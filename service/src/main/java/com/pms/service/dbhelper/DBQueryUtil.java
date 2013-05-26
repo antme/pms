@@ -16,6 +16,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.QueryBuilder;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.util.ApiUtil;
 
 public class DBQueryUtil {
 
@@ -141,7 +142,7 @@ public class DBQueryUtil {
             for (String key : keys) {
                 if (!ignoreKyes.contains(key)) {
                     Object object = parameters.get(key);
-                    if (key.equalsIgnoreCase(ApiConstants.MONGO_ID)) {
+                    if (key.equalsIgnoreCase(ApiConstants.MONGO_ID) && !ApiUtil.isEmpty(object)) {
                         if (object instanceof DBQuery) {
                             clone.put(key, object);
                         } else {

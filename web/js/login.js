@@ -15,6 +15,10 @@ $(document).ready(function() {
 						window.location = "main.html";
 					}
 				},
+				
+				error : function(){
+					$("#error").html("连接Service失败");
+				},
 
 				data : {
 					userName : $("#userName").val(),

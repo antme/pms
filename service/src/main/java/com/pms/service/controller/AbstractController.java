@@ -15,20 +15,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.util.ApiUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
 import com.pms.service.util.status.ResponseStatus;
 
 public abstract class AbstractController {
     private static Logger logger = LogManager.getLogger(AbstractController.class);
 
-
-
     public HashMap<String, Object> parserJsonParameters(HttpServletRequest request, boolean emptyParameter) {
         HashMap<String, Object> parametersMap = readParameters(request, emptyParameter);
         logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
 
-      
-        request.setAttribute("apiParameters", parametersMap);
         return parametersMap;
     }
 
@@ -57,21 +54,41 @@ public abstract class AbstractController {
             throw new ApiResponseException(String.format("Parameters required for path [%s]", request.getPathInfo()), ResponseCodeConstants.PARAMETERS_EMPTY.toString());
         }
 
-        return parametersMap;
-    }
+        parametersMap.remove("_");
+        parametersMap.remove("callback");
 
+        if (parametersMap.get("models") != null) {
+            String v = parametersMap.get("models").toString();
+            if (v.startsWith("[")) {
+                v = v.substring(1);
+            }
+
+            if (v.endsWith("]")) {
+                v = v.substring(0, v.lastIndexOf("]"));
+            }
+            parametersMap = new Gson().fromJson(v, HashMap.class);
+        }
+
+        if (parametersMap.get("_id") != null) {
+            if (ApiUtil.isEmpty(parametersMap.get("_id"))) {
+                parametersMap.remove("_id");
+            }
+        }
+        return parametersMap;
+
+    }
 
     protected void responseSuccessWithMap(Map<String, Object> data, String dataKey, HttpServletRequest request, HttpServletResponse response) {
         responseMsg(data, dataKey, ResponseStatus.SUCCESS, request, response);
     }
 
-    protected void responseSuccessWithKeyValue(String key, String value, HttpServletRequest request,  HttpServletResponse response) {
+    protected void responseSuccessWithKeyValue(String key, String value, HttpServletRequest request, HttpServletResponse response) {
         if (key == null) {
             responseSuccessWithMap(null, null, request, response);
         } else {
             Map<String, Object> temp = new HashMap<String, Object>();
             temp.put(key, value);
-            responseSuccessWithMap(temp, null, request , response);
+            responseSuccessWithMap(temp, null, request, response);
         }
     }
 
@@ -109,18 +126,18 @@ public abstract class AbstractController {
         } else {
             result.put("status", status.toString());
         }
-        
+
         response.setContentType("text/plain;charset=UTF-8");
 
         String jsonReturn = new Gson().toJson(result);
-        if(request !=null){
-            
-            if(request.getParameter("callback") !=null){
+        if (request != null) {
+
+            if (request.getParameter("callback") != null) {
                 response.setContentType("application/x-javascript;charset=UTF-8");
             }
-            
-            if(result.get("data")!=null){
-                jsonReturn = request.getParameter("callback") + "(" +  new Gson().toJson(result.get("data")) + ")";
+
+            if (result.get("data") != null) {
+                jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result.get("data")) + ")";
             }
         }
         response.addHeader("Accept-Encoding", "gzip, deflate");
@@ -132,9 +149,7 @@ public abstract class AbstractController {
 
     }
 
-
-
-    protected void responseServerError(Throwable throwable,  HttpServletRequest request, HttpServletResponse response) {
+    protected void responseServerError(Throwable throwable, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> temp = new HashMap<String, Object>();
 
         if (throwable instanceof ApiResponseException) {
