@@ -1,0 +1,7 @@
+package com.pms.service.dbhelper;
+
+public enum DBQueryOpertion {
+
+    LARGER_THAN, LESS_THAN, EQUAILS, GREATER_THAN_EQUALS, LESS_THAN_EQUAILS, NOT_NULL, NOT_IN, IN, NOT_EQUALS, BETWEEN_AND, CASE_INSENSITIVE, LIKE
+
+}

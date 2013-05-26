@@ -1,0 +1,221 @@
+<!DOCTYPE form-validation PUBLIC
+     "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.4.0//EN"
+     "http://commons.apache.org/dtds/validator_1_4_0.dtd">
+<form-validation>
+	<formset>
+		<form name="create">
+			<field property="name" depends="required,dbNotExists">
+				<arg key="group.name" />
+				<arg key="group.name.dbNotExists" />
+				<var>
+					<var-name>notMongoId</var-name>
+					<var-value>true</var-value>
+				</var>
+				<var>
+					<var-name>collection</var-name>
+					<var-value>group</var-value>
+				</var>
+			</field>
+			<field property="type" depends="required,in">
+				<arg key="group.type" />
+				<arg key="group.type.in" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>1,2</var-value>
+				</var>
+			</field>
+			<field property="slogan" depends="required">
+				<arg key="group.slogan" />
+			</field>
+			<field property="appId" depends="required,dbExists">
+				<arg key="app.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>app</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="update">
+			<field property="_id" depends="required, dbExists">
+				<arg key="group.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>group</var-value>
+				</var>
+			</field>
+			<field property="name" depends="required,dbNotExists">
+				<arg key="group.name" />
+				<arg key="group.name.dbNotExists" />
+				<var>
+					<var-name>notMongoId</var-name>
+					<var-value>true</var-value>
+				</var>
+				<var>
+					<var-name>collection</var-name>
+					<var-value>group</var-value>
+				</var>
+				<var>
+					<var-name>ignoreSelf</var-name>
+					<var-value>true</var-value>
+				</var>
+			</field>
+			<field property="type" depends="required,in">
+				<arg key="group.type" />
+				<arg key="group.type.in" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>1,2</var-value>
+				</var>
+			</field>
+			<field property="slogan" depends="required">
+				<arg key="group.slogan" />
+			</field>
+		</form>
+		<form name="listGroupByApp">
+			<field property="appId" depends="required,dbExists">
+				<arg key="app.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>app</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="groupIdRequireAndDbExists">
+			<field property="groupId" depends="required,dbExists">
+				<arg key="group.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>group</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="joinGroupApply">
+			<field property="groupId" depends="required,dbExists">
+				<arg key="group.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>group</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="fireGroupMember">
+			<field property="userId" depends="required,dbExists">
+				<arg key="user._id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>user</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="refuseOrPassJoinGroupApply">
+			<field property="_id" depends="required,dbExists">
+				<arg key="apply._id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>groupJoinApply</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="promoteOrDemoteMemberInGroup">
+			<field property="userId" depends="required,dbExists">
+				<arg key="user._id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>user</var-value>
+				</var>
+			</field>
+			<field property="groupId" depends="required,dbExists">
+				<arg key="group.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>group</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="setImageSpeaker">
+			<field property="userId" depends="required,dbExists">
+				<arg key="user._id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>user</var-value>
+				</var>
+			</field>
+			<field property="groupId" depends="required,dbExists">
+				<arg key="group.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>group</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="addPost">
+			<field property="userId" depends="required,dbExists">
+				<arg key="user._id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>user</var-value>
+				</var>
+			</field>
+			<field property="groupId" depends="required,dbExists">
+				<arg key="group.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>group</var-value>
+				</var>
+			</field>
+			<field property="title" depends="required">
+				<arg key="post.title" />
+			</field>
+			<field property="content" depends="required">
+				<arg key="post.content" />
+			</field>
+		</form>
+		<form name="replyPost">
+			<field property="userId" depends="required,dbExists">
+				<arg key="user._id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>user</var-value>
+				</var>
+			</field>
+			<field property="postId" depends="required,dbExists">
+				<arg key="post.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>post</var-value>
+				</var>
+			</field>
+			<field property="content" depends="required">
+				<arg key="post.reply.content" />
+			</field>
+		</form>
+		<form name="topOrUntopPost">
+			<field property="postId" depends="required,dbExists">
+				<arg key="post.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>post</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="listPostReplies">
+			<field property="postId" depends="required,dbExists">
+				<arg key="post.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>post</var-value>
+				</var>
+			</field>
+		</form>
+		
+		<form name="stationInApp">
+			<field property="appId" depends="required,dbExists">
+				<arg key="app.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>app</var-value>
+				</var>
+			</field>
+		</form>
+	</formset>
+</form-validation>

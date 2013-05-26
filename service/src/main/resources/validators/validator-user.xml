@@ -1,0 +1,215 @@
+<!DOCTYPE form-validation PUBLIC
+     "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.4.0//EN"
+     "http://commons.apache.org/dtds/validator_1_4_0.dtd">
+<form-validation>
+	<formset>
+		<form name="register">
+			<field property="email" depends="required, email,dbNotExists">
+				<arg key="user.email" />
+				<arg key="user.email.dbNotExists" />
+				<var>
+					<var-name>notMongoId</var-name>
+					<var-value>true</var-value>
+				</var>
+				<var>
+					<var-name>collection</var-name>
+					<var-value>user</var-value>
+				</var>
+			</field>
+			<field property="password" depends="required">
+				<arg key="user.password" />
+			</field>
+		</form>
+		<form name="update">
+			<field property="name" depends="dbNotExists">
+				<arg key="user.name" />
+				<arg key="user.name.dbNotExists" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>user</var-value>
+				</var>
+				<var>
+					<var-name>notMongoId</var-name>
+					<var-value>true</var-value>
+				</var>
+				<var>
+					<var-name>ignoreSelf</var-name>
+					<var-value>true</var-value>
+				</var>
+			</field>
+			<field property="gender" depends="in">
+				<arg key="user.gender" />
+				<arg key="user.gender.in" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>0,1</var-value>
+				</var>
+			</field>
+			<field property="recommendPoint" depends="int">
+				<arg key="user.recommendPoint" />
+				<arg key="user.recommendPoint.int" />
+				<var>
+					<var-name>lt</var-name>
+					<var-value>0</var-value>
+				</var>
+			</field>
+
+			<field property="bannedPost" depends="in">
+				<arg key="user.bannedPost" />
+				<arg key="user.bannedPost.in" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>0,1</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="login">
+			<field property="userName" depends="required">
+				<arg key="user.userName" />
+			</field>
+			<field property="password" depends="required">
+				<arg key="user.password" />
+			</field>
+		</form>
+
+		<form name="view">
+			<field property="userId" depends="required,dbExists">
+				<arg key="user.userId" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>user</var-value>
+				</var>
+			</field>
+		</form>
+
+		<form name="updateSettings">
+			<field property="autoWelcomeNewer" depends="int, in">
+				<arg key="user.autoWelcomeNewer" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>0,1</var-value>
+				</var>
+			</field>
+
+			<field property="receiveMess" depends="int, in">
+				<arg key="user.receiveMess" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>0,1</var-value>
+				</var>
+			</field>
+			<field property="unFindMe" depends="int, in">
+				<arg key="user.unFindMe" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>0,1</var-value>
+				</var>
+			</field>
+			<field property="unPubMyActivity" depends="int, in">
+				<arg key="user.unPubMyActivity" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>0,1</var-value>
+				</var>
+			</field>
+			<field property="unPubMyGames" depends="int, in">
+				<arg key="user.unPubMyGames" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>0,1</var-value>
+				</var>
+			</field>
+			<field property="receiveRate" depends="int, in">
+				<arg key="user.receiveRate" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>1,2,4,24</var-value>
+				</var>
+			</field>
+		</form>
+
+		<form name="addFeedBack">
+			<field property="content" depends="required">
+				<arg key="user.feedback.content" />
+			</field>
+		</form>
+
+		<form name="praise">
+			<field property="userId" depends="required,dbExists">
+				<arg key="user.userId" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>user</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="listLeaderBoardCharmers">
+			<field property="gender" depends="in">
+				<arg key="user.gender" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>0,1,2</var-value>
+				</var>
+			</field>
+			<field property="isMyApp" depends="in">
+				<arg key="user.isMyApp" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>0,1</var-value>
+				</var>
+			</field>			
+		</form>
+		<form name="listLeaderBoardVitality">
+			<field property="gender" depends="in">
+				<arg key="user.gender" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>0,1,2</var-value>
+				</var>
+			</field>
+			<field property="isMyApp" depends="in">
+				<arg key="user.isMyApp" />
+				<var>
+					<var-name>in</var-name>
+					<var-value>0,1</var-value>
+				</var>
+			</field>			
+		</form>
+		<form name="listAppRelatedCharmers">
+			<field property="appId" depends="required,dbExists">
+				<arg key="app.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>app</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="listAppRelatedUserRanking">
+			<field property="appId" depends="required,dbExists">
+				<arg key="app.id" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>app</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="getUserPoint">
+			<field property="userId" depends="required,dbExists">
+				<arg key="user.userId" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>user</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="setTodayStarUser">
+			<field property="userId" depends="required,dbExists">
+				<arg key="user.userId" />
+				<var>
+					<var-name>collection</var-name>
+					<var-value>user</var-value>
+				</var>
+			</field>
+		</form>
+	</formset>
+</form-validation>

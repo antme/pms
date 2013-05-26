@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appenders>
+		<RollingFile name="RollingFile" fileName="/var/log/pms/api/logs/api.log"
+			filePattern="/var/log/pms/api/logs/api-%-d{yyyy-MM-dd}.%i.log">
+			<PatternLayout>
+				<pattern>%-d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %l %x - %m%n%ex
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<!-- FIXME: change to 100MB -->
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="RollingFileFatal"
+			fileName="/var/log/pms/api/logs/api-fatal.log"
+			filePattern="/var/log/pms/api/logs/api-fatal-%-d{yyyy-MM-dd}.%i.log">
+			<PatternLayout>
+				<pattern>%-d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %l %x - %m%n%ex
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<!-- FIXME: change to 100MB -->
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+		</RollingFile>
+
+	</appenders>
+	<loggers>
+
+		<logger name="com.pms.service.controller.interceptor.ApiFilter"
+			level="fatal">
+			<appender-ref ref="RollingFileFatal" />
+		</logger>
+
+		<root level="debug">
+			<appender-ref ref="RollingFile" />
+		</root>
+
+	</loggers>
+</configuration>

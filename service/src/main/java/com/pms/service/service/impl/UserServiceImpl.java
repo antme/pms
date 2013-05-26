@@ -1,0 +1,101 @@
+package com.pms.service.service.impl;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.pms.service.dbhelper.DBQuery;
+import com.pms.service.dbhelper.DBQueryOpertion;
+import com.pms.service.exception.ApiResponseException;
+import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.GroupBean;
+import com.pms.service.mockbean.UserBean;
+import com.pms.service.service.AbstractService;
+import com.pms.service.service.IUserService;
+import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DataEncrypt;
+import com.pms.service.util.status.ResponseCodeConstants;
+
+public class UserServiceImpl extends AbstractService implements IUserService {
+
+    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
+
+
+
+    @Override
+    public String register(Map<String, Object> parameters) {
+        // load default settings from cheng you account, set to register user as
+        // default value
+        validate(parameters, "register");
+       
+        return null;
+    }
+
+
+    @Override
+    public void updateUserInfo(Map<String, Object> userInfoMap) {
+
+        String currentUserId = null;
+        userInfoMap.put(ApiConstants.MONGO_ID, currentUserId);
+        this.validate(userInfoMap, "update");
+        
+    }
+
+    @Override
+    public String login(Map<String, Object> parameters) {
+        this.validate(parameters, "login");
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(UserBean.USER_NAME, parameters.get(UserBean.USER_NAME));
+        query.put(UserBean.PASSWORD, DataEncrypt.generatePassword(parameters.get(UserBean.PASSWORD).toString()));
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "lastLogin"});
+        Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
+        if (user == null) {
+            throw new ApiResponseException(String.format("Name or password is incorrect when try to login [%s] ", parameters),
+                    ResponseCodeConstants.USER_LOGIN_USER_NAME_OR_PASSWORD_INCORRECT);
+        }
+        user.put("lastLogin", new Date().getTime());
+        dao.updateById(user, DBBean.USER);
+        return (String) user.get(ApiConstants.MONGO_ID);
+    }
+    
+    
+    public Map<String, Object> listRoleItems(){        
+        return this.dao.list(null, DBBean.USER_GROUP);
+    }
+    
+    public Map<String, Object> listGroups(){
+        return this.dao.list(null, DBBean.DB_ROLE_ITEM);
+    }
+
+    public void updateUserGroup(Map<String, Object> userGroup){
+
+        Map<String, Object> group = dao.findOne("_id", userGroup.get("_id"), DBBean.USER_GROUP);
+
+        if (group != null) {
+            group.put(GroupBean.ROLES, userGroup.get(GroupBean.ROLES));
+            dao.updateById(group, DBBean.USER_GROUP);
+        } else {
+            dao.add(userGroup, DBBean.USER_GROUP);
+        }
+        
+    }
+    
+    
+    @Override
+    public String geValidatorFileName() {
+        return "user";
+    }
+
+
+    @Override
+    public String logout(Map<String, Object> parameters) {
+        return null;
+    }
+   
+}

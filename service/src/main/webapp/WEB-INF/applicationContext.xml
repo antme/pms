@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>
+	</bean>
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetClass" value="com.pms.service.cfg.ConfigurationManager" />
+		<property name="targetMethod" value="setConfiguraion"></property>
+		<property name="arguments">
+			<list>
+				<value>config.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean name="mongoURI" class="com.mongodb.MongoURI" id="mongoURI">
+		<constructor-arg value="${mongoServerHost}"></constructor-arg>
+	</bean>
+
+	<bean name="mongo" class="com.mongodb.Mongo" id="mongo">
+		<constructor-arg index="0" ref="mongoURI"></constructor-arg>
+	</bean>
+
+	<bean name="commonDao" class="com.pms.service.dao.impl.mongo.CommonDaoMongoImpl"
+		id="mobileDao">
+		<property name="mongo" ref="mongo"></property>
+	</bean>
+
+	<bean name="userService" class="com.pms.service.service.impl.UserServiceImpl" id="userService">
+		<property name="dao" ref="commonDao"></property>
+	</bean>
+
+
+	<bean name="reportService" class="com.pms.service.service.impl.ReportServiceImpl"
+		id="reportService">
+		<property name="dao" ref="commonDao"></property>
+	</bean>
+
+
+	<bean name="groupService" class="com.pms.service.service.impl.GroupServiceImpl"
+		id="groupService">
+		<property name="dao" ref="commonDao"></property>
+	</bean>
+	
+	
+	<bean
+        class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass" value="com.pms.service.annotation.InitBean" />
+        <property name="targetMethod" value="initUserRoleDB"></property>
+        <property name="arguments">
+            <list>
+                <ref bean="commonDao" />
+            </list>
+        </property>
+    </bean>
+
+
+</beans>
