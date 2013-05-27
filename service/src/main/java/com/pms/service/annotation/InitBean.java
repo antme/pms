@@ -20,7 +20,7 @@ import com.pms.service.util.DataEncrypt;
 public class InitBean {
 
     /**
-     * 初始化role_item数据库
+     * 初始化数据库
      * 
      * @param dao
      * @throws SecurityException
