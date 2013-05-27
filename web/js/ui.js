@@ -23,6 +23,12 @@ function onAjaxFail(data) {
 
 }
 
+
+function displayMsg(result){
+	$("#error").html(result.msg);
+}
+
+
 function loadPage(page) {
 	var uid = kendo.guid();
 	$.ajax({

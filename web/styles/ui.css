@@ -81,14 +81,7 @@ body {
     padding-top: 5px
 }
 
-.project_m {
-	background-image: url("../images/user.png");
-	background-repeat: no-repeat;
-	padding-left: 35px;
-	height: 40px;
-	display: block;
-	padding-top: 5px
-}
+
 
 .main {
 	bottom: 0;
@@ -105,17 +98,9 @@ body {
 	margin-left: -10px;
 }
 
-.left ul {
-	margin-left: 20px;
-	list-style-type: none;
-	vertical-align: top;
-	padding: 0;
-}
-
-.left ul li {
-	margin-top: 5px;
-}
-
-.left ul li a {
-	text-decoration: none;
+#error{
+	margin-left: 220px;
+	margin-top: 20px;
+	font-size: 15px;
+	color: red;
 }

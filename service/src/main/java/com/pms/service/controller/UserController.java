@@ -27,7 +27,7 @@ public class UserController extends AbstractController {
     @RequestMapping("/register")
     public void register(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> user = parserJsonParameters(request, false);
-        responseSuccessWithKeyValue(ApiConstants.MONGO_ID, userService.register(user), request, response);
+        responseWithKeyValue(ApiConstants.MONGO_ID, userService.register(user), request, response);
     }
 
     /**
@@ -40,31 +40,31 @@ public class UserController extends AbstractController {
     @RoleValidate(roleID=RoleValidConstants.USER_INFO_UPDATE, desc = RoleValidConstants.USER_INFO_UPDATE_DESC)
     public void update(HttpServletRequest request, HttpServletResponse response) {
         userService.updateUserInfo(this.parserJsonParameters(request,  false));
-        responseSuccessWithMap(null, null, request, response);
+        responseWithData(null, request, response);
     }
 
     @RequestMapping("/login")
     public void login(HttpServletRequest request, HttpServletResponse response) {
-        responseSuccessWithKeyValue(ApiConstants.MONGO_ID, userService.login(parserJsonParameters(request,  false)), request, response);
+        responseWithKeyValue(ApiConstants.MONGO_ID, userService.login(parserJsonParameters(request,  false)), request, response);
     }
 
     @RequestMapping("/info")
     public void loadUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        responseSuccessWithKeyValue(ApiConstants.MONGO_ID, "test", request, response);
+        responseWithKeyValue(ApiConstants.MONGO_ID, "test", request, response);
     }
     
     
     @RequestMapping("/role/list")
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void listRoleItems(HttpServletRequest request, HttpServletResponse response) {
-        responseSuccessWithMap(userService.listRoleItems(), null, request, response);
+        responseWithData(userService.listRoleItems(), request, response);
     }
     
     
     @RequestMapping("/group/list")
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void listGroupItems(HttpServletRequest request, HttpServletResponse response) {
-        responseSuccessWithMap(userService.listRoleItems(), null, request, response);
+        responseWithData(userService.listRoleItems(), request, response);
     }
 
     
@@ -72,14 +72,14 @@ public class UserController extends AbstractController {
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void updateGroupItems(HttpServletRequest request, HttpServletResponse response) {
         userService.updateUserGroup(parserJsonParameters(request,  false));
-        responseSuccessWithMap(null, null, request, response);
+        responseWithData(null, request, response);
     }
     
     @RequestMapping("/group/delete")
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void deleteGroupItems(HttpServletRequest request, HttpServletResponse response) {
         userService.deleteUserGroup(parserJsonParameters(request,  false));
-        responseSuccessWithMap(null, null, request, response);
+        responseWithData(null, request, response);
     }
 
 
@@ -92,7 +92,7 @@ public class UserController extends AbstractController {
             logger.info("Find session userId from request =====================");
         }
         
-        responseSuccessWithKeyValue(ApiConstants.MONGO_ID, "test", request, response);
+        responseWithKeyValue(ApiConstants.MONGO_ID, "test", request, response);
     }
 
 
