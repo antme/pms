@@ -14,6 +14,9 @@ $(document).ready(function() {
 	$("#user-m").click(function(){
 		loadPage("userman.html");
 	});
+	$("#user-info").click(function(){
+		loadPage("local-data.html");
+	});
 });
 
 function onAjaxFail(data) {

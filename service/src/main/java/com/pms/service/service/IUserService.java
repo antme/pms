@@ -20,4 +20,6 @@ public interface IUserService {
     
     public void updateUserGroup(Map<String, Object> userGroup);
     
+    public Map<String, Object> updateUserGroupTest(Map<String, Object> userGroup);
+    
 }

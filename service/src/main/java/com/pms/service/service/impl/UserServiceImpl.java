@@ -83,7 +83,19 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         } else {
             dao.add(userGroup, DBBean.USER_GROUP);
         }
-        
+    }
+    
+    public Map<String, Object> updateUserGroupTest(Map<String, Object> userGroup){
+
+        Map<String, Object> group = dao.findOne("_id", userGroup.get("_id"), DBBean.USER_GROUP);
+
+        if (group != null) {
+            group.put(GroupBean.ROLES, userGroup.get(GroupBean.ROLES));
+            dao.updateById(group, DBBean.USER_GROUP);
+        } else {
+            dao.add(userGroup, DBBean.USER_GROUP);
+        }
+        return dao.findOneByQuery(new HashMap<String, Object>(), DBBean.USER_GROUP);
     }
     
     
