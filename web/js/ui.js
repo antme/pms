@@ -7,12 +7,12 @@ $(document).ready(function() {
 	console.log(urlStr);
 	page = jQuery.url.setUrl(urlStr).attr("anchor");
 	if (!page) {
-		page = "local-data.html";
+		page = "html/local-data.html";
 	}
 	loadPage(page);
 	
 	$("#user-m").click(function(){
-		loadPage("userman.html");
+		loadPage("html/user/userman.html");
 	});
 	$("#user-info").click(function(){
 		loadPage("local-data.html");
@@ -35,4 +35,14 @@ function loadPage(page) {
 
 }
 
+
+function onLeftNavSelect(e){
+	var text = this.text(e.node);
+	
+	if(text == "权限管理"){
+		loadPage("html/user/userman.html");
+	}else{
+		loadPage("html/local-data.html");
+	}
+}
 
