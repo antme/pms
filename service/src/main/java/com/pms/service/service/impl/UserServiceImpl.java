@@ -1,24 +1,20 @@
 package com.pms.service.service.impl;
 
-import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pms.service.dbhelper.DBQuery;
-import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
-import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IUserService;
-import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DataEncrypt;
 import com.pms.service.util.status.ResponseCodeConstants;
 
@@ -74,31 +70,23 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     }
 
     public void updateUserGroup(Map<String, Object> userGroup){
-
         Map<String, Object> group = dao.findOne("_id", userGroup.get("_id"), DBBean.USER_GROUP);
-
         if (group != null) {
-            group.put(GroupBean.ROLES, userGroup.get(GroupBean.ROLES));
-            dao.updateById(group, DBBean.USER_GROUP);
+            userGroup.put("_id", userGroup.get("_id"));
+            dao.updateById(userGroup, DBBean.USER_GROUP);
         } else {
             dao.add(userGroup, DBBean.USER_GROUP);
         }
     }
     
-    public Map<String, Object> updateUserGroupTest(Map<String, Object> userGroup){
-
-        Map<String, Object> group = dao.findOne("_id", userGroup.get("_id"), DBBean.USER_GROUP);
-
-        if (group != null) {
-            group.put(GroupBean.ROLES, userGroup.get(GroupBean.ROLES));
-            dao.updateById(group, DBBean.USER_GROUP);
-        } else {
-            dao.add(userGroup, DBBean.USER_GROUP);
-        }
-        return dao.findOneByQuery(new HashMap<String, Object>(), DBBean.USER_GROUP);
+    public void deleteUserGroup(Map<String, Object> userGroup){
+       
+        List<String> ids = new ArrayList<String>();
+        ids.add(userGroup.get("_id").toString());
+        dao.deleteByIds(ids, DBBean.USER_GROUP);
+       
     }
-    
-    
+
     @Override
     public String geValidatorFileName() {
         return "user";

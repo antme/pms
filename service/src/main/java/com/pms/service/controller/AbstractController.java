@@ -78,23 +78,20 @@ public abstract class AbstractController {
 
     }
 
-    protected void responseSuccessWithMap(Map<String, Object> data, String dataKey, HttpServletRequest request, HttpServletResponse response) {
-        responseMsg(data, dataKey, ResponseStatus.SUCCESS, request, response);
+    protected void responseWithData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
+        responseMsg(data, ResponseStatus.SUCCESS, request, response);
     }
 
-    protected void responseSuccessWithKeyValue(String key, String value, HttpServletRequest request, HttpServletResponse response) {
+    protected void responseWithKeyValue(String key, String value, HttpServletRequest request, HttpServletResponse response) {
         if (key == null) {
-            responseSuccessWithMap(null, null, request, response);
+            responseWithData(null, request, response);
         } else {
             Map<String, Object> temp = new HashMap<String, Object>();
             temp.put(key, value);
-            responseSuccessWithMap(temp, null, request, response);
+            responseWithData(temp, request, response);
         }
     }
 
-    protected void responseFailWithMap(Map<String, Object> data, String dataKey, HttpServletRequest request, HttpServletResponse response) {
-        responseMsg(data, dataKey, ResponseStatus.FAIL, request, response);
-    }
 
     /**
      * This function will return JSON data to Client
@@ -111,18 +108,13 @@ public abstract class AbstractController {
      *            0:FAIL, 1: SUCCESS
      * @return
      */
-    private void responseMsg(Map<String, Object> data, String dataKey, ResponseStatus status, HttpServletRequest request, HttpServletResponse response) {
+    private void responseMsg(Map<String, Object> data, ResponseStatus status, HttpServletRequest request, HttpServletResponse response) {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
         if (data != null) {
-            if (dataKey == null) {
-                data.put("status", status.toString());
-                result = data;
-            } else {
-                result.put(dataKey, data);
-                result.put("status", status.toString());
-            }
+            data.put("status", status.toString());
+            result = data;          
         } else {
             result.put("status", status.toString());
         }
@@ -134,10 +126,15 @@ public abstract class AbstractController {
 
             if (request.getParameter("callback") != null) {
                 response.setContentType("application/x-javascript;charset=UTF-8");
-            }
 
-            if (result.get("data") != null) {
-                jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result.get("data")) + ")";
+                
+                if (result.get("data") != null) {
+                    jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result.get("data")) + ");displayMsg({\"msg\":\"success\"});";
+                }else{
+                    jsonReturn = request.getParameter("callback") + "([]);displayMsg({\"msg\":\"success\"});";
+                }
+                
+                
             }
         }
         response.addHeader("Accept-Encoding", "gzip, deflate");
@@ -160,7 +157,7 @@ public abstract class AbstractController {
         } else {
             temp.put("msg", "System Error");
         }
-        responseMsg(temp, null, ResponseStatus.FAIL, request, response);
+        responseMsg(temp, ResponseStatus.FAIL, request, response);
 
     }
 
