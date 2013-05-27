@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.util.ApiUtil;
@@ -79,7 +80,11 @@ public abstract class AbstractController {
     }
 
     protected void responseWithData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
-        responseMsg(data, ResponseStatus.SUCCESS, request, response);
+        responseMsg(data, ResponseStatus.SUCCESS, request, response, null);
+    }
+    
+    protected void responseWithData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response, String msgKey) {
+        responseMsg(data, ResponseStatus.SUCCESS, request, response, msgKey);
     }
 
     protected void responseWithKeyValue(String key, String value, HttpServletRequest request, HttpServletResponse response) {
@@ -108,7 +113,7 @@ public abstract class AbstractController {
      *            0:FAIL, 1: SUCCESS
      * @return
      */
-    private void responseMsg(Map<String, Object> data, ResponseStatus status, HttpServletRequest request, HttpServletResponse response) {
+    private void responseMsg(Map<String, Object> data, ResponseStatus status, HttpServletRequest request, HttpServletResponse response, String msgKey) {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
@@ -122,19 +127,21 @@ public abstract class AbstractController {
         response.setContentType("text/plain;charset=UTF-8");
 
         String jsonReturn = new Gson().toJson(result);
+        
         if (request != null) {
 
             if (request.getParameter("callback") != null) {
                 response.setContentType("application/x-javascript;charset=UTF-8");
-
-                
-                if (result.get("data") != null) {
-                    jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result.get("data")) + ");displayMsg({\"msg\":\"success\"});";
-                }else{
-                    jsonReturn = request.getParameter("callback") + "([]);displayMsg({\"msg\":\"success\"});";
+                String displayMsg = null;
+                if (msgKey != null) {
+                    displayMsg = "displayMsg({\"msg\": \"" + ConfigurationManager.getSystemMessage(msgKey) + "\"});";
                 }
-                
-                
+                if (result.get("data") != null) {
+                    jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result.get("data")) + ");";
+                } else {
+                    jsonReturn = request.getParameter("callback") + "([]);";
+                }
+                jsonReturn = jsonReturn + displayMsg;
             }
         }
         response.addHeader("Accept-Encoding", "gzip, deflate");
@@ -157,7 +164,7 @@ public abstract class AbstractController {
         } else {
             temp.put("msg", "System Error");
         }
-        responseMsg(temp, ResponseStatus.FAIL, request, response);
+        responseMsg(temp, ResponseStatus.FAIL, request, response, null);
 
     }
 

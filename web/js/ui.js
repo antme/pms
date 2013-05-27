@@ -25,7 +25,10 @@ function onAjaxFail(data) {
 
 
 function displayMsg(result){
+	$('#error').show();
 	$("#error").html(result.msg);
+	$('#error').delay(2000).hide(0);
+
 }
 
 

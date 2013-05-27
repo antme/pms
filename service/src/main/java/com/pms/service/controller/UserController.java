@@ -72,7 +72,14 @@ public class UserController extends AbstractController {
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void updateGroupItems(HttpServletRequest request, HttpServletResponse response) {
         userService.updateUserGroup(parserJsonParameters(request,  false));
-        responseWithData(null, request, response);
+        responseWithData(null, request, response, "update_success");
+    }
+    
+    @RequestMapping("/group/add")
+    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void addGroupItems(HttpServletRequest request, HttpServletResponse response) {
+        userService.updateUserGroup(parserJsonParameters(request,  false));
+        responseWithData(null, request, response, "add_success");
     }
     
     @RequestMapping("/group/delete")
