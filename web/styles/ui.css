@@ -99,8 +99,7 @@ body {
 }
 
 #error{
-	margin-left: 220px;
-	margin-top: 20px;
+	margin-left: 20px;
 	font-size: 15px;
 	color: red;
 }
