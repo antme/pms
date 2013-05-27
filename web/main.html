@@ -32,22 +32,40 @@
 	</div>
 
 	<div class="main">
-		<div class="left" style="width: 200px; float: left;">
-			<ul>
-				<li class="first-child "><h1>
-						<a href=""><span class="project_m">Project Manager</span></a>
-					</h1></li>
-				<li><span class="k-in"><hr></span></li>
-				<li class="active"><a href="/api">API Reference</a></li>
-				<li class=""><a href="/getting-started">Getting Started</a></li>
-				<li class=""><a href="/howto">How Do I?</a></li>
-				<li class=""><a href="/tutorials">Tutorials</a></li>
-				<li class="last-child"><a href="http://demos.kendoui.com"
-					target="_blank">Demos</a></li>
-
-			</ul>
+		<div class="left" style="width: 200px; float: left; margin-top: 20px;">
+		  <div id="tree-nav"></div>
 		</div>
 		<div class="right" id="main_right" style="margin-left: 210px;"></div>
 	</div>
 </body>
+
+<script>
+                $("#tree-nav").kendoTreeView({
+                    dataSource: [
+                        {
+                            text: "项目管理", imageUrl: "../../content/web/treeview/mail.png"
+                        },
+
+                        {
+                            text: "合同管理", expanded: true, imageUrl: "../../content/web/treeview/search.png",
+                            items: [
+                                { text: "采购合同", imageUrl: "../../content/web/treeview/search.png" },
+                                { text: "客户合同", imageUrl: "../../content/web/treeview/search.png" },
+                                { text: "成本设备清单", imageUrl: "../../content/web/treeview/search.png"}
+                            ]
+                        },
+                        {
+                            text: "采购管理", imageUrl: "../../content/web/treeview/settings.png"
+                        },
+                        {
+                            text: "财务", imageUrl: "../../content/web/treeview/edit.png"
+                        },
+                        {
+                            text: "权限管理", imageUrl: "../../content/web/treeview/mail.png"
+                        }
+                    ],
+
+                    select: onLeftNavSelect
+                });
+            </script>
 </html>
