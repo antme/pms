@@ -1,0 +1,101 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+.k-grid-toolbar {
+	height: 25px;
+}
+</style>
+<body>
+	<div id="projectList" class="k-content">
+		<div id="grid"></div>
+		<script>
+			var dataSource = new kendo.data.DataSource({
+				transport : {
+					read : {
+						url : "../service/project/list",
+						dataType : "jsonp"
+					},
+					update : {
+						url : "../service/project/update",
+						dataType : "jsonp",
+						method : "post"
+					},
+					create : {
+						url : "../service/project/add",
+						dataType : "jsonp"
+					},
+					parameterMap : function(options, operation) {
+						if (operation !== "read" && options.models) {
+							return {
+								models : kendo.stringify(options.models)
+							};
+						}
+					},
+					method : "post"
+				},
+				pageSize : 10,
+				batch : true,
+				schema : {
+					model : {
+						id : "_id",
+						fields : {
+							_id : {
+								editable : false,
+								nullable : true
+							},
+							description : {
+								validation : {
+									required : true
+								}
+							},
+							projectName : {
+								validation : {
+									required : true
+								}
+							}
+						}
+					}
+				}
+			});
+
+			$("#grid").kendoGrid({
+				dataSource : dataSource,
+				pageable : true,
+				editable : "popup",
+				toolbar : [ {name: "create", text: "添加"} ],
+				columns : [ {
+					field : "projectCode",
+					title : "项目编号"
+				}, {
+					field : "projectName",
+					title : "项目名"
+				}, {
+					field : "projectStatus",
+					title : "项目状态"
+				}, {
+					field : "projectType",
+					title : "项目类型"
+				}, {
+					field : "projectManager",
+					title : "PM"
+				}, {
+					field : "customerName",
+					title : "客户名"
+				}, {
+					field : "totalAmount",
+					title : "项目总金额"
+				}, {
+					field : "invoiceAmount",
+					title : "开票金额%"
+				}, {
+					field : "getAmount",
+					title : "到款金额%"
+				}, {
+					field : "purchaseAmount",
+					title : "采购金额%"
+				}]
+
+			});
+		</script>
+
+	</div>
+</body>

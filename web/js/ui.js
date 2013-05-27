@@ -41,6 +41,8 @@ function onLeftNavSelect(e){
 	
 	if(text == "权限管理"){
 		loadPage("html/user/userman.html");
+	}else if (text == "项目管理"){
+		loadPage("html/project/project.html");
 	}else{
 		loadPage("html/local-data.html");
 	}

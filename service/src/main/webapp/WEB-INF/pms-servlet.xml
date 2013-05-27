@@ -41,6 +41,11 @@
 		id="userController">
 		<property name="userService" ref="userService"></property>
 	</bean>
+	
+	<bean name="projectController" class="com.pms.service.controller.ProjectController"
+		id="projectController">
+		<property name="projectService" ref="projectService"></property>
+	</bean>
 
 
 </beans>
