@@ -141,7 +141,10 @@ public abstract class AbstractController {
                 } else {
                     jsonReturn = request.getParameter("callback") + "([]);";
                 }
-                jsonReturn = jsonReturn + displayMsg;
+                
+                if(displayMsg !=null){
+                    jsonReturn = jsonReturn + displayMsg;
+                }
             }
         }
         response.addHeader("Accept-Encoding", "gzip, deflate");
