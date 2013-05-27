@@ -134,10 +134,14 @@ public abstract class AbstractController {
 
             if (request.getParameter("callback") != null) {
                 response.setContentType("application/x-javascript;charset=UTF-8");
-            }
 
-            if (result.get("data") != null) {
-                jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result.get("data")) + ")";
+                if (result.get("data") != null) {
+                    jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result.get("data")) + ")";
+                }else{
+                    jsonReturn = request.getParameter("callback") + "([])";
+                }
+                
+                
             }
         }
         response.addHeader("Accept-Encoding", "gzip, deflate");

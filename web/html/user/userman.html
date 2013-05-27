@@ -16,13 +16,18 @@
 					},
 					update : {
 						url : "../service/user/group/update",
-						dataType : "jsonp",
-						method : "post"
+						dataType : "jsonp"
 					},
 					create : {
 						url : "../service/user/group/update",
 						dataType : "jsonp"
 					},
+					
+					destroy: {
+						url : "../service/user/group/delete",
+						dataType : "jsonp"
+					},
+					
 					parameterMap : function(options, operation) {
 						if (operation !== "read" && options.models) {
 							return {
