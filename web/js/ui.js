@@ -54,3 +54,9 @@ function onLeftNavSelect(e){
 	}
 }
 
+function getSelectedRowDataByGrid(gridId){
+	var grid = $("#"+gridId).data("kendoGrid");
+	var row = grid.select();
+	return grid.dataItem(row);
+}
+

@@ -7,7 +7,28 @@
 <body>
 	<div id="projectList" class="k-content">
 		<div id="grid"></div>
+		
+		<script type="text/x-kendo-template" id="template">
+				<a class="k-button" href="\#" onclick="return toolbar_delete()">删除</a>
+				<a class="k-button" href="\#" onclick="return toolbar_projectApprove()">正式立项</a>
+        </script>
+        
 		<script>
+			
+			function toolbar_delete() {
+				var rowData = getSelectedRowDataByGrid("grid");
+				alert("Delete the row _id: " + rowData._id);
+			  	console.log("Toolbar command is clicked!");
+			  	return false;
+			};
+			
+			function toolbar_projectApprove() {
+				var rowData = getSelectedRowDataByGrid("grid");
+				alert("Approved prject _id: " + rowData._id);
+				console.log("Toolbar command is clicked!");
+				return false;
+			};
+				
 			var dataSource = new kendo.data.DataSource({
 				transport : {
 					read : {
@@ -23,18 +44,23 @@
 						url : "../service/project/add",
 						dataType : "jsonp"
 					},
-					parameterMap : function(options, operation) {
-						if (operation !== "read" && options.models) {
-							return {
-								models : kendo.stringify(options.models)
-							};
-						}
-					},
+					//	parameterMap : function(options, operation) {
+						//if (operation !== "read" && options.models) {
+							//return {
+								//models : kendo.stringify(options.models)
+							//};
+						//}
+					//},
+					
 					method : "post"
 				},
-				pageSize : 10,
-				batch : true,
-				schema : {
+				pageSize: 2,
+                //serverPaging: true,
+                //serverSorting: true,
+                //serverFiltering: true,
+				//batch : true,
+				
+                schema : {
 					model : {
 						id : "_id",
 						fields : {
@@ -42,26 +68,33 @@
 								editable : false,
 								nullable : true
 							},
-							description : {
-								validation : {
-									required : true
-								}
-							},
 							projectName : {
 								validation : {
 									required : true
 								}
 							}
 						}
-					}
-				}
+					}//,
+					//data: "data",
+					//total: "totalCount"
+				},
 			});
 
 			$("#grid").kendoGrid({
 				dataSource : dataSource,
-				pageable : true,
+				pageable : {
+					pageSize: 2,
+					buttonCount:5,
+					//input:true,
+					//pageSizes:true
+				},
 				editable : "popup",
-				toolbar : [ {name: "create", text: "添加"} ],
+				toolbar : [ {name: "create", text: "添加"},{ template: kendo.template($("#template").html()) } ],
+				selectable: "multiple, row",
+                sortable: {
+                    mode: "multiple",
+                    allowUnsort: true
+                },
 				columns : [ {
 					field : "projectCode",
 					title : "项目编号"
