@@ -12,7 +12,7 @@ $(document).ready(function() {
 	loadPage(page);
 
 	$("#user-m").click(function() {
-		loadPage("html/user/userman.html");
+		loadPage("html/project/project.html");
 	});
 	$("#user-info").click(function() {
 		loadPage("local-data.html");
