@@ -6,7 +6,9 @@ public interface IUserService {
 
     public String register(Map<String, Object> parameters);
 
-    public void updateUserInfo(Map<String, Object> map);
+    public void updateUser(Map<String, Object> map);
+    
+    public void deleteUser(Map<String, Object> userGroup);
 
     public String login(Map<String, Object> parameters);
 
@@ -22,5 +24,8 @@ public interface IUserService {
     
     
     public void deleteUserGroup(Map<String, Object> userGroup);
+    
+    
+    public Map<String, Object> listUsers();
     
 }

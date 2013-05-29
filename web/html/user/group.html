@@ -11,22 +11,22 @@
 			var dataSource = new kendo.data.DataSource({
 				transport : {
 					read : {
-						url : "../service/user/list",
+						url : "../service/user/group/list",
 						dataType : "jsonp"
 					},
 					update : {
-						url : "../service/user/update",
+						url : "../service/user/group/update",
 						dataType : "jsonp",
 						type : "post"
 					},
 					create : {
-						url : "../service/user/add",
+						url : "../service/user/group/add",
 						dataType : "jsonp",
 						type : "post"
 					},
 					
 					destroy: {
-						url : "../service/user/delete",
+						url : "../service/user/group/delete",
 						dataType : "jsonp",
 						type : "post"
 					},
@@ -49,12 +49,12 @@
 								editable : false,
 								nullable : true
 							},
-							userName : {
+							description : {
 								validation : {
 									required : true
 								}
 							},
-							password : {
+							groupName : {
 								validation : {
 									required : true
 								}
@@ -71,15 +71,13 @@
 				editable : "popup",
 				toolbar : [ "create" ],
 				columns : [ {
-					field : "userName",
+					field : "groupName",
 					title : "权限组"
 				}, {
-					field : "password",
+					field : "description",
 					title : "描述"
 				}, {
-					command : [
-					           "edit",
-					    {
+					command : [ "edit", {
 						name : "destroy",
 						title : "删除",
 						text : "删除"

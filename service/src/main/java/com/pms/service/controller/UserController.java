@@ -39,7 +39,7 @@ public class UserController extends AbstractController {
     @RequestMapping("/info/edit")
     @RoleValidate(roleID=RoleValidConstants.USER_INFO_UPDATE, desc = RoleValidConstants.USER_INFO_UPDATE_DESC)
     public void update(HttpServletRequest request, HttpServletResponse response) {
-        userService.updateUserInfo(this.parserJsonParameters(request,  false));
+        userService.updateUser(this.parserJsonParameters(request,  false));
         responseWithData(null, request, response);
     }
 
@@ -72,7 +72,14 @@ public class UserController extends AbstractController {
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void updateGroupItems(HttpServletRequest request, HttpServletResponse response) {
         userService.updateUserGroup(parserJsonParameters(request,  false));
-        responseWithData(null, request, response);
+        responseWithData(null, request, response, "update_success");
+    }
+    
+    @RequestMapping("/group/add")
+    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void addGroupItems(HttpServletRequest request, HttpServletResponse response) {
+        userService.updateUserGroup(parserJsonParameters(request,  false));
+        responseWithData(null, request, response, "add_success");
     }
     
     @RequestMapping("/group/delete")
@@ -83,6 +90,36 @@ public class UserController extends AbstractController {
     }
 
 
+    @RequestMapping("/list")
+    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void listUsers(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(userService.listUsers(), request, response);
+    }
+    
+    
+    
+    @RequestMapping("/update")
+    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void updateUser(HttpServletRequest request, HttpServletResponse response) {
+        userService.updateUser(parserJsonParameters(request,  false));
+        responseWithData(null, request, response, "update_success");
+    }
+    
+    @RequestMapping("/add")
+    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void addUser(HttpServletRequest request, HttpServletResponse response) {
+        userService.updateUser(parserJsonParameters(request,  false));
+        responseWithData(null, request, response, "add_success");
+    }
+    
+    @RequestMapping("/delete")
+    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void deleteUser(HttpServletRequest request, HttpServletResponse response) {
+        userService.deleteUser(parserJsonParameters(request,  false));
+        responseWithData(null, request, response);
+    }
+
+    
     @RequestMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         if(request.getSession().getAttribute("userId") == null){

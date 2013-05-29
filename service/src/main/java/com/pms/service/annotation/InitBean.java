@@ -20,7 +20,7 @@ import com.pms.service.util.DataEncrypt;
 public class InitBean {
 
     /**
-     * 初始化role_item数据库
+     * 初始化数据库
      * 
      * @param dao
      * @throws SecurityException
@@ -41,15 +41,15 @@ public class InitBean {
                         roleIds.add(rv.roleID());
                     }
                     @SuppressWarnings("unchecked")
-                    Map<String, Object> role = dao.findOne(RoleBean.ROLE_ID, rv.roleID(), DBBean.DB_ROLE_ITEM);
+                    Map<String, Object> role = dao.findOne(RoleBean.ROLE_ID, rv.roleID(), DBBean.ROLE_ITEM);
                     if (role != null) {
                         role.put(RoleBean.ROLE_DESC, rv.desc());
-                        dao.updateById(role, DBBean.DB_ROLE_ITEM);
+                        dao.updateById(role, DBBean.ROLE_ITEM);
                     } else {
                         Map<String, Object> roleMap = new HashMap<String, Object>();
                         roleMap.put(RoleBean.ROLE_ID, rv.roleID());
                         roleMap.put(RoleBean.ROLE_DESC, rv.desc());
-                        dao.add(roleMap, DBBean.DB_ROLE_ITEM);
+                        dao.add(roleMap, DBBean.ROLE_ITEM);
                     }
 
                 }

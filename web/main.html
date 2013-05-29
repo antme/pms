@@ -37,13 +37,14 @@
 		</div>
 		
 		<div class="right">
-		    <div id="error"></div>
-		
+		    <div style="height:25px; padding-top: 20px;"><span id="error"></span></div>		
 			<div  id="main_right" style="margin-left: 210px;">
 			</div>
 		</div>
 	</div>
 </body>
+
+
 
 <script>
                 $("#tree-nav").kendoTreeView({
@@ -67,7 +68,11 @@
                             text: "财务", imageUrl: "../../content/web/treeview/edit.png"
                         },
                         {
-                            text: "权限管理", imageUrl: "../../content/web/treeview/mail.png"
+                            text: "权限管理", imageUrl: "../../content/web/treeview/mail.png",
+                            items: [
+                                    { text: "用户管理", imageUrl: "../../content/web/treeview/search.png" },
+                                    { text: "角色管理", imageUrl: "../../content/web/treeview/search.png" }
+                                ]
                         }
                     ],
 

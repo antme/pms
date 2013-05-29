@@ -22,25 +22,33 @@ public class UserServiceImpl extends AbstractService implements IUserService {
 
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
-
-
     @Override
     public String register(Map<String, Object> parameters) {
         // load default settings from cheng you account, set to register user as
         // default value
         validate(parameters, "register");
-       
+
         return null;
     }
 
-
     @Override
-    public void updateUserInfo(Map<String, Object> userInfoMap) {
+    public void updateUser(Map<String, Object> userInfoMap) {
 
-        String currentUserId = null;
-        userInfoMap.put(ApiConstants.MONGO_ID, currentUserId);
-        this.validate(userInfoMap, "update");
-        
+        Map<String, Object> group = dao.findOne("_id", userInfoMap.get("_id"), DBBean.USER);
+        if (group != null) {
+            userInfoMap.put("_id", group.get("_id"));
+            dao.updateById(userInfoMap, DBBean.USER);
+        } else {
+            validate(userInfoMap, "register");
+            dao.add(userInfoMap, DBBean.USER);
+        }
+
+    }
+
+    public void deleteUser(Map<String, Object> userGroup) {
+        List<String> ids = new ArrayList<String>();
+        ids.add(userGroup.get("_id").toString());
+        dao.deleteByIds(ids, DBBean.USER);
     }
 
     @Override
@@ -49,27 +57,30 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(UserBean.USER_NAME, parameters.get(UserBean.USER_NAME));
         query.put(UserBean.PASSWORD, DataEncrypt.generatePassword(parameters.get(UserBean.PASSWORD).toString()));
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "lastLogin"});
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "lastLogin" });
         Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
         if (user == null) {
-            throw new ApiResponseException(String.format("Name or password is incorrect when try to login [%s] ", parameters),
-                    ResponseCodeConstants.USER_LOGIN_USER_NAME_OR_PASSWORD_INCORRECT);
+            throw new ApiResponseException(String.format("Name or password is incorrect when try to login [%s] ", parameters), ResponseCodeConstants.USER_LOGIN_USER_NAME_OR_PASSWORD_INCORRECT);
         }
         user.put("lastLogin", new Date().getTime());
         dao.updateById(user, DBBean.USER);
         return (String) user.get(ApiConstants.MONGO_ID);
     }
-    
-    
-    public Map<String, Object> listRoleItems(){        
+
+    public Map<String, Object> listRoleItems() {
         return this.dao.list(null, DBBean.USER_GROUP);
     }
-    
-    public Map<String, Object> listGroups(){
-        return this.dao.list(null, DBBean.DB_ROLE_ITEM);
+
+    public Map<String, Object> listGroups() {
+        return this.dao.list(null, DBBean.ROLE_ITEM);
     }
 
-    public void updateUserGroup(Map<String, Object> userGroup){
+    public Map<String, Object> listUsers() {
+        return this.dao.list(null, DBBean.USER);
+
+    }
+
+    public void updateUserGroup(Map<String, Object> userGroup) {
         Map<String, Object> group = dao.findOne("_id", userGroup.get("_id"), DBBean.USER_GROUP);
         if (group != null) {
             userGroup.put("_id", userGroup.get("_id"));
@@ -78,13 +89,13 @@ public class UserServiceImpl extends AbstractService implements IUserService {
             dao.add(userGroup, DBBean.USER_GROUP);
         }
     }
-    
-    public void deleteUserGroup(Map<String, Object> userGroup){
-       
+
+    public void deleteUserGroup(Map<String, Object> userGroup) {
+
         List<String> ids = new ArrayList<String>();
         ids.add(userGroup.get("_id").toString());
         dao.deleteByIds(ids, DBBean.USER_GROUP);
-       
+
     }
 
     @Override
@@ -92,10 +103,9 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         return "user";
     }
 
-
     @Override
     public String logout(Map<String, Object> parameters) {
         return null;
     }
-   
+
 }
