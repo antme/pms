@@ -14,7 +14,12 @@
 <link href="styles/examples-offline.css" rel="stylesheet">
 <link href="styles/kendo.common.min.css" rel="stylesheet">
 <link href="styles/kendo.default.min.css" rel="stylesheet">
+<style type="text/css">
 
+.k-image{
+    height:20px;
+}
+</style>
 
 </head>
 
@@ -32,7 +37,7 @@
 	</div>
 
 	<div class="main">
-		<div class="left" style="width: 200px; float: left; margin-top: 20px;">
+		<div class="left" style="width: 200px; float: left; margin-top: 20px; margin-left:5px;">
 		  <div id="tree-nav"></div>
 		</div>
 		
@@ -50,28 +55,28 @@
                 $("#tree-nav").kendoTreeView({
                     dataSource: [
                         {
-                            text: "项目管理", imageUrl: "../../content/web/treeview/mail.png"
+                            text: "项目管理", imageUrl: "/images/product.png"
                         },
 
                         {
-                            text: "合同管理", expanded: true, imageUrl: "../../content/web/treeview/search.png",
+                            text: "合同管理", expanded: true, imageUrl: "/images/contract.png",
                             items: [
-                                { text: "采购合同", imageUrl: "../../content/web/treeview/search.png" },
-                                { text: "客户合同", imageUrl: "../../content/web/treeview/search.png" },
-                                { text: "成本设备清单", imageUrl: "../../content/web/treeview/search.png"}
+                                { text: "采购合同", imageUrl: "/images/order.png" },
+                                { text: "客户合同", imageUrl: "/images/ccontract.png" },
+                                { text: "成本设备清单", imageUrl: "/images/ccontract.png"}
                             ]
                         },
                         {
-                            text: "采购管理", imageUrl: "../../content/web/treeview/settings.png"
+                            text: "采购管理", imageUrl: "/images/ccontract.png"
                         },
                         {
-                            text: "财务", imageUrl: "../../content/web/treeview/edit.png"
+                            text: "财务", imageUrl: "/images/ccontract.png"
                         },
                         {
-                            text: "权限管理", imageUrl: "../../content/web/treeview/mail.png",
+                            text: "权限管理", imageUrl: "/images/user.png",
                             items: [
-                                    { text: "用户管理", imageUrl: "../../content/web/treeview/search.png" },
-                                    { text: "角色管理", imageUrl: "../../content/web/treeview/search.png" }
+                                    { text: "用户管理", imageUrl: "/images/toy.png" },
+                                    { text: "角色管理", imageUrl: "/images/ccontract.png" }
                                 ]
                         }
                     ],
