@@ -43,6 +43,10 @@
 		<property name="dao" ref="commonDao"></property>
 	</bean>
 
+	<bean name="projectService" class="com.pms.service.service.impl.ProjectServiceImpl" id="projectService">
+		<property name="dao" ref="commonDao"></property>
+	</bean>
+
 
 	<bean name="reportService" class="com.pms.service.service.impl.ReportServiceImpl"
 		id="reportService">

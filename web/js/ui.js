@@ -47,9 +47,18 @@ function onLeftNavSelect(e) {
 
 	if (text == "权限管理" || text =="用户管理") {
 		loadPage("html/user/userman.html");
-	} else if (text == "角色管理") {
+	}else if (text == "项目管理"){
+		loadPage("html/project/project.html");
+	}else if (text == "角色管理") {
 		loadPage("html/user/group.html");
-	} else {
+	}else{
 		loadPage("html/local-data.html");
 	}
 }
+
+function getSelectedRowDataByGrid(gridId){
+	var grid = $("#"+gridId).data("kendoGrid");
+	var row = grid.select();
+	return grid.dataItem(row);
+}
+

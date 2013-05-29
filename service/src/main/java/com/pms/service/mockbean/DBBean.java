@@ -5,4 +5,6 @@ public class DBBean {
     public static final String USER = "user";
     
     public static final String USER_GROUP = "userGroup";
+    
+    public static final String PROJECT = "project";
 }
