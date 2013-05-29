@@ -11,11 +11,15 @@
 <script  src="js/group.js"></script>
 
 <script id="roleTemplate" type="text/x-kendo-tmpl">
-    <div id="role-edit"><img height="32px" widht="32px" src="/../../images/padlock.png" /></div>
+    <div id="role-edit" onclick="openGroupRoleWindow('#:_id#');"><img height="32px" widht="32px" src="/../../images/padlock.png" /></div>
 </script>
         
 <body>
 	<div id="roleitem" class="k-content">
-		<div id="group-grid"></div>	
+		<div  id="group-grid"></div>	
+	</div>
+	
+	<div id="group-role">
+	   <div id="group-role-select"></div>
 	</div>
 </body>

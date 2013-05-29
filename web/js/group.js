@@ -62,6 +62,10 @@ $(document).ready(function() {
 		editable : "popup",
 		toolbar : [ "create" ],
 		columns : [ {
+			field : "_id",
+			title : "ID",
+			hidden : true
+		}, {
 			field : "groupName",
 			title : "角色名"
 		}, {
@@ -71,7 +75,7 @@ $(document).ready(function() {
 			field : "roles",
 			title : "权限",
 			template : kendo.template($("#roleTemplate").html()),
-			editable: false
+			editable : false
 
 		}, {
 			command : [ "edit", {
@@ -84,4 +88,44 @@ $(document).ready(function() {
 		} ]
 
 	});
+	
+
+	 
 });
+
+function onActivate(e) {
+	
+	 $("#group-role-select").kendoMultiSelect({
+		 dataTextField: "groupName",
+         dataValueField: "_id",
+         dataSource: {
+             transport: {
+                 read: {
+                     dataType: "jsonp",
+                     url: "/service/user/group/list",
+                 }
+             }
+         },
+         height: 300
+     });
+}
+
+
+function openGroupRoleWindow(id){
+	
+   var window = $("#group-role");
+   if (!window.data("kendoWindow")) {
+	window.kendoWindow({
+        width: "315px",
+        height: "200px",
+        title: "Rams's Ten Principles of Good Design",
+        modal: true,
+        activate: onActivate
+    });
+	 window.data("kendoWindow").center();
+   }else{
+	   window.data("kendoWindow").open();
+	   window.data("kendoWindow").center();
+   }
+
+}

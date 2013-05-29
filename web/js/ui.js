@@ -30,12 +30,22 @@ function displayMsg(result) {
 
 }
 
-function loadPage(page) {
+function loadPage(page, divID) {
+	
+	if(!divID){
+		divID = "#main_right";
+	}
 	var uid = kendo.guid();
+	var url = page + "?_uid=" + uid
+	
+	if(page.indexOf("?") != -1){
+		url = page + "&_uid=" + uid
+		
+	}
 	$.ajax({
-		url : page + "?_uid=" + uid,
+		url : url,
 		success : function(data) {
-			$("#main_right").html(data);
+			$(divID).html(data);
 		},
 		error : onAjaxFail
 	});
