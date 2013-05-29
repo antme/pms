@@ -56,7 +56,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$("#grid").kendoGrid({
+	$("#group-grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
 		editable : "popup",
