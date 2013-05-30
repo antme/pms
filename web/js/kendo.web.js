@@ -16421,8 +16421,12 @@ if (typeof kendo_module === "undefined") {
             } else {
                 for (idx = 0, length = that.columns.length; idx < length; idx++) {
                     column = that.columns[idx];
+					var colStyle = "";
+					if(column.editHidden){
+						colStyle = "edit-hidden";
+					}
                     if (!column.command) {
-                        html += '<div class="k-edit-label"><label for="' + column.field + '">' + (column.title || column.field || "") + "</label></div>";
+                        html += '<div class="k-edit-label ' + colStyle +'"><label for="' + column.field + '">' + (column.title || column.field || "") + "</label></div>";
                         if ((!model.editable || model.editable(column.field)) && column.field) {
                             fields.push({
                                 field: column.field,
@@ -16430,7 +16434,7 @@ if (typeof kendo_module === "undefined") {
                                 editor: column.editor,
                                 values: column.values
                             });
-                            html += "<div " + kendo.attr("container-for") + '="' + column.field + '" class="k-edit-field"></div>';
+                            html += "<div " + kendo.attr("container-for") + '="' + column.field + '" class="k-edit-field ' + colStyle +'"></div>';
                         } else {
                             var state = {
                                 storage: {},
@@ -16440,7 +16444,7 @@ if (typeof kendo_module === "undefined") {
                             if (state.count > 0) {
                                 tmpl = proxy(tmpl, state.storage);
                             }
-                            html += '<div class="k-edit-field">' + tmpl(model) + "</div>";
+                            html += '<div class="k-edit-field ' + colStyle +'">' + tmpl(model) + "</div>";
                         }
                     } else if (column.command) {
                         tempCommand = getCommand(column.command, "edit");

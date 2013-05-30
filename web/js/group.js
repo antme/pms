@@ -38,10 +38,6 @@ $(document).ready(function() {
 			model : {
 				id : "_id",
 				fields : {
-					_id : {
-						editable : false,
-						nullable : true
-					},
 					description : {
 						validation : {
 							required : true
@@ -69,7 +65,8 @@ $(document).ready(function() {
 		columns : [ {
 			field : "_id",
 			title : "ID",
-			hidden : true
+			hidden : true,
+			editHidden: true
 		}, {
 			field : "groupName",
 			title : "角色名"
@@ -80,7 +77,7 @@ $(document).ready(function() {
 			field : "roles",
 			title : "权限",
 			template : kendo.template($("#roleTemplate").html()),
-			editable : false
+			editHidden: true
 
 		}, {
 			command : [ "edit", {
