@@ -1,134 +1,76 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <style>
 .k-grid-toolbar {
 	height: 25px;
 }
+
+.pro-tab {
+    width: 500px;
+    padding: 40px 0 0 0;
+    float: right;
+}
 </style>
+
+<script  src="js/project.js"></script>
+
+<script type="text/x-kendo-template" id="template">
+	<a class="k-button" href="\#" onclick="return toolbar_delete()">删除</a>
+	<a class="k-button" href="\#" onclick="return toolbar_projectApprove()">正式立项</a>
+	<a class="k-button" href="\#" onclick="toolbar_addNewProject();">新增</a>
+</script>
+
 <body>
 	<div id="projectList" class="k-content">
 		<div id="grid"></div>
-		
-		<script type="text/x-kendo-template" id="template">
-				<a class="k-button" href="\#" onclick="return toolbar_delete()">删除</a>
-				<a class="k-button" href="\#" onclick="return toolbar_projectApprove()">正式立项</a>
-        </script>
-        
-		<script>
-			
-			function toolbar_delete() {
-				var rowData = getSelectedRowDataByGrid("grid");
-				alert("Delete the row _id: " + rowData._id);
-			  	console.log("Toolbar command is clicked!");
-			  	return false;
-			};
-			
-			function toolbar_projectApprove() {
-				var rowData = getSelectedRowDataByGrid("grid");
-				alert("Approved prject _id: " + rowData._id);
-				console.log("Toolbar command is clicked!");
-				return false;
-			};
-				
-			var dataSource = new kendo.data.DataSource({
-				transport : {
-					read : {
-						url : "../service/project/list",
-						dataType : "jsonp"
-					},
-					update : {
-						url : "../service/project/update",
-						dataType : "jsonp",
-						method : "post"
-					},
-					create : {
-						url : "../service/project/add",
-						dataType : "jsonp"
-					},
-					//	parameterMap : function(options, operation) {
-						//if (operation !== "read" && options.models) {
-							//return {
-								//models : kendo.stringify(options.models)
-							//};
-						//}
-					//},
-					
-					method : "post"
-				},
-				pageSize: 5,
-                //serverPaging: true,
-                //serverSorting: true,
-                //serverFiltering: true,
-				//batch : true,
-				
-                schema : {
-					model : {
-						id : "_id",
-						fields : {
-							_id : {
-								editable : false,
-								nullable : true
-							},
-							projectName : {
-								validation : {
-									required : true
-								}
-							}
-						}
-					}//,
-					//data: "data",
-					//total: "totalCount"
-				},
-			});
-
-			$("#grid").kendoGrid({
-				dataSource : dataSource,
-				pageable : {
-					pageSize: 5,
-					buttonCount:5,
-					//input:true,
-					//pageSizes:true
-				},
-				editable : "popup",
-				toolbar : [ {name: "create", text: "添加"},{ template: kendo.template($("#template").html()) } ],
-				selectable: "multiple, row",
-                sortable: {
-                    mode: "multiple",
-                    allowUnsort: true
-                },
-				columns : [ {
-					field : "projectCode",
-					title : "项目编号"
-				}, {
-					field : "projectName",
-					title : "项目名"
-				}, {
-					field : "projectStatus",
-					title : "项目状态"
-				}, {
-					field : "projectType",
-					title : "项目类型"
-				}, {
-					field : "projectManager",
-					title : "PM"
-				}, {
-					field : "customerName",
-					title : "客户名"
-				}, {
-					field : "totalAmount",
-					title : "项目总金额"
-				}, {
-					field : "invoiceAmount",
-					title : "开票金额%"
-				}, {
-					field : "getAmount",
-					title : "到款金额%"
-				}, {
-					field : "purchaseAmount",
-					title : "采购金额%"
-				}]
-
-			});
-		</script>
-
+	</div>
+	
+	<div id="addNewProject">
+		<div id="forecast">
+                <div id="tabstrip">
+                    <ul>
+                        <li class="k-state-active">
+                            项目基本信息1
+                        </li>
+                        <li>
+                            项目基本信息2
+                        </li>
+                        <li>
+                            项目基本信息3
+                        </li>
+                        <li>
+                            项目基本信息4
+                        </li>
+                        <li>
+                            项目基本信息5
+                        </li>
+                    </ul>
+                    <div>
+                        <div class="pro-tab">
+                            <h2>项目基本信息1</h2>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="pro-tab">
+                            <h2>项目基本信息2</h2>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="pro-tab">
+                            <h2>项目基本信息3</h2>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="pro-tab">
+                            <h2>项目基本信息4</h2>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="pro-tab">
+                            <h2>项目基本信息5</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
 	</div>
 </body>
