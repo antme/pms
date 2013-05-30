@@ -161,8 +161,8 @@ function openGroupRoleWindow(id) {
 	var window = $("#group-role");
 	if (!window.data("kendoWindow")) {
 		window.kendoWindow({
-			width : "315px",
-			height : "200px",
+			width : "415px",
+			height : "500px",
 			title : "选择权限",
 			modal : true,
 			activate : onActivate
