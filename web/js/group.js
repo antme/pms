@@ -1,5 +1,7 @@
+var groupId;
+var dataSource;
 $(document).ready(function() {
-	var dataSource = new kendo.data.DataSource({
+	dataSource = new kendo.data.DataSource({
 		transport : {
 			read : {
 				url : "../service/user/group/list",
@@ -60,7 +62,10 @@ $(document).ready(function() {
 		dataSource : dataSource,
 		pageable : true,
 		editable : "popup",
-		toolbar : [ "create" ],
+		toolbar : [  {
+			name : "create",
+			text : "创建角色"
+		} ],
 		columns : [ {
 			field : "_id",
 			title : "ID",
@@ -88,44 +93,87 @@ $(document).ready(function() {
 		} ]
 
 	});
-	
 
-	 
+	$("#role-save").click(function() {
+		var multiselect = $("#group-role-select").data("kendoMultiSelect");
+		// get the value of the multiselect.
+		var value = multiselect.value();
+		var data = dataSource.data();
+		var length = data.length;
+		for (i = 0; i < length; i++) {
+			if (data[i]._id == groupId) {
+				var up = dataSource.at(i);
+				up.set("roles", value);
+				break;
+			}
+		}
+
+		dataSource.sync();
+	});
+
+	$("#group-role-select").kendoMultiSelect({
+		dataTextField : "description",
+		dataValueField : "_id",
+		placeholder : "选择权限...",
+		dataSource : {
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "/service/user/role/list",
+				}
+			}
+		},
+		height : 300
+	});
+
+	$("#group-role").hide();
+
 });
 
 function onActivate(e) {
-	
-	 $("#group-role-select").kendoMultiSelect({
-		 dataTextField: "groupName",
-         dataValueField: "_id",
-         dataSource: {
-             transport: {
-                 read: {
-                     dataType: "jsonp",
-                     url: "/service/user/group/list",
-                 }
-             }
-         },
-         height: 300
-     });
+	var multiselect = $("#group-role-select").data("kendoMultiSelect");
+	var data = dataSource.data();
+	var length = data.length;
+	multiselect.value([]);
+	console.log(groupId);
+	var roles;
+	for (i = 0; i < length; i++) {
+		console.log(data[i].id + "===" + groupId);
+		if (data[i].id == groupId) {
+			var up = data[i];
+			roles = up.roles;
+			console.log(roles);
+			if (roles) {
+				var upRoles = [];
+				for (j = 0; j < roles.length; j++) {
+					upRoles[j] = roles[j];
+				}
+				console.log(upRoles);
+				multiselect.value(upRoles);
+			}
+			break;
+
+		}
+	}
 }
 
 
-function openGroupRoleWindow(id){
-	
-   var window = $("#group-role");
-   if (!window.data("kendoWindow")) {
-	window.kendoWindow({
-        width: "315px",
-        height: "200px",
-        title: "Rams's Ten Principles of Good Design",
-        modal: true,
-        activate: onActivate
-    });
-	 window.data("kendoWindow").center();
-   }else{
-	   window.data("kendoWindow").open();
-	   window.data("kendoWindow").center();
-   }
+function openGroupRoleWindow(id) {
+	groupId = id;
+	$("#group-role").show();
+	var window = $("#group-role");
+	if (!window.data("kendoWindow")) {
+		window.kendoWindow({
+			width : "315px",
+			height : "200px",
+			title : "选择权限",
+			modal : true,
+			activate : onActivate
+		});
+		window.data("kendoWindow").center();
+	} else {
+		window.data("kendoWindow").open();
+		window.data("kendoWindow").center();
+	}
 
 }

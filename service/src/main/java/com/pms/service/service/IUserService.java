@@ -27,5 +27,7 @@ public interface IUserService {
     
     
     public Map<String, Object> listUsers();
+
+    public Map<String, Object> listGroupRoleItems(Map<String, Object> parameters);
     
 }

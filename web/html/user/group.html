@@ -11,7 +11,7 @@
 <script  src="js/group.js"></script>
 
 <script id="roleTemplate" type="text/x-kendo-tmpl">
-    <div id="role-edit" onclick="openGroupRoleWindow('#:_id#');"><img height="32px" widht="32px" src="/../../images/padlock.png" /></div>
+    <div id="role-edit" onclick="openGroupRoleWindow('#:id#');"><img height="32px" widht="32px" src="/../../images/padlock.png" /></div>
 </script>
         
 <body>
@@ -20,6 +20,8 @@
 	</div>
 	
 	<div id="group-role">
-	   <div id="group-role-select"></div>
+	   <div id="group-role-select">
+	   </div>
+	   <button class="k-button" id="role-save">保存</button>
 	</div>
 </body>

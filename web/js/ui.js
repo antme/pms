@@ -4,7 +4,6 @@ var isLogin = false;
 
 $(document).ready(function() {
 	var urlStr = window.document.location.href;
-	console.log(urlStr);
 	page = jQuery.url.setUrl(urlStr).attr("anchor");
 	if (!page) {
 		page = "html/local-data.html";
