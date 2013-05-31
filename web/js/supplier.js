@@ -3,19 +3,19 @@ $(document).ready(function () {
         dataSource = new kendo.data.DataSource({
             transport: {
                 read:  {
-                    url: crudServiceBaseUrl + "/Products",
+                    url: crudServiceBaseUrl + "/suppliers/list",
                     dataType: "jsonp"
                 },
                 update: {
-                    url: crudServiceBaseUrl + "/Products/Update",
+                    url: crudServiceBaseUrl + "/suppliers/update",
                     dataType: "jsonp"
                 },
                 destroy: {
-                    url: crudServiceBaseUrl + "/Products/Destroy",
+                    url: crudServiceBaseUrl + "/suppliers/destroy",
                     dataType: "jsonp"
                 },
                 create: {
-                    url: crudServiceBaseUrl + "/Products/Create",
+                    url: crudServiceBaseUrl + "/suppliers/create",
                     dataType: "jsonp"
                 },
                 parameterMap: function(options, operation) {
