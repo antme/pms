@@ -36,7 +36,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
 
     private static Logger logger = LogManager.getLogger(CommonDaoMongoImpl.class);
     
-    public String add(Map<String, Object> data, String collection) {
+    public Map<String, Object> add(Map<String, Object> data, String collection) {
   
 //        logger.debug(String.format("Add data into collection[%s] with parameters [%s]", collection, data));
         Map<String, Object> clone = DBQueryUtil.generateQueryFields(data);
@@ -48,7 +48,8 @@ public class CommonDaoMongoImpl implements ICommonDao {
         doc.put(ApiConstants.CREATED_ON, date.getTime());
         doc.put(ApiConstants.UPDATED_ON, date.getTime());
         WriteResult result = this.getConnection(ConfigurationManager.getDbName(), collection).insert(doc);
-        return result.getError() == null ? id.toString() : null;
+        doc.put(ApiConstants.MONGO_ID, id.toString());
+        return result.getError() == null ? doc : null;
     }
 
     public boolean addBatch(List<Map<String, Object>> data, String collection) {
@@ -217,7 +218,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
      *            collection name
      * @return return WriteResult or NUll if no "_id" passed to
      */
-    public boolean updateById(Map<String, Object> parameters, String collection) {
+    public Map<String, Object> updateById(Map<String, Object> parameters, String collection) {
         Map<String, Object> clone = DBQueryUtil.generateQueryFields(parameters);
         WriteResult result = null;
         if (clone.get(ApiConstants.MONGO_ID) != null) {
@@ -228,12 +229,15 @@ public class CommonDaoMongoImpl implements ICommonDao {
 
             result = this.getConnection(ConfigurationManager.getDbName(), collection).update(new BasicDBObject(ApiConstants.MONGO_ID, new ObjectId(id)),
                     new BasicDBObject("$set", doc));
+            clone.put(ApiConstants.MONGO_ID, id);
+            return result.getError() == null ? clone : null;
 
         }
-        return result.getError() == null ? true : false;
+        
+        return null;
 
     }
-    public boolean updateNoDateById(Map<String, Object> parameters, String collection) {
+    public Map<String, Object> updateNoDateById(Map<String, Object> parameters, String collection) {
         Map<String, Object> clone = DBQueryUtil.generateQueryFields(parameters);
         WriteResult result = null;
         if (clone.get(ApiConstants.MONGO_ID) != null) {
@@ -243,9 +247,10 @@ public class CommonDaoMongoImpl implements ICommonDao {
 
             result = this.getConnection(ConfigurationManager.getDbName(), collection).update(new BasicDBObject(ApiConstants.MONGO_ID, new ObjectId(id)),
                     new BasicDBObject("$set", doc));
-
+            clone.put(ApiConstants.MONGO_ID, id);
+            return result.getError() == null ? clone : null;
         }
-        return result.getError() == null ? true : false;
+        return null;
 
     }    
    

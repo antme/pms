@@ -84,8 +84,8 @@ public class UserController extends AbstractController {
     @RequestMapping("/group/add")
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void addGroupItems(HttpServletRequest request, HttpServletResponse response) {
-        userService.updateUserGroup(parserJsonParameters(request,  false));
-        responseWithData(null, request, response, "add_success");
+
+        responseWithData(userService.updateUserGroup(parserJsonParameters(request,  false)), request, response, "add_success");
     }
     
     @RequestMapping("/group/delete")

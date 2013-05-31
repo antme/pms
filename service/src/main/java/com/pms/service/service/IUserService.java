@@ -20,7 +20,7 @@ public interface IUserService {
     public Map<String, Object> listGroups();
     
     
-    public void updateUserGroup(Map<String, Object> userGroup);
+    public Map<String, Object> updateUserGroup(Map<String, Object> userGroup);
     
     
     public void deleteUserGroup(Map<String, Object> userGroup);
