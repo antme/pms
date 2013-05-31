@@ -100,6 +100,8 @@ $(document).ready(function() {
 	});
 	
 	$("#addNewProject").hide();
+	
+	
 });		
 
 	function toolbar_delete() {
@@ -117,8 +119,8 @@ $(document).ready(function() {
 	};
 	
 	function onActivate(e) {
-		
-	}
+		console.log("Add new project window activate........");
+	};
 	
 	function toolbar_addNewProject() {
 		console.log("add new project##############");
@@ -145,7 +147,30 @@ $(document).ready(function() {
                 }
             }
         });
+	};//end toolbar_addNewProject
 
-	}
-		
+	var proStatusItems = [{ text: "立项", value: "1" }, { text: "预立项", value: "2" }, { text: "草稿", value: "3" }];
+	$("#project-status").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+		optionLabel : "选择项目状态...",
+		dataSource : proStatusItems
+	});
+	var proCategoryItems = [{ text: "产品", value: "1" }, { text: "工程", value: "2" }, { text: "服务", value: "3" }];
+	$("#project-category").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+		optionLabel : "选择项目类型...",
+		dataSource : proCategoryItems
+	});
+	
+	var proManagerItems = [{ text: "Danny", value: "1" }, { text: "Dylan", value: "2" }, { text: "Jacky", value: "3" }];
+	$("#project-manager").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择项目经理...",
+		dataSource : proManagerItems,
+	});
+	
+	
 	
