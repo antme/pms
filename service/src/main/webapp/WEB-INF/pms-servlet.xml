@@ -47,5 +47,9 @@
 		<property name="projectService" ref="projectService"></property>
 	</bean>
 
+	<bean name="customerController" class="com.pms.service.controller.CustomerController"
+		id="customerController">
+		<property name="customerService" ref="customerService"></property>
+	</bean>
 
 </beans>

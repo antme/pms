@@ -5,11 +5,17 @@
 	height: 25px;
 }
 
-.pro-tab {
-    width: 500px;
-    padding: 40px 0 0 0;
-    float: right;
+.pro-tabss {
+    height: 500px;
 }
+
+.pro-dropdownlist{
+	width:250px;
+}
+
+.demo-section {
+            width: 300px;
+        }
 </style>
 
 <script  src="js/project.js"></script>
@@ -26,51 +32,80 @@
 	</div>
 	
 	<div id="addNewProject">
-		<div id="forecast">
-                <div id="tabstrip">
-                    <ul>
-                        <li class="k-state-active">
-                            项目基本信息1
-                        </li>
-                        <li>
-                            项目基本信息2
-                        </li>
-                        <li>
-                            项目基本信息3
-                        </li>
-                        <li>
-                            项目基本信息4
-                        </li>
-                        <li>
-                            项目基本信息5
-                        </li>
-                    </ul>
-                    <div>
-                        <div class="pro-tab">
-                            <h2>项目基本信息1</h2>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="pro-tab">
-                            <h2>项目基本信息2</h2>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="pro-tab">
-                            <h2>项目基本信息3</h2>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="pro-tab">
-                            <h2>项目基本信息4</h2>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="pro-tab">
-                            <h2>项目基本信息5</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
+		<div>
+			<a class="k-button" href="\#" onclick="addNewProjectSave()">保存</a>
+		</div>
+	
+		<div>
+           <div id="tabstrip">
+               <ul>
+                   <li class="k-state-active">
+                   	基本信息
+                   </li>
+                   <li>
+                                                            客户信息
+                   </li>
+                   <li>
+                                                            商务信息
+                   </li>
+                   <li>
+                                                            合同信息
+                   </li>
+                   <li>
+                                                             成本设备清单
+                   </li>
+               </ul>
+               <div>
+                   <div class="pro-tab">
+                       <div>
+					
+			                <label for="project-code">项目编号:</label>
+			                <input type="text" id="project-code" value="项目编号" class="k-textbox" />
+			                <br/>
+			            
+			                <label for="project-name">项目名称:</label>
+			                <input type="text" id="project-name" value="项目名称" class="k-textbox" />
+			                <br/>
+			                
+			                <label for="project-status">项目状态:</label>
+			                <input id="project-status" class="pro-dropdownlist"></input>
+			                <br/>
+			                
+			                <label for="project-category">项目类型:</label>
+			                <input id="project-category" class="pro-dropdownlist"></input>
+			                <br/>
+			                
+			                <label for="project-manager">项目经理:</label>
+			                <input id="project-manager" class="pro-dropdownlist"></input>
+			                
+			                
+            
+						</div>
+                   </div>
+               </div>
+               <div>
+                   <div class="pro-tab">
+                       <label for="project-code">客户名称:</label>
+		                <input type="text" id="customer-name" value="客户名称" class="k-textbox" />
+		                <br/>
+                   </div>
+               </div>
+               <div>
+                   <div class="pro-tab">
+                       <h2>商务信息</h2>
+                   </div>
+               </div>
+               <div>
+                   <div class="pro-tab">
+                       <h2>合同信息</h2>
+                   </div>
+               </div>
+               <div>
+                   <div class="pro-tab">
+                       <h2>成本设备清单</h2>
+                   </div>
+               </div>
+           </div>
+         </div>
 	</div>
 </body>

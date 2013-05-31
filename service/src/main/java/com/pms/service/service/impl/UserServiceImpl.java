@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IUserService;
@@ -32,15 +33,15 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     }
 
     @Override
-    public void updateUser(Map<String, Object> userInfoMap) {
+    public Map<String, Object> updateUser(Map<String, Object> userInfoMap) {
 
         Map<String, Object> group = dao.findOne("_id", userInfoMap.get("_id"), DBBean.USER);
         if (group != null) {
             userInfoMap.put("_id", group.get("_id"));
-            dao.updateById(userInfoMap, DBBean.USER);
+            return dao.updateById(userInfoMap, DBBean.USER);
         } else {
             validate(userInfoMap, "register");
-            dao.add(userInfoMap, DBBean.USER);
+            return dao.add(userInfoMap, DBBean.USER);
         }
 
     }
@@ -80,7 +81,7 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         return this.dao.list(null, DBBean.ROLE_ITEM);
     }
 
-    public Map<String, Object> listUsers() {
+    public Map<String, Object> listUsers() {        
         return this.dao.list(null, DBBean.USER);
 
     }

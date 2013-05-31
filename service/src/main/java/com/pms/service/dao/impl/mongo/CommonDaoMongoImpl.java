@@ -224,6 +224,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
         if (clone.get(ApiConstants.MONGO_ID) != null) {
             String id = clone.get(ApiConstants.MONGO_ID).toString();
             clone.remove(ApiConstants.MONGO_ID);
+            clone.remove(ApiConstants.CREATED_ON);
             clone.put(ApiConstants.UPDATED_ON, new Date().getTime());
             BasicDBObject doc = new BasicDBObject(clone);
 
