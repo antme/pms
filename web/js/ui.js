@@ -61,6 +61,8 @@ function onLeftNavSelect(e) {
 		loadPage("html/project/project.html");
 	}else if (text == "角色管理") {
 		loadPage("html/user/group.html");
+	}else if (text == "客户管理") {
+		loadPage("html/customer/customer.html");
 	}else{
 		loadPage("html/local-data.html");
 	}
