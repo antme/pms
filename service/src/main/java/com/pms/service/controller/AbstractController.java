@@ -136,8 +136,13 @@ public abstract class AbstractController {
                 if (msgKey != null) {
                     displayMsg = "displayMsg({\"msg\": \"" + ConfigurationManager.getSystemMessage(msgKey) + "\"});";
                 }
-                if (result.get("data") != null) {
-                    jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result.get("data")) + ");";
+                if (result != null && result instanceof Map) {
+                    
+                    if (result.get("data") != null) {
+                        jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result.get("data")) + ");";
+                    }else{
+                        jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result) + ");";
+                    }
                 } else {
                     jsonReturn = request.getParameter("callback") + "([]);";
                 }
