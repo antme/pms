@@ -7126,8 +7126,14 @@ if (typeof kendo_module === "undefined") {
                     if (field) {
                         if (value instanceof ObservableArray) {
                             for (length = value.length; idx < length; idx++) {
-                                values[idx] = value[idx].get(field);
+							console.log(typeof value[idx]);
+								if(typeof value[idx] === "string"){
+									values[idx] = value[idx];
+								}else{
+									values[idx] = value[idx].get(field);
+								}
                             }
+							
                             value = values;
                         } else if (value instanceof ObservableObject) {
                             value = value.get(field);
