@@ -59,7 +59,11 @@
 		<property name="dao" ref="commonDao"></property>
 	</bean>
 	
-	
+	<bean name="customerService" class="com.pms.service.service.impl.CustomerServiceImpl"
+		id="customerService">
+		<property name="dao" ref="commonDao"></property>
+	</bean>
+		
 	<bean
         class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetClass" value="com.pms.service.annotation.InitBean" />
