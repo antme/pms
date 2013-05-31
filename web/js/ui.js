@@ -4,7 +4,6 @@ var isLogin = false;
 
 $(document).ready(function() {
 	var urlStr = window.document.location.href;
-	console.log(urlStr);
 	page = jQuery.url.setUrl(urlStr).attr("anchor");
 	if (!page) {
 		page = "html/local-data.html";
@@ -63,6 +62,8 @@ function onLeftNavSelect(e) {
 		loadPage("html/user/group.html");
 	}else if (text == "客户管理") {
 		loadPage("html/customer/customer.html");
+	}else if (text == "供应商") {
+		loadPage("html/supplier/supplier.html");
 	}else{
 		loadPage("html/local-data.html");
 	}

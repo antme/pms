@@ -18,7 +18,7 @@ public interface ICommonDao {
      *            the db collection name
      * @return return the id of the document
      */
-    public String add(Map<String, Object> map, String collection);
+    public Map<String, Object> add(Map<String, Object> map, String collection);
 
     /**
      * Add batch data into Mongo collection
@@ -59,9 +59,9 @@ public interface ICommonDao {
     
     public Map<String, Object> listToOneMapByKey(Map<String, Object> parameters, String collection, String mapKey);
 
-    public boolean updateById(Map<String, Object> parameters, String collection);
+    public Map<String, Object> updateById(Map<String, Object> parameters, String collection);
     
-    public boolean updateNoDateById(Map<String, Object> parameters, String collection);
+    public Map<String, Object> updateNoDateById(Map<String, Object> parameters, String collection);
     
 
     public DBCollection getConnection(String dbName, String collection);

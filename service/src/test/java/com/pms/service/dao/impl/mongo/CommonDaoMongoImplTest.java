@@ -29,10 +29,7 @@ public class CommonDaoMongoImplTest extends BaseTestCase {
     }
 
     public void testAdd() {
-        String id1 = commonDao.add(ApiTestHelper.loadJsonMapTestData(CommonDaoMongoImplTest.class, "data", "data1"), TEST_COLLECTION_NAME);
-        String id2 = commonDao.add(ApiTestHelper.loadJsonMapTestData(CommonDaoMongoImplTest.class, "data", "data2"), TEST_COLLECTION_NAME);
-        assertNotNull(id1);
-        assertNotNull(id2);
+
 
     }
 
@@ -86,17 +83,7 @@ public class CommonDaoMongoImplTest extends BaseTestCase {
 
     public void testListAndMergeOne() {
 
-        String id1 = commonDao.add(ApiTestHelper.loadJsonMapTestData(CommonDaoMongoImplTest.class, "data", "data1"), TEST_COLLECTION_NAME);
-        commonDao.add(ApiTestHelper.loadJsonMapTestData(CommonDaoMongoImplTest.class, "data", "data2"), TEST_COLLECTION_NAME);
-        commonDao.add(ApiTestHelper.loadJsonMapTestData(CommonDaoMongoImplTest.class, "data", "data3"), TEST_COLLECTION_NAME);
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(ApiConstants.LIMIT_KEYS, new String[] { "name" });
-        Map<String, Object> result = this.commonDao.listToOneMapAndIdAsKey(parameters, TEST_COLLECTION_NAME);
-        System.out.println(result);
-        Map<String, Object> map = (Map<String, Object>) result.get(id1);
-        System.out.println(result.get(id1));
-        assertNotNull(result.get(id1));
 
     }
 
@@ -119,38 +106,7 @@ public class CommonDaoMongoImplTest extends BaseTestCase {
 
     public void testListInQuery() {
 
-        String id1 = commonDao.add(ApiTestHelper.loadJsonMapTestData(CommonDaoMongoImplTest.class, "data", "data1"), TEST_COLLECTION_NAME);
-        String id2 = commonDao.add(ApiTestHelper.loadJsonMapTestData(CommonDaoMongoImplTest.class, "data", "data2"), TEST_COLLECTION_NAME);
 
-        List<String> ids = new ArrayList<String>();
-        ids.add(id1);
-        ids.add(id2);
-
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
-        Map<String, Object> result = this.commonDao.list(parameters, TEST_COLLECTION_NAME);
-        List<Map<String, Object>> results = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
-        assertNotNull(results);
-        assertEquals(ids.size(), results.size());
-
-        parameters.clear();
-        parameters.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
-        parameters.put("name", "angry");
-        result = this.commonDao.list(parameters, TEST_COLLECTION_NAME);
-        results = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
-        assertNotNull(results);
-        assertEquals(1, results.size());
-
-        String id3 = commonDao.add(ApiTestHelper.loadJsonMapTestData(CommonDaoMongoImplTest.class, "data", "data3"), TEST_COLLECTION_NAME);
-        parameters.clear();
-        List<String> dev = new ArrayList<String>();
-        dev.add("chengos");
-        dev.add("pms");
-        parameters.put("developer", new DBQuery(DBQueryOpertion.IN, dev));
-        result = this.commonDao.list(parameters, TEST_COLLECTION_NAME);
-        results = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
-        assertNotNull(results);
-        assertEquals(3, results.size());
 
     }
 

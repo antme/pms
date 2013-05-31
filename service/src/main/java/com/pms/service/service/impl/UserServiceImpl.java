@@ -68,10 +68,15 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     }
 
     public Map<String, Object> listRoleItems() {
-        return this.dao.list(null, DBBean.USER_GROUP);
+        return this.dao.list(null, DBBean.ROLE_ITEM);
     }
 
     public Map<String, Object> listGroups() {
+        return this.dao.list(null, DBBean.USER_GROUP);
+    }
+    
+    public Map<String, Object> listGroupRoleItems(Map<String, Object> parameters){
+        
         return this.dao.list(null, DBBean.ROLE_ITEM);
     }
 
@@ -80,14 +85,16 @@ public class UserServiceImpl extends AbstractService implements IUserService {
 
     }
 
-    public void updateUserGroup(Map<String, Object> userGroup) {
+    public Map<String, Object> updateUserGroup(Map<String, Object> userGroup) {
         Map<String, Object> group = dao.findOne("_id", userGroup.get("_id"), DBBean.USER_GROUP);
         if (group != null) {
             userGroup.put("_id", userGroup.get("_id"));
             dao.updateById(userGroup, DBBean.USER_GROUP);
         } else {
-            dao.add(userGroup, DBBean.USER_GROUP);
+            return dao.add(userGroup, DBBean.USER_GROUP);
         }
+        
+        return null;
     }
 
     public void deleteUserGroup(Map<String, Object> userGroup) {

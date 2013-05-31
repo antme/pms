@@ -4,4 +4,6 @@ public class RoleBean {
 
     public static final String ROLE_ID = "roleID";
     public static final String ROLE_DESC = "description";
+    public static final String ROLES = "roles";
+    
 }

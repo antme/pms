@@ -2,6 +2,10 @@ body {
 	background-color: #f6f6f6;
 }
 
+.edit-hidden{
+	display:none;
+}
+
 .view-login {
 	padding-top: 0;
 	background-color: #142849;

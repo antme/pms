@@ -1,4 +1,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+<head>
+<script type="text/javascript" src="js/group.js"></script>
 <style>
 .k-grid-toolbar {
 	height: 25px;
@@ -8,18 +11,19 @@
 	cursor: pointer;
 }
 </style>
-<script  src="js/group.js"></script>
-
+</head>
 <script id="roleTemplate" type="text/x-kendo-tmpl">
-    <div id="role-edit" onclick="openGroupRoleWindow('#:_id#');"><img height="32px" widht="32px" src="/../../images/padlock.png" /></div>
+    <div id="role-edit" onclick="openGroupRoleWindow('#:id#');"><img height="32px" widht="32px" src="/../../images/padlock.png" /></div>
 </script>
-        
+
 <body>
 	<div id="roleitem" class="k-content">
-		<div  id="group-grid"></div>	
+		<div id="group-grid"></div>
 	</div>
-	
+
 	<div id="group-role">
-	   <div id="group-role-select"></div>
+		<div id="group-role-select"></div>
+		<button class="k-button" id="role-save">保存</button>
 	</div>
 </body>
+</html>
