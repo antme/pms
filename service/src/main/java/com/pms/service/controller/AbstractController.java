@@ -117,12 +117,12 @@ public abstract class AbstractController {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
-        if (data != null) {
-            data.put("status", status.toString());
-            result = data;          
-        } else {
-            result.put("status", status.toString());
-        }
+//        if (data != null) {
+//            data.put("status", status.toString());
+//            result = data;          
+//        } else {
+//            result.put("status", status.toString());
+//        }
 
         response.setContentType("text/plain;charset=UTF-8");
 
