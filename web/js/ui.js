@@ -60,6 +60,8 @@ function onLeftNavSelect(e) {
 		loadPage("html/project/project.html");
 	}else if (text == "角色管理") {
 		loadPage("html/user/group.html");
+	}else if (text == "供应商") {
+		loadPage("html/supplier/supplier.html");
 	}else{
 		loadPage("html/local-data.html");
 	}
