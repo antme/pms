@@ -2,6 +2,37 @@ $(document).ready(function() {
 	var validator = $("#form-login").kendoValidator().data("kendoValidator");
 
 	$("#login-button").click(function() {
+		login();
+	});
+
+	$("#logout-button").click(function() {
+		$.ajax({
+			url : "../service/user/logout",
+			success : function(responsetxt) {
+				window.location = "index.html";
+			}
+		});
+
+	});
+	
+	$("#userName").keypress(function(event) {
+	
+		if(event.charCode == 13){
+			login();
+		}
+		  
+	});
+	
+	$("#password").keypress(function(event) {
+		
+		if(event.charCode == 13){
+			login();
+		}
+		  
+	});
+	
+	
+	function login(){
 		if (validator.validate()) {
 			$.ajax({
 				url : "../service/user/login",
@@ -28,16 +59,6 @@ $(document).ready(function() {
 				method : "post"
 			});
 		}
-	});
-
-	$("#logout-button").click(function() {
-		$.ajax({
-			url : "../service/user/logout",
-			success : function(responsetxt) {
-				window.location = "index.html";
-			}
-		});
-
-	});
+	};
 
 });
