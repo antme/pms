@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import com.pms.service.service.IProjectService;
 
 @Controller
-@RequestMapping("/project")
+@RequestMapping("/suppliers")
 public class SupplierController extends AbstractController {
 	
 	private static Logger logger = LogManager.getLogger(SupplierController.class);

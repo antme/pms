@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var crudServiceBaseUrl = "http://demos.kendoui.com/service",
+    var crudServiceBaseUrl = "../service",
         dataSource = new kendo.data.DataSource({
             transport: {
                 read:  {
