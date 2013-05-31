@@ -1,0 +1,75 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+.k-grid-toolbar {
+	height: 25px;
+}
+
+#role-edit {
+	cursor: pointer;
+}
+</style>
+
+        
+<body>
+	<div id="main-content" class="main-content">
+		<div id="grid"></div>
+	</div>
+<script>
+    $(document).ready(function () {
+        var crudServiceBaseUrl = "../../service/customer",
+            dataSource = new kendo.data.DataSource({
+                transport: {
+                    read:  {
+                        url: crudServiceBaseUrl + "/list",
+                        dataType: "jsonp",
+                        type : "post"
+                    },
+                    update: {
+                        url: crudServiceBaseUrl + "/update",
+                        dataType: "jsonp",
+                        type : "post"
+                    },
+                    destroy: {
+                        url: crudServiceBaseUrl + "/destroy",
+                        dataType: "jsonp",
+                        type : "post"
+                    },
+                    create: {
+                        url: crudServiceBaseUrl + "/create",
+                        dataType: "jsonp",
+                        type : "post"
+                    },
+                    parameterMap: function(options, operation) {
+                        if (operation !== "read" && options.models) {
+                            return {models: kendo.stringify(options.models)};
+                        }
+                    }
+                },
+                batch: true,
+                pageSize: 10,
+                schema: {
+                    model: {
+                        id: "_id",
+                        fields: {
+                            _id: { editable: false, nullable: true },
+                            code: { validation: { required: true } },
+                            name: { validation: { required: true } }
+                        }
+                    }
+                }
+            });
+
+        $("#grid").kendoGrid({
+            dataSource: dataSource,
+            pageable: true,
+            toolbar: [{name: "create", text:"添加"}],
+            columns: [
+                { field:"code", title: "客户编号" },
+                { field: "name", title:"客户名称" },
+                { command: [{name: "edit", text: "编辑"},{name: "destroy", text: "删除"}], title: "&nbsp;", width: "160px" }
+            ],
+            editable: "popup"
+        });
+    });
+</script>	
+</body>
