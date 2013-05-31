@@ -4,9 +4,9 @@ import java.util.Map;
 
 public interface ICustomerService {
     
-	public String create(Map<String,Object> params);
+	public Map<String,Object> create(Map<String,Object> params);
 	
-	public void update(Map<String,Object> params);
+	public Map<String,Object> update(Map<String,Object> params);
 	
 	public void destroy(Map<String,Object> params);
 	

@@ -28,8 +28,7 @@ public class CustomerController extends AbstractController {
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void addUser(HttpServletRequest request, HttpServletResponse response) {
     	Map<String,Object> obj = parserJsonParameters(request,  false);
-    	obj.put(ApiConstants.MONGO_ID, customerService.create(obj));
-    	responseWithData(obj, request, response);
+    	responseWithData(customerService.create(obj), request, response, "add_success");
     }
 
     @RequestMapping("/destroy")
@@ -39,12 +38,11 @@ public class CustomerController extends AbstractController {
     	responseWithData(null, request, response);
     }	
     
-    
     @RequestMapping("/update")
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void updateUser(HttpServletRequest request, HttpServletResponse response) {
-    	customerService.update(parserJsonParameters(request,  false));
-    	responseWithData(null, request, response, "update_success");
+    	Map<String,Object> obj = customerService.update(parserJsonParameters(request,  false));
+    	responseWithData(obj, request, response, "update_success");
     }
     
     @RequestMapping("/list")

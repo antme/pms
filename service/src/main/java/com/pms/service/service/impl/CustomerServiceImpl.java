@@ -29,13 +29,13 @@ public class CustomerServiceImpl extends AbstractService implements ICustomerSer
 	}
 
 	@Override
-	public String create(Map<String, Object> params) {
+	public Map<String,Object> create(Map<String, Object> params) {
 		return dao.add(params, DBBean.CUSTOMER);
 	}
 
 	@Override
-	public void update(Map<String, Object> params) {
-		dao.updateById(params, DBBean.CUSTOMER);
+	public Map<String,Object> update(Map<String, Object> params) {
+		return dao.updateById(params, DBBean.CUSTOMER);
 	}
 	
 	@Override
