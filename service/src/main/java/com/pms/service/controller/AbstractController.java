@@ -119,7 +119,7 @@ public abstract class AbstractController {
 
 //        if (data != null) {
 //            data.put("status", status.toString());
-//            result = data;          
+            result = data;          
 //        } else {
 //            result.put("status", status.toString());
 //        }
