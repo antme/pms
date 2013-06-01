@@ -23,7 +23,7 @@ import com.pms.service.util.DataEncrypt;
 public class InitBean {
 
     
-    public static final Set<String> loginPath = new HashSet<>();
+    public static final Set<String> loginPath = new HashSet<String>();
     /**
      * 初始化数据库
      * 
