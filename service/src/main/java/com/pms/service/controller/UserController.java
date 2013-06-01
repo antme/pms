@@ -45,7 +45,9 @@ public class UserController extends AbstractController {
 
     @RequestMapping("/login")
     public void login(HttpServletRequest request, HttpServletResponse response) {
-        responseWithKeyValue(ApiConstants.MONGO_ID, userService.login(parserJsonParameters(request,  false)), request, response);
+        String id = userService.login(parserJsonParameters(request,  false));
+        request.getSession().setAttribute("userId", id);
+        responseWithKeyValue(ApiConstants.MONGO_ID, id, request, response);
     }
 
     @RequestMapping("/info")
@@ -70,6 +72,7 @@ public class UserController extends AbstractController {
     @RequestMapping("/group/list")
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void listGroupItems(HttpServletRequest request, HttpServletResponse response) {
+        loginCheck(request);
         responseWithData(userService.listGroups(), request, response);
     }
 
@@ -84,7 +87,7 @@ public class UserController extends AbstractController {
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void addGroupItems(HttpServletRequest request, HttpServletResponse response) {
 
-        responseWithData(userService.updateUserGroup(parserJsonParameters(request,  false)), request, response, "add_success");
+        responseWithData(userService.updateUserGroup(parserJsonParameters(request,  false, true)), request, response, "add_success");
     }
     
     @RequestMapping("/group/delete")
@@ -126,14 +129,10 @@ public class UserController extends AbstractController {
     
     @RequestMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
-        if(request.getSession().getAttribute("userId") == null){
-            logger.info("Set new session userId");
-            request.getSession().setAttribute("userId", "test");
-        }else{
-            logger.info("Find session userId from request =====================");
+        if(request.getSession().getAttribute("userId") != null){           
+            request.getSession().removeAttribute("userId");
         }
-        
-        responseWithKeyValue(ApiConstants.MONGO_ID, "test", request, response);
+        responseWithData(null, request, response);
     }
 
 

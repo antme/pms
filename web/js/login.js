@@ -1,3 +1,5 @@
+
+
 $(document).ready(function() {
 	var validator = $("#form-login").kendoValidator().data("kendoValidator");
 
@@ -62,3 +64,7 @@ $(document).ready(function() {
 	};
 
 });
+
+function forceLogin(){
+	window.location.href="index.html";
+}

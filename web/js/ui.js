@@ -3,7 +3,6 @@ var page;
 $(document).ready(function() {
 	var urlStr = window.document.location.href;
 	page = jQuery.url.setUrl(urlStr).attr("anchor");
-	console.log(page);
 	if (!page) {
 		page = "html/local-data.html";
 	}
@@ -68,7 +67,6 @@ function loadPage(page, divID) {
 }
 
 function onLeftNavSelect(e) {
-	console.log(e);
 	var text = this.text(e.node);
 
 	if (text == "权限管理" || text == "用户管理") {

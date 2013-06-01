@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.web.util.NestedServletException;
 
 import com.pms.service.controller.AbstractController;
+import com.pms.service.exception.ApiLoginException;
 import com.pms.service.exception.ApiResponseException;
 
 public class ApiFilter extends AbstractController implements Filter {
@@ -29,7 +30,6 @@ public class ApiFilter extends AbstractController implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-
         try {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
@@ -38,17 +38,17 @@ public class ApiFilter extends AbstractController implements Filter {
                 Throwable t = e.getCause();
 
                 if (t instanceof ApiResponseException) {
-                    //do nothing
-                } else {
+                    // do nothing
+                } else if(t instanceof ApiLoginException){
+                    forceLogin((HttpServletRequest) request, (HttpServletResponse) response);
+                }else {
                     logger.fatal("Fatal error when user try to call API ", e);
                 }
             } else {
                 logger.fatal("Fatal error when user try to call API ", e);
             }
-            responseServerError(e.getCause(), (HttpServletRequest)request, (HttpServletResponse) response);
+            responseServerError(e.getCause(), (HttpServletRequest) request, (HttpServletResponse) response);
         }
-
-
 
     }
 

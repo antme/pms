@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.pms.service.cfg.ConfigurationManager;
+import com.pms.service.exception.ApiLoginException;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.util.ApiUtil;
@@ -28,6 +29,20 @@ public abstract class AbstractController {
         logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
 
         return parametersMap;
+    }
+    
+    public HashMap<String, Object> parserJsonParameters(HttpServletRequest request, boolean emptyParameter, boolean needLogin) {
+        if (needLogin) {
+            loginCheck(request);
+        }
+        return parserJsonParameters(request, emptyParameter);
+    }
+
+    protected void loginCheck(HttpServletRequest request) {
+        if (request.getSession().getAttribute("userId") == null) {
+            throw new ApiLoginException();
+        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -94,6 +109,17 @@ public abstract class AbstractController {
             Map<String, Object> temp = new HashMap<String, Object>();
             temp.put(key, value);
             responseWithData(temp, request, response);
+        }
+    }
+    
+    protected void forceLogin(HttpServletRequest request, HttpServletResponse response){
+        response.setContentType("text/plain;charset=UTF-8");
+        response.setContentType("application/x-javascript;charset=UTF-8");
+        ((HttpServletResponse) response).addHeader("Accept-Encoding", "gzip, deflate");
+        try {
+            response.getWriter().write("forceLogin();");
+        } catch (IOException e) {
+            logger.fatal("Write response data to client failed!", e);
         }
     }
 
