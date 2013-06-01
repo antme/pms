@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.util.NestedServletException;
 
+import com.pms.service.annotation.InitBean;
 import com.pms.service.controller.AbstractController;
 import com.pms.service.exception.ApiLoginException;
 import com.pms.service.exception.ApiResponseException;
@@ -30,7 +31,10 @@ public class ApiFilter extends AbstractController implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+
         try {
+            loginCheck((HttpServletRequest) request);
+
             filterChain.doFilter(request, response);
         } catch (Exception e) {
 
@@ -39,11 +43,11 @@ public class ApiFilter extends AbstractController implements Filter {
 
                 if (t instanceof ApiResponseException) {
                     // do nothing
-                } else if(t instanceof ApiLoginException){
-                    forceLogin((HttpServletRequest) request, (HttpServletResponse) response);
-                }else {
+                } else {
                     logger.fatal("Fatal error when user try to call API ", e);
                 }
+            } else if (e instanceof ApiLoginException) {
+                forceLogin((HttpServletRequest) request, (HttpServletResponse) response);
             } else {
                 logger.fatal("Fatal error when user try to call API ", e);
             }
@@ -57,4 +61,12 @@ public class ApiFilter extends AbstractController implements Filter {
 
     }
 
+    protected void loginCheck(HttpServletRequest request) {
+        if (InitBean.loginPath.contains(request.getPathInfo())) {
+            if (request.getSession().getAttribute("userId") == null) {
+                throw new ApiLoginException();
+            }
+        }
+
+    }
 }

@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.pms.service.annotation.LoginRequired;
 import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.annotation.RoleValidate;
 import com.pms.service.mockbean.ApiConstants;
@@ -18,6 +19,7 @@ import com.pms.service.service.IUserService;
 @Controller
 @RequestMapping("/user")
 @RoleValidate()
+@LoginRequired()
 public class UserController extends AbstractController {
     private IUserService userService = null;
 
@@ -71,8 +73,8 @@ public class UserController extends AbstractController {
     
     @RequestMapping("/group/list")
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    @LoginRequired()
     public void listGroupItems(HttpServletRequest request, HttpServletResponse response) {
-        loginCheck(request);
         responseWithData(userService.listGroups(), request, response);
     }
 
@@ -84,10 +86,11 @@ public class UserController extends AbstractController {
     }
     
     @RequestMapping("/group/add")
+    @LoginRequired()
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void addGroupItems(HttpServletRequest request, HttpServletResponse response) {
 
-        responseWithData(userService.updateUserGroup(parserJsonParameters(request,  false, true)), request, response, "add_success");
+        responseWithData(userService.updateUserGroup(parserJsonParameters(request,  false)), request, response, "add_success");
     }
     
     @RequestMapping("/group/delete")

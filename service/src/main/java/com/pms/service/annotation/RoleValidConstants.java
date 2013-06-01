@@ -8,4 +8,5 @@ public class RoleValidConstants {
     
     public static final String ROLE_LIST = "role_list";
     public static final String ROLE_LIST_DESC = "查看权限列表 ";
+
 }

@@ -9,4 +9,5 @@ public class DBBean {
     public static final String PROJECT = "project";
     
     public static final String CUSTOMER = "customer";
+    
 }
