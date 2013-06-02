@@ -13,9 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.pms.service.annotation.InitBean;
 import com.pms.service.cfg.ConfigurationManager;
-import com.pms.service.exception.ApiLoginException;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.util.ApiUtil;
@@ -25,18 +23,8 @@ import com.pms.service.util.status.ResponseStatus;
 public abstract class AbstractController {
     private static Logger logger = LogManager.getLogger(AbstractController.class);
 
-    public HashMap<String, Object> parserJsonParameters(HttpServletRequest request, boolean emptyParameter) {
-
-        HashMap<String, Object> parametersMap = readParameters(request, emptyParameter);
-        logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
-
-        return parametersMap;
-    }
-
-
-
     @SuppressWarnings("unchecked")
-    private HashMap<String, Object> readParameters(HttpServletRequest request, boolean emptyParameter) {
+    protected HashMap<String, Object> parserJsonParameters(HttpServletRequest request, boolean emptyParameter) {
         HashMap<String, Object> parametersMap = new HashMap<String, Object>();
 
         String parameters = request.getParameter(ApiConstants.JSON_PARAMETERS_LABEL);
@@ -80,6 +68,8 @@ public abstract class AbstractController {
                 parametersMap.remove("_id");
             }
         }
+        logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
+
         return parametersMap;
 
     }

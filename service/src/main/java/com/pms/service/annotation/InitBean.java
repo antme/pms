@@ -24,6 +24,8 @@ public class InitBean {
 
     public static final Set<String> loginPath = new HashSet<String>();
     public static final Map<String, String> validationPath = new HashMap<String, String>();
+    public static final Map<String, String> rolesValidationMap = new HashMap<String, String>();
+    
 
     /**
      * 初始化数据库
@@ -50,7 +52,12 @@ public class InitBean {
             for (Method m : metods) {
                 RoleValidate rv = m.getAnnotation(RoleValidate.class);
                 if (rv != null) {
-
+                    
+                    RequestMapping mapping = m.getAnnotation(RequestMapping.class);
+                    if (mapping != null) {
+                        validationPath.put(path + mapping.value()[0], rv.roleID());
+                    }
+                    
                     if (!roleIds.contains(rv.roleID())) {
                         roleIds.add(rv.roleID());
                     }
@@ -65,12 +72,8 @@ public class InitBean {
                         roleMap.put(RoleBean.ROLE_DESC, rv.desc());
                         dao.add(roleMap, DBBean.ROLE_ITEM);
                     }
-
-                    RequestMapping mapping = m.getAnnotation(RequestMapping.class);
-                    if (mapping != null) {
-                        path = path + mapping.value()[0];
-                        validationPath.put(path, rv.roleID());
-                    }
+                    
+                    rolesValidationMap.put(path, rv.roleID());              
                 }
 
             }
@@ -111,8 +114,7 @@ public class InitBean {
                     RequestMapping mapping = m.getAnnotation(RequestMapping.class);
 
                     if (mapping != null) {
-                        path = path + mapping.value()[0];
-                        loginPath.add(path);
+                        loginPath.add(path + mapping.value()[0]);
 
                     }
                 }

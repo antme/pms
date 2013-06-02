@@ -1,6 +1,8 @@
 package com.pms.service.controller.interceptor;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -17,11 +19,19 @@ import org.springframework.web.util.NestedServletException;
 
 import com.pms.service.annotation.InitBean;
 import com.pms.service.controller.AbstractController;
+import com.pms.service.dao.ICommonDao;
 import com.pms.service.exception.ApiLoginException;
 import com.pms.service.exception.ApiResponseException;
+import com.pms.service.exception.ApiRoleValidException;
+import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.UserBean;
 
 public class ApiFilter extends AbstractController implements Filter {
 
+    
+    private static ICommonDao dao;
+    
     @Override
     public void destroy() {
 
@@ -34,7 +44,7 @@ public class ApiFilter extends AbstractController implements Filter {
 
         try {
             loginCheck((HttpServletRequest) request);
-
+            roleCheck((HttpServletRequest) request);
             filterChain.doFilter(request, response);
         } catch (Exception e) {
 
@@ -61,7 +71,34 @@ public class ApiFilter extends AbstractController implements Filter {
 
     }
 
-    protected void loginCheck(HttpServletRequest request) {
+    public static void initDao(ICommonDao dao){
+        ApiFilter.dao = dao;
+    }
+    
+    private void roleCheck(HttpServletRequest request) {
+        if (InitBean.rolesValidationMap.get(request.getPathInfo())!=null) {
+            
+            if (request.getSession().getAttribute("userId") != null) {
+                
+                Map<String, Object> query =new HashMap<String, Object>();
+                query.put("_id", request.getSession().getAttribute("userId"));
+                query.put(ApiConstants.LIMIT_KEYS, new String[]{UserBean.GROUPS});
+                Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
+                    
+                System.out.println(user);
+//                throw new ApiRoleValidException();
+           
+            }else{
+                
+                throw new ApiRoleValidException();
+            }
+            
+        }
+
+    }
+    
+    
+    private void loginCheck(HttpServletRequest request) {
         if (InitBean.loginPath.contains(request.getPathInfo())) {
             if (request.getSession().getAttribute("userId") == null) {
                 throw new ApiLoginException();
