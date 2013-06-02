@@ -58,7 +58,6 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         query.put(UserBean.USER_NAME, parameters.get(UserBean.USER_NAME));
         query.put(UserBean.PASSWORD, DataEncrypt.generatePassword(parameters.get(UserBean.PASSWORD).toString()));
         Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
-
         if (user == null) {
             throw new ApiResponseException(String.format("Name or password is incorrect when try to login [%s] ", parameters), ResponseCodeConstants.USER_LOGIN_USER_NAME_OR_PASSWORD_INCORRECT);
         }
@@ -71,11 +70,6 @@ public class UserServiceImpl extends AbstractService implements IUserService {
 
     public Map<String, Object> listGroups() {
         return this.dao.list(null, DBBean.USER_GROUP);
-    }
-    
-    public Map<String, Object> listGroupRoleItems(Map<String, Object> parameters){
-        
-        return this.dao.list(null, DBBean.ROLE_ITEM);
     }
 
     public Map<String, Object> listUsers() {        
