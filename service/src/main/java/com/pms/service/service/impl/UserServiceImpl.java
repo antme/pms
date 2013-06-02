@@ -1,6 +1,7 @@
 package com.pms.service.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,11 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pms.service.annotation.InitBean;
+import com.pms.service.dbhelper.DBQuery;
+import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
+import com.pms.service.exception.ApiRoleValidException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
@@ -96,6 +101,49 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         ids.add(userGroup.get("_id").toString());
         dao.deleteByIds(ids, DBBean.USER_GROUP);
 
+    }
+    
+    
+    public List<String> listUserRoles(String userId) {
+
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put("_id", userId);
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.GROUPS });
+        Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
+        List<String> groups = (List<String>) user.get(UserBean.GROUPS);
+        
+        Map<String, Object> limitQuery = new HashMap<String, Object>();
+        limitQuery.put("_id", new DBQuery(DBQueryOpertion.IN, groups));
+        limitQuery.put(ApiConstants.LIMIT_KEYS, new String[]{GroupBean.ROLES});
+        
+        List<Object> list = dao.listLimitKeyValues(limitQuery, DBBean.USER_GROUP);
+        List<String> roles = new ArrayList<String>();
+
+        for(Object role: list){
+            roles.addAll((Collection<? extends String>) role);
+        }
+        
+        if(user.get(UserBean.OTHER_ROLES)!=null){
+            roles.addAll((List<? extends String>) user.get(UserBean.OTHER_ROLES));
+        }
+
+        return roles;
+    }
+    
+    public void checkUserRole(String userId, String path) {
+
+        String roleId = InitBean.rolesValidationMap.get(path);
+
+        if (roleId != null) {
+            if (userId == null) {
+                throw new ApiResponseException(String.format("No role to for user[%s] and path[%s]", userId, path), "role_required");
+            }
+            List<String> roles = this.listUserRoles(userId);
+
+            if (!roles.contains(roleId)) {
+                throw new ApiResponseException(String.format("No role to for user[%s] and path[%s]", userId, path), "role_required");
+            }
+        }
     }
 
     @Override

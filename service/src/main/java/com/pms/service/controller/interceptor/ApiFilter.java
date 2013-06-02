@@ -26,12 +26,12 @@ import com.pms.service.exception.ApiRoleValidException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.UserBean;
+import com.pms.service.service.IUserService;
 
 public class ApiFilter extends AbstractController implements Filter {
 
-    
-    private static ICommonDao dao;
-    
+    private static IUserService userService;
+
     @Override
     public void destroy() {
 
@@ -53,15 +53,19 @@ public class ApiFilter extends AbstractController implements Filter {
 
                 if (t instanceof ApiResponseException) {
                     // do nothing
+                    responseServerError(t, (HttpServletRequest) request, (HttpServletResponse) response);
                 } else {
                     logger.fatal("Fatal error when user try to call API ", e);
+                    responseServerError(e, (HttpServletRequest) request, (HttpServletResponse) response);
+
                 }
             } else if (e instanceof ApiLoginException) {
                 forceLogin((HttpServletRequest) request, (HttpServletResponse) response);
             } else {
                 logger.fatal("Fatal error when user try to call API ", e);
+                responseServerError(e, (HttpServletRequest) request, (HttpServletResponse) response);
             }
-            responseServerError(e.getCause(), (HttpServletRequest) request, (HttpServletResponse) response);
+
         }
 
     }
@@ -71,33 +75,22 @@ public class ApiFilter extends AbstractController implements Filter {
 
     }
 
-    public static void initDao(ICommonDao dao){
-        ApiFilter.dao = dao;
+    public static void initDao(IUserService userService) {
+        ApiFilter.userService = userService;
     }
-    
+
     private void roleCheck(HttpServletRequest request) {
-        if (InitBean.rolesValidationMap.get(request.getPathInfo())!=null) {
-            
-            if (request.getSession().getAttribute("userId") != null) {
-                
-                Map<String, Object> query =new HashMap<String, Object>();
-                query.put("_id", request.getSession().getAttribute("userId"));
-                query.put(ApiConstants.LIMIT_KEYS, new String[]{UserBean.GROUPS});
-                Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
-                    
-                System.out.println(user);
-//                throw new ApiRoleValidException();
-           
-            }else{
-                
-                throw new ApiRoleValidException();
+        if (InitBean.rolesValidationMap.get(request.getPathInfo()) != null) {
+            if (request.getSession().getAttribute("userId") == null) {
+                userService.checkUserRole(null, request.getPathInfo());
+
+            } else {
+                userService.checkUserRole(request.getSession().getAttribute("userId").toString(), request.getPathInfo());
             }
-            
         }
 
     }
-    
-    
+
     private void loginCheck(HttpServletRequest request) {
         if (InitBean.loginPath.contains(request.getPathInfo())) {
             if (request.getSession().getAttribute("userId") == null) {

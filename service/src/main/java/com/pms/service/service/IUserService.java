@@ -1,5 +1,6 @@
 package com.pms.service.service;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IUserService {
@@ -23,6 +24,9 @@ public interface IUserService {
     
     public void deleteUserGroup(Map<String, Object> userGroup);
     
+    public List<String> listUserRoles(String userId);
+    
+    public void checkUserRole(String userId, String path);
     
     public Map<String, Object> listUsers();
 

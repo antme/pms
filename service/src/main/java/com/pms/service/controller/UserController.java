@@ -59,20 +59,17 @@ public class UserController extends AbstractController {
     
     
     @RequestMapping("/role/list")
-    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void listRoleItems(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(userService.listRoleItems(), request, response);
     }
     
     @RequestMapping("/group/role/list")
-    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void listGroupRoleItems(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(userService.listGroupRoleItems(parserJsonParameters(request,  false)), request, response);
     }
     
     
     @RequestMapping("/group/list")
-    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     @LoginRequired()
     public void listGroupItems(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(userService.listGroups(), request, response);
@@ -80,21 +77,18 @@ public class UserController extends AbstractController {
 
     
     @RequestMapping("/group/update")
-    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void updateGroupItems(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(userService.updateUserGroup(parserJsonParameters(request,  false)), request, response, "update_success");
     }
     
     @RequestMapping("/group/add")
     @LoginRequired()
-    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void addGroupItems(HttpServletRequest request, HttpServletResponse response) {
 
         responseWithData(userService.updateUserGroup(parserJsonParameters(request,  false)), request, response, "add_success");
     }
     
     @RequestMapping("/group/delete")
-    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void deleteGroupItems(HttpServletRequest request, HttpServletResponse response) {
         userService.deleteUserGroup(parserJsonParameters(request,  false));
         responseWithData(null, request, response);
@@ -102,7 +96,6 @@ public class UserController extends AbstractController {
 
 
     @RequestMapping("/list")
-    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void listUsers(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(userService.listUsers(), request, response);
     }

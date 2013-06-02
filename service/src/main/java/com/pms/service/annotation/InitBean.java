@@ -73,7 +73,7 @@ public class InitBean {
                         dao.add(roleMap, DBBean.ROLE_ITEM);
                     }
                     
-                    rolesValidationMap.put(path, rv.roleID());              
+                    rolesValidationMap.put(path + mapping.value()[0], rv.roleID());              
                 }
 
             }

@@ -81,7 +81,7 @@
         <property name="targetMethod" value="initDao"></property>
         <property name="arguments">
             <list>
-                <ref bean="commonDao" />
+                <ref bean="userService" />
             </list>
         </property>
     </bean>
