@@ -1,7 +1,6 @@
 package com.pms.service.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.google.gson.Gson;
-import com.pms.service.service.IProjectService;
+import com.pms.service.service.ISupplierService;
 
 @Controller
 @RequestMapping("/suppliers")
@@ -21,7 +19,7 @@ public class SupplierController extends AbstractController {
 	
 	private static Logger logger = LogManager.getLogger(SupplierController.class);
 
-    private IProjectService projectService;
+    private ISupplierService supplierService;
     
     @RequestMapping("/test")
     public void test(HttpServletRequest request, HttpServletResponse response) {
@@ -41,26 +39,26 @@ public class SupplierController extends AbstractController {
     }
     
     @RequestMapping("/list")
-    public void listProjects(HttpServletRequest request, HttpServletResponse response) {
+    public void list(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
-    	responseWithData(projectService.listProjects(params), request, response);
+    	responseWithData(supplierService.list(params), request, response);
     }
     
-    @RequestMapping("/add")
-    public void addProject(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping("/update")
+    public void update(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        projectService.addProject(params);
-        responseWithData(null, request, response);
+        responseWithData(supplierService.update(params), request, response);
     }
 
-	public IProjectService getProjectService() {
-		return projectService;
-	}
-
-	public void setProjectService(IProjectService projectService) {
-		this.projectService = projectService;
-	}
+    @RequestMapping("/destroy")
+    public void destroy(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(supplierService.destroy(params), request, response);
+    }
     
-    
-
+    @RequestMapping("/create")
+    public void create(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(supplierService.create(params), request, response);
+    }
 }
