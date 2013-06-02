@@ -1,7 +1,11 @@
 package com.pms.service.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.DBBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ISupplierService;
 
@@ -9,32 +13,25 @@ public class SupplierServiceImpl extends AbstractService implements ISupplierSer
 
 	@Override
 	public String geValidatorFileName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "supplier";
 	}
 
-	@Override
 	public Map<String, Object> list(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+		return dao.list(null, DBBean.SUPPLIER);
 	}
 
-	@Override
 	public Map<String, Object> update(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+		return dao.updateById(params, DBBean.SUPPLIER);
 	}
 
-	@Override
-	public Map<String, Object> destroy(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+	public void destroy(Map<String, Object> params) {
+		List<String> ids = new ArrayList<String>();
+		ids.add(String.valueOf(params.get(ApiConstants.MONGO_ID)));
+		dao.deleteByIds(ids, DBBean.SUPPLIER);
 	}
 
-	@Override
 	public Map<String, Object> create(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+		return dao.add(params, DBBean.SUPPLIER);
 	}
 
 }
