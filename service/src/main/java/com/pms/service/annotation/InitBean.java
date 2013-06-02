@@ -22,8 +22,9 @@ import com.pms.service.util.DataEncrypt;
 
 public class InitBean {
 
-    
     public static final Set<String> loginPath = new HashSet<String>();
+    public static final Map<String, String> validationPath = new HashMap<String, String>();
+
     /**
      * 初始化数据库
      * 
@@ -39,6 +40,13 @@ public class InitBean {
         for (BeanDefinition bd : scanner.findCandidateComponents(PackageRole.class.getPackage().getName())) {
             Class<?> classzz = Class.forName(bd.getBeanClassName());
             Method metods[] = classzz.getMethods();
+
+            RequestMapping parent = classzz.getAnnotation(RequestMapping.class);
+            String path = "";
+            if (parent != null) {
+                path = parent.value()[0];
+            }
+
             for (Method m : metods) {
                 RoleValidate rv = m.getAnnotation(RoleValidate.class);
                 if (rv != null) {
@@ -58,9 +66,14 @@ public class InitBean {
                         dao.add(roleMap, DBBean.ROLE_ITEM);
                     }
 
+                    RequestMapping mapping = m.getAnnotation(RequestMapping.class);
+                    if (mapping != null) {
+                        path = path + mapping.value()[0];
+                        validationPath.put(path, rv.roleID());
+                    }
                 }
-            }
 
+            }
         }
 
         Map<String, Object> adminUser = new HashMap<String, Object>();
@@ -76,36 +89,36 @@ public class InitBean {
             adminUser.put(UserBean.PASSWORD, DataEncrypt.generatePassword("123456"));
             dao.add(adminUser, DBBean.USER);
         }
+
         
         
         scanner.resetFilters(true);
         scanner.addIncludeFilter(new AnnotationTypeFilter(LoginRequired.class));
-
         for (BeanDefinition bd : scanner.findCandidateComponents(PackageRole.class.getPackage().getName())) {
             Class<?> classzz = Class.forName(bd.getBeanClassName());
             Method metods[] = classzz.getMethods();
-            
+
             RequestMapping parent = classzz.getAnnotation(RequestMapping.class);
             String path = "";
-            if(parent!=null){
+            if (parent != null) {
                 path = parent.value()[0];
             }
-            
+
             for (Method m : metods) {
                 LoginRequired rv = m.getAnnotation(LoginRequired.class);
                 System.out.println(m.getName());
                 if (rv != null) {
                     RequestMapping mapping = m.getAnnotation(RequestMapping.class);
-                    
-                    if(mapping !=null){
+
+                    if (mapping != null) {
                         path = path + mapping.value()[0];
                         loginPath.add(path);
-;                    }
+
+                    }
                 }
             }
 
         }
-               
 
     }
 

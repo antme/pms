@@ -125,15 +125,39 @@ $(document).ready(function() {
 });
 
 
+
+function roleMultSelectEditor(container, options) {
+	var uid = kendo.guid();
+	var editor = $('<input  data-bind="value:' + options.field + '"/>');
+	editor.appendTo(container);
+	editor.kendoMultiSelect({
+		dataTextField : "description",
+		dataValueField : "_id",
+		placeholder : "选择权限...",
+		dataSource : {
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "/service/user/role/list",
+				}
+			}
+		},
+		change : function(e) {
+			options.model.roles = this.value();
+		},
+		height : 300
+	});
+}
+
+
 function groupMultSelectEditor(container, options) {
 	var uid = kendo.guid();
 	var editor = $('<input  data-bind="value:' + options.field + '"/>');
 	editor.appendTo(container);
-	console.log(options.model.groups);
 	editor.kendoMultiSelect({
 		dataTextField : "groupName",
 		dataValueField : "_id",
-		placeholder : "选择权限...",
+		placeholder : "选择角色...",
 		dataSource : {
 			transport : {
 				read : {
@@ -146,5 +170,5 @@ function groupMultSelectEditor(container, options) {
 			options.model.groups = this.value();
 		},
 		height : 300
-	})[0];
+	});
 }

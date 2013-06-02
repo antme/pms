@@ -4,8 +4,6 @@ import java.util.Map;
 
 public interface IUserService {
 
-    public String register(Map<String, Object> parameters);
-
     public Map<String, Object> updateUser(Map<String, Object> map);
     
     public void deleteUser(Map<String, Object> userGroup);

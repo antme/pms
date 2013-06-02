@@ -131,44 +131,41 @@ public abstract class AbstractController {
      */
     private void responseMsg(Map<String, Object> data, ResponseStatus status, HttpServletRequest request, HttpServletResponse response, String msgKey) {
 
-        Map<String, Object> result = new HashMap<String, Object>();
-
-//        if (data != null) {
-//            data.put("status", status.toString());
-            result = data;          
-//        } else {
-//            result.put("status", status.toString());
-//        }
-
         response.setContentType("text/plain;charset=UTF-8");
+        response.addHeader("Accept-Encoding", "gzip, deflate");
 
-        String jsonReturn = new Gson().toJson(result);
-        
-        if (request != null) {
+        String jsonReturn = new Gson().toJson(data);
+        String displayMsg = null;
+        if (request.getParameter("callback") != null) {
+            response.setContentType("application/x-javascript;charset=UTF-8");
 
-            if (request.getParameter("callback") != null) {
-                response.setContentType("application/x-javascript;charset=UTF-8");
-                String displayMsg = null;
+            if (status == ResponseStatus.FAIL) {
+                jsonReturn = "displayMsg(" + jsonReturn + ");";
+            } else {
+
                 if (msgKey != null) {
                     displayMsg = "displayMsg({\"msg\": \"" + ConfigurationManager.getSystemMessage(msgKey) + "\"});";
                 }
-                if (result != null && result instanceof Map) {
-                    
-                    if (result.get("data") != null) {
-                        jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result.get("data")) + ");";
-                    }else{
-                        jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(result) + ");";
+
+                if (data != null && data instanceof Map) {
+                    if (data.get("data") != null) {
+                        //返回List
+                        jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(data.get("data")) + ");";
+                    } else {
+                        //返回单个
+                        jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(data) + ");";
                     }
                 } else {
+                    //不返回任何数据
                     jsonReturn = request.getParameter("callback") + "([]);";
                 }
-                
-                if(displayMsg !=null){
+
+                if (displayMsg != null) {
                     jsonReturn = jsonReturn + displayMsg;
                 }
             }
+
         }
-        response.addHeader("Accept-Encoding", "gzip, deflate");
         try {
             response.getWriter().write(jsonReturn);
         } catch (IOException e) {
@@ -179,6 +176,7 @@ public abstract class AbstractController {
 
     protected void responseServerError(Throwable throwable, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> temp = new HashMap<String, Object>();
+        temp.put("status", ResponseStatus.FAIL.toString());
 
         if (throwable instanceof ApiResponseException) {
             ApiResponseException apiException = (ApiResponseException) throwable;

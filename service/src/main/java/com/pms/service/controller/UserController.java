@@ -29,7 +29,7 @@ public class UserController extends AbstractController {
     @RequestMapping("/register")
     public void register(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> user = parserJsonParameters(request, false);
-        responseWithKeyValue(ApiConstants.MONGO_ID, userService.register(user), request, response);
+        responseWithData(userService.updateUser(user), request, response);
     }
 
     /**
@@ -112,8 +112,7 @@ public class UserController extends AbstractController {
     @RequestMapping("/update")
     @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void updateUser(HttpServletRequest request, HttpServletResponse response) {
-        userService.updateUser(parserJsonParameters(request,  false));
-        responseWithData(null, request, response, "update_success");
+        responseWithData(userService.updateUser(parserJsonParameters(request,  false)), request, response, "update_success");
     }
     
     @RequestMapping("/add")

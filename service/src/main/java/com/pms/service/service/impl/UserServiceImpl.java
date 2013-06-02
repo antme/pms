@@ -24,22 +24,16 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     @Override
-    public String register(Map<String, Object> parameters) {
-        // load default settings from cheng you account, set to register user as
-        // default value
-        validate(parameters, "register");
-
-        return null;
-    }
-
-    @Override
     public Map<String, Object> updateUser(Map<String, Object> userInfoMap) {
 
-        Map<String, Object> group = dao.findOne("_id", userInfoMap.get("_id"), DBBean.USER);
-        if (group != null) {
-            userInfoMap.put("_id", group.get("_id"));
+        Map<String, Object> user = dao.findOne("_id", userInfoMap.get("_id"), DBBean.USER);
+        if (user != null) {
+            
+            userInfoMap.put("_id", user.get("_id"));
             return dao.updateById(userInfoMap, DBBean.USER);
+            
         } else {
+            
             validate(userInfoMap, "register");
             return dao.add(userInfoMap, DBBean.USER);
         }
@@ -58,13 +52,11 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(UserBean.USER_NAME, parameters.get(UserBean.USER_NAME));
         query.put(UserBean.PASSWORD, DataEncrypt.generatePassword(parameters.get(UserBean.PASSWORD).toString()));
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "lastLogin" });
         Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
+
         if (user == null) {
             throw new ApiResponseException(String.format("Name or password is incorrect when try to login [%s] ", parameters), ResponseCodeConstants.USER_LOGIN_USER_NAME_OR_PASSWORD_INCORRECT);
         }
-        user.put("lastLogin", new Date().getTime());
-        dao.updateById(user, DBBean.USER);
         return (String) user.get(ApiConstants.MONGO_ID);
     }
 

@@ -67,31 +67,50 @@
                         },
 
                         {
-                            text: "合同管理", id: "contract", expanded: true, imageUrl: "/images/contract.png",
+                            text: "采购合同", id: "contract", expanded: false, imageUrl: "/images/contract.png",
                             items: [
-                                { text: "采购合同", id: "contract", imageUrl: "/images/order.png" },
-                                { text: "客户合同", id: "contract", imageUrl: "/images/ccontract.png" },
-                                { text: "成本设备清单", id: "contract", imageUrl: "/images/ccontract.png"}
+                                { text: "采购合同列表", id: "contract", imageUrl: "/images/order.png" },
+                                { text: "入库申请单", id: "contract", imageUrl: "/images/ccontract.png" },
+                                { text: "直发入库申请单", id: "contract", imageUrl: "/images/ccontract.png"}
                             ]
                         },
                         {
-                            text: "采购管理", id: "ccontract", imageUrl: "/images/ccontract.png"
+                            text: "项目执行", id: "projectex", imageUrl: "/images/ccontract.png",
+                            items: [
+                                    { text: "采购申请", id: "contract", imageUrl: "/images/order.png" },
+                                    { text: "调拨申请", id: "contract", imageUrl: "/images/ccontract.png" },
+                                    { text: "发货申请", id: "contract", imageUrl: "/images/ccontract.png"},
+                                    { text: "借货申请", id: "contract", imageUrl: "/images/ccontract.png"},
+                                    { text: "还货申请", id: "contract", imageUrl: "/images/ccontract.png"}
+                                ]
                         },
                         {
-                            text: "财务",  id: "finance", imageUrl: "/images/ccontract.png"
+                            text: "销售合同",  id: "salesc", imageUrl: "/images/user.png"
                         },
                         {
-                            text: "客户管理",  id: "customer", imageUrl: "/images/user.png"
+                            text: "财务",  id: "finance", imageUrl: "/images/ccontract.png",
+                            items: [
+                                    { text: "财务资料", id: "contract", imageUrl: "/images/order.png" },
+                                    { text: "开票信息", id: "contract", imageUrl: "/images/ccontract.png" },
+                                    { text: "收款信息", id: "contract", imageUrl: "/images/ccontract.png"},
+                                    { text: "付款信息", id: "contract", imageUrl: "/images/ccontract.png"},
+                                    { text: "售票信息", id: "contract", imageUrl: "/images/ccontract.png"}
+                                ]
                         },
+                      
                         {
-                            text: "权限管理", id: "userman", expanded: true, imageUrl: "/images/user.png",
+                            text: "权限管理", id: "userman", expanded: false, imageUrl: "/images/user.png",
                             items: [
                                     { text: "用户管理", id: "userman", imageUrl: "/images/toy.png" },
                                     { text: "角色管理", id: "group", imageUrl: "/images/ccontract.png" }
                                 ]
                         },
                         {
-                            text: "供应商",  id: "supplier", imageUrl: "/images/user.png"
+                            text: "基础信息",  id: "supplier", imageUrl: "/images/user.png",
+                            	items: [
+                                        { text: "客户", id: "userman", imageUrl: "/images/toy.png" },
+                                        { text: "供应商", id: "group", imageUrl: "/images/ccontract.png" }
+                                    ]
                         }
                     ],
 
