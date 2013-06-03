@@ -3,22 +3,22 @@ $(document).ready(function() {
 	var dataSource = new kendo.data.DataSource({
 		transport : {
 			read : {
-				url : "/service/contract/list",
+				url : "/service/purcontract/list",
 				dataType : "jsonp"
 			},
 			update : {
-				url : "/service/contract/update",
+				url : "/service/purcontract/update",
 				dataType : "jsonp",
 				type : "post"
 			},
 			create : {
-				url : "/service/contract/add",
+				url : "/service/purcontract/add",
 				dataType : "jsonp",
 				type : "post"
 			},
 
 			destroy : {
-				url : "/service/contract/delete",
+				url : "/service/purcontract/delete",
 				dataType : "jsonp",
 				type : "post"
 			},

@@ -56,10 +56,6 @@ public class PurchaseController extends AbstractController {
     /****CRUD 采购订单********/
     
     
-    
-    /****CRUD 采购合同********/
-    
-    
 	public IPurchaseService getPurchaseService() {
 		return purchaseService;
 	}

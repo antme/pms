@@ -143,6 +143,18 @@ $(document).ready(function() {
                 }
             }
         });
+		
+		//bind the modle
+		var projectModle = kendo.observable({
+			firstName:"name1",
+			lastName:"name2",
+			saveProject:function(){
+				var fN = this.get("firstName");
+				alert("firstName is : " + fN);
+			}
+		});
+		
+		kendo.bind($("#addNewProject"), projectModle);
 	};//end toolbar_addNewProject
 	
 	function onActivate(e) {
