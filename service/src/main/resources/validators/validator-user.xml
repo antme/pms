@@ -19,6 +19,9 @@
 			<field property="password" depends="required">
 				<arg key="user.password" />
 			</field>
+			<field property="userName" depends="required">
+				<arg key="user.userName" />
+			</field>
 		</form>
 		<form name="update">
 			<field property="name" depends="dbNotExists">
@@ -157,7 +160,7 @@
 					<var-name>in</var-name>
 					<var-value>0,1</var-value>
 				</var>
-			</field>			
+			</field>
 		</form>
 		<form name="listLeaderBoardVitality">
 			<field property="gender" depends="in">
@@ -173,7 +176,7 @@
 					<var-name>in</var-name>
 					<var-value>0,1</var-value>
 				</var>
-			</field>			
+			</field>
 		</form>
 		<form name="listAppRelatedCharmers">
 			<field property="appId" depends="required,dbExists">

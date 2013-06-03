@@ -6,6 +6,7 @@ public class UserBean {
     public static final String ROLES = "roles";
     public static final String GROUPS = "groups";
     public static final String OTHER_ROLES = "otherRoles";
-    
+    public static final String EMAIL = "email";
     public static final String GROUPS_DISPLAY = "groupsDisplay";
+    
 }
