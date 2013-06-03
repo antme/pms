@@ -28,9 +28,9 @@ $(document).ready(function () {
             pageSize: 20,
             schema: {
                 model: {
-                    id: "ProductID",
+                    id: "_id",
                     fields: {
-                        ProductID: { editable: false, nullable: true },
+                        _id: { editable: false, nullable: true },
                         ProductName: { validation: { required: true } },
                         UnitPrice: { type: "number", validation: { required: true, min: 1} },
                         Discontinued: { type: "boolean" },

@@ -44,4 +44,14 @@ public class SupplierController extends AbstractController {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(supplierService.create(params), request, response);
     }
+
+	public ISupplierService getSupplierService() {
+		return supplierService;
+	}
+
+	public void setSupplierService(ISupplierService supplierService) {
+		this.supplierService = supplierService;
+	}
+    
+    
 }
