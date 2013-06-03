@@ -45,6 +45,8 @@ function loadPage(page, divID) {
 		page = "html/customer/customer.html";
 	} else if (page == "supplier") {
 		page = "html/supplier/supplier.html";
+	} else if (page == "allocate") {
+		page = "html/execution/allocate.html";
 	} else {
 		page = "html/local-data.html";
 	}
@@ -79,6 +81,8 @@ function onLeftNavSelect(e) {
 		loadPage("customer");
 	} else if (text == "供应商") {
 		loadPage("supplier");
+	} else if (text == "调拨申请") {
+		loadPage("allocate");
 	} else {
 		loadPage("default");
 	}
