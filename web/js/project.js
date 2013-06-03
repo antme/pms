@@ -102,7 +102,7 @@ $(document).ready(function() {
 	$("#addNewProject").hide();
 	
 	
-});		
+});//end dom ready		
 
 	function toolbar_delete() {
 		var rowData = getSelectedRowDataByGrid("grid");
@@ -116,10 +116,6 @@ $(document).ready(function() {
 		alert("Approved prject _id: " + rowData._id);
 		console.log("Toolbar command is clicked!");
 		return false;
-	};
-	
-	function onActivate(e) {
-		console.log("Add new project window activate........");
 	};
 	
 	function toolbar_addNewProject() {
@@ -148,8 +144,12 @@ $(document).ready(function() {
             }
         });
 	};//end toolbar_addNewProject
+	
+	function onActivate(e) {
+		console.log("Add new project window activate........");
+	};
 
-	var proStatusItems = [{ text: "立项", value: "1" }, { text: "预立项", value: "2" }, { text: "草稿", value: "3" }];
+	var proStatusItems = [{ text: "正式立项", value: "1" }, { text: "预立项", value: "2" }, { text: "内部立项", value: "3" }];
 	$("#project-status").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
