@@ -52,4 +52,9 @@
 		<property name="customerService" ref="customerService"></property>
 	</bean>
 
+	<bean name="supplierController" class="com.pms.service.controller.SupplierController"
+		id="supplierController">
+		<property name="supplierService" ref="supplierService"></property>
+	</bean>
+
 </beans>
