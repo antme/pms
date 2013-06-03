@@ -45,13 +45,19 @@ $(document).ready(function () {
         selectable: "multiple",
         pageable: true,
         height: 430,
-        toolbar: ["create"],
+        toolbar: [{name: "create", text: "添加"}, {template: kendo.template($("#template").html())}],
         columns: [
             { field:"ProductName", title: "Product Name" },
             { field: "UnitPrice", title:"Unit Price", format: "{0:c}", width: "100px" },
             { field: "UnitsInStock", title:"Units In Stock", width: "100px" },
-            { field: "Discontinued", width: "100px" },
-            { command: ["edit", "destroy"], title: "&nbsp;", width: "160px" }],
+            { field: "Discontinued", width: "100px" }],
         editable: "popup"
     });
 });
+
+function toolbar_delete() {
+	var rowData = getSelectedRowDataByGrid("grid");
+	alert("Delete the row _id: " + rowData._id);
+  	console.log("Toolbar command is clicked!");
+  	return false;
+};
