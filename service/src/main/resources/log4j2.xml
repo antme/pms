@@ -33,11 +33,12 @@
 	</appenders>
 	<loggers>
 
+	    <!-- 
 		<logger name="com.pms.service.controller.interceptor.ApiFilter"
 			level="fatal">
 			<appender-ref ref="RollingFileFatal" />
 		</logger>
-
+         -->
 		<root level="debug">
 			<appender-ref ref="RollingFile" />
 			<appender-ref ref="Console" />

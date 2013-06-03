@@ -45,6 +45,10 @@ function loadPage(page, divID) {
 		page = "html/customer/customer.html";
 	} else if (page == "supplier") {
 		page = "html/supplier/supplier.html";
+	} else if (page == "allocate") {
+		page = "html/execution/allocate.html";
+	} else if (page == "purchasecontract") {
+		page = "html/purchasecontract/purchasecontract.html";
 	} else {
 		page = "html/local-data.html";
 	}
@@ -79,6 +83,10 @@ function onLeftNavSelect(e) {
 		loadPage("customer");
 	} else if (text == "供应商") {
 		loadPage("supplier");
+	} else if (text == "调拨申请") {
+		loadPage("allocate");
+	} else if (text == "采购合同" || text == "采购合同列表") {
+		loadPage("purchasecontract");
 	} else {
 		loadPage("default");
 	}

@@ -8,6 +8,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dao.ICommonDao;
 import com.pms.service.dao.impl.mongo.CommonDaoMongoImpl;
+import com.pms.service.mockbean.DBBean;
 import com.pms.service.service.IUserService;
 import com.pms.service.service.impl.UserServiceImpl;
 
@@ -27,6 +28,10 @@ public class BaseTestCase extends TestCase {
 
     public void testEmpty() {
         assertTrue(true);
+    }
+    
+    public void setUp(){
+//        commonDao.deleteByQuery(null, DBBean.USER);
     }
     
 }

@@ -36,7 +36,17 @@
 	<bean name="apiFilter" class="com.pms.service.controller.interceptor.ApiFilter" id="apiFilter">
 	</bean>
 
-
+    
+    <bean
+        class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass" value="com.pms.service.controller.interceptor.ApiFilter" />
+        <property name="targetMethod" value="initDao"></property>
+        <property name="arguments">
+            <list>
+                <ref bean="userService" />
+            </list>
+        </property>
+    </bean>
 	<bean name="userController" class="com.pms.service.controller.UserController"
 		id="userController">
 		<property name="userService" ref="userService"></property>
@@ -50,6 +60,11 @@
 	<bean name="customerController" class="com.pms.service.controller.CustomerController"
 		id="customerController">
 		<property name="customerService" ref="customerService"></property>
+	</bean>
+
+	<bean name="supplierController" class="com.pms.service.controller.SupplierController"
+		id="supplierController">
+		<property name="supplierService" ref="supplierService"></property>
 	</bean>
 
 </beans>

@@ -63,7 +63,12 @@
 		id="customerService">
 		<property name="dao" ref="commonDao"></property>
 	</bean>
-		
+	
+	<bean name="supplierService" class="com.pms.service.service.impl.SupplierServiceImpl"
+		id="supplierService">
+		<property name="dao" ref="commonDao"></property>
+	</bean>
+	
 	<bean
         class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetClass" value="com.pms.service.annotation.InitBean" />
@@ -74,17 +79,7 @@
             </list>
         </property>
     </bean>
-    
-	<bean
-        class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetClass" value="com.pms.service.controller.interceptor.ApiFilter" />
-        <property name="targetMethod" value="initDao"></property>
-        <property name="arguments">
-            <list>
-                <ref bean="userService" />
-            </list>
-        </property>
-    </bean>
+
 
 
 </beans>

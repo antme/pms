@@ -15,5 +15,8 @@ public class ResponseCodeConstants {
     public static final String  PARAMETERS_NOT_JSON = "-2";
     // *********Common end
 
-  
+    public static final String  ADMIN_EDIT_DISABLED = "admin_edit_disabled";
+    public static final String  ADMIN_DELETE_DISABLED = "admin_delete_disabled";
+    public static final String  ADMIN_GROUP_EDIT_DISABLED = "admin_group_edit_disabled";
+    public static final String  ADMIN_GROUP_DELETE_DISABLED = "admin_group_delete_disabled";
 }

@@ -42,6 +42,7 @@ $(document).ready(function () {
 
     $("#grid").kendoGrid({
         dataSource: dataSource,
+        selectable: "multiple",
         pageable: true,
         height: 430,
         toolbar: ["create"],

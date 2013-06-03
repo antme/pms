@@ -7,7 +7,7 @@ public interface IUserService {
 
     public Map<String, Object> updateUser(Map<String, Object> map);
     
-    public void deleteUser(Map<String, Object> userGroup);
+    public void deleteUser(Map<String, Object> user);
 
     public String login(Map<String, Object> parameters);
 
@@ -24,7 +24,7 @@ public interface IUserService {
     
     public void deleteUserGroup(Map<String, Object> userGroup);
     
-    public List<String> listUserRoles(String userId);
+    public List<String> listUserRoleIds(String userId);
     
     public void checkUserRole(String userId, String path);
     
