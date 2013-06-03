@@ -12,5 +12,6 @@ public class DBBean {
     public static final String CUSTOMER = "customer";
     
     public static final String SUPPLIER = "supplier";
-    
+ 
+    public static final String PURCHASE_REQUEST = "purchaseRequest";
 }
