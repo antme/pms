@@ -88,13 +88,13 @@ $(document).ready(function() {
 			title : "项目总金额"
 		}, {
 			field : "invoiceAmount",
-			title : "开票金额%"
+			title : "开票金额"
 		}, {
 			field : "getAmount",
-			title : "到款金额%"
+			title : "到款金额"
 		}, {
 			field : "purchaseAmount",
-			title : "采购金额%"
+			title : "采购金额"
 		}]
 
 	});
@@ -109,7 +109,7 @@ $(document).ready(function() {
 		alert("Delete the row _id: " + rowData._id);
 	  	console.log("Toolbar command is clicked!");
 	  	return false;
-	};
+	};//end toolbar_delete
 	
 	function toolbar_projectApprove() {
 		var rowData = getSelectedRowDataByGrid("grid");
@@ -146,9 +146,29 @@ $(document).ready(function() {
 		
 		//bind the modle
 		var projectModle = kendo.observable({
-			firstName:"name1",
-			lastName:"name2",
+			projectCode:"pro code",
+			projectName:"pro name",
+			projectManager:"",
+			customerName:"",
+			projectStatus:"",
 			saveProject:function(){
+				//addProjectDataSource.add({"projectCode":"test","projectName":"test","projectStatus":"test","projectType":"test","projectManager":"test","customerName":"test","totalAmount":"test","invoiceAmount":"test","getAmount":"test","purchaseAmount":"test",});
+				//addProjectDataSource.add();
+				//addProjectDataSource.sync();
+				
+				$.ajax( {
+			        url: "../service/project/add",
+			        dataType: "jsonp",
+			        data: {
+			          models: kendo.stringify(this)
+			        },
+			        success: function(result) {
+			        	options.success(result);
+			        },
+			        error: function(result) {
+			        	options.error(result);
+			    }});
+				
 				var fN = this.get("firstName");
 				alert("firstName is : " + fN);
 			}
@@ -182,6 +202,22 @@ $(document).ready(function() {
 		dataValueField : "value",
         optionLabel: "选择项目经理...",
 		dataSource : proManagerItems,
+	});
+	
+	var invoiceTypeItems = [{ text: "invoiceType1", value: "1" }, { text: "invoiceType2", value: "2" }, { text: "invoiceType3", value: "3" }];
+	$("#invoiceType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择发票类型...",
+		dataSource : invoiceTypeItems,
+	});
+	
+	var contractTypeItems = [{ text: "contractType1", value: "1" }, { text: "contractType2", value: "2" }, { text: "contractType3", value: "3" }];
+	$("#contractType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择合同类型...",
+		dataSource : contractTypeItems,
 	});
 	
 	
