@@ -37,6 +37,7 @@ body {
 .top_nav {
 	background-image: url("../images/greyback.png");
 	height: 60px;
+	display:none;
 }
 
 .top_nav ul {
