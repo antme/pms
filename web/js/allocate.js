@@ -1,21 +1,21 @@
 $(document).ready(function () {
-    var crudServiceBaseUrl = "../service",
+    var crudServiceBaseUrl = "http://demos.kendoui.com/service",
         dataSource = new kendo.data.DataSource({
             transport: {
                 read:  {
-                    url: crudServiceBaseUrl + "/suppliers/list",
+                    url: crudServiceBaseUrl + "/Products",
                     dataType: "jsonp"
                 },
                 update: {
-                    url: crudServiceBaseUrl + "/suppliers/update",
+                    url: crudServiceBaseUrl + "/Products/Update",
                     dataType: "jsonp"
                 },
                 destroy: {
-                    url: crudServiceBaseUrl + "/suppliers/destroy",
+                    url: crudServiceBaseUrl + "/Products/Destroy",
                     dataType: "jsonp"
                 },
                 create: {
-                    url: crudServiceBaseUrl + "/suppliers/create",
+                    url: crudServiceBaseUrl + "/Products/Create",
                     dataType: "jsonp"
                 },
                 parameterMap: function(options, operation) {
@@ -28,9 +28,9 @@ $(document).ready(function () {
             pageSize: 20,
             schema: {
                 model: {
-                    id: "_id",
+                    id: "ProductID",
                     fields: {
-                        _id: { editable: false, nullable: true },
+                        ProductID: { editable: false, nullable: true },
                         ProductName: { validation: { required: true } },
                         UnitPrice: { type: "number", validation: { required: true, min: 1} },
                         Discontinued: { type: "boolean" },
@@ -42,17 +42,75 @@ $(document).ready(function () {
 
     $("#grid").kendoGrid({
         dataSource: dataSource,
-        selectable: "multiple",
         pageable: true,
         height: 430,
-        toolbar: [{name: "create", text: "添加"}, {template: kendo.template($("#template").html())}],
+        toolbar: [ {
+			template : kendo.template($("#template").html())
+		} ],
         columns: [
             { field:"ProductName", title: "Product Name" },
             { field: "UnitPrice", title:"Unit Price", format: "{0:c}", width: "100px" },
             { field: "UnitsInStock", title:"Units In Stock", width: "100px" },
-            { field: "Discontinued", width: "100px" }],
+            { field: "Discontinued", width: "100px" },
+            { command: ["edit", "destroy"], title: "&nbsp;", width: "160px" }],
         editable: "popup"
     });
+    
+    var crudServiceBaseUrl = "http://demos.kendoui.com/service",
+    dataSource = new kendo.data.DataSource({
+        transport: {
+            read:  {
+                url: crudServiceBaseUrl + "/Products",
+                dataType: "jsonp"
+            },
+            update: {
+                url: crudServiceBaseUrl + "/Products/Update",
+                dataType: "jsonp"
+            },
+            destroy: {
+                url: crudServiceBaseUrl + "/Products/Destroy",
+                dataType: "jsonp"
+            },
+            create: {
+                url: crudServiceBaseUrl + "/Products/Create",
+                dataType: "jsonp"
+            },
+            parameterMap: function(options, operation) {
+                if (operation !== "read" && options.models) {
+                    return {models: kendo.stringify(options.models)};
+                }
+            }
+        },
+        batch: true,
+        pageSize: 20,
+        schema: {
+            model: {
+                id: "ProductID",
+                fields: {
+                    ProductID: { editable: false, nullable: true },
+                    ProductName: { validation: { required: true } },
+                    UnitPrice: { type: "number", validation: { required: true, min: 1} },
+                    Discontinued: { type: "boolean" },
+                    UnitsInStock: { type: "number", validation: { min: 0, required: true } }
+                }
+            }
+        }
+    });
+
+	$("#popup-grid").kendoGrid({
+	    dataSource: dataSource,
+	    navigatable: true,
+	    pageable: true,
+	    height: 430,
+	    toolbar: ["create", "save", "cancel"],
+	    columns: [
+	        "ProductName",
+	        { field: "UnitPrice", title: "Unit Price", format: "{0:c}", width: 110 },
+	        { field: "UnitsInStock", title: "Units In Stock", width: 110 },
+	        { field: "Discontinued", width: 110 },
+	        { command: "destroy", title: "&nbsp;", width: 90 }],
+	    editable: true
+	});
 });
 
 function toolbar_delete() {
