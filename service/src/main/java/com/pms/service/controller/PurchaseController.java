@@ -29,8 +29,8 @@ public class PurchaseController extends AbstractController {
     @RequestMapping("/request/create")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void addRequest(HttpServletRequest request, HttpServletResponse response) {
-    	Map<String,Object> obj = parserJsonParameters(request,  false);
-    	responseWithData(purchaseService.create(obj), request, response, "add_success");
+    	//Map<String,Object> obj = parserJsonParameters(request,  false);
+    	responseWithData(null, request, response, "add_success");
     }
 
     @RequestMapping("/request/destroy")
@@ -53,6 +53,13 @@ public class PurchaseController extends AbstractController {
     	responseWithData(purchaseService.list(parserJsonParameters(request,  false)), request, response);
     }
 
+    //获取某项目的清单列表
+    @RequestMapping("/request/prepare")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void prepareRequest(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.prepareRequest(parserJsonParameters(request,  false)), request, response);
+    }    
+    
     /****CRUD 采购订单********/
     
     
