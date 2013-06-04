@@ -17,4 +17,6 @@ public class DBBean {
     
     public static final String PURCHASE_CONTRACT = "purchaseContract";
     
+    public static final String PURCHASE_ORDER = "purchaseOrder";
+    
 }

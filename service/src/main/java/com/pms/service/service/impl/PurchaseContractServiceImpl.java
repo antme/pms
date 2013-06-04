@@ -39,7 +39,34 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, contract.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
         contract.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        return dao.updateById(contract, DBBean.USER);
+        return dao.updateById(contract, DBBean.PURCHASE_CONTRACT);
+
+    }
+
+    @Override
+    public Map<String, Object> addPurchaseOrder(Map<String, Object> contract) {
+        return this.dao.add(contract, DBBean.PURCHASE_ORDER);
+    }
+
+    @Override
+    public Map<String, Object> listPurchaseOrders() {
+        return this.dao.list(null, DBBean.PURCHASE_ORDER);
+    }
+
+    @Override
+    public void deletePurchaseOrder(Map<String, Object> contract) {
+        List<String> ids = new ArrayList<String>();
+        ids.add(contract.get(ApiConstants.MONGO_ID).toString());
+        dao.deleteByIds(ids, DBBean.PURCHASE_ORDER);
+
+    }
+
+    @Override
+    public Map<String, Object> updatePurchaseOrder(Map<String, Object> contract) {
+
+        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, contract.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
+        contract.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+        return dao.updateById(contract, DBBean.PURCHASE_ORDER);
 
     }
 
