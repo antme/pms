@@ -2,7 +2,6 @@ var crudServiceBaseUrl = "../service";
 
 var model = kendo.data.Model.define({
 	id : "_id",
-	dataSource : dataSource,
 	fields : {
 		_id : {
 			editable : false,
@@ -96,7 +95,6 @@ $(document).ready(function() {
 });
 
 function addNewSupplier() {
-
 	kendo.bind($("#supplier-edit"), dm);
 	$("#supplier-edit").show();
 	var window = $("#supplier-edit");

@@ -51,7 +51,9 @@ function loadPage(page, divID) {
 		page = "html/purchasecontract/purchasecontract.html";
 	} else if (page == "purchaseRequest") {
 		page = "html/purchasecontract/purchaseRequest.html";
-	} else {
+	} else if (page == "purchaseorder") {
+		page = "html/purchasecontract/purchaseOrder.html";
+	}else {
 		page = "html/local-data.html";
 	}
 
@@ -91,6 +93,8 @@ function onLeftNavSelect(e) {
 		loadPage("purchaseRequest");
 	} else if (text == "采购合同" || text == "采购合同列表") {
 		loadPage("purchasecontract");
+	}else if (text == "采购订单申请" || text == "采购订单") {
+		loadPage("purchaseorder");
 	} else {
 		loadPage("default");
 	}

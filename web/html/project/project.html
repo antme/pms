@@ -61,60 +61,126 @@
                    </li>
                </ul>
                <div>
-                   <div class="pro-tab">
+                   <div  class="k-edit-form-container"><!-- 项目基本信息 -->
                        <div>
-							<br/>
-			                <label for="project-code" class="title-heard">项目编号:</label>
-			                <input type="text" id="project-code" value="项目编号" class="k-textbox" data-bind="value: firstName"/>
-			                <br/><br/>
-			            
-			                <label for="project-name" class="title-heard">项目名称:</label>
-			                <input type="text" id="project-name" value="项目名称" class="k-textbox" data-bind="value: lastName"/>
-			                <br/><br/>
-			                
-			                <label for="project-manager" class="title-heard">项目经理:</label>
-			                <input id="project-manager" class="pro-dropdownlist"></input>
-			                <br/><br/>
-			            
-			                <label for="customer-name" class="title-heard">客户名称:</label>
-			                <input type="text" id="customer-name" value="客户名称" class="k-textbox" />
-			                <br/><br/>
-			                
-			                <label for="project-status" class="title-heard">项目状态:</label>
-			                <input id="project-status" class="pro-dropdownlist"></input>
-			                <br/><br/>
-			                
-			                <label for="project-category" class="title-heard">项目类型:</label>
-			                <input id="project-category" class="pro-dropdownlist"></input>
-			                <br/><br/>
-			            
-			                <label for="address" class="title-heard">实施地址:</label>
-			                <input type="text" id="address" value="实施地址" class="k-textbox" />
-			                <br/><br/>
-			            
-			                <label for="project-memo" class="title-heard">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:</label>
-			                <textarea id="project-memo" rows="4" cols="120" class="k-textbox">备注...</textarea>
-			                <br/>
-			                
-			                
+							<div class="k-edit-label ">
+							<label for="projectCode">项目编号</label>
+						</div>
+						<div data-container-for="projectCode" class="k-edit-field ">
+							<input type="text" class="k-input k-textbox" name="projectCode"
+								required="required" data-bind="value: projectCode">
+						</div>
+						
+						<div class="k-edit-label ">
+							<label for="projectName">项目名称</label>
+						</div>
+						<div data-container-for="projectName" class="k-edit-field ">
+							<input type="text" class="k-input k-textbox" name="projectName"
+								required="required" data-bind="value: projectName">
+						</div>
+						
+						<div class="k-edit-label ">
+							<label for="projectManager">项目经理</label>
+						</div>
+						<div data-container-for="projectManager" class="k-edit-field ">
+							<input type="text" class="k-input k-textbox" name="projectManager" id="projectManager"
+								required="required" data-bind="value: projectManager">
+						</div>
+						
+						<div class="k-edit-label ">
+							<label for="customerName">客户名称</label>
+						</div>
+						<div data-container-for="customerName" class="k-edit-field ">
+							<input type="text" class="k-input k-textbox" name="customerName" id="customerName"
+								required="required" data-bind="value: customerName">
+						</div>
+						
+						<div class="k-edit-label ">
+							<label for="projectStatus">项目状态</label>
+						</div>
+						<div data-container-for="projectStatus" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="projectStatus" id="projectStatus"
+								required="required" data-bind="value: projectStatus">
+						</div>
+						
+						<div class="k-edit-label ">
+							<label for="projectType">项目类型</label>
+						</div>
+						<div data-container-for="projectType" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="projectType" id="projectType"
+								required="required" data-bind="value: projectType">
+						</div>
+						
+						<div class="k-edit-label ">
+							<label for="projectAddress">实施地址</label>
+						</div>
+						<div data-container-for="projectAddress" class="k-edit-field ">
+							<input type="text" class="k-input k-textbox" name="projectAddress" id="projectAddress"
+								required="required" data-bind="value: projectAddress">
+						</div>
+						
+						<div class="k-edit-label ">
+							<label for="projectMemo">备注</label>
+						</div>
+						<div data-container-for="projectMemo" class="k-edit-field ">
+							<textarea id="projectMemo" rows="4" cols="120" class="k-textbox" data-bind="value: projectMemo"></textarea>
+						</div>
             
 						</div>
                    </div>
                </div>
                <div>
                    <div class="pro-tab">
-                       <label for="project-code">客户名称:</label>
-		                <input type="text" id="customer-name" value="客户名称" class="k-textbox" />
+                       
+                   </div>
+               </div>
+               <div>
+                   <div class="pro-tab"><!-- 商务信息-->
+                       <br/>
+	                   <label for="contractAmount" class="title-heard">合同金额:</label>
+			           <input type="text" id="contractAmount" class="k-textbox" data-bind="value: contractAmount"/>
+			           <br/><br/>
+			                
+		                <label for="invoiceType" class="title-heard">发票类型:</label>
+		                <input id="invoiceType" class="pro-dropdownlist" data-bind="value: invoiceType"></input>
+		                <br/><br/>
+	                   
+                   </div>
+               </div>
+               <div>
+                   <div class="pro-tab"><!-- 合同信息-->
+	                   <br/>
+	                   <label for="contractCode" class="title-heard">合同编号:</label>
+			           <input type="text" id="contractCode" class="k-textbox" data-bind="value: contractCode"/>
+			           <br/><br/>
+			           
+	                   <label for="contractPerson" class="title-heard">签订人:</label>
+			           <input type="text" id="contractPerson" class="k-textbox" data-bind="value: contractPerson"/>
+			           <br/><br/>
+			                
+		                <label for="contractType" class="title-heard">合同类型:</label>
+		                <input id="contractType" class="pro-dropdownlist" data-bind="value: contractType"></input>
+		                <br/><br/>
+			           
+	                   <label for="contractDate" class="title-heard">签订日期:</label>
+			           <input type="text" id="contractDate" class="k-textbox" data-bind="value: contractDate"/>
+			           <br/><br/>
+			           
+	                   <label for="contractDownPayment" class="title-heard">首付:</label>
+			           <input type="text" id="contractDownPayment" class="k-textbox" data-bind="value: contractDownPayment"/>
+			           <br/><br/>
+			           
+	                   <label for="progressPayment" class="title-heard">进度款:</label>
+			           <input type="text" id="progressPayment" class="k-textbox" data-bind="value: progressPayment"/>
+			           <br/><br/>
+			           
+	                   <label for="qualityMoney" class="title-heard">质保金:</label>
+			           <input type="text" id="qualityMoney" class="k-textbox" data-bind="value: qualityMoney"/>
+			           <br/>
+			            
+		                <label for="contract-memo" class="title-heard">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:</label>
+		                <textarea id="contract-memo" rows="4" cols="120" class="k-textbox" data-bind="value: contract-memo">备注...</textarea>
 		                <br/>
-                   </div>
-               </div>
-               <div>
-                   <div class="pro-tab">
-                       <h2>商务信息</h2>
-                   </div>
-               </div>
-               <div>
-                   <div class="pro-tab">
                    </div>
                </div>
                <div>

@@ -1,55 +1,106 @@
-var dataSource;
-$(document).ready(function() {
-	dataSource = new kendo.data.DataSource({
-		transport : {
-			read : {
-				url : "../service/project/list",
-				dataType : "jsonp"
-			},
-			update : {
-				url : "../service/project/update",
-				dataType : "jsonp",
-				method : "post"
-			},
-			create : {
-				url : "../service/project/add",
-				dataType : "jsonp",
-				method : "post"
-			},
-			//	parameterMap : function(options, operation) {
-				//if (operation !== "read" && options.models) {
-					//return {
-						//models : kendo.stringify(options.models)
-					//};
-				//}
-			//},
-			
-			method : "post"
+var addProjectFormModel = kendo.data.Model.define({
+	id : "_id",
+	saveProject:function(){
+		dataSource.add(pfm);
+		dataSource.sync();
+		var window = $("#addNewProject");
+
+		if (window.data("kendoWindow")) {
+			window.data("kendoWindow").close();
+		}
+
+		var grid = $("#grid");
+		if (window.data("kendoGrid")) {
+			window.data("kendoGrid").refresh();
+		}
+	},
+	fields : {
+		_id : {
+			editable : false,
+			nullable : true
 		},
-		pageSize: 5,
-        //serverPaging: true,
-        //serverSorting: true,
-        //serverFiltering: true,
-		//batch : true,
-		
-        schema : {
-			model : {
-				id : "_id",
-				fields : {
-					_id : {
-						editable : false,
-						nullable : true
-					},
-					projectName : {
-						validation : {
-							required : true
-						}
-					}
-				}
+		projectCode : {
+			validation : {
+				required : true
 			}
 		},
-	});
+		projectName : {
+			validation : {
+				required : true
+			}
+		},
+		projectManager : {
+			validation : {
+				required : true
+			}
+		},
+		customerName : {
+			validation : {
+				required : true
+			}
+		},
+		projectStatus : {
+			validation : {
+				required : true
+			}
+		},
+		projectType : {
+			validation : {
+				required : true
+			}
+		},
+		projectAddress : {
+			validation : {
+				required : true
+			}
+		},
+		projectMemo : {
+			validation : {
+				required : true
+			}
+		}
+	}
 
+});
+
+var dataSource = new kendo.data.DataSource({
+	transport : {
+		read : {
+			url : "../service/project/list",
+			dataType : "jsonp"
+		},
+		update : {
+			url : "../service/project/update",
+			dataType : "jsonp",
+			method : "post"
+		},
+		create : {
+			url : "../service/project/add",
+			dataType : "jsonp",
+			method : "post"
+		},
+		//	parameterMap : function(options, operation) {
+			//if (operation !== "read" && options.models) {
+				//return {
+					//models : kendo.stringify(options.models)
+				//};
+			//}
+		//},
+		
+		method : "post"
+	},
+	pageSize: 5,
+    //serverPaging: true,
+    //serverSorting: true,
+    //serverFiltering: true,
+	//batch : true,
+	
+	schema : {
+		//model : addProjectFormModel
+	},
+});
+
+$(document).ready(function() {
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : {
@@ -88,13 +139,13 @@ $(document).ready(function() {
 			title : "项目总金额"
 		}, {
 			field : "invoiceAmount",
-			title : "开票金额%"
+			title : "开票金额"
 		}, {
 			field : "getAmount",
-			title : "到款金额%"
+			title : "到款金额"
 		}, {
 			field : "purchaseAmount",
-			title : "采购金额%"
+			title : "采购金额"
 		}]
 
 	});
@@ -102,14 +153,14 @@ $(document).ready(function() {
 	$("#addNewProject").hide();
 	
 	
-});//end dom ready		
+});//end dom ready	
 
 	function toolbar_delete() {
 		var rowData = getSelectedRowDataByGrid("grid");
 		alert("Delete the row _id: " + rowData._id);
 	  	console.log("Toolbar command is clicked!");
 	  	return false;
-	};
+	};//end toolbar_delete
 	
 	function toolbar_projectApprove() {
 		var rowData = getSelectedRowDataByGrid("grid");
@@ -117,9 +168,12 @@ $(document).ready(function() {
 		console.log("Toolbar command is clicked!");
 		return false;
 	};
+
+	var pfm = new addProjectFormModel();
 	
 	function toolbar_addNewProject() {
 		console.log("add new project##############");
+		kendo.bind($("#addNewProject"), pfm);
 		$("#addNewProject").show();
 		var window = $("#addNewProject");
 		if (!window.data("kendoWindow")) {
@@ -127,8 +181,7 @@ $(document).ready(function() {
 				width : "900px",
 				height : "500px",
 				title : "新建项目",
-				modal : true,
-				activate : onActivate
+				modal : true
 			});
 			window.data("kendoWindow").center();
 		} else {
@@ -143,33 +196,18 @@ $(document).ready(function() {
                 }
             }
         });
-		
-		//bind the modle
-		var projectModle = kendo.observable({
-			firstName:"name1",
-			lastName:"name2",
-			saveProject:function(){
-				var fN = this.get("firstName");
-				alert("firstName is : " + fN);
-			}
-		});
-		
-		kendo.bind($("#addNewProject"), projectModle);
 	};//end toolbar_addNewProject
 	
-	function onActivate(e) {
-		console.log("Add new project window activate........");
-	};
 
 	var proStatusItems = [{ text: "正式立项", value: "1" }, { text: "预立项", value: "2" }, { text: "内部立项", value: "3" }];
-	$("#project-status").kendoDropDownList({
+	$("#projectStatus").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
 		optionLabel : "选择项目状态...",
 		dataSource : proStatusItems
 	});
 	var proCategoryItems = [{ text: "产品", value: "1" }, { text: "工程", value: "2" }, { text: "服务", value: "3" }];
-	$("#project-category").kendoDropDownList({
+	$("#projectType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
 		optionLabel : "选择项目类型...",
@@ -177,11 +215,27 @@ $(document).ready(function() {
 	});
 	
 	var proManagerItems = [{ text: "Danny", value: "1" }, { text: "Dylan", value: "2" }, { text: "Jacky", value: "3" }];
-	$("#project-manager").kendoDropDownList({
+	$("#projectManager").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
         optionLabel: "选择项目经理...",
 		dataSource : proManagerItems,
+	});
+	
+	var invoiceTypeItems = [{ text: "invoiceType1", value: "1" }, { text: "invoiceType2", value: "2" }, { text: "invoiceType3", value: "3" }];
+	$("#invoiceType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择发票类型...",
+		dataSource : invoiceTypeItems,
+	});
+	
+	var contractTypeItems = [{ text: "contractType1", value: "1" }, { text: "contractType2", value: "2" }, { text: "contractType3", value: "3" }];
+	$("#contractType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择合同类型...",
+		dataSource : contractTypeItems,
 	});
 	
 	
