@@ -11,87 +11,96 @@
 
         
 <body>
-	<div id="main-content" class="main-content">
-		123456<div id="grid"></div>
+	<div id="grid"></div>
+	
+<script type="text/x-kendo-template" id="purTemplate">
+	<div class="toolbar">
+		<button onclick="javascript:addPerchaseRequest()" id ="addPur">添加</button>
 	</div>
+</script>
 <script>
-    $(document).ready(function () {
-        var crudServiceBaseUrl = "../../service/purchase/request",
-            dataSource = new kendo.data.DataSource({
-                transport: {
-                    read:  {
-                        url: crudServiceBaseUrl + "/list",
-                        dataType: "jsonp",
-                        type : "post"
-                    },
-                    update: {
-                        url: crudServiceBaseUrl + "/update",
-                        dataType: "jsonp",
-                        type : "post"
-                    },
-                    destroy: {
-                        url: crudServiceBaseUrl + "/destroy",
-                        dataType: "jsonp",
-                        type : "post"
-                    },
-                    create: {
-                        url: crudServiceBaseUrl + "/create",
-                        dataType: "jsonp",
-                        type : "post"
-                    },
-                    parameterMap: function(options, operation) {
-                        if (operation !== "read" && options.models) {
-                            return {models: kendo.stringify(options.models)};
-                        }
-                    }
+function addPerchaseRequest(){
+	alert("待完成...");
+}
+function editPerchaseRequest(e){
+	alert("待完成...");
+}
+	
+$(document).ready(function () {	
+    var crudServiceBaseUrl = "../../service/purchase/request",
+        dataSource = new kendo.data.DataSource({
+            transport: {
+                read:  {
+                    url: crudServiceBaseUrl + "/list",
+                    dataType: "jsonp",
+                    type : "post"
                 },
-                batch: true,
-                pageSize: 10,
-                schema: {
-                    model: {
-                        id: "_id",
-                        fields: {
-                            _id: { editable: false, nullable: true },
-                            code: { validation: { required: true } },
-                            type: { },
-                            customerContractCode: { },
-                            purchaseOrderCode: { },
-                            purchseContractCode: { },
-                            customerName: { },
-                            projectManagerName: { },
-                            status: { },
-                            approvedDate: { },
-                            amount: { },
-                            acountOfRequestInContract: { },
-                            percentOfGoodsInContract: { }
-                            percentOfAmountInContract: { }
-                        }
+                update:  {
+                    url: crudServiceBaseUrl + "/update",
+                    dataType: "jsonp",
+                    type : "post"
+                },
+                destroy: {
+                    url: crudServiceBaseUrl + "/destroy",
+                    dataType: "jsonp",
+                    type : "post"
+                },
+                parameterMap: function(options, operation) {
+                    if (operation !== "read" && options.models) {
+                        return {models: kendo.stringify(options.models)};
                     }
                 }
-            });
-
-        $("#grid").kendoGrid({
-            dataSource: dataSource,
-            pageable: true,
-            toolbar: [{name: "create", text:"添加"}],
-            columns: [
-                { field:"code", title: "申请编号" },
-                { field: "type", title:"申请类型" },
-                { field: "customerContractCode", title:"客户合同编号" },
-                { field: "purchaseOrderCode", title:"采购订单编号" },
-                { field: "purchseContractCode", title:"采购合同编号" },
-                { field: "customerName", title:"客户名" },
-                { field: "projectManagerName", title:"PM" },
-                { field: "status", title:"申请状态" },
-                { field: "approvedDate", title:"申请批准时间" },
-                { field: "amount", title:"金额" },
-                { field: "acountOfRequestInContract", title:"合同下采购申请单数量" },
-                { field: "percentOfGoodsInContract", title:"合同下已成功申请货品%" },
-                { field: "percentOfAmountInContract", title:"合同下已成功申请货品金额%" },
-                { command: [{name: "edit", text: "编辑"},{name: "destroy", text: "删除"}], title: "&nbsp;", width: "160px" }
-            ],
-            editable: "popup"
+            },
+            batch: false,
+            pageSize: 10,
+            schema: {
+                model: {
+                    id: "_id",
+                    fields: {
+                        _id: { editable: false, nullable: true },
+                        code: { validation: { required: true } },
+                        type: { validation: { required: true } },
+                        customerContractCode : {},
+                        purchaseOrderCode : {},
+                        purchaseContractCode : {},
+                        customerName : {},
+                        projectManagerName : {},
+                        status : {},
+                        approvedDate : {},
+                        money : {},
+                        countOfOrder : {},
+                        percentOfHasApplyGoods : {},
+                        moneyOfHasApplyGoods : {}
+                    }
+                }
+            }
         });
+
+    $("#grid").kendoGrid({
+        dataSource: dataSource,
+        pageable: true,
+        toolbar: kendo.template($("#purTemplate").html()),
+        columns: [
+            { field: "code", title: "编号" },
+            { field: "type", title:"类型" },
+            { field: "status", title:"申请状态" },
+            { field: "projectManagerName", title:"PM" },
+            { field: "approvedDate", title:"申请批准时间" },
+            { field: "money", title:"金额" },
+            { field: "customerName", title:"客户名" },
+            { field: "customerContractCode", title:"客户合同编号" },
+            { field: "purchaseOrderCode", title:"采购订单编号" },
+            { field: "purchaseContractCode", title:"采购合同编号" },
+            { field: "countOfOrder", title:"采购申请单数量" },
+            { field: "percentOfHasApplyGoods", title:"已申请请货物%" },
+            { field: "moneyOfHasApplyGoods", title:"已申请货物金额" },
+            { command: [{text: "编辑",onclick:"editPerchaseRequest()"},{name: "destroy", text: "删除"}], title: "&nbsp;" }
+        ],
+        editable: "popup"
     });
-</script>	
+
+   	
+});
+</script>
+	
 </body>
