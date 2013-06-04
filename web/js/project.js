@@ -1,55 +1,106 @@
-var dataSource;
-$(document).ready(function() {
-	dataSource = new kendo.data.DataSource({
-		transport : {
-			read : {
-				url : "../service/project/list",
-				dataType : "jsonp"
-			},
-			update : {
-				url : "../service/project/update",
-				dataType : "jsonp",
-				method : "post"
-			},
-			create : {
-				url : "../service/project/add",
-				dataType : "jsonp",
-				method : "post"
-			},
-			//	parameterMap : function(options, operation) {
-				//if (operation !== "read" && options.models) {
-					//return {
-						//models : kendo.stringify(options.models)
-					//};
-				//}
-			//},
-			
-			method : "post"
+var addProjectFormModel = kendo.data.Model.define({
+	id : "_id",
+	saveProject:function(){
+		dataSource.add(pfm);
+		dataSource.sync();
+		var window = $("#addNewProject");
+
+		if (window.data("kendoWindow")) {
+			window.data("kendoWindow").close();
+		}
+
+		var grid = $("#grid");
+		if (window.data("kendoGrid")) {
+			window.data("kendoGrid").refresh();
+		}
+	},
+	fields : {
+		_id : {
+			editable : false,
+			nullable : true
 		},
-		pageSize: 5,
-        //serverPaging: true,
-        //serverSorting: true,
-        //serverFiltering: true,
-		//batch : true,
-		
-        schema : {
-			model : {
-				id : "_id",
-				fields : {
-					_id : {
-						editable : false,
-						nullable : true
-					},
-					projectName : {
-						validation : {
-							required : true
-						}
-					}
-				}
+		projectCode : {
+			validation : {
+				required : true
 			}
 		},
-	});
+		projectName : {
+			validation : {
+				required : true
+			}
+		},
+		projectManager : {
+			validation : {
+				required : true
+			}
+		},
+		customerName : {
+			validation : {
+				required : true
+			}
+		},
+		projectStatus : {
+			validation : {
+				required : true
+			}
+		},
+		projectType : {
+			validation : {
+				required : true
+			}
+		},
+		projectAddress : {
+			validation : {
+				required : true
+			}
+		},
+		projectMemo : {
+			validation : {
+				required : true
+			}
+		}
+	}
 
+});
+
+var dataSource = new kendo.data.DataSource({
+	transport : {
+		read : {
+			url : "../service/project/list",
+			dataType : "jsonp"
+		},
+		update : {
+			url : "../service/project/update",
+			dataType : "jsonp",
+			method : "post"
+		},
+		create : {
+			url : "../service/project/add",
+			dataType : "jsonp",
+			method : "post"
+		},
+		//	parameterMap : function(options, operation) {
+			//if (operation !== "read" && options.models) {
+				//return {
+					//models : kendo.stringify(options.models)
+				//};
+			//}
+		//},
+		
+		method : "post"
+	},
+	pageSize: 5,
+    //serverPaging: true,
+    //serverSorting: true,
+    //serverFiltering: true,
+	//batch : true,
+	
+	schema : {
+		//model : addProjectFormModel
+	},
+});
+
+$(document).ready(function() {
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : {
@@ -102,7 +153,7 @@ $(document).ready(function() {
 	$("#addNewProject").hide();
 	
 	
-});//end dom ready		
+});//end dom ready	
 
 	function toolbar_delete() {
 		var rowData = getSelectedRowDataByGrid("grid");
@@ -117,9 +168,12 @@ $(document).ready(function() {
 		console.log("Toolbar command is clicked!");
 		return false;
 	};
+
+	var pfm = new addProjectFormModel();
 	
 	function toolbar_addNewProject() {
 		console.log("add new project##############");
+		kendo.bind($("#addNewProject"), pfm);
 		$("#addNewProject").show();
 		var window = $("#addNewProject");
 		if (!window.data("kendoWindow")) {
@@ -127,8 +181,7 @@ $(document).ready(function() {
 				width : "900px",
 				height : "500px",
 				title : "新建项目",
-				modal : true,
-				activate : onActivate
+				modal : true
 			});
 			window.data("kendoWindow").center();
 		} else {
@@ -143,53 +196,18 @@ $(document).ready(function() {
                 }
             }
         });
-		
-		//bind the modle
-		var projectModle = kendo.observable({
-			projectCode:"pro code",
-			projectName:"pro name",
-			projectManager:"",
-			customerName:"",
-			projectStatus:"",
-			saveProject:function(){
-				//addProjectDataSource.add({"projectCode":"test","projectName":"test","projectStatus":"test","projectType":"test","projectManager":"test","customerName":"test","totalAmount":"test","invoiceAmount":"test","getAmount":"test","purchaseAmount":"test",});
-				//addProjectDataSource.add();
-				//addProjectDataSource.sync();
-				
-				$.ajax( {
-			        url: "../service/project/add",
-			        dataType: "jsonp",
-			        data: {
-			          models: kendo.stringify(this)
-			        },
-			        success: function(result) {
-			        	options.success(result);
-			        },
-			        error: function(result) {
-			        	options.error(result);
-			    }});
-				
-				var fN = this.get("firstName");
-				alert("firstName is : " + fN);
-			}
-		});
-		
-		kendo.bind($("#addNewProject"), projectModle);
 	};//end toolbar_addNewProject
 	
-	function onActivate(e) {
-		console.log("Add new project window activate........");
-	};
 
 	var proStatusItems = [{ text: "正式立项", value: "1" }, { text: "预立项", value: "2" }, { text: "内部立项", value: "3" }];
-	$("#project-status").kendoDropDownList({
+	$("#projectStatus").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
 		optionLabel : "选择项目状态...",
 		dataSource : proStatusItems
 	});
 	var proCategoryItems = [{ text: "产品", value: "1" }, { text: "工程", value: "2" }, { text: "服务", value: "3" }];
-	$("#project-category").kendoDropDownList({
+	$("#projectType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
 		optionLabel : "选择项目类型...",
@@ -197,7 +215,7 @@ $(document).ready(function() {
 	});
 	
 	var proManagerItems = [{ text: "Danny", value: "1" }, { text: "Dylan", value: "2" }, { text: "Jacky", value: "3" }];
-	$("#project-manager").kendoDropDownList({
+	$("#projectManager").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
         optionLabel: "选择项目经理...",
