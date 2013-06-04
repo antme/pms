@@ -4,14 +4,62 @@
 .k-grid-toolbar {
 	height: 25px;
 }
+
+.supplier-edit {
+	display: none;
+}
 </style>
 
-<script  src="js/supplier.js"></script>
+<script src="js/supplier.js"></script>
+<script type="text/x-kendo-template" id="template">
+    <button class="k-button"  onclick="addNewSupplier();">新增</button>
+</script>
 
 <body>
 	<div id="supplier" class="k-content">
-    	<div id="grid"></div>
+		<div id="grid"></div>
 	</div>
 
+	<div class="supplier-edit" id="supplier-edit">
+
+		<div class="k-edit-form-container">
+			<div class="k-edit-label ">
+				<label for="supplierName">供应商名字</label>
+			</div>
+			<div data-container-for="supplierName" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="supplierName"
+					required="required" data-bind="value:supplierName">
+			</div>
+			<div class="k-edit-label ">
+				<label for="supplierAddress">供应商地址</label>
+			</div>
+			<div data-container-for="supplierAddress" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="supplierAddress"
+					required="required" min="1" data-bind="value:supplierAddress">
+			</div>
+			<div class="k-edit-label ">
+				<label for="supplierContact">供应商联系人</label>
+			</div>
+			<div data-container-for="supplierContact" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="supplierContact"
+					data-bind="value:supplierContact">
+			</div>
+			<div class="k-edit-label ">
+				<label for="supplierContactPhone">供应商联系人电话</label>
+			</div>
+			<div data-container-for="supplierContactPhone" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox"
+					name="supplierContactPhone" min="0" required="required"
+					data-bind="value:supplierContactPhone">
+			</div>
+			<button class="k-button k-button-icontext k-grid-update" onclick="saveData()">
+				<span class="k-icon k-update"></span>Update
+			</button>
+			<button class="k-button k-button-icontext k-grid-cancel">
+				<span class="k-icon k-cancel"></span>Cancel
+			</button>
+		</div>
+
+	</div>
 </body>
 </html>
