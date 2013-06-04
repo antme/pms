@@ -109,7 +109,10 @@ body {
 	font-size: 15px;
 	color: red;
 }
-
+.left{
+	   display: none;
+	
+}
 #tree-nav .k-in {
 	cursor: pointer !important;
 }
