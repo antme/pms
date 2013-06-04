@@ -105,6 +105,7 @@ var dataSource = new kendo.data.DataSource({
 			}
 		}
 	},
+	batch : true,
 	pageSize: 10,
     //serverPaging: true,
     //serverSorting: true,
