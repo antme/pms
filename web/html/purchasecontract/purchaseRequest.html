@@ -1,182 +1,44 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style>
-.k-grid-toolbar {
-	height: 25px;
-}
+<!--
 
-#role-edit {
-	cursor: pointer;
-}
+-->
 </style>
-
-        
+<script type="text/javascript" src="js/purchaseRequest.js"></script>      
 <body>
+
 <div id="grid"></div>
-<div id="addPurchaseWindow" style="display: none;">
-	<label>项目名：</label>
-	<input id="projectName" />
-	<button id="projectSearch">加载</button>
-	<br/><hr>
-	<div id="projectGoodGrid"></div>
-</div>
 <script type="text/x-kendo-template" id="purTemplate">
 	<div class="toolbar">
 		<button id ="bt_addPur">添加</button>
 	</div>
 </script>
-<script>	
-$(document).ready(function () {	
-	//采购请求列表
-    var crudServiceBaseUrl = "../../service/purchase/request",
-    datasource = new kendo.data.DataSource({
-            transport: {
-                read:  {
-                    url: crudServiceBaseUrl + "/list",
-                    dataType: "jsonp",
-                    type : "post"
-                },
-                update:  {
-                    url: crudServiceBaseUrl + "/update",
-                    dataType: "jsonp",
-                    type : "post"
-                },
-                destroy: {
-                    url: crudServiceBaseUrl + "/destroy",
-                    dataType: "jsonp",
-                    type : "post"
-                },
-                parameterMap: function(options, operation) {
-                    if (operation !== "read" && options.models) {
-                        return {models: kendo.stringify(options.models)};
-                    }
-                }
-            },
-            batch: false,
-            pageSize: 10,
-            schema: {
-                model: {
-                    id: "_id",
-                    fields: {
-                        _id: { editable: false, nullable: true },
-                        code: { validation: { required: true } },
-                        type: { validation: { required: true } },
-                        customerContractCode : {},
-                        purchaseOrderCode : {},
-                        purchaseContractCode : {},
-                        customerName : {},
-                        projectManagerName : {},
-                        status : {},
-                        approvedDate : {},
-                        money : {},
-                        countOfOrder : {},
-                        percentOfHasApplyGoods : {},
-                        moneyOfHasApplyGoods : {}
-                    }
-                }
-            }
-        });
-
-    $("#grid").kendoGrid({
-        dataSource: datasource,
-        pageable: true,
-        toolbar: kendo.template($("#purTemplate").html()),
-        columns: [
-            { field: "code", title: "编号" },
-            { field: "type", title:"类型" },
-            { field: "status", title:"申请状态" },
-            { field: "projectManagerName", title:"PM" },
-            { field: "approvedDate", title:"申请批准时间" },
-            { field: "money", title:"金额" },
-            { field: "customerName", title:"客户名" },
-            { field: "customerContractCode", title:"客户合同编号" },
-            { field: "purchaseOrderCode", title:"采购订单编号" },
-            { field: "purchaseContractCode", title:"采购合同编号" },
-            { field: "countOfOrder", title:"采购申请单数量" },
-            { field: "percentOfHasApplyGoods", title:"已申请请货物%" },
-            { field: "moneyOfHasApplyGoods", title:"已申请货物金额" },
-            { command: [{text: "编辑",onclick:"editPerchaseRequest()"},{name: "destroy", text: "删除"}], title: "&nbsp;" }
-        ],
-        editable: "popup"
-    });
-////弹出框 grid加载///////////////////////////////
-    ds_addRequest = new kendo.data.DataSource({
-            transport: {
-                read:  {
-                    url: "../../service/purchase/request/prepare",
-                    dataType: "jsonp",
-                    type : "post"
-                },
-                update:  {
-                    url: "../../service/purchase/request/create",
-                    dataType: "jsonp",
-                    type : "post"
-                },
-                parameterMap: function(options, operation) {
-                    if (operation !== "read" && options.models) {
-                        return {models: kendo.stringify(options.models)};
-                    }
-                }
-            },
-            batch: true,
-            pageSize: 10,
-            serverFiltering: true,
-            schema: {
-                model: {
-                    id: "_id",
-                    fields: {
-                        _id: { editable: false, nullable: true },
-                        good_name: {editable: false, validation: { required: true } },
-                        good_code: { editable: false,validation: { required: true } },
-                        good_applyCount: {validation: { required: true } },
-                        good_totalCount: {editable: false, validation: { required: true } }
-                    }
-                }
-            }
-        });
-    var pgGrid = $("#projectGoodGrid").kendoGrid({
-        dataSource: ds_addRequest,
-        pageable: true,
-        toolbar: [{name:"save",text:"提交"},{name:"cancel",text:"取消"}],
-        columns: [
-            { field: "good_name", title: "货物名称" },
-            { field: "good_code", title:"货物编号" },
-            { field: "good_applyCount", title:"申请数量" },
-            { field: "good_totalCount", title:"总量" }
-        ],
-        editable: true
-    });
-
-/////////////////////////////////
-	$("#bt_addPur").click(function(){	
-		$("#addPurchaseWindow").data("kendoWindow").open();		
-	});
-
-  //弹出框：添加采购请求表单	
-	$("#addPurchaseWindow").kendoWindow({
-	    width: "800px",
-	    height: "300px",
-	    actions: ["Maximize", "Close"],
-	    title: "添加 [采购申请]",
-	    close: function() {
-	    	//......
-	    }
-	});
-
-   	//选择项目后，加载其清单列表
-   	$("#projectSearch").click(function(){
-		var pName = $("#projectName").val();
-		//if(projectName){
-			pgGrid.data("kendoGrid").dataSource.filter({ field: "good_name", operator: "eq", value: pName });	
-		//}else{
-		//	pgGrid.data("kendoGrid").dataSource.filter({});
-		//}   		
-   	});
-   	
-   	function editPerchaseRequest(e){
-		alert("待完成...");
-	}
-   	
-});
-</script>
-	
+<div id="popRequest" style="display: none;">
+    <div id="purchaseRequestInfo" >
+    		<label>请输入 销售合同编号:</label>
+    		<select data-role="combobox" data-text-field="name" data-value-field="name" data-bind="source: purchaseContractList, value: purchaseContractValue"></select>
+    		<button data-bind="click: L_search">确定</button>
+    		<br><hr><br>
+    		<label>申请编号:</label>
+    		<input data-bind="value: L_code" disabled="disabled"/>    		
+     		<label>销售合同编号:</label>
+    		<input data-bind="value: L_purchaseContractCode" disabled="disabled"/>   		
+    		<label>项目名称:</label>
+    		<input data-bind="value: L_projectName"  disabled="disabled"/>
+    		<label>项目负责人:</label>
+    		<input data-bind="value: L_pm"  disabled="disabled"/></td>
+    		<label>客户名称: </label>
+    		<input data-bind="value: L_customerName"  disabled="disabled"/>
+    		<br><hr><br>
+    		<label>采购类别:</label>
+    		<select data-role="dropdownlist" data-text-field="name" data-value-field="value" data-bind="source: typeValues, value:L_type"></select>
+    		<br>
+    		<label>要求到货日期: </label>
+    		<input data-role="datepicker" data-bind="value: L_requireDate" />
+    		<br>
+    		<label>清单列表：</label>
+    		<div data-role="grid" data-sortable="true" data-editable="true" data-columns='["Name", "Price", "UnitsInStock", {"command": "destroy"}]' data-bind="source: gridSource"></div>
+    		<button data-bind="click: L_submit">提交</button>
+	</div>	
+</div>	
 </body>
