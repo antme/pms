@@ -53,8 +53,7 @@ $(document).ready(function() {
 		pageable : true,
 		editable : "popup",
 		toolbar : [ {
-			name : "create",
-			text : "添加"
+			template : kendo.template($("#template").html())
 		} ],
 		columns : [ {
 			field : "orderId",
@@ -114,78 +113,165 @@ $(document).ready(function() {
 	});
 });
 
+function onRequestSelectWindowActive(e) {
+	$("#purchaseRequest").kendoDropDownList({
+		dataTextField : "ProductName",
+		dataValueField : "ProductID",
+		dataSource : {
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "http://demos.kendoui.com/service/Products",
+				}
+			}
+		}
+	});
+
+}
+
+var reoptions = {
+	id : "purchase-request-select",
+	width : "400px",
+	height : "300px",
+	title : "选择采购申请",
+	activate : onRequestSelectWindowActive
+};
+
+function add() {
+	openWindow(reoptions);
+
+}
+
+function cancelSelectRequest() {
+	var window = $("#" + reoptions.id);
+	if (window.data("kendoWindow")) {
+		window.data("kendoWindow").close();
+	}
+}
+
+function showOrderWindow() {
+	edit(null);
+	cancelSelectRequest();
+}
+
 function edit(e) {
-	e.preventDefault();
-	var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+	var dataItem = new model();
+	if (e) {
+		e.preventDefault();
+		dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+	}
 	kendo.bind($("#purchaseorder-edit"), dataItem);
 	$("#orderId").html(dataItem.orderId);
-	
 
-	
+	var options = {
+		id : "purchaseorder-edit",
+		width : "900px",
+		height : "500px",
+		title : "编辑采购订单"
+	};
+	openWindow(options);
+
 	$("#purchaseorder-edit-grid").kendoGrid({
-		dataSource : dataSource,
 		columns : [ {
 			field : "orderId",
-			title : "采购订单编号"
+			title : "货品编号",
+			width : 150
 		}, {
 			field : "customerContractId",
-			title : "客户合同编号"
+			title : "货品名",
+			width : 150
 		}, {
 			field : "contractRequestId",
-			title : "采购申请编号"
+			title : "货品类别",
+			width : 150
 		}, {
 			field : "purchaseConractId",
-			title : "采购合同编号"
+			title : "货品型号",
+			width : 150
 
 		}, {
 			field : "customerName",
-			title : "客户名"
+			title : "合同中总数",
+			width : 150
 		}, {
 			field : "projectManager",
-			title : "PM"
+			title : "可申请数量",
+			width : 150
 		}, {
 			field : "status",
-			title : "采购订单状态"
+			title : "本次申请数量",
+			width : 150
 		}, {
 			field : "approveDate",
-			title : "订单批准时间"
+			title : "参考单价",
+			width : 150
 		}, {
 			field : "money",
-			title : "金额"
+			title : "申请小计金额",
+			width : 150
 		}, {
 			field : "number",
-			title : "合同下采购申请单数量",
+			title : "订单货品编号",
 			width : 150
 		}, {
 			field : "numberExists",
-			title : "合同下已申请采购货品%",
+			title : "订单货品名%",
 			width : 150
 		}, {
 			field : "numberExistsRequest",
-			title : "合同下已申请采购金额%",
+			title : "订单货品型号%",
 			width : 150
-		} ]
+		} , {
+			field : "numberExistsRequest",
+			title : "订单货品单价",
+			width : 150
+		}, {
+			field : "numberExistsRequest",
+			title : "订单实际小计金额",
+			width : 150
+		}, {
+			field : "numberExistsRequest",
+			title : "金额差值",
+			width : 150
+		}],
+		scrollable: true,
+		width: "800px"
 
 	});
-	
+
+	var data = [ {
+		requestMoney : 100,
+		numbers : 33,
+		numbersPercent : 50,
+		moneyPercent : 20
+	} ];
 	$("#purchaseorder-sum-grid").kendoGrid({
-		dataSource : dataSource,
 		columns : [ {
-			field : "orderId",
-			title : "采购订单编号"
+			field : "requestMoney",
+			title : "申请金额"
 		}, {
-			field : "customerContractId",
-			title : "客户合同编号"
+			field : "numbers",
+			title : "货品数量"
 		}, {
-			field : "contractRequestId",
-			title : "采购申请编号"
+			field : "numbersPercent",
+			title : "货品占合同%"
 		}, {
-			field : "purchaseConractId",
-			title : "采购合同编号"
+			field : "moneyPercent",
+			title : "货品金额占合同%"
 
 		} ],
-		width:300
+		width : "200px"
 
 	});
+
+	var kendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
+
+	var dSource = new kendo.data.DataSource({
+		data : data
+	});
 	
+	
+	kendoGrid.setDataSource(dSource);
+
 }

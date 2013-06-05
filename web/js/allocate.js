@@ -88,7 +88,7 @@ $(document).ready(function () {
                 id: "ProductID",
                 fields: {
                     ProductID: { editable: false, nullable: true },
-                    ProductName: { validation: { required: true } },
+                    ProductName: { editable: false, validation: { required: true } },
                     UnitPrice: { type: "number", validation: { required: true, min: 1} },
                     Discontinued: { type: "boolean" },
                     UnitsInStock: { type: "number", validation: { min: 0, required: true } }
@@ -112,6 +112,23 @@ $(document).ready(function () {
 	    editable: true
 	});
 });
+
+function toolbar_add() {
+	$("#allocate-edit").show();
+	var window = $("#allocate-edit");
+	if (!window.data("kendoWindow")) {
+		window.kendoWindow({
+			width : "900px",
+			height : "500px",
+			title : "新建供应商",
+			modal : true,
+		});
+		window.data("kendoWindow").center();
+	} else {
+		window.data("kendoWindow").open();
+		window.data("kendoWindow").center();
+	}
+};
 
 function toolbar_delete() {
 	var rowData = getSelectedRowDataByGrid("grid");
