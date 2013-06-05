@@ -55,7 +55,7 @@ public class ProjectController extends AbstractController {
     @RequestMapping("/listequipments")
     public void listEquipmentListByProject(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, false);
-    	//responseWithData(projectService, request, response);
+    	responseWithData(projectService.listEquipmentsForProject(params), request, response);
     }
     
     @RequestMapping("/add")
