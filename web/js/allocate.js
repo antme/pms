@@ -55,72 +55,17 @@ $(document).ready(function () {
             { command: ["edit", "destroy"], title: "&nbsp;", width: "160px" }],
         editable: "popup"
     });
-    
-    var crudServiceBaseUrl = "http://demos.kendoui.com/service",
-    dataSource = new kendo.data.DataSource({
-        transport: {
-            read:  {
-                url: crudServiceBaseUrl + "/Products",
-                dataType: "jsonp"
-            },
-            update: {
-                url: crudServiceBaseUrl + "/Products/Update",
-                dataType: "jsonp"
-            },
-            destroy: {
-                url: crudServiceBaseUrl + "/Products/Destroy",
-                dataType: "jsonp"
-            },
-            create: {
-                url: crudServiceBaseUrl + "/Products/Create",
-                dataType: "jsonp"
-            },
-            parameterMap: function(options, operation) {
-                if (operation !== "read" && options.models) {
-                    return {models: kendo.stringify(options.models)};
-                }
-            }
-        },
-        batch: true,
-        pageSize: 20,
-        schema: {
-            model: {
-                id: "ProductID",
-                fields: {
-                    ProductID: { editable: false, nullable: true },
-                    ProductName: { editable: false, validation: { required: true } },
-                    UnitPrice: { type: "number", validation: { required: true, min: 1} },
-                    Discontinued: { type: "boolean" },
-                    UnitsInStock: { type: "number", validation: { min: 0, required: true } }
-                }
-            }
-        }
-    });
-
-	$("#popup-grid").kendoGrid({
-	    dataSource: dataSource,
-	    navigatable: true,
-	    pageable: true,
-	    height: 430,
-	    toolbar: ["create", "save", "cancel"],
-	    columns: [
-	        "ProductName",
-	        { field: "UnitPrice", title: "Unit Price", format: "{0:c}", width: 110 },
-	        { field: "UnitsInStock", title: "Units In Stock", width: 110 },
-	        { field: "Discontinued", width: 110 },
-	        { command: "destroy", title: "&nbsp;", width: 90 }],
-	    editable: true
-	});
 });
 
 function toolbar_add() {
+	show_edit_grid();
 	$("#allocate-edit").show();
 	var window = $("#allocate-edit");
 	if (!window.data("kendoWindow")) {
 		window.kendoWindow({
 			width : "900px",
 			height : "500px",
-			title : "新建供应商",
+			title : "shit",
 			modal : true,
 		});
 		window.data("kendoWindow").center();
@@ -129,6 +74,67 @@ function toolbar_add() {
 		window.data("kendoWindow").center();
 	}
 };
+
+function show_edit_grid() {
+	var crudServiceBaseUrl = "http://demos.kendoui.com/service",
+	grid = $("#popup-grid").kendoGrid({
+        dataSource: {
+        	type: "odata",
+            transport: {
+                read: "http://demos.kendoui.com/service/Northwind.svc/Products"
+            },
+            pageSize: 20,
+            serverPaging: true,
+            serverFiltering: true,
+            schema: {
+                model: {
+                    id: "ProductID",
+                    fields: {
+                        ProductID: { editable: false, nullable: true },
+                        ProductName: { editable: false, validation: { required: true } },
+                        UnitPrice: { editable: true, type: "number", validation: { required: true, min: 1} },
+                        QuantityPerUnit: { editable: false }
+                    }
+                }
+            }
+        },
+        selectable: "multiple",
+        toolbar: [
+			{ name: "save", text: "提交" },
+			{ name: "cancel", text: "还原" },
+			{ template: kendo.template($("#popup-template").html()) }
+        ],
+        height: 430,
+        pageable: true,
+        columns: [
+            { field: "ProductID", title: "Product ID", width: 100 },
+            { field: "ProductName", title: "Product Name" },
+            { field: "UnitPrice", title: "Unit Price", width: 100 },
+            { field: "QuantityPerUnit", title: "Quantity Per Unit" }
+        ],
+        editable: true
+    });
+    var dropDown = grid.find("#category").kendoDropDownList({
+        dataTextField: "ProductName",
+        dataValueField: "ProductID",
+        autoBind: false,
+        optionLabel: "All",
+        dataSource: {
+            transport: {
+                read: {
+                    dataType: "jsonp",
+                    url: "http://demos.kendoui.com/service/Products",
+                }
+            }
+        },
+        change: function() {
+            var value = this.value();
+            if (value) {
+                grid.data("kendoGrid").dataSource.filter({ field: "ProductID", operator: "eq", value: parseInt(value) });
+            }
+        }
+    });
+}
 
 function toolbar_delete() {
 	var rowData = getSelectedRowDataByGrid("grid");
