@@ -1,6 +1,7 @@
 package com.pms.service.mockbean;
 
 public class ProjectContractBean {
+	public static final String PC_PROJECT_ID = "projectId";
 
 	public static final String PC_CUSTOMER_NAME = "customerName";
 	public static final String PC_AMOUNT = "contractAmount";
@@ -24,6 +25,8 @@ public class ProjectContractBean {
 	public static final String PC_MEMO = "contractMemo";
 	
 	//设备成本清单字段
+	public static final String PC_EQ_LIST = "eqcostList";
+	
 	public static final String PC_EQ_LIST_NO = "eqcostNo";//序号
 	public static final String PC_EQ_LIST_MATERIAL_CODE = "eqcostMaterialCode";//物料代码
 	public static final String PC_EQ_LIST_PRODUCT_NAME = "eqcostProductName";//产品名称

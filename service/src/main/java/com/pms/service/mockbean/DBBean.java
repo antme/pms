@@ -7,7 +7,9 @@ public class DBBean {
     
     public static final String USER_GROUP = "userGroup";
     
-    public static final String PROJECT = "project";
+    public static final String PROJECT = "project"; //项目
+    
+    public static final String PROJECT_CONTRACT = "projectContract"; //销售合同
     
     public static final String CUSTOMER = "customer";
     
