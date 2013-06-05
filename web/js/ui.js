@@ -106,3 +106,30 @@ function getSelectedRowDataByGrid(gridId) {
 	var row = grid.select();
 	return grid.dataItem(row);
 }
+
+
+function openWindow(options){
+	var window = $("#"+options.id);
+	$("#"+options.id).show();
+	var onActivate = onDefaultActivate;
+	if(options.activate){
+		onActivate = options.activate;
+	}
+	if (!window.data("kendoWindow")) {		
+		window.kendoWindow({
+			width : options.width,
+			height : options.height,
+			title : options.title,
+			modal : true,
+			activate : onActivate
+		});
+		window.data("kendoWindow").center();
+	} else {
+		window.data("kendoWindow").open();
+		window.data("kendoWindow").center();
+	}	
+}
+
+function onDefaultActivate(e){
+	
+}

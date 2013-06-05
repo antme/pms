@@ -114,8 +114,17 @@ $(document).ready(function() {
 	});
 });
 
+
 function edit(e) {
+	
+	
 	e.preventDefault();
+
+	var options = {id:"purchaseorder-edit", width:"900px", height: "500px", title:"编辑采购订单"};
+	openWindow(options);
+	
+	
+	
 	var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
 	kendo.bind($("#purchaseorder-edit"), dataItem);
 	$("#orderId").html(dataItem.orderId);

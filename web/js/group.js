@@ -132,20 +132,16 @@ function onActivate(e) {
 	var data = dataSource.data();
 	var length = data.length;
 	multiselect.value([]);
-	console.log(groupId);
 	var roles;
 	for (i = 0; i < length; i++) {
-		console.log(data[i].id + "===" + groupId);
 		if (data[i].id == groupId) {
 			var up = data[i];
 			roles = up.roles;
-			console.log(roles);
 			if (roles) {
 				var upRoles = [];
 				for (j = 0; j < roles.length; j++) {
 					upRoles[j] = roles[j];
 				}
-				console.log(upRoles);
 				multiselect.value(upRoles);
 			}
 			break;
@@ -157,20 +153,6 @@ function onActivate(e) {
 
 function openGroupRoleWindow(id) {
 	groupId = id;
-	$("#group-role").show();
-	var window = $("#group-role");
-	if (!window.data("kendoWindow")) {
-		window.kendoWindow({
-			width : "415px",
-			height : "500px",
-			title : "选择权限",
-			modal : true,
-			activate : onActivate
-		});
-		window.data("kendoWindow").center();
-	} else {
-		window.data("kendoWindow").open();
-		window.data("kendoWindow").center();
-	}
-
+	var options = {id:"group-role", width:"415px", height: "500px", title:"选择权限", activate:onActivate};
+	openWindow(options);
 }
