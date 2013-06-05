@@ -52,6 +52,19 @@ var addProjectFormModel = kendo.data.Model.define({
 		invoiceType : {
 			
 		},
+		estimateEqCost0 : {
+			
+		},
+		estimateEqCost1 : {
+			
+		},
+		estimateSubCost : {},
+		estimatePMCost : {},
+		estimateDeepDesignCost:{},
+		estimateDebugCost:{},
+		estimateOtherCost:{},
+		debugCostType:{},
+		taxType:{},
 		contractCode : {
 			
 		},
@@ -141,10 +154,32 @@ $(document).ready(function() {
 			title : "项目名"
 		}, {
 			field : "projectStatus",
-			title : "项目状态"
+			title : "项目状态",
+			template:function(dataItem) {
+				var name = "";
+				if (dataItem.projectType == 1){
+					name = "正式立项";
+				} else if (dataItem.projectType == 2){
+					name = "预立项";
+				} else {
+					name = "内部立项";
+				}
+				return name;
+			}
 		}, {
 			field : "projectType",
-			title : "项目类型"
+			title : "项目类型",
+			template:function(dataItem) {
+				var name = "";
+				if (dataItem.projectType == 1){
+					name = "产品";
+				} else if (dataItem.projectType == 2){
+					name = "工程";
+				} else {
+					name = "服务";
+				}
+				return name;
+			}
 		}, {
 			field : "projectManager",
 			title : "PM"
@@ -213,6 +248,44 @@ $(document).ready(function() {
                 }
             }
         });
+		
+		//合同签订日期控件
+		$("#contractDate").kendoDatePicker();
+		
+		$("#contractAmount").kendoNumericTextBox({
+			min:0
+		});
+		$("#estimateEqCost0").kendoNumericTextBox({
+			min:0
+		});
+		$("#estimateEqCost1").kendoNumericTextBox({
+			min:0
+		});
+		$("#estimateSubCost").kendoNumericTextBox({
+			min:0
+		});
+		$("#estimatePMCost").kendoNumericTextBox({
+			min:0
+		});
+		$("#estimateDeepDesignCost").kendoNumericTextBox({
+			min:0
+		});
+		$("#estimateDebugCost").kendoNumericTextBox({
+			min:0
+		});
+		$("#estimateOtherCost").kendoNumericTextBox({
+			min:0
+		});
+		$("#contractDownPayment").kendoNumericTextBox({
+			min:0
+		});
+		$("#progressPayment").kendoNumericTextBox({
+			min:0
+		});
+		$("#qualityMoney").kendoNumericTextBox({
+			min:0
+		});
+        //$("#contractDate").data("kendoDatePicker").dateView.calendar.element.width(300);
 	};//end toolbar_addNewProject
 	
 
@@ -246,15 +319,6 @@ $(document).ready(function() {
         optionLabel: "选择发票类型...",
 		dataSource : invoiceTypeItems,
 	});
-	
-	var contractTypeItems = [{ text: "contractType1", value: "1" }, { text: "contractType2", value: "2" }, { text: "contractType3", value: "3" }];
-	$("#contractType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
-        optionLabel: "选择合同类型...",
-		dataSource : contractTypeItems,
-	});
-	
 	var taxTypeItems = [{ text: "taxType1", value: "1" }, { text: "taxType2", value: "2" }, { text: "taxType3", value: "3" }];
 	$("#taxType").kendoDropDownList({
 		dataTextField : "text",
@@ -270,6 +334,15 @@ $(document).ready(function() {
         optionLabel: "选择调试费用类型...",
 		dataSource : debugCostTypeItems,
 	});
+	
+	var contractTypeItems = [{ text: "contractType1", value: "1" }, { text: "contractType2", value: "2" }, { text: "contractType3", value: "3" }];
+	$("#contractType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择合同类型...",
+		dataSource : contractTypeItems,
+	});
+	
 	
 	function saveProject(){
 		dataSource.add(pfm);
