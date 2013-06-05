@@ -178,65 +178,40 @@ function edit(e) {
 		columns : [ {
 			field : "orderId",
 			title : "货品编号",
-			width : 150
+			width : 80
 		}, {
 			field : "customerContractId",
 			title : "货品名",
-			width : 150
+			width : 80
 		}, {
 			field : "contractRequestId",
 			title : "货品类别",
-			width : 150
+			width : 80
 		}, {
 			field : "purchaseConractId",
 			title : "货品型号",
-			width : 150
+			width : 80
 
 		}, {
 			field : "customerName",
-			title : "合同中总数",
-			width : 150
+			title : "单价",
+			width : 50
 		}, {
 			field : "projectManager",
-			title : "可申请数量",
-			width : 150
+			title : "小计金额",
+			width : 80
 		}, {
 			field : "status",
-			title : "本次申请数量",
-			width : 150
+			title : "物流目的地类型",
+			width : 100
 		}, {
 			field : "approveDate",
-			title : "参考单价",
-			width : 150
+			title : "货品物流状态",
+			width : 100
 		}, {
 			field : "money",
-			title : "申请小计金额",
-			width : 150
-		}, {
-			field : "number",
-			title : "订单货品编号",
-			width : 150
-		}, {
-			field : "numberExists",
-			title : "订单货品名%",
-			width : 150
-		}, {
-			field : "numberExistsRequest",
-			title : "订单货品型号%",
-			width : 150
-		}, {
-			field : "numberExistsRequest",
-			title : "订单货品单价",
-			width : 150
-		}, {
-			field : "numberExistsRequest",
-			title : "订单实际小计金额",
-			width : 150
-		}, {
-			field : "numberExistsRequest",
-			title : "金额差值",
-			width : 150
-		} ],
+			title : "货品预计到达时间"
+		}],
 		scrollable : true,
 		width : "800px"
 
