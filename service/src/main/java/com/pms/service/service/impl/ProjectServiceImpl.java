@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IProjectService;
 import com.pms.service.util.ApiUtil;
@@ -45,6 +46,24 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	public void updateProject(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Map<String, Object> listProjectsForSelect(Map<String, Object> params) {
+		// TODO Add logic to filter the projects which in progresss
+		String[] limitKeys = {ProjectBean.PROJECT_NAME};
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.LIMIT_KEYS, limitKeys);
+		Map<String, Object> result = dao.list(query, DBBean.PROJECT);
+		
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> listEquipmentsForProject(
+			Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
