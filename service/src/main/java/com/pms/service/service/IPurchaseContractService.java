@@ -22,4 +22,6 @@ public interface IPurchaseContractService {
     public void deletePurchaseOrder(Map<String, Object> order);
     
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> order);
+
+    public Map<String, Object> listPurchaseRequest();
 }
