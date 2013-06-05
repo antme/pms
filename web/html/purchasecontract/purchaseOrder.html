@@ -9,11 +9,22 @@
 #purchaseorder-edit {
 	display: none;
 }
+
+#purchase-request-select {
+	display: none;
+}
 </style>
 
 
 <script type="text/javascript" src="js/purchaseOrder.js"></script>
 </head>
+
+<script type="text/x-kendo-template" id="template">
+    <button class="k-button" onclick="add();">新增</button>
+    <a class="k-button" href="\#" onclick="return toolbar_delete()">删除</a>
+    <a class="k-button" href="\#" onclick="return toolbar_projectApprove()">批准</a>
+    <a class="k-button" href="\#" onclick="return toolbar_projectApprove()">拒绝</a>
+</script>
 
 <body>
 	<div id="purchaseorder" class="k-content">
@@ -23,14 +34,12 @@
 	<div id="purchaseorder-edit" class="k-content">
 		<div id="purchaseorder-edit-header" class="k-edit-form-container">
 			<div>
-				<label>项目名: <span id="orderId"></span></label> <label>项目ID:<span
-					id="customerContractId"></span></label> <label>合同ID: <span
-					id="customerContractId"></span></label> <label>申请ID:<span
-					id="customerContractId"></span></label> <label>订单ID: <span
-					id="customerContractId"></span></label>
+				<label>项目名: <span id="orderId"></span></label> 
+				<label>项目ID:<span id="customerContractId"></span></label> 
+				<label>合同ID: <span id="customerContractId"></span></label> 
+				<label>申请ID:<span id="customerContractId"></span></label> 
+				<label>订单ID: <span id="customerContractId"></span></label>
 			</div>
-
-
 		</div>
 		<div>
 			<div id="purchaseorder-edit-grid"></div>
@@ -45,5 +54,16 @@
 			</div>
 		</div>
 	</div>
+
+	<div id="purchase-request-select" class="k-content">
+		<div>
+			<input id="purchaseRequest" style="width: 250px" />
+		</div>
+		<div>
+			<button onclick="cancelSelectRequest();">取消</button>
+			<button onclick="showOrderWindow();">下一步</button>
+		</div>
+	</div>
+
 </body>
 </html>

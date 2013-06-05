@@ -115,7 +115,9 @@ function openWindow(options){
 	if(options.activate){
 		onActivate = options.activate;
 	}
-	if (!window.data("kendoWindow")) {		
+	
+	var kendoWindow = window.data("kendoWindow");
+	if (!kendoWindow) {		
 		window.kendoWindow({
 			width : options.width,
 			height : options.height,
@@ -123,10 +125,13 @@ function openWindow(options){
 			modal : true,
 			activate : onActivate
 		});
-		window.data("kendoWindow").center();
+		kendoWindow = window.data("kendoWindow");
+		kendoWindow.setOptions({modal : true});
+		kendoWindow.center();
 	} else {
-		window.data("kendoWindow").open();
-		window.data("kendoWindow").center();
+		kendoWindow.setOptions({modal : true});
+		kendoWindow.open();
+		kendoWindow.center();
 	}	
 }
 

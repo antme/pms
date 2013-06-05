@@ -53,8 +53,7 @@ $(document).ready(function() {
 		pageable : true,
 		editable : "popup",
 		toolbar : [ {
-			name : "create",
-			text : "添加"
+			template : kendo.template($("#template").html())
 		} ],
 		columns : [ {
 			field : "orderId",
@@ -114,23 +113,65 @@ $(document).ready(function() {
 	});
 });
 
+function onRequestSelectWindowActive(e) {
+	$("#purchaseRequest").kendoDropDownList({
+		dataTextField : "ProductName",
+		dataValueField : "ProductID",
+		dataSource : {
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "http://demos.kendoui.com/service/Products",
+				}
+			}
+		}
+	});
+
+}
+
+var reoptions = {
+	id : "purchase-request-select",
+	width : "400px",
+	height : "300px",
+	title : "选择采购申请",
+	activate : onRequestSelectWindowActive
+};
+
+function add() {
+	openWindow(reoptions);
+
+}
+
+function cancelSelectRequest() {
+	var window = $("#" + reoptions.id);
+	if (window.data("kendoWindow")) {
+		window.data("kendoWindow").close();
+	}
+}
+
+function showOrderWindow() {
+	edit(null);
+	cancelSelectRequest();
+}
 
 function edit(e) {
-	
-	
-	e.preventDefault();
 
-	var options = {id:"purchaseorder-edit", width:"900px", height: "500px", title:"编辑采购订单"};
-	openWindow(options);
-	
-	
-	
-	var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+	var dataItem = new model();
+	if (e) {
+		e.preventDefault();
+		dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+	}
 	kendo.bind($("#purchaseorder-edit"), dataItem);
 	$("#orderId").html(dataItem.orderId);
-	
 
-	
+	var options = {
+		id : "purchaseorder-edit",
+		width : "900px",
+		height : "500px",
+		title : "编辑采购订单"
+	};
+	openWindow(options);
+
 	$("#purchaseorder-edit-grid").kendoGrid({
 		dataSource : dataSource,
 		columns : [ {
@@ -176,7 +217,7 @@ function edit(e) {
 		} ]
 
 	});
-	
+
 	$("#purchaseorder-sum-grid").kendoGrid({
 		dataSource : dataSource,
 		columns : [ {
@@ -193,8 +234,8 @@ function edit(e) {
 			title : "采购合同编号"
 
 		} ],
-		width:300
+		width : 300
 
 	});
-	
+
 }
