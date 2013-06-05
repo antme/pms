@@ -50,4 +50,21 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	public Map<String, Object> list(Map<String, Object> params) {
 		return dao.list(params, DBBean.PURCHASE_REQUEST);
 	}
+
+	@Override
+	public Map<String, Object> prepareRequest(Map<String, Object> params) {
+		//list good list basing on projectName from request.
+		int count = dao.count(null, "test_goodsInProject");
+		if(count != 0) return dao.list(params, "test_goodsInProject");
+		
+    	for(int i=0; i<10; i++){
+    		Map<String,Object> map = new HashMap<String,Object>();
+    		map.put("good_name", "网线 A"+i);
+    		map.put("good_code", "WARE_"+i);
+    		map.put("good_applyCount", 0);
+    		map.put("good_totalCount", 100);
+    		dao.add(map, "test_goodsInProject");
+    	}	
+		return dao.list(params, "test_goodsInProject");
+	}
 }

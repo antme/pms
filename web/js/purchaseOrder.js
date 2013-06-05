@@ -2,50 +2,31 @@ var model = kendo.data.Model.define({
 	id : "_id",
 	dataSource : dataSource,
 	fields : {
-		_id : {
-			editable : false,
-			nullable : true
-		},
-		supplierName : {
-			validation : {
-				required : true
-			}
-		},
-		supplierAddress : {
-			validation : {
-				required : true,
-				min : 1
-			}
-		},
-		supplierContact : {},
-		supplierContactPhone : {
-			validation : {
-				min : 0,
-				required : true
-			}
+		orderId : {
+			editable : false
 		}
 	}
-
 });
+
 var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
-			url : "/service/purcontract/list",
+			url : "/service/purcontract/order/list",
 			dataType : "jsonp"
 		},
 		update : {
-			url : "/service/purcontract/update",
+			url : "/service/purcontract/order/update",
 			dataType : "jsonp",
 			type : "post"
 		},
 		create : {
-			url : "/service/purcontract/add",
+			url : "/service/purcontract/order/add",
 			dataType : "jsonp",
 			type : "post"
 		},
 
 		destroy : {
-			url : "/service/purcontract/delete",
+			url : "/service/purcontract/order/delete",
 			dataType : "jsonp",
 			type : "post"
 		},
@@ -65,9 +46,6 @@ var dataSource = new kendo.data.DataSource({
 	}
 });
 
-
-
-
 $(document).ready(function() {
 
 	$("#grid").kendoGrid({
@@ -79,8 +57,8 @@ $(document).ready(function() {
 			text : "添加"
 		} ],
 		columns : [ {
-			field : "contractId",
-			title : "采购合同编号"
+			field : "orderId",
+			title : "采购订单编号"
 		}, {
 			field : "customerContractId",
 			title : "客户合同编号"
@@ -88,8 +66,8 @@ $(document).ready(function() {
 			field : "contractRequestId",
 			title : "采购申请编号"
 		}, {
-			field : "conractOrderId",
-			title : "采购订单编号"
+			field : "purchaseConractId",
+			title : "采购合同编号"
 
 		}, {
 			field : "customerName",
@@ -99,26 +77,32 @@ $(document).ready(function() {
 			title : "PM"
 		}, {
 			field : "status",
-			title : "采购合同状态"
+			title : "采购订单状态"
 		}, {
-			field : "contractDate",
-			title : "合同签署时间"
+			field : "approveDate",
+			title : "订单批准时间"
 		}, {
-			field : "contractDate",
+			field : "money",
 			title : "金额"
 		}, {
-			field : "type",
-			title : "物流类型"
+			field : "number",
+			title : "合同下采购申请单数量",
+			width : 150
 		}, {
-			field : "supplierName",
-			title : "供应商名"
+			field : "numberExists",
+			title : "合同下已申请采购货品%",
+			width : 150
 		}, {
-			field : "supplierId",
-			title : "供应商编号"
+			field : "numberExistsRequest",
+			title : "合同下已申请采购金额%",
+			width : 150
 		},
 
 		{
-			command : [ "edit", {
+			command : [ {
+				text : "Edit",
+				click : edit
+			}, {
 				name : "destroy",
 				title : "删除",
 				text : "删除"
@@ -129,3 +113,79 @@ $(document).ready(function() {
 
 	});
 });
+
+function edit(e) {
+	e.preventDefault();
+	var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+	kendo.bind($("#purchaseorder-edit"), dataItem);
+	$("#orderId").html(dataItem.orderId);
+	
+
+	
+	$("#purchaseorder-edit-grid").kendoGrid({
+		dataSource : dataSource,
+		columns : [ {
+			field : "orderId",
+			title : "采购订单编号"
+		}, {
+			field : "customerContractId",
+			title : "客户合同编号"
+		}, {
+			field : "contractRequestId",
+			title : "采购申请编号"
+		}, {
+			field : "purchaseConractId",
+			title : "采购合同编号"
+
+		}, {
+			field : "customerName",
+			title : "客户名"
+		}, {
+			field : "projectManager",
+			title : "PM"
+		}, {
+			field : "status",
+			title : "采购订单状态"
+		}, {
+			field : "approveDate",
+			title : "订单批准时间"
+		}, {
+			field : "money",
+			title : "金额"
+		}, {
+			field : "number",
+			title : "合同下采购申请单数量",
+			width : 150
+		}, {
+			field : "numberExists",
+			title : "合同下已申请采购货品%",
+			width : 150
+		}, {
+			field : "numberExistsRequest",
+			title : "合同下已申请采购金额%",
+			width : 150
+		} ]
+
+	});
+	
+	$("#purchaseorder-sum-grid").kendoGrid({
+		dataSource : dataSource,
+		columns : [ {
+			field : "orderId",
+			title : "采购订单编号"
+		}, {
+			field : "customerContractId",
+			title : "客户合同编号"
+		}, {
+			field : "contractRequestId",
+			title : "采购申请编号"
+		}, {
+			field : "purchaseConractId",
+			title : "采购合同编号"
+
+		} ],
+		width:300
+
+	});
+	
+}

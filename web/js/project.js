@@ -1,19 +1,6 @@
+
 var addProjectFormModel = kendo.data.Model.define({
 	id : "_id",
-	saveProject:function(){
-		dataSource.add(pfm);
-		dataSource.sync();
-		var window = $("#addNewProject");
-
-		if (window.data("kendoWindow")) {
-			window.data("kendoWindow").close();
-		}
-
-		var grid = $("#grid");
-		if (window.data("kendoGrid")) {
-			window.data("kendoGrid").refresh();
-		}
-	},
 	fields : {
 		_id : {
 			editable : false,
@@ -58,6 +45,36 @@ var addProjectFormModel = kendo.data.Model.define({
 			validation : {
 				required : true
 			}
+		},
+		contractAmount : {
+			
+		},
+		invoiceType : {
+			
+		},
+		contractCode : {
+			
+		},
+		contractPerson : {
+			
+		},
+		contractType : {
+			
+		},
+		contractDate : {
+			
+		},
+		contractDownPayment : {
+			
+		},
+		progressPayment : {
+			
+		},
+		qualityMoney : {
+			
+		},
+		contractMemo : {
+			
 		}
 	}
 
@@ -79,24 +96,24 @@ var dataSource = new kendo.data.DataSource({
 			dataType : "jsonp",
 			method : "post"
 		},
-		//	parameterMap : function(options, operation) {
-			//if (operation !== "read" && options.models) {
-				//return {
-					//models : kendo.stringify(options.models)
-				//};
-			//}
-		//},
-		
-		method : "post"
+
+		parameterMap : function(options, operation) {
+			if (operation !== "read" && options.models) {
+				return {
+					models : kendo.stringify(options.models)
+				};
+			}
+		}
 	},
-	pageSize: 5,
+	batch : true,
+	pageSize: 10,
     //serverPaging: true,
     //serverSorting: true,
     //serverFiltering: true,
 	//batch : true,
 	
 	schema : {
-		//model : addProjectFormModel
+		model : addProjectFormModel
 	},
 });
 
@@ -237,6 +254,37 @@ $(document).ready(function() {
         optionLabel: "选择合同类型...",
 		dataSource : contractTypeItems,
 	});
+	
+	var taxTypeItems = [{ text: "taxType1", value: "1" }, { text: "taxType2", value: "2" }, { text: "taxType3", value: "3" }];
+	$("#taxType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择税收类型...",
+		dataSource : taxTypeItems,
+	});
+	
+	var debugCostTypeItems = [{ text: "debugCostType1", value: "1" }, { text: "debugCostType2", value: "2" }, { text: "debugCostType3", value: "3" }];
+	$("#debugCostType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择调试费用类型...",
+		dataSource : debugCostTypeItems,
+	});
+	
+	function saveProject(){
+		dataSource.add(pfm);
+		dataSource.sync();
+		var window = $("#addNewProject");
+
+		if (window.data("kendoWindow")) {
+			window.data("kendoWindow").close();
+		}
+
+		var grid = $("#grid");
+		if (window.data("kendoGrid")) {
+			window.data("kendoGrid").refresh();
+		}
+	}
 	
 	
 	

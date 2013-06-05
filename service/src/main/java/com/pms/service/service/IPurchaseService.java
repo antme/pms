@@ -11,5 +11,6 @@ public interface IPurchaseService {
 	public void destroy(Map<String,Object> params);
 	
 	public Map<String,Object> list(Map<String,Object> params);
-	
+
+	public Map<String,Object> prepareRequest(Map<String,Object> params);
 }
