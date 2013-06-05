@@ -106,3 +106,35 @@ function getSelectedRowDataByGrid(gridId) {
 	var row = grid.select();
 	return grid.dataItem(row);
 }
+
+
+function openWindow(options){
+	var window = $("#"+options.id);
+	$("#"+options.id).show();
+	var onActivate = onDefaultActivate;
+	if(options.activate){
+		onActivate = options.activate;
+	}
+	
+	var kendoWindow = window.data("kendoWindow");
+	if (!kendoWindow) {		
+		window.kendoWindow({
+			width : options.width,
+			height : options.height,
+			title : options.title,
+			modal : true,
+			activate : onActivate
+		});
+		kendoWindow = window.data("kendoWindow");
+		kendoWindow.setOptions({modal : true});
+		kendoWindow.center();
+	} else {
+		kendoWindow.setOptions({modal : true});
+		kendoWindow.open();
+		kendoWindow.center();
+	}	
+}
+
+function onDefaultActivate(e){
+	
+}

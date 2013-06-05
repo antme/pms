@@ -96,21 +96,8 @@ $(document).ready(function() {
 
 function addNewSupplier() {
 	kendo.bind($("#supplier-edit"), dm);
-	$("#supplier-edit").show();
-	var window = $("#supplier-edit");
-	if (!window.data("kendoWindow")) {
-		window.kendoWindow({
-			width : "900px",
-			height : "500px",
-			title : "新建供应商",
-			modal : true,
-		});
-		window.data("kendoWindow").center();
-	} else {
-		window.data("kendoWindow").open();
-		window.data("kendoWindow").center();
-	}
-
+	var options = {id:"supplier-edit", width:"900px", height: "500px", title:"新建供应商"};
+	openWindow(options);
 }
 
 function saveData() {
