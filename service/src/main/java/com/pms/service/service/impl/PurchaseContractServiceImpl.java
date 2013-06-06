@@ -21,10 +21,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return null;
     }
 
-    @Override
-    public Map<String, Object> addPurchaseContract(Map<String, Object> contract) {
-        return this.dao.add(contract, DBBean.PURCHASE_CONTRACT);
-    }
 
     @Override
     public Map<String, Object> listPurchaseContracts() {
@@ -42,11 +38,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract) {
 
-        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, contract.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
-        contract.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        return dao.updateById(contract, DBBean.PURCHASE_CONTRACT);
-
+        if (ApiUtil.isEmpty(contract.get(ApiConstants.MONGO_ID))) {
+            contract.put(PurchaseOrder.STATUS, "New");
+            contract.put("purchaseContractCode", contract.get(ProjectBean.PROJECT_CUSTOMER_NAME) + "_Contract_" + String.valueOf(new Date().getTime()));
+            return this.dao.add(contract, DBBean.PURCHASE_CONTRACT);
+        } else {
+            Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, contract.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
+            contract.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+            return dao.updateById(contract, DBBean.PURCHASE_CONTRACT);
+        }
     }
+ 
 
     @Override
     public Map<String, Object> listPurchaseOrders() {
