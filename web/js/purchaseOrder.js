@@ -229,7 +229,29 @@ function submitOrder() {
 	itemDataSource.sync();
 }
 
+function sumOrders(e) {
+	var data = itemDataSource.data();
+	requestDataItem.orderList = data;
 
+	
+	var referenceUnitPrice =e.model.referenceUnitPrice;
+	var requestedAmount = e.model.requestedAmount;
+	
+	if(e.values.referenceUnitPrice ){
+		referenceUnitPrice = e.values.referenceUnitPrice
+	}
+	
+	if(e.values.requestedAmount ){
+		requestedAmount = e.values.requestedAmount
+	}
+	
+	e.model.set("totalMoney", referenceUnitPrice * requestedAmount);
+
+	var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
+	grid1.refresh();
+	
+	
+}
 
 function edit(e) {
 
@@ -320,6 +342,7 @@ function edit(e) {
 			editable : true,
 			scrollable : true,
 			width : "950px",
+			save : sumOrders,
 			dataBound: function(e) {
 				var kendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
 				if(!kendoGrid){
@@ -365,20 +388,6 @@ function edit(e) {
 				});
 				kendoGrid.setDataSource(sumDataSource);
 				
-				
-				requestDataItem.orderList = data;
-				var referenceUnitPrice =e.model.referenceUnitPrice;
-				var requestedAmount = e.model.requestedAmount;
-				
-				if(e.values.referenceUnitPrice ){
-					referenceUnitPrice = e.values.referenceUnitPrice
-				}
-				
-				if(e.values.requestedAmount ){
-					requestedAmount = e.values.requestedAmount
-				}
-				
-				e.model.set("totalMoney", referenceUnitPrice * requestedAmount);
 			 }
 
 		});
