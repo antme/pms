@@ -1,5 +1,8 @@
+var dataSource;
+var eqDataSource;
+var projectName;
 $(document).ready(function () {
-    var dataSource = new kendo.data.DataSource({
+    dataSource = new kendo.data.DataSource({
             transport: {
                 read:  {
                     url: "../service/allocate/list",
@@ -29,11 +32,7 @@ $(document).ready(function () {
                 model: {
                     id: "_id",
                     fields: {
-                        ProductID: { editable: false, nullable: true },
-                        ProductName: { validation: { required: true } },
-                        UnitPrice: { type: "number", validation: { required: true, min: 1} },
-                        Discontinued: { type: "boolean" },
-                        UnitsInStock: { type: "number", validation: { min: 0, required: true } }
+                        ProductName: {},
                     }
                 }
             }
@@ -47,17 +46,14 @@ $(document).ready(function () {
 			template : kendo.template($("#template").html())
 		} ],
         columns: [
-            { field:"ProductName", title: "Product Name" },
-            { field: "UnitPrice", title:"Unit Price", format: "{0:c}", width: "100px" },
-            { field: "UnitsInStock", title:"Units In Stock", width: "100px" },
-            { field: "Discontinued", width: "100px" },
+            { field:"projectName", title: "项目名称" },
             { command: ["edit", "destroy"], title: "&nbsp;", width: "160px" }],
         editable: "popup"
     });
 });
 
 function toolbar_add() {
-	aaaaaa();
+	init_popup();
 	$("#allocate-edit").show();
 	var window = $("#allocate-edit");
 	if (!window.data("kendoWindow")) {
@@ -74,7 +70,7 @@ function toolbar_add() {
 	}
 };
 
-function aaaaaa() {
+function init_popup() {
 	$("#projects").kendoComboBox({
         placeholder: "Select project",
         dataTextField: "projectName",
@@ -91,7 +87,8 @@ function aaaaaa() {
         },
         change: function(e) {
         	var value = this.value();
-        	var dataSource = new kendo.data.DataSource({
+        	projectName = this.text();
+        	eqDataSource = new kendo.data.DataSource({
                 transport: {
                     read: {
                         url: "../service/project/listequipments",
@@ -119,12 +116,15 @@ function aaaaaa() {
                 }
             });
         	var grid = $("#equipments-grid").data("kendoGrid");
-        	grid.setDataSource(dataSource);
+        	grid.setDataSource(eqDataSource);
         }
     });
 	
 	$("#equipments-grid").kendoGrid({
-	    toolbar: ["cancel"],
+	    toolbar: [
+            { template: kendo.template($("#submit-template").html()) },
+            { name: "cancel", text: "撤销编辑" }
+	    ],
 	    columns: [
 	        { field: "eqcostNo", title: "序号" },
 	        { field: "eqcostMaterialCode", title: "物料代码" },
@@ -137,210 +137,10 @@ function aaaaaa() {
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	    editable: true
 	});
-}
+};
 
-function simulate() {
-	var equipmentsSource;
-	var viewModel = kendo.observable({
-	    productsSource: new kendo.data.DataSource({
-	        transport: {
-	            read: {
-	                url: "../service/project/listforselect",
-	                dataType: "jsonp"
-	            }
-	        },
-	        batch: true,
-	        schema: {
-	            model: {
-	                id: "_id"
-	            }
-	        }
-	    }),
-	    equipmentsSource: new kendo.data.DataSource({
-	        transport: {
-	            read: {
-	                url: "../service/project/listequipments",
-	                dataType: "jsonp",
-	                data: {
-	                	projectId: "51af47322b60fdf09fe22bfb"
-	                }
-	            }
-	        },
-	        batch: true,
-	        schema: {
-	            model: {
-	                id: "_id"
-	            }
-	        }
-	    }),
-	    selectedProduct: null,
-	    hasChanges: true,
-	    save: function() {
-	    	console.log(this.get("selectedProduct"));
-	    },
-	    remove: function() {
-	        if (confirm("Are you sure you want to delete this product?")) {
-	            this.productsSource.remove(this.selectedProduct);
-	            this.set("selectedProduct", this.productsSource.view()[0]);
-	            this.change();
-	        }
-	    },
-	    showForm: function() {
-	       return this.get("selectedProduct") !== null;
-	    },
-	    change: function() {
-	    	equipmentsSource = new kendo.data.DataSource({
-		        transport: {
-		            read: {
-		                url: "../service/project/listequipments",
-		                dataType: "jsonp",
-		                data: {
-		                	projectId: "51af47322b60fdf09fe22bfb"
-		                }
-		            }
-		        },
-		        batch: true,
-		        schema: {
-		            model: {
-		                id: "_id"
-		            }
-		        }
-		    });
-	    	equipmentsSource.read();
-	    }
-	});
-
-	kendo.bind($("#form-container"), viewModel);
-}
-
-function sonofbitch() {
-	var crudServiceBaseUrl = "http://demos.kendoui.com/service";
-	var viewModel = kendo.observable({
-	    productsSource: new kendo.data.DataSource({
-	        transport: {
-	            read: {
-	                url: crudServiceBaseUrl + "/Products",
-	                dataType: "jsonp"
-	            },
-	            update: {
-	                url: crudServiceBaseUrl + "/Products/Update",
-	                dataType: "jsonp"
-	            },
-	            destroy: {
-	                url: crudServiceBaseUrl + "/Products/Destroy",
-	                dataType: "jsonp"
-	            },
-	            parameterMap: function(options, operation) {
-	                if (operation !== "read" && options.models) {
-	                    return {
-	                        models: kendo.stringify(options.models)
-	                    };
-	                }
-	                return options;
-	            }
-	        },
-	        batch: true,
-	        schema: {
-	            model: {
-	                id: "ProductID"
-	            }
-	        }
-	    }),
-	    selectedProduct: null,
-	    hasChanges: false,
-	    save: function() {
-	        this.productsSource.sync();
-	        this.set("hasChanges", false);
-	    },
-	    remove: function() {
-	        if (confirm("Are you sure you want to delete this product?")) {
-	            this.productsSource.remove(this.selectedProduct);
-	            this.set("selectedProduct", this.productsSource.view()[0]);
-	            this.change();
-	        }
-	    },
-	    showForm: function() {
-	       return this.get("selectedProduct") !== null;
-	    },
-	    change: function() {
-	        this.set("hasChanges", true);
-	    }
-	});
-
-	kendo.bind($("#form-container"), viewModel);
-}
-
-function show_edit_grid() {
-	grid = $("#popup-grid").kendoGrid({
-        dataSource: {
-        	type: "odata",
-            transport: {
-            	read: {
-                    url: "../service/project/listequipments",
-                    dataType: "jsonp",
-                    data: {
-                    	projectId: function() {
-                            return dropDown.value();
-                        }
-                    }
-                }
-            },
-            pageSize: 20,
-            serverPaging: true,
-            serverFiltering: true,
-            schema: {
-                model: {
-                    id: "_id",
-                    fields: {
-                    	eqcostMemo: { editable: false, nullable: true },
-                        eqcostProductName: { editable: false, validation: { required: true } },
-                        eqcostBasePrice: { editable: true, type: "number", validation: { required: true, min: 1} },
-                        eqcostTotalAmount: { editable: false }
-                    }
-                }
-            }
-        },
-        selectable: "multiple",
-        toolbar: [
-			{ name: "save", text: "提交" },
-			{ name: "cancel", text: "还原" },
-			{ template: kendo.template($("#popup-template").html()) }
-        ],
-        height: 430,
-        pageable: true,
-        columns: [
-            { field: "eqcostMemo", title: "Product ID", width: 100 },
-            { field: "eqcostProductName", title: "Product Name" },
-            { field: "eqcostBasePrice", title: "Unit Price", width: 100 },
-            { field: "eqcostTotalAmount", title: "Quantity Per Unit" }
-        ],
-        editable: true
-    });
-    var dropDown = grid.find("#category").kendoDropDownList({
-        dataTextField: "projectName",
-        dataValueField: "_id",
-        autoBind: false,
-        optionLabel: "All",
-        dataSource: {
-            transport: {
-                read: {
-                    dataType: "jsonp",
-                    url: "../service/project/listforselect",
-                }
-            }
-        },
-        change: function() {
-            var value = this.value();
-            if (value) {
-                grid.data("kendoGrid").dataSource.read();
-            }
-        }
-    });
-}
-
-function toolbar_delete() {
-	var rowData = getSelectedRowDataByGrid("grid");
-	alert("Delete the row _id: " + rowData._id);
-  	console.log("Toolbar command is clicked!");
-  	return false;
+function toolbar_submit() {
+	var data = eqDataSource.data();
+	dataSource.add({ projectName: projectName, eqcostList: kendo.stringify(data) });
+	dataSource.sync();
 };
