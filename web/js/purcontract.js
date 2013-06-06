@@ -6,6 +6,12 @@ var model = kendo.data.Model.define({
 		},
 		goodsDeliveryArrivedTime : {
 			type : "date"
+		},
+		purchaseContractCode: {
+			
+		},
+		signDate : {
+			type: "date"
 		}
 	}
 });
@@ -49,11 +55,18 @@ var dataSource = new kendo.data.DataSource({
 	}
 });
 $(document).ready(function() {
-
+	$("#tabstrip").kendoTabStrip({
+        animation:  {
+            open: {
+                effects: "fadeIn"
+            }
+        }
+    });
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
 		editable : "popup",
+		selectable : "row",
 		toolbar : [ {
 			template : kendo.template($("#template").html())
 		} ],
@@ -67,7 +80,7 @@ $(document).ready(function() {
 			field : "purchaseRequestCode",
 			title : "采购申请编号"
 		}, {
-			field : "purchaseOrderCode",
+			field : "orderCode",
 			title : "采购订单编号"
 
 		}, {
@@ -80,10 +93,10 @@ $(document).ready(function() {
 			field : "stauts",
 			title : "采购合同状态"
 		}, {
-			field : "contractDate",
+			field : "signDate",
 			title : "合同签署时间"
 		}, {
-			field : "contractDate",
+			field : "contractMoney",
 			title : "金额"
 		}, {
 			field : "type",
@@ -114,7 +127,7 @@ $(document).ready(function() {
 
 function onRequestSelectWindowActive(e) {
 	$("#purchasecontractin").kendoDropDownList({
-		dataTextField : "customerContractCode",
+		dataTextField : "orderCode",
 		dataValueField : "_id",
 		dataSource : {
 			transport : {
@@ -136,6 +149,11 @@ var reoptions = {
 	title : "采购合同",
 	activate : onRequestSelectWindowActive
 };
+
+function onWindowClose(){
+	
+	dataSource.read();
+}
 
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
@@ -171,13 +189,79 @@ var itemDataSource = new kendo.data.DataSource({
 });
 
 function add() {
+	$("#purchasecontract-select").show();
+	$("#purchasecontract-edit-item").hide();
 	openWindow(reoptions);
+
 }
 
 function save() {
 
 	// 同步数据
 	itemDataSource.sync();
+}
+
+
+function approve() {
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else {
+		$.ajax({
+			url : "/service/purcontract/approve",
+			success : function(responsetxt) {
+				var res;
+				eval("res=" + responsetxt);
+				if (res.status == "0") {
+					alert(res.msg);
+				} else {
+					alert("审核成功");
+					dataSource.read();
+				}
+			},
+
+			error : function() {
+				alert("连接Service失败");
+			},
+
+			data : {
+				_id : row._id
+			},
+			method : "post"
+		});
+	}
+
+}
+
+function reject() {
+	var row = getSelectedRowDataByGrid("grid");
+
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else {
+		$.ajax({
+			url : "/service/purcontract/reject",
+			success : function(responsetxt) {
+				var res;
+				eval("res=" + responsetxt);
+				if (res.status == "0") {
+					alert(res.msg);
+				} else {
+					alert("拒绝成功");
+					dataSource.read();
+				}
+			},
+
+			error : function() {
+				alert("连接Service失败");
+			},
+
+			data : {
+				_id : row._id
+			},
+			method : "post"
+		});
+	}
 }
 
 function checkStatus(data) {
@@ -218,6 +302,8 @@ function edit(e) {
 		requestDataItem = dataItem;
 	}
 
+	
+	
 	var orderList = dataItem.orderList;
 	for (i = 0; i < orderList.length; i++) {
 		if (!orderList[i].goodsDeliveryType) {
@@ -228,16 +314,18 @@ function edit(e) {
 	// 渲染成本编辑列表
 	itemDataSource.data(dataItem.orderList);
 
-	var pfm = new model();
-	kendo.bind($("#purchasecontract-edit-grid"), pfm);
+	kendo.bind($("#purchasecontract-edit"), dataItem);
 
 	$("#purchasecontract-edit-item").show();
+	$("#purchasecontract-select").hide();
 
 	$("#orderCode").html(dataItem.orderCode);
 	$("#projectName").html(dataItem.projectName);
 	$("#projectCode").html(dataItem.projectCode);
 	$("#customerContractCode").html(dataItem.customerContractCode);
 	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
+	
+    $("#signDate").kendoDatePicker();
 
 	if (!$("#purchasecontract-edit-grid").data("kendoGrid")) {
 		$("#purchasecontract-edit-grid").kendoGrid({
@@ -260,7 +348,7 @@ function edit(e) {
 				width : 80
 
 			}, {
-				field : "goodsUnitPrice",
+				field : "orderGoodsUnitPrice",
 				title : "单价",
 				width : 50
 			}, {

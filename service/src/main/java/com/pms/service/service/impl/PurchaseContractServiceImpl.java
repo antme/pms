@@ -21,10 +21,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return null;
     }
 
-    @Override
-    public Map<String, Object> addPurchaseContract(Map<String, Object> contract) {
-        return this.dao.add(contract, DBBean.PURCHASE_CONTRACT);
-    }
 
     @Override
     public Map<String, Object> listPurchaseContracts() {
@@ -42,11 +38,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract) {
 
-        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, contract.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
-        contract.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        return dao.updateById(contract, DBBean.PURCHASE_CONTRACT);
-
+        if (ApiUtil.isEmpty(contract.get(ApiConstants.MONGO_ID))) {
+            contract.put(PurchaseOrder.STATUS, "New");
+            contract.put("purchaseContractCode", contract.get(ProjectBean.PROJECT_CUSTOMER_NAME) + "_Contract_" + String.valueOf(new Date().getTime()));
+            return this.dao.add(contract, DBBean.PURCHASE_CONTRACT);
+        } else {
+            Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, contract.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
+            contract.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+            return dao.updateById(contract, DBBean.PURCHASE_CONTRACT);
+        }
     }
+ 
 
     @Override
     public Map<String, Object> listPurchaseOrders() {
@@ -119,14 +121,20 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         request.put("goodsCode", "g2013");
         request.put("goodsName", "g2013-phone");
         request.put("goodsType", "phone");
-        request.put("orderGoodsUnitPrice", 49);
+        request.put("goodsModel", "a");
+        request.put("totalInContract", 300);
+        request.put("referenceUnitPrice", 8);
+        request.put("availableAmount", 200);
         requestList.add(request);
 
         request = new HashMap<String, Object>();
         request.put("goodsCode", "g2014");
         request.put("goodsName", "g2014-phone");
         request.put("goodsType", "phone");
-        request.put("orderGoodsUnitPrice", 34);
+        request.put("goodsModel", "b");
+        request.put("referenceUnitPrice", 6);
+        request.put("totalInContract", 400);
+        request.put("availableAmount", 350);
         requestList.add(request);
 
         Map<String, Object> map = new HashMap<String, Object>();

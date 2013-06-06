@@ -9,9 +9,22 @@
 #purchaseorder-edit {
 	display: none;
 }
+label{
+   margin-left: 5px;
+   
+}
 
 #purchaseorder-edit-item{
     display:none;
+}
+
+#purchaseorder-edit-header{
+    margin-bottom: 10px;
+}
+
+
+#purchaseorder-edit-header span{
+    font-weight: bold;
 }
 
 </style>
@@ -22,9 +35,8 @@
 
 <script type="text/x-kendo-template" id="template">
     <button class="k-button" onclick="add();">新增</button>
-    <a class="k-button" href="\#" onclick="return toolbar_delete()">删除</a>
-    <a class="k-button" href="\#" onclick="return toolbar_projectApprove()">批准</a>
-    <a class="k-button" href="\#" onclick="return toolbar_projectApprove()">拒绝</a>
+    <button class="k-button" onclick="approve();">批准</button>
+    <button class="k-button" onclick="reject();">拒绝</button>
 </script>
 
 <body>
@@ -37,11 +49,9 @@
 	    <div id="purchase-request-select" class="k-content">
 	        <div>
 	            <label>选择采购申请: </label><input id="purchaseRequest" style="width: 250px" /><button onclick="showOrderWindow();">确定</button>
-	        </div>
-	
+	        </div>	
 	    </div>
     
-
         <div id="purchaseorder-edit-item">
 			<div id="purchaseorder-edit-header">
 				<div>

@@ -78,6 +78,11 @@
         id="purchaseContractService">
         <property name="dao" ref="commonDao"></property>
     </bean>
+    
+    <bean name="allocateService" class="com.pms.service.service.impl.AllocateServiceImpl"
+		id="allocateService">
+		<property name="dao" ref="commonDao"></property>
+	</bean>
 	
 	<bean
         class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">

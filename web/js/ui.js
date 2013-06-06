@@ -84,7 +84,7 @@ function onLeftNavSelect(e) {
 		loadPage("project");
 	} else if (text == "角色管理") {
 		loadPage("group");
-	} else if (text == "客户") {
+	} else if (text == "客户" || text == "基础信息") {
 		loadPage("customer");
 	} else if (text == "供应商") {
 		loadPage("supplier");
@@ -94,7 +94,7 @@ function onLeftNavSelect(e) {
 		loadPage("purchaseRequest");
 	} else if (text == "采购合同" || text == "采购合同列表") {
 		loadPage("purchasecontract");
-	} else if (text == "采购订单申请" || text == "采购订单") {
+	} else if (text == "采购订单申请" || text == "采购订单" || text == "项目执行") {
 		loadPage("purchaseorder");
 	} else {
 		loadPage("default");
@@ -129,7 +129,8 @@ function openWindow(options) {
 			title : options.title,
 			modal : true,
 			activate : onActivate,
-			close : onClose
+			close : onClose,
+			actions: ["Maximize", "Close"]
 		});
 		kendoWindow = window.data("kendoWindow");
 		kendoWindow.setOptions({
