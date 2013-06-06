@@ -109,5 +109,60 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         return dao.updateById(order, DBBean.PURCHASE_ORDER);
     }
+    
+    
+    public Map<String, Object> listPurchaseRequest(){     
+        Map<String, Object> results = new HashMap<String, Object>();
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        
+        
+        List<Map<String, Object>> requestList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> request = new HashMap<String, Object>();
+        request.put("goodsCode", "g2013");
+        request.put("goodsName", "g2013-phone");
+        request.put("goodsType", "phone");
+        request.put("_id", 111111111);
+        
+        requestList.add(request);
+        
+        request = new HashMap<String, Object>();
+        request.put("goodsCode", "g2014");
+        request.put("goodsName", "g2014-phone");
+        request.put("goodsType", "phone");
+        request.put("_id", 4111);
+        
+        requestList.add(request);
+        
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("projectName", "QC2013");
+        map.put("projectCode", "QC2013-12345");
+        map.put("customerContractId", "QC2013-12345-1111");
+        map.put("customerRequestContractId", "QC2013-12345-111-222");
+        map.put("orderId", "QC2013-12345-111-222-111");
+        map.put("_id", 111111111);
+        map.put("orderList", requestList);
+        list.add(map);
+        
+        map = new HashMap<String, Object>();
+        map.put("projectName", "QC2014");
+        map.put("projectCode", "QC2014-12345");
+        map.put("customerContractId", "QC2014-12344-1111");
+        map.put("customerRequestContractId", "QC2014-12345-111-222");
+        map.put("orderId", "QC2014-12345-111-222-111");
+        map.put("_id", 4111);
+        map.put("orderList", requestList);
+        
+        list.add(map);
+        results.put("data", list);
+
+        
+        
+        results.put("data", list);
+        
+        
+        
+        return results;
+    }
+
 
 }
