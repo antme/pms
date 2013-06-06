@@ -25,9 +25,9 @@
 <script  src="js/project.js"></script>
 
 <script type="text/x-kendo-template" id="template">
-	<a class="k-button" href="\#" onclick="return toolbar_delete()">删除</a>
-	<a class="k-button" href="\#" onclick="return toolbar_projectApprove()">正式立项</a>
-	<a class="k-button" href="\#" onclick="toolbar_addNewProject();">新增</a>
+	<button class="k-button" onclick="toolbar_addNewProject();">新增</button>
+	<button class="k-button" onclick="toolbar_delete();">删除</button>
+	<button class="k-button" onclick="return toolbar_projectApprove();">正式立项</button>
 </script>
 
 <body>
@@ -292,8 +292,9 @@
                    </div>
                </div>
                <div>
-                   <div class="k-edit-form-container">
+                   <div>
                        <h2>成本设备清单</h2>
+                       <div id="pcEqCostList"  data-bind="value: eqcostList"></div>
                    </div>
                </div>
            </div>

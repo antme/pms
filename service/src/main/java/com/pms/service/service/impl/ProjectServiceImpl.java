@@ -137,7 +137,11 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		query.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		
 		Map<String, Object> re = dao.findOneByQuery(query, DBBean.PROJECT_CONTRACT);
-		return re;
+		Map<String, Object> re2 = new HashMap<String, Object>();
+		Map<String, Object> re3 = new HashMap<String, Object>();
+		re2 = (Map<String, Object>) re.get(ApiConstants.RESULTS_DATA);
+		re3.put(ApiConstants.RESULTS_DATA, re2.get(ProjectContractBean.PC_EQ_LIST));
+		return re3;
 	}
 
 }
