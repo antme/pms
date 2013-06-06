@@ -67,11 +67,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> order) {
-
-        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
-        order.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        return dao.updateById(order, DBBean.PURCHASE_ORDER);
-
+        if (ApiUtil.isEmpty(order.get(ApiConstants.MONGO_ID))) {
+            return this.dao.add(order, DBBean.PURCHASE_ORDER);
+        } else {
+            Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
+            order.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+            return dao.updateById(order, DBBean.PURCHASE_ORDER);
+        }
     }
     
     public Map<String, Object> approvePurchaseContract(HashMap<String, Object> order){

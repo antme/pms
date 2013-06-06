@@ -46,6 +46,7 @@ public abstract class AbstractController {
                 parametersMap.remove("_id");
             }
         }
+        logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
 
         return parametersMap;
 
@@ -67,6 +68,8 @@ public abstract class AbstractController {
                 parametersMap.remove("_id");
             }
         }
+        logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
+
         return parametersMap;
     }
 
@@ -96,7 +99,6 @@ public abstract class AbstractController {
 
         parametersMap.remove("_");
         parametersMap.remove("callback");
-        logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
         return parametersMap;
     }
     

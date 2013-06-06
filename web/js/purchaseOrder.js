@@ -31,7 +31,6 @@ var dataSource = new kendo.data.DataSource({
 
 		parameterMap : function(options, operation) {
 			if (operation !== "read" && options.models) {
-				console.log(options.models);
 				return {
 					models : kendo.stringify(options.models)
 				};
@@ -128,7 +127,6 @@ function onRequestSelectWindowActive(e) {
 		},
 		select : function(e) {
 			requestDataItem = this.dataSource.at(e.item.index());
-			console.log(requestDataItem.orderList);
 		}
 	});
 
@@ -161,10 +159,14 @@ var itemDataSource = new kendo.data.DataSource({
 		parameterMap : function(options, operation) {
 			if (operation !== "read" && options.models) {
 				return {
-					models : kendo.stringify(options.models)
+					json_p : kendo.stringify(requestDataItem)
 				};
 			}
 		},
+	},
+
+	schema : {
+		model : model
 	},
 	batch : true
 
@@ -179,16 +181,19 @@ function showOrderWindow() {
 	if (!requestDataItem) {
 		requestDataItem = kendoGrid.dataSource.at(0);
 	}
-	itemDataSource.data(requestDataItem.orderList);
-	console.log(requestDataItem.orderList);
+
+	requestDataItem.set("_id", "");
 	edit(null);
 
 }
 
 function submitOrder() {
-	var kendoGrid = $("#purchaseRequest").data("kendoDropDownList");
-	itemDataSource.sync();
 
+	var length = itemDataSource.data().length;
+
+	requestDataItem.set("changes", true);
+	console.log(requestDataItem);
+	itemDataSource.sync();
 }
 function sumOrders(e) {
 	var data = itemDataSource.data();
@@ -203,12 +208,15 @@ function edit(e) {
 		e.preventDefault();
 		openWindow(reoptions);
 		dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+		requestDataItem = dataItem;
 	}
 
 	if (requestDataItem) {
 		dataItem = requestDataItem;
 	}
+
 	kendo.bind($("#purchaseorder-edit"), dataItem);
+	itemDataSource.data(dataItem.orderList);
 
 	$("#orderId").html(dataItem.orderId);
 	$("#projectName").html(dataItem.projectName);
@@ -218,63 +226,67 @@ function edit(e) {
 
 	$("#purchaseorder-edit-item").show();
 
-	$("#purchaseorder-edit-grid").kendoGrid({
-		dataSource : itemDataSource,
-		columns : [ {
-			field : "goodsCode",
-			title : "货品编号"
-		}, {
-			field : "goodsName",
-			title : "货品名"
-		}, {
-			field : "goodsType",
-			title : "货品类别"
-		}, {
-			field : "purchaseConractId",
-			title : "货品型号"
+	var editKendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
 
-		}, {
-			field : "customerName",
-			title : "合同中总数"
-		}, {
-			field : "projectManager",
-			title : "可申请数量"
-		}, {
-			field : "status",
-			title : "本次申请数量"
-		}, {
-			field : "approveDate",
-			title : "参考单价"
-		}, {
-			field : "money",
-			title : "申请小计金额"
-		}, {
-			field : "number",
-			title : "订单货品编号"
-		}, {
-			field : "numberExists",
-			title : "订单货品名%"
-		}, {
-			field : "numberExistsRequest",
-			title : "订单货品型号%"
-		}, {
-			field : "numberExistsRequest1",
-			title : "订单货品单价"
-		}, {
-			field : "numberExistsRequest2",
-			title : "订单实际小计金额"
-		}, {
-			field : "numberExistsRequest3",
-			title : "金额差值"
-		} ],
+	if (!editKendoGrid) {
+		$("#purchaseorder-edit-grid").kendoGrid({
+			dataSource : itemDataSource,
+			columns : [ {
+				field : "goodsCode",
+				title : "货品编号"
+			}, {
+				field : "goodsName",
+				title : "货品名"
+			}, {
+				field : "goodsType",
+				title : "货品类别"
+			}, {
+				field : "purchaseConractId",
+				title : "货品型号"
 
-		toolbar : [ "create" ],
-		editable : true,
-		scrollable : true,
-		width : "850px",
-		edit : sumOrders
+			}, {
+				field : "customerName",
+				title : "合同中总数"
+			}, {
+				field : "projectManager",
+				title : "可申请数量"
+			}, {
+				field : "status",
+				title : "本次申请数量"
+			}, {
+				field : "approveDate",
+				title : "参考单价"
+			}, {
+				field : "money",
+				title : "申请小计金额"
+			}, {
+				field : "number",
+				title : "订单货品编号"
+			}, {
+				field : "numberExists",
+				title : "订单货品名%"
+			}, {
+				field : "numberExistsRequest",
+				title : "订单货品型号%"
+			}, {
+				field : "numberExistsRequest1",
+				title : "订单货品单价"
+			}, {
+				field : "numberExistsRequest2",
+				title : "订单实际小计金额"
+			}, {
+				field : "numberExistsRequest3",
+				title : "金额差值"
+			} ],
 
-	});
+			toolbar : [ "create" ],
+			editable : true,
+			scrollable : true,
+			width : "850px",
+			edit : sumOrders
+
+		});
+	}
 
 	$("#purchaseorder-sum-grid").kendoGrid({
 		columns : [ {
