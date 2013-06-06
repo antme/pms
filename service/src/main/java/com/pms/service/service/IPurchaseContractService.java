@@ -24,6 +24,8 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> order);
 
+
+
     public Map<String, Object> approvePurchaseOrder(HashMap<String, Object> order);
     
     public Map<String, Object> rejectPurchaseOrder(HashMap<String, Object> order);
@@ -31,4 +33,5 @@ public interface IPurchaseContractService {
     public Map<String, Object> approvePurchaseContract(HashMap<String, Object> order);
     
     public Map<String, Object> rejectPurchaseContract(HashMap<String, Object> order);
+    public Map<String, Object> listPurchaseRequest();
 }

@@ -3,6 +3,7 @@ package com.pms.service.controller;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,51 @@ public abstract class AbstractController {
 
     @SuppressWarnings("unchecked")
     protected HashMap<String, Object> parserJsonParameters(HttpServletRequest request, boolean emptyParameter) {
+        HashMap<String, Object> parametersMap = parserParameters(request, emptyParameter);
+
+        
+        if (parametersMap.get("models") != null) {
+            String v = parametersMap.get("models").toString();
+            if (v.startsWith("[")) {
+                v = v.substring(1);
+            }
+
+            if (v.endsWith("]")) {
+                v = v.substring(0, v.lastIndexOf("]"));
+            }
+            parametersMap = new Gson().fromJson(v, HashMap.class);
+        }
+
+        if (parametersMap.get("_id") != null) {
+            if (ApiUtil.isEmpty(parametersMap.get("_id"))) {
+                parametersMap.remove("_id");
+            }
+        }
+
+        return parametersMap;
+
+    }
+    
+    @SuppressWarnings("unchecked")
+    protected HashMap<String, Object> parserListJsonParameters(HttpServletRequest request, boolean emptyParameter) {
+        HashMap<String, Object> parametersMap = parserParameters(request, emptyParameter);
+
+        
+        if (parametersMap.get("models") != null) {
+            String v = parametersMap.get("models").toString();     
+            parametersMap.put(ApiConstants.RESULTS_DATA, new Gson().fromJson(v, List.class));
+            parametersMap.remove("models");
+        }
+
+        if (parametersMap.get("_id") != null) {
+            if (ApiUtil.isEmpty(parametersMap.get("_id"))) {
+                parametersMap.remove("_id");
+            }
+        }
+        return parametersMap;
+    }
+
+    private HashMap<String, Object> parserParameters(HttpServletRequest request, boolean emptyParameter) {
         HashMap<String, Object> parametersMap = new HashMap<String, Object>();
 
         String parameters = request.getParameter(ApiConstants.JSON_PARAMETERS_LABEL);
@@ -50,29 +96,10 @@ public abstract class AbstractController {
 
         parametersMap.remove("_");
         parametersMap.remove("callback");
-
-        if (parametersMap.get("models") != null) {
-            String v = parametersMap.get("models").toString();
-            if (v.startsWith("[")) {
-                v = v.substring(1);
-            }
-
-            if (v.endsWith("]")) {
-                v = v.substring(0, v.lastIndexOf("]"));
-            }
-            parametersMap = new Gson().fromJson(v, HashMap.class);
-        }
-
-        if (parametersMap.get("_id") != null) {
-            if (ApiUtil.isEmpty(parametersMap.get("_id"))) {
-                parametersMap.remove("_id");
-            }
-        }
         logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
-
         return parametersMap;
-
     }
+    
 
     protected void responseWithData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
         responseMsg(data, ResponseStatus.SUCCESS, request, response, null);
@@ -143,7 +170,7 @@ public abstract class AbstractController {
                         jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(data.get("data")) + ");";
                     } else {
                         //返回单个
-                        jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(data) + ");";
+                        jsonReturn = request.getParameter("callback") + "([" + new Gson().toJson(data) + "]);";
                     }
                 } else {
                     //不返回任何数据

@@ -138,7 +138,7 @@
 							<label for="contractAmount">合同金额</label>
 						</div>
 						<div data-container-for="contractAmount" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="contractAmount" id="contractAmount"
+							<input type="number" min="0" name="contractAmount" id="contractAmount"
 								required="required" data-bind="value: contractAmount">
 						</div>
 						
@@ -154,7 +154,7 @@
 							<label for="estimateEqCost0">预估设备成本（增）</label>
 						</div>
 						<div data-container-for="estimateEqCost0" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="estimateEqCost0" id="estimateEqCost0"
+							<input type="number" min="0" name="estimateEqCost0" id="estimateEqCost0"
 								required="required" data-bind="value: estimateEqCost0">
 						</div>
 						
@@ -162,7 +162,7 @@
 							<label for="estimateEqCost1">预估设备成本（非增）</label>
 						</div>
 						<div data-container-for="estimateEqCost1" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="estimateEqCost1" id="estimateEqCost1"
+							<input type="text" name="estimateEqCost1" id="estimateEqCost1"
 								required="required" data-bind="value: estimateEqCost1">
 						</div>
 						
@@ -170,7 +170,7 @@
 							<label for="estimateSubCost">预估分包成本</label>
 						</div>
 						<div data-container-for="estimateSubCost" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="estimateSubCost" id="estimateSubCost"
+							<input type="text" name="estimateSubCost" id="estimateSubCost"
 								required="required" data-bind="value: estimateSubCost">
 						</div>
 						
@@ -178,7 +178,7 @@
 							<label for="estimatePMCost">预估项目管理成本</label>
 						</div>
 						<div data-container-for="estimatePMCost" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="estimatePMCost" id="estimatePMCost"
+							<input type="text" name="estimatePMCost" id="estimatePMCost"
 								required="required" data-bind="value: estimatePMCost">
 						</div>
 						
@@ -186,7 +186,7 @@
 							<label for="estimateDeepDesignCost">预估深化设计成本</label>
 						</div>
 						<div data-container-for="estimateDeepDesignCost" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="estimateDeepDesignCost" id="estimateDeepDesignCost"
+							<input type="text" name="estimateDeepDesignCost" id="estimateDeepDesignCost"
 								required="required" data-bind="value: estimateDeepDesignCost">
 						</div>
 						
@@ -194,7 +194,7 @@
 							<label for="estimateDebugCost">预估调试费</label>
 						</div>
 						<div data-container-for="estimateDebugCost" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="estimateDebugCost" id="estimateDebugCost"
+							<input type="text" name="estimateDebugCost" id="estimateDebugCost"
 								required="required" data-bind="value: estimateDebugCost">
 						</div>
 						
@@ -202,7 +202,7 @@
 							<label for="estimateOtherCost">预估其他成本</label>
 						</div>
 						<div data-container-for="estimateOtherCost" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="estimateOtherCost" id="estimateOtherCost"
+							<input type="text" name="estimateOtherCost" id="estimateOtherCost"
 								required="required" data-bind="value: estimateOtherCost">
 						</div>
 						
@@ -254,15 +254,15 @@
 							<label for="contractDate">签订日期</label>
 						</div>
 						<div data-container-for="contractDate" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="contractDate" id="contractDate"
-								required="required" data-bind="value: contractDate">
+						
+							<input name="contractDate" id="contractDate" data-bind="value: contractDate">
 						</div>
 						
 	                   <div class="k-edit-label ">
 							<label for="contractDownPayment">首付</label>
 						</div>
 						<div data-container-for="contractDownPayment" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="contractDownPayment" id="contractDownPayment"
+							<input type="text" name="contractDownPayment" id="contractDownPayment"
 								required="required" data-bind="value: contractDownPayment">
 						</div>
 						
@@ -270,7 +270,7 @@
 							<label for="progressPayment">进度款</label>
 						</div>
 						<div data-container-for="progressPayment" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="progressPayment" id="progressPayment"
+							<input type="text" name="progressPayment" id="progressPayment"
 								required="required" data-bind="value: progressPayment">
 						</div>
 						
@@ -278,7 +278,7 @@
 							<label for="qualityMoney">质保金</label>
 						</div>
 						<div data-container-for="qualityMoney" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="qualityMoney" id="qualityMoney"
+							<input type="text" name="qualityMoney" id="qualityMoney"
 								required="required" data-bind="value: qualityMoney">
 						</div>
 						
