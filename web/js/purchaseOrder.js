@@ -2,11 +2,6 @@
 var model = kendo.data.Model.define({
 	id : "_id",
 	fields : {
-
-		totalInContract : {
-			type : "number"
-		},
-
 		availableAmount : {
 			type : "number"
 		},
@@ -15,7 +10,24 @@ var model = kendo.data.Model.define({
 			type : "number"
 		},
 		referenceUnitPrice : {
+			type : "number",
+			editable : false
+		},
+		totalInContract : {
+			editable : false,
 			type : "number"
+		},
+		orderGoodsUnitPrice : {
+			type : "number"
+		},
+		totalMoney: {
+			type : "number"
+		},
+		differenceAmount: {
+			type : "number"
+		},
+		goodsName : {
+			editable : false
 		}
 	}
 });
@@ -230,6 +242,7 @@ function submitOrder() {
 	itemDataSource.sync();
 }
 
+
 function sumOrders(e) {
 
 	var data = itemDataSource.data();
@@ -237,19 +250,30 @@ function sumOrders(e) {
 
 	var referenceUnitPrice = e.model.referenceUnitPrice;
 	var requestedAmount = e.model.requestedAmount;
+	var orderGoodsUnitPrice = e.model.orderGoodsUnitPrice;
 
 	if (e.values.referenceUnitPrice) {
 		referenceUnitPrice = e.values.referenceUnitPrice
 	}
 
+	if (e.values.orderGoodsTotalMoney) {
+		orderGoodsUnitPrice = e.values.orderGoodsUnitPrice
+	}
+
 	if (e.values.requestedAmount) {
 		requestedAmount = e.values.requestedAmount
 	}
-	e.model.set("totalMoney", referenceUnitPrice * requestedAmount);
-
+	
+	console.log(e);
 	var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
 	// will trigger dataBound event
+	e.model.set("totalMoney", referenceUnitPrice * requestedAmount);
+
 	grid1.refresh();
+	e.model.set("orderGoodsTotalMoney", orderGoodsUnitPrice * requestedAmount);
+
+	grid1.refresh();
+
 }
 
 function approve() {
@@ -434,11 +458,20 @@ function edit(e) {
 								var data = itemDataSource.data();
 								var total = 0;
 								var totalMoney = 0;
+								var requestActureMoney = 0;
+								var refresh = false;
 								for (i = 0; i < data.length; i++) {
 									var item = data[i];
 
 									if (item.requestedAmount) {
 										total = total + item.requestedAmount;
+									}
+
+									if (item.orderGoodsUnitPrice
+											&& item.requestedAmount) {
+										requestActureMoney = requestActureMoney
+												+ item.requestedAmount
+												* item.orderGoodsUnitPrice;
 									}
 
 									if (item.referenceUnitPrice
@@ -447,7 +480,25 @@ function edit(e) {
 												+ item.requestedAmount
 												* item.referenceUnitPrice;
 									}
+									
+									
+									
+									if(item.differenceAmount != (requestActureMoney - totalMoney)){
+										item.differenceAmount =  requestActureMoney - totalMoney;	
+										refresh = true;
+									}
+									
+									if (requestActureMoney > 0) {
+										totalMoney = requestActureMoney;
+									}
+									
 								}
+								
+								if(refresh){
+									var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
+									grid1.refresh();
+								}
+
 								sumDataSource.data({});
 								sumDataSource.add({
 									requestedNumbers : total,
@@ -455,8 +506,6 @@ function edit(e) {
 								});
 								kendoGrid.setDataSource(sumDataSource);
 
-								requestDataItem.totalMoney = totalMoney;
-								requestDataItem.requestedNumbers = total;
 							}
 
 						});
