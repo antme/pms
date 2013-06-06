@@ -7,7 +7,7 @@
 	height: 25px;
 }
 
-#purchasecontract-select {
+#purchasecontract-edit-item {
 	display: none;
 }
 
@@ -35,20 +35,24 @@
         </div>
  
         
-		<div id="purchasecontract-edit-header" class="k-edit-form-container">
-			<div>
-				<label>项目名: <span id="orderId"></span></label> <label>项目ID:<span
-					id="customerContractId"></span></label> <label>合同ID: <span
-					id="customerContractId"></span></label> <label>申请ID:<span
-					id="customerContractId"></span></label> <label>订单ID: <span
-					id="customerContractId"></span></label>
+        <div id="purchasecontract-edit-item">
+			<div id="purchasecontract-edit-header" >
+				<div>
+			          <div>
+	                    <label>项目名: <span id="projectName"></span></label> 
+	                    <label>项目ID:<span id="projectCode"></span></label> 
+	                    <label>客户合同ID: <span id="customerContractCode"></span></label> 
+	                    <label>申请ID:<span id="customerRequestContractId"></span></label> 
+	                    <label>订单ID: <span id="orderCode"></span></label>
+	                    <label>采购合同编号: <span id="purchaseContractCode"></span></label>
+	                </div>
+				</div>
 			</div>
-		</div>
-		<div>
-			<button>保存</button>
-			<button>入库申请单</button>
-		</div>
-		<div>
+	
+			<div>
+				<button onclick="save();">保存</button>
+				<button>入库申请单</button>
+			</div>
 			<div id="purchasecontract-edit-grid"></div>
 
 		</div>

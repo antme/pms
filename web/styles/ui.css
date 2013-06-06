@@ -113,3 +113,7 @@ body {
 #tree-nav .k-in {
 	cursor: pointer !important;
 }
+
+.k-grid-header .k-header{
+	white-space: normal;
+}

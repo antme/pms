@@ -155,7 +155,15 @@ public abstract class AbstractController {
 
         String jsonReturn = new Gson().toJson(data);
         String displayMsg = null;
-        if (request.getParameter("callback") != null) {
+        String callback = request.getParameter("callback");
+        
+        
+        boolean isMyCallBack = false;
+        if(request.getParameter("mycallback") != null){
+            callback = request.getParameter("mycallback");
+            isMyCallBack = true;
+        }
+        if (callback != null) {
             response.setContentType("application/x-javascript;charset=UTF-8");
 
             if (status == ResponseStatus.FAIL) {
@@ -169,14 +177,18 @@ public abstract class AbstractController {
                 if (data != null && data instanceof Map) {
                     if (data.get("data") != null) {
                         //返回List
-                        jsonReturn = request.getParameter("callback") + "(" + new Gson().toJson(data.get("data")) + ");";
+                        jsonReturn = callback + "(" + new Gson().toJson(data.get("data")) + ");";
                     } else {
                         //返回单个
-                        jsonReturn = request.getParameter("callback") + "([" + new Gson().toJson(data) + "]);";
+                        if(isMyCallBack){
+                            jsonReturn = callback + "(" + new Gson().toJson(data) + ");";
+                        }else{
+                            jsonReturn = callback + "([" + new Gson().toJson(data) + "]);";
+                        }
                     }
                 } else {
-                    //不返回任何数据
-                    jsonReturn = request.getParameter("callback") + "([]);";
+                    //不返回任何数据           
+                        jsonReturn =  callback + "();";              
                 }
 
                 if (displayMsg != null) {
