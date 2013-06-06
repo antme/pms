@@ -12,6 +12,23 @@
 	</div>
 
 	<div id="allocate-edit" class="allocate-edit">
+		<input id="projects" />
+		<div id="equipments-grid"></div>
+		
+		<div id="form-container">
+		    <div class="selector">
+		        Select Product: <select data-role="dropdownlist" data-value-field="_id" data-text-field="projectName"
+		                         data-bind="source: productsSource, value: selectedProduct, events: { change: change }"></select>
+		
+		        <button data-bind="click: save, enabled: hasChanges">Publish All Changes</button>
+		    </div>
+		    <div class="form" data-bind="visible: showForm">
+		        <div data-role="grid"
+	                data-sortable="true" data-editable="true"
+	                data-columns='["eqcostNo", "eqcostProductName", "eqcostProductType", "eqcostAmount", {"command": "destroy"}]'
+	                data-bind="source: equipmentsSource"></div>
+		    </div>
+		</div>
 		<div id="popup-grid"></div>
 		<script type="text/x-kendo-template" id="popup-template">
             <div class="toolbar">
