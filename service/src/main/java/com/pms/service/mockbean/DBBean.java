@@ -21,4 +21,6 @@ public class DBBean {
     
     public static final String PURCHASE_ORDER = "purchaseOrder";
     
+    public static final String ALLOCATE = "allocate";
+    
 }
