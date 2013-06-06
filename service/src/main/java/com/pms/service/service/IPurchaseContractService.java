@@ -14,10 +14,6 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract);
     
-    
-    
-    public Map<String, Object> addPurchaseOrder(Map<String, Object> order);
-    
     public Map<String, Object> listPurchaseOrders();
     
     public void deletePurchaseOrder(Map<String, Object> order);

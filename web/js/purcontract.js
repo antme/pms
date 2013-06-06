@@ -1,9 +1,11 @@
 var model = kendo.data.Model.define({
 	id : "_id",
-	dataSource : dataSource,
 	fields : {
-		orderId : {
+		orderCode : {
 			editable : false
+		},
+		goodsDeliveryArrivedTime : {
+			type : "date"
 		}
 	}
 });
@@ -42,15 +44,7 @@ var dataSource = new kendo.data.DataSource({
 	pageSize : 10,
 	batch : true,
 	schema : {
-		model : {
-			id : "_id",
-			fields : {
-				_id : {
-					editable : false,
-					nullable : true
-				}
-			}
-		}
+		model : model
 
 	}
 });
@@ -64,16 +58,16 @@ $(document).ready(function() {
 			template : kendo.template($("#template").html())
 		} ],
 		columns : [ {
-			field : "contractId",
+			field : "purchaseContractCode",
 			title : "采购合同编号"
 		}, {
-			field : "customerContractId",
+			field : "customerContractCode",
 			title : "客户合同编号"
 		}, {
-			field : "contractRequestId",
+			field : "purchaseRequestCode",
 			title : "采购申请编号"
 		}, {
-			field : "conractOrderId",
+			field : "purchaseOrderCode",
 			title : "采购订单编号"
 
 		}, {
@@ -83,7 +77,7 @@ $(document).ready(function() {
 			field : "projectManager",
 			title : "PM"
 		}, {
-			field : "status",
+			field : "stauts",
 			title : "采购合同状态"
 		}, {
 			field : "contractDate",
@@ -103,7 +97,10 @@ $(document).ready(function() {
 		},
 
 		{
-			command : [ "edit", {
+			command : [ {
+				text : "编辑",
+				click : edit
+			}, {
 				name : "destroy",
 				title : "删除",
 				text : "删除"
@@ -117,99 +114,193 @@ $(document).ready(function() {
 
 function onRequestSelectWindowActive(e) {
 	$("#purchasecontractin").kendoDropDownList({
-		dataTextField : "ProductName",
-		dataValueField : "ProductID",
+		dataTextField : "customerContractCode",
+		dataValueField : "_id",
 		dataSource : {
 			transport : {
 				read : {
 					dataType : "jsonp",
-					url : "http://demos.kendoui.com/service/Products",
+					url : "/service/purcontract/order/list",
 				}
 			}
 		}
 	});
 
 }
-
+var requestDataItem;
 
 var reoptions = {
-		id : "purchasecontract-edit",
-		width : "950px",
-		height : "600px",
-		title : "添加采购申请",
-		activate : onRequestSelectWindowActive
-	};
+	id : "purchasecontract-edit",
+	width : "950px",
+	height : "600px",
+	title : "采购合同",
+	activate : onRequestSelectWindowActive
+};
 
-	function add() {
-		openWindow(reoptions);
+var itemDataSource = new kendo.data.DataSource({
+	transport : {
+		update : {
+			url : "/service/purcontract/update",
+			dataType : "jsonp",
+			type : "post"
+		},
+		create : {
+			url : "/service/purcontract/add",
+			dataType : "jsonp",
+			type : "post"
+		},
+		parameterMap : function(options, operation) {
+			if (operation !== "read" && options.models) {
+				return {
+
+					// 解析成json_p模式
+					json_p : kendo.stringify(requestDataItem),
+					mycallback : "checkStatus"
+				};
+			}
+		},
+		requestEnd : function(e) {
+			var response = e.response;
+			console.log(e.type);
+		}
+	},
+	schema : {
+		model : model
+	},
+	batch : true
+});
+
+function add() {
+	openWindow(reoptions);
+}
+
+function save() {
+
+	// 同步数据
+	itemDataSource.sync();
+}
+
+function checkStatus(data) {
+
+	if (data._id !== "") {
+		requestDataItem.set("_id", data._id);
 	}
-
-	
-
+}
+// 计算成
 
 function showOrderWindow() {
-	edit(null);
+	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
+	var kendoGrid = $("#purchasecontractin").data("kendoDropDownList");
+	if (!requestDataItem) {
+		requestDataItem = kendoGrid.dataSource.at(0);
+	}
+
+	// 新增，所以设置_id为空
+	requestDataItem.set("_id", "");
+	edit();
 }
 
 function edit(e) {
 
+	// 初始化空对象
 	var dataItem = new model();
-	if (e) {
-		e.preventDefault();
-		dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+	if (requestDataItem) {
+		// 如果是从采购申请选择过来的
+		dataItem = requestDataItem;
 	}
-	kendo.bind($("#purchasecontract-edit"), dataItem);
-	$("#orderId").html(dataItem.orderId);
 
-	var options = {
-		id : "purchasecontract-edit",
-		width : "900px",
-		height : "500px",
-		title : "编辑采购订单"
-	};
-	openWindow(options);
+	if (e) {
+		// 如果是从订单列表页点击edit过来的数据
+		e.preventDefault();
+		openWindow(reoptions);
+		dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+		requestDataItem = dataItem;
+	}
 
-	$("#purchasecontract-edit-grid").kendoGrid({
-		columns : [ {
-			field : "orderId",
-			title : "货品编号",
-			width : 80
-		}, {
-			field : "customerContractId",
-			title : "货品名",
-			width : 80
-		}, {
-			field : "contractRequestId",
-			title : "货品类别",
-			width : 80
-		}, {
-			field : "purchaseConractId",
-			title : "货品型号",
-			width : 80
+	var orderList = dataItem.orderList;
+	for (i = 0; i < orderList.length; i++) {
+		if (!orderList[i].goodsDeliveryType) {
+			orderList[i].goodsDeliveryType = "";
+		}
+	}
+	console.log(dataItem.orderList);
+	// 渲染成本编辑列表
+	itemDataSource.data(dataItem.orderList);
 
-		}, {
-			field : "customerName",
-			title : "单价",
-			width : 50
-		}, {
-			field : "projectManager",
-			title : "小计金额",
-			width : 80
-		}, {
-			field : "status",
-			title : "物流目的地类型",
-			width : 100
-		}, {
-			field : "approveDate",
-			title : "货品物流状态",
-			width : 100
-		}, {
-			field : "money",
-			title : "货品预计到达时间"
-		}],
-		scrollable : true,
-		width : "800px"
+	var pfm = new model();
+	kendo.bind($("#purchasecontract-edit-grid"), pfm);
 
-	});
+	$("#purchasecontract-edit-item").show();
 
+	$("#orderCode").html(dataItem.orderCode);
+	$("#projectName").html(dataItem.projectName);
+	$("#projectCode").html(dataItem.projectCode);
+	$("#customerContractCode").html(dataItem.customerContractCode);
+	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
+
+	if (!$("#purchasecontract-edit-grid").data("kendoGrid")) {
+		$("#purchasecontract-edit-grid").kendoGrid({
+			dataSource : itemDataSource,
+			columns : [ {
+				field : "goodsCode",
+				title : "货品编号",
+				width : 80
+			}, {
+				field : "goodsName",
+				title : "货品名",
+				width : 80
+			}, {
+				field : "goodsType",
+				title : "货品类别",
+				width : 80
+			}, {
+				field : "goodsModel",
+				title : "货品型号",
+				width : 80
+
+			}, {
+				field : "goodsUnitPrice",
+				title : "单价",
+				width : 50
+			}, {
+				field : "totalMoney",
+				title : "小计金额",
+				width : 80
+			}, {
+				field : "goodsDeliveryStatus",
+				title : "货品物流状态",
+				width : 100
+			}, {
+				field : "goodsDeliveryType",
+				title : "物流类型",
+				width : "160px",
+				editor : categoryDropDownEditor,
+				template : "#=goodsDeliveryType#"
+			}, {
+				field : "goodsDeliveryArrivedTime",
+				title : "货品预计到达时间"
+			} ],
+			scrollable : true,
+			editable : true,
+			width : "800px"
+
+		});
+	}
+}
+
+function categoryDropDownEditor(container, options) {
+	var data = [ {
+		name : "直发"
+	}, {
+		name : "上海仓库"
+	} ];
+
+	$(
+			'<input required data-text-field="name" data-value-field="name" data-bind="value:'
+					+ options.field + '"/>').appendTo(container)
+			.kendoDropDownList({
+				autoBind : false,
+				dataSource : data
+			});
 }
