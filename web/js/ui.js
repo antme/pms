@@ -97,7 +97,7 @@ function onLeftNavSelect(e) {
 	} else if (text == "采购订单申请" || text == "采购订单" || text == "项目执行") {
 		loadPage("purchaseorder");
 	} else {
-		loadPage("project");
+		loadPage("default");
 	}
 
 }
