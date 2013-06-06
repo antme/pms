@@ -129,7 +129,8 @@ function openWindow(options) {
 			title : options.title,
 			modal : true,
 			activate : onActivate,
-			close : onClose
+			close : onClose,
+			actions: ["Maximize", "Close"]
 		});
 		kendoWindow = window.data("kendoWindow");
 		kendoWindow.setOptions({
