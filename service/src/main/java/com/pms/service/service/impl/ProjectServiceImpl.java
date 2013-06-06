@@ -85,7 +85,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			Map<String, Object> equipment = new HashMap<String, Object>();
 			equipment.put(ProjectContractBean.PC_EQ_LIST_NO, "201306"+i);
 			equipment.put(ProjectContractBean.PC_EQ_LIST_MATERIAL_CODE, "PJ-xx-"+i);
-			equipment.put(ProjectContractBean.PC_EQ_LIST_PRODUCT_NAME, "路由器"+1);
+			equipment.put(ProjectContractBean.PC_EQ_LIST_PRODUCT_NAME, "路由器"+i);
 			equipment.put(ProjectContractBean.PC_EQ_LIST_PRODUCT_TYPE, i+"M/s");
 			equipment.put(ProjectContractBean.PC_EQ_LIST_AMOUNT, 100);
 			equipment.put(ProjectContractBean.PC_EQ_LIST_UNIT, "个");
@@ -137,7 +137,9 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		query.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		
 		Map<String, Object> re = dao.findOneByQuery(query, DBBean.PROJECT_CONTRACT);
-		return re;
+		Map<String, Object> re2 = new HashMap<String, Object>();
+		re2.put(ApiConstants.RESULTS_DATA, re.get(ProjectContractBean.PC_EQ_LIST));
+		return re2;
 	}
 
 }

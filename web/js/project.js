@@ -88,11 +88,31 @@ var addProjectFormModel = kendo.data.Model.define({
 		},
 		contractMemo : {
 			
+		},
+		eqcostList : {
+			
 		}
 	}
 
 });
-
+var eqCostListDataSource = new kendo.data.DataSource({
+//	data:[],
+	schema : {
+		model : {
+            fields: {
+            	eqcostNo: { type: "string" },
+            	eqcostMaterialCode: { type: "string" },
+            	eqcostProductName: { type: "string" },
+            	eqcostProductType: { type: "string" },
+            	eqcostAmount: { type: "number" },
+            	eqcostUnit: { type: "string" },
+            	eqcostBrand: { type: "string" },
+            	eqcostBasePrice: { type: "number" },
+            	eqcostMemo: { type: "string" }
+            }
+        }
+	}
+});
 var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
@@ -140,7 +160,7 @@ $(document).ready(function() {
 			//pageSizes:true
 		},
 		editable : "popup",
-		toolbar : [ {name: "create", text: "添加"},{ template: kendo.template($("#template").html()) } ],
+		toolbar : [ { template: kendo.template($("#template").html()) } ],
 		selectable: "multiple, row",
         sortable: {
             mode: "multiple",
@@ -285,7 +305,44 @@ $(document).ready(function() {
 		$("#qualityMoney").kendoNumericTextBox({
 			min:0
 		});
-        //$("#contractDate").data("kendoDatePicker").dateView.calendar.element.width(300);
+		
+		//成本设备清单
+		$("#pcEqCostList").kendoGrid({
+			dataSource : eqCostListDataSource,
+			columns : [ {
+				field : "eqcostNo",
+				title : "序号"
+			}, {
+				field : "eqcostMaterialCode",
+				title : "物料代码"
+			}, {
+				field : "eqcostProductName",
+				title : "产品名称"
+			}, {
+				field : "eqcostProductType",
+				title : "规格型号"
+
+			}, {
+				field : "eqcostAmount",
+				title : "数量"
+			}, {
+				field : "eqcostUnit",
+				title : "单位"
+			}, {
+				field : "eqcostBrand",
+				title : "品牌"
+			}, {
+				field : "eqcostBasePrice",
+				title : "成本价"
+			}, {
+				field : "eqcostMemo",
+				title : "备注"
+			} ],
+
+			toolbar : [ "create" ],
+			editable : true,
+			scrollable : true
+		});
 	};//end toolbar_addNewProject
 	
 
@@ -345,8 +402,17 @@ $(document).ready(function() {
 	
 	
 	function saveProject(){
+		var data = eqCostListDataSource.data();
+		
+		console.log("start save : *******"+pfm);
+		pfm.set("eqcostList",kendo.stringify(data));
+		
+		console.log("set over will add ****"+pfm);
 		dataSource.add(pfm);
+		
+		console.log("add over will sync:*************");
 		dataSource.sync();
+		console.log("##########"+kendo.stringify(pfm));
 		var window = $("#addNewProject");
 
 		if (window.data("kendoWindow")) {
