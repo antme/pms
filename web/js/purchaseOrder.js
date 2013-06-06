@@ -229,29 +229,7 @@ function submitOrder() {
 	itemDataSource.sync();
 }
 
-function sumOrders(e) {
-	var data = itemDataSource.data();
-	requestDataItem.orderList = data;
 
-	
-	var referenceUnitPrice =e.model.referenceUnitPrice;
-	var requestedAmount = e.model.requestedAmount;
-	
-	if(e.values.referenceUnitPrice ){
-		referenceUnitPrice = e.values.referenceUnitPrice
-	}
-	
-	if(e.values.requestedAmount ){
-		requestedAmount = e.values.requestedAmount
-	}
-	
-	e.model.set("totalMoney", referenceUnitPrice * requestedAmount);
-
-	var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
-	grid1.refresh();
-	
-	
-}
 
 function edit(e) {
 
@@ -342,62 +320,69 @@ function edit(e) {
 			editable : true,
 			scrollable : true,
 			width : "950px",
-			save : sumOrders,
 			dataBound: function(e) {
 				var kendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
-				if(kendoGrid){
-					var data = itemDataSource.data();
-					console.log(data);
-					var total = 0;
-					var totalMoney = 0;
-					for(i=0; i<data.length; i++){
-						var item = data[i];
-						console.log(item.requestedAmount);
-	
-						if(item.requestedAmount){
-							total = total + item.requestedAmount;
-						}
-						
-						if(item.referenceUnitPrice && item.requestedAmount){
-							totalMoney = totalMoney + item.requestedAmount * item.referenceUnitPrice;
-						}
-					}
-					sumDataSource.data({});
-					sumDataSource.add({
-						requestedNumbers : total,
-						requestedMoney: totalMoney
+				if(!kendoGrid){
+					$("#purchaseorder-sum-grid").kendoGrid({
+						columns : [ {
+							field : "requestedMoney",
+							title : "申请金额"
+						}, {
+							field : "requestedNumbers",
+							title : "货品数量"
+						}, {
+							field : "numbersPercentOfContract",
+							title : "货品占合同%"
+						}, {
+							field : "moneyPercentOfContract",
+							title : "货品金额占合同%"
+
+						} ],
+						width : "200px"
+
 					});
-					kendoGrid.setDataSource(sumDataSource);
 				}
+				kendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
+				var data = itemDataSource.data();
+				var total = 0;
+				var totalMoney = 0;
+				for(i=0; i<data.length; i++){
+					var item = data[i];
+					console.log(item.requestedAmount);
+
+					if(item.requestedAmount){
+						total = total + item.requestedAmount;
+					}
+					
+					if(item.referenceUnitPrice && item.requestedAmount){
+						totalMoney = totalMoney + item.requestedAmount * item.referenceUnitPrice;
+					}
+				}
+				sumDataSource.data({});
+				sumDataSource.add({
+					requestedNumbers : total,
+					requestedMoney: totalMoney
+				});
+				kendoGrid.setDataSource(sumDataSource);
+				
+				
+				requestDataItem.orderList = data;
+				var referenceUnitPrice =e.model.referenceUnitPrice;
+				var requestedAmount = e.model.requestedAmount;
+				
+				if(e.values.referenceUnitPrice ){
+					referenceUnitPrice = e.values.referenceUnitPrice
+				}
+				
+				if(e.values.requestedAmount ){
+					requestedAmount = e.values.requestedAmount
+				}
+				
+				e.model.set("totalMoney", referenceUnitPrice * requestedAmount);
 			 }
 
 		});
 	}
 
-	$("#purchaseorder-sum-grid").kendoGrid({
-		columns : [ {
-			field : "requestedMoney",
-			title : "申请金额"
-		}, {
-			field : "requestedNumbers",
-			title : "货品数量"
-		}, {
-			field : "numbersPercentOfContract",
-			title : "货品占合同%"
-		}, {
-			field : "moneyPercentOfContract",
-			title : "货品金额占合同%"
-
-		} ],
-		width : "200px"
-
-	});
-
-	var kendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
-	sumDataSource.data({});
-	sumDataSource.add({
-		requestedMoney : "0"
-	});
-	kendoGrid.setDataSource(sumDataSource);
 
 }
