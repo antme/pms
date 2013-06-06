@@ -121,14 +121,20 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         request.put("goodsCode", "g2013");
         request.put("goodsName", "g2013-phone");
         request.put("goodsType", "phone");
-        request.put("orderGoodsUnitPrice", 49);
+        request.put("goodsModel", "a");
+        request.put("totalInContract", 300);
+        request.put("referenceUnitPrice", 8);
+        request.put("availableAmount", 200);
         requestList.add(request);
 
         request = new HashMap<String, Object>();
         request.put("goodsCode", "g2014");
         request.put("goodsName", "g2014-phone");
         request.put("goodsType", "phone");
-        request.put("orderGoodsUnitPrice", 34);
+        request.put("goodsModel", "b");
+        request.put("referenceUnitPrice", 6);
+        request.put("totalInContract", 400);
+        request.put("availableAmount", 350);
         requestList.add(request);
 
         Map<String, Object> map = new HashMap<String, Object>();

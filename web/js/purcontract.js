@@ -66,6 +66,7 @@ $(document).ready(function() {
 		dataSource : dataSource,
 		pageable : true,
 		editable : "popup",
+		selectable : "row",
 		toolbar : [ {
 			template : kendo.template($("#template").html())
 		} ],
@@ -92,10 +93,10 @@ $(document).ready(function() {
 			field : "stauts",
 			title : "采购合同状态"
 		}, {
-			field : "contractDate",
+			field : "signDate",
 			title : "合同签署时间"
 		}, {
-			field : "contractDate",
+			field : "contractMoney",
 			title : "金额"
 		}, {
 			field : "type",
@@ -149,6 +150,11 @@ var reoptions = {
 	activate : onRequestSelectWindowActive
 };
 
+function onWindowClose(){
+	
+	dataSource.read();
+}
+
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
 		update : {
@@ -183,13 +189,79 @@ var itemDataSource = new kendo.data.DataSource({
 });
 
 function add() {
+	$("#purchasecontract-select").show();
+	$("#purchasecontract-edit-item").hide();
 	openWindow(reoptions);
+
 }
 
 function save() {
 
 	// 同步数据
 	itemDataSource.sync();
+}
+
+
+function approve() {
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else {
+		$.ajax({
+			url : "/service/purcontract/approve",
+			success : function(responsetxt) {
+				var res;
+				eval("res=" + responsetxt);
+				if (res.status == "0") {
+					alert(res.msg);
+				} else {
+					alert("审核成功");
+					dataSource.read();
+				}
+			},
+
+			error : function() {
+				alert("连接Service失败");
+			},
+
+			data : {
+				_id : row._id
+			},
+			method : "post"
+		});
+	}
+
+}
+
+function reject() {
+	var row = getSelectedRowDataByGrid("grid");
+
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else {
+		$.ajax({
+			url : "/service/purcontract/reject",
+			success : function(responsetxt) {
+				var res;
+				eval("res=" + responsetxt);
+				if (res.status == "0") {
+					alert(res.msg);
+				} else {
+					alert("拒绝成功");
+					dataSource.read();
+				}
+			},
+
+			error : function() {
+				alert("连接Service失败");
+			},
+
+			data : {
+				_id : row._id
+			},
+			method : "post"
+		});
+	}
 }
 
 function checkStatus(data) {
@@ -245,6 +317,7 @@ function edit(e) {
 	kendo.bind($("#purchasecontract-edit"), dataItem);
 
 	$("#purchasecontract-edit-item").show();
+	$("#purchasecontract-select").hide();
 
 	$("#orderCode").html(dataItem.orderCode);
 	$("#projectName").html(dataItem.projectName);
