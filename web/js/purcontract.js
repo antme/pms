@@ -150,6 +150,11 @@ var reoptions = {
 	activate : onRequestSelectWindowActive
 };
 
+function onWindowClose(){
+	
+	dataSource.read();
+}
+
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
 		update : {

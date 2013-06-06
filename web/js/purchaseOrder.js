@@ -110,7 +110,7 @@ $(document).ready(function() {
 			field : "approvedDate",
 			title : "批准时间"
 		}, {
-			field : "totalMoney",
+			field : "orderGoodsTotalMoney",
 			title : "金额"
 		}, {
 			field : "requestedNumbers",
@@ -166,13 +166,20 @@ function onRequestSelectWindowActive(e) {
 	});
 }
 
+
+function onWindowClose(){
+	
+	dataSource.read();
+}
+
 // 窗口属性设置
 var reoptions = {
 	id : "purchaseorder-edit",
 	width : "1050px",
 	height : "600px",
 	title : "采购订单编辑",
-	activate : onRequestSelectWindowActive
+	activate : onRequestSelectWindowActive,
+	close: onWindowClose
 };
 
 function add() {
@@ -497,7 +504,10 @@ function edit(e) {
 								if(refresh){
 									var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
 									grid1.refresh();
+							
 								}
+								requestDataItem.requestedNumbers = total;
+								requestDataItem.orderGoodsTotalMoney = totalMoney;
 
 								sumDataSource.data({});
 								sumDataSource.add({
