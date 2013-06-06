@@ -1,13 +1,24 @@
 //抽象model对象， datasource对象必须绑定一个model为了方便解析parameterMap中需要提交的参数
 var model = kendo.data.Model.define({
+	id:"_id"
 });
 
 //外面列表页的datasource对象
-var orderDataSource = new kendo.data.DataSource({
+var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
 			url : "/service/purcontract/order/list",
 			dataType : "jsonp"
+		},
+		update : {
+			url : "/service/purcontract/order/update",
+			dataType : "jsonp",
+			type : "post"
+		},
+		create : {
+			url : "/service/purcontract/order/add",
+			dataType : "jsonp",
+			type : "post"
 		},
 		destroy : {
 			url : "/service/purcontract/order/delete",
@@ -35,9 +46,10 @@ $(document).ready(function() {
 	
 	//初始化采购订单列表页
 	$("#grid").kendoGrid({
-		dataSource : orderDataSource,
+		dataSource : dataSource,
 		pageable : true,
-		
+		editable : "popup",
+		selectable : "multiple",
 		//自定义toolbar，参见html中模板代码
 		toolbar : [ {
 			template : kendo.template($("#template").html())
@@ -160,10 +172,15 @@ var itemDataSource = new kendo.data.DataSource({
 				return {
 					
 					//解析成json_p模式
-					json_p : kendo.stringify(requestDataItem)
+					json_p : kendo.stringify(requestDataItem),
+					mycallback: "checkStatus"
 				};
 			}
 		},
+		requestEnd : function(e) {
+			var response = e.response;
+			console.log(e.type);
+		}
 	},
 	schema : {
 		model : model
@@ -172,6 +189,13 @@ var itemDataSource = new kendo.data.DataSource({
 });
 
 
+
+function checkStatus(data){
+	
+	if(data._id !==""){
+		requestDataItem.set("_id", data._id);
+	}
+}
 //计算成本数据的datasouce
 var sumDataSource = new kendo.data.DataSource({
 

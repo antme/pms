@@ -36,7 +36,7 @@ public class PurchaseContractController extends AbstractController {
 
     @RequestMapping("/update")
     public void listPurchaseContract(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.updatePurchaseContract(parserJsonParameters(request, false)), request, response);
+        responseWithData(pService.updatePurchaseContract(parserJsonParameters(request, false)), request, response, "save_success");
     }
     
     
@@ -60,7 +60,7 @@ public class PurchaseContractController extends AbstractController {
 
     @RequestMapping("/order/add")
     public void addPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.updatePurchaseOrder(parserListJsonParameters(request, false)), request, response);
+        responseWithData(pService.updatePurchaseOrder(parserListJsonParameters(request, false)), request, response, "save_success");
     }
 
     @RequestMapping("/order/delete")
@@ -71,7 +71,7 @@ public class PurchaseContractController extends AbstractController {
 
     @RequestMapping("/order/update")
     public void updatePurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.updatePurchaseOrder(parserListJsonParameters(request, false)), request, response);
+        responseWithData(pService.updatePurchaseOrder(parserListJsonParameters(request, false)), request, response, "save_success");
     }
     
     @RequestMapping("/request/list")
