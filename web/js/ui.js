@@ -21,9 +21,10 @@ function onAjaxFail(data) {
 }
 
 function displayMsg(result) {
-	$('#error').show();
-	$("#error").html(result.msg);
-	$('#error').delay(2000).hide(0);
+	// $('#error').show();
+	// $("#error").html(result.msg);
+	// $('#error').delay(2000).hide(0);
+	alert(result.msg);
 
 }
 
@@ -53,7 +54,7 @@ function loadPage(page, divID) {
 		page = "html/purchasecontract/purchaseRequest.html";
 	} else if (page == "purchaseorder") {
 		page = "html/purchasecontract/purchaseOrder.html";
-	}else {
+	} else {
 		page = "html/local-data.html";
 	}
 
@@ -93,7 +94,7 @@ function onLeftNavSelect(e) {
 		loadPage("purchaseRequest");
 	} else if (text == "采购合同" || text == "采购合同列表") {
 		loadPage("purchasecontract");
-	}else if (text == "采购订单申请" || text == "采购订单") {
+	} else if (text == "采购订单申请" || text == "采购订单") {
 		loadPage("purchaseorder");
 	} else {
 		loadPage("default");
@@ -107,34 +108,69 @@ function getSelectedRowDataByGrid(gridId) {
 	return grid.dataItem(row);
 }
 
-
-function openWindow(options){
-	var window = $("#"+options.id);
-	$("#"+options.id).show();
-	var onActivate = onDefaultActivate;
-	if(options.activate){
+function openWindow(options) {
+	var window = $("#" + options.id);
+	$("#" + options.id).show();
+	var onActivate = onWindowDefaultActivate;
+	if (options.activate) {
 		onActivate = options.activate;
 	}
-	
+
+	var onClose = onWindowDefaultClose;
+	if (options.close) {
+		onClose = options.close;
+	}
+
 	var kendoWindow = window.data("kendoWindow");
-	if (!kendoWindow) {		
+	if (!kendoWindow) {
 		window.kendoWindow({
 			width : options.width,
 			height : options.height,
 			title : options.title,
 			modal : true,
-			activate : onActivate
+			activate : onActivate,
+			close : onClose
 		});
 		kendoWindow = window.data("kendoWindow");
-		kendoWindow.setOptions({modal : true});
+		kendoWindow.setOptions({
+			modal : true
+		});
 		kendoWindow.center();
 	} else {
-		kendoWindow.setOptions({modal : true});
+		kendoWindow.setOptions({
+			modal : true
+		});
 		kendoWindow.open();
 		kendoWindow.center();
-	}	
+	}
 }
 
-function onDefaultActivate(e){
-	
+
+function postAjaxRequest(url, parameters) {
+	$.ajax({
+		url : url,
+		success : function(responsetxt) {
+			var res;
+			eval("res=" + responsetxt);
+			if (res.status == "0") {
+				alert(res.msg);
+			}
+		},
+
+		error : function() {
+			alert("连接Service失败");
+		},
+
+		json_p : parameters,
+		method : "post"
+	});
+
+}
+
+function onWindowDefaultActivate(e) {
+
+}
+
+function onWindowDefaultClose(e) {
+
 }

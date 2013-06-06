@@ -40,6 +40,19 @@ public class PurchaseContractController extends AbstractController {
     }
     
     
+    @RequestMapping("/approve")
+    public void approvePurchaseContract(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.approvePurchaseContract(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/reject")
+    public void rejectPurchaseContract(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.rejectPurchaseContract(parserJsonParameters(request, false)), request, response);
+    }
+
+    
+    
+    
     @RequestMapping("/order/list")
     public void listPurchaseOrders(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listPurchaseOrders(), request, response);
@@ -59,6 +72,16 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/order/update")
     public void listPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.updatePurchaseOrder(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/order/approve")
+    public void approvePurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.approvePurchaseOrder(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/order/reject")
+    public void rejectPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.rejectPurchaseOrder(parserJsonParameters(request, false)), request, response);
     }
 
     public IPurchaseContractService getpService() {
