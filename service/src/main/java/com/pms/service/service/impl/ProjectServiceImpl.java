@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import com.google.gson.Gson;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
@@ -81,7 +83,10 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		contract.put(ProjectContractBean.PC_MEMO, params.get(ProjectContractBean.PC_MEMO));
 		
 		List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
-		for (int i=0; i<5; i++){
+//		String eqcostListString = params.get(ProjectContractBean.PC_EQ_LIST).toString();
+//		eqcostList = (List<Map<String, Object>>) new ObjectMapper().readValue(eqcostListString, ArrayList.class);
+		eqcostList = new Gson().fromJson(params.get(ProjectContractBean.PC_EQ_LIST).toString(), List.class);
+		/*for (int i=0; i<5; i++){
 			Map<String, Object> equipment = new HashMap<String, Object>();
 			equipment.put(ProjectContractBean.PC_EQ_LIST_NO, "201306"+i);
 			equipment.put(ProjectContractBean.PC_EQ_LIST_MATERIAL_CODE, "PJ-xx-"+i);
@@ -96,7 +101,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			
 			eqcostList.add(equipment);
 		}
-		
+		*/
 		contract.put(ProjectContractBean.PC_EQ_LIST, eqcostList);
 		dao.add(contract, DBBean.PROJECT_CONTRACT);
 		
