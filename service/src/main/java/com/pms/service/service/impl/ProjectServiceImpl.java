@@ -82,7 +82,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			Map<String, Object> equipment = new HashMap<String, Object>();
 			equipment.put(ProjectContractBean.PC_EQ_LIST_NO, "201306"+i);
 			equipment.put(ProjectContractBean.PC_EQ_LIST_MATERIAL_CODE, "PJ-xx-"+i);
-			equipment.put(ProjectContractBean.PC_EQ_LIST_PRODUCT_NAME, "路由器"+1);
+			equipment.put(ProjectContractBean.PC_EQ_LIST_PRODUCT_NAME, "路由器"+i);
 			equipment.put(ProjectContractBean.PC_EQ_LIST_PRODUCT_TYPE, i+"M/s");
 			equipment.put(ProjectContractBean.PC_EQ_LIST_AMOUNT, 100);
 			equipment.put(ProjectContractBean.PC_EQ_LIST_UNIT, "个");
