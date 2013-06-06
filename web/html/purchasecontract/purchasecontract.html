@@ -17,9 +17,8 @@
 <script type="text/javascript" src="js/purcontract.js"></script>
 <script type="text/x-kendo-template" id="template">
     <button class="k-button" onclick="add();">新增</button>
-    <a class="k-button" href="\#" onclick="return toolbar_delete()">删除</a>
-    <a class="k-button" href="\#" onclick="return toolbar_projectApprove()">批准</a>
-    <a class="k-button" href="\#" onclick="return toolbar_projectApprove()">拒绝</a>
+    <button class="k-button"  onclick="approve()">批准</button>
+    <button class="k-button"  onclick="reject()">拒绝</button>
 </script>
 
 </head>
@@ -30,7 +29,7 @@
 
 
 	<div id="purchasecontract-edit" class="k-content">
-		<div>
+		<div id="purchasecontract-select">
 			<label> 选择采购订单: </label><input id="purchasecontractin"
 				style="width: 250px" />
 			<button onclick="showOrderWindow();">确定</button>
