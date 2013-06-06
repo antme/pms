@@ -406,6 +406,11 @@ $(document).ready(function() {
 		
 		console.log("start save : *******"+pfm);
 		pfm.set("eqcostList",kendo.stringify(data));
+
+		pfm.set("totalAmount", 0);
+		pfm.set("invoiceAmount", 0);
+		pfm.set("getAmount", 0);
+		pfm.set("purchaseAmount", 0);
 		
 		console.log("set over will add ****"+pfm);
 		dataSource.add(pfm);
