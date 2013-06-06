@@ -29,8 +29,8 @@ public class PurchaseController extends AbstractController {
     @RequestMapping("/request/create")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void addRequest(HttpServletRequest request, HttpServletResponse response) {
-    	//Map<String,Object> obj = parserJsonParameters(request,  false);
-    	responseWithData(null, request, response, "add_success");
+    	Map<String,Object> obj = purchaseService.create(parserJsonParameters(request,  false));
+    	responseWithData(obj, request, response, "add_success");
     }
 
     @RequestMapping("/request/destroy")

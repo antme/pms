@@ -8,17 +8,13 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
-import com.pms.service.mockbean.UserBean;
+import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.ProjectContractBean;
+import com.pms.service.mockbean.PurchaseRequestBean;
 import com.pms.service.service.AbstractService;
-import com.pms.service.service.ICustomerService;
 import com.pms.service.service.IPurchaseService;
-import com.pms.service.service.IUserService;
-import com.pms.service.util.DataEncrypt;
-import com.pms.service.util.status.ResponseCodeConstants;
 
 public class PurchaseServiceImpl extends AbstractService implements IPurchaseService {
 
@@ -31,6 +27,11 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
 	@Override
 	public Map<String,Object> create(Map<String, Object> params) {
+		params.put(PurchaseRequestBean.COST, 987);
+		params.put(PurchaseRequestBean.COST_USED_GOODS, 123);
+		params.put(PurchaseRequestBean.COUNT_USED_REQUET, 1);
+		params.put(PurchaseRequestBean.PERCENT_USED_GOODS,11);
+		params.put(PurchaseRequestBean.STATUS, "已提交");
 		return dao.add(params, DBBean.PURCHASE_REQUEST);
 	}
 
@@ -53,18 +54,25 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
 	@Override
 	public Map<String, Object> prepareRequest(Map<String, Object> params) {
-		//list good list basing on projectName from request.
-		int count = dao.count(null, "test_goodsInProject");
-		if(count != 0) return dao.list(params, "test_goodsInProject");
+		Map<String,Object> request = new HashMap<String,Object>();
 		
-    	for(int i=0; i<10; i++){
-    		Map<String,Object> map = new HashMap<String,Object>();
-    		map.put("good_name", "网线 A"+i);
-    		map.put("good_code", "WARE_"+i);
-    		map.put("good_applyCount", 0);
-    		map.put("good_totalCount", 100);
-    		dao.add(map, "test_goodsInProject");
-    	}	
-		return dao.list(params, "test_goodsInProject");
-	}
+		String projectCode = String.valueOf(params.get("projectCode"));
+		Map<String,Object> project = dao.findOne(ProjectBean.PROJECT_CODE, projectCode, DBBean.PROJECT);
+		if(project != null) {
+			String projectId = String.valueOf(project.get(ApiConstants.MONGO_ID));
+			String[] limitKey =  {ProjectContractBean.PC_CODE, ProjectContractBean.PC_EQ_LIST};
+			Map<String, Object> pc = dao.findOne(ProjectContractBean.PC_PROJECT_ID, projectId, limitKey, DBBean.PROJECT_CONTRACT);
+			if(pc != null) {
+				//request.put(ApiConstants.MONGO_ID, new ObjectId().toString());
+				request.put(PurchaseRequestBean.PROJECT_CODE, project.get(ProjectBean.PROJECT_CODE));
+				request.put(PurchaseRequestBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
+				request.put(PurchaseRequestBean.PROJECT_MANAGER, project.get(ProjectBean.PROJECT_MANAGER));
+				request.put(PurchaseRequestBean.CUSTOMER_NAME, project.get(ProjectBean.PROJECT_CUSTOMER_NAME));
+				
+				request.put(PurchaseRequestBean.PC_CODE, pc.get(ProjectContractBean.PC_CODE));
+				request.put(PurchaseRequestBean.PC_EQ_LIST, pc.get(ProjectContractBean.PC_EQ_LIST));
+			}
+		}
+		return request;
+	}	
 }

@@ -2,7 +2,8 @@ package com.pms.service.mockbean;
 
 public class ProjectContractBean {
 	public static final String PC_PROJECT_ID = "projectId";
-
+	public static final String PC_PROJECT_NAME = "projectName";
+	public static final String PC_PROJECT_MANAGER = "projectManager";
 	public static final String PC_CUSTOMER_NAME = "customerName";
 	public static final String PC_AMOUNT = "contractAmount";
 	public static final String PC_INVOICE_TYPE = "invoiceType";

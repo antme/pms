@@ -1,44 +1,85 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <style>
-<!--
+.k-grid-toolbar {
+	height: 25px;
+}
 
--->
+.title-heard{
+	font-weight:bold;
+}
+
+.pro-tabss {
+    height: 500px;
+}
+
+.pro-dropdownlist{
+	width:250px;
+}
+
+.demo-section {
+            width: 300px;
+        }
 </style>
-<script type="text/javascript" src="js/purchaseRequest.js"></script>      
-<body>
 
-<div id="grid"></div>
-<script type="text/x-kendo-template" id="purTemplate">
-	<div class="toolbar">
-		<button id ="bt_addPur">添加</button>
-	</div>
+<script  src="js/purchaseRequest.js"></script>
+
+<script type="text/x-kendo-template" id="template">
+	<button class="k-button" id="showRequestForm">新增</button>
+	<button class="k-button" id="approveRequest">批准</button>
 </script>
-<div id="popRequest" style="display: none;">
-    <div id="purchaseRequestInfo" >
-    		<label>请输入 销售合同编号:</label>
-    		<select data-role="combobox" data-text-field="name" data-value-field="name" data-bind="source: purchaseContractList, value: purchaseContractValue"></select>
-    		<button data-bind="click: L_search">确定</button>
-    		<br><hr><br>
-    		<label>申请编号:</label>
-    		<input data-bind="value: L_code" disabled="disabled"/>    		
-     		<label>销售合同编号:</label>
-    		<input data-bind="value: L_purchaseContractCode" disabled="disabled"/>   		
-    		<label>项目名称:</label>
-    		<input data-bind="value: L_projectName"  disabled="disabled"/>
-    		<label>项目负责人:</label>
-    		<input data-bind="value: L_pm"  disabled="disabled"/></td>
-    		<label>客户名称: </label>
-    		<input data-bind="value: L_customerName"  disabled="disabled"/>
-    		<br><hr><br>
-    		<label>采购类别:</label>
-    		<select data-role="dropdownlist" data-text-field="name" data-value-field="value" data-bind="source: typeValues, value:L_type"></select>
-    		<br>
-    		<label>要求到货日期: </label>
-    		<input data-role="datepicker" data-bind="value: L_requireDate" />
-    		<br>
-    		<label>清单列表：</label>
-    		<div data-role="grid" data-sortable="true" data-editable="true" data-columns='["Name", "Price", "UnitsInStock", {"command": "destroy"}]' data-bind="source: gridSource"></div>
-    		<button data-bind="click: L_submit">提交</button>
-	</div>	
-</div>	
+
+<body>
+	<div id="objList" class="k-content">
+		<div id="grid"></div>
+	</div>
+	<!-- 自定义表单：采购申请 -->
+	<div id="popRequest" style="display: none">
+		<div id="form-container">
+		<div>
+			请输入项目编号：<input type="text" id="searchFor">
+			<button data-bind="click: searchItem" class="k-button">确定</button>	 
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button data-bind="click: save" class="k-button">保存</button>
+		</div>
+           <div id="tabstrip">
+               <ul>
+                   <li class="k-state-active">
+                   	基本信息
+                   </li>
+                   <li>
+                                                             成本设备清单
+                   </li>
+               </ul>
+               <div><!-- tab1 -->
+                   <div class="k-edit-form-container">               	 	  
+                  	 
+                  	 <br>申请日期 : 		<input disabled="disabled" data-role="datepicker" data-bind="value: todayDate" />
+                  	 <br>销售合同编号 :	<input disabled="disabled" type="text"  data-bind="value: selectedItem.projectContractCode" />
+                  	 <br>项目名称 : 		<input disabled="disabled" type="text" data-bind="value: selectedItem.projectName" />
+                  	 <br>项目负责人 :  	<input disabled="disabled" type="text" data-bind="value: selectedItem.projectManager" />
+                  	 <br>客户名称 : 		<input disabled="disabled" type="text" data-bind="value: selectedItem.customerName" />
+                  	<br> <hr><br>
+                  	 编号 : 	<input type="text" class="k-textbox" data-bind="value: selectedItem.code" />
+                  	 申请部门 : <input type="text" class="k-textbox" data-bind="value: selectedItem.department" />
+                  	  到货要求日期 :	<input data-role="datepicker" data-bind="value: planDate" />
+                  	 <br>采购类别 : <select data-role="dropdownlist"  data-bind="source: typeSource, value: selectedItem.type"></select>
+                  	 <br> 备注 : <textarea rows="4" cols="120" class="k-textbox" data-bind="value: selectedItem.comment" ></textarea>
+ 					                     	 
+                   </div>
+               </div>
+               <div><!-- tab2 -->
+                   <div>
+                       <h2>成本设备清单</h2>
+            <div data-role="grid"
+                data-sortable="false" data-editable="true"
+                data-columns='["eqcostNo", "eqcostMaterialCode", "eqcostProductName","eqcostProductType","eqcostAmount","eqcostUnit","eqcostBrand","eqcostBasePrice","eqcostMemo",{"command": "destroy"}]'
+                data-bind="source: selectedItem.eqcostList"></div>
+                   </div>
+               </div>
+           </div> 
+                                
+            <!-- /////////////end -->	
+		</div>
+	</div>
 </body>
