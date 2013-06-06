@@ -6,6 +6,12 @@ var model = kendo.data.Model.define({
 		},
 		goodsDeliveryArrivedTime : {
 			type : "date"
+		},
+		purchaseContractCode: {
+			
+		},
+		signDate : {
+			type: "date"
 		}
 	}
 });
@@ -49,7 +55,13 @@ var dataSource = new kendo.data.DataSource({
 	}
 });
 $(document).ready(function() {
-
+	$("#tabstrip").kendoTabStrip({
+        animation:  {
+            open: {
+                effects: "fadeIn"
+            }
+        }
+    });
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
@@ -67,7 +79,7 @@ $(document).ready(function() {
 			field : "purchaseRequestCode",
 			title : "采购申请编号"
 		}, {
-			field : "purchaseOrderCode",
+			field : "orderCode",
 			title : "采购订单编号"
 
 		}, {
@@ -114,7 +126,7 @@ $(document).ready(function() {
 
 function onRequestSelectWindowActive(e) {
 	$("#purchasecontractin").kendoDropDownList({
-		dataTextField : "customerContractCode",
+		dataTextField : "orderCode",
 		dataValueField : "_id",
 		dataSource : {
 			transport : {
@@ -218,6 +230,8 @@ function edit(e) {
 		requestDataItem = dataItem;
 	}
 
+	
+	
 	var orderList = dataItem.orderList;
 	for (i = 0; i < orderList.length; i++) {
 		if (!orderList[i].goodsDeliveryType) {
@@ -228,8 +242,7 @@ function edit(e) {
 	// 渲染成本编辑列表
 	itemDataSource.data(dataItem.orderList);
 
-	var pfm = new model();
-	kendo.bind($("#purchasecontract-edit-grid"), pfm);
+	kendo.bind($("#purchasecontract-edit"), dataItem);
 
 	$("#purchasecontract-edit-item").show();
 
@@ -238,6 +251,8 @@ function edit(e) {
 	$("#projectCode").html(dataItem.projectCode);
 	$("#customerContractCode").html(dataItem.customerContractCode);
 	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
+	
+    $("#signDate").kendoDatePicker();
 
 	if (!$("#purchasecontract-edit-grid").data("kendoGrid")) {
 		$("#purchasecontract-edit-grid").kendoGrid({
@@ -260,7 +275,7 @@ function edit(e) {
 				width : 80
 
 			}, {
-				field : "goodsUnitPrice",
+				field : "orderGoodsUnitPrice",
 				title : "单价",
 				width : 50
 			}, {

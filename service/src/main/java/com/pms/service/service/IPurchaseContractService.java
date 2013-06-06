@@ -6,7 +6,6 @@ import java.util.Map;
 public interface IPurchaseContractService {
 
     
-    public Map<String, Object> addPurchaseContract(Map<String, Object> contract);
     
     public Map<String, Object> listPurchaseContracts();
     
