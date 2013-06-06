@@ -131,29 +131,24 @@ function onRequestSelectWindowActive(e) {
 
 }
 
+
 var reoptions = {
-	id : "purchasecontract-select",
-	width : "400px",
-	height : "300px",
-	title : "选择采购订单",
-	activate : onRequestSelectWindowActive
-};
+		id : "purchasecontract-edit",
+		width : "950px",
+		height : "600px",
+		title : "添加采购申请",
+		activate : onRequestSelectWindowActive
+	};
 
-function add() {
-	openWindow(reoptions);
-
-}
-
-function cancelSelectRequest() {
-	var window = $("#" + reoptions.id);
-	if (window.data("kendoWindow")) {
-		window.data("kendoWindow").close();
+	function add() {
+		openWindow(reoptions);
 	}
-}
+
+	
+
 
 function showOrderWindow() {
 	edit(null);
-	cancelSelectRequest();
 }
 
 function edit(e) {

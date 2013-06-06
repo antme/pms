@@ -1,15 +1,5 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<style>
-.k-grid-toolbar {
-	height: 25px;
-}
-
-.allocate-edit {
-	display: none;
-}
-</style>
-
 <script  src="js/allocate.js"></script>
 
 <script type="text/x-kendo-template" id="template">
@@ -23,6 +13,26 @@
 
 	<div id="allocate-edit" class="allocate-edit">
 		<div id="popup-grid"></div>
+		<script type="text/x-kendo-template" id="popup-template">
+            <div class="toolbar">
+                <label class="category-label" for="category">Show products by category:</label>
+                <input type="search" id="category" style="width: 150px"/>
+            </div>
+        </script>
+        <style scoped="scoped">
+            .category-label
+            {
+                vertical-align: middle;
+                padding-right: .5em;
+            }
+            #category
+            {
+                vertical-align: middle;
+            }
+            .toolbar {
+                float: right;
+            }
+        </style>
 	</div>
 </body>
 </html>

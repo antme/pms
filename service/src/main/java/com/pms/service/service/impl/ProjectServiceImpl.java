@@ -52,6 +52,9 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		projectBean.put(ProjectBean.PROJECT_GET_AMOUNT, 0);
 		projectBean.put(ProjectBean.PROJECT_PURCHASE_AMOUNT, 0);
 		
+		//后台处理字段
+		projectBean.put(ProjectBean.PROJECT_MODIFY_TIMES, 0);
+		
 		Map<String, Object> newProject = dao.add(projectBean, DBBean.PROJECT);
 		String _id = newProject.get(ApiConstants.MONGO_ID).toString(); 
 		

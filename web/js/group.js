@@ -32,7 +32,7 @@ $(document).ready(function() {
 				}
 			},
 		},
-		pageSize : 10,
+		pageSize : 20,
 		batch : true,
 		schema : {
 			model : {
@@ -58,7 +58,8 @@ $(document).ready(function() {
 		dataSource : dataSource,
 		pageable : true,
 		editable : "popup",
-		toolbar : [  {
+		selectable : "multiple",
+		toolbar : [ {
 			name : "create",
 			text : "创建角色"
 		} ],
@@ -66,7 +67,7 @@ $(document).ready(function() {
 			field : "_id",
 			title : "ID",
 			hidden : true,
-			editHidden: true
+			editHidden : true
 		}, {
 			field : "groupName",
 			title : "角色名"
@@ -77,7 +78,7 @@ $(document).ready(function() {
 			field : "roles",
 			title : "权限",
 			template : kendo.template($("#roleTemplate").html()),
-			editHidden: true
+			editHidden : true
 
 		}, {
 			command : [ "edit", {
@@ -150,9 +151,14 @@ function onActivate(e) {
 	}
 }
 
-
 function openGroupRoleWindow(id) {
 	groupId = id;
-	var options = {id:"group-role", width:"415px", height: "500px", title:"选择权限", activate:onActivate};
+	var options = {
+		id : "group-role",
+		width : "415px",
+		height : "500px",
+		title : "选择权限",
+		activate : onActivate
+	};
 	openWindow(options);
 }

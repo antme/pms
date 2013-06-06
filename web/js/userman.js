@@ -43,7 +43,7 @@ $(document).ready(function() {
 				}
 			},
 		},
-		pageSize : 10,
+		pageSize : 20,
 		batch : true,
 		schema : {
 			model : {
@@ -73,6 +73,7 @@ $(document).ready(function() {
 		dataSource : dataSource,
 		pageable : true,
 		editable : "popup",
+		selectable : "multiple",
 		toolbar : [ {
 			name : "create",
 			text : "创建用户"
