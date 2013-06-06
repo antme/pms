@@ -1,21 +1,20 @@
 $(document).ready(function () {
-    var crudServiceBaseUrl = "http://demos.kendoui.com/service",
-        dataSource = new kendo.data.DataSource({
+    var dataSource = new kendo.data.DataSource({
             transport: {
                 read:  {
-                    url: crudServiceBaseUrl + "/Products",
+                    url: "../service/allocate/list",
                     dataType: "jsonp"
                 },
                 update: {
-                    url: crudServiceBaseUrl + "/Products/Update",
+                    url: + "../service/allocate/update",
                     dataType: "jsonp"
                 },
                 destroy: {
-                    url: crudServiceBaseUrl + "/Products/Destroy",
+                    url: "../service/allocate/destroy",
                     dataType: "jsonp"
                 },
                 create: {
-                    url: crudServiceBaseUrl + "/Products/Create",
+                    url: "../service/allocate/create",
                     dataType: "jsonp"
                 },
                 parameterMap: function(options, operation) {
@@ -28,7 +27,7 @@ $(document).ready(function () {
             pageSize: 20,
             schema: {
                 model: {
-                    id: "ProductID",
+                    id: "_id",
                     fields: {
                         ProductID: { editable: false, nullable: true },
                         ProductName: { validation: { required: true } },
@@ -65,7 +64,7 @@ function toolbar_add() {
 		window.kendoWindow({
 			width : "900px",
 			height : "500px",
-			title : "shit",
+			title : "调拨申请",
 			modal : true,
 		});
 		window.data("kendoWindow").center();
@@ -89,46 +88,52 @@ function aaaaaa() {
 	                dataType: "jsonp"
 	            }
 	        }
-        }
-    });
-	
-	var dataSource = new kendo.data.DataSource({
-        transport: {
-            read: {
-                url: "../service/project/listequipments",
-                dataType: "jsonp",
-                data: {
-                	projectId: "51af47322b60fdf09fe22bfb"
-                }
-            }
         },
-        batch: true,
-        pageSize: 20,
-        schema: {
-            model: {
-                id: "_id",
-                fields: {
-                    ProductID: { editable: false, nullable: true },
-                    ProductName: { validation: { required: true } },
-                    UnitPrice: { type: "number", validation: { required: true, min: 1} },
-                    Discontinued: { type: "boolean" },
-                    UnitsInStock: { type: "number", validation: { min: 0, required: true } }
+        change: function(e) {
+        	var value = this.value();
+        	var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "../service/project/listequipments",
+                        dataType: "jsonp",
+                        data: {
+                        	projectId: value
+                        }
+                    }
+                },
+                batch: true,
+                schema: {
+                    model: {
+                        id: "eqcostNo",
+                        fields: {
+                        	eqcostNo: { editable: false },
+                        	eqcostMaterialCode: { editable: false },
+                        	eqcostProductName: { editable: false },
+                        	eqcostProductType: { editable: false },
+                        	eqcostAmount: { type: "number", validation: { required: true, min: 1} },
+                        	eqcostUnit: { editable: false },
+                        	eqcostBrand: { editable: false },
+                        	eqcostBasePrice: { editable: false }
+                        }
+                    }
                 }
-            }
+            });
+        	var grid = $("#equipments-grid").data("kendoGrid");
+        	grid.setDataSource(dataSource);
         }
     });
 	
-	$("#grid").kendoGrid({
-	    dataSource: dataSource,
-	    navigatable: true,
-	    pageable: true,
-	    height: 430,
-	    toolbar: ["create", "save", "cancel"],
+	$("#equipments-grid").kendoGrid({
+	    toolbar: ["cancel"],
 	    columns: [
-	        "ProductName",
-	        { field: "UnitPrice", title: "Unit Price", format: "{0:c}", width: 110 },
-	        { field: "UnitsInStock", title: "Units In Stock", width: 110 },
-	        { field: "Discontinued", width: 110 },
+	        { field: "eqcostNo", title: "序号" },
+	        { field: "eqcostMaterialCode", title: "物料代码" },
+	        { field: "eqcostProductName", title: "产品名称" },
+	        { field: "eqcostProductType", title: "规格型号" },
+	        { field: "eqcostAmount", title: "数量" },
+	        { field: "eqcostUnit", title: "单位" },
+	        { field: "eqcostBrand", title: "品牌" },
+	        { field: "eqcostBasePrice", title: "成本价" },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	    editable: true
 	});

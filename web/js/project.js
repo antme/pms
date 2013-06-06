@@ -229,6 +229,7 @@ $(document).ready(function() {
 
 	function toolbar_delete() {
 		var rowData = getSelectedRowDataByGrid("grid");
+		alert(kendo.stringify(rowData));
 		alert("Delete the row _id: " + rowData._id);
 	  	console.log("Toolbar command is clicked!");
 	  	return false;
@@ -339,7 +340,7 @@ $(document).ready(function() {
 				title : "备注"
 			} ],
 
-			toolbar : [ "create" ],
+			toolbar : [ {name:"create",text:"新增一条设备成本"} ],
 			editable : true,
 			scrollable : true
 		});
