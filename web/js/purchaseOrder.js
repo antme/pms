@@ -85,6 +85,9 @@ $(document).ready(function() {
 		editable : "popup",
 		selectable : "row",
 		width : "1000px",
+		dataBound: function(e){
+			kendo.ui.progress($("#grid"), false);
+		},
 		// 自定义toolbar，参见html中模板代码
 		toolbar : [ {
 			template : kendo.template($("#template").html())
@@ -127,6 +130,8 @@ $(document).ready(function() {
 			field : "moneyOfContract",
 			title : "合同下已申请采购金额%"
 		},
+		
+	
 
 		{
 			command : [ {
@@ -173,7 +178,7 @@ function onRequestSelectWindowActive(e) {
 
 
 function onWindowClose(){
-	
+	kendo.ui.progress($("#grid"), true);
 	dataSource.read();
 }
 
