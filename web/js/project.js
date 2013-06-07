@@ -151,6 +151,16 @@ var dataSource = new kendo.data.DataSource({
 });
 
 $(document).ready(function() {
+	
+	//选项卡
+	$("#tabstrip").kendoTabStrip({
+        animation:  {
+            open: {
+                effects: "fadeIn"
+            }
+        }
+    });
+	
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : {
@@ -375,14 +385,7 @@ $(document).ready(function() {
 		}
 		kendo.bind($("#addNewProject"), pfm);
 
-		//选项卡
-		$("#tabstrip").kendoTabStrip({
-            animation:  {
-                open: {
-                    effects: "fadeIn"
-                }
-            }
-        });
+
 		
 		//成本设备清单
 		eqCostListDataSource.data(pfm.eqcostList);
