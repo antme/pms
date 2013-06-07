@@ -20,11 +20,16 @@ var model = kendo.data.Model.define({
 		orderGoodsUnitPrice : {
 			type : "number"
 		},
+		orderGoodsTotalMoney: {
+			editable : false
+		},
 		totalMoney: {
-			type : "number"
+			type : "number",
+			editable : false
 		},
 		differenceAmount: {
-			type : "number"
+			type : "number",
+			editable : false
 		},
 		goodsName : {
 			editable : false
@@ -271,12 +276,9 @@ function sumOrders(e) {
 		requestedAmount = e.values.requestedAmount
 	}
 	
-	console.log(e);
 	var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
 	// will trigger dataBound event
 	e.model.set("totalMoney", referenceUnitPrice * requestedAmount);
-
-	grid1.refresh();
 	e.model.set("orderGoodsTotalMoney", orderGoodsUnitPrice * requestedAmount);
 
 	grid1.refresh();
@@ -432,7 +434,6 @@ function edit(e) {
 								title : "金额差值"
 							} ],
 
-							toolbar : [ "create" ],
 							editable : true,
 							scrollable : true,
 							width : "950px",
@@ -460,25 +461,29 @@ function edit(e) {
 
 									});
 								}
-								kendoGrid = $("#purchaseorder-sum-grid").data(
-										"kendoGrid");
 								var data = itemDataSource.data();
 								var total = 0;
 								var totalMoney = 0;
 								var requestActureMoney = 0;
 								var refresh = false;
+								
 								for (i = 0; i < data.length; i++) {
 									var item = data[i];
-
+									var itemTotalMoney = item.totalMoney;
+									var orderGoodsTotalMoney = item.orderGoodsTotalMoney;
+									var itemDifferenceAmount = 	item.differenceAmount;
+;
+									//计算总的申请数量
 									if (item.requestedAmount) {
 										total = total + item.requestedAmount;
 									}
 
-									if (item.orderGoodsUnitPrice
-											&& item.requestedAmount) {
+									if (item.orderGoodsUnitPrice && item.requestedAmount) {
 										requestActureMoney = requestActureMoney
 												+ item.requestedAmount
 												* item.orderGoodsUnitPrice;
+										item.orderGoodsTotalMoney = item.requestedAmount * item.orderGoodsUnitPrice;
+										
 									}
 
 									if (item.referenceUnitPrice
@@ -486,34 +491,39 @@ function edit(e) {
 										totalMoney = totalMoney
 												+ item.requestedAmount
 												* item.referenceUnitPrice;
+										item.totalMoney = item.requestedAmount * item.referenceUnitPrice;
 									}
 									
-									
-									
-									if(item.differenceAmount != (requestActureMoney - totalMoney)){
-										item.differenceAmount =  requestActureMoney - totalMoney;	
-										refresh = true;
-									}
+									item.differenceAmount =  requestActureMoney - totalMoney;	
 									
 									if (requestActureMoney > 0) {
 										totalMoney = requestActureMoney;
+									}
+
+																		
+									if (itemTotalMoney != item.totalMoney
+											|| orderGoodsTotalMoney != item.orderGoodsTotalMoney
+											|| itemDifferenceAmount != item.differenceAmount) {
+										refresh = true;
 									}
 									
 								}
 								
 								if(refresh){
 									var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
-									grid1.refresh();
-							
+									grid1.refresh();							
 								}
+								
 								requestDataItem.requestedNumbers = total;
 								requestDataItem.orderGoodsTotalMoney = totalMoney;
 
+								
 								sumDataSource.data({});
 								sumDataSource.add({
 									requestedNumbers : total,
 									requestedMoney : totalMoney
 								});
+								kendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
 								kendoGrid.setDataSource(sumDataSource);
 
 							}

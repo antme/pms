@@ -28,9 +28,9 @@ $(document).ready(function() {
 				if (operation !== "read" && options.models) {
 					return {
 						models : kendo.stringify(options.models)
-					};
+					}
 				}
-			},
+			}
 		},
 		pageSize : 20,
 		batch : true,
