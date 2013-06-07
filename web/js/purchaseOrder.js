@@ -20,14 +20,14 @@ var model = kendo.data.Model.define({
 		orderGoodsUnitPrice : {
 			type : "number"
 		},
-		orderGoodsTotalMoney: {
+		orderGoodsTotalMoney : {
 			editable : false
 		},
-		totalMoney: {
+		totalMoney : {
 			type : "number",
 			editable : false
 		},
-		differenceAmount: {
+		differenceAmount : {
 			type : "number",
 			editable : false
 		},
@@ -85,7 +85,7 @@ $(document).ready(function() {
 		editable : "popup",
 		selectable : "row",
 		width : "1000px",
-		dataBound: function(e){
+		dataBound : function(e) {
 			kendo.ui.progress($("#grid"), false);
 		},
 		// 自定义toolbar，参见html中模板代码
@@ -146,7 +146,7 @@ $(document).ready(function() {
 		} ]
 
 	});
-	
+
 	// 获取采购申请的数据，数据包含了成本清单
 	$("#purchaseRequest").kendoDropDownList({
 		dataTextField : "projectName",
@@ -170,7 +170,7 @@ $(document).ready(function() {
 // 声明一个总的对象用来传递数据
 var requestDataItem;
 
-function onWindowClose(){
+function onWindowClose() {
 	kendo.ui.progress($("#grid"), true);
 	dataSource.read();
 	requestDataItem = null;
@@ -182,7 +182,7 @@ var reoptions = {
 	width : "1050px",
 	height : "600px",
 	title : "采购订单编辑",
-	close: onWindowClose
+	close : onWindowClose
 };
 
 function add() {
@@ -252,7 +252,6 @@ function submitOrder() {
 	itemDataSource.sync();
 }
 
-
 function sumOrders(e) {
 
 	var data = itemDataSource.data();
@@ -273,7 +272,7 @@ function sumOrders(e) {
 	if (e.values.requestedAmount) {
 		requestedAmount = e.values.requestedAmount
 	}
-	
+
 	var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
 	// will trigger dataBound event
 	e.model.set("totalMoney", referenceUnitPrice * requestedAmount);
@@ -459,67 +458,70 @@ function edit(e) {
 								}
 								var data = itemDataSource.data();
 								var total = 0;
+								//采购申请总价格
 								var totalMoney = 0;
+
+								//合同中总数
+								var totalInContract = 0;
+								//订单实际总价格
 								var requestActureMoney = 0;
 								var refresh = false;
-								
+
 								for (i = 0; i < data.length; i++) {
 									var item = data[i];
 									var itemTotalMoney = item.totalMoney;
 									var orderGoodsTotalMoney = item.orderGoodsTotalMoney;
-									var itemDifferenceAmount = 	item.differenceAmount;
-;
+									var itemDifferenceAmount = item.differenceAmount;
+					
 									//计算总的申请数量
-									if (item.requestedAmount) {
-										total = total + item.requestedAmount;
-									}
+									total = total + item.requestedAmount;
+									totalInContract = totalInContract + item.totalInContract;
 
-									if (item.orderGoodsUnitPrice && item.requestedAmount) {
-										requestActureMoney = requestActureMoney
-												+ item.requestedAmount
-												* item.orderGoodsUnitPrice;
-										item.orderGoodsTotalMoney = item.requestedAmount * item.orderGoodsUnitPrice;
-										
-									}
+									requestActureMoney = requestActureMoney
+											+ item.requestedAmount
+											* item.orderGoodsUnitPrice;
+									item.orderGoodsTotalMoney = item.requestedAmount
+											* item.orderGoodsUnitPrice;
 
-									if (item.referenceUnitPrice
-											&& item.requestedAmount) {
-										totalMoney = totalMoney
-												+ item.requestedAmount
-												* item.referenceUnitPrice;
-										item.totalMoney = item.requestedAmount * item.referenceUnitPrice;
-									}
-									
-									item.differenceAmount =  requestActureMoney - totalMoney;	
-									
-									if (requestActureMoney > 0) {
-										totalMoney = requestActureMoney;
-									}
+									totalMoney = totalMoney
+											+ item.requestedAmount
+											* item.referenceUnitPrice;
+									item.totalMoney = item.requestedAmount
+											* item.referenceUnitPrice;
 
-																		
+									item.differenceAmount = item.requestedAmount
+											* item.orderGoodsUnitPrice
+											- item.requestedAmount
+											* item.referenceUnitPrice;
+
 									if (itemTotalMoney != item.totalMoney
 											|| orderGoodsTotalMoney != item.orderGoodsTotalMoney
 											|| itemDifferenceAmount != item.differenceAmount) {
 										refresh = true;
 									}
-									
-								}
-								
-								if(refresh){
-									var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
-									grid1.refresh();							
-								}
-								
-								requestDataItem.requestedNumbers = total;
-								requestDataItem.orderGoodsTotalMoney = totalMoney;
 
+								}
+
+								if (refresh) {
+									var grid1 = $("#purchaseorder-edit-grid")
+											.data("kendoGrid");
+									grid1.refresh();
+								}
+
+								requestDataItem.requestedNumbers = total;
+								requestDataItem.orderGoodsTotalMoney = requestActureMoney;
+								requestDataItem.numbersExists = (total/totalInContract)*100;
+								requestDataItem.moneyOfContract = (requestActureMoney/totalMoney)*100;
 								
 								sumDataSource.data({});
 								sumDataSource.add({
 									requestedNumbers : total,
-									requestedMoney : totalMoney
+									requestedMoney : requestActureMoney,
+									numbersPercentOfContract: (total/totalInContract)*100,
+									moneyPercentOfContract: (requestActureMoney/totalMoney)*100
 								});
-								kendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
+								kendoGrid = $("#purchaseorder-sum-grid").data(
+										"kendoGrid");
 								kendoGrid.setDataSource(sumDataSource);
 
 							}
