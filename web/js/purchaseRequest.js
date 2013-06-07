@@ -17,6 +17,10 @@ var requestModel = kendo.data.Model.define({
 		specialRequire:{},
 		comment:{},
 		eqcostList:{},
+		costUsedGoods: {},
+		countUsedRquest: {},
+		percentUsedGoods: {},
+		costUsedGoods: {},		
 		projectCode : {
 			validation : {
 				required : false,
@@ -46,7 +50,8 @@ var requestModel = kendo.data.Model.define({
 				required : false,
 				editable : false
 			}
-		}
+		},
+		purchaseOrderCode: {}
 	}
 });
 //------end-------

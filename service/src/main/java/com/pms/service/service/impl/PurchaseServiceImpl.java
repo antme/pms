@@ -64,6 +64,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			Map<String, Object> pc = dao.findOne(ProjectContractBean.PC_PROJECT_ID, projectId, limitKey, DBBean.PROJECT_CONTRACT);
 			if(pc != null) {
 				//request.put(ApiConstants.MONGO_ID, new ObjectId().toString());
+				request.put(PurchaseRequestBean.SUBMIT_DATE, new Date());
 				request.put(PurchaseRequestBean.PROJECT_CODE, project.get(ProjectBean.PROJECT_CODE));
 				request.put(PurchaseRequestBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
 				request.put(PurchaseRequestBean.PROJECT_MANAGER, project.get(ProjectBean.PROJECT_MANAGER));
