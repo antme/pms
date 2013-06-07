@@ -1,7 +1,9 @@
 body {
 	background-color: #f6f6f6;
 }
-
+.k-grid-toolbar {
+    height: 25px;
+}
 .edit-hidden {
 	display: none;
 }
