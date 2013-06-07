@@ -83,7 +83,7 @@ $(document).ready(function () {
 });
 
 function toolbar_add() {
-	init_popup();
+	
 	var rowData = getSelectedRowDataByGrid("grid");
 	
 	if (rowData == null) {
@@ -92,12 +92,19 @@ function toolbar_add() {
 		model = rowData;
 	}
 	
-	var eqDataSource = new kendo.data.DataSource();
+	kendo.bind($("#allocate-edit"), model);
+	
+	init_popup();
+	
+	var eqDataSource = new kendo.data.DataSource({
+        batch: true,
+        schema: {
+            model: eqModel
+        }
+    });
 	eqDataSource.data(model.eqcostList);
 	var grid = $("#equipments-grid").data("kendoGrid");
 	grid.setDataSource(eqDataSource);
-	
-	kendo.bind($("#allocate-edit"), model);
 	
 	$("#allocate-edit").show();
 	var window = $("#allocate-edit");
