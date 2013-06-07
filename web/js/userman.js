@@ -39,9 +39,9 @@ $(document).ready(function() {
 				if (operation !== "read" && options.models) {
 					return {
 						models : kendo.stringify(options.models)
-					};
+					}
 				}
-			},
+			}
 		},
 		pageSize : 20,
 		batch : true,
@@ -139,7 +139,7 @@ function roleMultSelectEditor(container, options) {
 			transport : {
 				read : {
 					dataType : "jsonp",
-					url : "/service/user/role/list",
+					url : "/service/user/role/list"
 				}
 			}
 		},
@@ -163,7 +163,7 @@ function groupMultSelectEditor(container, options) {
 			transport : {
 				read : {
 					dataType : "jsonp",
-					url : "/service/user/group/list",
+					url : "/service/user/group/list"
 				}
 			}
 		},

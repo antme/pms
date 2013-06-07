@@ -53,21 +53,32 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		projectBean.put(ProjectBean.PROJECT_CUSTOMER_NAME, params.get(ProjectBean.PROJECT_CUSTOMER_NAME));
 		
 		//初始化项目列表的4个金额字段
+		//FIXME
 		projectBean.put(ProjectBean.PROJECT_TOTAL_AMOUNT, 0);
 		projectBean.put(ProjectBean.PROJECT_INVOICE_AMOUNT, 0);
 		projectBean.put(ProjectBean.PROJECT_GET_AMOUNT, 0);
 		projectBean.put(ProjectBean.PROJECT_PURCHASE_AMOUNT, 0);
 		
 		//后台处理字段
-		projectBean.put(ProjectBean.PROJECT_MODIFY_TIMES, 0);
+		int modTimes = ApiUtil.getInteger(params, ProjectBean.PROJECT_MODIFY_TIMES, 0);
+		projectBean.put(ProjectBean.PROJECT_MODIFY_TIMES, modTimes);
 		
-		Map<String, Object> newProject = dao.add(projectBean, DBBean.PROJECT);
-		String _id = newProject.get(ApiConstants.MONGO_ID).toString(); 
-		
+		Map<String, Object> newProject = new HashMap<String, Object>();
+		String _id = (String) params.get(ApiConstants.MONGO_ID);
+		if (params.get(ApiConstants.MONGO_ID) == null){//Add
+			newProject = dao.add(projectBean, DBBean.PROJECT);
+			_id = newProject.get(ApiConstants.MONGO_ID).toString();
+		}else{//Update
+			projectBean.put(ApiConstants.MONGO_ID, _id);
+			newProject = dao.updateById(projectBean, DBBean.PROJECT);
+		}
+		 
+		//构造合同信息
 		Map<String, Object> contract = new HashMap<String, Object>();
 		contract.put(ProjectContractBean.PC_PROJECT_ID, _id);
 		contract.put(ProjectContractBean.PC_CUSTOMER_NAME, params.get(ProjectContractBean.PC_CUSTOMER_NAME));
 		contract.put(ProjectContractBean.PC_AMOUNT, params.get(ProjectContractBean.PC_AMOUNT));
+		contract.put(ProjectContractBean.PC_INVOICE_TYPE, params.get(ProjectContractBean.PC_INVOICE_TYPE));
 		contract.put(ProjectContractBean.PC_ESTIMATE_EQ_COST0, params.get(ProjectContractBean.PC_ESTIMATE_EQ_COST0));
 		contract.put(ProjectContractBean.PC_ESTIMATE_EQ_COST1, params.get(ProjectContractBean.PC_ESTIMATE_EQ_COST1));
 		contract.put(ProjectContractBean.PC_ESTIMATE_SUB_COST, params.get(ProjectContractBean.PC_ESTIMATE_SUB_COST));
@@ -87,28 +98,16 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		contract.put(ProjectContractBean.PC_MEMO, params.get(ProjectContractBean.PC_MEMO));
 		
 		List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
-//		String eqcostListString = params.get(ProjectContractBean.PC_EQ_LIST).toString();
-//		eqcostList = (List<Map<String, Object>>) new ObjectMapper().readValue(eqcostListString, ArrayList.class);
 		eqcostList = new Gson().fromJson(params.get(ProjectContractBean.PC_EQ_LIST).toString(), List.class);
-		/*for (int i=0; i<5; i++){
-			Map<String, Object> equipment = new HashMap<String, Object>();
-			equipment.put(ProjectContractBean.PC_EQ_LIST_NO, "201306"+i);
-			equipment.put(ProjectContractBean.PC_EQ_LIST_MATERIAL_CODE, "PJ-xx-"+i);
-			equipment.put(ProjectContractBean.PC_EQ_LIST_PRODUCT_NAME, "路由器"+i);
-			equipment.put(ProjectContractBean.PC_EQ_LIST_PRODUCT_TYPE, i+"M/s");
-			equipment.put(ProjectContractBean.PC_EQ_LIST_AMOUNT, 100);
-			equipment.put(ProjectContractBean.PC_EQ_LIST_UNIT, "个");
-			equipment.put(ProjectContractBean.PC_EQ_LIST_BRAND, "TP-LINK");
-			equipment.put(ProjectContractBean.PC_EQ_LIST_BASE_PRICE, 100);
-			equipment.put(ProjectContractBean.PC_EQ_LIST_TOTAL_AMOUNT, 10000);
-			equipment.put(ProjectContractBean.PC_EQ_LIST_MEMO, "memo...");
-			
-			eqcostList.add(equipment);
-		}
-		*/
 		contract.put(ProjectContractBean.PC_EQ_LIST, eqcostList);
-		dao.add(contract, DBBean.PROJECT_CONTRACT);
 		
+		if (params.get(ApiConstants.MONGO_ID) == null){//Add
+			dao.add(contract, DBBean.PROJECT_CONTRACT);
+		}else{//Update
+			Map<String, Object> contr = dao.findOne(ProjectContractBean.PC_PROJECT_ID, params.get(ApiConstants.MONGO_ID), DBBean.PROJECT_CONTRACT);
+			contract.put(ApiConstants.MONGO_ID, contr.get(ApiConstants.MONGO_ID));
+			dao.updateById(contract, DBBean.PROJECT_CONTRACT);
+		}
 		return newProject;
 	}
 
@@ -119,9 +118,9 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	}
 
 	@Override
-	public void updateProject(Map<String, Object> params) {
+	public Map<String, Object> updateProject(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
@@ -166,6 +165,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		for (Map<String, Object> p:list){
 			String _id = p.get(ApiConstants.MONGO_ID).toString();
 			Map<String, Object> conInfoMap = (Map<String, Object>) cInfoMap.get(_id);
+			conInfoMap.remove(ApiConstants.MONGO_ID);
 			p.putAll(conInfoMap);
 		}
 		
