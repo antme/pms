@@ -161,24 +161,26 @@ function onWindowClose() {
 function onWindowActive() {
 
 	// 获取采购申请的数据，数据包含了成本清单
-	$("#purchaseRequest").kendoDropDownList({
-		dataTextField : "projectName",
-		dataValueField : "_id",
-		dataSource : {
-			transport : {
-				read : {
-					dataType : "jsonp",
-					url : "/service/purcontract/request/list",
+	if (!$("#purchaseRequest").data("kendoDropDownList")) {
+		$("#purchaseRequest").kendoDropDownList({
+			dataTextField : "projectName",
+			dataValueField : "_id",
+			dataSource : {
+				transport : {
+					read : {
+						dataType : "jsonp",
+						url : "/service/purcontract/request/list",
+					}
 				}
-			}
-		},
+			},
 
-		// 当用户选择不同的采购申请时候赋值给requestDataItem对象
-		select : function(e) {
-			requestDataItem = this.dataSource.at(e.item.index());
-		}
-	});
-	
+			// 当用户选择不同的采购申请时候赋值给requestDataItem对象
+			select : function(e) {
+				requestDataItem = this.dataSource.at(e.item.index());
+			}
+		});
+	}
+
 }
 
 // 窗口属性设置
