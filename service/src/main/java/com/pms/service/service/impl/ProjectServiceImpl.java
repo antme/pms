@@ -7,6 +7,8 @@ import java.util.Map;
 
 
 import com.google.gson.Gson;
+import com.pms.service.dbhelper.DBQuery;
+import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
@@ -33,6 +35,8 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		queryMap.put(ApiConstants.LIMIT_START, limitStart);
 		
 		Map<String, Object> result = this.dao.list(queryMap, DBBean.PROJECT);
+		
+		mergeProjectContratInfo(result);
 		return result;
 	}
 
@@ -145,6 +149,31 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		Map<String, Object> re2 = new HashMap<String, Object>();
 		re2.put(ApiConstants.RESULTS_DATA, re.get(ProjectContractBean.PC_EQ_LIST));
 		return re2;
+	}
+	
+	private void mergeProjectContratInfo(Map<String, Object> result){
+		List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+		
+		List<String> pId = new ArrayList<String>();
+		for (Map<String, Object> p:list){
+			pId.add(p.get(ApiConstants.MONGO_ID).toString());
+		}
+		
+		Map<String, Object> queryContract = new HashMap<String, Object>();
+		queryContract.put(ProjectContractBean.PC_PROJECT_ID, new DBQuery(DBQueryOpertion.IN, pId));
+		Map<String, Object> cInfoMap = dao.listToOneMapByKey(queryContract, DBBean.PROJECT_CONTRACT, ProjectContractBean.PC_PROJECT_ID);
+		
+		for (Map<String, Object> p:list){
+			String _id = p.get(ApiConstants.MONGO_ID).toString();
+			Map<String, Object> conInfoMap = (Map<String, Object>) cInfoMap.get(_id);
+			p.putAll(conInfoMap);
+		}
+		
+	}
+
+	@Override
+	public Map<String, Object> getProjectById(String id) {
+		return dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
 	}
 
 }

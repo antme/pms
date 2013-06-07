@@ -340,12 +340,82 @@ $(document).ready(function() {
 				title : "备注"
 			} ],
 
-			toolbar : [ {name:"create",text:"新增一条设备成本"} ],
+			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
 			scrollable : true
 		});
 	};//end toolbar_addNewProject
 	
+	function toolbar_modifyProject() {
+		var rowData = getSelectedRowDataByGrid("grid");
+		
+		//itemDataSource.data(rowData.orderList);
+		console.log("########rowData:" + kendo.stringify(rowData));
+		kendo.bind($("#addNewProject"), rowData);
+		
+		$("#addNewProject").show();
+		var window = $("#addNewProject");
+		if (!window.data("kendoWindow")) {
+			window.kendoWindow({
+				width : "900px",
+				height : "500px",
+				title : "项目变更",
+				modal : true
+			});
+			window.data("kendoWindow").center();
+		} else {
+			window.data("kendoWindow").open();
+			window.data("kendoWindow").center();
+		}
+		
+		//选项卡
+		$("#tabstrip").kendoTabStrip({
+            animation:  {
+                open: {
+                    effects: "fadeIn"
+                }
+            }
+        });
+		
+		//成本设备清单
+		eqCostListDataSource = rowData.eqcostList;
+		$("#pcEqCostList").kendoGrid({
+			dataSource : eqCostListDataSource,
+			columns : [ {
+				field : "eqcostNo",
+				title : "序号"
+			}, {
+				field : "eqcostMaterialCode",
+				title : "物料代码"
+			}, {
+				field : "eqcostProductName",
+				title : "产品名称"
+			}, {
+				field : "eqcostProductType",
+				title : "规格型号"
+
+			}, {
+				field : "eqcostAmount",
+				title : "数量"
+			}, {
+				field : "eqcostUnit",
+				title : "单位"
+			}, {
+				field : "eqcostBrand",
+				title : "品牌"
+			}, {
+				field : "eqcostBasePrice",
+				title : "成本价"
+			}, {
+				field : "eqcostMemo",
+				title : "备注"
+			} ],
+
+			toolbar : [ {name:"create",text:"新增成本项"} ],
+			editable : false,
+			scrollable : true
+		});
+	}
 
 	var proStatusItems = [{ text: "正式立项", value: "1" }, { text: "预立项", value: "2" }, { text: "内部立项", value: "3" }];
 	$("#projectStatus").kendoDropDownList({
