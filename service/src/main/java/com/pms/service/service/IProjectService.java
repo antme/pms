@@ -15,4 +15,6 @@ public interface IProjectService {
 	public Map<String, Object> listProjectsForSelect(Map<String, Object> params);
 	
 	public Map<String, Object> listEquipmentsForProject(Map<String, Object> params);
+	
+	public Map<String, Object> getProjectById(String id);
 }
