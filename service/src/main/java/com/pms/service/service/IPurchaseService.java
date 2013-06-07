@@ -14,6 +14,8 @@ public interface IPurchaseService {
 
 	public Map<String,Object> prepareRequest(Map<String,Object> params);
 	
+	public Map<String,Object> loadRequest(Map<String,Object> params);
+	
 	public Map<String,Object> approveRequest(Map<String,Object> params);
 	
 	public Map<String,Object> rejectRequest(Map<String,Object> params);

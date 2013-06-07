@@ -1,7 +1,30 @@
-var dataSource;
-var eqDataSource;
-var projectName;
+var dataSource, eqDataSource, inProjectId, outProjectId, model;
+
+var allocate = kendo.data.Model.define( {
+    id: "_id",
+    fields: {
+    	inProjectId: {},
+    	outProjectId: {},
+    	allocateType: {}
+    }
+});
+
+var eqModel = kendo.data.Model.define( {
+    id: "eqcostNo",
+    fields: {
+    	eqcostNo: { editable: false },
+    	eqcostMaterialCode: { editable: false },
+    	eqcostProductName: { editable: false },
+    	eqcostProductType: { editable: false },
+    	eqcostAmount: { type: "number", validation: { required: true, min: 1} },
+    	eqcostUnit: { editable: false },
+    	eqcostBrand: { editable: false },
+    	eqcostBasePrice: { editable: false }
+    }
+});
+
 $(document).ready(function () {
+
     dataSource = new kendo.data.DataSource({
             transport: {
                 read:  {
@@ -9,16 +32,19 @@ $(document).ready(function () {
                     dataType: "jsonp"
                 },
                 update: {
-                    url: + "../service/allocate/update",
-                    dataType: "jsonp"
+                    url: "../service/allocate/update",
+                    dataType: "jsonp",
+                    type: "POST"
                 },
                 destroy: {
                     url: "../service/allocate/destroy",
-                    dataType: "jsonp"
+                    dataType: "jsonp",
+                    type: "POST"
                 },
                 create: {
                     url: "../service/allocate/create",
-                    dataType: "jsonp"
+                    dataType: "jsonp",
+                    type: "POST"
                 },
                 parameterMap: function(options, operation) {
                     if (operation !== "read" && options.models) {
@@ -29,12 +55,7 @@ $(document).ready(function () {
             batch: true,
             pageSize: 20,
             schema: {
-                model: {
-                    id: "_id",
-                    fields: {
-                        ProductName: {},
-                    }
-                }
+                model: allocate
             }
         });
 
@@ -46,14 +67,38 @@ $(document).ready(function () {
 			template : kendo.template($("#template").html())
 		} ],
         columns: [
-            { field:"projectName", title: "项目名称" },
-            { command: ["edit", "destroy"], title: "&nbsp;", width: "160px" }],
+            { field:"inProjectCode", title: "调入项目编号" },
+            { field:"inProjectName", title: "调入项目名称" },
+            { field:"inProjectManager", title: "调入项目负责人" },
+            { field:"outProjectCode", title: "调出项目编号" },
+            { field:"outProjectName", title: "调出项目名称" },
+            { field:"outProjectManager", title: "调出项目负责人" },
+            { field:"allocateType", title: "调拨类型" },
+            { field:"allocateStatus", title: "申请状态" },
+            { command: ["destroy"], title: "&nbsp;", width: "160px" }],
+        selectable: true,
         editable: "popup"
     });
+    
 });
 
 function toolbar_add() {
 	init_popup();
+	var rowData = getSelectedRowDataByGrid("grid");
+	
+	if (rowData == null) {
+		model = new allocate();
+	} else {
+		model = rowData;
+	}
+	
+	var eqDataSource = new kendo.data.DataSource();
+	eqDataSource.data(model.eqcostList);
+	var grid = $("#equipments-grid").data("kendoGrid");
+	grid.setDataSource(eqDataSource);
+	
+	kendo.bind($("#allocate-edit"), model);
+	
 	$("#allocate-edit").show();
 	var window = $("#allocate-edit");
 	if (!window.data("kendoWindow")) {
@@ -71,52 +116,54 @@ function toolbar_add() {
 };
 
 function init_popup() {
-	$("#projects").kendoComboBox({
+	var projectDataSource = new kendo.data.DataSource({
+        transport: {
+            read: {
+                url: "../service/project/listforselect",
+                dataType: "jsonp"
+            }
+        }
+    });
+	
+	$("#in-projects").kendoComboBox({
         placeholder: "Select project",
         dataTextField: "projectName",
         dataValueField: "_id",
         filter: "contains",
         suggest: true,
-        dataSource: {
-            transport: {
-	            read: {
-	                url: "../service/project/listforselect",
-	                dataType: "jsonp"
-	            }
-	        }
-        },
+        dataSource: projectDataSource,
         change: function(e) {
-        	var value = this.value();
-        	projectName = this.text();
+        	inProjectId = this.value();
+        	
         	eqDataSource = new kendo.data.DataSource({
                 transport: {
                     read: {
                         url: "../service/project/listequipments",
                         dataType: "jsonp",
                         data: {
-                        	projectId: value
+                        	projectId: inProjectId
                         }
                     }
                 },
                 batch: true,
                 schema: {
-                    model: {
-                        id: "eqcostNo",
-                        fields: {
-                        	eqcostNo: { editable: false },
-                        	eqcostMaterialCode: { editable: false },
-                        	eqcostProductName: { editable: false },
-                        	eqcostProductType: { editable: false },
-                        	eqcostAmount: { type: "number", validation: { required: true, min: 1} },
-                        	eqcostUnit: { editable: false },
-                        	eqcostBrand: { editable: false },
-                        	eqcostBasePrice: { editable: false }
-                        }
-                    }
+                    model: eqModel
                 }
             });
         	var grid = $("#equipments-grid").data("kendoGrid");
         	grid.setDataSource(eqDataSource);
+        }
+    });
+	
+	$("#out-projects").kendoComboBox({
+        placeholder: "Select project",
+        dataTextField: "projectName",
+        dataValueField: "_id",
+        filter: "contains",
+        suggest: true,
+        dataSource: projectDataSource,
+        change: function(e) {
+        	outProjectId = this.value();
         }
     });
 	
@@ -141,6 +188,13 @@ function init_popup() {
 
 function toolbar_submit() {
 	var data = eqDataSource.data();
-	dataSource.add({ projectName: projectName, eqcostList: kendo.stringify(data) });
+	model.set("eqcostList", data);
+	dataSource.add(model);
 	dataSource.sync();
+	dataSource.read();
+	
+	var window = $("#allocate-edit");
+	if (window.data("kendoWindow")) {
+		window.data("kendoWindow").close();
+	}
 };

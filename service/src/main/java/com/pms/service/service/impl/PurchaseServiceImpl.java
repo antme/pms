@@ -53,9 +53,16 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	}
 
 	@Override
+	public Map<String, Object> loadRequest(Map<String, Object> params) {
+		if(params.get(ApiConstants.MONGO_ID) != null){
+			return dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
+		} 
+		return prepareRequest(params);
+	}
+
+	@Override
 	public Map<String, Object> prepareRequest(Map<String, Object> params) {
 		Map<String,Object> request = new HashMap<String,Object>();
-		
 		String projectCode = String.valueOf(params.get("projectCode"));
 		Map<String,Object> project = dao.findOne(ProjectBean.PROJECT_CODE, projectCode, DBBean.PROJECT);
 		if(project != null) {
