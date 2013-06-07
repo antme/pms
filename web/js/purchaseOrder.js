@@ -241,9 +241,14 @@ function showOrderWindow() {
 	if (!requestDataItem) {
 		requestDataItem = kendoGrid.dataSource.at(0);
 	}
+	
+	if(!requestDataItem.orderCode){
+		requestDataItem.orderCode ="";
+	}
 
 	// 新增，所以设置_id为空
 	requestDataItem.set("_id", "");
+
 	edit();
 }
 
@@ -364,6 +369,7 @@ function edit(e) {
 		// 隐藏选择采购申请
 		$("#purchase-request-select").hide();
 	}
+	console.log(dataItem.orderCode);
 
 	// 渲染成本编辑列表
 	itemDataSource.data(dataItem.eqcostList);
