@@ -130,8 +130,6 @@ $(document).ready(function() {
 			field : "moneyOfContract",
 			title : "合同下已申请采购金额%"
 		},
-		
-	
 
 		{
 			command : [ {
@@ -148,14 +146,7 @@ $(document).ready(function() {
 		} ]
 
 	});
-});
-
-// 声明一个总的对象用来传递数据
-var requestDataItem;
-
-// 当window弹出的时候
-function onRequestSelectWindowActive(e) {
-
+	
 	// 获取采购申请的数据，数据包含了成本清单
 	$("#purchaseRequest").kendoDropDownList({
 		dataTextField : "projectName",
@@ -174,8 +165,10 @@ function onRequestSelectWindowActive(e) {
 			requestDataItem = this.dataSource.at(e.item.index());
 		}
 	});
-}
+});
 
+// 声明一个总的对象用来传递数据
+var requestDataItem;
 
 function onWindowClose(){
 	kendo.ui.progress($("#grid"), true);
@@ -189,7 +182,6 @@ var reoptions = {
 	width : "1050px",
 	height : "600px",
 	title : "采购订单编辑",
-	activate : onRequestSelectWindowActive,
 	close: onWindowClose
 };
 
