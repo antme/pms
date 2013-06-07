@@ -128,19 +128,22 @@ $(document).ready(function() {
 	});
 });
 
-function onRequestSelectWindowActive(e) {
-	$("#purchasecontractin").kendoDropDownList({
-		dataTextField : "orderCode",
-		dataValueField : "_id",
-		dataSource : {
-			transport : {
-				read : {
-					dataType : "jsonp",
-					url : "/service/purcontract/order/list",
+function onRequestSelectWindowActive() {
+
+	if (!$("#purchasecontractin").data("kendoDropDownList")) {
+		$("#purchasecontractin").kendoDropDownList({
+			dataTextField : "orderCode",
+			dataValueField : "_id",
+			dataSource : {
+				transport : {
+					read : {
+						dataType : "jsonp",
+						url : "/service/purcontract/order/list",
+					}
 				}
 			}
-		}
-	});
+		});
+	}
 
 }
 var requestDataItem;
