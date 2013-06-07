@@ -369,7 +369,6 @@ function edit(e) {
 		// 隐藏选择采购申请
 		$("#purchase-request-select").hide();
 	}
-	console.log(dataItem.orderCode);
 
 	// 渲染成本编辑列表
 	itemDataSource.data(dataItem.eqcostList);
