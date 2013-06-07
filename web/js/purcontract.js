@@ -316,7 +316,9 @@ function edit(e) {
 	// 渲染成本编辑列表
 	itemDataSource.data(dataItem.orderList);
 
+	console.log("****************bind");
 	kendo.bind($("#purchasecontract-edit"), dataItem);
+	console.log("****************bind ok!!!!!!!!!!!!!!!!!!!");
 
 	$("#purchasecontract-edit-item").show();
 	$("#purchasecontract-select").hide();

@@ -249,8 +249,7 @@ $(document).ready(function() {
 		pfm = new addProjectFormModel();
 		console.log("add new project##############" + kendo.stringify(pfm));
 		$("#addNewProject").show();
-		kendo.bind($("#addNewProject"), pfm);
-		console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
+		
 		var window = $("#addNewProject");
 		if (!window.data("kendoWindow")) {
 			window.kendoWindow({
@@ -266,7 +265,13 @@ $(document).ready(function() {
 			window.data("kendoWindow").center();
 		}
 		
-		//click Save
+		//clear the grid data
+		eqCostListDataSource.data(pfm.eqcostList);
+		
+		kendo.bind($("#addNewProject"), pfm);
+		console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
+		
+		//add new project : click Save
 		$("#saveButton").click(function(){
 			var data = eqCostListDataSource.data();
 			
@@ -284,15 +289,15 @@ $(document).ready(function() {
 			dataSource.add(pfm);
 //			console.log(dataSource);
 			dataSource.sync();
+			
 			var window = $("#addNewProject");
-
 			if (window.data("kendoWindow")) {
 				window.data("kendoWindow").close();
 			}
 
 			var grid = $("#grid");
-			if (window.data("kendoGrid")) {
-				window.data("kendoGrid").refresh();
+			if (grid.data("kendoGrid")) {
+				grid.data("kendoGrid").refresh();
 			}
 		});
 	};//end toolbar_addNewProject
@@ -331,45 +336,8 @@ $(document).ready(function() {
 		
 		//成本设备清单
 		eqCostListDataSource.data(pfm.eqcostList);
-//		$("#pcEqCostList").kendoGrid({
-//			dataSource : eqCostListDataSource,
-//			columns : [ {
-//				field : "eqcostNo",
-//				title : "序号"
-//			}, {
-//				field : "eqcostMaterialCode",
-//				title : "物料代码"
-//			}, {
-//				field : "eqcostProductName",
-//				title : "产品名称"
-//			}, {
-//				field : "eqcostProductType",
-//				title : "规格型号"
-//
-//			}, {
-//				field : "eqcostAmount",
-//				title : "数量"
-//			}, {
-//				field : "eqcostUnit",
-//				title : "单位"
-//			}, {
-//				field : "eqcostBrand",
-//				title : "品牌"
-//			}, {
-//				field : "eqcostBasePrice",
-//				title : "成本价"
-//			}, {
-//				field : "eqcostMemo",
-//				title : "备注"
-//			} ],
-//
-//			toolbar : [ {name:"create",text:"新增成本项"} ],
-//			editable : true,
-//			scrollable : true
-//		});
 		
-		
-		//click Save
+		//modify click Save
 		$("#saveButton").click(function(){
 			var data = eqCostListDataSource.data();
 			
@@ -394,8 +362,8 @@ $(document).ready(function() {
 			}
 
 			var grid = $("#grid");
-			if (window.data("kendoGrid")) {
-				window.data("kendoGrid").refresh();
+			if (grid.data("kendoGrid")) {
+				grid.data("kendoGrid").refresh();
 			}
 		});
 	};
