@@ -157,6 +157,7 @@ var reoptions = {
 function onWindowClose() {
 	kendo.ui.progress($("#grid"), true);
 	dataSource.read();
+	requestDataItem = null;
 }
 
 var itemDataSource = new kendo.data.DataSource({
