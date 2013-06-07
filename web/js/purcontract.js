@@ -306,15 +306,15 @@ function edit(e) {
 		requestDataItem = dataItem;
 	}
 
-	var orderList = dataItem.orderList;
-	for (i = 0; i < orderList.length; i++) {
-		if (!orderList[i].goodsDeliveryType) {
-			orderList[i].goodsDeliveryType = "";
+	var eqcostList = dataItem.eqcostList;
+	for (i = 0; i < eqcostList.length; i++) {
+		if (!eqcostList[i].goodsDeliveryType) {
+			eqcostList[i].goodsDeliveryType = "";
 		}
 	}
-	console.log(dataItem.orderList);
+	console.log(dataItem.eqcostList);
 	// 渲染成本编辑列表
-	itemDataSource.data(dataItem.orderList);
+	itemDataSource.data(dataItem.eqcostList);
 
 	console.log("****************bind");
 	kendo.bind($("#purchasecontract-edit"), dataItem);
@@ -335,11 +335,11 @@ function edit(e) {
 		$("#purchasecontract-edit-grid").kendoGrid({
 			dataSource : itemDataSource,
 			columns : [ {
-				field : "goodsCode",
+				field : "eqcostNo",
 				title : "货品编号",
 				width : 80
 			}, {
-				field : "goodsName",
+				field : "eqcostProductName",
 				title : "货品名",
 				width : 80
 			}, {
@@ -347,7 +347,7 @@ function edit(e) {
 				title : "货品类别",
 				width : 80
 			}, {
-				field : "goodsModel",
+				field : "eqcostProductType",
 				title : "货品型号",
 				width : 80
 

@@ -113,57 +113,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     public Map<String, Object> listPurchaseRequest() {
-        Map<String, Object> results = new HashMap<String, Object>();
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-        List<Map<String, Object>> requestList = new ArrayList<Map<String, Object>>();
-        Map<String, Object> request = new HashMap<String, Object>();
-        request.put("goodsCode", "g2013");
-        request.put("goodsName", "g2013-phone");
-        request.put("goodsType", "phone");
-        request.put("goodsModel", "a");
-        request.put("totalInContract", 300);
-        request.put("referenceUnitPrice", 8);
-        request.put("availableAmount", 200);
-        requestList.add(request);
-
-        request = new HashMap<String, Object>();
-        request.put("goodsCode", "g2014");
-        request.put("goodsName", "g2014-phone");
-        request.put("goodsType", "phone");
-        request.put("goodsModel", "b");
-        request.put("referenceUnitPrice", 6);
-        request.put("totalInContract", 400);
-        request.put("availableAmount", 350);
-        requestList.add(request);
-
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("projectName", "QC2013");
-        map.put("projectCode", "QC2013-1");
-        map.put("customerContractCode", "QC2013-1-1");
-        map.put("purchaseRequestCode", "QC2013-1-1-1");
-        map.put("customerName", "EMC");
-        map.put("projectManager", "dylan");
-        map.put("orderId", "QC2013-12345-111-222-111");
         
-        map.put("orderList", requestList);
-        list.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("projectName", "QC2014");
-        map.put("projectCode", "QC2014-2");
-        map.put("customerContractCode", "QC2014-2-1");
-        map.put("purchaseRequestCode", "QC2014-2-1-1");
-        map.put("customerName", "EMC");
-        map.put("projectManager", "dylan");
-        map.put("orderList", requestList);
-
-        list.add(map);
-        results.put("data", list);
-
-        results.put("data", list);
-
-        return results;
+        return this.dao.list(null, DBBean.PURCHASE_REQUEST);
+        
     }
 
 }
