@@ -62,6 +62,11 @@ var listDatasource = new kendo.data.DataSource({
             dataType: "jsonp",
             type : "post"
         },
+        update: {
+            url: baseUrl + "/update",
+            dataType: "jsonp",
+            type : "post"
+        },
         destroy: {
             url: baseUrl + "/destroy",
             dataType: "jsonp",
@@ -80,6 +85,65 @@ var listDatasource = new kendo.data.DataSource({
     }
 });
 
+//initial pop form
+var itemForm = kendo.observable({
+    itemSource: new kendo.data.DataSource({
+        transport: {
+            read: {
+                url: baseUrl + "/load",
+                dataType: "jsonp",
+                method : "post"
+            },
+            update: {
+                url: baseUrl + "/update",
+                dataType: "jsonp",
+                method : "post"
+            },
+            create: {
+                url: baseUrl + "/create",
+                dataType: "jsonp",
+                method : "post"
+            },
+            parameterMap: function(options, operation) {
+                if (operation === "read") {
+                    return {
+                    	projectCode : $("#searchFor").val(),
+                    	_id : $("#searchId").val()
+                    };
+                } else if (operation !== "read" && options.models) {
+                    return {
+                        models: kendo.stringify(options.models)
+                    };
+                }
+                return options;
+            }
+        },
+        change: function() {
+        	itemForm.reset();
+        },
+        batch: true,
+        schema: {
+            	model: requestModel
+        }
+    }),
+    selectedItem: null,
+    typeSource:["上海代理产品采购","同方自主产品采购","其它渠道采购"],
+    todayDate: new Date(),
+    save: function() {
+        this.itemSource.sync();
+    },
+    reset: function(){
+    	this.set("selectedItem",this.itemSource.view()[0]);
+    },
+    searchItem: function(){
+    	this.itemSource.read();
+    },
+    clear: function(){
+    	this.selectedItem = new requestModel();
+    	//itemForm.selectedItem = new requestModel();
+    }
+});
+//--------
 $(document).ready(function () {
 	$("#grid").kendoGrid({
 	    dataSource: listDatasource,
@@ -100,7 +164,7 @@ $(document).ready(function () {
 	        { field: "countUsedRquest", title:"合同下申请单数量" },
 	        { field: "percentUsedGoods", title:"合同下已成功申请请货物%" },
 	        { field: "costUsedGoods", title:"合同下已成功申请货物金额%" },
-	        { command: [{name: "edit", text: "编辑"},{name: "destroy", text: "删除"}], title: "&nbsp;" }
+	        { command: [{name: "destroy", text: "删除"}], title: "&nbsp;" }
 	    ],
 	    editable: "popup"
 	});
@@ -128,13 +192,27 @@ $(document).ready(function () {
 			}
 		}
 	});	
+	    
+    itemForm.selectedItem = new requestModel();
+    kendo.bind($("#form-container"), itemForm);
 	
-	showAddForm();
 	
 });
 
 function add(){
+	//itemForm.clear();
 	$("#popRequest").data("kendoWindow").open();
+}
+function edit(){
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else {	
+		$("#searchId").val(row._id);
+	    itemForm.searchItem();
+	    $("#popRequest").data("kendoWindow").open();		
+	}
+
 }
 function approve() {
 	var row = getSelectedRowDataByGrid("grid");
@@ -152,23 +230,17 @@ function approve() {
 					alert("审核成功");
 					listDatasource.read();
 				}
-			},
-
-			error : function() {
+			}, error : function() {
 				alert("连接Service失败");
-			},
-
-			data : {
+			}, data : {
 				_id : row._id
-			},
-			method : "post"
+			},method : "post"
 		});
 	}
 }
 
 function reject() {
 	var row = getSelectedRowDataByGrid("grid");
-
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else {
@@ -183,76 +255,11 @@ function reject() {
 					alert("拒绝成功");
 					listDatasource.read();
 				}
-			},
-
-			error : function() {
+			}, error : function() {
 				alert("连接Service失败");
-			},
-
-			data : {
+			}, data : {
 				_id : row._id
-			},
-			method : "post"
+			}, method : "post"
 		});
 	}
-}
-
-function showAddForm(){
-    var itemForm = kendo.observable({
-        itemSource: new kendo.data.DataSource({
-            transport: {
-                read: {
-                    url: baseUrl + "/prepare",
-                    dataType: "jsonp",
-                    method : "post"
-                },
-                update: {
-                    url: baseUrl + "/update",
-                    dataType: "jsonp",
-                    method : "post"
-                },
-                create: {
-                    url: baseUrl + "/create",
-                    dataType: "jsonp",
-                    method : "post"
-                },
-                parameterMap: function(options, operation) {
-                    if (operation === "read") {
-                        return {
-                        	projectCode : $("#searchFor").val()
-                        };
-                    } else if (operation !== "read" && options.models) {
-                        return {
-                            models: kendo.stringify(options.models)
-                        };
-                    }
-                    return options;
-                }
-            },
-            change: function() {
-            	itemForm.reset();
-            },
-            batch: true,
-            schema: {
-                	model: requestModel
-            }
-        }),
-        selectedItem: null,
-        typeSource:["上海代理产品采购","同方自主产品采购","其它渠道采购"],
-        todayDate: new Date(),
-        save: function() {
-            this.itemSource.sync();
-        },
-        reset: function(){
-        	this.set("selectedItem",this.itemSource.view()[0]);
-        },
-        searchItem: function(){
-        	this.itemSource.read();
-        }
-    });
-    //-----------------
-    //itemForm.itemSource.read();
-    itemForm.selectedItem = new requestModel();
-    kendo.bind($("#form-container"), itemForm);
-
 }
