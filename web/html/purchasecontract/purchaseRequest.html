@@ -18,17 +18,23 @@
 }
 
 .demo-section {
-            width: 300px;
-        }
+    width: 300px;
+}
+.table_form td {
+	padding: 3px 10px;
+}
+.table_form td:FIRST-CHILD {
+	text-align: right;
+	width: 100px;
+}      
 </style>
 
 <script  src="js/purchaseRequest.js"></script>
-
 <script type="text/x-kendo-template" id="template">
-	<button class="k-button" id="showRequestForm">新增</button>
-	<button class="k-button" id="approveRequest">批准</button>
+    <button class="k-button" onclick="add();">新增</button>
+    <button class="k-button" onclick="approve();">批准</button>
+    <button class="k-button" onclick="reject();">拒绝</button>
 </script>
-
 <body>
 	<div id="objList" class="k-content">
 		<div id="grid"></div>
@@ -37,49 +43,69 @@
 	<div id="popRequest" style="display: none">
 		<div id="form-container">
 		<div>
-			请输入项目编号：<input type="text" id="searchFor">
+			<label>请选择项目：</label>
+			<input type="text" id="searchFor">
 			<button data-bind="click: searchItem" class="k-button">确定</button>	 
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button data-bind="click: save" class="k-button">保存</button>
 		</div>
-           <div id="tabstrip">
-               <ul>
-                   <li class="k-state-active">
-                   	基本信息
-                   </li>
-                   <li>
-                                                             成本设备清单
-                   </li>
-               </ul>
-               <div><!-- tab1 -->
-                   <div class="k-edit-form-container">               	 	  
-                  	 
-                  	 <br>申请日期 : 		<input disabled="disabled" data-role="datepicker" data-bind="value: todayDate" />
-                  	 <br>销售合同编号 :	<input disabled="disabled" type="text"  data-bind="value: selectedItem.projectContractCode" />
-                  	 <br>项目名称 : 		<input disabled="disabled" type="text" data-bind="value: selectedItem.projectName" />
-                  	 <br>项目负责人 :  	<input disabled="disabled" type="text" data-bind="value: selectedItem.projectManager" />
-                  	 <br>客户名称 : 		<input disabled="disabled" type="text" data-bind="value: selectedItem.customerName" />
-                  	<br> <hr><br>
-                  	 编号 : 	<input type="text" class="k-textbox" data-bind="value: selectedItem.code" />
-                  	 申请部门 : <input type="text" class="k-textbox" data-bind="value: selectedItem.department" />
-                  	  到货要求日期 :	<input data-role="datepicker" data-bind="value: planDate" />
-                  	 <br>采购类别 : <select data-role="dropdownlist"  data-bind="source: typeSource, value: selectedItem.type"></select>
-                  	 <br> 备注 : <textarea rows="4" cols="120" class="k-textbox" data-bind="value: selectedItem.comment" ></textarea>
- 					                     	 
-                   </div>
-               </div>
-               <div><!-- tab2 -->
-                   <div>
-                       <h2>成本设备清单</h2>
-            <div data-role="grid"
-                data-sortable="false" data-editable="true"
-                data-columns='["eqcostNo", "eqcostMaterialCode", "eqcostProductName","eqcostProductType","eqcostAmount","eqcostUnit","eqcostBrand","eqcostBasePrice","eqcostMemo",{"command": "destroy"}]'
-                data-bind="source: selectedItem.eqcostList"></div>
-                   </div>
-               </div>
-           </div> 
-                                
-            <!-- /////////////end -->	
+		
+        <div data-role="tabstrip" data-animation="false">
+            <ul>
+                <li class="k-state-active">基本信息 </li>
+                <li>成本设备清单</li>
+            </ul>
+            <div>
+            	<table class="table_form" >
+            		<tr>
+            			<td>申请日期 </td>
+            			<td><input disabled="disabled" data-role="datepicker" data-bind="value: todayDate" /></td>
+            		</tr>
+            		<tr>
+            			<td>销售合同编号 </td>
+            			<td><input disabled="disabled" type="text"  data-bind="value: selectedItem.projectContractCode" /></td>
+            		</tr>
+            		<tr>
+            			<td>项目名称 </td>
+            			<td><input disabled="disabled" type="text" data-bind="value: selectedItem.projectName" /></td>
+            		</tr>
+            		<tr>
+            			<td>项目负责人 </td>
+            			<td><input disabled="disabled" type="text" data-bind="value: selectedItem.projectManager" /></td>
+            		</tr>
+            		<tr>
+            			<td>客户名称 </td>
+            			<td><input disabled="disabled" type="text" data-bind="value: selectedItem.customerName" /></td>
+            		</tr>
+            		<tr>
+            			<td>申请编号 </td>
+            			<td><input type="text" class="k-textbox" data-bind="value: selectedItem.code" /></td>
+            		</tr>
+            		<tr>
+            			<td>申请部门 </td>
+            			<td><input type="text" class="k-textbox" data-bind="value: selectedItem.department" /></td>
+            		</tr>
+            		<tr>
+            			<td>到货要求日期 </td>
+            			<td><input data-role="datepicker" data-bind="value: planDate" /></td>
+            		</tr>
+            		<tr>
+            			<td>采购类别 </td>
+            			<td><select data-role="dropdownlist"  data-bind="source: typeSource, value: selectedItem.type"></select></td>
+            		</tr>
+            		<tr>
+            			<td>备注 </td>
+            			<td><textarea rows="4" cols="120" class="k-textbox" data-bind="value: selectedItem.comment" ></textarea></td>
+            		</tr>
+            	</table>				    
+            </div>
+            <div>
+				<h2>成本设备清单</h2>
+            	<div data-role="grid" data-sortable="false" data-editable="true" 
+            		data-columns='[{ field: "eqcostNo", title: "序号" },{ field: "eqcostMaterialCode", title: "物料代码" },{ field: "eqcostProductName", title: "产品名称" },{ field: "eqcostProductType", title: "规格型号" },{ field: "eqcostUnit", title: "单位" },{ field: "eqcostApplyAmount", title: "本次申请数量" },{ field: "eqcostAmount", title: "合同中总数数量" },{ field: "eqcostBasePrice", title: "预估单价" },{ field: "eqcostBrand", title: "品牌" },{ field: "eqcostMemo", title: "备注" },{"command": "destroy"}]' 
+            		data-bind="source: selectedItem.eqcostList">
+            	</div>
+            </div>
+        </div>	
 		</div>
 	</div>
 </body>

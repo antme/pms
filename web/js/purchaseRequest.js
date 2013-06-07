@@ -89,8 +89,8 @@ $(document).ready(function () {
 	    pageable: true,
 	    toolbar: kendo.template($("#template").html()),
 	    columns: [
-	        { field: "code", title: "编号" },
-	        { field: "type", title:"类型" },
+	        { field: "code", title: "申请编号" },
+	        { field: "type", title:"采购类别" },
 	        { field: "projectContractCode", title:"销售合同编号" },
 	        { field: "purchaseOrderCode", title:"采购订单编号" },
 	        { field: "purchaseContractCode", title:"采购合同编号" },
@@ -99,9 +99,9 @@ $(document).ready(function () {
 	        { field: "status", title:"申请状态" },
 	        { field: "approvedDate", title:"批准时间" },
 	        { field: "cost", title:"金额" },
-	        { field: "countUsedRquest", title:"申请单数量" },
-	        { field: "percentUsedGoods", title:"成功申请请货物%" },
-	        { field: "costUsedGoods", title:"成功申请货物金额" },
+	        { field: "countUsedRquest", title:"合同下申请单数量" },
+	        { field: "percentUsedGoods", title:"合同下已成功申请请货物%" },
+	        { field: "costUsedGoods", title:"合同下已成功申请货物金额%" },
 	        { command: [{name: "destroy", text: "删除"}], title: "&nbsp;" }
 	    ],
 	    editable: "popup"
@@ -113,30 +113,34 @@ $(document).ready(function () {
 		height : "500px",	    
 	    title: "采购申请单"
 	});
+		
+	$("#searchFor").kendoDropDownList({
+		dataTextField : "projectName",
+		dataValueField : "projectCode",
+		dataSource : {
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "/service/project/listforselect",
+				}
+			}
+		}
+	});	
 	
-	$("#showRequestForm").click(function(){
-		$("#popRequest").data("kendoWindow").center().open();
-	});
 
-	//--------------------------
-	
-	$("#approveRequest").click(function(){
-		alert("功能正在开发中...");
-	});
-	
 	showAddForm();
 });
 
-
+function add(){
+	$("#popRequest").data("kendoWindow").open();
+}
+function approve(){
+	alert("开发中...");
+}
+function reject(){
+	alert("开发中...");
+}
 function showAddForm(){
-	$("#tabstrip").kendoTabStrip({
-        animation:  {
-            open: {
-                effects: "fadeIn"
-            }
-        }
-    });
-	
     var itemForm = kendo.observable({
         itemSource: new kendo.data.DataSource({
             transport: {
@@ -181,7 +185,7 @@ function showAddForm(){
         todayDate: new Date(),
         save: function() {
             this.itemSource.sync();
-            //location.reload();
+            location.reload();
         },
         reset: function(){
         	this.set("selectedItem",this.itemSource.view()[0]);
@@ -192,8 +196,8 @@ function showAddForm(){
     });
     //-----------------
     
-    itemForm.itemSource.read();
+    //itemForm.itemSource.read();
+    itemForm.selectedItem = new requestModel();
     kendo.bind($("#form-container"), itemForm);
-    
-	
+
 }
