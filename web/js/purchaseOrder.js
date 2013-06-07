@@ -147,6 +147,19 @@ $(document).ready(function() {
 
 	});
 
+});
+
+// 声明一个总的对象用来传递数据
+var requestDataItem;
+
+function onWindowClose() {
+	kendo.ui.progress($("#grid"), true);
+	dataSource.read();
+	requestDataItem = null;
+}
+
+function onWindowActive() {
+
 	// 获取采购申请的数据，数据包含了成本清单
 	$("#purchaseRequest").kendoDropDownList({
 		dataTextField : "projectName",
@@ -165,15 +178,7 @@ $(document).ready(function() {
 			requestDataItem = this.dataSource.at(e.item.index());
 		}
 	});
-});
-
-// 声明一个总的对象用来传递数据
-var requestDataItem;
-
-function onWindowClose() {
-	kendo.ui.progress($("#grid"), true);
-	dataSource.read();
-	requestDataItem = null;
+	
 }
 
 // 窗口属性设置
@@ -182,7 +187,8 @@ var reoptions = {
 	width : "1050px",
 	height : "600px",
 	title : "采购订单编辑",
-	close : onWindowClose
+	close : onWindowClose,
+	activate: onWindowActive
 };
 
 function add() {
