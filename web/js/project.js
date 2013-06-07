@@ -348,10 +348,14 @@ $(document).ready(function() {
 	
 	function toolbar_modifyProject() {
 		var rowData = getSelectedRowDataByGrid("grid");
+		if (rowData == null){
+			alert("请选择一条项目记录！");
+			return;
+		}
 		
-		//itemDataSource.data(rowData.orderList);
-		console.log("########rowData:" + kendo.stringify(rowData));
-		kendo.bind($("#addNewProject"), rowData);
+		pfm = rowData;
+		console.log("########rowData:" + kendo.stringify(pfm));
+		kendo.bind($("#addNewProject"), pfm);
 		
 		$("#addNewProject").show();
 		var window = $("#addNewProject");
@@ -378,7 +382,7 @@ $(document).ready(function() {
         });
 		
 		//成本设备清单
-		eqCostListDataSource = rowData.eqcostList;
+		eqCostListDataSource.data(pfm.eqcostList);
 		$("#pcEqCostList").kendoGrid({
 			dataSource : eqCostListDataSource,
 			columns : [ {
@@ -412,10 +416,40 @@ $(document).ready(function() {
 			} ],
 
 			toolbar : [ {name:"create",text:"新增成本项"} ],
-			editable : false,
+			editable : true,
 			scrollable : true
 		});
-	}
+	};
+	
+	function saveProject(){
+		//console.log(kendo.stringify(eqCostListDataSource.data()));
+		var data = eqCostListDataSource.data();
+		
+		//console.log("start save : *******"+pfm);
+		//pfm.set("eqcostList",eqCostListDataSource.data());
+		pfm.set("eqcostList",data);
+		pfm.set("totalAmount", 0);
+		pfm.set("invoiceAmount", 0);
+		pfm.set("getAmount", 0);
+		pfm.set("purchaseAmount", 0);
+		
+		//console.log("set over will add ****"+kendo.stringify(pfm));
+		
+		console.log(dataSource);
+//		dataSource.add(pfm);
+//		console.log(dataSource);
+		dataSource.sync();
+		var window = $("#addNewProject");
+
+		if (window.data("kendoWindow")) {
+			window.data("kendoWindow").close();
+		}
+
+		var grid = $("#grid");
+		if (window.data("kendoGrid")) {
+			window.data("kendoGrid").refresh();
+		}
+	};
 
 	var proStatusItems = [{ text: "正式立项", value: "1" }, { text: "预立项", value: "2" }, { text: "内部立项", value: "3" }];
 	$("#projectStatus").kendoDropDownList({
@@ -471,35 +505,13 @@ $(document).ready(function() {
 		dataSource : contractTypeItems,
 	});
 	
-	
-	function saveProject(){
-		var data = eqCostListDataSource.data();
-		
-		console.log("start save : *******"+pfm);
-		pfm.set("eqcostList",kendo.stringify(data));
-
-		pfm.set("totalAmount", 0);
-		pfm.set("invoiceAmount", 0);
-		pfm.set("getAmount", 0);
-		pfm.set("purchaseAmount", 0);
-		
-		console.log("set over will add ****"+pfm);
-		dataSource.add(pfm);
-		
-		console.log("add over will sync:*************");
-		dataSource.sync();
-		console.log("##########"+kendo.stringify(pfm));
-		var window = $("#addNewProject");
-
-		if (window.data("kendoWindow")) {
-			window.data("kendoWindow").close();
-		}
-
-		var grid = $("#grid");
-		if (window.data("kendoGrid")) {
-			window.data("kendoGrid").refresh();
-		}
+	function onWindowClose(){
+		console.log("**********************win close");
+		dataSource.read();
 	}
+	
+	
+	
 	
 	
 	

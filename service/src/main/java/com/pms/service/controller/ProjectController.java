@@ -61,8 +61,13 @@ public class ProjectController extends AbstractController {
     @RequestMapping("/add")
     public void addProject(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        projectService.addProject(params);
-        responseWithData(null, request, response);
+        responseWithData(projectService.addProject(params), request, response);
+    }
+    
+    @RequestMapping("/update")
+    public void updateProject(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(projectService.addProject(params), request, response);
     }
 
 	public IProjectService getProjectService() {
