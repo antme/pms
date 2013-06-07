@@ -355,23 +355,26 @@ $(document).ready(function() {
 		
 		pfm = rowData;
 		console.log("########rowData:" + kendo.stringify(pfm));
-		kendo.bind($("#addNewProject"), pfm);
 		
 		$("#addNewProject").show();
 		var window = $("#addNewProject");
-		if (!window.data("kendoWindow")) {
+		var kendoWindow = window.data("kendoWindow");
+		if (!kendoWindow) {
 			window.kendoWindow({
 				width : "900px",
 				height : "500px",
 				title : "项目变更",
-				modal : true
+				modal : true,
+				close : onWindowClose
 			});
-			window.data("kendoWindow").center();
+			kendoWindow = window.data("kendoWindow");
+			kendoWindow.center();
 		} else {
-			window.data("kendoWindow").open();
-			window.data("kendoWindow").center();
+			kendoWindow.open();
+			kendoWindow.center();
 		}
-		
+		kendo.bind($("#addNewProject"), pfm);
+
 		//选项卡
 		$("#tabstrip").kendoTabStrip({
             animation:  {
@@ -506,8 +509,12 @@ $(document).ready(function() {
 	});
 	
 	function onWindowClose(){
-		console.log("**********************win close");
+		var window = $("#addNewProject");
+		if(window.data("kendoWindow")){
+//			window.data("kendoWindow").destroy();
+		}
 		dataSource.read();
+		
 	}
 	
 	
