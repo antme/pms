@@ -152,15 +152,6 @@ var dataSource = new kendo.data.DataSource({
 
 $(document).ready(function() {
 	
-	//选项卡
-//	$("#tabstrip").kendoTabStrip({
-//        animation:  {
-//            open: {
-//                effects: "fadeIn"
-//            }
-//        }
-//    });
-	
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : {
@@ -257,8 +248,9 @@ $(document).ready(function() {
 	function toolbar_addNewProject() {
 		pfm = new addProjectFormModel();
 		console.log("add new project##############" + kendo.stringify(pfm));
-		kendo.bind($("#addNewProject"), pfm);
 		$("#addNewProject").show();
+		kendo.bind($("#addNewProject"), pfm);
+		console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
 		var window = $("#addNewProject");
 		if (!window.data("kendoWindow")) {
 			window.kendoWindow({
@@ -334,7 +326,7 @@ $(document).ready(function() {
 			kendoWindow.center();
 		}
 		kendo.bind($("#addNewProject"), pfm);
-
+		console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
 
 		
 		//成本设备清单
@@ -500,7 +492,7 @@ $(document).ready(function() {
 		dataSource.read();
 	};
 	
-	//pop window 
+	//popup window initial 
 	//合同签订日期控件
 	$("#contractDate").kendoDatePicker();
 	
