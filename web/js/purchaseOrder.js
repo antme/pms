@@ -466,24 +466,24 @@ function edit(e) {
 								var totalMoney = 0;
 								var requestActureMoney = 0;
 								var refresh = false;
+								
 								for (i = 0; i < data.length; i++) {
 									var item = data[i];
-
+									var itemTotalMoney = item.totalMoney;
+									var orderGoodsTotalMoney = item.orderGoodsTotalMoney;
+									var itemDifferenceAmount = 	item.differenceAmount;
+;
 									//计算总的申请数量
 									if (item.requestedAmount) {
 										total = total + item.requestedAmount;
 									}
-									
-									console.log(item);
 
-									if(!item.orderGoodsTotalMoney || !item.totalMoney){
-										refresh = true;
-									}
 									if (item.orderGoodsUnitPrice && item.requestedAmount) {
 										requestActureMoney = requestActureMoney
 												+ item.requestedAmount
 												* item.orderGoodsUnitPrice;
 										item.orderGoodsTotalMoney = item.requestedAmount * item.orderGoodsUnitPrice;
+										
 									}
 
 									if (item.referenceUnitPrice
@@ -494,15 +494,17 @@ function edit(e) {
 										item.totalMoney = item.requestedAmount * item.referenceUnitPrice;
 									}
 									
-									
-									
-									if(item.differenceAmount != (requestActureMoney - totalMoney)){
-										item.differenceAmount =  requestActureMoney - totalMoney;	
-										refresh = true;
-									}
+									item.differenceAmount =  requestActureMoney - totalMoney;	
 									
 									if (requestActureMoney > 0) {
 										totalMoney = requestActureMoney;
+									}
+
+																		
+									if (itemTotalMoney != item.totalMoney
+											|| orderGoodsTotalMoney != item.orderGoodsTotalMoney
+											|| itemDifferenceAmount != item.differenceAmount) {
+										refresh = true;
 									}
 									
 								}
@@ -511,7 +513,6 @@ function edit(e) {
 									var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
 									grid1.refresh();							
 								}
-								
 								
 								requestDataItem.requestedNumbers = total;
 								requestDataItem.orderGoodsTotalMoney = totalMoney;
