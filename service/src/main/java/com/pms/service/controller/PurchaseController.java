@@ -59,7 +59,24 @@ public class PurchaseController extends AbstractController {
     public void prepareRequest(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.prepareRequest(parserJsonParameters(request,  false)), request, response);
     }    
+
+    @RequestMapping("/request/approve")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void approveRequest(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.approveRequest(parserJsonParameters(request,  false)), request, response);
+    } 
     
+    @RequestMapping("/request/reject")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void rejectRequest(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.rejectRequest(parserJsonParameters(request,  false)), request, response);
+    }
+    
+    @RequestMapping("/request/submit")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void submitRequest(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.submitRequest(parserJsonParameters(request,  false)), request, response);
+    }    
     /****CRUD 采购订单********/
     
     

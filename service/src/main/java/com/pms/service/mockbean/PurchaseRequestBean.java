@@ -5,6 +5,7 @@ public class PurchaseRequestBean {
 	public static final String CODE = "code";
 	public static final String DEPARTMENT = "department";
 	public static final String SUBMIT_DATE = "submitDate";
+	public static final String APPROVED_DATE = "approveDate";
 	public static final String PLAN_DATE = "planDate";
 	public static final String TYPE = "type";
 	public static final String STATUS = "status";
@@ -21,4 +22,9 @@ public class PurchaseRequestBean {
 	public static final String CUSTOMER_NAME = "customerName";
 	public static final String PC_CODE = "projectContractCode";
 	public static final String PUC_CODE = "purchaseOrderCode";
+	
+	public static final String STATUS_SAVED = "已保存";
+	public static final String STATUS_SUBMIT = "已提交";
+	public static final String STATUS_APPROVED = "已批准";
+	public static final String STATUS_REJECT = "已拒绝";
 }
