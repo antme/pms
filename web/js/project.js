@@ -138,31 +138,27 @@ var dataSource = new kendo.data.DataSource({
 			}
 		}
 	},
-	batch : true,
 	pageSize: 10,
-    //serverPaging: true,
-    //serverSorting: true,
-    //serverFiltering: true,
-	//batch : true,
+	batch : true,
 	
 	schema : {
 		model : addProjectFormModel
-	},
+	}
 });
 
 $(document).ready(function() {
 	
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
+//		pageable : true,
 		pageable : {
-			pageSize: 5,
 			buttonCount:5,
 			//input:true,
 			//pageSizes:true
 		},
 		editable : "popup",
 		toolbar : [ { template: kendo.template($("#template").html()) } ],
-		selectable: "multiple, row",
+		selectable: "row",
         sortable: {
             mode: "multiple",
             allowUnsort: true
@@ -178,11 +174,11 @@ $(document).ready(function() {
 			title : "项目状态",
 			template:function(dataItem) {
 				var name = "";
-				if (dataItem.projectType == 1){
+				if (dataItem.projectStatus == 1){
 					name = "正式立项";
-				} else if (dataItem.projectType == 2){
+				} else if (dataItem.projectStatus == 2){
 					name = "预立项";
-				} else {
+				} else {//projectStatus=3
 					name = "内部立项";
 				}
 				return name;
@@ -236,10 +232,17 @@ $(document).ready(function() {
 	  	return false;
 	};//end toolbar_delete
 	
-	function toolbar_projectApprove() {
+	function toolbar_projectApprove() {//1:正式立项；2：预立项；3：内部立项
 		var rowData = getSelectedRowDataByGrid("grid");
-		alert("Approved prject _id: " + rowData._id);
-		console.log("Toolbar command is clicked!");
+		if (rowData == null){
+			alert("请选择一条项目记录！");
+			return;
+		}
+		if (rowData.projectStatus == 1){
+			alert("请选择一条非正式立项记录！");
+			return;
+		}
+		alert("正式立项 _id: " + rowData._id);
 		return false;
 	};
 
@@ -272,34 +275,36 @@ $(document).ready(function() {
 		console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
 		
 		//add new project : click Save
-		$("#saveButton").click(function(){
-			var data = eqCostListDataSource.data();
-			
-			//console.log("start save : *******"+pfm);
-			//pfm.set("eqcostList",eqCostListDataSource.data());
-			pfm.set("eqcostList",data);
-			pfm.set("totalAmount", 0);
-			pfm.set("invoiceAmount", 0);
-			pfm.set("getAmount", 0);
-			pfm.set("purchaseAmount", 0);
-			
-			//console.log("set over will add ****"+kendo.stringify(pfm));
-			
-			console.log(dataSource);
-			dataSource.add(pfm);
-//			console.log(dataSource);
-			dataSource.sync();
-			
-			var window = $("#addNewProject");
-			if (window.data("kendoWindow")) {
-				window.data("kendoWindow").close();
-			}
-
-			var grid = $("#grid");
-			if (grid.data("kendoGrid")) {
-				grid.data("kendoGrid").refresh();
-			}
-		});
+//		$("#saveButton").click(function(){
+//			console.log("add new project save ********************************");
+//			var data = eqCostListDataSource.data();
+//			
+//			//console.log("start save : *******"+pfm);
+//			//pfm.set("eqcostList",eqCostListDataSource.data());
+//			pfm.set("eqcostList",data);
+//			pfm.set("totalAmount", 0);
+//			pfm.set("invoiceAmount", 0);
+//			pfm.set("getAmount", 0);
+//			pfm.set("purchaseAmount", 0);
+//			
+//			//console.log("set over will add ****"+kendo.stringify(pfm));
+//			
+//			//console.log(dataSource);
+//			dataSource.add(pfm);
+////			console.log(dataSource);
+//			console.log("add new project sync ********************************");
+//			dataSource.sync();
+//			
+//			var window = $("#addNewProject");
+//			if (window.data("kendoWindow")) {
+//				window.data("kendoWindow").close();
+//			}
+//
+//			var grid = $("#grid");
+//			if (grid.data("kendoGrid")) {
+//				grid.data("kendoGrid").refresh();
+//			}
+//		});
 	};//end toolbar_addNewProject
 	
 	function toolbar_modifyProject() {
@@ -330,45 +335,48 @@ $(document).ready(function() {
 			kendoWindow.open();
 			kendoWindow.center();
 		}
-		kendo.bind($("#addNewProject"), pfm);
-		console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
 
-		
 		//成本设备清单
 		eqCostListDataSource.data(pfm.eqcostList);
 		
+		kendo.bind($("#addNewProject"), pfm);
+		console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
+		
 		//modify click Save
-		$("#saveButton").click(function(){
-			var data = eqCostListDataSource.data();
-			
-			//console.log("start save : *******"+pfm);
-			//pfm.set("eqcostList",eqCostListDataSource.data());
-			pfm.set("eqcostList",data);
-			pfm.set("totalAmount", 0);
-			pfm.set("invoiceAmount", 0);
-			pfm.set("getAmount", 0);
-			pfm.set("purchaseAmount", 0);
-			
-			//console.log("set over will add ****"+kendo.stringify(pfm));
-			
-			console.log(dataSource);
-//			dataSource.add(pfm);
+//		$("#saveButton").click(function(){
+//			var data = eqCostListDataSource.data();
+//			
+//			//console.log("start save : *******"+pfm);
+//			//pfm.set("eqcostList",eqCostListDataSource.data());
+//			pfm.set("eqcostList",data);
+//			pfm.set("totalAmount", 0);
+//			pfm.set("invoiceAmount", 0);
+//			pfm.set("getAmount", 0);
+//			pfm.set("purchaseAmount", 0);
+//			
+//			//console.log("set over will add ****"+kendo.stringify(pfm));
+//			
 //			console.log(dataSource);
-			dataSource.sync();
-			var window = $("#addNewProject");
-
-			if (window.data("kendoWindow")) {
-				window.data("kendoWindow").close();
-			}
-
-			var grid = $("#grid");
-			if (grid.data("kendoGrid")) {
-				grid.data("kendoGrid").refresh();
-			}
-		});
+////			dataSource.add(pfm);
+////			console.log(dataSource);
+//			dataSource.sync();
+//			var window = $("#addNewProject");
+//
+//			if (window.data("kendoWindow")) {
+//				window.data("kendoWindow").close();
+//			}
+//
+//			var grid = $("#grid");
+//			if (grid.data("kendoGrid")) {
+//				grid.data("kendoGrid").refresh();
+//			}
+//		});
 	};
 	
 	function saveProject(){
+		console.log("saveProject *****************************");
+		var _id = pfm.get("_id");
+		console.log(_id);
 		console.log("save pfm &&&&&&&&&&&&"+kendo.stringify(pfm));
 		var data = eqCostListDataSource.data();
 		
@@ -383,7 +391,10 @@ $(document).ready(function() {
 		//console.log("set over will add ****"+kendo.stringify(pfm));
 		
 		console.log(dataSource);
-		dataSource.add(pfm);
+		if (_id == null){
+			dataSource.add(pfm);
+		}
+		
 //		console.log(dataSource);
 		dataSource.sync();
 		var window = $("#addNewProject");

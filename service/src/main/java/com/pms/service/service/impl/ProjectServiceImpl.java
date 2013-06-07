@@ -31,8 +31,8 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		int limit = ApiUtil.getInteger(params, "pageSize", 10);
 		int limitStart = ApiUtil.getInteger(params, "skip", 0);
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-		queryMap.put(ApiConstants.LIMIT, limit);
-		queryMap.put(ApiConstants.LIMIT_START, limitStart);
+//		queryMap.put(ApiConstants.LIMIT, limit);
+//		queryMap.put(ApiConstants.LIMIT_START, limitStart);
 		
 		Map<String, Object> result = this.dao.list(queryMap, DBBean.PROJECT);
 		
