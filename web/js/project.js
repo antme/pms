@@ -152,15 +152,6 @@ var dataSource = new kendo.data.DataSource({
 
 $(document).ready(function() {
 	
-	//选项卡
-	$("#tabstrip").kendoTabStrip({
-        animation:  {
-            open: {
-                effects: "fadeIn"
-            }
-        }
-    });
-	
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : {
@@ -252,19 +243,22 @@ $(document).ready(function() {
 		return false;
 	};
 
-	var pfm = new addProjectFormModel();
+	var pfm;
 	
 	function toolbar_addNewProject() {
-		console.log("add new project##############");
-		kendo.bind($("#addNewProject"), pfm);
+		pfm = new addProjectFormModel();
+		console.log("add new project##############" + kendo.stringify(pfm));
 		$("#addNewProject").show();
+		kendo.bind($("#addNewProject"), pfm);
+		console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
 		var window = $("#addNewProject");
 		if (!window.data("kendoWindow")) {
 			window.kendoWindow({
 				width : "900px",
 				height : "500px",
 				title : "新建项目",
-				modal : true
+				modal : true,
+				close : onWindowClose
 			});
 			window.data("kendoWindow").center();
 		} else {
@@ -272,91 +266,39 @@ $(document).ready(function() {
 			window.data("kendoWindow").center();
 		}
 		
-		$("#tabstrip").kendoTabStrip({
-            animation:  {
-                open: {
-                    effects: "fadeIn"
-                }
-            }
-        });
-		
-		//合同签订日期控件
-		$("#contractDate").kendoDatePicker();
-		
-		$("#contractAmount").kendoNumericTextBox({
-			min:0
-		});
-		$("#estimateEqCost0").kendoNumericTextBox({
-			min:0
-		});
-		$("#estimateEqCost1").kendoNumericTextBox({
-			min:0
-		});
-		$("#estimateSubCost").kendoNumericTextBox({
-			min:0
-		});
-		$("#estimatePMCost").kendoNumericTextBox({
-			min:0
-		});
-		$("#estimateDeepDesignCost").kendoNumericTextBox({
-			min:0
-		});
-		$("#estimateDebugCost").kendoNumericTextBox({
-			min:0
-		});
-		$("#estimateOtherCost").kendoNumericTextBox({
-			min:0
-		});
-		$("#contractDownPayment").kendoNumericTextBox({
-			min:0
-		});
-		$("#progressPayment").kendoNumericTextBox({
-			min:0
-		});
-		$("#qualityMoney").kendoNumericTextBox({
-			min:0
-		});
-		
-		//成本设备清单
-		$("#pcEqCostList").kendoGrid({
-			dataSource : eqCostListDataSource,
-			columns : [ {
-				field : "eqcostNo",
-				title : "序号"
-			}, {
-				field : "eqcostMaterialCode",
-				title : "物料代码"
-			}, {
-				field : "eqcostProductName",
-				title : "产品名称"
-			}, {
-				field : "eqcostProductType",
-				title : "规格型号"
+		//click Save
+		$("#saveButton").click(function(){
+			var data = eqCostListDataSource.data();
+			
+			//console.log("start save : *******"+pfm);
+			//pfm.set("eqcostList",eqCostListDataSource.data());
+			pfm.set("eqcostList",data);
+			pfm.set("totalAmount", 0);
+			pfm.set("invoiceAmount", 0);
+			pfm.set("getAmount", 0);
+			pfm.set("purchaseAmount", 0);
+			
+			//console.log("set over will add ****"+kendo.stringify(pfm));
+			
+			console.log(dataSource);
+			dataSource.add(pfm);
+//			console.log(dataSource);
+			dataSource.sync();
+			var window = $("#addNewProject");
 
-			}, {
-				field : "eqcostAmount",
-				title : "数量"
-			}, {
-				field : "eqcostUnit",
-				title : "单位"
-			}, {
-				field : "eqcostBrand",
-				title : "品牌"
-			}, {
-				field : "eqcostBasePrice",
-				title : "成本价"
-			}, {
-				field : "eqcostMemo",
-				title : "备注"
-			} ],
+			if (window.data("kendoWindow")) {
+				window.data("kendoWindow").close();
+			}
 
-			toolbar : [ {name:"create",text:"新增成本项"} ],
-			editable : true,
-			scrollable : true
+			var grid = $("#grid");
+			if (window.data("kendoGrid")) {
+				window.data("kendoGrid").refresh();
+			}
 		});
 	};//end toolbar_addNewProject
 	
 	function toolbar_modifyProject() {
+		
 		var rowData = getSelectedRowDataByGrid("grid");
 		if (rowData == null){
 			alert("请选择一条项目记录！");
@@ -384,51 +326,82 @@ $(document).ready(function() {
 			kendoWindow.center();
 		}
 		kendo.bind($("#addNewProject"), pfm);
-
+		console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
 
 		
 		//成本设备清单
 		eqCostListDataSource.data(pfm.eqcostList);
-		$("#pcEqCostList").kendoGrid({
-			dataSource : eqCostListDataSource,
-			columns : [ {
-				field : "eqcostNo",
-				title : "序号"
-			}, {
-				field : "eqcostMaterialCode",
-				title : "物料代码"
-			}, {
-				field : "eqcostProductName",
-				title : "产品名称"
-			}, {
-				field : "eqcostProductType",
-				title : "规格型号"
+//		$("#pcEqCostList").kendoGrid({
+//			dataSource : eqCostListDataSource,
+//			columns : [ {
+//				field : "eqcostNo",
+//				title : "序号"
+//			}, {
+//				field : "eqcostMaterialCode",
+//				title : "物料代码"
+//			}, {
+//				field : "eqcostProductName",
+//				title : "产品名称"
+//			}, {
+//				field : "eqcostProductType",
+//				title : "规格型号"
+//
+//			}, {
+//				field : "eqcostAmount",
+//				title : "数量"
+//			}, {
+//				field : "eqcostUnit",
+//				title : "单位"
+//			}, {
+//				field : "eqcostBrand",
+//				title : "品牌"
+//			}, {
+//				field : "eqcostBasePrice",
+//				title : "成本价"
+//			}, {
+//				field : "eqcostMemo",
+//				title : "备注"
+//			} ],
+//
+//			toolbar : [ {name:"create",text:"新增成本项"} ],
+//			editable : true,
+//			scrollable : true
+//		});
+		
+		
+		//click Save
+		$("#saveButton").click(function(){
+			var data = eqCostListDataSource.data();
+			
+			//console.log("start save : *******"+pfm);
+			//pfm.set("eqcostList",eqCostListDataSource.data());
+			pfm.set("eqcostList",data);
+			pfm.set("totalAmount", 0);
+			pfm.set("invoiceAmount", 0);
+			pfm.set("getAmount", 0);
+			pfm.set("purchaseAmount", 0);
+			
+			//console.log("set over will add ****"+kendo.stringify(pfm));
+			
+			console.log(dataSource);
+//			dataSource.add(pfm);
+//			console.log(dataSource);
+			dataSource.sync();
+			var window = $("#addNewProject");
 
-			}, {
-				field : "eqcostAmount",
-				title : "数量"
-			}, {
-				field : "eqcostUnit",
-				title : "单位"
-			}, {
-				field : "eqcostBrand",
-				title : "品牌"
-			}, {
-				field : "eqcostBasePrice",
-				title : "成本价"
-			}, {
-				field : "eqcostMemo",
-				title : "备注"
-			} ],
+			if (window.data("kendoWindow")) {
+				window.data("kendoWindow").close();
+			}
 
-			toolbar : [ {name:"create",text:"新增成本项"} ],
-			editable : true,
-			scrollable : true
+			var grid = $("#grid");
+			if (window.data("kendoGrid")) {
+				window.data("kendoGrid").refresh();
+			}
 		});
 	};
 	
 	function saveProject(){
-		//console.log(kendo.stringify(eqCostListDataSource.data()));
+		console.log("save pfm &&&&&&&&&&&&"+kendo.stringify(pfm));
 		var data = eqCostListDataSource.data();
 		
 		//console.log("start save : *******"+pfm);
@@ -442,7 +415,7 @@ $(document).ready(function() {
 		//console.log("set over will add ****"+kendo.stringify(pfm));
 		
 		console.log(dataSource);
-//		dataSource.add(pfm);
+		dataSource.add(pfm);
 //		console.log(dataSource);
 		dataSource.sync();
 		var window = $("#addNewProject");
@@ -517,9 +490,94 @@ $(document).ready(function() {
 //			window.data("kendoWindow").destroy();
 		}
 		dataSource.read();
-		
-	}
+	};
 	
+	//popup window initial 
+	//合同签订日期控件
+	$("#contractDate").kendoDatePicker();
+	
+	$("#contractAmount").kendoNumericTextBox({
+		min:0
+	});
+	$("#estimateEqCost0").kendoNumericTextBox({
+		min:0
+	});
+	$("#estimateEqCost1").kendoNumericTextBox({
+		min:0
+	});
+	$("#estimateSubCost").kendoNumericTextBox({
+		min:0
+	});
+	$("#estimatePMCost").kendoNumericTextBox({
+		min:0
+	});
+	$("#estimateDeepDesignCost").kendoNumericTextBox({
+		min:0
+	});
+	$("#estimateDebugCost").kendoNumericTextBox({
+		min:0
+	});
+	$("#estimateOtherCost").kendoNumericTextBox({
+		min:0
+	});
+	$("#contractDownPayment").kendoNumericTextBox({
+		min:0
+	});
+	$("#progressPayment").kendoNumericTextBox({
+		min:0
+	});
+	$("#qualityMoney").kendoNumericTextBox({
+		min:0
+	});
+	
+	$("#tabstrip").kendoTabStrip({
+        animation:  {
+            open: {
+                effects: "fadeIn"
+            }
+        }
+    });
+	
+	//成本设备清单
+	//eqCostListDataSource.data(null);
+	if (!$("#pcEqCostList").data("kendoGrid")){
+		$("#pcEqCostList").kendoGrid({
+			dataSource : eqCostListDataSource,
+			columns : [ {
+				field : "eqcostNo",
+				title : "序号"
+			}, {
+				field : "eqcostMaterialCode",
+				title : "物料代码"
+			}, {
+				field : "eqcostProductName",
+				title : "产品名称"
+			}, {
+				field : "eqcostProductType",
+				title : "规格型号"
+
+			}, {
+				field : "eqcostAmount",
+				title : "数量"
+			}, {
+				field : "eqcostUnit",
+				title : "单位"
+			}, {
+				field : "eqcostBrand",
+				title : "品牌"
+			}, {
+				field : "eqcostBasePrice",
+				title : "成本价"
+			}, {
+				field : "eqcostMemo",
+				title : "备注"
+			} ],
+
+			toolbar : [ {name:"create",text:"新增成本项"} ],
+			editable : true,
+			scrollable : true
+		});
+	}
 	
 	
 	

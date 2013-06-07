@@ -3,7 +3,7 @@
 <script  src="js/allocate.js"></script>
 
 <script id="template" type="text/x-kendo-template">
-	<a class="k-button" href="\#" onclick="return toolbar_add()">添加</a>
+	<a class="k-button" href="\#" onclick="return toolbar_add()">添加/修改</a>
 </script>
 
 <script id="submit-template" type="text/x-kendo-template">
@@ -16,7 +16,10 @@
 	</div>
 
 	<div id="allocate-edit" class="allocate-edit" style="display:none">
-		<input id="projects" />
+		<label for="in-projects">调入项目:</label><input id="in-projects" data-bind="value: inProjectId" />
+		<label for="out-projects">调出项目:</label><input id="out-projects" data-bind="value: outProjectId" />
+		<label for="allocateType">调拨类型:</label>
+        <input type="text" id="allocateType" class="k-textbox" data-bind="value: allocateType" />
 		<div id="equipments-grid"></div>
 	</div>
 </body>

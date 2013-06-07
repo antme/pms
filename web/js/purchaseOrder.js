@@ -85,6 +85,9 @@ $(document).ready(function() {
 		editable : "popup",
 		selectable : "row",
 		width : "1000px",
+		dataBound: function(e){
+			kendo.ui.progress($("#grid"), false);
+		},
 		// 自定义toolbar，参见html中模板代码
 		toolbar : [ {
 			template : kendo.template($("#template").html())
@@ -143,14 +146,7 @@ $(document).ready(function() {
 		} ]
 
 	});
-});
-
-// 声明一个总的对象用来传递数据
-var requestDataItem;
-
-// 当window弹出的时候
-function onRequestSelectWindowActive(e) {
-
+	
 	// 获取采购申请的数据，数据包含了成本清单
 	$("#purchaseRequest").kendoDropDownList({
 		dataTextField : "projectName",
@@ -169,12 +165,15 @@ function onRequestSelectWindowActive(e) {
 			requestDataItem = this.dataSource.at(e.item.index());
 		}
 	});
-}
+});
 
+// 声明一个总的对象用来传递数据
+var requestDataItem;
 
 function onWindowClose(){
-	
+	kendo.ui.progress($("#grid"), true);
 	dataSource.read();
+	requestDataItem = null;
 }
 
 // 窗口属性设置
@@ -183,7 +182,6 @@ var reoptions = {
 	width : "1050px",
 	height : "600px",
 	title : "采购订单编辑",
-	activate : onRequestSelectWindowActive,
 	close: onWindowClose
 };
 
@@ -376,11 +374,9 @@ function edit(e) {
 	$("#projectCode").html(dataItem.projectCode);
 	$("#customerContractCode").html(dataItem.customerContractCode);
 	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
-
 	$("#purchaseorder-edit-item").show();
 
-	var editKendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
-
+	var editKendoGrid = $("#purchaseorder-edit-grid").data("kendoGrid");
 	if (!editKendoGrid) {
 		$("#purchaseorder-edit-grid")
 				.kendoGrid(

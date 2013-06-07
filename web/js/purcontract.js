@@ -7,11 +7,11 @@ var model = kendo.data.Model.define({
 		goodsDeliveryArrivedTime : {
 			type : "date"
 		},
-		purchaseContractCode: {
-			
+		purchaseContractCode : {
+
 		},
 		signDate : {
-			type: "date"
+			type : "date"
 		}
 	}
 });
@@ -56,17 +56,20 @@ var dataSource = new kendo.data.DataSource({
 });
 $(document).ready(function() {
 	$("#tabstrip").kendoTabStrip({
-        animation:  {
-            open: {
-                effects: "fadeIn"
-            }
-        }
-    });
+		animation : {
+			open : {
+				effects : "fadeIn"
+			}
+		}
+	});
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
 		editable : "popup",
 		selectable : "row",
+		dataBound : function(e) {
+			kendo.ui.progress($("#grid"), false);
+		},
 		toolbar : [ {
 			template : kendo.template($("#template").html())
 		} ],
@@ -147,12 +150,14 @@ var reoptions = {
 	width : "950px",
 	height : "600px",
 	title : "采购合同",
-	activate : onRequestSelectWindowActive
+	activate : onRequestSelectWindowActive,
+	close : onWindowClose
 };
 
-function onWindowClose(){
-	
+function onWindowClose() {
+	kendo.ui.progress($("#grid"), true);
 	dataSource.read();
+	requestDataItem = null;
 }
 
 var itemDataSource = new kendo.data.DataSource({
@@ -200,7 +205,6 @@ function save() {
 	// 同步数据
 	itemDataSource.sync();
 }
-
 
 function approve() {
 	var row = getSelectedRowDataByGrid("grid");
@@ -302,8 +306,6 @@ function edit(e) {
 		requestDataItem = dataItem;
 	}
 
-	
-	
 	var orderList = dataItem.orderList;
 	for (i = 0; i < orderList.length; i++) {
 		if (!orderList[i].goodsDeliveryType) {
@@ -324,8 +326,8 @@ function edit(e) {
 	$("#projectCode").html(dataItem.projectCode);
 	$("#customerContractCode").html(dataItem.customerContractCode);
 	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
-	
-    $("#signDate").kendoDatePicker();
+
+	$("#signDate").kendoDatePicker();
 
 	if (!$("#purchasecontract-edit-grid").data("kendoGrid")) {
 		$("#purchasecontract-edit-grid").kendoGrid({
