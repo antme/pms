@@ -13,4 +13,12 @@ public interface IPurchaseService {
 	public Map<String,Object> list(Map<String,Object> params);
 
 	public Map<String,Object> prepareRequest(Map<String,Object> params);
+	
+	public Map<String,Object> approveRequest(Map<String,Object> params);
+	
+	public Map<String,Object> rejectRequest(Map<String,Object> params);
+	
+	public Map<String,Object> submitRequest(Map<String,Object> params);
+	
+	public Map<String,Object> saveRequest(Map<String,Object> params);
 }

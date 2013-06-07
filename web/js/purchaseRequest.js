@@ -55,38 +55,36 @@ var requestModel = kendo.data.Model.define({
 	}
 });
 //------end-------
-
+var listDatasource = new kendo.data.DataSource({
+    transport: {
+        read:  {
+            url: baseUrl + "/list",
+            dataType: "jsonp",
+            type : "post"
+        },
+        destroy: {
+            url: baseUrl + "/destroy",
+            dataType: "jsonp",
+            type : "post"
+        },
+        parameterMap: function(options, operation) {
+            if (operation !== "read" && options.models) {
+                return {models: kendo.stringify(options.models)};
+            }
+        }
+    },
+    batch: true,
+    pageSize: 10,
+    schema: {
+        model: requestModel
+    }
+});
 
 $(document).ready(function () {
-	
-    var listDatasource = new kendo.data.DataSource({
-        transport: {
-            read:  {
-                url: baseUrl + "/list",
-                dataType: "jsonp",
-                type : "post"
-            },
-            destroy: {
-                url: baseUrl + "/destroy",
-                dataType: "jsonp",
-                type : "post"
-            },
-            parameterMap: function(options, operation) {
-                if (operation !== "read" && options.models) {
-                    return {models: kendo.stringify(options.models)};
-                }
-            }
-        },
-        batch: true,
-        pageSize: 10,
-        schema: {
-            model: requestModel
-        }
-    });
-    
 	$("#grid").kendoGrid({
 	    dataSource: listDatasource,
 	    pageable: true,
+	    selectable : "row",
 	    toolbar: kendo.template($("#template").html()),
 	    columns: [
 	        { field: "code", title: "申请编号" },
@@ -102,7 +100,7 @@ $(document).ready(function () {
 	        { field: "countUsedRquest", title:"合同下申请单数量" },
 	        { field: "percentUsedGoods", title:"合同下已成功申请请货物%" },
 	        { field: "costUsedGoods", title:"合同下已成功申请货物金额%" },
-	        { command: [{name: "destroy", text: "删除"}], title: "&nbsp;" }
+	        { command: [{name: "edit", text: "编辑"},{name: "destroy", text: "删除"}], title: "&nbsp;" }
 	    ],
 	    editable: "popup"
 	});
@@ -111,7 +109,11 @@ $(document).ready(function () {
 	    actions: ["Maximize", "Close"],
 	    width : "900px",
 		height : "500px",	    
-	    title: "采购申请单"
+	    title: "采购申请单",
+	    close: function(){
+	    	listDatasource.read();
+	    	//location.reload();
+	    }
 	});
 		
 	$("#searchFor").kendoDropDownList({
@@ -127,19 +129,74 @@ $(document).ready(function () {
 		}
 	});	
 	
-
 	showAddForm();
+	
 });
 
 function add(){
 	$("#popRequest").data("kendoWindow").open();
 }
-function approve(){
-	alert("开发中...");
+function approve() {
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else {
+		$.ajax({
+			url : "/service/purchase/request/approve",
+			success : function(responsetxt) {
+				var res;
+				eval("res=" + responsetxt);
+				if (res.status == "0") {
+					alert(res.msg);
+				} else {
+					alert("审核成功");
+					listDatasource.read();
+				}
+			},
+
+			error : function() {
+				alert("连接Service失败");
+			},
+
+			data : {
+				_id : row._id
+			},
+			method : "post"
+		});
+	}
 }
-function reject(){
-	alert("开发中...");
+
+function reject() {
+	var row = getSelectedRowDataByGrid("grid");
+
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else {
+		$.ajax({
+			url : "/service/purchase/request/reject",
+			success : function(responsetxt) {
+				var res;
+				eval("res=" + responsetxt);
+				if (res.status == "0") {
+					alert(res.msg);
+				} else {
+					alert("拒绝成功");
+					listDatasource.read();
+				}
+			},
+
+			error : function() {
+				alert("连接Service失败");
+			},
+
+			data : {
+				_id : row._id
+			},
+			method : "post"
+		});
+	}
 }
+
 function showAddForm(){
     var itemForm = kendo.observable({
         itemSource: new kendo.data.DataSource({
@@ -185,7 +242,6 @@ function showAddForm(){
         todayDate: new Date(),
         save: function() {
             this.itemSource.sync();
-            location.reload();
         },
         reset: function(){
         	this.set("selectedItem",this.itemSource.view()[0]);
@@ -195,7 +251,6 @@ function showAddForm(){
         }
     });
     //-----------------
-    
     //itemForm.itemSource.read();
     itemForm.selectedItem = new requestModel();
     kendo.bind($("#form-container"), itemForm);

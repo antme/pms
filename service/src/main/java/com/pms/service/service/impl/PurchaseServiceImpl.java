@@ -31,7 +31,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		params.put(PurchaseRequestBean.COST_USED_GOODS, 123);
 		params.put(PurchaseRequestBean.COUNT_USED_REQUET, 1);
 		params.put(PurchaseRequestBean.PERCENT_USED_GOODS,11);
-		params.put(PurchaseRequestBean.STATUS, "已提交");
+		params.put(PurchaseRequestBean.STATUS, PurchaseRequestBean.STATUS_SUBMIT);
 		return dao.add(params, DBBean.PURCHASE_REQUEST);
 	}
 
@@ -64,7 +64,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			Map<String, Object> pc = dao.findOne(ProjectContractBean.PC_PROJECT_ID, projectId, limitKey, DBBean.PROJECT_CONTRACT);
 			if(pc != null) {
 				//request.put(ApiConstants.MONGO_ID, new ObjectId().toString());
-				request.put(PurchaseRequestBean.SUBMIT_DATE, new Date());
 				request.put(PurchaseRequestBean.PROJECT_CODE, project.get(ProjectBean.PROJECT_CODE));
 				request.put(PurchaseRequestBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
 				request.put(PurchaseRequestBean.PROJECT_MANAGER, project.get(ProjectBean.PROJECT_MANAGER));
@@ -75,5 +74,37 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			}
 		}
 		return request;
+	}
+
+	@Override
+	public Map<String, Object> approveRequest(Map<String, Object> params) {
+		Map<String,Object> obj = new HashMap<String,Object>();
+		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		obj.put(PurchaseRequestBean.STATUS, PurchaseRequestBean.STATUS_APPROVED);
+		obj.put(PurchaseRequestBean.APPROVED_DATE, new Date());
+		return dao.updateById(obj, DBBean.PURCHASE_REQUEST);
+	}
+
+	@Override
+	public Map<String, Object> rejectRequest(Map<String, Object> params) {
+		Map<String,Object> obj = new HashMap<String,Object>();
+		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		obj.put(PurchaseRequestBean.STATUS, PurchaseRequestBean.STATUS_REJECT);
+		return dao.updateById(obj, DBBean.PURCHASE_REQUEST);
+	}
+
+	@Override
+	public Map<String, Object> submitRequest(Map<String, Object> params) {
+		Map<String,Object> obj = new HashMap<String,Object>();
+		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		obj.put(PurchaseRequestBean.STATUS, PurchaseRequestBean.STATUS_SUBMIT);
+		return dao.updateById(obj, DBBean.PURCHASE_REQUEST);
+	}
+	
+	public Map<String, Object> saveRequest(Map<String, Object> params) {
+		Map<String,Object> obj = new HashMap<String,Object>();
+		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		obj.put(PurchaseRequestBean.STATUS, PurchaseRequestBean.STATUS_SAVED);
+		return dao.updateById(obj, DBBean.PURCHASE_REQUEST);
 	}	
 }
