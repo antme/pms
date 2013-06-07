@@ -7126,7 +7126,6 @@ if (typeof kendo_module === "undefined") {
                     if (field) {
                         if (value instanceof ObservableArray) {
                             for (length = value.length; idx < length; idx++) {
-							console.log(typeof value[idx]);
 								if(typeof value[idx] === "string"){
 									values[idx] = value[idx];
 								}else{
