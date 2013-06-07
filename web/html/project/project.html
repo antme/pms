@@ -39,11 +39,12 @@
 	<div id="addNewProject"  class="k-content">
 		<div>
 			<!-- <button data-bind="click: saveProject">保存</button> -->
-			<button class="k-button"  onclick="saveProject();">保存</button>
+			<!--<button class="k-button"  onclick="saveProject();">保存</button>-->
+			<button id="saveButton" class="k-button">保存</button>
 		</div>
 	
 		<div>
-           <div id="tabstrip">
+           <div id="tabstrip" data-role="tabstrip" data-animation="false">
                <ul>
                    <li class="k-state-active">
                    	基本信息
