@@ -180,6 +180,7 @@ function onRequestSelectWindowActive(e) {
 function onWindowClose(){
 	kendo.ui.progress($("#grid"), true);
 	dataSource.read();
+	requestDataItem = null;
 }
 
 // 窗口属性设置
@@ -381,11 +382,9 @@ function edit(e) {
 	$("#projectCode").html(dataItem.projectCode);
 	$("#customerContractCode").html(dataItem.customerContractCode);
 	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
-
 	$("#purchaseorder-edit-item").show();
 
-	var editKendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
-
+	var editKendoGrid = $("#purchaseorder-edit-grid").data("kendoGrid");
 	if (!editKendoGrid) {
 		$("#purchaseorder-edit-grid")
 				.kendoGrid(
