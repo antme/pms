@@ -90,11 +90,12 @@ function toolbar_add() {
 		model = new allocate();
 	} else {
 		model = rowData;
-		var eqDataSource = new kendo.data.DataSource();
-		eqDataSource.data(model.eqcostList);
-		var grid = $("#equipments-grid").data("kendoGrid");
-    	grid.setDataSource(eqDataSource);
 	}
+	
+	var eqDataSource = new kendo.data.DataSource();
+	eqDataSource.data(model.eqcostList);
+	var grid = $("#equipments-grid").data("kendoGrid");
+	grid.setDataSource(eqDataSource);
 	
 	kendo.bind($("#allocate-edit"), model);
 	
