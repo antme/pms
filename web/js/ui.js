@@ -32,8 +32,11 @@ function getUrlParser(){
 	return jQuery.url.setUrl(urlStr);	
 }
 function refreshPage(page, parameters){
-	getUrlParser().attr("base");	
-	window.document.location = getUrlParser().attr("base") + "main.html?" + parameters + "#" +page;
+	if(parameters){
+		window.document.location = getUrlParser().attr("base") + "main.html?" + parameters + "#" +page;
+	}else{
+		window.document.location = getUrlParser().attr("base") + "main.html#" +page;
+	}
 }
 
 
