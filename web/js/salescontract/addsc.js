@@ -141,7 +141,7 @@ $(document).ready(function() {
 	});
 	
 	var projectIdItems = [{ text: "项目1", value: "51b1e09ff5429da33cdbfdff" }, { text: "项目2", value: "51b1e13af5429da33cdbfe01" }, { text: "项目3", value: "51b1e309f5429da33cdbfe03" }];
-	$("#contractType").kendoDropDownList({
+	$("#projectId").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
         optionLabel: "选择项目...",
@@ -233,38 +233,17 @@ $(document).ready(function() {
 		
 function saveSC(){
 	console.log("saveProject *****************************");
-	var _id = pfm.get("_id");
+	var _id = scm.get("_id");
 	console.log(_id);
-	console.log("save pfm &&&&&&&&&&&&"+kendo.stringify(pfm));
+	console.log("save scm &&&&&&&&&&&&"+kendo.stringify(scm));
 	var data = eqCostListDataSource.data();
-	
-	//console.log("start save : *******"+pfm);
-	//pfm.set("eqcostList",eqCostListDataSource.data());
-	pfm.set("eqcostList",data);
-	pfm.set("totalAmount", 0);
-	pfm.set("invoiceAmount", 0);
-	pfm.set("getAmount", 0);
-	pfm.set("purchaseAmount", 0);
-	
-	//console.log("set over will add ****"+kendo.stringify(pfm));
-	
+	scm.set("eqcostList", data);
 	console.log(dataSource);
 	if (_id == null){
-		dataSource.add(pfm);
+		dataSource.add(scm);
 	}
-	
-//		console.log(dataSource);
 	dataSource.sync();
-	var window = $("#addNewProject");
-
-	if (window.data("kendoWindow")) {
-		window.data("kendoWindow").close();
-	}
-
-	var grid = $("#grid");
-	if (window.data("kendoGrid")) {
-		window.data("kendoGrid").refresh();
-	}
+	loadPage("scList");
 };
 
 	
