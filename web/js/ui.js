@@ -1,8 +1,6 @@
-var page;
 
 $(document).ready(function() {
-	var urlStr = window.document.location.href;
-	page = jQuery.url.setUrl(urlStr).attr("anchor");
+	var page = getUrlParser().attr("anchor");
 
 	if (!page) {
 		page = "html/local-data.html";
@@ -28,10 +26,17 @@ function displayMsg(result) {
 	alert(result.msg);
 
 }
-function refreshPage(page, parameters){
+
+function getUrlParser(){
 	var urlStr = window.document.location.href;
-	jQuery.url.setUrl(urlStr).attr("base");	
-	window.document.location = jQuery.url.setUrl(urlStr).attr("base") + "main.html?" + parameters + "#" +page;
+	return jQuery.url.setUrl(urlStr);	
+}
+function refreshPage(page, parameters){
+	if(parameters){
+		window.document.location = getUrlParser().attr("base") + "main.html?" + parameters + "#" +page;
+	}else{
+		window.document.location = getUrlParser().attr("base") + "main.html#" +page;
+	}
 }
 
 
@@ -163,7 +168,8 @@ function openWindow(options) {
 }
 
 
-function postAjaxRequest(url, parameters) {
+function postAjaxRequest(url, parameters, callback) {
+	console.log(parameters);
 	$.ajax({
 		url : url,
 		success : function(responsetxt) {
@@ -171,6 +177,8 @@ function postAjaxRequest(url, parameters) {
 			eval("res=" + responsetxt);
 			if (res.status == "0") {
 				alert(res.msg);
+			} else {
+				eval("callback(res)");
 			}
 		},
 
@@ -178,7 +186,7 @@ function postAjaxRequest(url, parameters) {
 			alert("连接Service失败");
 		},
 
-		json_p : parameters,
+		data : parameters,
 		method : "post"
 	});
 

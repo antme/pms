@@ -75,6 +75,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             return dao.updateById(order, DBBean.PURCHASE_ORDER);
         }
     }
+    
+    public Map<String, Object> getPurchaseOrder(HashMap<String, Object> parameters){
+        
+        return this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
+    }
 
     public Map<String, Object> approvePurchaseContract(HashMap<String, Object> order) {
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
