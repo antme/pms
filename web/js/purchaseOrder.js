@@ -179,7 +179,6 @@ function reject() {
 
 function edit() {
 	// 如果是从订单列表页点击edit过来的数据
-	var row = getSelectedRowDataByGrid("grid");
-	
-	refreshPage("purchaseOrderEdit", {_id:row._id});
+	var row = getSelectedRowDataByGrid("grid");	
+	loadPage("purchaseOrderEdit", null, {_id:row._id});
 }

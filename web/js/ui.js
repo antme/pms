@@ -65,9 +65,6 @@ function getUrlParser(){
 	var urlStr = window.document.location.href;
 	return jQuery.url.setUrl(urlStr);	
 }
-function refreshPage(page, parameters){
-	loadPage(page, null, parameters);
-}
 
 
 function loadPage(page, divID, parameters) {
