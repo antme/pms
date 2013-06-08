@@ -81,4 +81,9 @@
         id="allocateController">
         <property name="allocateService" ref="allocateService"></property>
     </bean>
+    
+    <bean name="salesContractController" class="com.pms.service.controller.SalesContractController"
+        id="salesContractController">
+        <property name="salesContractService" ref="salesContractService"></property>
+    </bean>
 </beans>

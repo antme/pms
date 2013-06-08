@@ -40,6 +40,8 @@ function loadPage(page, divID) {
 		page = "html/user/userman.html";
 	} else if (page == "project") {
 		page = "html/project/project.html";
+	} else if (page == "scList") {
+		page = "html/salescontract/scList.html";
 	} else if (page == "group") {
 		page = "html/user/group.html";
 	} else if (page == "customer") {
@@ -54,6 +56,8 @@ function loadPage(page, divID) {
 		page = "html/purchasecontract/purchaseRequest.html";
 	} else if (page == "purchaseorder") {
 		page = "html/purchasecontract/purchaseOrder.html";
+	} else if (page == "addsc") {
+		page = "html/salescontract/addsc.html";
 	} else {
 		page = "html/local-data.html";
 	}
@@ -82,6 +86,8 @@ function onLeftNavSelect(e) {
 		loadPage("userman");
 	} else if (text == "项目管理") {
 		loadPage("project");
+	}else if (text == "销售合同") {
+		loadPage("scList");
 	} else if (text == "角色管理") {
 		loadPage("group");
 	} else if (text == "客户" || text == "基础信息") {

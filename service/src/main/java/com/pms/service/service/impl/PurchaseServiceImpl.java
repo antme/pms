@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
-import com.pms.service.mockbean.ProjectContractBean;
+import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.PurchaseRequestBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseService;
@@ -67,8 +67,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		Map<String,Object> project = dao.findOne(ProjectBean.PROJECT_CODE, projectCode, DBBean.PROJECT);
 		if(project != null) {
 			String projectId = String.valueOf(project.get(ApiConstants.MONGO_ID));
-			String[] limitKey =  {ProjectContractBean.PC_CODE, ProjectContractBean.PC_EQ_LIST};
-			Map<String, Object> pc = dao.findOne(ProjectContractBean.PC_PROJECT_ID, projectId, limitKey, DBBean.PROJECT_CONTRACT);
+			String[] limitKey =  {SalesContractBean.SC_CODE, SalesContractBean.SC_EQ_LIST};
+			Map<String, Object> pc = dao.findOne(SalesContractBean.SC_PROJECT_ID, projectId, limitKey, DBBean.PROJECT_CONTRACT);
 			if(pc != null) {
 				//request.put(ApiConstants.MONGO_ID, new ObjectId().toString());
 				request.put(PurchaseRequestBean.PROJECT_CODE, project.get(ProjectBean.PROJECT_CODE));
@@ -76,8 +76,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				request.put(PurchaseRequestBean.PROJECT_MANAGER, project.get(ProjectBean.PROJECT_MANAGER));
 				request.put(PurchaseRequestBean.CUSTOMER_NAME, project.get(ProjectBean.PROJECT_CUSTOMER_NAME));
 				
-				request.put(PurchaseRequestBean.PC_CODE, pc.get(ProjectContractBean.PC_CODE));
-				request.put(PurchaseRequestBean.PC_EQ_LIST, pc.get(ProjectContractBean.PC_EQ_LIST));
+				request.put(PurchaseRequestBean.PC_CODE, pc.get(SalesContractBean.SC_CODE));
+				request.put(PurchaseRequestBean.PC_EQ_LIST, pc.get(SalesContractBean.SC_EQ_LIST));
 			}
 		}
 		return request;

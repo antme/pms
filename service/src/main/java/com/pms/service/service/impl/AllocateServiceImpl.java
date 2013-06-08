@@ -11,7 +11,7 @@ import com.pms.service.mockbean.AllocateBean;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
-import com.pms.service.mockbean.ProjectContractBean;
+import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IAllocateService;
 

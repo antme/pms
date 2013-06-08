@@ -12,7 +12,7 @@ import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
-import com.pms.service.mockbean.ProjectContractBean;
+import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IProjectService;
 import com.pms.service.util.ApiUtil;
@@ -75,36 +75,36 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		 
 		//构造合同信息
 		Map<String, Object> contract = new HashMap<String, Object>();
-		contract.put(ProjectContractBean.PC_PROJECT_ID, _id);
-		contract.put(ProjectContractBean.PC_CUSTOMER_NAME, params.get(ProjectContractBean.PC_CUSTOMER_NAME));
-		contract.put(ProjectContractBean.PC_AMOUNT, params.get(ProjectContractBean.PC_AMOUNT));
-		contract.put(ProjectContractBean.PC_INVOICE_TYPE, params.get(ProjectContractBean.PC_INVOICE_TYPE));
-		contract.put(ProjectContractBean.PC_ESTIMATE_EQ_COST0, params.get(ProjectContractBean.PC_ESTIMATE_EQ_COST0));
-		contract.put(ProjectContractBean.PC_ESTIMATE_EQ_COST1, params.get(ProjectContractBean.PC_ESTIMATE_EQ_COST1));
-		contract.put(ProjectContractBean.PC_ESTIMATE_SUB_COST, params.get(ProjectContractBean.PC_ESTIMATE_SUB_COST));
-		contract.put(ProjectContractBean.PC_ESTIMATE_PM_COST, params.get(ProjectContractBean.PC_ESTIMATE_PM_COST));
-		contract.put(ProjectContractBean.PC_ESTIMATE_DEEP_DESIGN_COST, params.get(ProjectContractBean.PC_ESTIMATE_DEEP_DESIGN_COST));
-		contract.put(ProjectContractBean.PC_ESTIMATE_DEBUG_COST, params.get(ProjectContractBean.PC_ESTIMATE_DEBUG_COST));
-		contract.put(ProjectContractBean.PC_ESTIMATE_OTHER_COST, params.get(ProjectContractBean.PC_ESTIMATE_OTHER_COST));
-		contract.put(ProjectContractBean.PC_DEBUG_COST_TYPE, params.get(ProjectContractBean.PC_DEBUG_COST_TYPE));
-		contract.put(ProjectContractBean.PC_TAX_TYPE, params.get(ProjectContractBean.PC_TAX_TYPE));
-		contract.put(ProjectContractBean.PC_CODE, params.get(ProjectContractBean.PC_CODE));
-		contract.put(ProjectContractBean.PC_PERSON, params.get(ProjectContractBean.PC_PERSON));
-		contract.put(ProjectContractBean.PC_TYPE, params.get(ProjectContractBean.PC_TYPE));
-		contract.put(ProjectContractBean.PC_DATE, params.get(ProjectContractBean.PC_DATE));
-		contract.put(ProjectContractBean.PC_DOWN_PAYMENT, params.get(ProjectContractBean.PC_DOWN_PAYMENT));
-		contract.put(ProjectContractBean.PC_PROGRESS_PAYMENT, params.get(ProjectContractBean.PC_PROGRESS_PAYMENT));
-		contract.put(ProjectContractBean.PC_QUALITY_MONEY, params.get(ProjectContractBean.PC_QUALITY_MONEY));
-		contract.put(ProjectContractBean.PC_MEMO, params.get(ProjectContractBean.PC_MEMO));
+		contract.put(SalesContractBean.SC_PROJECT_ID, _id);
+		contract.put(SalesContractBean.SC_CUSTOMER_NAME, params.get(SalesContractBean.SC_CUSTOMER_NAME));
+		contract.put(SalesContractBean.SC_AMOUNT, params.get(SalesContractBean.SC_AMOUNT));
+		contract.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
+		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, params.get(SalesContractBean.SC_ESTIMATE_EQ_COST0));
+		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST1, params.get(SalesContractBean.SC_ESTIMATE_EQ_COST1));
+		contract.put(SalesContractBean.SC_ESTIMATE_SUB_COST, params.get(SalesContractBean.SC_ESTIMATE_SUB_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_PM_COST, params.get(SalesContractBean.SC_ESTIMATE_PM_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST, params.get(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_DEBUG_COST, params.get(SalesContractBean.SC_ESTIMATE_DEBUG_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_OTHER_COST, params.get(SalesContractBean.SC_ESTIMATE_OTHER_COST));
+		contract.put(SalesContractBean.SC_DEBUG_COST_TYPE, params.get(SalesContractBean.SC_DEBUG_COST_TYPE));
+		contract.put(SalesContractBean.SC_TAX_TYPE, params.get(SalesContractBean.SC_TAX_TYPE));
+		contract.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE));
+		contract.put(SalesContractBean.SC_PERSON, params.get(SalesContractBean.SC_PERSON));
+		contract.put(SalesContractBean.SC_TYPE, params.get(SalesContractBean.SC_TYPE));
+		contract.put(SalesContractBean.SC_DATE, params.get(SalesContractBean.SC_DATE));
+		contract.put(SalesContractBean.SC_DOWN_PAYMENT, params.get(SalesContractBean.SC_DOWN_PAYMENT));
+		contract.put(SalesContractBean.SC_PROGRESS_PAYMENT, params.get(SalesContractBean.SC_PROGRESS_PAYMENT));
+		contract.put(SalesContractBean.SC_QUALITY_MONEY, params.get(SalesContractBean.SC_QUALITY_MONEY));
+		contract.put(SalesContractBean.SC_MEMO, params.get(SalesContractBean.SC_MEMO));
 		
 		List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
-		eqcostList = new Gson().fromJson(params.get(ProjectContractBean.PC_EQ_LIST).toString(), List.class);
-		contract.put(ProjectContractBean.PC_EQ_LIST, eqcostList);
+		eqcostList = new Gson().fromJson(params.get(SalesContractBean.SC_EQ_LIST).toString(), List.class);
+		contract.put(SalesContractBean.SC_EQ_LIST, eqcostList);
 		
 		if (params.get(ApiConstants.MONGO_ID) == null){//Add
 			dao.add(contract, DBBean.PROJECT_CONTRACT);
 		}else{//Update
-			Map<String, Object> contr = dao.findOne(ProjectContractBean.PC_PROJECT_ID, params.get(ApiConstants.MONGO_ID), DBBean.PROJECT_CONTRACT);
+			Map<String, Object> contr = dao.findOne(SalesContractBean.SC_PROJECT_ID, params.get(ApiConstants.MONGO_ID), DBBean.PROJECT_CONTRACT);
 			contract.put(ApiConstants.MONGO_ID, contr.get(ApiConstants.MONGO_ID));
 			dao.updateById(contract, DBBean.PROJECT_CONTRACT);
 		}
@@ -137,16 +137,16 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	@Override
 	public Map<String, Object> listEquipmentsForProject(
 			Map<String, Object> params) {
-		String projectId = (String) params.get(ProjectContractBean.PC_PROJECT_ID);
-		String[] limitKeys = {ProjectContractBean.PC_EQ_LIST};
+		String projectId = (String) params.get(SalesContractBean.SC_PROJECT_ID);
+		String[] limitKeys = {SalesContractBean.SC_EQ_LIST};
 		
 		Map<String, Object> query = new HashMap<String, Object>();
-		query.put(ProjectContractBean.PC_PROJECT_ID, projectId);
+		query.put(SalesContractBean.SC_PROJECT_ID, projectId);
 		query.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		
 		Map<String, Object> re = dao.findOneByQuery(query, DBBean.PROJECT_CONTRACT);
 		Map<String, Object> re2 = new HashMap<String, Object>();
-		re2.put(ApiConstants.RESULTS_DATA, re.get(ProjectContractBean.PC_EQ_LIST));
+		re2.put(ApiConstants.RESULTS_DATA, re.get(SalesContractBean.SC_EQ_LIST));
 		return re2;
 	}
 	
@@ -159,8 +159,8 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		}
 		
 		Map<String, Object> queryContract = new HashMap<String, Object>();
-		queryContract.put(ProjectContractBean.PC_PROJECT_ID, new DBQuery(DBQueryOpertion.IN, pId));
-		Map<String, Object> cInfoMap = dao.listToOneMapByKey(queryContract, DBBean.PROJECT_CONTRACT, ProjectContractBean.PC_PROJECT_ID);
+		queryContract.put(SalesContractBean.SC_PROJECT_ID, new DBQuery(DBQueryOpertion.IN, pId));
+		Map<String, Object> cInfoMap = dao.listToOneMapByKey(queryContract, DBBean.PROJECT_CONTRACT, SalesContractBean.SC_PROJECT_ID);
 		
 		for (Map<String, Object> p:list){
 			String _id = p.get(ApiConstants.MONGO_ID).toString();
