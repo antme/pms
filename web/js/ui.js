@@ -107,7 +107,7 @@ function loadPage(page, parameters) {
 	}else if (page == "addProject") {
 		page = "html/project/addProject.html";
 	} else {
-		page = "html/local-data.html";
+		page = "html/supplier/supplier.html";
 	}
 
 	var url = page + "?_uid=" + uid;
