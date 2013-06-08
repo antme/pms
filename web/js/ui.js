@@ -1,8 +1,6 @@
-var page;
 
 $(document).ready(function() {
-	var urlStr = window.document.location.href;
-	page = jQuery.url.setUrl(urlStr).attr("anchor");
+	var page = getUrlParser().attr("anchor");
 
 	if (!page) {
 		page = "html/local-data.html";
@@ -28,10 +26,14 @@ function displayMsg(result) {
 	alert(result.msg);
 
 }
-function refreshPage(page, parameters){
+
+function getUrlParser(){
 	var urlStr = window.document.location.href;
-	jQuery.url.setUrl(urlStr).attr("base");	
-	window.document.location = jQuery.url.setUrl(urlStr).attr("base") + "main.html?" + parameters + "#" +page;
+	return jQuery.url.setUrl(urlStr);	
+}
+function refreshPage(page, parameters){
+	getUrlParser().attr("base");	
+	window.document.location = getUrlParser().attr("base") + "main.html?" + parameters + "#" +page;
 }
 
 
@@ -87,34 +89,6 @@ function loadPage(page, divID) {
 
 }
 
-function onLeftNavSelect(e) {
-	var text = this.text(e.node);
-
-	if (text == "权限管理" || text == "用户管理") {
-		loadPage("userman");
-	} else if (text == "项目管理") {
-		loadPage("project");
-	}else if (text == "销售合同") {
-		loadPage("scList");
-	} else if (text == "角色管理") {
-		loadPage("group");
-	} else if (text == "客户" || text == "基础信息") {
-		loadPage("customer");
-	} else if (text == "供应商") {
-		loadPage("supplier");
-	} else if (text == "调拨申请") {
-		loadPage("allocate");
-	} else if (text == "采购申请") {
-		loadPage("purchaseRequest");
-	} else if (text == "采购合同" || text == "采购合同列表") {
-		loadPage("purchasecontract");
-	} else if (text == "采购订单申请" || text == "采购订单" || text == "项目执行") {
-		loadPage("purchaseorder");
-	} else {
-		loadPage("default");
-	}
-
-}
 
 function getSelectedRowDataByGrid(gridId) {
 	var grid = $("#" + gridId).data("kendoGrid");
@@ -161,7 +135,8 @@ function openWindow(options) {
 }
 
 
-function postAjaxRequest(url, parameters) {
+function postAjaxRequest(url, parameters, callback) {
+	console.log(parameters);
 	$.ajax({
 		url : url,
 		success : function(responsetxt) {
@@ -169,6 +144,8 @@ function postAjaxRequest(url, parameters) {
 			eval("res=" + responsetxt);
 			if (res.status == "0") {
 				alert(res.msg);
+			} else {
+				eval("callback(res)");
 			}
 		},
 
@@ -176,7 +153,7 @@ function postAjaxRequest(url, parameters) {
 			alert("连接Service失败");
 		},
 
-		json_p : parameters,
+		data : parameters,
 		method : "post"
 	});
 
