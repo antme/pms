@@ -45,16 +45,16 @@ var scm;
 var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
-			url : "../service/salescontract/list",
+			url : "../service/sc/list",
 			dataType : "jsonp"
 		},
 		update : {
-			url : "../service/salescontract/update",
+			url : "../service/sc/update",
 			dataType : "jsonp",
 			method : "post"
 		},
 		create : {
-			url : "../service/salescontract/add",
+			url : "../service/sc/add",
 			dataType : "jsonp",
 			method : "post"
 		},
@@ -89,6 +89,7 @@ var eqCostListDataSource = new kendo.data.DataSource({
             	eqcostUnit: { type: "string" },
             	eqcostBrand: { type: "string" },
             	eqcostBasePrice: { type: "number" },
+            	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" }
             }
         }
@@ -140,12 +141,19 @@ $(document).ready(function() {
 		dataSource : contractTypeItems,
 	});
 	
-	var projectIdItems = [{ text: "项目1", value: "51b1e09ff5429da33cdbfdff" }, { text: "项目2", value: "51b1e13af5429da33cdbfe01" }, { text: "项目3", value: "51b1e309f5429da33cdbfe03" }];
+	var projectItems = new kendo.data.DataSource({
+		transport : {
+			read : {
+				url : "../service/project/listforselect",
+				dataType : "jsonp"
+			}
+		}
+	});
 	$("#projectId").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
+		dataTextField : "projectName",
+		dataValueField : "_id",
         optionLabel: "选择项目...",
-		dataSource : projectIdItems,
+		dataSource : projectItems,
 	});
 	
 	//合同签订日期控件
@@ -215,6 +223,9 @@ $(document).ready(function() {
 				field : "eqcostBasePrice",
 				title : "成本价"
 			}, {
+				field : "eqcostDiscountRate",
+				title : "折扣率"
+			}, {
 				field : "eqcostMemo",
 				title : "备注"
 			} ],
@@ -232,13 +243,9 @@ $(document).ready(function() {
 });//end dom ready	
 		
 function saveSC(){
-	console.log("saveProject *****************************");
 	var _id = scm.get("_id");
-	console.log(_id);
-	console.log("save scm &&&&&&&&&&&&"+kendo.stringify(scm));
 	var data = eqCostListDataSource.data();
 	scm.set("eqcostList", data);
-	console.log(dataSource);
 	if (_id == null){
 		dataSource.add(scm);
 	}

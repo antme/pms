@@ -25,6 +25,8 @@ public class SalesContractBean {
 	public static final String SC_QUALITY_MONEY = "qualityMoney";
 	public static final String SC_MEMO = "contractMemo";
 	public static final String SC_MODIFY_TIMES = "scModifyTimes"; //增补次数
+	public static final String SC_ARCHIVE_STATUS = "archiveStatus"; // 归档状态
+	public static final String SC_RUNNING_STATUS = "runningStatus"; //执行状态
 	
 	//设备成本清单字段
 	public static final String SC_EQ_LIST = "eqcostList";
@@ -39,5 +41,6 @@ public class SalesContractBean {
 	public static final String SC_EQ_LIST_BASE_PRICE = "eqcostBasePrice"; //成本价
 	public static final String SC_EQ_LIST_TOTAL_AMOUNT = "eqcostTotalAmount";//小计
 	public static final String SC_EQ_LIST_MEMO = "eqcostMemo";//备注
+	public static final String SC_EQ_LIST_DISCOUNT_RATE = "eqcostDiscountRate";
 	
 }

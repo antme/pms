@@ -45,8 +45,8 @@ function loadPage(page, divID) {
 
 	if (page == "userman") {
 		page = "html/user/userman.html";
-	} else if (page == "project") {
-		page = "html/project/project.html";
+	} else if (page == "projectList") {
+		page = "html/project/projectList.html";
 	} else if (page == "scList") {
 		page = "html/salescontract/scList.html";
 	} else if (page == "group") {
@@ -67,6 +67,8 @@ function loadPage(page, divID) {
 		page = "html/salescontract/addsc.html";
 	}else if (page == "purchaseOrderEdit") {
 		page = "html/purchasecontract/purchaseOrderEdit.html";
+	}else if (page == "addProject") {
+		page = "html/project/addProject.html";
 	} else {
 		page = "html/local-data.html";
 	}
@@ -93,7 +95,7 @@ function onLeftNavSelect(e) {
 	if (text == "权限管理" || text == "用户管理") {
 		loadPage("userman");
 	} else if (text == "项目管理") {
-		loadPage("project");
+		loadPage("projectList");
 	}else if (text == "销售合同") {
 		loadPage("scList");
 	} else if (text == "角色管理") {
