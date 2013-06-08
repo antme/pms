@@ -26,7 +26,7 @@ var dataSource = new kendo.data.DataSource({
 					models : kendo.stringify(options.models)
 				};
 			}
-		},
+		}
 	},
 	pageSize : 20,
 	batch : true
@@ -181,5 +181,5 @@ function edit() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
 	
-	refreshPage("purchaseOrderEdit", "_id="+row._id);
+	refreshPage("purchaseOrderEdit", {_id:row._id});
 }

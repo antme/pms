@@ -38,15 +38,11 @@ var model = kendo.data.Model.define({
 });
 
 $(document).ready(function() {
-
-	if (getUrlParser().param("_id")) {
-		var params = {
-			"_id" : getUrlParser().param("_id")
-		};
-		postAjaxRequest("/service/purcontract/order/get", params, edit);
-	} else {
-		add();
-	}
+			if (redirectParams) {
+				postAjaxRequest("/service/purcontract/order/get", redirectParams, edit);
+			} else {
+				add();
+			}
 });
 
 // 声明一个总的对象用来传递数据
@@ -63,7 +59,7 @@ function add() {
 				transport : {
 					read : {
 						dataType : "jsonp",
-						url : "/service/purcontract/request/list",
+						url : "/service/purcontract/request/list"
 					}
 				}
 			},
@@ -96,11 +92,8 @@ var itemDataSource = new kendo.data.DataSource({
 					// 解析成json_p模式
 					json_p : kendo.stringify(requestDataItem),
 					mycallback : "checkStatus"
-				};
+				}
 			}
-		},
-		requestEnd : function(e) {
-			var response = e.response;
 		}
 	},
 	schema : {
@@ -110,10 +103,8 @@ var itemDataSource = new kendo.data.DataSource({
 });
 
 function checkStatus(data) {
-
-	if (data._id !== "") {
-		requestDataItem.set("_id", data._id);
-	}
+	console.log(requestDataItem);
+	requestDataItem.set("_id", data._id);
 }
 // 计算成本数据的datasouce
 var sumDataSource = new kendo.data.DataSource({
@@ -132,8 +123,8 @@ function showOrderWindow() {
 		requestDataItem.orderCode = "";
 	}
 
-	// 新增，所以设置_id为空
-	requestDataItem.set("_id", "");
+	// // 新增，所以设置_id为空
+	// requestDataItem.set("_id", "");
 
 	edit();
 }
@@ -184,7 +175,6 @@ function edit(data) {
 		// 如果是从采购申请选择过来的
 		dataItem = requestDataItem;
 	}
-
 
 	// 隐藏选择采购申请
 	// $("#purchase-request-select").hide();
@@ -378,13 +368,12 @@ function edit(data) {
 											numbersPercentOfContract : totalPercent,
 											moneyPercentOfContract : requestActureMoneyPercent
 										});
-								kendoGrid = $("#purchaseorder-sum-grid").data(
-										"kendoGrid");
+								kendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
 								kendoGrid.setDataSource(sumDataSource);
 
 							}
 
-						});
+			});
 	}
 
 }
