@@ -3,6 +3,7 @@ var page;
 $(document).ready(function() {
 	var urlStr = window.document.location.href;
 	page = jQuery.url.setUrl(urlStr).attr("anchor");
+
 	if (!page) {
 		page = "html/local-data.html";
 	}
@@ -27,6 +28,12 @@ function displayMsg(result) {
 	alert(result.msg);
 
 }
+function refreshPage(page, parameters){
+	var urlStr = window.document.location.href;
+	jQuery.url.setUrl(urlStr).attr("base");	
+	window.document.location = jQuery.url.setUrl(urlStr).attr("base") + "main.html?" + parameters + "#" +page;
+}
+
 
 function loadPage(page, divID) {
 
@@ -58,6 +65,8 @@ function loadPage(page, divID) {
 		page = "html/purchasecontract/purchaseOrder.html";
 	} else if (page == "addsc") {
 		page = "html/salescontract/addsc.html";
+	}else if (page == "purchaseOrderEdit") {
+		page = "html/purchasecontract/purchaseOrderEdit.html";
 	} else {
 		page = "html/local-data.html";
 	}
@@ -72,7 +81,6 @@ function loadPage(page, divID) {
 		url : url,
 		success : function(data) {
 			$(divID).html(data);
-
 		},
 		error : onAjaxFail
 	});
