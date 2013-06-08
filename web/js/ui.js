@@ -1,38 +1,5 @@
-var redirectParams = undefined;
-var redirecPage = undefined;
 
 $(document).ready(function() {
-
-	document.onkeydown = function() {
-		if (event.keyCode == 116) {
-			event.keyCode = 0;
-			event.returnValue = true;
-			loadPage(redirecPage, null, redirectParams);
-			return false;
-		}
-	};
-
-	$(document).keydown(function(event) {
-
-		if (event.keyCode == 116) {
-			if (event && event.preventDefault) {
-				event.preventDefault();
-			}
-			event.returnValue = false;
-			event.keyCode = 0;
-
-			loadPage(redirecPage, null, redirectParams);
-			return false; // 屏蔽F5刷新键
-		}
-
-		if ((event.ctrlKey) && (event.keyCode == 82)) {
-			loadPage(redirecPage, null, redirectParams);
-			return false; // 屏蔽alt+R
-		}
-	});
-	
-	
-
 	var page = getUrlParser().attr("anchor");
 
 	if (!page) {
@@ -53,36 +20,38 @@ function onAjaxFail(data) {
 }
 
 function displayMsg(result) {
-	console.log(result);
+	// $('#error').show();
+	// $("#error").html(result.msg);
+	// $('#error').delay(2000).hide(0);
 	alert(result.msg);
+
 }
 
-function getUrlParser() {
+function getUrlParser(){
 	var urlStr = window.document.location.href;
-	return jQuery.url.setUrl(urlStr);
+	return jQuery.url.setUrl(urlStr);	
 }
-
-function refreshPage(page, parameters) {
-	loadPage(page, null, parameters);
-}
-
-function loadPage(page, divID, parameters) {
-	redirecPage = page;
-	if (parameters) {
-		redirectParams = parameters;
-	} else {
-		redirectParams = undefined;
+function refreshPage(page, parameters){
+	if(parameters){
+		window.document.location = getUrlParser().attr("base") + "main.html?" + parameters + "#" +page;
+	}else{
+		window.document.location = getUrlParser().attr("base") + "main.html#" +page;
 	}
+}
+
+
+function loadPage(page, divID) {
 
 	if (!divID) {
 		divID = "#main_right";
 	}
 
 	var uid = kendo.guid();
+
 	if (page == "userman") {
 		page = "html/user/userman.html";
-	} else if (page == "project") {
-		page = "html/project/project.html";
+	} else if (page == "projectList") {
+		page = "html/project/projectList.html";
 	} else if (page == "scList") {
 		page = "html/salescontract/scList.html";
 	} else if (page == "group") {
@@ -101,8 +70,10 @@ function loadPage(page, divID, parameters) {
 		page = "html/purchasecontract/purchaseOrder.html";
 	} else if (page == "addsc") {
 		page = "html/salescontract/addsc.html";
-	} else if (page == "purchaseOrderEdit") {
+	}else if (page == "purchaseOrderEdit") {
 		page = "html/purchasecontract/purchaseOrderEdit.html";
+	}else if (page == "addProject") {
+		page = "html/project/addProject.html";
 	} else {
 		page = "html/local-data.html";
 	}
@@ -122,6 +93,7 @@ function loadPage(page, divID, parameters) {
 	});
 
 }
+
 
 function getSelectedRowDataByGrid(gridId) {
 	var grid = $("#" + gridId).data("kendoGrid");
@@ -151,7 +123,7 @@ function openWindow(options) {
 			modal : true,
 			activate : onActivate,
 			close : onClose,
-			actions : [ "Maximize", "Close" ]
+			actions: ["Maximize", "Close"]
 		});
 		kendoWindow = window.data("kendoWindow");
 		kendoWindow.setOptions({
@@ -167,7 +139,9 @@ function openWindow(options) {
 	}
 }
 
+
 function postAjaxRequest(url, parameters, callback) {
+	console.log(parameters);
 	$.ajax({
 		url : url,
 		success : function(responsetxt) {
@@ -197,3 +171,5 @@ function onWindowDefaultActivate(e) {
 function onWindowDefaultClose(e) {
 
 }
+
+

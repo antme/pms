@@ -23,7 +23,7 @@ public class SalesContractController extends AbstractController {
     @RequestMapping("/list")
     public void listProjects(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
-    	//responseWithData(projectService.listProjects(params), request, response);
+    	responseWithData(salesContractService.listSC(params), request, response);
     }
     
     @RequestMapping("/listforselect")
@@ -41,13 +41,13 @@ public class SalesContractController extends AbstractController {
     @RequestMapping("/add")
     public void addProject(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        //responseWithData(projectService.addProject(params), request, response);
+        responseWithData(salesContractService.addSC(params), request, response);
     }
     
     @RequestMapping("/update")
     public void updateProject(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        //responseWithData(projectService.addProject(params), request, response);
+        responseWithData(salesContractService.addSC(params), request, response);
     }
     
 
