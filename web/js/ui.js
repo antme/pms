@@ -69,6 +69,11 @@ function getUrlParser(){
 
 function loadPage(page, parameters) {
 	
+	
+	if($(".k-window").length>0 && $(".k-overlay").length>0){
+		$(".k-window").hide();
+		$(".k-overlay").hide();
+	}
 	redirecPage = page;
 	redirectParams = parameters;
 	
