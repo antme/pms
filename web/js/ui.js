@@ -8,7 +8,7 @@ $(document).ready(function() {
 		if (event.keyCode == 116) {
 			event.keyCode = 0;
 			event.returnValue = true;
-			loadPage(redirecPage, null, redirectParams);
+			loadPage(redirecPage, redirectParams);
 			return false;
 		}
 	};
@@ -22,12 +22,12 @@ $(document).ready(function() {
 			event.returnValue = false;
 			event.keyCode = 0;
 
-			loadPage(redirecPage, null, redirectParams);
+			loadPage(redirecPage, redirectParams);
 			return false; // 屏蔽F5刷新键
 		}
 
 		if ((event.ctrlKey) && (event.keyCode == 82)) {
-			loadPage(redirecPage, null, redirectParams);
+			loadPage(redirecPage, redirectParams);
 			return false; // 屏蔽alt+R
 		}
 	});
@@ -70,11 +70,8 @@ function getUrlParser(){
 function loadPage(page, parameters) {
 	
 	redirecPage = page;
-	if (parameters) {
-		redirectParams = parameters;
-	} else {
-		redirectParams = undefined;
-	}
+	redirectParams = parameters;
+	
 
 	var uid = kendo.guid();
 
