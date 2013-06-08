@@ -1,5 +1,39 @@
+var redirectParams = undefined;
+var redirecPage = undefined;
+
 
 $(document).ready(function() {
+	
+	document.onkeydown = function() {
+		if (event.keyCode == 116) {
+			event.keyCode = 0;
+			event.returnValue = true;
+			loadPage(redirecPage, null, redirectParams);
+			return false;
+		}
+	};
+
+	$(document).keydown(function(event) {
+
+		if (event.keyCode == 116) {
+			if (event && event.preventDefault) {
+				event.preventDefault();
+			}
+			event.returnValue = false;
+			event.keyCode = 0;
+
+			loadPage(redirecPage, null, redirectParams);
+			return false; // 屏蔽F5刷新键
+		}
+
+		if ((event.ctrlKey) && (event.keyCode == 82)) {
+			loadPage(redirecPage, null, redirectParams);
+			return false; // 屏蔽alt+R
+		}
+	});
+	
+	
+	
 	var page = getUrlParser().attr("anchor");
 
 	if (!page) {
@@ -32,16 +66,19 @@ function getUrlParser(){
 	return jQuery.url.setUrl(urlStr);	
 }
 function refreshPage(page, parameters){
-	if(parameters){
-		window.document.location = getUrlParser().attr("base") + "main.html?" + parameters + "#" +page;
-	}else{
-		window.document.location = getUrlParser().attr("base") + "main.html#" +page;
-	}
+	loadPage(page, null, parameters);
 }
 
 
-function loadPage(page, divID) {
-
+function loadPage(page, divID, parameters) {
+	
+	redirecPage = page;
+	if (parameters) {
+		redirectParams = parameters;
+	} else {
+		redirectParams = undefined;
+	}
+	
 	if (!divID) {
 		divID = "#main_right";
 	}
