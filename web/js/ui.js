@@ -67,17 +67,13 @@ function getUrlParser(){
 }
 
 
-function loadPage(page, divID, parameters) {
+function loadPage(page, parameters) {
 	
 	redirecPage = page;
 	if (parameters) {
 		redirectParams = parameters;
 	} else {
 		redirectParams = undefined;
-	}
-	
-	if (!divID) {
-		divID = "#main_right";
 	}
 
 	var uid = kendo.guid();
@@ -121,7 +117,7 @@ function loadPage(page, divID, parameters) {
 	$.ajax({
 		url : url,
 		success : function(data) {
-			$(divID).html(data);
+			$("#main_right").html(data);
 		},
 		error : onAjaxFail
 	});
