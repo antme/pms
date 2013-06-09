@@ -62,6 +62,11 @@ public class PurchaseContractController extends AbstractController {
     public void addPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.updatePurchaseOrder(parserListJsonParameters(request, false)), request, response, "save_success");
     }
+    
+    @RequestMapping("/order/get")
+    public void getPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.getPurchaseOrder(parserListJsonParameters(request, false)), request, response);
+    }
 
     @RequestMapping("/order/delete")
     public void deletePurchaseOrder(HttpServletRequest request, HttpServletResponse response) {

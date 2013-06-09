@@ -117,7 +117,7 @@ $(document).ready(function() {
 			transport : {
 				read : {
 					dataType : "jsonp",
-					url : "/service/user/role/list",
+					url : "/service/user/role/list"
 				}
 			}
 		},

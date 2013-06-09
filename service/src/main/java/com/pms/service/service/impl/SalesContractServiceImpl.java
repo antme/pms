@@ -26,7 +26,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> listSC(Map<String, Object> params) {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-		
+		String[] limitKeys = {SalesContractBean.SC_CODE, SalesContractBean.SC_CUSTOMER_NAME, 
+				SalesContractBean.SC_AMOUNT, SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID};
+		queryMap.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		Map<String, Object> result = dao.list(queryMap, DBBean.SALES_CONTRACT);
 		
 		mergeProjectInfoForSC(result);
@@ -97,13 +99,16 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		queryProject.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pIdList));
 		queryProject.put(ApiConstants.LIMIT_KEYS, new String[] {ProjectBean.PROJECT_NAME, 
 				ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_CODE});
-		Map<String, Object> pInfoMap = dao.listToOneMapAndIdAsKey(queryProject, DBBean.PROJECT_CONTRACT);
+		Map<String, Object> pInfoMap = dao.listToOneMapAndIdAsKey(queryProject, DBBean.PROJECT);
 		
 		for (Map<String, Object> sc:list){
 			String pId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
 			Map<String, Object> pro = (Map<String, Object>) pInfoMap.get(pId);
-			pro.remove(ApiConstants.MONGO_ID);
-			sc.putAll(pro);
+			//pro.remove(ApiConstants.MONGO_ID);
+			//sc.putAll(pro);
+			sc.put(ProjectBean.PROJECT_CODE, pro.get(ProjectBean.PROJECT_CODE));
+			sc.put(ProjectBean.PROJECT_NAME, pro.get(ProjectBean.PROJECT_NAME));
+			sc.put(ProjectBean.PROJECT_MANAGER, pro.get(ProjectBean.PROJECT_MANAGER));
 		}
 	}
 }

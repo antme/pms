@@ -45,16 +45,16 @@ var scm;
 var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
-			url : "../service/salescontract/list",
+			url : "../service/sc/list",
 			dataType : "jsonp"
 		},
 		update : {
-			url : "../service/salescontract/update",
+			url : "../service/sc/update",
 			dataType : "jsonp",
 			method : "post"
 		},
 		create : {
-			url : "../service/salescontract/add",
+			url : "../service/sc/add",
 			dataType : "jsonp",
 			method : "post"
 		},
@@ -89,6 +89,7 @@ var eqCostListDataSource = new kendo.data.DataSource({
             	eqcostUnit: { type: "string" },
             	eqcostBrand: { type: "string" },
             	eqcostBasePrice: { type: "number" },
+            	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" }
             }
         }
@@ -140,12 +141,19 @@ $(document).ready(function() {
 		dataSource : contractTypeItems,
 	});
 	
-	var projectIdItems = [{ text: "项目1", value: "51b1e09ff5429da33cdbfdff" }, { text: "项目2", value: "51b1e13af5429da33cdbfe01" }, { text: "项目3", value: "51b1e309f5429da33cdbfe03" }];
-	$("#contractType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
+	var projectItems = new kendo.data.DataSource({
+		transport : {
+			read : {
+				url : "../service/project/listforselect",
+				dataType : "jsonp"
+			}
+		}
+	});
+	$("#projectId").kendoDropDownList({
+		dataTextField : "projectName",
+		dataValueField : "_id",
         optionLabel: "选择项目...",
-		dataSource : projectIdItems,
+		dataSource : projectItems,
 	});
 	
 	//合同签订日期控件
@@ -215,6 +223,9 @@ $(document).ready(function() {
 				field : "eqcostBasePrice",
 				title : "成本价"
 			}, {
+				field : "eqcostDiscountRate",
+				title : "折扣率"
+			}, {
 				field : "eqcostMemo",
 				title : "备注"
 			} ],
@@ -232,39 +243,14 @@ $(document).ready(function() {
 });//end dom ready	
 		
 function saveSC(){
-	console.log("saveProject *****************************");
-	var _id = pfm.get("_id");
-	console.log(_id);
-	console.log("save pfm &&&&&&&&&&&&"+kendo.stringify(pfm));
+	var _id = scm.get("_id");
 	var data = eqCostListDataSource.data();
-	
-	//console.log("start save : *******"+pfm);
-	//pfm.set("eqcostList",eqCostListDataSource.data());
-	pfm.set("eqcostList",data);
-	pfm.set("totalAmount", 0);
-	pfm.set("invoiceAmount", 0);
-	pfm.set("getAmount", 0);
-	pfm.set("purchaseAmount", 0);
-	
-	//console.log("set over will add ****"+kendo.stringify(pfm));
-	
-	console.log(dataSource);
+	scm.set("eqcostList", data);
 	if (_id == null){
-		dataSource.add(pfm);
+		dataSource.add(scm);
 	}
-	
-//		console.log(dataSource);
 	dataSource.sync();
-	var window = $("#addNewProject");
-
-	if (window.data("kendoWindow")) {
-		window.data("kendoWindow").close();
-	}
-
-	var grid = $("#grid");
-	if (window.data("kendoGrid")) {
-		window.data("kendoGrid").refresh();
-	}
+	loadPage("scList");
 };
 
 	

@@ -72,83 +72,25 @@ $(document).ready(function() {
 	});
 });//end dom ready	
 
-function toolbar_delete() {
+function toolbar_deleteSalesContract() {
 	var rowData = getSelectedRowDataByGrid("grid");
-	alert(kendo.stringify(rowData));
 	alert("Delete the row _id: " + rowData._id);
-  	console.log("Toolbar command is clicked!");
   	return false;
 };//end toolbar_delete
 	
 function toolbar_addSalesContract(){
 	loadPage("addsc");
 }
-	
-function toolbar_addNewProject() {
-	pfm = new addProjectFormModel();
-	console.log("add new project##############" + kendo.stringify(pfm));
-	$("#addNewProject").show();
-	
-	var window = $("#addNewProject");
-	if (!window.data("kendoWindow")) {
-		window.kendoWindow({
-			width : "900px",
-			height : "500px",
-			title : "新建项目",
-			modal : true,
-			close : onWindowClose
-		});
-		window.data("kendoWindow").center();
-	} else {
-		window.data("kendoWindow").open();
-		window.data("kendoWindow").center();
-	}
-	
-	//clear the grid data
-	eqCostListDataSource.data(pfm.eqcostList);
-	
-	kendo.bind($("#addNewProject"), pfm);
-	console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
-	
-	//add new project : click Save
-//		$("#saveButton").click(function(){
-//			console.log("add new project save ********************************");
-//			var data = eqCostListDataSource.data();
-//			
-//			//console.log("start save : *******"+pfm);
-//			//pfm.set("eqcostList",eqCostListDataSource.data());
-//			pfm.set("eqcostList",data);
-//			pfm.set("totalAmount", 0);
-//			pfm.set("invoiceAmount", 0);
-//			pfm.set("getAmount", 0);
-//			pfm.set("purchaseAmount", 0);
-//			
-//			//console.log("set over will add ****"+kendo.stringify(pfm));
-//			
-//			//console.log(dataSource);
-//			dataSource.add(pfm);
-////			console.log(dataSource);
-//			console.log("add new project sync ********************************");
-//			dataSource.sync();
-//			
-//			var window = $("#addNewProject");
-//			if (window.data("kendoWindow")) {
-//				window.data("kendoWindow").close();
-//			}
-//
-//			var grid = $("#grid");
-//			if (grid.data("kendoGrid")) {
-//				grid.data("kendoGrid").refresh();
-//			}
-//		});
-};//end toolbar_addNewProject
 
-function toolbar_modifyProject() {
+function toolbar_modifySalesContract() {
 	
 	var rowData = getSelectedRowDataByGrid("grid");
 	if (rowData == null){
 		alert("请选择一条项目记录！");
 		return;
+	}else{
+		//test
+		alert("New function pls wait......");return;
 	}
 	
 	pfm = rowData;
@@ -178,72 +120,8 @@ function toolbar_modifyProject() {
 	kendo.bind($("#addNewProject"), pfm);
 	console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
 	
-	//modify click Save
-//		$("#saveButton").click(function(){
-//			var data = eqCostListDataSource.data();
-//			
-//			//console.log("start save : *******"+pfm);
-//			//pfm.set("eqcostList",eqCostListDataSource.data());
-//			pfm.set("eqcostList",data);
-//			pfm.set("totalAmount", 0);
-//			pfm.set("invoiceAmount", 0);
-//			pfm.set("getAmount", 0);
-//			pfm.set("purchaseAmount", 0);
-//			
-//			//console.log("set over will add ****"+kendo.stringify(pfm));
-//			
-//			console.log(dataSource);
-////			dataSource.add(pfm);
-////			console.log(dataSource);
-//			dataSource.sync();
-//			var window = $("#addNewProject");
-//
-//			if (window.data("kendoWindow")) {
-//				window.data("kendoWindow").close();
-//			}
-//
-//			var grid = $("#grid");
-//			if (grid.data("kendoGrid")) {
-//				grid.data("kendoGrid").refresh();
-//			}
-//		});
 };
 
-function saveProject(){
-		console.log("saveProject *****************************");
-		var _id = pfm.get("_id");
-		console.log(_id);
-		console.log("save pfm &&&&&&&&&&&&"+kendo.stringify(pfm));
-		var data = eqCostListDataSource.data();
-		
-		//console.log("start save : *******"+pfm);
-		//pfm.set("eqcostList",eqCostListDataSource.data());
-		pfm.set("eqcostList",data);
-		pfm.set("totalAmount", 0);
-		pfm.set("invoiceAmount", 0);
-		pfm.set("getAmount", 0);
-		pfm.set("purchaseAmount", 0);
-		
-		//console.log("set over will add ****"+kendo.stringify(pfm));
-		
-		console.log(dataSource);
-		if (_id == null){
-			dataSource.add(pfm);
-		}
-		
-//		console.log(dataSource);
-		dataSource.sync();
-		var window = $("#addNewProject");
-
-		if (window.data("kendoWindow")) {
-			window.data("kendoWindow").close();
-		}
-
-		var grid = $("#grid");
-		if (window.data("kendoGrid")) {
-			window.data("kendoGrid").refresh();
-		}
-	};
 
 	
 	
