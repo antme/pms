@@ -67,7 +67,7 @@ public interface ICommonDao {
     public DBCollection getConnection(String dbName, String collection);
 
     @SuppressWarnings("rawtypes")
-    public Map findOneByQuery(Map<String, Object> parameters, String collection);
+    public Map<String,Object> findOneByQuery(Map<String, Object> parameters, String collection);
 
     @SuppressWarnings("rawtypes")
     public Map findOne(String key, Object value, String collection);
@@ -89,4 +89,5 @@ public interface ICommonDao {
     public List<Map<String, Object>> groupQuery(String[] queryKeys, DBObject queryCondition, Map<String, Object> initialParameters, String reduce,
             String finalize, String collection);
     
+    public Map<String,Object> loadById(String id, String collection);
 }

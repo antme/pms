@@ -4,6 +4,7 @@ public class SalesContractBean {
 	public static final String SC_PROJECT_ID = "projectId";
 	public static final String SC_PROJECT_NAME = "projectName";
 	public static final String SC_PROJECT_MANAGER = "projectManager";
+	public static final String SC_CUSTOMER_ID = "customerId";
 	public static final String SC_CUSTOMER_NAME = "customerName";
 	public static final String SC_AMOUNT = "contractAmount";
 	public static final String SC_INVOICE_TYPE = "invoiceType";

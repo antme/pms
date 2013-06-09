@@ -54,11 +54,11 @@ public class PurchaseController extends AbstractController {
     }
 
     //获取某项目的清单列表
-    @RequestMapping("/request/load")
+    @RequestMapping("/request/prepare")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void prepareRequest(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(purchaseService.loadRequest(parserJsonParameters(request,  false)), request, response);
-    }    
+    	responseWithData(purchaseService.prepareRequest(parserJsonParameters(request,  false)), request, response);
+    }
 
     @RequestMapping("/request/approve")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)

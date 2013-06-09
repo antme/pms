@@ -201,7 +201,9 @@ $(document).ready(function () {
 
 function add(){
 	//itemForm.clear();
-	$("#popRequest").data("kendoWindow").open();
+	//$("#popRequest").data("kendoWindow").open();
+	var row = getSelectedRowDataByGrid("grid");
+	loadPage("purchaseRequestAdd", { salesContract_id : row._id });	
 }
 function edit(){
 	var row = getSelectedRowDataByGrid("grid");

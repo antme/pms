@@ -119,7 +119,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
         
     }
 
-    public Map findOneByQuery(Map<String, Object> parameters, String collection) {
+    public Map<String,Object> findOneByQuery(Map<String, Object> parameters, String collection) {
 
         DBObject query = DBQueryUtil.buildQueryObject(parameters, true, true);
                
@@ -194,6 +194,11 @@ public class CommonDaoMongoImpl implements ICommonDao {
         return this.findOneByQuery(query, collection);
     }
 
+    public Map<String,Object> loadById(String id, String collection){
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ApiConstants.MONGO_ID, id);
+        return findOneByQuery(query, collection);
+    }
     public boolean exist(String key, Object value, String collection) {
         value = convertMongoId(key, value);
         Map<String, Object> caseInsensitiveQuery = new HashMap<String, Object>();

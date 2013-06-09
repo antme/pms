@@ -3,18 +3,23 @@ package com.pms.service.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.ejb.EnterpriseBean;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.PurchaseRequestBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseService;
+import com.pms.service.util.ApiUtil;
 
 public class PurchaseServiceImpl extends AbstractService implements IPurchaseService {
 
@@ -56,31 +61,76 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	public Map<String, Object> loadRequest(Map<String, Object> params) {
 		if(params.get(ApiConstants.MONGO_ID) != null){
 			return dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
-		} 
+		}
 		return prepareRequest(params);
 	}
 
 	@Override
 	public Map<String, Object> prepareRequest(Map<String, Object> params) {
-		Map<String,Object> request = new HashMap<String,Object>();
-		String projectCode = String.valueOf(params.get("projectCode"));
-		Map<String,Object> project = dao.findOne(ProjectBean.PROJECT_CODE, projectCode, DBBean.PROJECT);
-		if(project != null) {
-			String projectId = String.valueOf(project.get(ApiConstants.MONGO_ID));
-			String[] limitKey =  {SalesContractBean.SC_CODE, SalesContractBean.SC_EQ_LIST};
-			Map<String, Object> pc = dao.findOne(SalesContractBean.SC_PROJECT_ID, projectId, limitKey, DBBean.PROJECT_CONTRACT);
-			if(pc != null) {
-				//request.put(ApiConstants.MONGO_ID, new ObjectId().toString());
-				request.put(PurchaseRequestBean.PROJECT_CODE, project.get(ProjectBean.PROJECT_CODE));
-				request.put(PurchaseRequestBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
-				request.put(PurchaseRequestBean.PROJECT_MANAGER, project.get(ProjectBean.PROJECT_MANAGER));
-				request.put(PurchaseRequestBean.CUSTOMER_NAME, project.get(ProjectBean.PROJECT_CUSTOMER_NAME));
-				
-				request.put(PurchaseRequestBean.PC_CODE, pc.get(SalesContractBean.SC_CODE));
-				request.put(PurchaseRequestBean.PC_EQ_LIST, pc.get(SalesContractBean.SC_EQ_LIST));
+		Map<String,Object> request = new LinkedHashMap<String,Object>();
+		
+		//sales contract
+		String salesId = (String) params.get(PurchaseRequestBean.salesContract_id);
+		//TODO: salesContract must exist and status must be approved
+		Map<String, Object> salesContract = dao.loadById(salesId, DBBean.SALES_CONTRACT);
+		if(salesContract != null){
+			request.put(PurchaseRequestBean.salesContract_money, salesContract.get(SalesContractBean.SC_AMOUNT));
+			request.put(PurchaseRequestBean.salesContract_code, salesContract.get(SalesContractBean.SC_CODE));
+			request.put(PurchaseRequestBean.eqcostList, salesContract.get(SalesContractBean.SC_EQ_LIST));
+			//project
+			String project_id = (String) salesContract.get(SalesContractBean.SC_PROJECT_ID);
+			Map<String,Object> project = dao.loadById(project_id, DBBean.PROJECT);
+			if(project != null){
+				request.put(PurchaseRequestBean.project_code, project.get(ProjectBean.PROJECT_CODE));
+				request.put(PurchaseRequestBean.project_name, project.get(ProjectBean.PROJECT_NAME));
+				request.put(PurchaseRequestBean.project_managerName, project.get(ProjectBean.PROJECT_MANAGER));
+				request.put(PurchaseRequestBean.customer_name, project.get(ProjectBean.PROJECT_CUSTOMER_NAME));
 			}
+			
+			//customer
+			String customer_id = (String) salesContract.get(SalesContractBean.SC_CUSTOMER_ID);
+			Map<String,Object> customer = dao.loadById(customer_id, DBBean.CUSTOMER);
+			if(customer != null){
+				request.put(PurchaseRequestBean.customer_name, customer.get(CustomerBean.NAME));
+			}
+			
+			
+			//get the used count of every good in one contract
+			Map<Integer,Integer> countMap = getEqconstApplyCount((String)salesContract.get(SalesContractBean.SC_CODE));
+			List<Map<String,Object>> eqList = (List<Map<String,Object>>) request.get(PurchaseRequestBean.eqcostList);
+			
+			for(Map<String,Object> eq : eqList){
+				int num = ApiUtil.getInteger(eq, SalesContractBean.SC_EQ_LIST_NO, 0);
+				int total = ApiUtil.getInteger(eq, SalesContractBean.SC_EQ_LIST_AMOUNT, 0);
+				int hasApply =   countMap.containsKey(num) ? countMap.get(num) : 0;
+				eq.put(PurchaseRequestBean.eqcost_hasApplyAmount, hasApply);
+				eq.put(PurchaseRequestBean.eqcost_leftAmount, total-hasApply);
+			}				
 		}
 		return request;
+	}
+	//合同下每样货物的已申请数量
+	private Map<Integer,Integer> getEqconstApplyCount(String salesContract_code){
+		Map<Integer,Integer> usedCountMap = new HashMap<Integer,Integer>();
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put(PurchaseRequestBean.salesContract_code, salesContract_code);
+		query.put(ApiConstants.LIMIT_KEYS, new String[]{PurchaseRequestBean.eqcostList});
+		List<Object> list = dao.listLimitKeyValues(query, DBBean.PURCHASE_REQUEST);
+		List<Map<Integer,Integer>> eqList = null;
+		int num = 0;
+		int count = 0;
+		for(Object obj : list){
+			eqList = (List<Map<Integer,Integer>>) obj;
+			for(Map<Integer,Integer> eq : eqList){
+				num = eq.get(SalesContractBean.SC_EQ_LIST_NO) == null ? 0 : eq.get(SalesContractBean.SC_EQ_LIST_NO);
+				count = eq.get(PurchaseRequestBean.eqcost_applyAmount) == null ? 0 : eq.get(PurchaseRequestBean.eqcost_applyAmount);
+				if(usedCountMap.containsKey(num)){
+					count += usedCountMap.get(num);
+				}
+				usedCountMap.put(num, count);
+			}
+		}
+		return usedCountMap;
 	}
 
 	@Override
