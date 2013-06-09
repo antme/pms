@@ -4,32 +4,9 @@ var dataSource = new kendo.data.DataSource({
 		read : {
 			url : "/service/purcontract/order/list",
 			dataType : "jsonp"
-		},
-		update : {
-			url : "/service/purcontract/order/update",
-			dataType : "jsonp",
-			type : "post"
-		},
-		create : {
-			url : "/service/purcontract/order/add",
-			dataType : "jsonp",
-			type : "post"
-		},
-		destroy : {
-			url : "/service/purcontract/order/delete",
-			dataType : "jsonp",
-			type : "post"
-		},
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
 		}
 	},
-	pageSize : 20,
-	batch : true
+	pageSize : 20
 });
 
 $(document).ready(function() {
@@ -39,7 +16,6 @@ $(document).ready(function() {
 		$("#grid").kendoGrid({
 			dataSource : dataSource,
 			pageable : true,
-			editable : "popup",
 			selectable : "row",
 			width : "1000px",
 			dataBound : function(e) {
@@ -69,7 +45,7 @@ $(document).ready(function() {
 				field : "projectManager",
 				title : "PM"
 			}, {
-				field : "stauts",
+				field : "processStauts",
 				title : "订单状态"
 			}, {
 				field : "approvedDate",
@@ -86,20 +62,6 @@ $(document).ready(function() {
 			}, {
 				field : "moneyOfContract",
 				title : "合同下已申请采购金额%"
-			},
-
-			{
-				command : [ {
-					text : "Edit",
-					// 自定义点击事件
-					click : edit
-				}, {
-					name : "destroy",
-					title : "删除",
-					text : "删除"
-				} ],
-				title : "&nbsp;",
-				width : "160px"
 			} ]
 
 		});
@@ -109,76 +71,48 @@ $(document).ready(function() {
 });
 
 function checkStatus(data) {
-
 	if (data._id !== "") {
 		requestDataItem.set("_id", data._id);
 	}
 }
 
+function approveStatusCheck(response) {
+	alert("审核成功");
+	dataSource.read();
+}
+
+
 function approve() {
-	var row = getSelectedRowDataByGrid("grid");
-	if (!row) {
-		alert("点击列表可以选中数据");
-	} else {
-		$.ajax({
-			url : "/service/purcontract/order/approve",
-			success : function(responsetxt) {
-				var res;
-				eval("res=" + responsetxt);
-				if (res.status == "0") {
-					alert(res.msg);
-				} else {
-					alert("审核成功");
-					dataSource.read();
-				}
-			},
 
-			error : function() {
-				alert("连接Service失败");
-			},
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		var param = {
+			_id : row._id
+		};
+		postAjaxRequest("/service/purcontract/order/approve", param,
+				approveStatusCheck);
 
-			data : {
-				_id : row._id
-			},
-			method : "post"
-		});
 	}
 
 }
 
 function reject() {
-	var row = getSelectedRowDataByGrid("grid");
 
-	if (!row) {
-		alert("点击列表可以选中数据");
-	} else {
-		$.ajax({
-			url : "/service/purcontract/order/reject",
-			success : function(responsetxt) {
-				var res;
-				eval("res=" + responsetxt);
-				if (res.status == "0") {
-					alert(res.msg);
-				} else {
-					alert("拒绝成功");
-					dataSource.read();
-				}
-			},
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		var param = {
+			"_id" : row._id
+		};
+		postAjaxRequest("/service/purcontract/order/reject", param,
+				approveStatusCheck);
 
-			error : function() {
-				alert("连接Service失败");
-			},
-
-			data : {
-				_id : row._id
-			},
-			method : "post"
-		});
 	}
 }
 
 function edit() {
 	// 如果是从订单列表页点击edit过来的数据
-	var row = getSelectedRowDataByGrid("grid");	
-	loadPage("purchaseOrderEdit", {_id:row._id});
+	var row = getSelectedRowDataByGrid("grid");
+	loadPage("purchaseOrderEdit", {
+		_id : row._id
+	});
 }

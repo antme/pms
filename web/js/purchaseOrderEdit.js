@@ -46,7 +46,7 @@ $(document).ready(function() {
 });
 
 // 声明一个总的对象用来传递数据
-var requestDataItem;
+var requestDataItem ;
 
 function add() {
 
@@ -88,7 +88,6 @@ var itemDataSource = new kendo.data.DataSource({
 		parameterMap : function(options, operation) {
 			if (operation !== "read" && options.models) {
 				return {
-
 					// 解析成json_p模式
 					json_p : kendo.stringify(requestDataItem),
 					mycallback : "checkStatus"
@@ -103,8 +102,7 @@ var itemDataSource = new kendo.data.DataSource({
 });
 
 function checkStatus(data) {
-	console.log(requestDataItem);
-	requestDataItem.set("_id", data._id);
+	loadPage("purchaseorder", null);
 }
 // 计算成本数据的datasouce
 var sumDataSource = new kendo.data.DataSource({
@@ -124,14 +122,16 @@ function showOrderWindow() {
 	}
 
 	// // 新增，所以设置_id为空
-	// requestDataItem.set("_id", "");
+	 requestDataItem.set("_id", "");
 
-	edit();
+	 edit();
 }
 
 function submitOrder() {
 	// 同步数据
 	itemDataSource.sync();
+	
+	
 }
 
 function sumOrders(e) {
