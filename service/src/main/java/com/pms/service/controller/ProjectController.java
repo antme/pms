@@ -81,8 +81,7 @@ public class ProjectController extends AbstractController {
     @RequestMapping("/setup")
     public void setupProject(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        String id = (String) params.get(ApiConstants.MONGO_ID);
-        responseWithData(projectService.getProjectById(id), request, response);
+        responseWithData(projectService.setupProject(params), request, response);
     }
 
 	public IProjectService getProjectService() {

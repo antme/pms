@@ -114,9 +114,9 @@ $(document).ready(function() {
 		dataSource : proManagerItems,
 	});
 	
-	if (redirectParams) {
+	if (redirectParams) {//Edit
 		postAjaxRequest("/service/project/get", redirectParams, edit);
-	} else {
+	} else {//Add
 		//添加表单绑定一个空的 Model
 		pModel = new projectModel();
 		kendo.bind($("#addProject"), pModel);

@@ -1,32 +1,38 @@
 package com.pms.service.mockbean;
 
 public class SalesContractBean {
-	public static final String SC_PROJECT_ID = "projectId";
-	public static final String SC_PROJECT_NAME = "projectName";
-	public static final String SC_PROJECT_MANAGER = "projectManager";
-	public static final String SC_CUSTOMER_NAME = "customerName";
-	public static final String SC_AMOUNT = "contractAmount";
-	public static final String SC_INVOICE_TYPE = "invoiceType";
-	public static final String SC_ESTIMATE_EQ_COST0 = "estimateEqCost0";
-	public static final String SC_ESTIMATE_EQ_COST1 = "estimateEqCost1";
-	public static final String SC_ESTIMATE_SUB_COST = "estimateSubCost";
-	public static final String SC_ESTIMATE_PM_COST = "estimatePMCost";
-	public static final String SC_ESTIMATE_DEEP_DESIGN_COST = "estimateDeepDesignCost";
-	public static final String SC_ESTIMATE_DEBUG_COST = "estimateDebugCost";
-	public static final String SC_ESTIMATE_OTHER_COST = "estimateOtherCost";
-	public static final String SC_DEBUG_COST_TYPE = "debugCostType";
-	public static final String SC_TAX_TYPE = "taxType";
-	public static final String SC_CODE = "contractCode";
-	public static final String SC_PERSON = "contractPerson";
-	public static final String SC_TYPE = "contractType";
-	public static final String SC_DATE = "contractDate";
-	public static final String SC_DOWN_PAYMENT = "contractDownPayment";
-	public static final String SC_PROGRESS_PAYMENT = "progressPayment";
-	public static final String SC_QUALITY_MONEY = "qualityMoney";
-	public static final String SC_MEMO = "contractMemo";
+	public static final String SC_PROJECT_ID = "projectId"; //项目id外键
+	
+	//销售合同基础信息字段
 	public static final String SC_MODIFY_TIMES = "scModifyTimes"; //增补次数
-	public static final String SC_ARCHIVE_STATUS = "archiveStatus"; // 归档状态
-	public static final String SC_RUNNING_STATUS = "runningStatus"; //执行状态
+	public static final String SC_CODE = "contractCode"; //销售合同编号
+	public static final String SC_PERSON = "contractPerson"; //签订人
+	public static final String SC_CUSTOMER_NAME = "customerName"; //客户名
+	public static final String SC_TYPE = "contractType"; //合同类型*********
+	public static final String SC_DATE = "contractDate"; //合同签订日期
+	public static final String SC_DOWN_PAYMENT = "contractDownPayment"; //首付
+	public static final String SC_PROGRESS_PAYMENT = "progressPayment"; //进度款
+	public static final String SC_QUALITY_MONEY = "qualityMoney"; //质保金
+	public static final String SC_ARCHIVE_STATUS = "archiveStatus"; // 归档状态*********
+	public static final String SC_RUNNING_STATUS = "runningStatus"; //执行状态*********
+	public static final String SC_MEMO = "contractMemo"; //备注
+	
+	//商务信息字段
+	public static final String SC_AMOUNT = "contractAmount"; //合同金额
+	public static final String SC_INVOICE_TYPE = "invoiceType"; //发票类型*********
+	public static final String SC_EXTIMATE_GROSS_PROFIT_RATE = "estimateGrossProfitRate";//==预计毛利率
+	public static final String SC_EXTIMATE_GROSS_PROFIT ="estimateGrossProfit";//==预计毛利
+	public static final String SC_ESTIMATE_EQ_COST0 = "estimateEqCost0"; //预估设备成本（增值税）
+	public static final String SC_ESTIMATE_EQ_COST1 = "estimateEqCost1"; //预估设备成本（非增值税）
+	public static final String SC_ESTIMATE_SUB_COST = "estimateSubCost"; //预估分包成本
+	public static final String SC_ESTIMATE_PM_COST = "estimatePMCost"; //预估项目管理成本
+	public static final String SC_ESTIMATE_DEEP_DESIGN_COST = "estimateDeepDesignCost"; //预估深化设计成本
+	public static final String SC_ESTIMATE_DEBUG_COST = "estimateDebugCost"; //预估调试费用
+	public static final String SC_DEBUG_COST_TYPE = "debugCostType"; //调试费用类型*********
+	public static final String SC_ESTIMATE_TAX = "estimateTax"; //==预估税收
+	public static final String SC_TAX_TYPE = "taxType"; //税收类型*********
+	public static final String SC_ESTIMATE_OTHER_COST = "estimateOtherCost"; //预估其他成本
+	public static final String SC_TOTAL_ESTIMATE_COST = "totalEstimateCost"; //==项目总预估成本
 	
 	//设备成本清单字段
 	public static final String SC_EQ_LIST = "eqcostList";
@@ -43,4 +49,47 @@ public class SalesContractBean {
 	public static final String SC_EQ_LIST_MEMO = "eqcostMemo";//备注
 	public static final String SC_EQ_LIST_DISCOUNT_RATE = "eqcostDiscountRate"; //折扣率
 	
+	//执行信息
+	
+	//财务数据
+	
+	//工程数据
+	
+	//**********下拉列表基础数据
+	//合同类型
+	public static final int SC_TYPE_WEAK_CURRENT_ENGINEERING = 1;  //弱电工程
+	public static final int SC_TYPE_PRODUCT_INTEGRATION = 2;  //产品集成（灯控/布线，楼控，其他）
+	public static final int SC_TYPE_PRODUCT_SALES = 3;  //产品销售
+	public static final int SC_TYPE_MAINTENANCE_SERVICE = 4;  //维护及服务
+	
+	//归档状态
+	public static final int SC_ARCHIVE_STATUS_ARCHIVED = 1;  //
+	public static final int SC_ARCHIVE_STATUS_UN_ARCHIVED = 0;  //
+	
+	//执行状态
+	public static final int SC_RUNNING_STATUS_RUNNING = 1; //执行中
+	public static final int SC_RUNNING_STATUS_PAUSE = 2; //中止或暂停
+	public static final int SC_RUNNING_STATUS_END_PHASE = 3; //收尾阶段
+	public static final int SC_RUNNING_STATUS_OVER = 4; //结束
+	public static final int SC_RUNNING_STATUS_WARRANTY = 5; //质保期
+	public static final int SC_RUNNING_STATUS_CANCEL = 6; //作废
+	
+	//发票类型
+//	public static final int SC_INVOICE_TYPE_ = 1; //
+//	public static final int SC_INVOICE_TYPE_ = 1; //
+//	public static final int SC_INVOICE_TYPE_ = 1; //
+//	public static final int SC_INVOICE_TYPE_ = 1; //
+//	public static final int SC_INVOICE_TYPE_ = 1; //
+	
+	//调试费用类型
+//	public static final int SC_DEBUG_COST_TYPE_ = 1; //
+//	public static final int SC_DEBUG_COST_TYPE_ = 1; //
+//	public static final int SC_DEBUG_COST_TYPE_ = 1; //
+//	public static final int SC_DEBUG_COST_TYPE_ = 1; //
+//	public static final int SC_DEBUG_COST_TYPE_ = 1; //
+	
+	//税收类型
+//	public static final int SC_TAX_TYPE_ = 1; //
+//	public static final int SC_TAX_TYPE_ = 1; //
+//	public static final int SC_TAX_TYPE_ = 1; //
 }

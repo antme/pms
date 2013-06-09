@@ -3,16 +3,16 @@
 var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
-			url : "../service/project/list",
+			url : "/service/project/list",
 			dataType : "jsonp"
 		},
 		update : {
-			url : "../service/project/update",
+			url : "/service/project/update",
 			dataType : "jsonp",
 			method : "post"
 		},
 		create : {
-			url : "../service/project/add",
+			url : "/service/project/add",
 			dataType : "jsonp",
 			method : "post"
 		},
@@ -108,13 +108,13 @@ $(document).ready(function() {
 	
 function toolbar_addProject() {
 	loadPage("addProject");
-};
+}
 
 function toolbar_deleteProject() {
 	var rowData = getSelectedRowDataByGrid("grid");
 	alert("Delete the row _id: " + rowData._id);
   	return false;
-};
+}
 
 function toolbar_editProject(){
 	var rowData = getSelectedRowDataByGrid("grid");
@@ -136,34 +136,16 @@ function toolbar_setupProject() {//1:正式立项；2：预立项；3：内部�
 		alert("请选择一条非正式立项记录！");
 		return;
 	}
+	
+	var param = {_id : row._id};
+	postAjaxRequest("../service/project/setup", param, setupProjectCallBack);
 
-	console.log("************set up");
-	$.ajax({
-		url : "../service/project/setup",
-		success : function(responsetxt) {
-			var res;
-			eval("res=" + responsetxt);
-			console.log(res);
-			console.log(res.status);
-			if (res.status == "0") {
-				alert(res.msg);
-			} else {
-				alert("正式立项成功");
-				dataSource.read();
-			}
-		},
+}
 
-		error : function() {
-			alert("连接Service失败");
-		},
-
-		data : {
-			_id : row._id
-		},
-		method : "post"
-	});
-
-};
+function setupProjectCallBack(){
+	alert("正式立项成功");
+	dataSource.read();
+}
 	
 	
 	

@@ -16,6 +16,8 @@ var scModel = kendo.data.Model.define({
 				required : true
 			}
 		},
+		archiveStatus : {},
+		runningStatus : {},
 		contractAmount : {},
 		invoiceType : {},
 		estimateEqCost0 : {},
@@ -133,12 +135,30 @@ $(document).ready(function() {
 		dataSource : debugCostTypeItems,
 	});
 
-	var contractTypeItems = [{ text: "contractType1", value: "1" }, { text: "contractType2", value: "2" }, { text: "contractType3", value: "3" }];
+	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
+	var contractTypeItems = [{ text: "弱电工程", value: 1 }, { text: "产品集成（灯控/布线，楼控，其他）", value: 2 }, { text: "产品销售", value: 3 }, { text: "维护及服务", value: 4 }];
 	$("#contractType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
         optionLabel: "选择合同类型...",
 		dataSource : contractTypeItems,
+	});
+	
+	//已归档，未归档
+	var archiveStatusItems = [{ text: "已归档", value: 1 }, { text: "未归档", value: 2 }];
+	$("#archiveStatus").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择归档状态...",
+		dataSource : archiveStatusItems,
+	});
+	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
+	var runningStatusItems = [{ text: "弱电工程", value: 1 }, { text: "产品集成（灯控/布线，楼控，其他）", value: 2 }, { text: "产品销售", value: 3 }, { text: "维护及服务", value: 4 }];
+	$("#runningStatus").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择执行状态...",
+		dataSource : runningStatusItems,
 	});
 	
 	var projectItems = new kendo.data.DataSource({
