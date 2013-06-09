@@ -26,6 +26,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> listPurchaseContracts() {
         return this.dao.list(null, DBBean.PURCHASE_CONTRACT);
     }
+    
+    public Map<String, Object> getPurchaseContract(HashMap<String, Object> parameters){
+        
+        return this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
+    }
+
 
     @Override
     public void deletePurchaseContract(Map<String, Object> contract) {

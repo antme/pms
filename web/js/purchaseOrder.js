@@ -80,11 +80,12 @@ function approveStatusCheck(response) {
 	alert("审核成功");
 	dataSource.read();
 }
+
+
 function approve() {
-	var row = getSelectedRowDataByGrid("grid");
-	if (!row) {
-		alert("点击列表可以选中数据");
-	} else {
+
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
 		var param = {
 			_id : row._id
 		};
@@ -96,11 +97,9 @@ function approve() {
 }
 
 function reject() {
-	var row = getSelectedRowDataByGrid("grid");
 
-	if (!row) {
-		alert("点击列表可以选中数据");
-	} else {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
 		var param = {
 			"_id" : row._id
 		};
