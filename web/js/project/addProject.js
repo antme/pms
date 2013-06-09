@@ -90,8 +90,6 @@ var dataSource = new kendo.data.DataSource({
 });
 
 $(document).ready(function() {
-	
-	
 	//表单中的各种控件
 	var proStatusItems = [{ text: "正式立项", value: "1" }, { text: "预立项", value: "2" }, { text: "内部立项", value: "3" }];
 	$("#projectStatus").kendoDropDownList({
@@ -116,20 +114,26 @@ $(document).ready(function() {
 		dataSource : proManagerItems,
 	});
 	
-	//添加表单绑定一个空的 Model
-	pModel = new projectModel();
-	kendo.bind($("#addProject"), pModel);
+	if (redirectParams) {
+		postAjaxRequest("/service/project/get", redirectParams, edit);
+	} else {
+		//添加表单绑定一个空的 Model
+		pModel = new projectModel();
+		kendo.bind($("#addProject"), pModel);
+	}
 	
 });//end dom ready
 
+function edit(data){
+	pModel = new projectModel(data);
+	kendo.bind($("#addProject"), pModel);
+}
+
 function saveProject(){
-	console.log("saveProject *****************************");
 	var _id = pModel.get("_id");
-	console.log(_id);
-	console.log("save scm &&&&&&&&&&&&"+kendo.stringify(pModel));
-	if (_id == null){
+	//if (_id == null){
 		dataSource.add(pModel);
-	}
+	//}
 	dataSource.sync();
 	loadPage("projectList");
 };

@@ -105,29 +105,64 @@ $(document).ready(function() {
 		]
 	});
 });//end dom ready	
+	
+function toolbar_addProject() {
+	loadPage("addProject");
+};
 
 function toolbar_deleteProject() {
 	var rowData = getSelectedRowDataByGrid("grid");
 	alert("Delete the row _id: " + rowData._id);
   	return false;
-};//end toolbar_delete
-	
-function toolbar_approveProject() {//1:正式立项；2：预立项；3：内部立项
+};
+
+function toolbar_editProject(){
 	var rowData = getSelectedRowDataByGrid("grid");
 	if (rowData == null){
-		alert("请选择一条项目记录！");
+		alert("请点击选择一条项目记录！");
 		return;
 	}
-	if (rowData.projectStatus == 1){
+	
+	loadPage("addProject",{_id:rowData._id});
+}
+	
+function toolbar_setupProject() {//1:正式立项；2：预立项；3：内部立项
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row){
+		alert("请点击选择一条项目记录！");
+		return;
+	}
+	if (row.projectStatus == 1){
 		alert("请选择一条非正式立项记录！");
 		return;
 	}
-	alert("正式立项 _id: " + rowData._id);
-	return false;
-};
-	
-function toolbar_addProject() {
-	loadPage("addProject");
+
+	console.log("************set up");
+	$.ajax({
+		url : "../service/project/setup",
+		success : function(responsetxt) {
+			var res;
+			eval("res=" + responsetxt);
+			console.log(res);
+			console.log(res.status);
+			if (res.status == "0") {
+				alert(res.msg);
+			} else {
+				alert("正式立项成功");
+				dataSource.read();
+			}
+		},
+
+		error : function() {
+			alert("连接Service失败");
+		},
+
+		data : {
+			_id : row._id
+		},
+		method : "post"
+	});
+
 };
 	
 	

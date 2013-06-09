@@ -41,6 +41,6 @@ public class SalesContractBean {
 	public static final String SC_EQ_LIST_BASE_PRICE = "eqcostBasePrice"; //成本价
 	public static final String SC_EQ_LIST_TOTAL_AMOUNT = "eqcostTotalAmount";//小计
 	public static final String SC_EQ_LIST_MEMO = "eqcostMemo";//备注
-	public static final String SC_EQ_LIST_DISCOUNT_RATE = "eqcostDiscountRate";
+	public static final String SC_EQ_LIST_DISCOUNT_RATE = "eqcostDiscountRate"; //折扣率
 	
 }
