@@ -78,6 +78,7 @@ function loadPage(page, parameters) {
 	redirectParams = parameters;
 	
 
+	console.log(page);
 	var uid = kendo.guid();
 
 	if (page == "userman") {
@@ -173,7 +174,6 @@ function openWindow(options) {
 
 
 function postAjaxRequest(url, parameters, callback) {
-	console.log(parameters);
 	$.ajax({
 		url : url,
 		success : function(responsetxt) {
