@@ -78,7 +78,6 @@ function loadPage(page, parameters) {
 	redirectParams = parameters;
 	
 
-	console.log(page);
 	var uid = kendo.guid();
 
 	if (page == "userman") {
@@ -97,8 +96,10 @@ function loadPage(page, parameters) {
 		page = "html/execution/allocate.html";
 	} else if (page == "purchasecontract") {
 		page = "html/purchasecontract/purchasecontract.html";
-	} else if (page == "purchaseRequest") {
-		page = "html/purchasecontract/purchaseRequest.html";
+	} else if (page == "purchasecontract") {
+		page = "html/purchasecontract/purchasecontract.html";
+	} else if (page == "purchasecontractedit") {
+		page = "html/purchasecontract/purchasecontractedit.html";
 	} else if (page == "purchaseorder") {
 		page = "html/purchasecontract/purchaseOrder.html";
 	} else if (page == "addsc") {
@@ -135,6 +136,18 @@ function getSelectedRowDataByGrid(gridId) {
 	var row = grid.select();
 	return grid.dataItem(row);
 }
+
+function getSelectedRowDataByGridWithMsg(gridId) {
+	var grid = $("#" + gridId).data("kendoGrid");
+	var row = grid.select();
+	var response =  grid.dataItem(row);
+
+	if (!response) {
+		alert("点击列表可以选中数据");
+	}
+	return response;
+}
+
 
 function openWindow(options) {
 	var window = $("#" + options.id);

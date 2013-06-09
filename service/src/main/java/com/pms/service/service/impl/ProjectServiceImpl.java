@@ -105,4 +105,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		return dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
 	}
 
+	@Override
+	public Map<String, Object> setupProject(Map<String, Object> params) {
+		String _id = (String) params.get(ApiConstants.MONGO_ID);
+		Map<String, Object> pro = dao.findOne(ApiConstants.MONGO_ID, _id, DBBean.PROJECT);
+		pro.put(ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS_OFFICIAL);
+		return dao.updateById(pro, DBBean.PROJECT);
+	}
+
 }

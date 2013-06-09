@@ -19,4 +19,14 @@ public class ProjectBean {
 	public static final String PROJECT_MEMO = "projectMemo";  //备注
 	
 	public static final String PROJECT_CUSTOMER_NAME = "customerName"; // 和 销售合同 都存放了该字段
+	
+	//项目类型数据
+	public static final int PROJECT_TYPE_PRODUCT = 1;  //产品
+	public static final int PROJECT_TYPE_PROJECT = 2;  //工程
+	public static final int PROJECT_TYPE_SERVICE = 3;  //服务
+	
+	//项目状态数据
+	public static final int PROJECT_STATUS_OFFICIAL = 1;  //正式立项
+	public static final int PROJECT_STATUS_PRE = 2;       //预立项
+	public static final int PROJECT_STATUS_INNER = 3;     //内部立项
 }

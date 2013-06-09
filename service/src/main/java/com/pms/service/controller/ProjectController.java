@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.google.gson.Gson;
+import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.service.IProjectService;
 
 @Controller
@@ -68,6 +69,19 @@ public class ProjectController extends AbstractController {
     public void updateProject(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(projectService.addProject(params), request, response);
+    }
+    
+    @RequestMapping("/get")
+    public void getProjectById(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        String id = (String) params.get(ApiConstants.MONGO_ID);
+        responseWithData(projectService.getProjectById(id), request, response);
+    }
+    
+    @RequestMapping("/setup")
+    public void setupProject(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(projectService.setupProject(params), request, response);
     }
 
 	public IProjectService getProjectService() {

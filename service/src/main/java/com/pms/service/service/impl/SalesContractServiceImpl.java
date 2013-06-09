@@ -57,6 +57,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		contract.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE));
 		contract.put(SalesContractBean.SC_PERSON, params.get(SalesContractBean.SC_PERSON));
 		contract.put(SalesContractBean.SC_TYPE, params.get(SalesContractBean.SC_TYPE));
+		contract.put(SalesContractBean.SC_ARCHIVE_STATUS, params.get(SalesContractBean.SC_ARCHIVE_STATUS));
+		contract.put(SalesContractBean.SC_RUNNING_STATUS, params.get(SalesContractBean.SC_RUNNING_STATUS));
 		contract.put(SalesContractBean.SC_DATE, params.get(SalesContractBean.SC_DATE));
 		contract.put(SalesContractBean.SC_DOWN_PAYMENT, params.get(SalesContractBean.SC_DOWN_PAYMENT));
 		contract.put(SalesContractBean.SC_PROGRESS_PAYMENT, params.get(SalesContractBean.SC_PROGRESS_PAYMENT));

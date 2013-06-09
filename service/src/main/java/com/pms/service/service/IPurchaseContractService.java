@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface IPurchaseContractService {
 
-    
+    public Map<String, Object> getPurchaseContract(HashMap<String, Object> parameters);
     
     public Map<String, Object> listPurchaseContracts();
     
