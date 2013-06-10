@@ -60,6 +60,7 @@ public class SalesContractBean {
 	//工程数据
 	
 	//**********下拉列表基础数据
+	
 	//合同类型
 	public static final int SC_TYPE_WEAK_CURRENT_ENGINEERING = 1;  //弱电工程
 	public static final int SC_TYPE_PRODUCT_INTEGRATION = 2;  //产品集成（灯控/布线，楼控，其他）
