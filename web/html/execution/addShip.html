@@ -1,0 +1,34 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<script id="template" type="text/x-kendo-template">
+	<a class="k-button" href="\#" onclick="return toolbar_add()">添加/修改</a>
+</script>
+
+<script id="submit-template" type="text/x-kendo-template">
+	<a class="k-button" href="\#" onclick="return toolbar_submit()">提交</a>
+</script>
+
+<body>
+	<div class="k-edit-form-container">
+		<div class="k-edit-label ">
+			<label for="shipNo">编号</label>
+		</div>
+		<div data-container-for="shipNo" class="k-edit-field ">
+			<input type="text" class="k-input k-textbox" name="shipNo" data-bind="shipNo">
+		</div>
+		<div class="k-edit-label ">
+			<label for="applicationDepartment">申请部门</label>
+		</div>
+		<div data-container-for="applicationDepartment" class="k-edit-field ">
+			<input type="text" class="k-input k-textbox" name="applicationDepartment" data-bind="value:applicationDepartment">
+		</div>
+		<div class="k-edit-label ">
+			<label for="applicationDate">销售合同</label>
+		</div>
+		<div data-container-for="applicationDate" class="k-edit-field ">
+			<input type="text" class="k-input k-textbox" name="applicationDate" data-bind="value:applicationDate">
+		</div>
+	</div>
+</body>
+</html>
