@@ -4,34 +4,36 @@ var redirecPage = undefined;
 
 $(document).ready(function() {
 	
-	document.onkeydown = function() {
-		if (event.keyCode == 116) {
-			event.keyCode = 0;
-			event.returnValue = true;
-			loadPage(redirecPage, redirectParams);
-			return false;
-		}
-	};
 
-	$(document).keydown(function(event) {
-
-		if (event.keyCode == 116) {
-			if (event && event.preventDefault) {
-				event.preventDefault();
+	if (navigator.userAgent.indexOf("MSIE")>0) {
+		document.onkeydown = function() {
+			if (event.keyCode == 116) {
+				event.keyCode = 0;
+				event.returnValue = true;
+				loadPage(redirecPage, redirectParams);
+				return false;
 			}
-			event.returnValue = false;
-			event.keyCode = 0;
+		};
+	} else {
+		$(document).keydown(function(event) {
 
-			loadPage(redirecPage, redirectParams);
-			return false; // 屏蔽F5刷新键
-		}
+			if (event.keyCode == 116) {
+				if (event && event.preventDefault) {
+					event.preventDefault();
+				}
+				event.returnValue = false;
+				event.keyCode = 0;
 
-		if ((event.ctrlKey) && (event.keyCode == 82)) {
-			loadPage(redirecPage, redirectParams);
-			return false; // 屏蔽alt+R
-		}
-	});
-	
+				loadPage(redirecPage, redirectParams);
+				return false; // 屏蔽F5刷新键
+			}
+
+			if ((event.ctrlKey) && (event.keyCode == 82)) {
+				loadPage(redirecPage, redirectParams);
+				return false; // 屏蔽alt+R
+			}
+		});
+	}
 	
 
 	var page = getUrlParser().attr("anchor");
@@ -100,7 +102,7 @@ function loadPage(page, parameters) {
 		page = "html/execution/allocate.html";
 	} else if (page == "purchasecontract") {
 		page = "html/purchasecontract/purchasecontract.html";
-	} else if (page == "purchasecontract") {
+	} else if (page == "purchaseRequest") {
 		page = "html/purchasecontract/purchaseRequest.html";
 	} else if (page == "purchasecontractedit") {
 		page = "html/purchasecontract/purchasecontractedit.html";
@@ -112,6 +114,10 @@ function loadPage(page, parameters) {
 		page = "html/project/addProject.html";
 	} else if (page == "purchaseRequestAdd") {
 		page = "html/purchasecontract/purchaseRequestAdd.html";
+	} else if (page == "ship") {
+		page = "html/execution/ship.html";
+	} else if (page == "addShip") {
+		page = "html/execution/addShip.html";
 	} else {
 		page = "html/supplier/supplier.html";
 	}
@@ -219,6 +225,11 @@ function onWindowDefaultActivate(e) {
 
 function onWindowDefaultClose(e) {
 
+}
+
+function checkRoles(ids){
+	
+	
 }
 
 

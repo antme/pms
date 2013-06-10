@@ -66,20 +66,11 @@
                         },
 
                         {
-                            text: "采购合同", id: "purchasecontract", expanded: false, imageUrl: "/images/contract.png",
-                            items: [
-                                { text: "采购合同列表", id: "purchasecontract", imageUrl: "/images/order.png" },
-                                { text: "入库申请单", id: "contract", imageUrl: "/images/ccontract.png" },
-                                { text: "直发入库申请单", id: "contract", imageUrl: "/images/ccontract.png"}
-                            ]
-                        },
-                        {
                             text: "项目执行", id: "projectex", imageUrl: "/images/ccontract.png",
                             items: [
-                                    { text: "采购申请", id: "purchaseRequest", imageUrl: "/images/order.png" },
-                                    { text: "调拨申请", id: "contract", imageUrl: "/images/ccontract.png" },
-                                    { text: "采购订单申请", id: "purchaseorder", imageUrl: "/images/ccontract.png" },
-                                    { text: "发货申请", id: "contract", imageUrl: "/images/ccontract.png"},
+                                    { text: "备货申请", id: "purchaseRequest", imageUrl: "/images/order.png" },
+                                    { text: "开票申请", id: "purchaseorder", imageUrl: "/images/ccontract.png" },
+                                    { text: "发货申请", id: "ship", imageUrl: "/images/ccontract.png"},
                                     { text: "借货申请", id: "contract", imageUrl: "/images/ccontract.png"},
                                     { text: "还货申请", id: "contract", imageUrl: "/images/ccontract.png"}
                                 ]
@@ -87,18 +78,29 @@
                         {
                             text: "销售合同",  id: "scList", imageUrl: "/images/user.png"
                         },
+                        
+
+                        {
+                            text: "采购合同", id: "purchasecontract", expanded: false, imageUrl: "/images/contract.png",
+                            items: [
+                                { text: "备货申请", id: "purchaseRequest", imageUrl: "/images/order.png" },
+                                { text: "调拨申请", id: "contract", imageUrl: "/images/ccontract.png" },
+                                { text: "采购申请", id: "purchaseorder", imageUrl: "/images/ccontract.png"},
+                                { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
+                                { text: "入库申请单", id: "contract", imageUrl: "/images/ccontract.png" },
+                                { text: "直发入库申请单", id: "contract", imageUrl: "/images/ccontract.png"}
+                            ]
+                        },                                               
                         {
                             text: "财务",  id: "finance", imageUrl: "/images/finance.png",
                             items: [
                                     { text: "财务资料", id: "contract", imageUrl: "/images/order.png" },
                                     { text: "开票信息", id: "contract", imageUrl: "/images/ccontract.png" },
                                     { text: "收款信息", id: "contract", imageUrl: "/images/ccontract.png"},
-                                    { text: "付款信息", id: "contract", imageUrl: "/images/ccontract.png"},
-                                    { text: "售票信息", id: "contract", imageUrl: "/images/ccontract.png"}
+                                    { text: "付款信息", id: "contract", imageUrl: "/images/ccontract.png"}
                                 ]
                         },
-                      
-                      
+                                            
                         {
                             text: "基础信息",  id: "customer", imageUrl: "/images/user.png",
                             	items: [
