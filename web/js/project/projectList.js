@@ -86,7 +86,7 @@ $(document).ready(function() {
 			field : "projectManager",
 			title : "PM"
 		}, {
-			field : "customerName",
+			field : "customer",
 			title : "客户名"
 		}
 //		, {

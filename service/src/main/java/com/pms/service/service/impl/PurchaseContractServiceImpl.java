@@ -46,7 +46,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         if (ApiUtil.isEmpty(contract.get(ApiConstants.MONGO_ID))) {
             contract.put(PurchaseOrder.PROCESS_STATUS, "New");
-            contract.put("purchaseContractCode", contract.get(ProjectBean.PROJECT_CUSTOMER_NAME) + "_Contract_" + String.valueOf(new Date().getTime()));
+            contract.put("purchaseContractCode", contract.get(ProjectBean.PROJECT_CUSTOMER) + "_Contract_" + String.valueOf(new Date().getTime()));
             return this.dao.add(contract, DBBean.PURCHASE_CONTRACT);
         } else {
             Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, contract.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
@@ -73,7 +73,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> order) {
         if (ApiUtil.isEmpty(order.get(ApiConstants.MONGO_ID))) {
             order.put(PurchaseOrder.PROCESS_STATUS, "New");
-            order.put(PurchaseOrder.ORDER_CODE, order.get(ProjectBean.PROJECT_CUSTOMER_NAME) + "_" + String.valueOf(new Date().getTime()));
+            order.put(PurchaseOrder.ORDER_CODE, order.get(ProjectBean.PROJECT_CUSTOMER) + "_" + String.valueOf(new Date().getTime()));
             return this.dao.add(order, DBBean.PURCHASE_ORDER);
         } else {
             Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);

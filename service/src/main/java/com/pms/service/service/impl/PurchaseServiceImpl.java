@@ -84,7 +84,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				request.put(PurchaseRequestBean.project_code, project.get(ProjectBean.PROJECT_CODE));
 				request.put(PurchaseRequestBean.project_name, project.get(ProjectBean.PROJECT_NAME));
 				request.put(PurchaseRequestBean.project_managerName, project.get(ProjectBean.PROJECT_MANAGER));
-				request.put(PurchaseRequestBean.customer_name, project.get(ProjectBean.PROJECT_CUSTOMER_NAME));
+				request.put(PurchaseRequestBean.customer_name, project.get(ProjectBean.PROJECT_CUSTOMER));
 			}
 			
 			//customer

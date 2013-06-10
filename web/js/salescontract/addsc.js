@@ -11,11 +11,11 @@ var scModel = kendo.data.Model.define({
 				required : true
 			}
 		},
-		customerName : {
-			validation : {
-				required : true
-			}
-		},
+//		customer : {
+//			validation : {
+//				required : true
+//			}
+//		},
 		archiveStatus : {},
 		runningStatus : {},
 		contractAmount : {},
@@ -152,8 +152,9 @@ $(document).ready(function() {
         optionLabel: "选择归档状态...",
 		dataSource : archiveStatusItems,
 	});
-	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
-	var runningStatusItems = [{ text: "弱电工程", value: 1 }, { text: "产品集成（灯控/布线，楼控，其他）", value: 2 }, { text: "产品销售", value: 3 }, { text: "维护及服务", value: 4 }];
+	
+	//执行中、收尾阶段、质保期、结束、中止或暂停、作废
+	var runningStatusItems = [{ text: "执行中", value: 1 }, { text: "中止或暂停", value: 2 }, { text: "收尾阶段", value: 3 }, { text: "结束", value: 4 }, { text: "质保期", value: 5 }, { text: "作废", value: 6 }];
 	$("#runningStatus").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
@@ -175,6 +176,21 @@ $(document).ready(function() {
         optionLabel: "选择项目...",
 		dataSource : projectItems,
 	});
+	
+//	var customerItems = new kendo.data.DataSource({
+//		transport : {
+//			read : {
+//				url : "/service/customer/list",
+//				dataType : "jsonp"
+//			}
+//		}
+//	});
+//	$("#customer").kendoDropDownList({
+//		dataTextField : "name",
+//		dataValueField : "_id",
+//        optionLabel: "选择客户...",
+//		dataSource : customerItems,
+//	});
 	
 	//合同签订日期控件
 	$("#contractDate").kendoDatePicker();

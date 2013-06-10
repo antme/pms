@@ -10,9 +10,11 @@ import com.google.gson.Gson;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.SalesContractBean;
+import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IProjectService;
 import com.pms.service.util.ApiUtil;
@@ -31,14 +33,14 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		int limit = ApiUtil.getInteger(params, "pageSize", 10);
 		int limitStart = ApiUtil.getInteger(params, "skip", 0);
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-		String[] limitKeys = new String[] {ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CUSTOMER_NAME,
+		String[] limitKeys = new String[] {ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CUSTOMER,
 				ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_ABBR};
 //		queryMap.put(ApiConstants.LIMIT, limit);
 //		queryMap.put(ApiConstants.LIMIT_START, limitStart);
 		queryMap.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		Map<String, Object> result = this.dao.list(queryMap, DBBean.PROJECT);
 		
-		//mergeProjectContratInfo(result);
+		mergePMandCustomerInfo(result);
 		return result;
 	}
 
@@ -54,7 +56,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		projectBean.put(ProjectBean.PROJECT_TYPE, params.get(ProjectBean.PROJECT_TYPE));
 		projectBean.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
 		projectBean.put(ProjectBean.PROJECT_MEMO, params.get(ProjectBean.PROJECT_MEMO));
-		projectBean.put(ProjectBean.PROJECT_CUSTOMER_NAME, params.get(ProjectBean.PROJECT_CUSTOMER_NAME));
+		projectBean.put(ProjectBean.PROJECT_CUSTOMER, params.get(ProjectBean.PROJECT_CUSTOMER));
 		projectBean.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
 		
 		//初始化项目列表的4个金额字段
@@ -111,6 +113,38 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		Map<String, Object> pro = dao.findOne(ApiConstants.MONGO_ID, _id, DBBean.PROJECT);
 		pro.put(ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS_OFFICIAL);
 		return dao.updateById(pro, DBBean.PROJECT);
+	}
+	
+	public void mergePMandCustomerInfo(Map<String, Object> result){
+		List<Map<String, Object>> resultListData = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+		
+		List<String> pmIds = new ArrayList<String>();
+		List<String> customerIds = new ArrayList<String>();
+		
+		for (Map<String, Object> pro : resultListData){
+			pmIds.add((String) pro.get(ProjectBean.PROJECT_MANAGER));
+			customerIds.add((String) pro.get(ProjectBean.PROJECT_CUSTOMER));
+		}
+		
+		Map<String, Object> pmQuery = new HashMap<String, Object>();
+		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME});
+		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pmIds));
+		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
+		
+		Map<String, Object> customerQuery = new HashMap<String, Object>();
+		customerQuery.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
+		customerQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, customerIds));
+		Map<String, Object> customerData = dao.listToOneMapAndIdAsKey(customerQuery, DBBean.CUSTOMER);
+		
+		for (Map<String, Object> pro : resultListData){
+			String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER);
+			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
+			pro.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+
+			String cId = (String) pro.get(ProjectBean.PROJECT_CUSTOMER);
+			Map<String, Object> cInfo = (Map<String, Object>) customerData.get(cId);
+			pro.put(ProjectBean.PROJECT_CUSTOMER, cInfo.get(CustomerBean.NAME));
+		}
 	}
 
 }

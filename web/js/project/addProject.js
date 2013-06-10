@@ -20,7 +20,7 @@ var projectModel = kendo.data.Model.define({
 				required : true
 			}
 		},
-		customerName : {
+		customer : {
 			validation : {
 				required : true
 			}
@@ -106,12 +106,35 @@ $(document).ready(function() {
 		dataSource : proCategoryItems
 	});
 	
-	var proManagerItems = [{ text: "Danny", value: "1" }, { text: "Dylan", value: "2" }, { text: "Jacky", value: "3" }];
+	var proManagerItems = new kendo.data.DataSource({
+		transport : {
+			read : {
+				url : "/service/user/list",
+				dataType : "jsonp"
+			}
+		}
+	});
+	//var proManagerItems = [{ text: "Danny", value: "1" }, { text: "Dylan", value: "2" }, { text: "Jacky", value: "3" }];
 	$("#projectManager").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
+		dataTextField : "userName",
+		dataValueField : "_id",
         optionLabel: "选择项目经理...",
 		dataSource : proManagerItems,
+	});
+	
+	var customerItems = new kendo.data.DataSource({
+		transport : {
+			read : {
+				url : "/service/customer/list",
+				dataType : "jsonp"
+			}
+		}
+	});
+	$("#customer").kendoDropDownList({
+		dataTextField : "name",
+		dataValueField : "_id",
+        optionLabel: "选择客户...",
+		dataSource : customerItems,
 	});
 	
 	if (redirectParams) {//Edit

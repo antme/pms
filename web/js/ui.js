@@ -33,7 +33,7 @@ $(document).ready(function() {
 	});
 	
 	
-	
+
 	var page = getUrlParser().attr("anchor");
 
 	if (!page) {
@@ -47,6 +47,7 @@ $(document).ready(function() {
 	$("#user-info").click(function() {
 		loadPage("default");
 	});
+	
 });
 
 function onAjaxFail(data) {
@@ -68,7 +69,6 @@ function getUrlParser(){
 
 
 function loadPage(page, parameters) {
-	
 	
 	if($(".k-window").length>0 && $(".k-overlay").length>0){
 		$(".k-window").hide();
