@@ -19,7 +19,7 @@ public class AllocateServiceImpl extends AbstractService implements IAllocateSer
 
 	@Override
 	public String geValidatorFileName() {
-		return "supplier";
+		return "allocate";
 	}
 
 	public Map<String, Object> list(Map<String, Object> params) {

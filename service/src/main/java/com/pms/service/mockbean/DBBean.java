@@ -25,4 +25,6 @@ public class DBBean {
     
     public static final String ALLOCATE = "allocate";
     
+    public static final String SHIP = "ship";
+    
 }
