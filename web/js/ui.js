@@ -4,34 +4,36 @@ var redirecPage = undefined;
 
 $(document).ready(function() {
 	
-	document.onkeydown = function() {
-		if (event.keyCode == 116) {
-			event.keyCode = 0;
-			event.returnValue = true;
-			loadPage(redirecPage, redirectParams);
-			return false;
-		}
-	};
 
-	$(document).keydown(function(event) {
-
-		if (event.keyCode == 116) {
-			if (event && event.preventDefault) {
-				event.preventDefault();
+	if (navigator.userAgent.indexOf("MSIE")>0) {
+		document.onkeydown = function() {
+			if (event.keyCode == 116) {
+				event.keyCode = 0;
+				event.returnValue = true;
+				loadPage(redirecPage, redirectParams);
+				return false;
 			}
-			event.returnValue = false;
-			event.keyCode = 0;
+		};
+	} else {
+		$(document).keydown(function(event) {
 
-			loadPage(redirecPage, redirectParams);
-			return false; // 屏蔽F5刷新键
-		}
+			if (event.keyCode == 116) {
+				if (event && event.preventDefault) {
+					event.preventDefault();
+				}
+				event.returnValue = false;
+				event.keyCode = 0;
 
-		if ((event.ctrlKey) && (event.keyCode == 82)) {
-			loadPage(redirecPage, redirectParams);
-			return false; // 屏蔽alt+R
-		}
-	});
-	
+				loadPage(redirecPage, redirectParams);
+				return false; // 屏蔽F5刷新键
+			}
+
+			if ((event.ctrlKey) && (event.keyCode == 82)) {
+				loadPage(redirecPage, redirectParams);
+				return false; // 屏蔽alt+R
+			}
+		});
+	}
 	
 
 	var page = getUrlParser().attr("anchor");
