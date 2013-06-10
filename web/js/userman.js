@@ -2,6 +2,8 @@
 var groupDataSource;
 
 $(document).ready(function() {
+	
+	checkRoles("ddddd");
 	groupDataSource = new kendo.data.DataSource({
 		transport : {
 			read : {

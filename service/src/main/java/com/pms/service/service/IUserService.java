@@ -30,5 +30,7 @@ public interface IUserService {
     
     public Map<String, Object> listUsers();
 
+    public Map<String, Object> listNotUserRoleItems(Map<String, Object> roles);
+
     
 }

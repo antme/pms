@@ -226,8 +226,13 @@ function onWindowDefaultClose(e) {
 }
 
 function checkRoles(ids){
+	var data = {"ids": ids};
+	postAjaxRequest("/service/user/role/not/list", data, hiddenButtons)
+}
+
+function hiddenButtons(data){
 	
-	
+	console.log(data);
 }
 
 

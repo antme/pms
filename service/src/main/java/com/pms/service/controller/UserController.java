@@ -81,6 +81,11 @@ public class UserController extends AbstractController {
     public void listRoleItems(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(userService.listRoleItems(), request, response);
     }
+    
+    @RequestMapping("/role/not/list")
+    public void listNotUserRoleItems(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(userService.listNotUserRoleItems(parserJsonParameters(request, false)), request, response);
+    }
 
     
     @RequestMapping("/group/list")
