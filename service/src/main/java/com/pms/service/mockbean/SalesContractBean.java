@@ -2,7 +2,8 @@ package com.pms.service.mockbean;
 
 public class SalesContractBean {
 	public static final String SC_PROJECT_ID = "projectId"; //项目id外键
-	
+	public static final String SC_CUSTOMER_ID = "customerId";
+	   
 	//销售合同基础信息字段
 	public static final String SC_MODIFY_TIMES = "scModifyTimes"; //增补次数
 	public static final String SC_CODE = "contractCode"; //销售合同编号
