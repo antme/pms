@@ -225,4 +225,9 @@ function onWindowDefaultClose(e) {
 
 }
 
+function checkRoles(ids){
+	
+	
+}
+
 
