@@ -13,6 +13,10 @@ body {
 	background-color: #142849;
 }
 
+.k-content {	
+    border: 1px solid #c5c5c5;
+    padding: 10px;
+}
 .view-login .container {
 	width: 500px;
 	position: absolute;

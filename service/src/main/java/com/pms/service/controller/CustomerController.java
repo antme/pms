@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.annotation.RoleValidate;
-import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.service.ICustomerService;
 
 @Controller
@@ -25,28 +24,27 @@ public class CustomerController extends AbstractController {
  	private ICustomerService customerService;
 	
     @RequestMapping("/create")
-    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    @RoleValidate(roleID=RoleValidConstants.CUSTOMER_MANAGEMENT, desc = RoleValidConstants.CUSTOMER_MANAGEMENT_DESC)
     public void addUser(HttpServletRequest request, HttpServletResponse response) {
     	Map<String,Object> obj = parserJsonParameters(request,  false);
     	responseWithData(customerService.create(obj), request, response, "add_success");
     }
 
     @RequestMapping("/destroy")
-    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    @RoleValidate(roleID=RoleValidConstants.CUSTOMER_MANAGEMENT, desc = RoleValidConstants.CUSTOMER_MANAGEMENT_DESC)
     public void deleteUser(HttpServletRequest request, HttpServletResponse response) {
     	customerService.destroy(parserJsonParameters(request,  false));
     	responseWithData(null, request, response);
     }	
     
     @RequestMapping("/update")
-    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    @RoleValidate(roleID=RoleValidConstants.CUSTOMER_MANAGEMENT, desc = RoleValidConstants.CUSTOMER_MANAGEMENT_DESC)
     public void updateUser(HttpServletRequest request, HttpServletResponse response) {
     	Map<String,Object> obj = customerService.update(parserJsonParameters(request,  false));
     	responseWithData(obj, request, response, "update_success");
     }
     
     @RequestMapping("/list")
-    @RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void listUsers(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(customerService.list(parserJsonParameters(request,  false)), request, response);
     }

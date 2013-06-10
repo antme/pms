@@ -15,22 +15,22 @@ $(document).ready(function() {
 	var dataSource = new kendo.data.DataSource({
 		transport : {
 			read : {
-				url : "../service/user/list",
+				url : "/service/user/list",
 				dataType : "jsonp"
 			},
 			update : {
-				url : "../service/user/update",
+				url : "/service/user/update",
 				dataType : "jsonp",
 				type : "post"
 			},
 			create : {
-				url : "../service/user/add",
+				url : "/service/user/add",
 				dataType : "jsonp",
 				type : "post"
 			},
 
 			destroy : {
-				url : "../service/user/delete",
+				url : "/service/user/delete",
 				dataType : "jsonp",
 				type : "post"
 			},

@@ -37,41 +37,33 @@ var model = kendo.data.Model.define({
 	}
 });
 
+// 声明一个总的对象用来传递数据
+var requestDataItem;
+
 $(document).ready(function() {
+		$("#purchaseRequest").kendoDropDownList({
+				dataTextField : "projectName",
+				dataValueField : "_id",
+				dataSource : {
+					transport : {
+						read : {
+							dataType : "jsonp",
+							url : "/service/purcontract/request/list"
+						}
+					}
+				},
+
+				// 当用户选择不同的采购申请时候赋值给requestDataItem对象
+				select : function(e) {
+					requestDataItem = this.dataSource.at(e.item.index());
+				}
+			});
+
 			if (redirectParams) {
-				postAjaxRequest("/service/purcontract/order/get", redirectParams, edit);
-			} else {
-				add();
+				postAjaxRequest("/service/purcontract/order/get",
+						redirectParams, edit);
 			}
 });
-
-// 声明一个总的对象用来传递数据
-var requestDataItem ;
-
-function add() {
-
-	// 获取采购申请的数据，数据包含了成本清单
-	if (!$("#purchaseRequest").data("kendoDropDownList")) {
-		$("#purchaseRequest").kendoDropDownList({
-			dataTextField : "projectName",
-			dataValueField : "_id",
-			dataSource : {
-				transport : {
-					read : {
-						dataType : "jsonp",
-						url : "/service/purcontract/request/list"
-					}
-				}
-			},
-
-			// 当用户选择不同的采购申请时候赋值给requestDataItem对象
-			select : function(e) {
-				requestDataItem = this.dataSource.at(e.item.index());
-			}
-		});
-	}
-
-}
 
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
@@ -97,8 +89,7 @@ var itemDataSource = new kendo.data.DataSource({
 	},
 	schema : {
 		model : model
-	},
-	batch : true
+	}
 });
 
 function checkStatus(data) {
@@ -122,16 +113,15 @@ function showOrderWindow() {
 	}
 
 	// // 新增，所以设置_id为空
-	 requestDataItem.set("_id", "");
-
-	 edit();
+	requestDataItem._id="";
+	console.log(requestDataItem);
+	edit();
 }
 
 function submitOrder() {
 	// 同步数据
 	itemDataSource.sync();
-	
-	
+
 }
 
 function sumOrders(e) {
@@ -169,6 +159,7 @@ function edit(data) {
 	// 初始化空对象
 	var dataItem = new model();
 	if (data) {
+		$("#purchase-request-select").hide();
 		requestDataItem = data;
 	}
 	if (requestDataItem) {
@@ -368,12 +359,13 @@ function edit(data) {
 											numbersPercentOfContract : totalPercent,
 											moneyPercentOfContract : requestActureMoneyPercent
 										});
-								kendoGrid = $("#purchaseorder-sum-grid").data("kendoGrid");
+								kendoGrid = $("#purchaseorder-sum-grid").data(
+										"kendoGrid");
 								kendoGrid.setDataSource(sumDataSource);
 
 							}
 
-			});
+						});
 	}
 
 }
