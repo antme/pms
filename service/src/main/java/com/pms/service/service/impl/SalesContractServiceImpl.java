@@ -29,8 +29,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> listSC(Map<String, Object> params) {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-		String[] limitKeys = {SalesContractBean.SC_CODE, SalesContractBean.SC_CUSTOMER, 
-				SalesContractBean.SC_AMOUNT, SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID};
+		String[] limitKeys = {SalesContractBean.SC_CODE, SalesContractBean.SC_AMOUNT, 
+				SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID};
 		queryMap.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		Map<String, Object> result = dao.list(queryMap, DBBean.SALES_CONTRACT);
 		
@@ -45,7 +45,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		//构造合同信息
 		Map<String, Object> contract = new HashMap<String, Object>();
 		contract.put(SalesContractBean.SC_PROJECT_ID, params.get(SalesContractBean.SC_PROJECT_ID));
-		contract.put(SalesContractBean.SC_CUSTOMER, params.get(SalesContractBean.SC_CUSTOMER));
+//		contract.put(SalesContractBean.SC_CUSTOMER, params.get(SalesContractBean.SC_CUSTOMER));
 		contract.put(SalesContractBean.SC_AMOUNT, params.get(SalesContractBean.SC_AMOUNT));
 		contract.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
 		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, params.get(SalesContractBean.SC_ESTIMATE_EQ_COST0));
@@ -141,5 +141,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			Map<String, Object> cusInfo = (Map<String, Object>) customerData.get(cusId);
 			sc.put(ProjectBean.PROJECT_CUSTOMER, cusInfo.get(CustomerBean.NAME));
 		}
+	}
+
+	@Override
+	public Map<String, Object> getSC(Map<String, Object> params) {
+		String _id = (String) params.get(ApiConstants.MONGO_ID);
+		return dao.findOne(ApiConstants.MONGO_ID, _id, DBBean.SALES_CONTRACT);
 	}
 }

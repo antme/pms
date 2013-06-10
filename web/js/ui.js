@@ -86,7 +86,11 @@ function loadPage(page, parameters) {
 		page = "html/project/projectList.html";
 	} else if (page == "scList") {
 		page = "html/salescontract/scList.html";
-	} else if (page == "group") {
+	} else if (page == "addsc") {
+		page = "html/salescontract/addsc.html";
+	} else if (page == "editsc") {
+		page = "html/salescontract/editsc.html";
+	}else if (page == "group") {
 		page = "html/user/group.html";
 	} else if (page == "customer") {
 		page = "html/customer/customer.html";
@@ -102,8 +106,6 @@ function loadPage(page, parameters) {
 		page = "html/purchasecontract/purchasecontractedit.html";
 	} else if (page == "purchaseorder") {
 		page = "html/purchasecontract/purchaseOrder.html";
-	} else if (page == "addsc") {
-		page = "html/salescontract/addsc.html";
 	}else if (page == "purchaseOrderEdit") {
 		page = "html/purchasecontract/purchaseOrderEdit.html";
 	}else if (page == "addProject") {

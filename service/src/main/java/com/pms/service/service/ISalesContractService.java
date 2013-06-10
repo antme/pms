@@ -8,6 +8,8 @@ public interface ISalesContractService {
 	public Map<String, Object> addSC(Map<String, Object> params);
 	
 	public Map<String, Object> listSCsForSelect(Map<String, Object> params);
-	
+
 	public Map<String, Object> listEquipmentsForSC(Map<String, Object> params);
+	
+	public Map<String, Object> getSC(Map<String, Object> params);
 }

@@ -83,43 +83,13 @@ function toolbar_addSalesContract(){
 }
 
 function toolbar_modifySalesContract() {
-	
 	var rowData = getSelectedRowDataByGrid("grid");
 	if (rowData == null){
-		alert("请选择一条项目记录！");
+		alert("请点击选择一条合同记录！");
 		return;
-	}else{
-		//test
-		alert("New function pls wait......");return;
 	}
 	
-	pfm = rowData;
-	console.log("########rowData:" + kendo.stringify(pfm));
-	
-	$("#addNewProject").show();
-	var window = $("#addNewProject");
-	var kendoWindow = window.data("kendoWindow");
-	if (!kendoWindow) {
-		window.kendoWindow({
-			width : "900px",
-			height : "500px",
-			title : "项目变更",
-			modal : true,
-			close : onWindowClose
-		});
-		kendoWindow = window.data("kendoWindow");
-		kendoWindow.center();
-	} else {
-		kendoWindow.open();
-		kendoWindow.center();
-	}
-
-	//成本设备清单
-	eqCostListDataSource.data(pfm.eqcostList);
-	
-	kendo.bind($("#addNewProject"), pfm);
-	console.log("bind ok!!!!!!!!!!!!!!!!!!!!!");
-	
+	loadPage("editsc",{_id:rowData._id});
 };
 
 
