@@ -28,10 +28,11 @@ $(document).ready(function() {
 		}
 	});
 	
-	if (!$("#purchasecontractin").data("kendoDropDownList")) {
-		$("#purchasecontractin").kendoDropDownList({
+	if (!$("#purchasecontractin").data("kendoMultiSelect")) {
+		$("#purchasecontractin").kendoMultiSelect({
 			dataTextField : "orderCode",
 			dataValueField : "_id",
+			placeholder : "选择采购申请...",
 			dataSource : {
 				transport : {
 					read : {
@@ -42,11 +43,27 @@ $(document).ready(function() {
 			}
 		});
 	}
+
+	
+
+	$("#supplierName").kendoDropDownList({
+		dataTextField : "supplierName",
+		dataValueField : "_id",
+		dataSource : {
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "/service/suppliers/list"
+				}
+			}
+		}
+	});
+	
+	
 	if (redirectParams) {
 		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
-	} else {
-		edit();
-	}
+	} 
+	
 });
 
 
@@ -84,6 +101,9 @@ var itemDataSource = new kendo.data.DataSource({
 });
 
 
+var itemListDataSource = new kendo.data.DataSource({
+	data: []
+});
 
 function save() {
 	// 同步数据
@@ -99,12 +119,37 @@ function checkStatus() {
 
 function showOrderWindow() {
 	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
-	var kendoGrid = $("#purchasecontractin").data("kendoDropDownList");
-	if (!requestDataItem) {
-		requestDataItem = kendoGrid.dataSource.at(0);
+	var kendoGrid = $("#purchasecontractin").data("kendoMultiSelect");
+
+	var dataItems = kendoGrid.dataSource.data();
+	var selectedValues = kendoGrid.value();
+	for(id in selectedValues){	
+		for(index in dataItems){			
+			if(dataItems[index]._id == selectedValues[id]){
+				var eqcostList = dataItems[index].eqcostList;
+				for(listIndex in eqcostList){
+					if(eqcostList[listIndex].uid){
+						if(!eqcostList[listIndex].goodsDeliveryType ){
+							eqcostList[listIndex].goodsDeliveryType="";
+						}
+						itemListDataSource.add(eqcostList[listIndex]);
+					}
+				}
+				break;
+			}
+		}
+		
 	}
-	// 新增，所以设置_id为空
-	requestDataItem.set("_id", "");
+	
+	requestDataItem = new model({});
+	requestDataItem.eqcostList = itemListDataSource.data();
+	console.log(itemListDataSource);
+	
+//	if (!requestDataItem) {
+//		requestDataItem = kendoGrid.dataSource.at(0);
+//	}
+//	// 新增，所以设置_id为空
+//	requestDataItem.set("_id", "");
 	edit();
 }
 
@@ -189,7 +234,15 @@ function edit(data) {
 			}, {
 				field : "goodsDeliveryArrivedTime",
 				title : "货品预计到达时间"
-			} ],
+			}, {
+				command : [  {
+					name : "destroy",
+					title : "删除",
+					text : "删除"
+				} ],
+				title : "&nbsp;",
+				width : "160px"
+			}],
 			scrollable : true,
 			editable : true,
 			width : "800px"

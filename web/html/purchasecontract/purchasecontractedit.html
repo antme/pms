@@ -2,14 +2,16 @@
 <script type="text/javascript" src="js/purcontractEdit.js"></script>
 
 	<div id="purchasecontract-edit" class="k-content">
-		<div id="purchasecontract-select">
-			<label> 选择采购订单: </label><input id="purchasecontractin"
-				style="width: 250px" />
-			<button onclick="showOrderWindow();">确定</button>
-		</div>
+	<div class="k-edit-field " style="width:300px;">
+		<input type="text" name="purchasecontractin" id="purchasecontractin"
+			required="required">
+		<button onclick="showOrderWindow();">确定</button>
+
+	</div>
 
 
-		<div id="purchasecontract-edit-item">
+
+	<div id="purchasecontract-edit-item">
 			<div id="purchasecontract-edit-header">
 				<div>
 					<div>
@@ -72,7 +74,7 @@
 								<label for="supplierName">供应商名称</label>
 							</div>
 							<div data-container-for="supplierName" class="k-edit-field ">
-								<input type="text" class="pro-dropdownlist" name="supplierName"
+								<input type="text" name="supplierName"
 									id="supplierName" required="required"
 									data-bind="value: supplierName">
 							</div>
@@ -82,19 +84,9 @@
 							</div>
 							<div data-container-for="supplierNameContact"
 								class="k-edit-field ">
-								<input type="text" class="pro-dropdownlist"
+								<input type="text" 
 									name="supplierNameContact" id="supplierNameContact"
 									required="required" data-bind="value: supplierNameContact">
-							</div>
-
-							<div class="k-edit-label ">
-								<label for="projectContractName">对应销售合同名称</label>
-							</div>
-							<div data-container-for="projectContractName"
-								class="k-edit-field ">
-								<input type="text" class="k-input k-textbox"
-									name="projectContractName" id="projectContractName"
-									required="required" data-bind="value: projectContractName">
 							</div>
 
 							<div class="k-edit-label ">
