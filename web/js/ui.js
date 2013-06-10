@@ -97,7 +97,7 @@ function loadPage(page, parameters) {
 	} else if (page == "purchasecontract") {
 		page = "html/purchasecontract/purchasecontract.html";
 	} else if (page == "purchasecontract") {
-		page = "html/purchasecontract/purchasecontract.html";
+		page = "html/purchasecontract/purchaseRequest.html";
 	} else if (page == "purchasecontractedit") {
 		page = "html/purchasecontract/purchasecontractedit.html";
 	} else if (page == "purchaseorder") {
