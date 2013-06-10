@@ -77,9 +77,8 @@ var dataSource = new kendo.data.DataSource({
 	}
 });
 
-//成本设备清单数据源
-var eqCostListDataSource = new kendo.data.DataSource({
-//	data:[],
+//变更新的成本设备清单
+var eqCostListDataSourceNew = new kendo.data.DataSource({
 	schema : {
 		model : {
             fields: {
@@ -112,6 +111,7 @@ $(document).ready(function() {
 	};
 	
 	//表单中的各种控件
+	//发票类型
 	var invoiceTypeItems = [{ text: "invoiceType1", value: "1" }, { text: "invoiceType2", value: "2" }, { text: "invoiceType3", value: "3" }];
 	$("#invoiceType").kendoDropDownList({
 		dataTextField : "text",
@@ -119,6 +119,8 @@ $(document).ready(function() {
         optionLabel: "选择发票类型...",
 		dataSource : invoiceTypeItems,
 	});
+	
+	//税收类型
 	var taxTypeItems = [{ text: "taxType1", value: "1" }, { text: "taxType2", value: "2" }, { text: "taxType3", value: "3" }];
 	$("#taxType").kendoDropDownList({
 		dataTextField : "text",
@@ -127,6 +129,7 @@ $(document).ready(function() {
 		dataSource : taxTypeItems,
 	});
 	
+	//调试费用类型
 	var debugCostTypeItems = [{ text: "debugCostType1", value: "1" }, { text: "debugCostType2", value: "2" }, { text: "debugCostType3", value: "3" }];
 	$("#debugCostType").kendoDropDownList({
 		dataTextField : "text",
@@ -135,6 +138,7 @@ $(document).ready(function() {
 		dataSource : debugCostTypeItems,
 	});
 
+	//合同类型
 	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
 	var contractTypeItems = [{ text: "弱电工程", value: 1 }, { text: "产品集成（灯控/布线，楼控，其他）", value: 2 }, { text: "产品销售", value: 3 }, { text: "维护及服务", value: 4 }];
 	$("#contractType").kendoDropDownList({
@@ -144,7 +148,7 @@ $(document).ready(function() {
 		dataSource : contractTypeItems,
 	});
 	
-	//已归档，未归档
+	//归档状态：已归档，未归档
 	var archiveStatusItems = [{ text: "已归档", value: 1 }, { text: "未归档", value: 2 }];
 	$("#archiveStatus").kendoDropDownList({
 		dataTextField : "text",
@@ -153,7 +157,7 @@ $(document).ready(function() {
 		dataSource : archiveStatusItems,
 	});
 	
-	//执行中、收尾阶段、质保期、结束、中止或暂停、作废
+	//执行状态： 执行中、中止或暂停、收尾阶段、结束、质保期、作废
 	var runningStatusItems = [{ text: "执行中", value: 1 }, { text: "中止或暂停", value: 2 }, { text: "收尾阶段", value: 3 }, { text: "结束", value: 4 }, { text: "质保期", value: 5 }, { text: "作废", value: 6 }];
 	$("#runningStatus").kendoDropDownList({
 		dataTextField : "text",
@@ -229,10 +233,10 @@ $(document).ready(function() {
 		min:0
 	});
 	
-	//成本设备清单
-	if (!$("#scEqCostList").data("kendoGrid")){
-		$("#scEqCostList").kendoGrid({
-			dataSource : eqCostListDataSource,
+	//成本设备清单_new
+	if (!$("#scEqCostListNew").data("kendoGrid")){
+		$("#scEqCostListNew").kendoGrid({
+			dataSource : eqCostListDataSourceNew,
 			columns : [ {
 				field : "eqcostNo",
 				title : "序号"
@@ -270,13 +274,58 @@ $(document).ready(function() {
 			editable : true,
 			scrollable : true
 		});
-	}//成本设备清单
+	}//成本设备清单_new
 	
-	//添加表单绑定一个空的 Model
-	scm = new scModel();
-	kendo.bind($("#addSalesContract"), scm);
+	postAjaxRequest("/service/sc/get", redirectParams, edit);
 	
 });//end dom ready	
+
+function edit(data){
+	scm = new scModel(data);
+	//成本设备清单_old
+	if (!$("#scEqCostListOld").data("kendoGrid")){
+		$("#scEqCostListOld").kendoGrid({
+			dataSource : scm.eqcostList,
+			columns : [ {
+				field : "eqcostNo",
+				title : "序号"
+			}, {
+				field : "eqcostMaterialCode",
+				title : "物料代码"
+			}, {
+				field : "eqcostProductName",
+				title : "产品名称"
+			}, {
+				field : "eqcostProductType",
+				title : "规格型号"
+
+			}, {
+				field : "eqcostAmount",
+				title : "数量"
+			}, {
+				field : "eqcostUnit",
+				title : "单位"
+			}, {
+				field : "eqcostBrand",
+				title : "品牌"
+			}, {
+				field : "eqcostBasePrice",
+				title : "成本价"
+			}, {
+				field : "eqcostDiscountRate",
+				title : "折扣率"
+			}, {
+				field : "eqcostMemo",
+				title : "备注"
+			} ],
+
+			//toolbar : [ {name:"create",text:"新增成本项"} ],
+			//editable : true,
+			scrollable : true
+		});
+	}//成本设备清单_old
+	kendo.bind($("#editSalesContract"), scm);
+}
 		
 function saveSC(){
 	var _id = scm.get("_id");
@@ -288,3 +337,8 @@ function saveSC(){
 	dataSource.sync();
 	loadPage("scList");
 };
+	
+	
+	
+	
+	

@@ -147,4 +147,28 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		}
 	}
 
+	@Override
+	public String getCustomerIdByProId(String pId) {
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.MONGO_ID, pId);
+		query.put(ApiConstants.LIMIT_KEYS, new String[] {ProjectBean.PROJECT_CUSTOMER});
+		Map<String, Object> p = dao.findOneByQuery(query, DBBean.PROJECT);
+		return (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+	}
+
+	@Override
+	public String getCustomerNameByProId(String pId) {
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.MONGO_ID, pId);
+		query.put(ApiConstants.LIMIT_KEYS, new String[] {ProjectBean.PROJECT_CUSTOMER});
+		Map<String, Object> p = dao.findOneByQuery(query, DBBean.PROJECT);
+		String cId = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+		
+		Map<String, Object> cQuery = new HashMap<String, Object>();
+		cQuery.put(ApiConstants.MONGO_ID, cId);
+		cQuery.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
+		Map<String, Object> customer = dao.findOneByQuery(cQuery, DBBean.CUSTOMER);
+		return (String) customer.get(CustomerBean.NAME);
+	}
+
 }

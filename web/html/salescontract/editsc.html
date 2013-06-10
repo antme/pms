@@ -11,11 +11,11 @@ width:900px;
 }
 </style>
 
-<script  src="js/salescontract/addsc.js"></script>
+<script  src="js/salescontract/editsc.js"></script>
 
 <body>
 	
-	<div id="addSalesContract" class="k-content test">
+	<div id="editSalesContract" class="k-content test">
 		<div>
 			<button class="k-button"  onclick="saveSC();">保存</button>
 			<button class="k-button"  onclick='loadPage("scList");'>取消</button>
@@ -32,6 +32,15 @@ width:900px;
                    </li>
                    <li>
                                                             成本设备清单
+                   </li>
+                   <li>
+                                                            执行信息
+                   </li>
+                   <li>
+                                                            财务数据
+                   </li>
+                   <li>
+                                                            工程数据
                    </li>
                </ul>
                
@@ -230,7 +239,30 @@ width:900px;
                
                <div><!-- 第 3 个Tab -->
                    <div><!-- 成本设备清单 -->
-                       <div id="scEqCostList"></div>
+                       <div id="scEqCostListNew"></div>
+                       <br/>
+                       <hr/>
+                       <h3>已有设备成本列表数据：</h3>	
+                       <div id="scEqCostListOld"></div>
+                       <br/>
+                   </div>
+               </div>
+               
+               <div><!-- 第 4 个Tab -->
+                   <div><!-- 执行信息 -->
+                       
+                   </div>
+               </div>
+               
+               <div><!-- 第 5 个Tab -->
+                   <div><!-- 财务数据 -->
+                       
+                   </div>
+               </div>
+               
+               <div><!-- 第 6 个Tab -->
+                   <div><!-- 工程数据 -->
+                       
                    </div>
                </div>
                
