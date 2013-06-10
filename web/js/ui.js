@@ -114,6 +114,8 @@ function loadPage(page, parameters) {
 		page = "html/purchasecontract/purchaseRequestAdd.html";
 	} else if (page == "ship") {
 		page = "html/execution/ship.html";
+	} else if (page == "addShip") {
+		page = "html/execution/addShip.html";
 	} else {
 		page = "html/supplier/supplier.html";
 	}
