@@ -122,8 +122,15 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		List<String> customerIds = new ArrayList<String>();
 		
 		for (Map<String, Object> pro : resultListData){
-			pmIds.add((String) pro.get(ProjectBean.PROJECT_MANAGER));
-			customerIds.add((String) pro.get(ProjectBean.PROJECT_CUSTOMER));
+			String pPM = (String) pro.get(ProjectBean.PROJECT_MANAGER);
+			if (pPM != null && pPM.length() > 0){
+				pmIds.add(pPM);
+			}
+			String pC = (String) pro.get(ProjectBean.PROJECT_CUSTOMER);
+			if (pC != null && pC.length() > 0){
+				customerIds.add(pC);
+			}
+			
 		}
 		
 		Map<String, Object> pmQuery = new HashMap<String, Object>();
@@ -139,11 +146,17 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		for (Map<String, Object> pro : resultListData){
 			String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER);
 			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
-			pro.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+			if (pmInfo != null){
+				pro.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+			}
+			
 
 			String cId = (String) pro.get(ProjectBean.PROJECT_CUSTOMER);
 			Map<String, Object> cInfo = (Map<String, Object>) customerData.get(cId);
-			pro.put(ProjectBean.PROJECT_CUSTOMER, cInfo.get(CustomerBean.NAME));
+			if (cInfo != null){
+				pro.put(ProjectBean.PROJECT_CUSTOMER, cInfo.get(CustomerBean.NAME));
+			}
+			
 		}
 	}
 
