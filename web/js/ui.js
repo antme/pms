@@ -233,8 +233,15 @@ function checkRoles(ids){
 }
 
 function hiddenButtons(data){
-	
-	console.log(data);
+
+	var roles = data.data;
+	if(roles){		
+		for(index in roles){	
+			var id="."+roles[index];
+			 $(id).hide();
+		
+		}
+	}
 }
 
 

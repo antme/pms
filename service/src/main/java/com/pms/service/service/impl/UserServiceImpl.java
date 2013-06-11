@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.pms.service.annotation.InitBean;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
+import com.pms.service.exception.ApiLoginException;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
@@ -20,6 +21,7 @@ import com.pms.service.mockbean.RoleBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IUserService;
+import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DataEncrypt;
 import com.pms.service.util.status.ResponseCodeConstants;
@@ -86,6 +88,8 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         if (user == null) {
             throw new ApiResponseException(String.format("Name or password is incorrect when try to login [%s] ", parameters), ResponseCodeConstants.USER_LOGIN_USER_NAME_OR_PASSWORD_INCORRECT);
         }
+        ApiThreadLocal.set(UserBean.USER_ID, user.get(ApiConstants.MONGO_ID));
+        logger.info(ApiThreadLocal.get(UserBean.USER_ID));
         return (String) user.get(ApiConstants.MONGO_ID);
     }
 
@@ -93,9 +97,26 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         return this.dao.list(null, DBBean.ROLE_ITEM);
     }
     
-    public Map<String, Object> listNotUserRoleItems(Map<String, Object> roles){
-        
-        return this.dao.list(null, DBBean.ROLE_ITEM);
+    public Map<String, Object> listNotUserRoleItems(Map<String, Object> roles) {
+
+        if (ApiThreadLocal.get(UserBean.USER_ID) != null) {
+            List<String> userRoles = this.listUserRoleIds(ApiThreadLocal.get(UserBean.USER_ID).toString());
+            String[] checkRoles = roles.get("ids").toString().split(",");
+            List<String> notUserRoles = new ArrayList<String>();
+
+            for (String role : checkRoles) {
+                if (!userRoles.contains(role.trim())) {
+                    notUserRoles.add(role.trim());
+                }
+            }
+
+            Map<String, Object> resutls = new HashMap<String, Object>();
+            resutls.put("data", notUserRoles);
+            return resutls;
+
+        } else {
+            throw new ApiLoginException();
+        }
     }
 
     public Map<String, Object> listGroups() {

@@ -26,10 +26,10 @@ $(document).ready(function() {
 				template : kendo.template($("#template").html())
 			} ],
 			columns : [ {
-				field : "orderCode",
+				field : "purchaseOrderCode",
 				title : "订单编号"
 			}, {
-				field : "customerContractCode",
+				field : "projectContractCode",
 				title : "客户合同编号"
 			}, {
 				field : "purchaseRequestCode",
@@ -45,13 +45,13 @@ $(document).ready(function() {
 				field : "projectManager",
 				title : "PM"
 			}, {
-				field : "processStauts",
+				field : "status",
 				title : "订单状态"
 			}, {
 				field : "approvedDate",
 				title : "批准时间"
 			}, {
-				field : "orderGoodsTotalMoney",
+				field : "requestedTotalMoney",
 				title : "金额"
 			}, {
 				field : "requestedNumbers",

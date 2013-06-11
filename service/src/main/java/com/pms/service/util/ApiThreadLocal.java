@@ -1,0 +1,42 @@
+package com.pms.service.util;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ApiThreadLocal {
+
+    public static final Map values = Collections.synchronizedMap(new HashMap());
+
+    public static Object get(String key) {
+        Thread curThread = Thread.currentThread();
+        Map<String, Object> map = getMapResult(curThread);
+        return map.get(key);
+    }
+
+    private static Map<String, Object> getMapResult(Thread curThread) {
+        Object o = values.get(curThread);
+        if (o == null && !values.containsKey(curThread)) {
+            o = initialValue();
+            values.put(curThread, o);
+        }
+        Map<String, Object> map = (Map<String, Object>) o;
+        return map;
+    }
+
+    public static void set(String key, Object newValue) {
+        Thread currentThread = Thread.currentThread();
+        Map<String, Object> map = getMapResult(currentThread);
+        map.put(key, newValue);
+        values.put(currentThread, map);
+    }
+
+    public static Object initialValue() {
+        return new HashMap<String, Object>();
+    }
+
+    public static void removeAll() {
+        Thread curThread = Thread.currentThread();
+        values.remove(curThread);
+    }
+}

@@ -25,13 +25,13 @@ $(document).ready(function() {
 			field : "purchaseContractCode",
 			title : "采购合同编号"
 		}, {
-			field : "customerContractCode",
+			field : "projectContractCode",
 			title : "客户合同编号"
 		}, {
 			field : "purchaseRequestCode",
 			title : "采购申请编号"
 		}, {
-			field : "orderCode",
+			field : "purchaseOrderCode",
 			title : "采购订单编号"
 
 		}, {
@@ -41,22 +41,22 @@ $(document).ready(function() {
 			field : "projectManager",
 			title : "PM"
 		}, {
-			field : "processStauts",
+			field : "status",
 			title : "采购合同状态"
 		}, {
 			field : "signDate",
 			title : "合同签署时间"
 		}, {
-			field : "contractMoney",
+			field : "requestedTotalMoney",
 			title : "金额"
 		}, {
-			field : "type",
+			field : "logisticsType",
 			title : "物流类型"
 		}, {
 			field : "supplierName",
 			title : "供应商名"
 		}, {
-			field : "supplierId",
+			field : "supplierCode",
 			title : "供应商编号"
 		}]
 

@@ -1,9 +1,8 @@
 
 var groupDataSource;
 
-$(document).ready(function() {
-	
-	checkRoles("ddddd");
+$(document).ready(function() {	
+
 	groupDataSource = new kendo.data.DataSource({
 		transport : {
 			read : {
@@ -123,7 +122,6 @@ $(document).ready(function() {
 			title : "&nbsp;",
 			width : "160px"
 		} ]
-
 	});
 });
 

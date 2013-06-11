@@ -1,6 +1,7 @@
 package com.pms.service.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public interface IPurchaseContractService {
@@ -31,4 +32,7 @@ public interface IPurchaseContractService {
     public Map<String, Object> listPurchaseRequest();
 
     public Map<String, Object> getPurchaseOrder(HashMap<String, Object> parameters);
+    
+    
+    public List<Map<String,Object>> listApprovedPurchaseContractCosts(String salesContractCode);
 }

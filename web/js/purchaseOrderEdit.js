@@ -2,11 +2,11 @@
 var model = kendo.data.Model.define({
 	id : "_id",
 	fields : {
-		availableAmount : {
+		eqcostAvailableAmount : {
 			type : "number"
 		},
 
-		requestedAmount : {
+		eqcostRequestedAmount : {
 			type : "number"
 		},
 		eqcostBasePrice : {
@@ -17,13 +17,13 @@ var model = kendo.data.Model.define({
 			editable : false,
 			type : "number"
 		},
-		orderGoodsUnitPrice : {
+		eqcostProductUnitPrice : {
 			type : "number"
 		},
-		orderGoodsTotalMoney : {
+		requestedTotalMoney : {
 			editable : false
 		},
-		totalMoney : {
+		eqcostContractTotalMoney : {
 			type : "number",
 			editable : false
 		},
@@ -87,6 +87,7 @@ var itemDataSource = new kendo.data.DataSource({
 			}
 		}
 	},
+	batch : true,
 	schema : {
 		model : model
 	}
@@ -108,13 +109,12 @@ function showOrderWindow() {
 		requestDataItem = kendoGrid.dataSource.at(0);
 	}
 
-	if (!requestDataItem.orderCode) {
-		requestDataItem.orderCode = "";
+	if (!requestDataItem.purchaseOrderCode) {
+		requestDataItem.purchaseOrderCode = "";
 	}
 
 	// // 新增，所以设置_id为空
 	requestDataItem._id="";
-	console.log(requestDataItem);
 	edit();
 }
 
@@ -130,25 +130,25 @@ function sumOrders(e) {
 	requestDataItem.eqcostList = data;
 
 	var eqcostBasePrice = e.model.eqcostBasePrice;
-	var requestedAmount = e.model.requestedAmount;
-	var orderGoodsUnitPrice = e.model.orderGoodsUnitPrice;
+	var eqcostRequestedAmount = e.model.eqcostRequestedAmount;
+	var eqcostProductUnitPrice = e.model.eqcostProductUnitPrice;
 
 	if (e.values.eqcostBasePrice) {
 		eqcostBasePrice = e.values.eqcostBasePrice
 	}
 
-	if (e.values.orderGoodsTotalMoney) {
-		orderGoodsUnitPrice = e.values.orderGoodsUnitPrice
+	if (e.values.requestedTotalMoney) {
+		eqcostProductUnitPrice = e.values.eqcostProductUnitPrice
 	}
 
-	if (e.values.requestedAmount) {
-		requestedAmount = e.values.requestedAmount
+	if (e.values.eqcostRequestedAmount) {
+		eqcostRequestedAmount = e.values.eqcostRequestedAmount
 	}
 
 	var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
 	// will trigger dataBound event
-	e.model.set("totalMoney", eqcostBasePrice * requestedAmount);
-	e.model.set("orderGoodsTotalMoney", orderGoodsUnitPrice * requestedAmount);
+	e.model.set("eqcostContractTotalMoney", eqcostBasePrice * eqcostRequestedAmount);
+	e.model.set("requestedTotalMoney", eqcostProductUnitPrice * eqcostRequestedAmount);
 
 	grid1.refresh();
 
@@ -173,10 +173,10 @@ function edit(data) {
 	// 渲染成本编辑列表
 	itemDataSource.data(dataItem.eqcostList);
 
-	$("#orderCode").html(dataItem.orderCode);
+	$("#purchaseOrderCode").html(dataItem.purchaseOrderCode);
 	$("#projectName").html(dataItem.projectName);
 	$("#projectCode").html(dataItem.projectCode);
-	$("#customerContractCode").html(dataItem.customerContractCode);
+	$("#projectContractCode").html(dataItem.projectContractCode);
 	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
 	$("#purchaseorder-edit-item").show();
 
@@ -193,7 +193,7 @@ function edit(data) {
 								field : "eqcostProductName",
 								title : "货品名"
 							}, {
-								field : "goodsType",
+								field : "eqcostProductCategory",
 								title : "货品类别"
 							}, {
 								field : "eqcostProductType",
@@ -203,31 +203,31 @@ function edit(data) {
 								field : "eqcostAmount",
 								title : "合同中总数"
 							}, {
-								field : "availableAmount",
+								field : "eqcostAvailableAmount",
 								title : "可申请数量"
 							}, {
-								field : "requestedAmount",
+								field : "eqcostRequestedAmount",
 								title : "本次申请数量"
 							}, {
 								field : "eqcostBasePrice",
 								title : "参考单价"
 							}, {
-								field : "totalMoney",
+								field : "eqcostContractTotalMoney",
 								title : "小计金额"
 							}, {
-								field : "orderGoodsCode",
+								field : "orderEqcostCode",
 								title : "订单货品编号"
 							}, {
-								field : "orderGoodsName",
+								field : "orderEqcostName",
 								title : "订单货品名"
 							}, {
-								field : "orderGoodsModel",
+								field : "orderEqcostModel",
 								title : "订单货品型号"
 							}, {
-								field : "orderGoodsUnitPrice",
+								field : "eqcostProductUnitPrice",
 								title : "订单货品单价"
 							}, {
-								field : "orderGoodsTotalMoney",
+								field : "requestedTotalMoney",
 								title : "订单实际小计金额"
 							}, {
 								field : "differenceAmount",
@@ -264,7 +264,7 @@ function edit(data) {
 								var data = itemDataSource.data();
 								var total = 0;
 								// 采购申请总价格
-								var totalMoney = 0;
+								var eqcostContractTotalMoney = 0;
 
 								// 合同中总数
 								var eqcostAmount = 0;
@@ -274,20 +274,24 @@ function edit(data) {
 
 								for (i = 0; i < data.length; i++) {
 									var item = data[i];
-									var itemTotalMoney = item.totalMoney;
-									var orderGoodsTotalMoney = item.orderGoodsTotalMoney;
-									var itemDifferenceAmount = item.differenceAmount;
 
+									if (!item.eqcostContractTotalMoney) {
+										item.eqcostContractTotalMoney = 0;
+									}
+									if (!item.requestedTotalMoney) {
+										item.requestedTotalMoney = 0;
+									}
+									
 									if (!item.eqcostAmount) {
 										item.eqcostAmount = 0;
 									}
 
-									if (!item.requestedAmount) {
-										item.requestedAmount = 0;
+									if (!item.eqcostRequestedAmount) {
+										item.eqcostRequestedAmount = 0;
 									}
 
-									if (!item.orderGoodsUnitPrice) {
-										item.orderGoodsUnitPrice = 0;
+									if (!item.eqcostProductUnitPrice) {
+										item.eqcostProductUnitPrice = 0;
 									}
 
 									if (!item.differenceAmount) {
@@ -297,30 +301,33 @@ function edit(data) {
 									if (!item.eqcostBasePrice) {
 										item.eqcostBasePrice = 0;
 									}
+									
+									var requestedTotalMoney = item.requestedTotalMoney;
+									var itemDifferenceAmount = item.differenceAmount;
+
 									// 计算总的申请数量
-									total = total + item.requestedAmount;
+									total = total + item.eqcostRequestedAmount;
 									eqcostAmount = eqcostAmount
 											+ item.eqcostAmount;
 
 									requestActureMoney = requestActureMoney
-											+ item.requestedAmount
-											* item.orderGoodsUnitPrice;
-									item.orderGoodsTotalMoney = item.requestedAmount
-											* item.orderGoodsUnitPrice;
+											+ item.eqcostRequestedAmount
+											* item.eqcostProductUnitPrice;
+									item.requestedTotalMoney = item.eqcostRequestedAmount
+											* item.eqcostProductUnitPrice;
 
-									totalMoney = totalMoney
-											+ item.requestedAmount
+									eqcostContractTotalMoney = eqcostContractTotalMoney
+											+ item.eqcostRequestedAmount
 											* item.eqcostBasePrice;
-									item.totalMoney = item.requestedAmount
-											* item.eqcostBasePrice;
-
-									item.differenceAmount = item.requestedAmount
-											* item.orderGoodsUnitPrice
-											- item.requestedAmount
+									item.eqcostContractTotalMoney = item.eqcostRequestedAmount
 											* item.eqcostBasePrice;
 
-									if (itemTotalMoney != item.totalMoney
-											|| orderGoodsTotalMoney != item.orderGoodsTotalMoney
+									item.differenceAmount = item.eqcostRequestedAmount
+											* item.eqcostProductUnitPrice
+											- item.eqcostRequestedAmount
+											* item.eqcostBasePrice;
+
+									if ( requestedTotalMoney != item.requestedTotalMoney
 											|| itemDifferenceAmount != item.differenceAmount) {
 										refresh = true;
 									}
@@ -328,13 +335,12 @@ function edit(data) {
 								}
 
 								if (refresh) {
-									var grid1 = $("#purchaseorder-edit-grid")
-											.data("kendoGrid");
+									var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
 									grid1.refresh();
 								}
 
 								requestDataItem.requestedNumbers = total;
-								requestDataItem.orderGoodsTotalMoney = requestActureMoney;
+								requestDataItem.requestedTotalMoney = requestActureMoney;
 
 								var totalPercent = 0;
 
@@ -344,8 +350,8 @@ function edit(data) {
 
 								var requestActureMoneyPercent = 0;
 
-								if (totalMoney != 0) {
-									requestActureMoneyPercent = (requestActureMoney / totalMoney) * 100;
+								if (eqcostContractTotalMoney != 0) {
+									requestActureMoneyPercent = (requestActureMoney / eqcostContractTotalMoney) * 100;
 								}
 
 								requestDataItem.numbersExists = totalPercent;
