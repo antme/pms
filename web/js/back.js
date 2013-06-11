@@ -79,14 +79,14 @@ $(document).ready(function () {
 });
 
 function add(){
-	loadPage("backEdit");
+	loadPage("backedit");
 }
 function edit(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else {	
-		loadPage("backEdit", { _id : row._id });	
+		loadPage("backedit", { _id : row._id });	
 	}
 
 }

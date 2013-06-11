@@ -140,10 +140,8 @@ $(document).ready(function () {
 		var saleId = redirectParams.salesContract_id;
 		$("#searchDiv").hide();
 		if(backId) {
-			alert("edit:" + backId);
 			postAjaxRequest(baseUrl+"/load", {_id:backId}, edit);
 		}else if(saleId){
-			alert("add:"+saleId);
 			postAjaxRequest(baseUrl+"/prepare", {salesContract_id:saleId}, edit);
 		}		
 	}
