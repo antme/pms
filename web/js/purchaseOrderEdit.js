@@ -42,7 +42,7 @@ var requestDataItem;
 
 $(document).ready(function() {
 		$("#purchaseRequest").kendoDropDownList({
-				dataTextField : "projectName",
+				dataTextField : "_id",
 				dataValueField : "_id",
 				dataSource : {
 					transport : {

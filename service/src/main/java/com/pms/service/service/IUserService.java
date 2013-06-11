@@ -24,9 +24,7 @@ public interface IUserService {
     
     public void deleteUserGroup(Map<String, Object> userGroup);
     
-    public List<String> listUserRoleIds(String userId);
-    
-    
+ 
     public Map<String, Object> listUserRoles(String userId);
     
     

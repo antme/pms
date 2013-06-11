@@ -1,6 +1,6 @@
 var redirectParams = undefined;
 var redirecPage = undefined;
-
+var roles = undefined;
 
 $(document).ready(function() {
 
@@ -34,8 +34,6 @@ $(document).ready(function() {
 		});
 	}
 	
-	
-
 	postAjaxRequest("/service/user/role/mine/list", null, init)
 
 	
@@ -43,8 +41,7 @@ $(document).ready(function() {
 
 function init(data){
 	
-	console.log(data);
-	
+	roles = data.data;
 	$("#tree-nav").kendoTreeView({
     	template: kendo.template($("#treeview-template").html()),
         dataSource: [
@@ -74,6 +71,7 @@ function init(data){
                     { text: "备货申请", id: "back", imageUrl: "/images/order.png" },
                     { text: "调拨申请", id: "contract", imageUrl: "/images/ccontract.png" },
                     { text: "采购申请", id: "purchaseorder", imageUrl: "/images/ccontract.png"},
+                    { text: "采购订单", id: "purchaseorder", imageUrl: "/images/ccontract.png"},
                     { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
                     { text: "入库申请单", id: "contract", imageUrl: "/images/ccontract.png" },
                     { text: "直发入库申请单", id: "contract", imageUrl: "/images/ccontract.png"}
@@ -301,11 +299,22 @@ function onWindowDefaultClose(e) {
 
 function checkRoles(){
 	var buttons = $('button[access]');
-	
-	for(i in buttons){
-		console.log(i);
-	}
-
+	buttons.each(function(index){
+		var node = jQuery(buttons[index]);
+		var roleId = node.attr("access");
+		var hasAccess = false;
+		for(i in roles){	
+			if(roles[i].roleID == roleId){
+				hasAccess = true;
+				break;
+			}
+		}
+		
+		if(!hasAccess){
+			node.hide();
+		}
+		
+	});
 }
 
 

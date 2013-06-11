@@ -36,11 +36,13 @@ var dataSource = new kendo.data.DataSource({
 		},
 		update : {
 			url : crudServiceBaseUrl + "/suppliers/update",
-			dataType : "jsonp"
+			dataType : "jsonp",
+			method: "post"
 		},
 		destroy : {
 			url : crudServiceBaseUrl + "/suppliers/destroy",
-			dataType : "jsonp"
+			dataType : "jsonp",
+			method: "post"
 		},
 		create : {
 			url : crudServiceBaseUrl + "/suppliers/create",

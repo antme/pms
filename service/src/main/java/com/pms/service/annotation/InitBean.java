@@ -32,7 +32,6 @@ public class InitBean {
     private static final Logger logger = LogManager.getLogger(InitBean.class);
 
     public static final String ADMIN_USER_NAME = "admin";
-    public static final String GROUP_ADMIN_NAME = "admin";
     
     /**
      * 初始化数据库
@@ -46,16 +45,40 @@ public class InitBean {
         setLoginPathValidation();
 
         createAdminGroup(dao);
+        createSystemDefaultGroups(dao);
         createAdminUser(dao);
+    }
+    
+    
+
+    private static void createSystemDefaultGroups(ICommonDao dao) {
+        String[] groupNames = new String[] { GroupBean.DEPARTMENT_ASSISTANT_VALUE, GroupBean.DEPARTMENT_MANAGER_VALUE, GroupBean.COO_VALUE, GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE };
+
+        for (String name : groupNames) {
+            Map<String, Object> adminGroup = new HashMap<String, Object>();
+            adminGroup.put(GroupBean.GROUP_NAME, name);
+
+            // 查找是否角色已经初始化
+            Map<String, Object> group = dao.findOne(GroupBean.GROUP_NAME, GroupBean.GROUP_ADMIN_VALUE, DBBean.USER_GROUP);
+            if (group == null) {
+                //系统角色不允许删除
+                adminGroup.put(GroupBean.IS_SYSTEM_GROUP, true);
+                dao.add(adminGroup, DBBean.USER_GROUP);
+            } else {
+                group.put(GroupBean.IS_SYSTEM_GROUP, true);
+                dao.updateById(group, DBBean.USER_GROUP);
+            }
+        }
+
     }
 
     private static void createAdminGroup(ICommonDao dao) {
         logger.info("Init admin group");
         Map<String, Object> adminGroup = new HashMap<String, Object>();
-        adminGroup.put(GroupBean.GROUP_NAME, GROUP_ADMIN_NAME);
+        adminGroup.put(GroupBean.GROUP_NAME, GroupBean.GROUP_ADMIN_VALUE);
         
         //查找是否admin角色已经初始化
-        Map<String, Object> group = dao.findOne(GroupBean.GROUP_NAME, GROUP_ADMIN_NAME, DBBean.USER_GROUP);       
+        Map<String, Object> group = dao.findOne(GroupBean.GROUP_NAME, GroupBean.GROUP_ADMIN_VALUE, DBBean.USER_GROUP);       
                
         
         //查询所有的权限赋值给admin
@@ -82,7 +105,7 @@ public class InitBean {
         
         //查找admin角色的_id
         Map<String, Object> groupQuery = new HashMap<String, Object>();
-        groupQuery.put(GroupBean.GROUP_NAME, GROUP_ADMIN_NAME);
+        groupQuery.put(GroupBean.GROUP_NAME, GroupBean.GROUP_ADMIN_VALUE);
         groupQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ApiConstants.MONGO_ID });
         List<Object> list = dao.listLimitKeyValues(groupQuery, DBBean.USER_GROUP);
 

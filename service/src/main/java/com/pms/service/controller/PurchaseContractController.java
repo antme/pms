@@ -30,6 +30,7 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/add")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, desc = RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT_DESC)
     public void addPurchaseContract(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.updatePurchaseContract(parserJsonParameters(request, false)), request, response, "save_success");
     }
@@ -63,7 +64,7 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/assistant/request/add")
-    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_ADD, desc = RoleValidConstants.PURCHASE_REQUEST_ADD_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
     public void addPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
         pService.updatePurchaseOrder(parserListJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
@@ -75,10 +76,17 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/assistant/request/delete")
-    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_DELETE, desc = RoleValidConstants.PURCHASE_REQUEST_DELETE_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
     public void deletePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
         pService.deletePurchaseOrder(parserJsonParameters(request, false));
         responseWithData(null, request, response);
+    }
+    
+    @RequestMapping("/assistant/request/update")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
+    public void updatePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        pService.updatePurchaseOrder(parserListJsonParameters(request, false));
+        responseWithData(null, request, response, "save_success");
     }
     
     
