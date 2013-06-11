@@ -1,0 +1,43 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<style>
+.k-grid-toolbar {
+	height: 25px;
+}
+
+.title-heard{
+	font-weight:bold;
+}
+
+.pro-tabss {
+    height: 500px;
+}
+
+.pro-dropdownlist{
+	width:250px;
+}
+
+.demo-section {
+    width: 300px;
+}
+.table_form td {
+	padding: 3px 10px;
+}
+.table_form td:FIRST-CHILD {
+	text-align: right;
+	width: 100px;
+}      
+</style>
+
+<script  src="js/back.js"></script>
+<script type="text/x-kendo-template" id="template">
+    <button class="k-button" onclick="add();">新增</button>
+	<button class="k-button" onclick="edit();">编辑</button>
+    <button class="k-button" onclick="approve();">批准</button>
+    <button class="k-button" onclick="reject();">拒绝</button>
+</script>
+<body>
+	<div id="objList" class="k-content">
+		<div id="grid"></div>
+	</div>
+</body>

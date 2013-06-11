@@ -99,8 +99,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	@Override
 	public Map<String, Object> listSCsForSelect(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE});
+		return dao.list(query, DBBean.SALES_CONTRACT);
 	}
 
 	@Override

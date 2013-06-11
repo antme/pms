@@ -55,7 +55,7 @@ function init(data){
             {
                 text: "项目执行", id: "projectex", imageUrl: "/images/ccontract.png",
                 items: [
-                        { text: "备货申请", id: "purchaseRequest", imageUrl: "/images/order.png" },
+                        { text: "备货申请", id: "back", imageUrl: "/images/order.png" },
                         { text: "采购申请", id: "purchaseRequestByAssistant", imageUrl: "/images/ccontract.png"},
                         { text: "开票申请", id: "purchaseorder", imageUrl: "/images/ccontract.png" },
                         { text: "发货申请", id: "ship", imageUrl: "/images/ccontract.png"},
@@ -71,7 +71,7 @@ function init(data){
             {
                 text: "采购合同", id: "purchasecontract", expanded: false, imageUrl: "/images/contract.png",
                 items: [
-                    { text: "备货申请", id: "purchaseRequest", imageUrl: "/images/order.png" },
+                    { text: "备货申请", id: "back", imageUrl: "/images/order.png" },
                     { text: "调拨申请", id: "contract", imageUrl: "/images/ccontract.png" },
                     { text: "采购申请", id: "purchaseorder", imageUrl: "/images/ccontract.png"},
                     { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
@@ -186,6 +186,10 @@ function loadPage(page, parameters) {
 		page = "html/execution/ship.html";
 	} else if (page == "addShip") {
 		page = "html/execution/addShip.html";
+	} else if (page == "back") {
+		page = "html/purchasecontract/back.html";
+	} else if (page == "backedit") {
+		page = "html/purchasecontract/backedit.html";		
 	} else {
 		page = "html/supplier/supplier.html";
 	}

@@ -86,4 +86,8 @@
         id="salesContractController">
         <property name="salesContractService" ref="salesContractService"></property>
     </bean>
+    <bean name="backController" class="com.pms.service.controller.BackController"
+        id="backController">
+        <property name="backService" ref="backService"></property>
+    </bean>    
 </beans>
