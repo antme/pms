@@ -9,9 +9,9 @@ import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
-import com.pms.service.service.ISupplierService;
+import com.pms.service.service.IShipService;
 
-public class ShipServiceImpl extends AbstractService implements ISupplierService {
+public class ShipServiceImpl extends AbstractService implements IShipService {
 	
 	private IPurchaseContractService pService;
 
