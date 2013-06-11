@@ -29,7 +29,7 @@ public class SalesContractController extends AbstractController {
     @RequestMapping("/listforselect")
     public void listSCsForSelect(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
-    	//responseWithData(projectService.listProjectsForSelect(params), request, response);
+    	responseWithData(salesContractService.listSCsForSelect(params), request, response);
     }
     
     @RequestMapping("/eqlist")

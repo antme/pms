@@ -118,6 +118,10 @@ function loadPage(page, parameters) {
 		page = "html/execution/ship.html";
 	} else if (page == "addShip") {
 		page = "html/execution/addShip.html";
+	} else if (page == "back") {
+		page = "html/purchasecontract/back.html";
+	} else if (page == "backedit") {
+		page = "html/purchasecontract/backedit.html";		
 	} else {
 		page = "html/supplier/supplier.html";
 	}

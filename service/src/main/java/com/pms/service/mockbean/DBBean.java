@@ -20,6 +20,8 @@ public class DBBean {
  
     public static final String PURCHASE_REQUEST = "purchaseRequest";
     
+    public static final String PURCHASE_BACK = "purchaseBack";
+    
     public static final String PURCHASE_CONTRACT = "purchaseContract";
     
     public static final String PURCHASE_ORDER = "purchaseOrder";
