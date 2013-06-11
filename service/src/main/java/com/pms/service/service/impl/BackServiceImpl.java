@@ -183,5 +183,21 @@ public class BackServiceImpl extends AbstractService implements IBackService {
 		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
 		obj.put(PurchaseBack.status, PurchaseBack.status_saved);
 		return dao.updateById(obj, DBBean.PURCHASE_BACK);
-	}	
+	}
+	
+	public Map<String,Object> listApprovedBackBySalesContractId(String saleId){
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put(PurchaseBack.salesContract_id, saleId);
+		query.put(PurchaseBack.type, PurchaseBack.status_approved);
+		return dao.list(query, DBBean.PURCHASE_BACK);
+	}
+	
+	
+	public Map<String,Object> listApprovedAllocateBySalesContractId(String saleId){
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put(PurchaseBack.salesContract_id, saleId);
+		query.put(PurchaseBack.type, PurchaseBack.status_approved);
+		return dao.list(query, DBBean.PURCHASE_ALLOCATE);
+	}
+	
 }
