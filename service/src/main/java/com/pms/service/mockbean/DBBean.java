@@ -11,7 +11,8 @@ public class DBBean {
     
     public static final String SALES_CONTRACT = "salesContract";//销售合同
     // /will delete. User salesContract name
-    public static final String PROJECT_CONTRACT = "projectContract"; //销售合同
+    //public static final String PROJECT_CONTRACT = "projectContract"; //销售合同
+    public static final String EQ_COST = "eqCost";
     
     public static final String CUSTOMER = "customer";
     

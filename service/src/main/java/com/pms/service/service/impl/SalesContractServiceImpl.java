@@ -12,6 +12,7 @@ import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
@@ -70,14 +71,30 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
 		eqcostList = new Gson().fromJson(params.get(SalesContractBean.SC_EQ_LIST).toString(), List.class);
-		contract.put(SalesContractBean.SC_EQ_LIST, eqcostList);
+		//contract.put(SalesContractBean.SC_EQ_LIST, eqcostList);
+		
+		Map<String, Object> addedContract = null;
 		if (_id == null){//Add
 			contract.put(SalesContractBean.SC_MODIFY_TIMES, 0);
-			return dao.add(contract, DBBean.SALES_CONTRACT);
+			addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
+			
+			//添加成本设备清单记录
+			if (!eqcostList.isEmpty()){
+				addEqCostListForContract(eqcostList, (String)addedContract.get(ApiConstants.MONGO_ID));
+			}
+			
+			return addedContract;
 		}else{//Update
 			
 		}
 		return null;
+	}
+	
+	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId){
+		for (Map<String, Object> item : eqcostList){
+			item.put(EqCostListBean.EQ_LIST_SC_ID, cId);
+			dao.add(item, DBBean.EQ_COST);
+		}
 	}
 
 	@Override
@@ -87,9 +104,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 
 	@Override
-	public Map<String, Object> listEquipmentsForSC(Map<String, Object> params) {
+	public Map<String, Object> listEqListBySC(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return null;
+		String cId = (String) params.get(EqCostListBean.EQ_LIST_SC_ID);
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(EqCostListBean.EQ_LIST_SC_ID, cId);
+		Map<String, Object> result = dao.list(query, DBBean.EQ_COST);
+		return result;
 	}
 
 	private void mergeProjectInfoForSC(Map<String, Object> result){
@@ -146,6 +167,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> getSC(Map<String, Object> params) {
 		String _id = (String) params.get(ApiConstants.MONGO_ID);
-		return dao.findOne(ApiConstants.MONGO_ID, _id, DBBean.SALES_CONTRACT);
+		Map<String, Object> sc = dao.findOne(ApiConstants.MONGO_ID, _id, DBBean.SALES_CONTRACT);
+		
+		Map<String, Object> eqCostQuery = new HashMap<String, Object>();
+		eqCostQuery.put(EqCostListBean.EQ_LIST_SC_ID, _id);
+		Map<String, Object> eqList = dao.list(eqCostQuery, DBBean.EQ_COST);
+		List<Map<String, Object>> eqListData = (List<Map<String, Object>>) eqList.get(ApiConstants.RESULTS_DATA);
+		
+		sc.put(SalesContractBean.SC_EQ_LIST, eqListData);
+		return sc;
 	}
 }

@@ -32,10 +32,10 @@ public class SalesContractController extends AbstractController {
     	//responseWithData(projectService.listProjectsForSelect(params), request, response);
     }
     
-    @RequestMapping("/listequipments")
+    @RequestMapping("/eqlist")
     public void listEquipmentListBySC(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, false);
-    	//responseWithData(projectService.listEquipmentsForProject(params), request, response);
+    	responseWithData(salesContractService.listEqListBySC(params), request, response);
     }
     
     @RequestMapping("/add")
