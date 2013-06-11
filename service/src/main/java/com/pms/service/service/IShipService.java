@@ -11,4 +11,6 @@ public interface IShipService {
 	public void destroy(Map<String, Object> params);
 	
 	public Map<String, Object> create(Map<String, Object> params);
+
+	public Map<String, Object> eqlist(Map<String, Object> params);
 }
