@@ -1,5 +1,6 @@
 package com.pms.service.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -88,7 +89,12 @@ public class UserController extends AbstractController {
     public void listNotUserRoleItems(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(userService.listNotUserRoleItems(parserJsonParameters(request, false)), request, response);
     }
-
+    
+    
+    @RequestMapping("/role/mine/list")
+    public void listUserRoleItems(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(userService.listUserRoles(ApiThreadLocal.getCurrentUserId()), request, response);
+    }
     
     @RequestMapping("/group/list")
     @LoginRequired()

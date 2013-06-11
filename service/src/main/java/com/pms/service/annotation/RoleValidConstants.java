@@ -13,5 +13,15 @@ public class RoleValidConstants {
 
     public static final String CUSTOMER_MANAGEMENT = "customer_management";
     public static final String CUSTOMER_MANAGEMENT_DESC = "客户管理 ";
+    
+    
+    public static final String PURCHASE_REQUEST_ADD = "purchase_request_add";
+    public static final String PURCHASE_REQUEST_ADD_DESC = "采购申请创建 ";
+    
+    
+    public static final String PURCHASE_REQUEST_DELETE = "purchase_request_delete";
+    public static final String PURCHASE_REQUEST_DELETE_DESC = "客户管理 ";
+    
+    
 
 }

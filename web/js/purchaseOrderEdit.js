@@ -118,7 +118,10 @@ function showOrderWindow() {
 	edit();
 }
 
-function submitOrder() {
+function submitOrder(status) {
+	if(!requestDataItem.status){
+		requestDataItem.status = status;
+	}
 	// 同步数据
 	itemDataSource.sync();
 

@@ -62,7 +62,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract) {
 
         if (ApiUtil.isEmpty(contract.get(ApiConstants.MONGO_ID))) {
-            contract.put(PurchaseOrder.PROCESS_STATUS, "New");
             contract.put("purchaseContractCode","Contract_" + String.valueOf(new Date().getTime()));
             return this.dao.add(contract, DBBean.PURCHASE_CONTRACT);
         } else {

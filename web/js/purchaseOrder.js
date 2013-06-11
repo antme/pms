@@ -10,7 +10,8 @@ var dataSource = new kendo.data.DataSource({
 });
 
 $(document).ready(function() {
-
+	checkRoles();
+	
 	if ($("#grid").length > 0) {
 		// 初始化采购订单列表页
 		$("#grid").kendoGrid({
@@ -21,10 +22,7 @@ $(document).ready(function() {
 			dataBound : function(e) {
 				kendo.ui.progress($("#grid"), false);
 			},
-			// 自定义toolbar，参见html中模板代码
-			toolbar : [ {
-				template : kendo.template($("#template").html())
-			} ],
+
 			columns : [ {
 				field : "purchaseOrderCode",
 				title : "订单编号"
