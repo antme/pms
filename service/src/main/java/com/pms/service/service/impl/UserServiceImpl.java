@@ -182,6 +182,15 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         return roles;
     }
     
+    public Map<String, Object> listUserRoles(String userId){
+        List<String> ids = listUserRoleIds(userId);
+        
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
+        
+        return this.dao.list(query, DBBean.ROLE_ITEM);
+    }
+    
     public void checkUserRole(String userId, String path) {
 
         String roleId = InitBean.rolesValidationMap.get(path);

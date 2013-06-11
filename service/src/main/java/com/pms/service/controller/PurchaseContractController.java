@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pms.service.annotation.LoginRequired;
+import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.annotation.RoleValidate;
 import com.pms.service.service.IPurchaseContractService;
 
@@ -56,6 +57,29 @@ public class PurchaseContractController extends AbstractController {
     }
 
     
+    @RequestMapping("/assistant/request/list")
+    public void listPurchaseRequestByAssistant(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listPurchaseOrders(), request, response);
+    }
+
+    @RequestMapping("/assistant/request/add")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_ADD, desc = RoleValidConstants.PURCHASE_REQUEST_ADD_DESC)
+    public void addPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        pService.updatePurchaseOrder(parserListJsonParameters(request, false));
+        responseWithData(null, request, response, "save_success");
+    }
+    
+    @RequestMapping("/assistant/request/get")
+    public void getPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.getPurchaseOrder(parserListJsonParameters(request, false)), request, response);
+    }
+
+    @RequestMapping("/assistant/request/delete")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_DELETE, desc = RoleValidConstants.PURCHASE_REQUEST_DELETE_DESC)
+    public void deletePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        pService.deletePurchaseOrder(parserJsonParameters(request, false));
+        responseWithData(null, request, response);
+    }
     
     
     @RequestMapping("/order/list")

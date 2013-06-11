@@ -3,7 +3,6 @@ var redirecPage = undefined;
 
 
 $(document).ready(function() {
-	
 
 	if (navigator.userAgent.indexOf("MSIE")>0) {
 		document.onkeydown = function() {
@@ -35,7 +34,77 @@ $(document).ready(function() {
 		});
 	}
 	
+	
 
+	postAjaxRequest("/service/user/role/mine/list", null, init)
+
+	
+});
+
+function init(data){
+	
+	console.log(data);
+	
+	$("#tree-nav").kendoTreeView({
+    	template: kendo.template($("#treeview-template").html()),
+        dataSource: [
+            {
+                text: "项目管理", id: "projectList", imageUrl: "/images/product.png"
+            },
+
+            {
+                text: "项目执行", id: "projectex", imageUrl: "/images/ccontract.png",
+                items: [
+                        { text: "备货申请", id: "purchaseRequest", imageUrl: "/images/order.png" },
+                        { text: "采购申请", id: "purchaseRequestByAssistant", imageUrl: "/images/ccontract.png"},
+                        { text: "开票申请", id: "purchaseorder", imageUrl: "/images/ccontract.png" },
+                        { text: "发货申请", id: "ship", imageUrl: "/images/ccontract.png"},
+                        { text: "借货申请", id: "contract", imageUrl: "/images/ccontract.png"},
+                        { text: "还货申请", id: "contract", imageUrl: "/images/ccontract.png"}
+                    ]
+            },
+            {
+                text: "销售合同",  id: "scList", imageUrl: "/images/user.png"
+            },
+            
+
+            {
+                text: "采购合同", id: "purchasecontract", expanded: false, imageUrl: "/images/contract.png",
+                items: [
+                    { text: "备货申请", id: "purchaseRequest", imageUrl: "/images/order.png" },
+                    { text: "调拨申请", id: "contract", imageUrl: "/images/ccontract.png" },
+                    { text: "采购申请", id: "purchaseorder", imageUrl: "/images/ccontract.png"},
+                    { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
+                    { text: "入库申请单", id: "contract", imageUrl: "/images/ccontract.png" },
+                    { text: "直发入库申请单", id: "contract", imageUrl: "/images/ccontract.png"}
+                ]
+            },                                               
+            {
+                text: "财务",  id: "finance", imageUrl: "/images/finance.png",
+                items: [
+                        { text: "财务资料", id: "contract", imageUrl: "/images/order.png" },
+                        { text: "开票信息", id: "contract", imageUrl: "/images/ccontract.png" },
+                        { text: "收款信息", id: "contract", imageUrl: "/images/ccontract.png"},
+                        { text: "付款信息", id: "contract", imageUrl: "/images/ccontract.png"}
+                    ]
+            },
+                                
+            {
+                text: "基础信息",  id: "customer", imageUrl: "/images/user.png",
+                	items: [
+                            { text: "客户", id: "customer", imageUrl: "/images/toy.png" },
+                            { text: "供应商", id: "supplier", imageUrl: "/images/ccontract.png" }
+                        ]
+            } , {
+                text: "权限管理", id: "userman", expanded: false, imageUrl: "/images/friends_group.png",
+                items: [
+                        { text: "用户管理", id: "userman", imageUrl: "/images/toy.png" },
+                        { text: "角色管理", id: "group", imageUrl: "/images/ccontract.png" }
+                    ]
+            }
+        ]
+
+    });
 	var page = getUrlParser().attr("anchor");
 
 	if (!page) {
@@ -49,8 +118,7 @@ $(document).ready(function() {
 	$("#user-info").click(function() {
 		loadPage("default");
 	});
-	
-});
+}
 
 function onAjaxFail(data) {
 
@@ -106,7 +174,7 @@ function loadPage(page, parameters) {
 		page = "html/purchasecontract/purchaseRequest.html";
 	} else if (page == "purchasecontractedit") {
 		page = "html/purchasecontract/purchasecontractedit.html";
-	} else if (page == "purchaseorder") {
+	} else if (page == "purchaseorder" || page == "purchaseRequestByAssistant") {
 		page = "html/purchasecontract/purchaseOrder.html";
 	}else if (page == "purchaseOrderEdit") {
 		page = "html/purchasecontract/purchaseOrderEdit.html";
@@ -227,21 +295,14 @@ function onWindowDefaultClose(e) {
 
 }
 
-function checkRoles(ids){
-	var data = {"ids": ids};
-	postAjaxRequest("/service/user/role/not/list", data, hiddenButtons)
-}
-
-function hiddenButtons(data){
-
-	var roles = data.data;
-	if(roles){		
-		for(index in roles){	
-			var id="."+roles[index];
-			 $(id).hide();
-		
-		}
+function checkRoles(){
+	var buttons = $('button[access]');
+	
+	for(i in buttons){
+		console.log(i);
 	}
+
 }
+
 
 
