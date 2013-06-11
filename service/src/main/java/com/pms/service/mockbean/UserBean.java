@@ -9,4 +9,8 @@ public class UserBean {
     public static final String EMAIL = "email";
     public static final String GROUPS_DISPLAY = "groupsDisplay";
     
+    
+    public static final String USER_ID = "userId";
+
+    
 }

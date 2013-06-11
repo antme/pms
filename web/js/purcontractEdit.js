@@ -3,10 +3,10 @@ var requestDataItem;
 var model = kendo.data.Model.define({
 	id : "_id",
 	fields : {
-		orderCode : {
+		purchaseOrderCode : {
 			editable : false
 		},
-		goodsDeliveryArrivedTime : {
+		logisticsArrivedTime : {
 			type : "date"
 		},
 		purchaseContractCode : {
@@ -30,7 +30,7 @@ $(document).ready(function() {
 	
 	if (!$("#purchasecontractin").data("kendoMultiSelect")) {
 		$("#purchasecontractin").kendoMultiSelect({
-			dataTextField : "orderCode",
+			dataTextField : "purchaseOrderCode",
 			dataValueField : "_id",
 			placeholder : "选择采购申请...",
 			dataSource : {
@@ -129,8 +129,8 @@ function showOrderWindow() {
 				var eqcostList = dataItems[index].eqcostList;
 				for(listIndex in eqcostList){
 					if(eqcostList[listIndex].uid){
-						if(!eqcostList[listIndex].goodsDeliveryType ){
-							eqcostList[listIndex].goodsDeliveryType="";
+						if(!eqcostList[listIndex].logisticsType ){
+							eqcostList[listIndex].logisticsType="";
 						}
 						itemListDataSource.add(eqcostList[listIndex]);
 					}
@@ -173,8 +173,8 @@ function edit(data) {
 	
 	if(eqcostList){
 		for (i = 0; i < eqcostList.length; i++) {
-			if (!eqcostList[i].goodsDeliveryType) {
-				eqcostList[i].goodsDeliveryType = "";
+			if (!eqcostList[i].logisticsType) {
+				eqcostList[i].logisticsType = "";
 			}
 		}
 	}
@@ -185,10 +185,10 @@ function edit(data) {
 	$("#purchasecontract-edit-item").show();
 	$("#purchasecontract-select").hide();
 
-	$("#orderCode").html(dataItem.orderCode);
+	$("#purchaseOrderCode").html(dataItem.purchaseOrderCode);
 	$("#projectName").html(dataItem.projectName);
 	$("#projectCode").html(dataItem.projectCode);
-	$("#customerContractCode").html(dataItem.customerContractCode);
+	$("#projectContractCode").html(dataItem.projectContractCode);
 	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
 
 	$("#signDate").kendoDatePicker();
@@ -205,7 +205,7 @@ function edit(data) {
 				title : "货品名",
 				width : 80
 			}, {
-				field : "goodsType",
+				field : "eqcostProductCategory",
 				title : "货品类别",
 				width : 80
 			}, {
@@ -214,25 +214,25 @@ function edit(data) {
 				width : 80
 
 			}, {
-				field : "orderGoodsUnitPrice",
+				field : "eqcostProductUnitPrice",
 				title : "单价",
 				width : 50
 			}, {
-				field : "totalMoney",
+				field : "eqcostContractTotalMoney",
 				title : "小计金额",
 				width : 80
 			}, {
-				field : "goodsDeliveryStatus",
+				field : "logisticsStatus",
 				title : "货品物流状态",
 				width : 100
 			}, {
-				field : "goodsDeliveryType",
+				field : "logisticsType",
 				title : "物流类型",
 				width : "160px",
 				editor : categoryDropDownEditor,
-				template : "#=goodsDeliveryType#"
+				template : "#=logisticsType#"
 			}, {
-				field : "goodsDeliveryArrivedTime",
+				field : "logisticsArrivedTime",
 				title : "货品预计到达时间"
 			}, {
 				command : [  {

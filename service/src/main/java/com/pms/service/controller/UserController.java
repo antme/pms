@@ -15,6 +15,7 @@ import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.annotation.RoleValidate;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.service.IUserService;
+import com.pms.service.util.ApiThreadLocal;
 
 @Controller
 @RequestMapping("/user")
@@ -44,6 +45,7 @@ public class UserController extends AbstractController {
     @RequestMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().removeAttribute(USER_ID);
+        ApiThreadLocal.removeAll();
         responseWithData(null, request, response);
     }
 

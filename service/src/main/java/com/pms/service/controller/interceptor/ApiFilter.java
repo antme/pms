@@ -19,7 +19,9 @@ import com.pms.service.annotation.InitBean;
 import com.pms.service.controller.AbstractController;
 import com.pms.service.exception.ApiLoginException;
 import com.pms.service.exception.ApiResponseException;
+import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.IUserService;
+import com.pms.service.util.ApiThreadLocal;
 
 public class ApiFilter extends AbstractController implements Filter {
 
@@ -34,7 +36,10 @@ public class ApiFilter extends AbstractController implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-
+        HttpServletRequest srequest = (HttpServletRequest) request;
+        if (srequest.getSession().getAttribute(UserBean.USER_ID) != null) {
+            ApiThreadLocal.set(UserBean.USER_ID, srequest.getSession().getAttribute(UserBean.USER_ID));
+        }
         try {
             loginCheck((HttpServletRequest) request);
             roleCheck((HttpServletRequest) request);
@@ -73,22 +78,20 @@ public class ApiFilter extends AbstractController implements Filter {
     }
 
     private void roleCheck(HttpServletRequest request) {
-        if (InitBean.rolesValidationMap.get(request.getPathInfo()) != null) {
-            String uerId = null;
+        String uerId = null;
 
-            if (request.getSession().getAttribute("userId") != null) {
-                uerId = request.getSession().getAttribute("userId").toString();
-            }
-            
+        if (request.getSession().getAttribute(UserBean.USER_ID) != null) {
+            uerId = request.getSession().getAttribute(UserBean.USER_ID).toString();
+        }
+        if (InitBean.rolesValidationMap.get(request.getPathInfo()) != null) {             
             userService.checkUserRole(uerId, request.getPathInfo());
-
         }
 
     }
 
     private void loginCheck(HttpServletRequest request) {
         if (InitBean.loginPath.contains(request.getPathInfo())) {
-            if (request.getSession().getAttribute("userId") == null) {
+            if (request.getSession().getAttribute(UserBean.USER_ID) == null) {
                 logger.debug("Login requried for path : " + request.getPathInfo());
                 throw new ApiLoginException();
             }
