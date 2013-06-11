@@ -9,7 +9,13 @@ var model = kendo.data.Model.define({
 		logisticsArrivedTime : {
 			type : "date"
 		},
-		purchaseContractCode : {
+		supplierName : {
+
+		},
+		supplierNameContact : {
+
+		},
+		firstPay : {
 
 		},
 		signDate : {
@@ -89,9 +95,6 @@ var itemDataSource = new kendo.data.DataSource({
 					mycallback : "checkStatus"
 				};
 			}
-		},
-		requestEnd : function(e) {
-			var response = e.response;
 		}
 	},
 	schema : {
@@ -162,14 +165,14 @@ function edit(data) {
 	}
 
 	if (requestDataItem) {
-		// 如果是从采购申请选择过来的
-		dataItem = new model(requestDataItem);
+		requestDataItem = new model(requestDataItem);
+
 	}
 
-	kendo.bind($("#purchasecontract-edit"), dataItem);
+	kendo.bind($("#purchasecontract-edit"), requestDataItem);
 
 	
-	var eqcostList = dataItem.eqcostList;
+	var eqcostList = requestDataItem.eqcostList;
 	
 	if(eqcostList){
 		for (i = 0; i < eqcostList.length; i++) {
@@ -179,17 +182,17 @@ function edit(data) {
 		}
 	}
 	// 渲染成本编辑列表
-	itemDataSource.data(dataItem.eqcostList);
+	itemDataSource.data(requestDataItem.eqcostList);
 
 
 	$("#purchasecontract-edit-item").show();
 	$("#purchasecontract-select").hide();
 
-	$("#purchaseOrderCode").html(dataItem.purchaseOrderCode);
-	$("#projectName").html(dataItem.projectName);
-	$("#projectCode").html(dataItem.projectCode);
-	$("#projectContractCode").html(dataItem.projectContractCode);
-	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
+	$("#purchaseOrderCode").html(requestDataItem.purchaseOrderCode);
+	$("#projectName").html(requestDataItem.projectName);
+	$("#projectCode").html(requestDataItem.projectCode);
+	$("#projectContractCode").html(requestDataItem.projectContractCode);
+	$("#customerRequestContractId").html(requestDataItem.customerRequestContractId);
 
 	$("#signDate").kendoDatePicker();
 

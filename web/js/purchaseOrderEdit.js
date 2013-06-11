@@ -115,7 +115,6 @@ function showOrderWindow() {
 
 	// // 新增，所以设置_id为空
 	requestDataItem._id="";
-	console.log(requestDataItem);
 	edit();
 }
 
