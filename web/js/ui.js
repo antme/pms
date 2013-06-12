@@ -168,11 +168,7 @@ function loadPage(page, parameters) {
 		page = "html/execution/allocate.html";
 	} else if (page == "purchasecontract") {
 		page = "html/purchasecontract/purchasecontract.html";
-	} else if (page == "purchaseRequest") {
-		page = "html/purchasecontract/purchaseRequest.html";		
-	} else if (page == "purchasecontractedit") {
-		page = "html/purchasecontract/purchasecontractedit.html";
-	} else if (page == "purchaseorder" ) {
+	}else if (page == "purchaseorder" ) {
 		page = "html/purchasecontract/purchaseOrder.html";
 	}else if (page == "purchaseRequestByAssistant") {
 		page = "html/purchasecontract/purchaseRequest.html";
@@ -180,9 +176,7 @@ function loadPage(page, parameters) {
 		page = "html/purchasecontract/purchaseRequestApprove.html";
 	}else if (page == "addProject") {
 		page = "html/project/addProject.html";
-	} else if (page == "purchaseRequestAdd") {
-		page = "html/purchasecontract/purchaseRequestAdd.html";
-	} else if (page == "ship") {
+	}  else if (page == "ship") {
 		page = "html/execution/ship.html";
 	} else if (page == "addShip") {
 		page = "html/execution/addShip.html";

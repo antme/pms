@@ -77,7 +77,7 @@ public class PurchaseContractController extends AbstractController {
     
     @RequestMapping("/request/select/list")
     public void listPurchaseRequestForSelect(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listBackRequestForSelect(), request, response);
+        responseWithData(pService.listPurchaseRequestForSelect(), request, response);
     }
     
     @RequestMapping("/request/get")

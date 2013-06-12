@@ -154,7 +154,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> listPurchaseRequestForSelect(){
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseBack.status, PurchaseBack.status_approved);
+        query.put(PurchaseBack.status, "approved");
         query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.code, PurchaseBack.salesContract_code });
         return dao.list(query, DBBean.PURCHASE_REQUEST);
     }
@@ -162,7 +162,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> updatePurchaseRequest(Map<String, Object> order){
         if (ApiUtil.isEmpty(order.get(ApiConstants.MONGO_ID))) {
             order.put(PurchaseOrder.PROCESS_STATUS, "New");
-            order.put(PurchaseOrder.ORDER_CODE, "Order" + String.valueOf(new Date().getTime()));
+            order.put(PurchaseOrder.ORDER_CODE, "Request" + String.valueOf(new Date().getTime()));
             return this.dao.add(order, DBBean.PURCHASE_REQUEST);
         } else {
             Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);

@@ -1,0 +1,65 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+<head>
+<style>
+
+label{
+   margin-left: 5px;
+   
+}
+
+
+#purchaseorder-edit-header{
+    margin-bottom: 10px;
+}
+
+
+#purchaseorder-edit-header span{
+    font-weight: bold;
+}
+
+</style>
+
+
+<script type="text/javascript" src="js/purchaseRequestEdit.js"></script>
+</head>
+
+
+
+<body>
+   
+    <div id="purchaseorder-edit" class="k-content">
+        <div id="purchase-request-select" class="k-content">
+            <div>
+                <label>选择备货申请: </label><input id="purchaseRequest" style="width: 250px" /><button onclick="showOrderWindow();">确定</button>
+            </div>  
+        </div>
+    
+        <div id="purchaseorder-edit-item">
+            <div id="purchaseorder-edit-header">
+                <div>
+                    <label>项目名: <span id="projectName"></span></label> 
+                    <label>项目ID:<span id="projectCode"></span></label> 
+                    <label>合同ID: <span id="projectContractCode"></span></label> 
+                    <label>申请ID:<span id="customerRequestContractId"></span></label> 
+                </div>
+            </div>
+            <div>
+                <div><label>提示: 点击单元格可以编辑</label></div>
+                <div id="purchaseorder-edit-grid"></div>        
+            </div>
+            <div style="width:400px; margin-top:50px;">
+                <div id="purchaseorder-sum-grid"></div>
+                <div>
+                    <button onclick="submitOrder('draft');">保存</button>
+                    <button onclick="submitOrder('new');">提交申请</button>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+
+
+
+</body>
+</html>
