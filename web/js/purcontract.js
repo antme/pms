@@ -21,12 +21,9 @@ $(document).ready(function() {
 		columns : [ {
 			field : "purchaseContractCode",
 			title : "采购合同编号"
-		}, {
-			field : "projectContractCode",
-			title : "客户合同编号"
-		}, {
-			field : "purchaseRequestCode",
-			title : "采购申请编号"
+		},  {
+			field : "approvedDate",
+			title : "批准时间"
 		}, {
 			field : "supplierName",
 			title : "供应商"

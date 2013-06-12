@@ -10,10 +10,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.BaseEntity;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
+import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.PurchaseRequestOrder;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
@@ -71,7 +73,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract) {
-        return updatePurchase(contract, DBBean.PURCHASE_CONTRACT, "contract_");
+        return updatePurchase(contract, DBBean.PURCHASE_CONTRACT, "contract_", new PurchaseContract());
     }
  
 
@@ -106,7 +108,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> order) {
-        return updatePurchase(order, DBBean.PURCHASE_ORDER, "order_");
+        return updatePurchase(order, DBBean.PURCHASE_ORDER, "order_", new PurchaseRequestOrder());
     }
     
     public Map<String, Object> getPurchaseOrder(HashMap<String, Object> parameters){
@@ -207,12 +209,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
     
     public Map<String, Object> updatePurchaseRequest(Map<String, Object> order) {
-        return updatePurchase(order, DBBean.PURCHASE_REQUEST, "request_");
+        return updatePurchase(order, DBBean.PURCHASE_REQUEST, "request_", new PurchaseRequestOrder());
     }
     
-    public Map<String, Object> updatePurchase(Map<String, Object> parameters, String db, String prefix) {
+    public Map<String, Object> updatePurchase(Map<String, Object> parameters, String db, String prefix, BaseEntity entity) {
 
-        PurchaseRequestOrder request = (PurchaseRequestOrder) new PurchaseRequestOrder().toEntity(parameters);
+        PurchaseRequestOrder request = (PurchaseRequestOrder) entity.toEntity(parameters);
 
         if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
             

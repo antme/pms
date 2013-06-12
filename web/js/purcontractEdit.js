@@ -10,7 +10,9 @@ var model = kendo.data.Model.define({
 			type : "date"
 		},
 		supplierName : {
-
+			validation : {
+				required : true
+			}
 		},
 		supplierNameContact : {
 
@@ -108,13 +110,29 @@ var itemListDataSource = new kendo.data.DataSource({
 	data: []
 });
 
-function save() {
+function save(status) {
+	if(!requestDataItem.status){
+		requestDataItem.status = "草稿";
+	}
+	if(status){
+		requestDataItem.status = status;
+	}
+	
 	if(itemDataSource.at(0)){
 		//force set haschanges = true
 		itemDataSource.at(0).set("uid", kendo.guid());
 	}
+
 	
+	if(requestDataItem.supplierName && requestDataItem.supplierName._id){
+		requestDataItem.supplierName = requestDataItem.supplierName._id
+	}
 	
+	if(!requestDataItem.supplierName){
+		var dl = $("#supplierName").data("kendoDropDownList");
+		requestDataItem.supplierName = dl.dataSource.at(0)._id;
+	}
+
 	// 同步数据
 	itemDataSource.sync();
 	
@@ -152,7 +170,8 @@ function showOrderWindow() {
 	
 	requestDataItem = new model({});
 	requestDataItem.eqcostList = itemListDataSource.data();
-	console.log(itemListDataSource);
+	
+	
 	
 //	if (!requestDataItem) {
 //		requestDataItem = kendoGrid.dataSource.at(0);
