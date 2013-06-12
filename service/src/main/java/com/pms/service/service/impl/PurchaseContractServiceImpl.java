@@ -18,8 +18,8 @@ import com.pms.service.mockbean.PurchaseRequestOrder;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
-import com.pms.service.service.IBackService;
 import com.pms.service.service.IPurchaseContractService;
+import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISalesContractService;
 import com.pms.service.util.ApiUtil;
 
@@ -29,7 +29,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     private static final Logger logger = LogManager.getLogger(PurchaseContractServiceImpl.class);
     
     
-    private IBackService backService;
+    private IPurchaseService backService;
     
     private ISalesContractService scs;
     
@@ -266,7 +266,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> getBackRequestForSelect(HashMap<String, Object> parameters){
         
-       return backService.loadRequest(parameters);
+       return backService.loadBack(parameters);
     }
 
 
@@ -281,15 +281,15 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
 
-    public IBackService getBackService() {
+    public IPurchaseService getBackService() {
         return backService;
     }
 
 
-    public void setBackService(IBackService backService) {
+    public void setBackService(IPurchaseService backService) {
         this.backService = backService;
     }
-    
+
     
     
     

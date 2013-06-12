@@ -119,6 +119,8 @@ function showOrderWindow() {
 	if (!selectedRequest) {
 		selectedRequest = kendoGrid.dataSource.at(0);
 	}
+	
+	console.log(selectedRequest);
 
 	postAjaxRequest(getSelectUrl, {_id: selectedRequest._id}, loadRequest);
 }
