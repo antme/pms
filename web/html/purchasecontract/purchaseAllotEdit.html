@@ -19,7 +19,7 @@
 }
 </style>
 
-<script  src="js/backedit.js"></script>
+<script  src="js/purchaseAllotEdit.js"></script>
 <body>
 <script id="popup-editor" type="text/x-kendo-template">
   	<h3>申请数量</h3>
@@ -27,13 +27,7 @@
 </script>
 
 <div>
-		<h2>添加申请表单</h2>
-		<div id="searchDiv">
-			<label>选择合同:</label>
-			<input id="searchfor" type="text" value="51b6ccd12b6001f9de9c5627"/>
-			<input id="searchbt" type="button" value="确定"/>
-		</div>
-		<br><hr>
+		<h2>审核调拨表单</h2>
 		<div id="form-container">
 			<div>
 				<table style="width: 80%">
@@ -50,14 +44,14 @@
 			<hr>
 			<div>
 				<ul>
-					<li>申请部门: <input type="text" class="k-textbox" data-bind="value: department" /></li>
-					<li>采购类别: <select data-bind="value: type">
+					<li>申请部门: <input type="text" class="k-textbox foredit" data-bind="value: department" /></li>
+					<li>采购类别: <select data-bind="value: type" class="foredit" >
 										<option value="上海代理产品采购">上海代理产品采购</option>
 										<option value="同方自主产品采购">同方自主产品采购</option>
 										<option value="其它渠道采购">其它渠道采购</option>
 								</select>
 					</li>
-					<li>到货要求日期: <input data-role="datepicker" data-bind="value: planDate" /></li>
+					<li>到货要求日期: <input data-role="datepicker" data-bind="value: planDate" class="foredit" /></li>
 				</ul>
 			</div>
 			<br><br>
@@ -72,9 +66,7 @@
             </div>
             <br>
             <div>
-            	<input class="submitform" type="button" value="保存">
             	<input class="submitform" type="button" value="提交">
-            	<input class="submitform" type="button" value="取消">
             </div>
 		</div>
 </div>		

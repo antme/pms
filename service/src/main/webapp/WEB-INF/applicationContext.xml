@@ -94,11 +94,6 @@
 		<property name="dao" ref="commonDao"></property>
 		<property name="pService" ref="purchaseContractService"></property>
 	</bean>
-    
-    <bean name="backService" class="com.pms.service.service.impl.BackServiceImpl"
-		id="backService">
-		<property name="dao" ref="commonDao"></property>
-	</bean>	
 
 	<bean
         class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
