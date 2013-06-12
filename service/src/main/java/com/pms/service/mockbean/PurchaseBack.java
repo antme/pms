@@ -6,11 +6,14 @@ public class PurchaseBack {
 	public static final String department = "department";
 	public static final String submitDate = "submitDate";
 	public static final String approveDate = "approveDate";
+	public static final String operateDate = "operateDate";
+	public static final String checkDate = "checkDate";
 	public static final String planDate = "planDate";
 	public static final String type = "type";
 	public static final String status = "status";
 	public static final String specialRequire = "specialRequire";
 	public static final String comment = "comment";
+	public static final String commentHistory = "commentHistory";
 	public static final String money = "money";
 	public static final String cost = "cost";
 	public static final String costUsedGoods = "costUsedGoods";
@@ -36,7 +39,9 @@ public class PurchaseBack {
 	
 	//设备成本清单字段
 	public static final String eqcostList = "eqcostList";
-	public static final String eqcost_applyAmount = "eqcostApplyAmount";//申请数量
+	public static final String backTotalCount = "backTotalCount";//备货申请总数，用于备货申请
+	public static final String backUsedCount = "backUsedCount";//备货申请已用数，用于调拨
+	public static final String backLeftCount = "backLeftCount";//备货申请剩余数，用于采购申请
 	
 	public static final String purchaseOrder_code = "purchaseOrder_code";
 	public static final String purchaseOrder_id = "purchaseOrder_id";

@@ -90,4 +90,6 @@ public interface ICommonDao {
             String finalize, String collection);
     
     public Map<String,Object> loadById(String id, String collection);
+    
+    public void updateCount(String queryKey, Object queryValue, String updateKey, String collection, double number);
 }
