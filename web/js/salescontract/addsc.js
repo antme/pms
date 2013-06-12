@@ -112,13 +112,14 @@ $(document).ready(function() {
 	};
 	
 	//表单中的各种控件
-	var invoiceTypeItems = [{ text: "invoiceType1", value: "1" }, { text: "invoiceType2", value: "2" }, { text: "invoiceType3", value: "3" }];
+	var invoiceTypeItems = [{ text: "增值税专用", value: 1 }, { text: "增值税普通", value: 2 }, { text: "建筑业发票", value: 3 }, { text: "服务业发票", value: 4 }];
 	$("#invoiceType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
         optionLabel: "选择发票类型...",
 		dataSource : invoiceTypeItems,
 	});
+	
 	var taxTypeItems = [{ text: "taxType1", value: "1" }, { text: "taxType2", value: "2" }, { text: "taxType3", value: "3" }];
 	$("#taxType").kendoDropDownList({
 		dataTextField : "text",

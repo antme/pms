@@ -88,7 +88,7 @@ function toolbar_modifySalesContract() {
 		alert("请点击选择一条合同记录！");
 		return;
 	}
-	
+	console.log("*******************************************8");
 	loadPage("editsc",{_id:rowData._id});
 };
 

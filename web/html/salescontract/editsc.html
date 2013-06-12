@@ -6,12 +6,24 @@
 	width:250px;
 }
 
-.test{
-width:900px;
+.invoice-edit {
+	display: none;
+}
+
+.got-money-edit {
+	display: none;
 }
 </style>
 
 <script  src="js/salescontract/editsc.js"></script>
+
+<script type="text/x-kendo-template" id="addInvoiceButtonTem">
+    <button class="k-button"  onclick="addInvoice();">新增</button>
+</script>
+
+<script type="text/x-kendo-template" id="addGotMoneyButtonTem">
+    <button class="k-button"  onclick="addGotMoney();">新增</button>
+</script>
 
 <body>
 	
@@ -256,7 +268,15 @@ width:900px;
                
                <div><!-- 第 5 个Tab -->
                    <div><!-- 财务数据 -->
-                       
+                   	<br/>
+                   		<h3>开票信息列表</h3>
+                       <div id="invoiceList"></div>
+                       <br/>
+                       <hr/>
+                       <br/>
+                       <h3>收款信息列表</h3>
+                       <div id="gotMoneyList"></div>
+                       <br/>
                    </div>
                </div>
                
@@ -268,5 +288,66 @@ width:900px;
                
            </div>
          </div>
+	</div>
+	
+	<div class="invoice-edit" id="invoice-edit">
+
+		<div class="k-edit-form-container">
+			<div class="k-edit-label ">
+				<label for="scInvoiceMoney">开票金额</label>
+			</div>
+			<div data-container-for="scInvoiceMoney" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="scInvoiceMoney" id="scInvoiceMoney"
+					required="required" data-bind="value:scInvoiceMoney">
+			</div>
+			<div class="k-edit-label ">
+				<label for="invoiceType">开票类型</label>
+			</div>
+			<div data-container-for="invoiceType" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="invoiceType" id="invoiceType"
+					required="required" data-bind="value:invoiceType">
+			</div>
+			<div class="k-edit-label ">
+				<label for="scInvoiceDate">开票日期</label>
+			</div>
+			<div data-container-for="scInvoiceDate" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="scInvoiceDate" id="scInvoiceDate"
+					data-bind="value:scInvoiceDate">
+			</div>
+			<button class="k-button k-button-icontext k-grid-update" onclick="saveInvoice()">
+				<span class="k-icon k-update"></span>Update
+			</button>
+			<button class="k-button k-button-icontext k-grid-cancel">
+				<span class="k-icon k-cancel"></span>Cancel
+			</button>
+		</div>
+
+	</div>
+	
+	<div class="got-money-edit" id="got-money-edit">
+
+		<div class="k-edit-form-container">
+			<div class="k-edit-label ">
+				<label for="scGotMoney">收款金额</label>
+			</div>
+			<div data-container-for="scGotMoney" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="scGotMoney" id="scGotMoney"
+					required="required" data-bind="value:scGotMoney">
+			</div>
+			<div class="k-edit-label ">
+				<label for="scGotMoneyDate">收款日期</label>
+			</div>
+			<div data-container-for="scGotMoneyDate" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="scGotMoneyDate" id="scGotMoneyDate"
+					data-bind="value:scGotMoneyDate">
+			</div>
+			<button class="k-button k-button-icontext k-grid-update" onclick="saveGotMoney()">
+				<span class="k-icon k-update"></span>Update
+			</button>
+			<button class="k-button k-button-icontext k-grid-cancel">
+				<span class="k-icon k-cancel"></span>Cancel
+			</button>
+		</div>
+
 	</div>
 </body>

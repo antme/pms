@@ -11,11 +11,6 @@ var scModel = kendo.data.Model.define({
 				required : true
 			}
 		},
-//		customer : {
-//			validation : {
-//				required : true
-//			}
-//		},
 		archiveStatus : {},
 		runningStatus : {},
 		contractAmount : {},
@@ -37,13 +32,108 @@ var scModel = kendo.data.Model.define({
 		progressPayment : {},
 		qualityMoney : {},
 		contractMemo : {},
-		eqcostList : {}
+		eqcostList : {},
+		scInvoiceInfo : {},
+		scGotMoneyInfo : {}
 	}
-
 });
 
 var scm;
+var scInvoiceModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		_id : {
+			editable : false,
+			nullable : true
+		},
+		scInvoiceMoney:{},
+		invoiceType:{},
+		scId:{},
+		scInvoiceDate:{}
+	}
+});
+var im;
 
+var scGotMoneyModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		_id : {
+			editable : false,
+			nullable : true
+		},
+		scGotMoney:{},
+		scId:{},
+		scGotMoneyDate:{}
+	}
+});
+var gmm;
+
+var invoiceDataSource = new kendo.data.DataSource({
+	transport : {
+		read : {
+			url : "../service/sc/invoice/list",
+			dataType : "jsonp"
+		},
+		update : {
+			url : "../service/sc/invoice/update",
+			dataType : "jsonp",
+			method : "post"
+		},
+		create : {
+			url : "../service/sc/invoice/add",
+			dataType : "jsonp",
+			method : "post"
+		},
+
+		parameterMap : function(options, operation) {
+			if (operation !== "read" && options.models) {
+				return {
+					//options.models.set("cid":"aaaaaaaaaaaaaa");
+					models : kendo.stringify(options.models)
+				};
+			}
+		}
+	},
+	pageSize: 10,
+	batch : true,
+	
+	schema : {
+		model : scInvoiceModel
+	}
+});
+
+var gotMoneyDataSource = new kendo.data.DataSource({
+	transport : {
+		read : {
+			url : "../service/sc/gotmoney/list",
+			dataType : "jsonp"
+		},
+		update : {
+			url : "../service/sc/gotmoney/update",
+			dataType : "jsonp",
+			method : "post"
+		},
+		create : {
+			url : "../service/sc/gotmoney/add",
+			dataType : "jsonp",
+			method : "post"
+		},
+
+		parameterMap : function(options, operation) {
+			if (operation !== "read" && options.models) {
+				return {
+					models : kendo.stringify(options.models)
+				};
+			}
+		}
+	},
+	pageSize: 10,
+	batch : true,
+	
+	schema : {
+		model : scGotMoneyModel
+	}
+});
 var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
@@ -99,6 +189,7 @@ var eqCostListDataSourceNew = new kendo.data.DataSource({
 
 
 $(document).ready(function() {
+	console.log("*******************************************8");
 	//选项卡
 	if (!$("#tabstrip").data("kendoTabStrip")){
 		$("#tabstrip").kendoTabStrip({
@@ -112,7 +203,7 @@ $(document).ready(function() {
 	
 	//表单中的各种控件
 	//发票类型
-	var invoiceTypeItems = [{ text: "invoiceType1", value: "1" }, { text: "invoiceType2", value: "2" }, { text: "invoiceType3", value: "3" }];
+	var invoiceTypeItems = [{ text: "增值税专用", value: 1 }, { text: "增值税普通", value: 2 }, { text: "建筑业发票", value: 3 }, { text: "服务业发票", value: 4 }];
 	$("#invoiceType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
@@ -180,21 +271,6 @@ $(document).ready(function() {
         optionLabel: "选择项目...",
 		dataSource : projectItems,
 	});
-	
-//	var customerItems = new kendo.data.DataSource({
-//		transport : {
-//			read : {
-//				url : "/service/customer/list",
-//				dataType : "jsonp"
-//			}
-//		}
-//	});
-//	$("#customer").kendoDropDownList({
-//		dataTextField : "name",
-//		dataValueField : "_id",
-//        optionLabel: "选择客户...",
-//		dataSource : customerItems,
-//	});
 	
 	//合同签订日期控件
 	$("#contractDate").kendoDatePicker();
@@ -275,7 +351,6 @@ $(document).ready(function() {
 			scrollable : true
 		});
 	}//成本设备清单_new
-	
 	postAjaxRequest("/service/sc/get", redirectParams, edit);
 	
 });//end dom ready	
@@ -318,12 +393,52 @@ function edit(data){
 				field : "eqcostMemo",
 				title : "备注"
 			} ],
-
-			//toolbar : [ {name:"create",text:"新增成本项"} ],
-			//editable : true,
 			scrollable : true
 		});
 	}//成本设备清单_old
+
+	invoiceDataSource.data(scm.scInvoiceInfo);
+	if (!$("#invoiceList").data("kendoGrid")){
+		$("#invoiceList").kendoGrid({
+			dataSource : invoiceDataSource,
+			editable : "popup",
+			toolbar : [ {
+				template : kendo.template($("#addInvoiceButtonTem").html())
+			} ],
+			//toolbar : [ { name:"create",text:"新开票" } ],
+			columns : [ {
+				field : "scInvoiceMoney",
+				title : "开票金额"
+			}, {
+				field : "invoiceType",
+				title : "开票类型"
+			}, {
+				field : "scInvoiceDate",
+				title : "开票日期"
+			}],
+			scrollable : true
+		});
+	}
+	
+	gotMoneyDataSource.data(scm.scGotMoneyInfo);
+	if (!$("#gotMoneyList").data("kendoGrid")){
+		$("#gotMoneyList").kendoGrid({
+			dataSource : gotMoneyDataSource,
+			editable : "popup",
+			toolbar : [ {
+				template : kendo.template($("#addGotMoneyButtonTem").html())
+			} ],
+			//toolbar : [ { name:"create",text:"新收款" } ],
+			columns : [ {
+				field : "scGotMoney",
+				title : "收款金额"
+			}, {
+				field : "scGotMoneyDate",
+				title : "收款日期"
+			}],
+			scrollable : true
+		});
+	}
 	kendo.bind($("#editSalesContract"), scm);
 }
 		
@@ -337,6 +452,53 @@ function saveSC(){
 	dataSource.sync();
 	loadPage("scList");
 };
+
+function addInvoice(){
+	im = new scInvoiceModel();
+	console.log(redirectParams._id+"&&&&&&&&&&&&&&&&&&&&&&&&&");
+	kendo.bind($("#invoice-edit"), im);
+	var options = {id:"invoice-edit", width:"450px", height: "300px", title:"新开票"};
+	openWindow(options);
+}
+
+function saveInvoice(){
+	im.set("scId", redirectParams._id);
+	invoiceDataSource.add(im);
+	invoiceDataSource.sync();
+	var window = $("#invoice-edit");
+
+	if (window.data("kendoWindow")) {
+		window.data("kendoWindow").close();
+	}
+	
+	var grid = $("#invoiceList");
+	if (grid.data("kendoGrid")) {
+		grid.data("kendoGrid").refresh();
+	}
+}
+
+function addGotMoney(){
+	gmm = new scGotMoneyModel();
+	kendo.bind($("#got-money-edit"), gmm);
+	var options = {id:"got-money-edit", width:"450px", height: "300px", title:"新收款"};
+	openWindow(options);
+}
+
+function saveGotMoney(){
+	gmm.set("scId", redirectParams._id);
+	gotMoneyDataSource.add(gmm);
+	gotMoneyDataSource.sync();
+	var window = $("#got-money-edit");
+
+	if (window.data("kendoWindow")) {
+		window.data("kendoWindow").close();
+	}
+	
+	var grid = $("#gotMoneyList");
+	if (grid.data("kendoGrid")) {
+		grid.data("kendoGrid").refresh();
+	}
+}
 	
 	
 	

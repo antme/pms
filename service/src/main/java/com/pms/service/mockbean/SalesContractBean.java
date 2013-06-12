@@ -49,14 +49,22 @@ public class SalesContractBean {
 	public static final String SC_EQ_LIST_MEMO = "eqcostMemo";//备注
 	public static final String SC_EQ_LIST_DISCOUNT_RATE = "eqcostDiscountRate"; //折扣率
 	
-	//执行信息
+	//执行信息-财务数据
+	//包装字段
+	public static final String SC_EXECUTION_INFO = "scExecutionInfo";
+	public static final String SC_INVOICE_INFO = "scInvoiceInfo";
+	public static final String SC_GOT_MONEY_INFO = "scGotMoneyInfo"; 
+	
 	public static final String SC_SHIPMENTS_MONEY = "scShipmentsMoney"; //==发货金额
 	public static final String SC_INVOICE_MONEY = "scInvoiceMoney";  //==开票金额
 	public static final String SC_GOT_MONEY = "scGotMoney";  //==收款金额
+	public static final String SC_GOT_MONEY_DATE = "scGotMoneyDate";  //==收款日期
 	public static final String SC_RECEIVABLE_MONEY = "scReceivableMoney";  //==应收账款
 	public static final String SC_NO_EXECUTION_MONEY = "scNoExecutionMoney";  //==未执行款
+
+	public static final String SC_INVOICE_DATE = "scInvoiceDate"; //==开票日期
 	
-	//财务数据
+	public static final String SC_ID = "scId"; // 其他表外键引用SC 时用此字段名 （eg. 开票表，收款表）
 	
 	//工程数据
 	

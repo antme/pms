@@ -56,6 +56,41 @@ public class SalesContractController extends AbstractController {
         responseWithData(salesContractService.getSC(params), request, response);
     }
     
+    @RequestMapping("/invoice/add")
+    public void addInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.addInvoiceForSC(params), request, response);
+    }
+    
+    @RequestMapping("/invoice/update")
+    public void updateInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.addInvoiceForSC(params), request, response);
+    }
+    
+    @RequestMapping("/invoice/list")
+    public void listInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.listInvoiceForSC(params), request, response);
+    }
+    
+    @RequestMapping("/gotmoney/add")
+    public void addGotMoneyForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.addGotMoneyForSC(params), request, response);
+    }
+    
+    @RequestMapping("/gotmoney/update")
+    public void updateGotMoneyForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.addGotMoneyForSC(params), request, response);
+    }
+    
+    @RequestMapping("/gotmoney/list")
+    public void listGotMoneyForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.listGotMoneyForSC(params), request, response);
+    }
 
 	public ISalesContractService getSalesContractService() {
 		return salesContractService;

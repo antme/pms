@@ -169,12 +169,74 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		String _id = (String) params.get(ApiConstants.MONGO_ID);
 		Map<String, Object> sc = dao.findOne(ApiConstants.MONGO_ID, _id, DBBean.SALES_CONTRACT);
 		
+		//获取相关的 设备清单列表数据
 		Map<String, Object> eqCostQuery = new HashMap<String, Object>();
 		eqCostQuery.put(EqCostListBean.EQ_LIST_SC_ID, _id);
 		Map<String, Object> eqList = dao.list(eqCostQuery, DBBean.EQ_COST);
 		List<Map<String, Object>> eqListData = (List<Map<String, Object>>) eqList.get(ApiConstants.RESULTS_DATA);
 		
+		//获取相关开票信息列表数据
+		Map<String, Object> invoiceQuery = new HashMap<String, Object>();
+		invoiceQuery.put(SalesContractBean.SC_ID, _id);
+		Map<String, Object> invoiceList = dao.list(invoiceQuery, DBBean.SC_INVOICE);
+		List<Map<String, Object>> invoiceListData = (List<Map<String, Object>>) invoiceList.get(ApiConstants.RESULTS_DATA); 
+		
+		//后去相关收款信息列表数据
+		Map<String, Object> gotMoneyQuery = new HashMap<String, Object>();
+		gotMoneyQuery.put(SalesContractBean.SC_ID, _id);
+		Map<String, Object> gotMoneyList = dao.list(gotMoneyQuery, DBBean.SC_GOT_MONEY);
+		List<Map<String, Object>> gotMoneyListData = (List<Map<String, Object>>) gotMoneyList.get(ApiConstants.RESULTS_DATA);
+		
 		sc.put(SalesContractBean.SC_EQ_LIST, eqListData);
+		sc.put(SalesContractBean.SC_INVOICE_INFO, invoiceListData);
+		sc.put(SalesContractBean.SC_GOT_MONEY_INFO, gotMoneyListData);
 		return sc;
+	}
+
+	@Override
+	public Map<String, Object> addInvoiceForSC(Map<String, Object> params) {
+		String _id = (String) params.get(ApiConstants.MONGO_ID);
+		if (_id == null || _id.length() == 0){
+			Map<String, Object> invoice = new HashMap<String, Object>();
+			invoice.put(SalesContractBean.SC_INVOICE_MONEY, params.get(SalesContractBean.SC_INVOICE_MONEY));
+			invoice.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
+			invoice.put(SalesContractBean.SC_INVOICE_DATE, params.get(SalesContractBean.SC_INVOICE_DATE));
+			invoice.put(SalesContractBean.SC_ID, params.get(SalesContractBean.SC_ID));
+			return dao.add(invoice, DBBean.SC_INVOICE);
+		}else{
+			
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> listInvoiceForSC(Map<String, Object> params) {
+		String scId = (String) params.get(SalesContractBean.SC_ID);
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(SalesContractBean.SC_ID, scId);
+		return dao.list(query, DBBean.SC_INVOICE);
+	}
+
+	@Override
+	public Map<String, Object> addGotMoneyForSC(Map<String, Object> params) {
+		String _id = (String) params.get(ApiConstants.MONGO_ID);
+		if (_id == null || _id.length() == 0){
+			Map<String, Object> gm = new HashMap<String, Object>();
+			gm.put(SalesContractBean.SC_GOT_MONEY, params.get(SalesContractBean.SC_GOT_MONEY));
+			gm.put(SalesContractBean.SC_GOT_MONEY_DATE, params.get(SalesContractBean.SC_GOT_MONEY_DATE));
+			gm.put(SalesContractBean.SC_ID, params.get(SalesContractBean.SC_ID));
+			return dao.add(gm, DBBean.SC_GOT_MONEY);
+		}else{
+			
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> listGotMoneyForSC(Map<String, Object> params) {
+		String scId = (String) params.get(SalesContractBean.SC_ID);
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(SalesContractBean.SC_ID, scId);
+		return dao.list(query, DBBean.SC_GOT_MONEY);
 	}
 }

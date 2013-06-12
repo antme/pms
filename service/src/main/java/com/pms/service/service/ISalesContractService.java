@@ -12,4 +12,12 @@ public interface ISalesContractService {
 	public Map<String, Object> listEqListBySC(Map<String, Object> params);
 	
 	public Map<String, Object> getSC(Map<String, Object> params);
+	
+	public Map<String, Object> addInvoiceForSC(Map<String, Object> params);
+	
+	public Map<String, Object> listInvoiceForSC(Map<String, Object> params);
+	
+	public Map<String, Object> addGotMoneyForSC(Map<String, Object> params);
+	
+	public Map<String, Object> listGotMoneyForSC(Map<String, Object> params);
 }
