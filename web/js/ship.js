@@ -42,7 +42,7 @@ $(document).ready(function () {
     $("#grid").kendoGrid({
         dataSource: dataSource,
         pageable: true,
-        toolbar: ["create"],
+        toolbar: [ { template: kendo.template($("#template").html()) } ],
         columns: [
             { field:"applicationDepartment", title: "申请部门" },
             { field: "applicationDate", title:"申请日期", format: "{0:MM/dd/yyyy HH:mm tt}" },
@@ -52,3 +52,7 @@ $(document).ready(function () {
         editable: "popup"
     });
 });
+
+function toolbar_add() {
+	loadPage("addShip");
+}
