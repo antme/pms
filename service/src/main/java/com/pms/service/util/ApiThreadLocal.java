@@ -46,4 +46,9 @@ public class ApiThreadLocal {
 
         return get(UserBean.USER_ID) == null ? null : get(UserBean.USER_ID).toString();
     }
+    
+    public static String getCurrentUserName() {
+
+        return get(UserBean.USER_NAME) == null ? null : get(UserBean.USER_NAME).toString();
+    }
 }

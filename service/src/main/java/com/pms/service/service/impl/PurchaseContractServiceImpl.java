@@ -1,6 +1,5 @@
 package com.pms.service.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,7 +45,21 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> listPurchaseContracts() {
-        return this.dao.list(null, DBBean.PURCHASE_CONTRACT);
+        Map<String, Object> results = dao.list(null, DBBean.PURCHASE_CONTRACT);
+        List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
+        
+        for(Map<String, Object> data: list){
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ApiConstants.MONGO_ID, data.get("supplierName"));
+            
+            
+            Map<String, Object> relatedProjectInfo = this.dao.findOneByQuery(query, DBBean.SUPPLIER);
+            
+            data.put("supplierName", relatedProjectInfo.get("supplierName"));
+        }
+        
+        return results;
+        
     }
     
     
@@ -133,7 +146,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         Map<String, Object> result =  dao.updateById(request, db);
         
-        updateSummaryUnderContract(db, cc.get(PurchaseRequestOrder.SALES_CONTRACT_CODE).toString());
+        if(cc.get(PurchaseRequestOrder.SALES_CONTRACT_CODE)!=null){
+            updateSummaryUnderContract(db, cc.get(PurchaseRequestOrder.SALES_CONTRACT_CODE).toString());
+        }
         
         return result;
         
@@ -269,7 +284,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
 
     public Map<String, Object> approvePurchaseRequest(HashMap<String, Object> request){
-        return processRequest(request, DBBean.PURCHASE_REQUEST, APPROVED);
+        
+        if(isDepartmentManager()){
+            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequestOrder.MANAGER_APPROVED);
+        }else{
+            return processRequest(request, DBBean.PURCHASE_REQUEST, APPROVED);
+        }
     }
     
     public Map<String, Object> cancelPurchaseRequest(HashMap<String, Object> request){

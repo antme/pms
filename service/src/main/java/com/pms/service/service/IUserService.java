@@ -1,6 +1,5 @@
 package com.pms.service.service;
 
-import java.util.List;
 import java.util.Map;
 
 public interface IUserService {
@@ -9,7 +8,7 @@ public interface IUserService {
     
     public void deleteUser(Map<String, Object> user);
 
-    public String login(Map<String, Object> parameters);
+    public Map<String, Object> login(Map<String, Object> parameters);
 
     public String logout(Map<String, Object> parameters);
     
