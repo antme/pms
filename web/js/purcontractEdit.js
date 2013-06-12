@@ -113,6 +113,8 @@ function save() {
 		//force set haschanges = true
 		itemDataSource.at(0).set("uid", kendo.guid());
 	}
+	
+	
 	// 同步数据
 	itemDataSource.sync();
 	

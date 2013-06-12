@@ -28,33 +28,20 @@ $(document).ready(function() {
 			field : "purchaseRequestCode",
 			title : "采购申请编号"
 		}, {
-			field : "purchaseOrderCode",
-			title : "采购订单编号"
-
-		}, {
-			field : "customerName",
-			title : "客户名"
-		}, {
-			field : "projectManager",
-			title : "PM"
-		}, {
+			field : "supplierName",
+			title : "供应商"
+		},{
 			field : "status",
-			title : "采购合同状态"
+			title : "合同状态"
 		}, {
 			field : "signDate",
-			title : "合同签署时间"
+			title : "签署时间"
 		}, {
 			field : "requestedTotalMoney",
 			title : "金额"
 		}, {
 			field : "logisticsType",
 			title : "物流类型"
-		}, {
-			field : "supplierName",
-			title : "供应商名"
-		}, {
-			field : "supplierCode",
-			title : "供应商编号"
 		}]
 
 	});

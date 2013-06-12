@@ -32,7 +32,7 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listBackRequestForSelect();
     
-    public Map<String, Object> listPurchaseRequestForSelect();
+    public Map<String, Object> listApprovedPurchaseRequestForSelect();
 
     public Map<String, Object> getPurchaseOrder(HashMap<String, Object> parameters);
     
@@ -53,4 +53,6 @@ public interface IPurchaseContractService {
     public Map<String, Object> getPurchaseRequest(HashMap<String, Object> parameters);
     
     public void deletePurchaseRequest(Map<String, Object> order);
+
+    public Map<String, Object> getBackRequestForSelect(HashMap<String, Object> parserJsonParameters);
 }

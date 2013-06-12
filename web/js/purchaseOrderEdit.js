@@ -53,7 +53,7 @@ var selectedRequest;
 
 $(document).ready(function() {
 		$("#purchaseRequest").kendoDropDownList({
-				dataTextField : "code",
+				dataTextField : "purchaseRequestCode",
 				dataValueField : "_id",
 				dataSource : {
 					transport : {
@@ -136,8 +136,12 @@ function loadRequest(data){
 
 function submitOrder(status) {
 	if(!requestDataItem.status){
+		requestDataItem.status = "草稿";
+	}
+	if(status){
 		requestDataItem.status = status;
 	}
+
 	
 	if(itemDataSource.at(0)){
 		//force set haschanges = true
