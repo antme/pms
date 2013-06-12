@@ -48,4 +48,12 @@ public class PurchaseBack {
 	public static final String purchaseContract_code = "purchaseContract_code";
 	public static final String purchaseContract_id = "purchaseContract_id";
 	
+	public static final String purchaseBack_id = "purchaseBack_id";
+	public static final String purchaseAllot_id = "purchaseAllot_id";
+	
+	public static final String allotCount = "allotCount";//调拨申请数
+	
+	
+	
+	
 }

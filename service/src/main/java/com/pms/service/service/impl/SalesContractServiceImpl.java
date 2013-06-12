@@ -133,7 +133,37 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> result = dao.list(query, DBBean.EQ_COST);
 		return result;
 	}
-
+	
+	public Map<String,Object> getBaseInfoByIds(List<String> ids){
+		String[] keys = new String[]{SalesContractBean.SC_CODE,SalesContractBean.SC_AMOUNT, SalesContractBean.SC_PROJECT_ID,
+				SalesContractBean.SC_CUSTOMER_ID,SalesContractBean.SC_BACK_REQUEST_COUNT};
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put(ApiConstants.LIMIT_KEYS, keys);
+		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
+		Map<String,Object> result = dao.list(query, DBBean.SALES_CONTRACT);
+		mergeProjectInfoForSC(result);
+		List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+		Map<String,Object> data = new HashMap<String,Object>();
+		for(Map<String,Object> obj : list){
+			data.put((String)obj.get(ApiConstants.MONGO_ID), obj);
+			obj.remove(ApiConstants.MONGO_ID);
+		}
+		return data;
+	}
+	/**id:map*/
+	public Map<String,Object> getEqBaseInfoBySalesContractIds(String id){
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put(EqCostListBean.EQ_LIST_SC_ID, id);
+		return dao.listToOneMapAndIdAsKey(query,DBBean.EQ_COST);
+	}
+	
+	/**id:map*/
+	public Map<String,Object> getEqBaseInfoByIds(String ids){
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
+		return dao.listToOneMapAndIdAsKey(query,DBBean.EQ_COST);
+	}
+	
 	private void mergeProjectInfoForSC(Map<String, Object> result){
 		List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
 		

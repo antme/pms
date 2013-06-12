@@ -1,5 +1,6 @@
 package com.pms.service.service;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ISalesContractService {
@@ -26,4 +27,10 @@ public interface ISalesContractService {
 	public Map<String, Object> listMonthShipmentsForSC(Map<String, Object> params);
 	
 	public Map<String, Object> getRelatedProjectInfo(Map<String, Object> params);
+	
+	public Map<String,Object> getBaseInfoByIds(List<String> ids);
+	
+	public Map<String,Object> getEqBaseInfoBySalesContractIds(String id);
+	
+	public Map<String,Object> getEqBaseInfoByIds(String ids);
 }

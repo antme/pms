@@ -19,21 +19,10 @@
 }
 </style>
 
-<script  src="js/purchaseBackEdit.js"></script>
+<script  src="js/purchaseAllotManageEdit.js"></script>
 <body>
-<script id="popup-editor" type="text/x-kendo-template">
-  	<h3>申请数量</h3>
-	<span data-bind="text: eqcostNo"></span>
-</script>
-
 <div>
-		<h2>添加申请表单</h2>
-		<div id="searchDiv">
-			<label>选择合同:</label>
-			<input id="searchfor" type="text" value="51b6ccd12b6001f9de9c5627"/>
-			<input id="searchbt" type="button" value="确定"/>
-		</div>
-		<br><hr>
+		<h2>审核调拨申请</h2>
 		<div id="form-container">
 			<div>
 				<table style="width: 80%">
@@ -72,9 +61,9 @@
             </div>
             <br>
             <div>
-            	<input class="submitform foredit" type="button" value="保存">
-            	<input class="submitform foredit" type="button" value="提交">
-            	<input class="submitform foredit" type="button" value="取消">
+            	<input class="submitform" type="button" value="批准">
+            	<input class="submitform" type="button" value="拒绝">
+            	<input class="submitform" type="button" value="取消">
             </div>
 		</div>
 </div>		

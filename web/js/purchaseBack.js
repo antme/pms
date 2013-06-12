@@ -14,25 +14,20 @@ $(document).ready(function () {
 			department:{},
 			submitDate:{},
 			planDate:{},
-			operateDate:{},
 			type:{},
 			status:{},
-			specialRequire:{},
 			comment:{},
 			money:{},
 			eqcostList:{},
-			costUsedGoods: {},
-			countUsedRquest: {},
-			percentUsedGoods: {},
-			costUsedGoods: {},		
-			project_code : {},
-			project_name : {},
-			project_managerName : {},
-			customer_name : {},
-			salesContract_code : {},
-			purchaseOrder_code: {},
-			purchaseContract_code: {},
-			backRequestCount:{}
+			projectCode : {},
+			projectName : {},
+			projectManager : {},
+			customer : {},
+			contractCode : {},
+			contractAmount:{},
+			backRequestCount:{},
+			purchaseOrderCode: {},
+			purchaseContractCode: {}
 		}
 	});
 
@@ -64,13 +59,13 @@ $(document).ready(function () {
 	    columns: [
 	        { field: "code", title: "申请编号" },
 	        { field: "type", title:"采购类别" ,width:"120px"},
-	        { field: "salesContract_code", title:"销售合同编号" },
-	        { field: "purchaseOrder_code", title:"采购订单编号" },
-	        { field: "purchaseContract_code", title:"采购合同编号" },
-	        { field: "customer_name", title:"客户名" },
-	        { field: "project_managerName", title:"PM" },
+	        { field: "contractCode", title:"销售合同编号" },
+	        { field: "purchaseOrderCode", title:"采购订单编号" },
+	        { field: "purchaseContractCode", title:"采购合同编号" },
+	        { field: "customer", title:"客户名" },
+	        { field: "projectManager", title:"PM" },
 	        { field: "status", title:"申请状态" },
-	        { field: "operateDate", title:"批准时间" },
+	        { field: "approveDate", title:"批准时间" },
 	        { field: "money", title:"金额" },
 	        { field: "backRequestCount", title:"合同下申请单数量" }/*,
 	        { field: "percentUsedGoods", title:"合同下已成功申请请货物%" },
@@ -93,13 +88,13 @@ function edit(){
 
 }
 
-function approve() {
+function pending() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.status == "已提交" || row.status == "已批准"){
+	} else if(row.status == "已提交"){
 		$.ajax({
-			url : baseUrl+"/approve",
+			url : baseUrl+"/pending",
 			success : function(responsetxt) {
 				var res;
 				eval("res=" + responsetxt);
@@ -118,13 +113,13 @@ function approve() {
 	}
 }
 
-function reject() {
+function destroy() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.status == "已提交" || row.status == "已批准"){
+	} else if(row.status == "已保存"){
 		$.ajax({
-			url : baseUrl+"/reject",
+			url : baseUrl+"/destroy",
 			success : function(responsetxt) {
 				var res;
 				eval("res=" + responsetxt);

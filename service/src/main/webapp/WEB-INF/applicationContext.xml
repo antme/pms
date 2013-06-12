@@ -67,6 +67,7 @@
 	<bean name="purchaseService" class="com.pms.service.service.impl.PurchaseServiceImpl"
 		id="purchaseService">
 		<property name="dao" ref="commonDao"></property>
+		<property name="salesContractService" ref="salesContractService"></property>
 	</bean>
 
 	<bean name="supplierService" class="com.pms.service.service.impl.SupplierServiceImpl"

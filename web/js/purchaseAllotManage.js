@@ -34,9 +34,14 @@ $(document).ready(function () {
 	listDatasource = new kendo.data.DataSource({
 	    transport: {
 	        read:  {
-	            url: baseUrl + "/back/listchecked",
+	            url: baseUrl + "/allot/list",
 	            dataType: "jsonp",
 	            type : "post"
+	        },
+	        parameterMap: function(options, operation) {
+	            if (operation !== "read" && options.models) {
+	                return {models: kendo.stringify(options.models)};
+	            }
 	        }
 	    },
 	    batch: true,
@@ -53,55 +58,25 @@ $(document).ready(function () {
 	    toolbar: kendo.template($("#template").html()),
 	    columns: [
 	        { field: "code", title: "申请编号" },
-	        { field: "type", title:"采购类别" ,width:"120px"},
 	        { field: "contractCode", title:"销售合同编号" },
 	        { field: "purchaseOrderCode", title:"采购订单编号" },
 	        { field: "purchaseContractCode", title:"采购合同编号" },
 	        { field: "customer", title:"客户名" },
 	        { field: "projectManager", title:"PM" },
 	        { field: "status", title:"申请状态" },
-	        { field: "approveDate", title:"批准时间" },
-	        { field: "money", title:"金额" },
-	        { field: "backRequestCount", title:"合同下申请单数量" }
+	        { field: "approveDate", title:"批准时间" }
 	    ]
 	});
 	
 });
 
-function generateAllot() {
+
+function edit(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else {
-		$.ajax({
-			url : baseUrl+"/allot/submit",
-			success : function(responsetxt) {
-				var res;
-				eval("res=" + responsetxt);
-				if (res.status == "0") {
-					alert(res.msg);
-				} else {
-					loadPage("purchaseAllotManage");
-				}
-			}, error : function() {
-				alert("连接Service失败");
-			}, data : {
-				_id : row._id
-			},method : "post"
-		});
+	} else {	
+		loadPage("purchaseAllotManageEdit", { _id : row._id });	
 	}
+
 }
-/*function editAllot(){
-	var row = getSelectedRowDataByGrid("grid");
-	if (!row) {
-		alert("点击列表可以选中数据");
-	} else if(row.status == "调拨中"){
-		loadPage("purchaseAllotEdit",{_id:row._id});
-	}else{
-		alert("请选择‘调拨中’的数据");
-	}
-}*/
-
-function generateRequest(){}
-
-

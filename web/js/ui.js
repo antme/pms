@@ -69,7 +69,7 @@ function init(data){
                 text: "采购合同", id: "purchasecontract", expanded: false, imageUrl: "/images/contract.png",
                 items: [
                     { text: "备货申请", id: "purchaseAllot", imageUrl: "/images/order.png" },
-                    { text: "调拨申请", id: "contract", imageUrl: "/images/ccontract.png" },
+                    { text: "调拨申请", id: "purchaseAllotManage", imageUrl: "/images/ccontract.png" },
                     { text: "采购申请", id: "purchaseRequestApprove", imageUrl: "/images/ccontract.png"},
                     { text: "采购订单", id: "purchaseorder", imageUrl: "/images/ccontract.png"},
                     { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
@@ -188,7 +188,12 @@ function loadPage(page, parameters) {
 		page = "html/purchasecontract/purchaseAllot.html";		
 	} else if(page == "purchaseAllotEdit"){
 		page = "html/purchasecontract/purchaseAllotEdit.html";		
+	} else if(page == "purchaseAllotManage"){
+		page = "html/purchasecontract/purchaseAllotManage.html";		
+	}else if(page == "purchaseAllotManageEdit"){
+		page = "html/purchasecontract/purchaseAllotManageEdit.html";		
 	}
+	
 	
 	if(!page.endWith(".html")){
 		page = "html/supplier/supplier.html";

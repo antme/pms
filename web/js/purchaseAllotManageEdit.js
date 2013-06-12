@@ -1,6 +1,6 @@
 $(document).ready(function () {
 	var currentObj;
-	var baseUrl = "../../service/purchase/back";
+	var baseUrl = "../../service/purchase";
 	var subModel = kendo.data.Model.define({
 		id : "eqcostNo",
 		fields : {
@@ -40,8 +40,15 @@ $(document).ready(function () {
             	 validation: { // validation rules
                      //required: true, // the field is required
                      min: 0 // the minimum value is 1
-                 },
-            }
+                 }
+            },
+            allotCount:{
+            	type: "number",
+           	 	validation: { // validation rules
+                    //required: true, // the field is required
+                    min: 0 // the minimum value is 1
+                }
+           }
 		}
 	});	
 	var myModel = kendo.data.Model.define({
@@ -75,9 +82,9 @@ $(document).ready(function () {
 			},
 			aggregate: [ 
 			    { field: "eqcostNo", aggregate: "count" },
+			    { field: "allotCount", aggregate: "sum" },
 			    { field: "backTotalCount", aggregate: "sum" },
-			    { field: "eqcostLeftAmount", aggregate: "sum" },
-			    { field: "eqcostAmount", aggregate: "count" }
+			    { field: "eqcostAmount", aggregate: "sum" }
 			]			
 		},
 	    columns: [
@@ -86,9 +93,8 @@ $(document).ready(function () {
 			{ field: "eqcostProductName", title: "产品名称" },
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
-			{ field: "backTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
-			{ field: "eqcostLeftAmount", title: "可申请数量",footerTemplate: "总共: #=sum#"},
-			{ field: "eqcostAmount", title: "总数" ,footerTemplate: "总共: #=count#"},
+			{ field: "allotCount", title: "调拨数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
+			{ field: "backTotalCount", title: "备货数量",footerTemplate: "总共: #=sum#"},
 			{ field: "eqcostBasePrice", title: "预估单价￥" },
 			{ field: "eqcostBrand", title: "品牌" },
 			{ field: "eqcostMemo", title: "备注" }
@@ -97,46 +103,19 @@ $(document).ready(function () {
 	  	toolbar: [{text:"保存",name:"save"}]
 	});
 
-	$("#searchfor").kendoDropDownList({
-		dataTextField : "contractCode",
-		dataValueField : "_id",
-		dataSource : {
-			transport : {
-				read : {
-					dataType : "jsonp",
-					url : "/service/sc/listforselect",
-				}
-			}
-		}
-	});	
-
 	$(".submitform").click(function(){
 		if(confirm(this.value + "表单，确认？")){
-			if(this.value == "保存"){
-				postAjaxRequest( baseUrl+"/save", {models:kendo.stringify(currentObj)} , saveSuccess);
-			} else if(this.value == "提交"){
-				postAjaxRequest( baseUrl+"/submit", {models:kendo.stringify(currentObj)} , saveSuccess);
+			if(this.value == "批准"){
+				postAjaxRequest( baseUrl+"/allot/approve", {models:kendo.stringify(currentObj)} , saveSuccess);
+			} else if(this.value == "拒绝"){
+				postAjaxRequest( baseUrl+"/allot/reject", {models:kendo.stringify(currentObj)} , saveSuccess);
 			}else if(this.value=="取消"){
 				location.reload();
 			}
 		}
 	});
-
-	$("#searchbt").click(function(){
-		var vv = $("#searchfor").val();
-		if(vv != ""){
-			postAjaxRequest(baseUrl+"/prepare", {salesContract_id:vv}, edit);
-		}else{
-			alert("请选择合同编号");
-		}
-	});	
-	
+	$(".foredit ").attr("disabled","disabled");
 	function edit(e){
-		if(e){
-			if(e.status == "已提交"){
-				$(".foredit").attr("disabled","disabled");
-			}
-		}
 		currentObj = new myModel(e);
 		kendo.bind($("#form-container"), currentObj);
 	}
@@ -144,15 +123,12 @@ $(document).ready(function () {
 	function saveSuccess(){
 		location.reload();
 	}
+	
+	
 	if(redirectParams){
-		var backId = redirectParams._id;
-		var saleId = redirectParams.salesContract_id;
-		$("#searchDiv").hide();
-		if(backId) {
-			postAjaxRequest(baseUrl+"/load", {_id:backId}, edit);
-		}else if(saleId){
-			postAjaxRequest(baseUrl+"/prepare", {salesContract_id:saleId}, edit);
-		}		
+		if(redirectParams._id) {
+			postAjaxRequest(baseUrl+"/allot/load", {_id:redirectParams._id}, edit);
+		}	
 	}
 
 	
