@@ -111,4 +111,7 @@ public class SalesContractBean {
 //	public static final int SC_TAX_TYPE_ = 1; //
 //	public static final int SC_TAX_TYPE_ = 1; //
 //	public static final int SC_TAX_TYPE_ = 1; //
+	
+	
+	public static final String SC_BACK_REQUEST_COUNT = "backRequestCount";//合同下申请单数量
 }

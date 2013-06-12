@@ -1,0 +1,81 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<style>
+.table_form td {
+	padding: 3px 10px;
+}
+.table_form td:FIRST-CHILD {
+	text-align: right;
+	width: 100px;
+}
+#form-container ul {
+	list-style: none;
+	padding: 0px;
+	display:block;
+}
+#form-container ul li {
+	float: left;
+	padding: 0px 5px;
+}
+</style>
+
+<script  src="js/purchaseBackEdit.js"></script>
+<body>
+<script id="popup-editor" type="text/x-kendo-template">
+  	<h3>申请数量</h3>
+	<span data-bind="text: eqcostNo"></span>
+</script>
+
+<div>
+		<h2>添加申请表单</h2>
+		<div id="searchDiv">
+			<label>选择合同:</label>
+			<input id="searchfor" type="text" value="51b6ccd12b6001f9de9c5627"/>
+			<input id="searchbt" type="button" value="确定"/>
+		</div>
+		<br><hr>
+		<div id="form-container">
+			<div>
+				<table style="width: 80%">
+					<tr>
+						<td>项目名： <span data-bind="text: project_name"></span></td>	
+						<td>项目编号： <span data-bind="text: project_code"></span></td>
+						<td>合同编号： <span data-bind="text: salesContract_code"></span></td>
+						<td>客户名称： <span data-bind="text: customer_name"></span></td>
+						<td>申请编号：<span data-bind="text: code" ></span></td>
+						<td>状态：<span data-bind="text: status" ></span></td>
+					</tr>
+				</table>
+			</div>
+			<hr>
+			<div>
+				<ul>
+					<li>申请部门: <input type="text" class="k-textbox foredit" data-bind="value: department" /></li>
+					<li>采购类别: <select data-bind="value: type" class="foredit" >
+										<option value="上海代理产品采购">上海代理产品采购</option>
+										<option value="同方自主产品采购">同方自主产品采购</option>
+										<option value="其它渠道采购">其它渠道采购</option>
+								</select>
+					</li>
+					<li>到货要求日期: <input data-role="datepicker"  data-bind="value: planDate" class="foredit"  /></li>
+				</ul>
+			</div>
+			<br><br>
+            <div>
+				<h4>成本设备清单</h4>
+				<div id="subGrid" data-bind="source: eqcostList"></div>
+            </div>
+            <br><br>
+            <div>
+            	<label>备注:</label>
+            	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: comment" ></textarea>
+            </div>
+            <br>
+            <div>
+            	<input class="submitform" type="button" value="保存">
+            	<input class="submitform" type="button" value="提交">
+            	<input class="submitform" type="button" value="取消">
+            </div>
+		</div>
+</div>		
+</body>

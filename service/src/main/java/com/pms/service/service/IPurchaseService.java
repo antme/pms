@@ -3,24 +3,33 @@ package com.pms.service.service;
 import java.util.Map;
 
 public interface IPurchaseService {
-    
-	public Map<String,Object> create(Map<String,Object> params);
 	
-	public Map<String,Object> update(Map<String,Object> params);
+	//--------备货API---------
+	/**初始化备货申请添加页面*/
+	public Map<String,Object> prepareBack(Map<String,Object> params);
+	/**加载备货申请详情*/
+	public Map<String,Object> loadBack(Map<String,Object> params);
+	/**保存备货申请*/
+	public Map<String,Object> saveBack(Map<String,Object> params);
+	/**提交备货申请*/
+	public Map<String,Object> submitBack(Map<String,Object> params);
+	/**批准审核备货申请，已提交=》已批准=》已审核=》调拨中=》已调拨*/
+	public Map<String,Object> approveBack(Map<String,Object> params);
+	/**拒绝备货申请*/
+	public Map<String,Object> rejectBack(Map<String,Object> params);
+	/**中止备货申请*/
+	public Map<String,Object> pendingBack(Map<String,Object> params);
+	/**列出所有备货申请*/
+	public Map<String,Object> listAllBack(Map<String,Object> params);
+	/**列出采购已审核的备货申请 (包括已审核，调拨中，已调拨，已采购申请)*/
+	public Map<String,Object> listCheckedBack(Map<String,Object> params);
+	/**列出已调拨的备货申请*/
+	public Map<String,Object> listAllottedBack(Map<String,Object> params);	
+	/**删除*/
+	public void destoryBack(Map<String,Object> params);
+	/**提交调拨申请*/
+	public Map<String,Object> submitAllotBack(Map<String,Object> params);	
+	/**仓库管理员完成调拨申请，输入可调拨货物数字，0--备货数*/
+	public Map<String,Object> approveAllotForBack(Map<String,Object> params);	
 	
-	public void destroy(Map<String,Object> params);
-	
-	public Map<String,Object> list(Map<String,Object> params);
-
-	public Map<String,Object> prepareRequest(Map<String,Object> params);
-	
-	public Map<String,Object> loadRequest(Map<String,Object> params);
-	
-	public Map<String,Object> approveRequest(Map<String,Object> params);
-	
-	public Map<String,Object> rejectRequest(Map<String,Object> params);
-	
-	public Map<String,Object> submitRequest(Map<String,Object> params);
-	
-	public Map<String,Object> saveRequest(Map<String,Object> params);
 }

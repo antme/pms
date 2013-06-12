@@ -109,6 +109,12 @@ var itemListDataSource = new kendo.data.DataSource({
 });
 
 function save() {
+	if(itemDataSource.at(0)){
+		//force set haschanges = true
+		itemDataSource.at(0).set("uid", kendo.guid());
+	}
+	
+	
 	// 同步数据
 	itemDataSource.sync();
 	
@@ -161,7 +167,10 @@ function edit(data) {
 	// 初始化空对象
 	var dataItem = new model();
 	if(data){
+		$("#purchasecontractselect").hide();
 		requestDataItem = data;
+	}else{
+		$("#purchasecontractselect").show();
 	}
 
 	if (requestDataItem) {

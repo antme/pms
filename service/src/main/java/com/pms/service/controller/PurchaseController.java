@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.annotation.RoleValidate;
-import com.pms.service.mockbean.ApiConstants;
-import com.pms.service.service.ICustomerService;
 import com.pms.service.service.IPurchaseService;
 
 @Controller
@@ -25,60 +23,79 @@ public class PurchaseController extends AbstractController {
 	
  	private IPurchaseService purchaseService;
 	
- 	/****CRUD 采购申请********/
-    @RequestMapping("/request/create")
+    @RequestMapping("/back/prepare")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
-    public void addRequest(HttpServletRequest request, HttpServletResponse response) {
-    	Map<String,Object> obj = purchaseService.create(parserJsonParameters(request,  false));
-    	responseWithData(obj, request, response, "add_success");
+    public void prepareRequest(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.prepareBack(parserJsonParameters(request,  false)), request, response);
     }
 
-    @RequestMapping("/request/destroy")
+    @RequestMapping("/back/load")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
-    public void deleteRequest(HttpServletRequest request, HttpServletResponse response) {
-    	purchaseService.destroy(parserJsonParameters(request,  false));
-    	responseWithData(null, request, response);
-    }	
+    public void loadBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.loadBack(parserJsonParameters(request,  false)), request, response);
+    }
     
-    @RequestMapping("/request/update")
+    @RequestMapping("/back/save")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
-    public void updateRequest(HttpServletRequest request, HttpServletResponse response) {
-    	Map<String,Object> obj = purchaseService.update(parserJsonParameters(request,  false));
+    public void saveBack(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String,Object> obj = purchaseService.saveBack(parserJsonParameters(request,  false));
     	responseWithData(obj, request, response, "update_success");
     }
     
-    @RequestMapping("/request/list")
+    @RequestMapping("/back/submit")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
-    public void listRequest(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(purchaseService.list(parserJsonParameters(request,  false)), request, response);
+    public void submitBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.submitBack(parserJsonParameters(request,  false)), request, response);
+    }
+    
+    @RequestMapping("/back/approve")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void approveBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.approveBack(parserJsonParameters(request,  false)), request, response);
+    }
+    
+    @RequestMapping("/back/reject")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void rejectBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.rejectBack(parserJsonParameters(request,  false)), request, response);
+    }
+        
+    @RequestMapping("/back/destroy")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void destoryBack(HttpServletRequest request, HttpServletResponse response) {
+    	purchaseService.destoryBack(parserJsonParameters(request,  false));
+    	responseWithData(null, request, response);
+    }
+    
+    @RequestMapping("/back/list")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void listAllBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.listAllBack(parserJsonParameters(request,  false)), request, response);
+    }
+    
+    @RequestMapping("/back/listchecked")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void listHasCheckedBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.listCheckedBack(parserJsonParameters(request,  false)), request, response);
+    }
+    
+    @RequestMapping("/back/listallotted")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void listAllottedBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.listAllottedBack(parserJsonParameters(request,  false)), request, response);
     }
 
-    //获取某项目的清单列表
-    @RequestMapping("/request/prepare")
+    @RequestMapping("/back/submitallot")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
-    public void prepareRequest(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(purchaseService.prepareRequest(parserJsonParameters(request,  false)), request, response);
-    }
-
-    @RequestMapping("/request/approve")
-    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
-    public void approveRequest(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(purchaseService.approveRequest(parserJsonParameters(request,  false)), request, response);
-    } 
-    
-    @RequestMapping("/request/reject")
-    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
-    public void rejectRequest(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(purchaseService.rejectRequest(parserJsonParameters(request,  false)), request, response);
+    public void submitAllotBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.submitAllotBack(parserJsonParameters(request,  false)), request, response);
     }
     
-    @RequestMapping("/request/submit")
+    @RequestMapping("/back/approveallot")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
-    public void submitRequest(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(purchaseService.submitRequest(parserJsonParameters(request,  false)), request, response);
-    }    
-    /****CRUD 采购订单********/
-    
+    public void approveAllotForBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.approveAllotForBack(parserJsonParameters(request,  false)), request, response);
+    }
     
 	public IPurchaseService getPurchaseService() {
 		return purchaseService;

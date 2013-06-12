@@ -68,6 +68,11 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listBackRequestForSelect(), request, response);
     }
     
+    @RequestMapping("/back/get")
+    public void getBackRequestForSelect(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.getBackRequestForSelect(parserJsonParameters(request, false)), request, response);
+    }
+    
     @RequestMapping("/request/add")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
     public void addPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
@@ -77,7 +82,7 @@ public class PurchaseContractController extends AbstractController {
     
     @RequestMapping("/request/select/list")
     public void listPurchaseRequestForSelect(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listPurchaseRequestForSelect(), request, response);
+        responseWithData(pService.listApprovedPurchaseRequestForSelect(), request, response);
     }
     
     @RequestMapping("/request/get")

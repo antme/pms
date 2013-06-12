@@ -28,18 +28,23 @@ $(document).ready(function() {
 			},
 
 			columns : [ {
-				field : "purchaseOrderCode",
-				title : "订单编号"
+				field : "purchaseRequestCode",
+				title : "采购申请编号"
 			}, {
 				field : "projectContractCode",
 				title : "客户合同编号"
 			}, {
-				field : "purchaseRequestCode",
-				title : "采购申请编号"
+				field : "backRequestCode",
+				title : "备货申请编号"
 			}, {
-				field : "purchaseContractCode",
-				title : "采购合同编号"
-
+				field : "salesContractCode",
+				title : "销售合同编号"
+			},  {
+				field : "purchaseOrderCode",
+				title : "订单编号"
+			}, {
+				field : "projectName",
+				title : "项目名"
 			}, {
 				field : "customerName",
 				title : "客户名"
@@ -48,10 +53,10 @@ $(document).ready(function() {
 				title : "PM"
 			}, {
 				field : "status",
-				title : "订单状态"
+				title : "状态"
 			}, {
 				field : "approvedDate",
-				title : "批准时间"
+				title : "审批时间"
 			}, {
 				field : "requestedTotalMoney",
 				title : "金额"

@@ -526,7 +526,19 @@ public class CommonDaoMongoImpl implements ICommonDao {
         cursor.close();
         return data;
     }
-
+    
+    public void updateCount(String queryKey, Object queryValue, String updateKey, String collection, double number) {
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(queryKey, queryValue);
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { updateKey });
+        Map<String, Object> obj = this.findOneByQuery(query, collection);
+        if (obj != null && !obj.isEmpty()) {
+            Double old = ApiUtil.getDouble(obj, updateKey, 0);
+            number = number + old;
+            obj.put(updateKey, number);
+            this.updateById(obj, collection);
+        }
+    }
 
     public Mongo getMongo() {
         return mongo;

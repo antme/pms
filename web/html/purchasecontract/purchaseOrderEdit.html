@@ -31,7 +31,7 @@ label{
     <div id="purchaseorder-edit" class="k-content">
         <div id="purchase-request-select" class="k-content">
             <div>
-                <label>选择备货申请: </label><input id="purchaseRequest" style="width: 250px" /><button onclick="showOrderWindow();">确定</button>
+                <label>选择采购申请: </label><input id="purchaseRequest" style="width: 250px" /><button onclick="showOrderWindow();">确定</button>
             </div>  
         </div>
     
@@ -51,8 +51,8 @@ label{
             <div style="width:400px; margin-top:50px;">
                 <div id="purchaseorder-sum-grid"></div>
                 <div>
-                    <button onclick="submitOrder('draft');">保存</button>
-                    <button onclick="submitOrder('new');">提交申请</button>
+                    <button onclick="submitOrder();">保存</button>
+                    <button onclick="submitOrder('审批中');">提交申请</button>
                 </div>
             </div>
         

@@ -112,6 +112,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId){
 		for (Map<String, Object> item : eqcostList){
 			item.put(EqCostListBean.EQ_LIST_SC_ID, cId);
+			item.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, item.get(EqCostListBean.EQ_LIST_AMOUNT));
 			dao.add(item, DBBean.EQ_COST);
 		}
 	}

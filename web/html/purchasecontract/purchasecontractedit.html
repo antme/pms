@@ -2,8 +2,8 @@
 <script type="text/javascript" src="js/purcontractEdit.js"></script>
 
 	<div id="purchasecontract-edit" class="k-content">
-	<div class="k-edit-field " style="width:300px;">
-		<input type="text" name="purchasecontractin" id="purchasecontractin"
+	<div class="k-edit-field " id="purchasecontractselect" style="width:300px;">
+		<label for="purchasecontractin">选择采购订单：</label><input type="text" name="purchasecontractin" id="purchasecontractin"
 			required="required">
 		<button onclick="showOrderWindow();">确定</button>
 
@@ -24,11 +24,6 @@
 							id="purchaseContractCode"></span></label>
 					</div>
 				</div>
-			</div>
-
-			<div>
-				<button onclick="save();">保存</button>
-				<button>入库申请单</button>
 			</div>
 
 			<div id="tabstrip">
@@ -158,8 +153,15 @@
 				<div>
 					<div id="purchasecontract-edit-grid"></div>
 				</div>
+				
+				
+           
+				
 			</div>
-
+            <div>
+                <button onclick="save();">保存</button>
+                <button>入库申请单</button>
+            </div>
 		</div>
 
 	</div>

@@ -1,7 +1,9 @@
-var baseUrl = "../../service/back";
+var baseUrl = "../../service/purchase/back";
+var requestModel;
+var listDatasource;
 $(document).ready(function () {	
 	
-	var requestModel = kendo.data.Model.define({
+	requestModel = kendo.data.Model.define({
 		id : "_id",
 		fields : {
 			_id : {
@@ -12,6 +14,7 @@ $(document).ready(function () {
 			department:{},
 			submitDate:{},
 			planDate:{},
+			operateDate:{},
 			type:{},
 			status:{},
 			specialRequire:{},
@@ -28,21 +31,17 @@ $(document).ready(function () {
 			customer_name : {},
 			salesContract_code : {},
 			purchaseOrder_code: {},
-			purchaseContract_code: {}
+			purchaseContract_code: {},
+			backRequestCount:{}
 		}
 	});
 
-	var listDatasource = new kendo.data.DataSource({
+	listDatasource = new kendo.data.DataSource({
 	    transport: {
 	        read:  {
-	            url: baseUrl + "/list",
+	            url: baseUrl + "/listchecked",
 	            dataType: "jsonp",
 	            type : "post"
-	        },
-	        parameterMap: function(options, operation) {
-	            if (operation !== "read" && options.models) {
-	                return {models: kendo.stringify(options.models)};
-	            }
 	        }
 	    },
 	    batch: true,
@@ -66,45 +65,30 @@ $(document).ready(function () {
 	        { field: "customer_name", title:"客户名" },
 	        { field: "project_managerName", title:"PM" },
 	        { field: "status", title:"申请状态" },
-	        { field: "approvedDate", title:"批准时间" },
+	        { field: "operateDate", title:"批准时间" },
 	        { field: "money", title:"金额" },
-	        { field: "countUsedRquest", title:"合同下申请单数量" }/*,
+	        { field: "backRequestCount", title:"合同下申请单数量" }/*,
 	        { field: "percentUsedGoods", title:"合同下已成功申请请货物%" },
 	        { field: "costUsedGoods", title:"合同下已成功申请货物金额%" }*/
 	    ]
 	});
 	
-	
-	
 });
 
-function add(){
-	loadPage("backedit");
-}
-function edit(){
+function generateAllot() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else {	
-		loadPage("backedit", { _id : row._id });	
-	}
-
-}
-
-function approve() {
-	var row = getSelectedRowDataByGrid("grid");
-	if (!row) {
-		alert("点击列表可以选中数据");
-	} else {
+	} else if(row.status == "已审核"){
 		$.ajax({
-			url : baseUrl+"/approve",
+			url : baseUrl+"/submitallot",
 			success : function(responsetxt) {
 				var res;
 				eval("res=" + responsetxt);
 				if (res.status == "0") {
 					alert(res.msg);
 				} else {
-					alert("审核成功");
+					alert("调拨申请成功");
 					listDatasource.read();
 				}
 			}, error : function() {
@@ -113,30 +97,21 @@ function approve() {
 				_id : row._id
 			},method : "post"
 		});
+	}else {
+		alert("请选择‘已审核’的数据");
 	}
 }
-
-function reject() {
+function editAllot(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else {
-		$.ajax({
-			url : baseUrl+"/reject",
-			success : function(responsetxt) {
-				var res;
-				eval("res=" + responsetxt);
-				if (res.status == "0") {
-					alert(res.msg);
-				} else {
-					alert("拒绝成功");
-					listDatasource.read();
-				}
-			}, error : function() {
-				alert("连接Service失败");
-			}, data : {
-				_id : row._id
-			}, method : "post"
-		});
+	} else if(row.status == "调拨中"){
+		loadPage("purchaseAllotEdit",{_id:row._id});
+	}else{
+		alert("请选择‘调拨中’的数据");
 	}
 }
+
+function generateRequest(){}
+
+

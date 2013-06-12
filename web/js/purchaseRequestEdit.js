@@ -4,7 +4,7 @@ var selectUrl = "/service/purcontract/back/select/list";
 var editUrl = "/service/purcontract/request/get";
 var saveUrl =  "/service/purcontract/request/update";
 var addUrl =  "/service/purcontract/order/add";
-var getSelectUrl = "/service/back/load";
+var getSelectUrl = "/service/purcontract/back/get";
 
 
 
@@ -104,7 +104,7 @@ var itemDataSource = new kendo.data.DataSource({
 });
 
 function checkStatus(data) {
-	loadPage("purchaseorder", null);
+	loadPage("purchaseRequestByAssistant", null);
 }
 // 计算成本数据的datasouce
 var sumDataSource = new kendo.data.DataSource({
@@ -125,6 +125,7 @@ function showOrderWindow() {
 
 function loadRequest(data){
 	requestDataItem = data;
+	console.log(requestDataItem);
 	if (!requestDataItem.purchaseOrderCode) {
 		requestDataItem.purchaseOrderCode = "";
 	}
@@ -136,8 +137,23 @@ function loadRequest(data){
 
 function submitOrder(status) {
 	if(!requestDataItem.status){
+		requestDataItem.status = "草稿";
+	}
+	if(status){
 		requestDataItem.status = status;
 	}
+	
+	if(itemDataSource.at(0)){
+		//force set haschanges = true
+		itemDataSource.at(0).set("uid", kendo.guid());
+	}
+	
+	requestDataItem.eqcostRequestedAmoun = requestDataItem.eqcostApplyAmount;
+	requestDataItem.backRequestCode = requestDataItem.code;
+	requestDataItem.backRequestCode = requestDataItem.code;
+	requestDataItem.salesContractCode = requestDataItem.salesContract_code;
+	
+	console.log(requestDataItem);
 	// 同步数据
 	itemDataSource.sync();
 

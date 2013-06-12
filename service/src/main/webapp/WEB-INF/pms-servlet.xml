@@ -90,11 +90,6 @@
     <bean name="shipController" class="com.pms.service.controller.ShipController"
         id="shipController">
         <property name="shipService" ref="shipService"></property>
-    </bean>
-
-    <bean name="backController" class="com.pms.service.controller.BackController"
-        id="backController">
-        <property name="backService" ref="backService"></property>
-    </bean>    
+    </bean>  
 
 </beans>
