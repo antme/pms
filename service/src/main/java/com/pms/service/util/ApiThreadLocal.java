@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.pms.service.mockbean.UserBean;
+
 public class ApiThreadLocal {
 
     public static final Map values = Collections.synchronizedMap(new HashMap());
@@ -38,5 +40,10 @@ public class ApiThreadLocal {
     public static void removeAll() {
         Thread curThread = Thread.currentThread();
         values.remove(curThread);
+    }
+
+    public static String getCurrentUserId() {
+
+        return get(UserBean.USER_ID) == null ? null : get(UserBean.USER_ID).toString();
     }
 }

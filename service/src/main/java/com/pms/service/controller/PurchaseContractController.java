@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pms.service.annotation.LoginRequired;
+import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.annotation.RoleValidate;
 import com.pms.service.service.IPurchaseContractService;
 
@@ -29,6 +30,7 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/add")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, desc = RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT_DESC)
     public void addPurchaseContract(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.updatePurchaseContract(parserJsonParameters(request, false)), request, response, "save_success");
     }
@@ -56,6 +58,36 @@ public class PurchaseContractController extends AbstractController {
     }
 
     
+    @RequestMapping("/assistant/request/list")
+    public void listPurchaseRequestByAssistant(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listPurchaseOrders(), request, response);
+    }
+
+    @RequestMapping("/assistant/request/add")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
+    public void addPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        pService.updatePurchaseOrder(parserListJsonParameters(request, false));
+        responseWithData(null, request, response, "save_success");
+    }
+    
+    @RequestMapping("/assistant/request/get")
+    public void getPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.getPurchaseOrder(parserListJsonParameters(request, false)), request, response);
+    }
+
+    @RequestMapping("/assistant/request/delete")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
+    public void deletePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        pService.deletePurchaseOrder(parserJsonParameters(request, false));
+        responseWithData(null, request, response);
+    }
+    
+    @RequestMapping("/assistant/request/update")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
+    public void updatePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        pService.updatePurchaseOrder(parserListJsonParameters(request, false));
+        responseWithData(null, request, response, "save_success");
+    }
     
     
     @RequestMapping("/order/list")

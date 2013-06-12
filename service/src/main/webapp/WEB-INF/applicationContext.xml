@@ -89,6 +89,17 @@
 		<property name="dao" ref="commonDao"></property>
 	</bean>
 	
+    <bean name="shipService" class="com.pms.service.service.impl.ShipServiceImpl"
+		id="shipService">
+		<property name="dao" ref="commonDao"></property>
+		<property name="pService" ref="purchaseContractService"></property>
+	</bean>
+    
+    <bean name="backService" class="com.pms.service.service.impl.BackServiceImpl"
+		id="backService">
+		<property name="dao" ref="commonDao"></property>
+	</bean>	
+
 	<bean
         class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetClass" value="com.pms.service.annotation.InitBean" />

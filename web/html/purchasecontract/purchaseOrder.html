@@ -28,15 +28,15 @@ label{
 <script type="text/javascript" src="js/purchaseOrder.js"></script>
 </head>
 
-<script type="text/x-kendo-template" id="template">
-    <button  class="k-button" onclick='loadPage("purchaseOrderEdit");'>新增</button>
-    <button  class="k-button" onclick='edit();' >编辑</button>
-    <button class="k-button" onclick="approve();">批准</button>
-    <button class="k-button" onclick="reject();">拒绝</button>
-</script>
-
 <body>
 	<div id="purchaseorder" class="k-content">
+	
+	<div class="k-toolbar k-grid-toolbar">
+	    <button access="purchase_request_management" class="k-button" onclick="loadPage(&quot;purchaseOrderEdit&quot;);">新增</button>
+	    <button access="purchase_request_management" class="k-button" onclick="edit();">编辑</button>
+	    <button access="purchase_request_management" class="k-button" onclick="approve();">批准</button>
+	    <button access="purchase_request_management" class="k-button" onclick="reject();">拒绝</button>
+	</div>
 		<div id="grid"></div>
 	</div>
 </body>

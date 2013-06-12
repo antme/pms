@@ -132,7 +132,7 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         Map<String, Object> group = dao.findOne(ApiConstants.MONGO_ID, userGroup.get(ApiConstants.MONGO_ID), DBBean.USER_GROUP);
 
         if (group != null) {
-            if (group.get(GroupBean.GROUP_NAME).equals(InitBean.GROUP_ADMIN_NAME)) {
+            if (group.get(GroupBean.GROUP_NAME).equals(GroupBean.GROUP_ADMIN_VALUE)) {
                 throw new ApiResponseException("Not allowed to edit admin group!", ResponseCodeConstants.ADMIN_GROUP_EDIT_DISABLED);
             }
 
@@ -147,7 +147,7 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     public void deleteUserGroup(Map<String, Object> userGroup) {        
         Map<String, Object> group = dao.findOne(ApiConstants.MONGO_ID, userGroup.get(ApiConstants.MONGO_ID), DBBean.USER_GROUP);
 
-        if (group != null && group.get(GroupBean.GROUP_NAME).equals(InitBean.GROUP_ADMIN_NAME)) {
+        if (group != null && group.get(GroupBean.GROUP_NAME).equals(GroupBean.GROUP_ADMIN_VALUE)) {
             throw new ApiResponseException("Not allowed to delete admin group!", ResponseCodeConstants.ADMIN_GROUP_EDIT_DISABLED);
         }
             
@@ -157,29 +157,16 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     }
     
     
-    public List<String> listUserRoleIds(String userId) {
+
+    
+    public Map<String, Object> listUserRoles(String userId){
+        if(userId == null){
+            return null;
+        }
+        List<String> ids = listUserRoleIds(userId);       
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(ApiConstants.MONGO_ID, userId);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.GROUPS });
-        Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
-        List<String> groups = (List<String>) user.get(UserBean.GROUPS);
-        
-        Map<String, Object> limitQuery = new HashMap<String, Object>();
-        limitQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, groups));
-        limitQuery.put(ApiConstants.LIMIT_KEYS, new String[]{GroupBean.ROLES});
-        
-        List<Object> list = dao.listLimitKeyValues(limitQuery, DBBean.USER_GROUP);
-        List<String> roles = new ArrayList<String>();
-
-        for(Object role: list){
-            roles.addAll((Collection<? extends String>) role);
-        }
-        
-        if(user.get(UserBean.OTHER_ROLES)!=null){
-            roles.addAll((List<? extends String>) user.get(UserBean.OTHER_ROLES));
-        }
-
-        return roles;
+        query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));        
+        return this.dao.list(query, DBBean.ROLE_ITEM);
     }
     
     public void checkUserRole(String userId, String path) {

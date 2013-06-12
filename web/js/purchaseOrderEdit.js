@@ -42,7 +42,7 @@ var requestDataItem;
 
 $(document).ready(function() {
 		$("#purchaseRequest").kendoDropDownList({
-				dataTextField : "projectName",
+				dataTextField : "_id",
 				dataValueField : "_id",
 				dataSource : {
 					transport : {
@@ -118,7 +118,10 @@ function showOrderWindow() {
 	edit();
 }
 
-function submitOrder() {
+function submitOrder(status) {
+	if(!requestDataItem.status){
+		requestDataItem.status = status;
+	}
 	// 同步数据
 	itemDataSource.sync();
 

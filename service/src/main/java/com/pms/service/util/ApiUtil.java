@@ -91,6 +91,28 @@ public class ApiUtil {
         in = (in == null) ? defaultValue : in;
         return in;
     }
+
+    public static Double getDouble(Map<String, Object> params, String key) {
+        Object value = null;
+        if (params != null){
+            value = params.get(key);
+        }
+        Double in = null;
+        if (value != null) {
+            try {
+            	in = Double.valueOf(String.valueOf(value));
+            } catch (Exception e) {
+                throw new ApiResponseException(String.format("Integer parameter illegal [%s]", value),
+                        ResponseCodeConstants.NUMBER_PARAMETER_ILLEGAL);
+            }
+        }
+        return in;    	
+    }
+    public static Double getDouble(Map<String, Object> params, String key, double defaultValue) {
+        Double in = getDouble(params,key);
+        if(in == null) in = defaultValue;
+        return in;
+    }
     
     public static Integer getIntegerParam(Map<String, Object> params, String key) {
         Object value = null;

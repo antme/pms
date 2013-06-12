@@ -52,4 +52,10 @@ public class ShipController extends AbstractController {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(shipService.create(params), request, response);
     }
+    
+    @RequestMapping("/eqlist")
+    public void eqlist(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(shipService.eqlist(params), request, response);
+    }
 }

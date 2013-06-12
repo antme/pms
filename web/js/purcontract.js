@@ -10,7 +10,7 @@ var dataSource = new kendo.data.DataSource({
 });
 
 $(document).ready(function() {
-
+	checkRoles();
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
@@ -18,9 +18,6 @@ $(document).ready(function() {
 		dataBound : function(e) {
 			kendo.ui.progress($("#grid"), false);
 		},
-		toolbar : [ {
-			template : kendo.template($("#template").html())
-		} ],
 		columns : [ {
 			field : "purchaseContractCode",
 			title : "采购合同编号"

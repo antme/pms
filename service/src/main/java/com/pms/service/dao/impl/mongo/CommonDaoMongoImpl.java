@@ -28,6 +28,7 @@ import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.dbhelper.Pagnation;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 
 public class CommonDaoMongoImpl implements ICommonDao {
@@ -47,6 +48,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
         Date date = new Date();
         doc.put(ApiConstants.CREATED_ON, date.getTime());
         doc.put(ApiConstants.UPDATED_ON, date.getTime());
+        doc.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
         WriteResult result = this.getConnection(ConfigurationManager.getDbName(), collection).insert(doc);
         doc.put(ApiConstants.MONGO_ID, id.toString());
         return result.getError() == null ? doc : null;

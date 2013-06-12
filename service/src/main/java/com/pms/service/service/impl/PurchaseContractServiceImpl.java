@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseOrder;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.AbstractService;
@@ -62,7 +63,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract) {
 
         if (ApiUtil.isEmpty(contract.get(ApiConstants.MONGO_ID))) {
-            contract.put(PurchaseOrder.PROCESS_STATUS, "New");
             contract.put("purchaseContractCode","Contract_" + String.valueOf(new Date().getTime()));
             return this.dao.add(contract, DBBean.PURCHASE_CONTRACT);
         } else {
@@ -142,9 +142,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     public Map<String, Object> listPurchaseRequest() {
-        
-        return this.dao.list(null, DBBean.PURCHASE_REQUEST);
-        
+        Map<String,Object> query = new HashMap<String,Object>();
+        query.put(PurchaseBack.status, PurchaseBack.status_approved);
+        return dao.list(query, DBBean.PURCHASE_BACK);
     }
 
 }
