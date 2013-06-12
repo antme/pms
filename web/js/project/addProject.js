@@ -153,10 +153,14 @@ function edit(data){
 }
 
 function saveProject(){
-	var _id = pModel.get("_id");
-	//if (_id == null){
-		dataSource.add(pModel);
-	//}
-	dataSource.sync();
-	loadPage("projectList");
+	var validator = $("#addProject").kendoValidator().data("kendoValidator");
+	if (!validator.validate()) {
+		return;
+    } else {
+        var _id = pModel.get("_id");
+    	dataSource.add(pModel);
+    	dataSource.sync();
+    	loadPage("projectList");
+    }
+	
 };

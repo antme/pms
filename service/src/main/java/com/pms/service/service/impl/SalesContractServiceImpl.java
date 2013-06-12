@@ -71,7 +71,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		contract.put(SalesContractBean.SC_MEMO, params.get(SalesContractBean.SC_MEMO));
 		
 		List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
-		eqcostList = new Gson().fromJson(params.get(SalesContractBean.SC_EQ_LIST).toString(), List.class);
+		eqcostList = (List<Map<String, Object>>)params.get(SalesContractBean.SC_EQ_LIST);
+		//eqcostList = new Gson().fromJson(params.get(SalesContractBean.SC_EQ_LIST).toString(), List.class);
 		//contract.put(SalesContractBean.SC_EQ_LIST, eqcostList);
 		
 		Map<String, Object> addedContract = null;
