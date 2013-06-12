@@ -1,6 +1,7 @@
 package com.pms.service.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,8 +48,9 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 	
 	public Map<String, Object> eqlist(Map<String, Object> params) {
-//		Map<String, Object> res = (Map<String, Object>) pService.listApprovedPurchaseContractCosts((String) params.get(ShipBean.SHIP_SALES_CONTRACT_NO));
-		return pService.listApprovedPurchaseContractCosts((String) params.get(ShipBean.SHIP_SALES_CONTRACT_NO)).get(0);
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put(ApiConstants.RESULTS_DATA, pService.listApprovedPurchaseContractCosts((String) params.get(ShipBean.SHIP_SALES_CONTRACT_NO)));
+		return res;
 	}
 
 }

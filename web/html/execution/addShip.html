@@ -1,21 +1,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-
-<script id="template" type="text/x-kendo-template">
-	<a class="k-button" href="\#" onclick="return toolbar_add()">添加/修改</a>
-</script>
-
-<script id="submit-template" type="text/x-kendo-template">
-	<a class="k-button" href="\#" onclick="return toolbar_submit()">提交</a>
-</script>
+<script  src="js/addShip.js"></script>
 
 <body>
-    <div id="example" class="k-content">
+    <div id="addShip" class="k-content">
+    
+    <button onclick="save()" class="k-button">保存</button>
+    <button onclick='loadPage("ship");' class="k-button">取消</button>
+    
     <table class="metrotable">
         <tbody>
-        <tr>
-            <th>发货申请</th>
-        </tr>
         <tr>
             <td>
                 <input type="text" data-bind="value: shipNo" class="k-textbox" />
@@ -30,71 +24,25 @@
         </tr>
         <tr>
             <td>
-                <select data-role="combobox" data-text-field="contractCode" data-value-field="_id" data-bind="source: salesContractSource, value: selectedSalesContract"></select>
+                <input id="salesContract" data-bind="value: salesContractId" />
                 <h4>销售合同编号</h4>
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" data-bind="value: selectedSalesContract.customer" class="k-textbox" />
+                <input type="text" data-bind="value: customer" class="k-textbox" />
                 <h4>客户名称</h4>
             </td>
         </tr>
         <tr>
             <td>
                 <h4>设备清单</h4>
-                <div data-role="grid" data-sortable="true" data-editable="true" data-columns='[{ field:"Name", title: "调入项目编号" }, "Price", "UnitsInStock", {"command": "destroy"}]' data-bind="source: gridSource"></div>
+                <div id="equipments-grid" ></div>
             </td>
         </tr>
         </tbody>
     </table>
-    <script>
-        
-        var crudServiceBaseUrl = "../service";
-
-        $(document).ready(function() {
-            var Node = kendo.data.Node;
-            var viewModel = kendo.observable({
-            	salesContractSource: new kendo.data.DataSource({
-                    transport: {
-                        read: {
-                            url: crudServiceBaseUrl + "/sc/list",
-                            dataType: "jsonp"
-                        }
-                    }
-                }),
-                selectedSalesContract: null,
-                gridSource: new kendo.data.DataSource({
-                    transport: {
-                        read: {
-                            url: crudServiceBaseUrl + "/ship/eqlist",
-                            dataType: "jsonp"
-                        }
-                    },
-                    schema: {
-                        model: {
-                            id: "eqcostNo",
-                            fields: {
-                            	eqcostNo: { editable: false },
-                            	eqcostMaterialCode: { editable: false },
-                            	eqcostProductName: { editable: false },
-                            	eqcostProductType: { editable: false },
-                            	eqcostAmount: { type: "number", validation: { required: true, min: 1} },
-                            	eqcostUnit: { editable: false },
-                            	eqcostBrand: { editable: false },
-                            	eqcostBasePrice: { editable: false }
-                            }
-						}
-                    }
-                }),
-                displayGridSource: function() {
-                    return stringify(this.get("gridSource").toJSON());
-                }
-            });
-
-            kendo.bind($("table"), viewModel);
-        });
-    </script>
+    
     <style scoped>
         .metrotable {
 

@@ -10,7 +10,24 @@ var model = kendo.data.Model.define({
 			type : "date"
 		},
 		supplierName : {
-
+			validation : {
+				required : true
+			}
+		},
+		purchaseContractType : {
+			defaultValue : "代理产品"
+		},
+		
+		eqcostDeliveryType: {
+			defaultValue : "直发现场"
+		},
+		
+		contractProperty: {
+			defaultValue: "闭口合同"
+		},
+		
+		invoiceType: {
+			defaultValue: "增值税专用"
 		},
 		supplierNameContact : {
 
@@ -38,7 +55,7 @@ $(document).ready(function() {
 		$("#purchasecontractin").kendoMultiSelect({
 			dataTextField : "purchaseOrderCode",
 			dataValueField : "_id",
-			placeholder : "选择采购申请...",
+			placeholder : "选择采购订单...",
 			dataSource : {
 				transport : {
 					read : {
@@ -108,13 +125,29 @@ var itemListDataSource = new kendo.data.DataSource({
 	data: []
 });
 
-function save() {
+function save(status) {
+	if(!requestDataItem.status){
+		requestDataItem.status = "草稿";
+	}
+	if(status){
+		requestDataItem.status = status;
+	}
+	
 	if(itemDataSource.at(0)){
 		//force set haschanges = true
 		itemDataSource.at(0).set("uid", kendo.guid());
 	}
+
 	
+	if(requestDataItem.supplierName && requestDataItem.supplierName._id){
+		requestDataItem.supplierName = requestDataItem.supplierName._id
+	}
 	
+	if(!requestDataItem.supplierName){
+		var dl = $("#supplierName").data("kendoDropDownList");
+		requestDataItem.supplierName = dl.dataSource.at(0)._id;
+	}
+
 	// 同步数据
 	itemDataSource.sync();
 	
@@ -152,7 +185,8 @@ function showOrderWindow() {
 	
 	requestDataItem = new model({});
 	requestDataItem.eqcostList = itemListDataSource.data();
-	console.log(itemListDataSource);
+	
+	
 	
 //	if (!requestDataItem) {
 //		requestDataItem = kendoGrid.dataSource.at(0);
@@ -200,7 +234,7 @@ function edit(data) {
 	$("#purchaseOrderCode").html(requestDataItem.purchaseOrderCode);
 	$("#projectName").html(requestDataItem.projectName);
 	$("#projectCode").html(requestDataItem.projectCode);
-	$("#projectContractCode").html(requestDataItem.projectContractCode);
+	$("#salesContractCode").html(requestDataItem.salesContractCode);
 	$("#customerRequestContractId").html(requestDataItem.customerRequestContractId);
 
 	$("#signDate").kendoDatePicker();

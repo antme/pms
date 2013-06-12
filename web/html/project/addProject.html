@@ -9,9 +9,7 @@
 <script  src="js/project/addProject.js"></script>
 
 <body>
-	<div id="projectList" class="k-content">
-		<div id="grid"></div>
-	</div>
+	<div class="validateStatus"></div>
 	
 	<div id="addProject"  class="k-content">
 		<div>
@@ -22,11 +20,11 @@
 		<div class="k-edit-form-container"><!-- 项目基本信息 -->
 	    	<div>
 				<div class="k-edit-label ">
-				<label for="projectCode">项目编号</label>
+				<label for="projectCode"  class="required">项目编号</label>
 				</div>
 				<div data-container-for="projectCode" class="k-edit-field ">
 					<input type="text" class="k-input k-textbox" name="projectCode"
-						required="required" data-bind="value: projectCode">
+						required validationMessage="必填" data-bind="value: projectCode">
 				</div>
 				
 				<div class="k-edit-label ">
@@ -34,14 +32,14 @@
 				</div>
 				<div data-container-for="projectName" class="k-edit-field ">
 					<input type="text" class="k-input k-textbox" name="projectName"
-						required="required" data-bind="value: projectName">
+						required="required" validationMessage="必填" data-bind="value: projectName">
 				</div>
 				<div class="k-edit-label ">
 					<label for="projectAbbr">项目缩写</label>
 				</div>
 				<div data-container-for="projectAbbr" class="k-edit-field ">
 					<input type="text" class="k-input k-textbox" name="projectAbbr"
-						required="required" data-bind="value: projectAbbr">
+						required="required" validationMessage="必填" data-bind="value: projectAbbr">
 				</div>
 				
 				<div class="k-edit-label ">
@@ -49,7 +47,7 @@
 				</div>
 				<div data-container-for="customer" class="k-edit-field ">
 					<input type="text" class="pro-dropdownlist" name="customer" id="customer"
-						required="required" data-bind="value: customer">
+						required="required" validationMessage="必填" data-bind="value: customer">
 				</div>
 				
 				<div class="k-edit-label ">
@@ -57,7 +55,7 @@
 				</div>
 				<div data-container-for="projectManager" class="k-edit-field ">
 					<input type="text" class="pro-dropdownlist" name="projectManager" id="projectManager"
-						required="required" data-bind="value: projectManager">
+						required="required" validationMessage="必填" data-bind="value: projectManager">
 				</div>
 				
 				<div class="k-edit-label ">
@@ -65,7 +63,7 @@
 				</div>
 				<div data-container-for="projectStatus" class="k-edit-field ">
 					<input type="text" class="pro-dropdownlist" name="projectStatus" id="projectStatus"
-						required="required" data-bind="value: projectStatus">
+						required="required" validationMessage="必填" data-bind="value: projectStatus">
 				</div>
 				
 				<div class="k-edit-label ">
@@ -73,7 +71,7 @@
 				</div>
 				<div data-container-for="projectType" class="k-edit-field ">
 					<input type="text" class="pro-dropdownlist" name="projectType" id="projectType"
-						required="required" data-bind="value: projectType">
+						required="required" validationMessage="必填" data-bind="value: projectType">
 				</div>
 				
 				<div class="k-edit-label ">
@@ -81,7 +79,7 @@
 				</div>
 				<div data-container-for="projectAddress" class="k-edit-field ">
 					<input type="text" class="k-input k-textbox" name="projectAddress" id="projectAddress"
-						required="required" data-bind="value: projectAddress">
+						required="required" validationMessage="必填" data-bind="value: projectAddress">
 				</div>
 				
 				<div class="k-edit-label ">

@@ -211,8 +211,7 @@ function edit(data) {
 	$("#purchaseOrderCode").html(dataItem.purchaseOrderCode);
 	$("#projectName").html(dataItem.projectName);
 	$("#projectCode").html(dataItem.projectCode);
-	$("#projectContractCode").html(dataItem.projectContractCode);
-	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
+	$("#salesContractCode").html(dataItem.salesContractCode);
 	$("#purchaseorder-edit-item").show();
 
 	var editKendoGrid = $("#purchaseorder-edit-grid").data("kendoGrid");
@@ -279,7 +278,7 @@ function edit(data) {
 								if (!kendoGrid) {
 									$("#purchaseorder-sum-grid").kendoGrid({
 										columns : [ {
-											field : "requestedMoney",
+											field : "requestedTotalMoney",
 											title : "申请金额"
 										}, {
 											field : "requestedNumbers",
@@ -389,14 +388,14 @@ function edit(data) {
 									requestActureMoneyPercent = (requestActureMoney / eqcostContractTotalMoney) * 100;
 								}
 
-								requestDataItem.numbersExists = totalPercent;
-								requestDataItem.moneyOfContract = requestActureMoneyPercent;
+								requestDataItem.numbersPercentOfContract = totalPercent;
+								requestDataItem.moneyPercentOfContract = requestActureMoneyPercent;
 
 								sumDataSource.data({});
 								sumDataSource
 										.add({
 											requestedNumbers : total,
-											requestedMoney : requestActureMoney,
+											requestedTotalMoney : requestActureMoney,
 											numbersPercentOfContract : totalPercent,
 											moneyPercentOfContract : requestActureMoneyPercent
 										});

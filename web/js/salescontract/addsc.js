@@ -263,12 +263,21 @@ $(document).ready(function() {
 });//end dom ready	
 		
 function saveSC(){
-	var _id = scm.get("_id");
-	var contractDate = $("#contractDate").val();
-	scm.set("contractDate", contractDate);
-	var data = eqCostListDataSource.data();
-	scm.set("eqcostList", data);
-	dataSource.add(scm);
-	dataSource.sync();
-	loadPage("scList");
+	var validator = $("#addSalesContract").kendoValidator().data("kendoValidator");
+	var validatestatus = $("#validate-status");
+	if(!validator.validate()) {
+		validatestatus.text("表单验证不通过！")
+        .removeClass("valid")
+        .addClass("invalid");
+		return;
+    } else {
+		var _id = scm.get("_id");
+		var contractDate = $("#contractDate").val();
+		scm.set("contractDate", contractDate);
+		var data = eqCostListDataSource.data();
+		scm.set("eqcostList", data);
+		dataSource.add(scm);
+		dataSource.sync();
+		loadPage("scList");
+    }
 };

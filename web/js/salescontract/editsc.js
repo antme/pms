@@ -521,24 +521,39 @@ function edit(data){
 			scrollable : true
 		});
 	}
+	
+//	$("#contractDate").val(scm.contractDate);
 	kendo.bind($("#editSalesContract"), scm);
 }
 		
 function saveSC(){
-	var _id = scm.get("_id");
-	var data = eqCostListDataSourceNew.data();
-	scm.set("eqcostList", data);
-//	if (_id == null){
+	var validator = $("#editSalesContract").kendoValidator().data("kendoValidator");
+	if (!validator.validate()) {
+		return;
+    } else {
+		var _id = scm.get("_id");
+		var data = eqCostListDataSourceNew.data();
+		scm.set("eqcostList", data);
 		dataSource.add(scm);
-//	}
-	dataSource.sync();
-	loadPage("scList");
+		dataSource.sync();
+		loadPage("scList");
+	}
 };
 
 function addInvoice(){
 	im = new scInvoiceModel();
 	kendo.bind($("#invoice-edit"), im);
 	var options = {id:"invoice-edit", width:"450px", height: "300px", title:"新开票"};
+	$("#scInvoiceMoney").kendoNumericTextBox({
+		min:0
+	});//发票类型
+	var invoiceTypeItems = [{ text: "增值税专用", value: 1 }, { text: "增值税普通", value: 2 }, { text: "建筑业发票", value: 3 }, { text: "服务业发票", value: 4 }];
+	$("#addInvoiceType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择发票类型...",
+		dataSource : invoiceTypeItems,
+	});
 	openWindow(options);
 }
 

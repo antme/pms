@@ -10,9 +10,9 @@ public class ShipBean {
 
     public static final String SHIP_SALES_CONTRACT_ID = "salesContractId"; // 销售合同数据库id-外键
     
-    public static final String SHIP_SALES_CONTRACT_NO = "salesContractNo"; // 销售合同编号
+    public static final String SHIP_SALES_CONTRACT_NO = "contractCode"; // 销售合同编号
     
-    public static final String SHIP_CUSTOMER_NAME = "customerName"; // 客户名称
+    public static final String SHIP_CUSTOMER_NAME = "customer"; // 客户名称
     
     public static final String SHIP_DELIVERY_CONTACT = "deliveryContact"; // 收货联系人
     

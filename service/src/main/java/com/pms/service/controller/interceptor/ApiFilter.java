@@ -40,6 +40,10 @@ public class ApiFilter extends AbstractController implements Filter {
         if (srequest.getSession().getAttribute(UserBean.USER_ID) != null) {
             ApiThreadLocal.set(UserBean.USER_ID, srequest.getSession().getAttribute(UserBean.USER_ID));
         }
+        if (srequest.getSession().getAttribute(UserBean.USER_NAME) != null) {
+            ApiThreadLocal.set(UserBean.USER_NAME, srequest.getSession().getAttribute(UserBean.USER_NAME));
+        }
+        
         try {
             loginCheck((HttpServletRequest) request);
             roleCheck((HttpServletRequest) request);
@@ -90,11 +94,14 @@ public class ApiFilter extends AbstractController implements Filter {
     }
 
     private void loginCheck(HttpServletRequest request) {
-        if (InitBean.loginPath.contains(request.getPathInfo())) {
+        
+        if(request.getPathInfo().indexOf("login") == -1){
+//        if (InitBean.loginPath.contains(request.getPathInfo())) {
             if (request.getSession().getAttribute(UserBean.USER_ID) == null) {
                 logger.debug("Login requried for path : " + request.getPathInfo());
                 throw new ApiLoginException();
             }
+//        }
         }
 
     }

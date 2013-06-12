@@ -42,6 +42,7 @@ $(document).ready(function() {
 function init(data){
 	
 	roles = data.data;
+	$("#user_info").html(data.userName);
 	$("#tree-nav").kendoTreeView({
     	template: kendo.template($("#treeview-template").html()),
         dataSource: [
@@ -312,14 +313,18 @@ function checkRoles(){
 		var roleId = node.attr("access");
 		var hasAccess = false;
 		for(i in roles){	
+			console.log(roles[i].roleID + "====" + roleId);
 			if(roles[i].roleID == roleId){
 				hasAccess = true;
 				break;
 			}
 		}
 		
+		console.log(hasAccess);
 		if(!hasAccess){
 			node.hide();
+		}else{
+			node.show();
 		}
 		
 	});

@@ -182,19 +182,21 @@ public abstract class AbstractService {
             return false;
         }else{
             String userId = ApiThreadLocal.get(UserBean.USER_ID).toString();
-            List<String> userRoles = this.listUserRoleIds(userId);
             Map<String, Object> query = new HashMap<String, Object>();
             query.put(ApiConstants.LIMIT_KEYS, ApiConstants.MONGO_ID);
             query.put(GroupBean.GROUP_NAME, groupName);
             Map<String, Object> group = this.dao.findOneByQuery(query, DBBean.USER_GROUP);
             String id = group == null? null : group.get(ApiConstants.MONGO_ID).toString();
-            if(userRoles.contains(id)){
-                return true;
-            }
+            
+            
+            Map<String, Object> userQuery = new HashMap<String, Object>();
+            userQuery.put(ApiConstants.MONGO_ID, userId);
+            userQuery.put(UserBean.GROUPS, new DBQuery(DBQueryOpertion.IN, id));
+            
+            return this.dao.exist(userQuery, DBBean.USER);
             
         }
-        
-        return false;
+
     }
     
     public List<String> listUserRoleIds(String userId) {

@@ -79,7 +79,7 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     }
 
     @Override
-    public String login(Map<String, Object> parameters) {
+    public Map<String, Object> login(Map<String, Object> parameters) {
         this.validate(parameters, "login");
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(UserBean.USER_NAME, parameters.get(UserBean.USER_NAME));
@@ -89,8 +89,10 @@ public class UserServiceImpl extends AbstractService implements IUserService {
             throw new ApiResponseException(String.format("Name or password is incorrect when try to login [%s] ", parameters), ResponseCodeConstants.USER_LOGIN_USER_NAME_OR_PASSWORD_INCORRECT);
         }
         ApiThreadLocal.set(UserBean.USER_ID, user.get(ApiConstants.MONGO_ID));
+        ApiThreadLocal.set(UserBean.USER_NAME, user.get(UserBean.USER_NAME));
         logger.info(ApiThreadLocal.get(UserBean.USER_ID));
-        return (String) user.get(ApiConstants.MONGO_ID);
+        
+        return user;
     }
 
     public Map<String, Object> listRoleItems() {
@@ -166,7 +168,9 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         List<String> ids = listUserRoleIds(userId);       
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));        
-        return this.dao.list(query, DBBean.ROLE_ITEM);
+        Map<String, Object> roles =  this.dao.list(query, DBBean.ROLE_ITEM);
+        roles.put(UserBean.USER_NAME, ApiThreadLocal.getCurrentUserName());
+        return roles;
     }
     
     public void checkUserRole(String userId, String path) {

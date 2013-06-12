@@ -20,6 +20,8 @@ width:900px;
 			<button class="k-button"  onclick="saveSC();">保存</button>
 			<button class="k-button"  onclick='loadPage("scList");'>取消</button>
 		</div>
+		
+		<div id="validate-status"></div>
 	
 		<div>
            <div id="tabstrip">
@@ -43,23 +45,15 @@ width:900px;
 						</div>
 						<div data-container-for="contractCode" class="k-edit-field ">
 							<input type="text" class="k-input k-textbox" name="contractCode" id="contractCode"
-								required="required" data-bind="value: contractCode">
+								required="required" validationMessage="必填" data-bind="value: contractCode">
 						</div>
-						<!-- 
-                   		<div class="k-edit-label ">
-							<label for="customer">客户名称</label>
-						</div>
-						<div data-container-for="customer" class="k-edit-field ">
-							<input type="text" class="pro-dropdownlist" name="customer" id="customer"
-								required="required" data-bind="value: customer">
-						</div> -->
 						
 	                   <div class="k-edit-label ">
 							<label for="contractPerson">签订人</label>
 						</div>
 						<div data-container-for="contractPerson" class="k-edit-field ">
 							<input type="text" class="k-input k-textbox" name="contractPerson" id="contractPerson"
-								required="required" data-bind="value: contractPerson">
+								required="required" validationMessage="必填" data-bind="value: contractPerson">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -67,7 +61,7 @@ width:900px;
 						</div>
 						<div data-container-for="projectId" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="projectId" id="projectId"
-								required="required" data-bind="value: projectId">
+								required="required" validationMessage="必填" data-bind="value: projectId">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -75,7 +69,7 @@ width:900px;
 						</div>
 						<div data-container-for="contractType" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="contractType" id="contractType"
-								required="required" data-bind="value: contractType">
+								required="required" validationMessage="必填" data-bind="value: contractType">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -83,7 +77,7 @@ width:900px;
 						</div>
 						<div data-container-for="archiveStatus" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="archiveStatus" id="archiveStatus"
-								required="required" data-bind="value: archiveStatus">
+								required="required" validationMessage="必填" data-bind="value: archiveStatus">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -99,7 +93,7 @@ width:900px;
 						</div>
 						<div data-container-for="contractDate" class="k-edit-field ">
 						
-							<input name="contractDate" id="contractDate" data-bind="value: contractDate">
+							<input name="contractDate" required="required" validationMessage="必填" id="contractDate" data-bind="value: contractDate">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -107,7 +101,7 @@ width:900px;
 						</div>
 						<div data-container-for="contractDownPayment" class="k-edit-field ">
 							<input type="text" name="contractDownPayment" id="contractDownPayment"
-								required="required" data-bind="value: contractDownPayment">
+								required="required" validationMessage="必填" data-bind="value: contractDownPayment">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -115,7 +109,7 @@ width:900px;
 						</div>
 						<div data-container-for="progressPayment" class="k-edit-field ">
 							<input type="text" name="progressPayment" id="progressPayment"
-								required="required" data-bind="value: progressPayment">
+								required="required" validationMessage="必填" data-bind="value: progressPayment">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -123,7 +117,7 @@ width:900px;
 						</div>
 						<div data-container-for="qualityMoney" class="k-edit-field ">
 							<input type="text" name="qualityMoney" id="qualityMoney"
-								required="required" data-bind="value: qualityMoney">
+								required="required" validationMessage="必填" data-bind="value: qualityMoney">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -143,7 +137,7 @@ width:900px;
 						</div>
 						<div data-container-for="contractAmount" class="k-edit-field ">
 							<input type="number" min="0" name="contractAmount" id="contractAmount"
-								required="required" data-bind="value: contractAmount">
+								required="required" validationMessage="必填" data-bind="value: contractAmount">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -151,7 +145,7 @@ width:900px;
 						</div>
 						<div data-container-for="estimateEqCost0" class="k-edit-field ">
 							<input type="number" min="0" name="estimateEqCost0" id="estimateEqCost0"
-								required="required" data-bind="value: estimateEqCost0">
+								required="required" validationMessage="必填" data-bind="value: estimateEqCost0">
 						</div>
 						
 	                   <div class="k-edit-label ">
