@@ -1,6 +1,7 @@
 var url = "/service/purcontract/request/list";
 var approveUrl = "/service/purcontract/request/approve";
 var rejectUrl = "/service/purcontract/request/reject";
+var cancelUrl = "/service/purcontract/request/cancel";
 
 // 外面列表页的datasource对象
 var dataSource = new kendo.data.DataSource({
@@ -61,13 +62,13 @@ $(document).ready(function() {
 				field : "requestedTotalMoney",
 				title : "金额"
 			}, {
-				field : "requestedNumbers",
+				field : "requestTotalOfCountract",
 				title : "合同下采购申请单数量"
 			}, {
-				field : "numbersExists",
+				field : "allRequestedNumbersOfCountract",
 				title : "合同下已申请采购货品%"
 			}, {
-				field : "moneyOfContract",
+				field : "totalRequestedMoneyOfContract",
 				title : "合同下已申请采购金额%"
 			} ]
 
@@ -84,44 +85,47 @@ function checkStatus(data) {
 }
 
 function approveStatusCheck(response) {
-	alert("审核成功");
+	alert("操作成功");
 	dataSource.read();
 }
 
 
 function approve() {
-
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	if (row) {
-		var param = {
-			_id : row._id
-		};
-		postAjaxRequest(approveUrl, param,
-				approveStatusCheck);
-
-	}
-
+	process(approveUrl);
 }
 
-function reject() {
+function cancel(){
+	process(cancelUrl);
+}
+
+
+function process(url){
 
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		var param = {
 			"_id" : row._id
 		};
-		postAjaxRequest(rejectUrl, param,
+		postAjaxRequest(url, param,
 				approveStatusCheck);
 
 	}
 }
 
+function reject() {
+	process(rejectUrl);
+}
+
 function edit() {
 	// 如果是从订单列表页点击edit过来的数据
-	var row = getSelectedRowDataByGrid("grid");
-	loadPage("html/purchasecontract/purchaseRequestEdit.html", {
-		_id : row._id
-	});
+	var row = getSelectedRowDataByGrid("grid");	
+	if(row.status=="审批通过"){
+		alert("已审批通过，不允许编辑, 请先废止再编辑!");
+	}else{
+		loadPage("html/purchasecontract/purchaseRequestEdit.html", {
+			_id : row._id
+		});
+	}
 }
 
 function add(){

@@ -43,12 +43,14 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listPurchaseRequests();
     
-    public Map<String, Object> updatePurchaseRequest(Map<String, Object> order);
+    public Map<String, Object> updatePurchaseRequest(Map<String, Object> request);
 
 
-    public Map<String, Object> approvePurchaseRequest(HashMap<String, Object> order);
+    public Map<String, Object> approvePurchaseRequest(HashMap<String, Object> request);
     
-    public Map<String, Object> rejectPurchaseRequest(HashMap<String, Object> order);
+    public Map<String, Object> cancelPurchaseRequest(HashMap<String, Object> request);
+    
+    public Map<String, Object> rejectPurchaseRequest(HashMap<String, Object> request);
     
     public Map<String, Object> getPurchaseRequest(HashMap<String, Object> parameters);
     

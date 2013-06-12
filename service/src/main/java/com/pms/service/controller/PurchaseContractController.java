@@ -58,11 +58,6 @@ public class PurchaseContractController extends AbstractController {
     }
 
     
-    @RequestMapping("/request/list")
-    public void listPurchaseRequestByAssistant(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listPurchaseRequests(), request, response);
-    }
-    
     @RequestMapping("/back/select/list")
     public void listBackRequestForSelect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listBackRequestForSelect(), request, response);
@@ -71,6 +66,13 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/back/get")
     public void getBackRequestForSelect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.getBackRequestForSelect(parserJsonParameters(request, false)), request, response);
+    }
+    
+
+    
+    @RequestMapping("/request/list")
+    public void listPurchaseRequestByAssistant(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listPurchaseRequests(), request, response);
     }
     
     @RequestMapping("/request/add")
@@ -107,6 +109,11 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/request/approve")
     public void approvePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.approvePurchaseRequest(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/request/cancel")
+    public void cancelPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.cancelPurchaseRequest(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/request/reject")

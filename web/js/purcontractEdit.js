@@ -14,6 +14,21 @@ var model = kendo.data.Model.define({
 				required : true
 			}
 		},
+		purchaseContractType : {
+			defaultValue : "代理产品"
+		},
+		
+		eqcostDeliveryType: {
+			defaultValue : "直发现场"
+		},
+		
+		contractProperty: {
+			defaultValue: "闭口合同"
+		},
+		
+		invoiceType: {
+			defaultValue: "增值税专用"
+		},
 		supplierNameContact : {
 
 		},
@@ -40,7 +55,7 @@ $(document).ready(function() {
 		$("#purchasecontractin").kendoMultiSelect({
 			dataTextField : "purchaseOrderCode",
 			dataValueField : "_id",
-			placeholder : "选择采购申请...",
+			placeholder : "选择采购订单...",
 			dataSource : {
 				transport : {
 					read : {
