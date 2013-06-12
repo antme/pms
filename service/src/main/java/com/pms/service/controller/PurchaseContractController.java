@@ -58,35 +58,55 @@ public class PurchaseContractController extends AbstractController {
     }
 
     
-    @RequestMapping("/assistant/request/list")
+    @RequestMapping("/request/list")
     public void listPurchaseRequestByAssistant(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listPurchaseOrders(), request, response);
+        responseWithData(pService.listPurchaseRequests(), request, response);
     }
-
-    @RequestMapping("/assistant/request/add")
+    
+    @RequestMapping("/back/select/list")
+    public void listBackRequestForSelect(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listBackRequestForSelect(), request, response);
+    }
+    
+    @RequestMapping("/request/add")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
     public void addPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
-        pService.updatePurchaseOrder(parserListJsonParameters(request, false));
+        pService.updatePurchaseRequest(parserListJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
     
-    @RequestMapping("/assistant/request/get")
+    @RequestMapping("/request/select/list")
+    public void listPurchaseRequestForSelect(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listPurchaseRequestForSelect(), request, response);
+    }
+    
+    @RequestMapping("/request/get")
     public void getPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.getPurchaseOrder(parserListJsonParameters(request, false)), request, response);
+        responseWithData(pService.getPurchaseRequest(parserListJsonParameters(request, false)), request, response);
     }
 
-    @RequestMapping("/assistant/request/delete")
+    @RequestMapping("/request/delete")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
     public void deletePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
-        pService.deletePurchaseOrder(parserJsonParameters(request, false));
+        pService.deletePurchaseRequest(parserJsonParameters(request, false));
         responseWithData(null, request, response);
     }
     
-    @RequestMapping("/assistant/request/update")
+    @RequestMapping("/request/update")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
     public void updatePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
-        pService.updatePurchaseOrder(parserListJsonParameters(request, false));
+        pService.updatePurchaseRequest(parserListJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
+    }
+    
+    @RequestMapping("/request/approve")
+    public void approvePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.approvePurchaseRequest(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/request/reject")
+    public void rejectPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.rejectPurchaseRequest(parserJsonParameters(request, false)), request, response);
     }
     
     
@@ -117,12 +137,7 @@ public class PurchaseContractController extends AbstractController {
         pService.updatePurchaseOrder(parserListJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
-    
-    @RequestMapping("/request/list")
-    public void listPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listPurchaseRequest(), request, response);
-    }
-    
+
     @RequestMapping("/order/approve")
     public void approvePurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.approvePurchaseOrder(parserJsonParameters(request, false)), request, response);

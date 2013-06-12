@@ -10,25 +10,151 @@
 </script>
 
 <body>
-	<div class="k-edit-form-container">
-		<div class="k-edit-label ">
-			<label for="shipNo">编号</label>
-		</div>
-		<div data-container-for="shipNo" class="k-edit-field ">
-			<input type="text" class="k-input k-textbox" name="shipNo" data-bind="shipNo">
-		</div>
-		<div class="k-edit-label ">
-			<label for="applicationDepartment">申请部门</label>
-		</div>
-		<div data-container-for="applicationDepartment" class="k-edit-field ">
-			<input type="text" class="k-input k-textbox" name="applicationDepartment" data-bind="value:applicationDepartment">
-		</div>
-		<div class="k-edit-label ">
-			<label for="applicationDate">销售合同</label>
-		</div>
-		<div data-container-for="applicationDate" class="k-edit-field ">
-			<input type="text" class="k-input k-textbox" name="applicationDate" data-bind="value:applicationDate">
-		</div>
-	</div>
+    <div id="example" class="k-content">
+    <table class="metrotable">
+        <tbody>
+        <tr>
+            <th>发货申请</th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" data-bind="value: shipNo" class="k-textbox" />
+                <h4>编号</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" data-bind="value: applicationDepartment" class="k-textbox" />
+                <h4>申请部门</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select data-role="combobox" data-text-field="contractCode" data-value-field="_id" data-bind="source: salesContractSource, value: selectedSalesContract"></select>
+                <h4>销售合同编号</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" data-bind="value: selectedSalesContract.customer" class="k-textbox" />
+                <h4>客户名称</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h4>设备清单</h4>
+                <div data-role="grid" data-sortable="true" data-editable="true" data-columns='[{ field:"Name", title: "调入项目编号" }, "Price", "UnitsInStock", {"command": "destroy"}]' data-bind="source: gridSource"></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <script>
+        
+        var crudServiceBaseUrl = "../service";
+
+        $(document).ready(function() {
+            var Node = kendo.data.Node;
+            var viewModel = kendo.observable({
+            	salesContractSource: new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: crudServiceBaseUrl + "/sc/list",
+                            dataType: "jsonp"
+                        }
+                    }
+                }),
+                selectedSalesContract: null,
+                gridSource: new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: crudServiceBaseUrl + "/ship/eqlist",
+                            dataType: "jsonp"
+                        }
+                    },
+                    schema: {
+                        model: {
+                            id: "eqcostNo",
+                            fields: {
+                            	eqcostNo: { editable: false },
+                            	eqcostMaterialCode: { editable: false },
+                            	eqcostProductName: { editable: false },
+                            	eqcostProductType: { editable: false },
+                            	eqcostAmount: { type: "number", validation: { required: true, min: 1} },
+                            	eqcostUnit: { editable: false },
+                            	eqcostBrand: { editable: false },
+                            	eqcostBasePrice: { editable: false }
+                            }
+						}
+                    }
+                }),
+                displayGridSource: function() {
+                    return stringify(this.get("gridSource").toJSON());
+                }
+            });
+
+            kendo.bind($("table"), viewModel);
+        });
+    </script>
+    <style scoped>
+        .metrotable {
+
+            width: 100%;
+        }
+
+        .metrotable > tbody > tr > td {
+            display: table-cell;
+            padding: 5px 5px 5px 0;
+            font-size: 1em;
+            text-transform: none;
+        }
+
+        .metrotable td > .k-textbox,
+        .metrotable td > .k-dropdown,
+        .metrotable td > .k-combobox,
+        .metrotable td > .k-datepicker,
+        .metrotable td > .k-numerictextbox,
+        .metrotable td > .k-timepicker,
+        .metrotable td > .k-slider {
+            float: right;
+        }
+
+        .metrotable td > .k-slider {
+            margin-bottom: 10px;
+        }
+
+        .metrotable > tbody > tr > th {
+            border-bottom: 1px solid #ccc;
+            color: #787878;
+            font-size: 1.4em;
+            font-weight: lighter;
+            padding: 0 1em 0 0;
+            text-align: left;
+        }
+        
+        .metrotable > tbody > tr > td {
+		    text-align: left;
+		    font-weight: lighter;
+		    color: #787878;
+		    border-bottom: 1px solid #e1e1e1;
+		}
+
+        td h4 {
+            margin: 0;
+            padding: 7px 0;
+            font-weight: normal;
+        }
+
+        td label {
+            float: left;
+            clear: left;
+        }
+
+        td pre {
+            font-size: 11px;
+        }
+    </style>
+</div>
+
+
 </body>
 </html>

@@ -70,7 +70,7 @@ function init(data){
                 items: [
                     { text: "备货申请", id: "back", imageUrl: "/images/order.png" },
                     { text: "调拨申请", id: "contract", imageUrl: "/images/ccontract.png" },
-                    { text: "采购申请", id: "purchaseorder", imageUrl: "/images/ccontract.png"},
+                    { text: "采购申请", id: "purchaseRequestApprove", imageUrl: "/images/ccontract.png"},
                     { text: "采购订单", id: "purchaseorder", imageUrl: "/images/ccontract.png"},
                     { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
                     { text: "入库申请单", id: "contract", imageUrl: "/images/ccontract.png" },
@@ -168,19 +168,15 @@ function loadPage(page, parameters) {
 		page = "html/execution/allocate.html";
 	} else if (page == "purchasecontract") {
 		page = "html/purchasecontract/purchasecontract.html";
-	} else if (page == "purchaseRequest") {
-		page = "html/purchasecontract/purchaseRequest.html";
-	} else if (page == "purchasecontractedit") {
-		page = "html/purchasecontract/purchasecontractedit.html";
-	} else if (page == "purchaseorder" || page == "purchaseRequestByAssistant") {
+	}else if (page == "purchaseorder" ) {
 		page = "html/purchasecontract/purchaseOrder.html";
-	}else if (page == "purchaseOrderEdit") {
-		page = "html/purchasecontract/purchaseOrderEdit.html";
+	}else if (page == "purchaseRequestByAssistant") {
+		page = "html/purchasecontract/purchaseRequest.html";
+	}else if (page == "purchaseRequestApprove") {
+		page = "html/purchasecontract/purchaseRequestApprove.html";
 	}else if (page == "addProject") {
 		page = "html/project/addProject.html";
-	} else if (page == "purchaseRequestAdd") {
-		page = "html/purchasecontract/purchaseRequestAdd.html";
-	} else if (page == "ship") {
+	}  else if (page == "ship") {
 		page = "html/execution/ship.html";
 	} else if (page == "addShip") {
 		page = "html/execution/addShip.html";
@@ -188,9 +184,12 @@ function loadPage(page, parameters) {
 		page = "html/purchasecontract/back.html";
 	} else if (page == "backedit") {
 		page = "html/purchasecontract/backedit.html";		
-	} else {
+	} 
+	
+	if(!page.endWith(".html")){
 		page = "html/supplier/supplier.html";
 	}
+	
 
 	var url = page + "?_uid=" + uid;
 
@@ -315,6 +314,16 @@ function checkRoles(){
 		}
 		
 	});
+}
+
+String.prototype.endWith = function(s) {
+	if (s == null || s == "" || this.length == 0 || s.length > this.length)
+		return false;
+	if (this.substring(this.length - s.length) == s)
+		return true;
+	else
+		return false;
+	return true;
 }
 
 

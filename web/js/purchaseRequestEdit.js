@@ -1,10 +1,10 @@
 
 //添加采购申请的时候先选择备货申请
-var selectUrl = "/service/purcontract/request/select/list";
+var selectUrl = "/service/purcontract/back/select/list";
 var editUrl = "/service/purcontract/request/get";
-var saveUrl =  "/service/purcontract/order/update";
+var saveUrl =  "/service/purcontract/request/update";
 var addUrl =  "/service/purcontract/order/add";
-var getSelectUrl = "/service/purcontract/request/get";
+var getSelectUrl = "/service/back/load";
 
 
 

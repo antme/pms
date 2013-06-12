@@ -47,8 +47,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 	
 	public Map<String, Object> eqlist(Map<String, Object> params) {
-		Map<String, Object> res = (Map<String, Object>) pService.listApprovedPurchaseContractCosts((String) params.get(ShipBean.SHIP_SALES_CONTRACT_NO));
-		return res;
+//		Map<String, Object> res = (Map<String, Object>) pService.listApprovedPurchaseContractCosts((String) params.get(ShipBean.SHIP_SALES_CONTRACT_NO));
+		return pService.listApprovedPurchaseContractCosts((String) params.get(ShipBean.SHIP_SALES_CONTRACT_NO)).get(0);
 	}
 
 }

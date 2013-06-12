@@ -61,7 +61,7 @@ $(document).ready(function() {
 });
 
 function add() {
-	loadPage("purchasecontractedit");
+	loadPage("html/purchasecontract/purchasecontractedit.html");
 
 }
 
@@ -69,7 +69,7 @@ function edit(){
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
 
-	loadPage("purchasecontractedit",  {
+	loadPage("html/purchasecontract/purchasecontractedit.html",  {
 		_id : row._id
 	});
 }

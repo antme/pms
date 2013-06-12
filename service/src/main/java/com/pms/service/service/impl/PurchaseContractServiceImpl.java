@@ -75,7 +75,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> listPurchaseOrders() {
-        logger.info(listApprovedPurchaseContractCosts(null));
         return this.dao.list(null, DBBean.PURCHASE_ORDER);
     }
 
@@ -141,10 +140,63 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return dao.updateById(order, DBBean.PURCHASE_ORDER);
     }
 
-    public Map<String, Object> listPurchaseRequest() {
-        Map<String,Object> query = new HashMap<String,Object>();
+    public Map<String, Object> listBackRequestForSelect() {
+        Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseBack.status, PurchaseBack.status_approved);
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.code, PurchaseBack.salesContract_code });
         return dao.list(query, DBBean.PURCHASE_BACK);
     }
+    
+    
+    public Map<String, Object> listPurchaseRequests(){
+        return this.dao.list(null, DBBean.PURCHASE_REQUEST);
+    }
+    
+    public Map<String, Object> listPurchaseRequestForSelect(){
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(PurchaseBack.status, "approved");
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.code, PurchaseBack.salesContract_code });
+        return dao.list(query, DBBean.PURCHASE_REQUEST);
+    }
+    
+    public Map<String, Object> updatePurchaseRequest(Map<String, Object> order){
+        if (ApiUtil.isEmpty(order.get(ApiConstants.MONGO_ID))) {
+            order.put(PurchaseOrder.PROCESS_STATUS, "New");
+            order.put(PurchaseOrder.ORDER_CODE, "Request" + String.valueOf(new Date().getTime()));
+            return this.dao.add(order, DBBean.PURCHASE_REQUEST);
+        } else {
+            Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
+            order.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+            return dao.updateById(order, DBBean.PURCHASE_ORDER);
+        }
+    }
+
+
+    public Map<String, Object> approvePurchaseRequest(HashMap<String, Object> order){
+        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
+        order.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+        order.put(PurchaseOrder.PROCESS_STATUS, APPROVED);
+        order.put(PurchaseOrder.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+        return dao.updateById(order, DBBean.PURCHASE_REQUEST);
+    }
+    
+    public Map<String, Object> rejectPurchaseRequest(HashMap<String, Object> order){
+        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
+        order.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+        order.put(PurchaseOrder.PROCESS_STATUS, "rejected");
+        order.put(PurchaseOrder.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+
+        return dao.updateById(order, DBBean.PURCHASE_REQUEST);
+    }
+    
+    public Map<String, Object> getPurchaseRequest(HashMap<String, Object> parameters){
+        return this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
+    }
+    
+    public void deletePurchaseRequest(Map<String, Object> order){
+        
+    }
+    
+    
 
 }
