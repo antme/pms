@@ -18,6 +18,7 @@ import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ISalesContractService;
+import com.pms.service.util.ApiUtil;
 
 public class SalesContractServiceImpl extends AbstractService implements ISalesContractService {
 
@@ -85,9 +86,19 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			
 			return addedContract;
 		}else{//Update
-			
+			contract.put(ApiConstants.MONGO_ID, _id);
+			Map<String, Object> existContractQuery = new HashMap<String, Object>();
+			existContractQuery.put(ApiConstants.MONGO_ID, _id);
+			existContractQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_MODIFY_TIMES, SalesContractBean.SC_AMOUNT});
+			Map<String, Object> existContract = dao.findOneByQuery(existContractQuery, DBBean.SALES_CONTRACT);
+			float oldAmount = ApiUtil.getFloatParam(existContract, SalesContractBean.SC_AMOUNT);
+			float newAmount = ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT);
+			if (oldAmount != newAmount){
+				int newVersion = ApiUtil.getIntegerParam(existContract, SalesContractBean.SC_MODIFY_TIMES);
+				contract.put(SalesContractBean.SC_MODIFY_TIMES, newVersion++);
+			}
+			return dao.updateById(contract, DBBean.SALES_CONTRACT);
 		}
-		return null;
 	}
 	
 	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId){
@@ -239,5 +250,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(SalesContractBean.SC_ID, scId);
 		return dao.list(query, DBBean.SC_GOT_MONEY);
+	}
+
+	@Override
+	public Map<String, Object> getRelatedProjectInfo(Map<String, Object> params) {
+		String scId = (String) params.get(SalesContractBean.SC_ID);
+		Map<String, Object> querySC = new HashMap<String, Object>();
+		querySC.put(ApiConstants.MONGO_ID, scId);
+		querySC.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_PROJECT_ID});
+		Map<String, Object> sc = dao.findOneByQuery(querySC, DBBean.SALES_CONTRACT);
+		
+		String pId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
+		return dao.findOne(ApiConstants.MONGO_ID, pId, DBBean.PROJECT);
 	}
 }

@@ -20,4 +20,6 @@ public interface ISalesContractService {
 	public Map<String, Object> addGotMoneyForSC(Map<String, Object> params);
 	
 	public Map<String, Object> listGotMoneyForSC(Map<String, Object> params);
+	
+	public Map<String, Object> getRelatedProjectInfo(Map<String, Object> params);
 }

@@ -56,6 +56,12 @@ public class SalesContractController extends AbstractController {
         responseWithData(salesContractService.getSC(params), request, response);
     }
     
+    @RequestMapping("/project/info")//根据销售合同id 获取相对应的项目信息
+    public void getRelatedProjectInfo(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.getRelatedProjectInfo(params), request, response);
+    }
+    
     @RequestMapping("/invoice/add")
     public void addInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
