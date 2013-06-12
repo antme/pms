@@ -1,3 +1,13 @@
+
+//添加采购申请的时候先选择备货申请
+var selectUrl = "/service/purcontract/request/select/list";
+var editUrl = "/service/purcontract/request/get";
+var saveUrl =  "/service/purcontract/order/update";
+var addUrl =  "/service/purcontract/order/add";
+var getSelectUrl = "/service/purcontract/order/get";
+
+
+
 //抽象model对象， datasource对象必须绑定一个model为了方便解析parameterMap中需要提交的参数
 var model = kendo.data.Model.define({
 	id : "_id",
@@ -6,7 +16,7 @@ var model = kendo.data.Model.define({
 			type : "number"
 		},
 
-		eqcostRequestedAmount : {
+		eqcostApplyAmount : {
 			type : "number"
 		},
 		eqcostBasePrice : {
@@ -39,41 +49,41 @@ var model = kendo.data.Model.define({
 
 // 声明一个总的对象用来传递数据
 var requestDataItem;
+var selectedRequest;
 
 $(document).ready(function() {
 		$("#purchaseRequest").kendoDropDownList({
-				dataTextField : "_id",
+				dataTextField : "code",
 				dataValueField : "_id",
 				dataSource : {
 					transport : {
 						read : {
 							dataType : "jsonp",
-							url : "/service/purcontract/request/list"
+							url : selectUrl
 						}
 					}
 				},
 
 				// 当用户选择不同的采购申请时候赋值给requestDataItem对象
 				select : function(e) {
-					requestDataItem = this.dataSource.at(e.item.index());
+					selectedRequest = this.dataSource.at(e.item.index());
 				}
 			});
 
 			if (redirectParams) {
-				postAjaxRequest("/service/purcontract/order/get",
-						redirectParams, edit);
+				postAjaxRequest(editUrl, redirectParams, edit);
 			}
 });
 
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
 		update : {
-			url : "/service/purcontract/order/update",
+			url : saveUrl,
 			dataType : "jsonp",
 			type : "post"
 		},
 		create : {
-			url : "/service/purcontract/order/add",
+			url : addUrl,
 			dataType : "jsonp",
 			type : "post"
 		},
@@ -105,10 +115,16 @@ function showOrderWindow() {
 
 	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
 	var kendoGrid = $("#purchaseRequest").data("kendoDropDownList");
-	if (!requestDataItem) {
-		requestDataItem = kendoGrid.dataSource.at(0);
+	
+	if (!selectedRequest) {
+		selectedRequest = kendoGrid.dataSource.at(0);
 	}
 
+	postAjaxRequest(getSelectUrl, {_id: selectedRequest._id}, loadRequest);
+}
+
+function loadRequest(data){
+	requestDataItem = data;
 	if (!requestDataItem.purchaseOrderCode) {
 		requestDataItem.purchaseOrderCode = "";
 	}
@@ -133,7 +149,7 @@ function sumOrders(e) {
 	requestDataItem.eqcostList = data;
 
 	var eqcostBasePrice = e.model.eqcostBasePrice;
-	var eqcostRequestedAmount = e.model.eqcostRequestedAmount;
+	var eqcostApplyAmount = e.model.eqcostApplyAmount;
 	var eqcostProductUnitPrice = e.model.eqcostProductUnitPrice;
 
 	if (e.values.eqcostBasePrice) {
@@ -144,14 +160,14 @@ function sumOrders(e) {
 		eqcostProductUnitPrice = e.values.eqcostProductUnitPrice
 	}
 
-	if (e.values.eqcostRequestedAmount) {
-		eqcostRequestedAmount = e.values.eqcostRequestedAmount
+	if (e.values.eqcostApplyAmount) {
+		eqcostApplyAmount = e.values.eqcostApplyAmount
 	}
 
 	var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
 	// will trigger dataBound event
-	e.model.set("eqcostContractTotalMoney", eqcostBasePrice * eqcostRequestedAmount);
-	e.model.set("requestedTotalMoney", eqcostProductUnitPrice * eqcostRequestedAmount);
+	e.model.set("eqcostContractTotalMoney", eqcostBasePrice * eqcostApplyAmount);
+	e.model.set("requestedTotalMoney", eqcostProductUnitPrice * eqcostApplyAmount);
 
 	grid1.refresh();
 
@@ -196,8 +212,8 @@ function edit(data) {
 								field : "eqcostProductName",
 								title : "货品名"
 							}, {
-								field : "eqcostProductCategory",
-								title : "货品类别"
+								field : "eqcostMaterialCode",
+								title : "物料代码"
 							}, {
 								field : "eqcostProductType",
 								title : "货品型号"
@@ -209,7 +225,7 @@ function edit(data) {
 								field : "eqcostAvailableAmount",
 								title : "可申请数量"
 							}, {
-								field : "eqcostRequestedAmount",
+								field : "eqcostApplyAmount",
 								title : "本次申请数量"
 							}, {
 								field : "eqcostBasePrice",
@@ -289,8 +305,8 @@ function edit(data) {
 										item.eqcostAmount = 0;
 									}
 
-									if (!item.eqcostRequestedAmount) {
-										item.eqcostRequestedAmount = 0;
+									if (!item.eqcostApplyAmount) {
+										item.eqcostApplyAmount = 0;
 									}
 
 									if (!item.eqcostProductUnitPrice) {
@@ -309,25 +325,25 @@ function edit(data) {
 									var itemDifferenceAmount = item.differenceAmount;
 
 									// 计算总的申请数量
-									total = total + item.eqcostRequestedAmount;
+									total = total + item.eqcostApplyAmount;
 									eqcostAmount = eqcostAmount
 											+ item.eqcostAmount;
 
 									requestActureMoney = requestActureMoney
-											+ item.eqcostRequestedAmount
+											+ item.eqcostApplyAmount
 											* item.eqcostProductUnitPrice;
-									item.requestedTotalMoney = item.eqcostRequestedAmount
+									item.requestedTotalMoney = item.eqcostApplyAmount
 											* item.eqcostProductUnitPrice;
 
 									eqcostContractTotalMoney = eqcostContractTotalMoney
-											+ item.eqcostRequestedAmount
+											+ item.eqcostApplyAmount
 											* item.eqcostBasePrice;
-									item.eqcostContractTotalMoney = item.eqcostRequestedAmount
+									item.eqcostContractTotalMoney = item.eqcostApplyAmount
 											* item.eqcostBasePrice;
 
-									item.differenceAmount = item.eqcostRequestedAmount
+									item.differenceAmount = item.eqcostApplyAmount
 											* item.eqcostProductUnitPrice
-											- item.eqcostRequestedAmount
+											- item.eqcostApplyAmount
 											* item.eqcostBasePrice;
 
 									if ( requestedTotalMoney != item.requestedTotalMoney

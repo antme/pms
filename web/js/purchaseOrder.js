@@ -1,8 +1,12 @@
+var url = "/service/purcontract/order/list";
+var approveUrl = "/service/purcontract/order/approve";
+var rejectUrl = "/service/purcontract/order/reject";
+
 // 外面列表页的datasource对象
 var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
-			url : "/service/purcontract/order/list",
+			url : url,
 			dataType : "jsonp"
 		}
 	},
@@ -87,7 +91,7 @@ function approve() {
 		var param = {
 			_id : row._id
 		};
-		postAjaxRequest("/service/purcontract/order/approve", param,
+		postAjaxRequest(approveUrl, param,
 				approveStatusCheck);
 
 	}
@@ -101,16 +105,20 @@ function reject() {
 		var param = {
 			"_id" : row._id
 		};
-		postAjaxRequest("/service/purcontract/order/reject", param,
+		postAjaxRequest(rejectUrl, param,
 				approveStatusCheck);
 
 	}
 }
 
+function add(){
+	loadPage("html/purchasecontract/purchaseOrderEdit.html");
+}
+
 function edit() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
-	loadPage("purchaseOrderEdit", {
+	loadPage("html/purchasecontract/purchaseOrderEdit.html", {
 		_id : row._id
 	});
 }

@@ -6,22 +6,6 @@
 	height: 25px;
 }
 
-
-label{
-   margin-left: 5px;
-   
-}
-
-
-#purchaseorder-edit-header{
-    margin-bottom: 10px;
-}
-
-
-#purchaseorder-edit-header span{
-    font-weight: bold;
-}
-
 </style>
 
 
@@ -32,7 +16,7 @@ label{
 	<div id="purchaseorder" class="k-content">
 	
 	<div class="k-toolbar k-grid-toolbar">
-	    <button access="purchase_request_management" class="k-button" onclick="loadPage(&quot;purchaseOrderEdit&quot;);">新增</button>
+	    <button access="purchase_request_management" class="k-button" onclick="add();">新增</button>
 	    <button access="purchase_request_management" class="k-button" onclick="edit();">编辑</button>
 	    <button access="purchase_request_management" class="k-button" onclick="approve();">批准</button>
 	    <button access="purchase_request_management" class="k-button" onclick="reject();">拒绝</button>
