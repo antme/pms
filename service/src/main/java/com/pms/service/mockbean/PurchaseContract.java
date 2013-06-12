@@ -26,6 +26,12 @@ public class PurchaseContract extends PurchaseRequestOrder{
     
     
     private String description;
+    
+    
+    private String eqcostDeliveryType;
+    
+    private String contractProperty;
+
 
 
     public String getPurchaseContractType() {
@@ -128,6 +134,26 @@ public class PurchaseContract extends PurchaseRequestOrder{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+    public String getEqcostDeliveryType() {
+        return eqcostDeliveryType;
+    }
+
+
+    public void setEqcostDeliveryType(String eqcostDeliveryType) {
+        this.eqcostDeliveryType = eqcostDeliveryType;
+    }
+
+
+    public String getContractProperty() {
+        return contractProperty;
+    }
+
+
+    public void setContractProperty(String contractProperty) {
+        this.contractProperty = contractProperty;
     }
     
     

@@ -114,8 +114,7 @@ public class PurchaseRequestOrder extends BaseEntity {
     }
     
     
-    
-
+   
     public String getPurchaseContractCode() {
         return purchaseContractCode;
     }
