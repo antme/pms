@@ -43,7 +43,12 @@ public class DBQueryUtil {
                 if (dbQuery.getOperation() == DBQueryOpertion.IN) {
                     BasicDBList dbList = new BasicDBList();
                     List<Object> arrayValues = new ArrayList<Object>();
-                    if(dbQuery.getValue() instanceof String[]){
+                    if(dbQuery.getValue() instanceof String){  
+                        String[] s = new String[] {(String) dbQuery.getValue()};
+                        for(String v: s){
+                            arrayValues.add(v);
+                        }
+                    }else if(dbQuery.getValue() instanceof String[]){
                         String[] s = (String[]) (dbQuery.getValue());
                         for(String v: s){
                             arrayValues.add(v);

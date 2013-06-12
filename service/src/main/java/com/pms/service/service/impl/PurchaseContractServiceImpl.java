@@ -175,10 +175,22 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     
     public Map<String, Object> listPurchaseRequests(){
-        Map<String, Object> results = dao.list(null, DBBean.PURCHASE_REQUEST);
+        
+        Map<String, Object> roleQuery = new HashMap<String, Object>();
+        
+        if(isDepartmentManager()){
+            roleQuery.put(PurchaseRequestOrder.PROCESS_STATUS, PurchaseRequestOrder.STATUS_NEW);
+        }
+        
+        if (isPurchase()) {
+            roleQuery.put(PurchaseRequestOrder.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequestOrder.MANAGER_APPROVED, PurchaseRequestOrder.STATUS_APPROVED, PurchaseRequestOrder.STATUS_REJECTED }));
+        }
+        
+        Map<String, Object> results = dao.list(roleQuery, DBBean.PURCHASE_REQUEST);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
         
         for(Map<String, Object> data: list){
+            //FIXME
             Map<String, Object> query = new HashMap<String, Object>();
             query.put(SalesContractBean.SC_ID, data.get(PurchaseRequestOrder.SALES_CONTRACT_CODE));
             

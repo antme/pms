@@ -81,7 +81,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
         if (parameters.get(ApiConstants.LIMIT_KEYS) == null) {
             throw new ApiResponseException("should set limitKeys varable", null);
         }
-        String[] limitKeys = (String[]) parameters.get(ApiConstants.LIMIT_KEYS);
+        String[] limitKeys = getLimitKeys(parameters);
 
         DBObject query = DBQueryUtil.buildQueryObject(parameters, true, true);
         Pagnation page = getPagnation(parameters);
@@ -142,10 +142,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
 
     private void mergeDefaultValue(Map<String, Object> parameters, String collection, Map<String, Object> map) {
         map.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID).toString());
-        String[] limitKeys = null;
-        if(parameters!=null && parameters.get(ApiConstants.LIMIT_KEYS) != null){
-            limitKeys = (String[]) parameters.get(ApiConstants.LIMIT_KEYS);
-        }
+
         
         if (map.get(ApiConstants.CREATED_ON) != null) {
             if (map.get(ApiConstants.CREATED_ON) instanceof Date) {
@@ -457,10 +454,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
     private BasicDBObject getQueryKey(Map<String, Object> parameters) {
         BasicDBObject queryKeys;
         String keys[] = null;
-        if (parameters.get(ApiConstants.LIMIT_KEYS) instanceof String) {
-            keys = new String[] { parameters.get(ApiConstants.LIMIT_KEYS).toString() };
-        }
-        keys = (String[]) parameters.get(ApiConstants.LIMIT_KEYS);
+        keys = getLimitKeys(parameters);
 
         queryKeys = new BasicDBObject();
         queryKeys.put(ApiConstants.MONGO_ID, 1);
@@ -468,6 +462,16 @@ public class CommonDaoMongoImpl implements ICommonDao {
             queryKeys.put(queryKey, 1);
         }
         return queryKeys;
+    }
+
+    private String[] getLimitKeys(Map<String, Object> parameters) {
+        String[] keys;
+        if (parameters.get(ApiConstants.LIMIT_KEYS) instanceof String) {
+            keys = new String[] { parameters.get(ApiConstants.LIMIT_KEYS).toString() };
+        }else{
+            keys = (String[]) parameters.get(ApiConstants.LIMIT_KEYS);
+        }
+        return keys;
     }
 
 
