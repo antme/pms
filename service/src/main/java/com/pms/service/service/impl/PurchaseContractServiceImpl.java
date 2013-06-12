@@ -133,7 +133,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         Map<String, Object> result =  dao.updateById(request, db);
         
-        updateSummaryUnderContract(db, cc.get(PurchaseRequestOrder.SALES_CONTRACT_CODE).toString());
+        if(cc.get(PurchaseRequestOrder.SALES_CONTRACT_CODE)!=null){
+            updateSummaryUnderContract(db, cc.get(PurchaseRequestOrder.SALES_CONTRACT_CODE).toString());
+        }
         
         return result;
         
@@ -269,7 +271,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
 
     public Map<String, Object> approvePurchaseRequest(HashMap<String, Object> request){
-        return processRequest(request, DBBean.PURCHASE_REQUEST, APPROVED);
+        
+        if(isDepartmentManager()){
+            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequestOrder.MANAGER_APPROVED);
+        }else{
+            return processRequest(request, DBBean.PURCHASE_REQUEST, APPROVED);
+        }
     }
     
     public Map<String, Object> cancelPurchaseRequest(HashMap<String, Object> request){

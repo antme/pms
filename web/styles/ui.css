@@ -77,6 +77,15 @@ body {
 	padding-top: 5px;
 }
 
+.user_logout{
+	background-image: url("../images/block.png");
+    background-repeat: no-repeat;
+    padding-left: 35px;
+    height: 40px;
+    display: block;
+    padding-top: 5px;
+}
+
 .user_info {
 	background-image: url("../images/user.png");
 	background-repeat: no-repeat;
@@ -115,4 +124,8 @@ body {
 
 .k-grid-header .k-header{
 	white-space: normal;
+}
+
+.access{
+	display: none;
 }

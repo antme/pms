@@ -15,6 +15,7 @@ import com.pms.service.annotation.LoginRequired;
 import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.annotation.RoleValidate;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.IUserService;
 import com.pms.service.util.ApiThreadLocal;
 
@@ -23,7 +24,6 @@ import com.pms.service.util.ApiThreadLocal;
 @RoleValidate()
 @LoginRequired()
 public class UserController extends AbstractController {
-    private static final String USER_ID = "userId";
 
     private IUserService userService = null;
 
@@ -38,14 +38,18 @@ public class UserController extends AbstractController {
 
     @RequestMapping("/login")
     public void login(HttpServletRequest request, HttpServletResponse response) {
-        String id = userService.login(parserJsonParameters(request,  false));
-        request.getSession().setAttribute(USER_ID, id);
-        responseWithKeyValue(ApiConstants.MONGO_ID, id, request, response);
+        Map<String, Object> user = userService.login(parserJsonParameters(request,  false));
+        request.getSession().setAttribute(UserBean.USER_ID, user.get(ApiConstants.MONGO_ID));
+        request.getSession().setAttribute(UserBean.USER_NAME, user.get(UserBean.USER_NAME));
+
+        responseWithKeyValue(ApiConstants.MONGO_ID, user.get(ApiConstants.MONGO_ID).toString(), request, response);
     }
         
     @RequestMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
-        request.getSession().removeAttribute(USER_ID);
+        request.getSession().removeAttribute(UserBean.USER_ID);
+        request.getSession().removeAttribute(UserBean.USER_NAME);
+
         ApiThreadLocal.removeAll();
         responseWithData(null, request, response);
     }

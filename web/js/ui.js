@@ -42,6 +42,7 @@ $(document).ready(function() {
 function init(data){
 	
 	roles = data.data;
+	$("#user_info").html(data.userName);
 	$("#tree-nav").kendoTreeView({
     	template: kendo.template($("#treeview-template").html()),
         dataSource: [
@@ -315,6 +316,8 @@ function checkRoles(){
 		
 		if(!hasAccess){
 			node.hide();
+		}else{
+			node.show();
 		}
 		
 	});
