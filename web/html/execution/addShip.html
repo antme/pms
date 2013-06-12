@@ -2,49 +2,42 @@
 
 <script  src="js/addShip.js"></script>
 
-<script id="template" type="text/x-kendo-template">
-	<a class="k-button" href="\#" onclick="return toolbar_add()">添加/修改</a>
-</script>
-
-<script id="submit-template" type="text/x-kendo-template">
-	<a class="k-button" href="\#" onclick="return toolbar_submit()">提交</a>
-</script>
-
 <body>
-    <div id="example" class="k-content">
+    <div id="addShip" class="k-content">
+    
+    <button onclick="save()" class="k-button">保存</button>
+    <button onclick='loadPage("ship");' class="k-button">取消</button>
+    
     <table class="metrotable">
         <tbody>
         <tr>
-            <th>发货申请</th>
-        </tr>
-        <tr>
             <td>
-                <input type="text" data-bind="value: data.salesContract.shipNo" class="k-textbox" />
+                <input type="text" data-bind="value: shipNo" class="k-textbox" />
                 <h4>编号</h4>
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" data-bind="value: data.applicationDepartment" class="k-textbox" />
+                <input type="text" data-bind="value: applicationDepartment" class="k-textbox" />
                 <h4>申请部门</h4>
             </td>
         </tr>
         <tr>
             <td>
-                <select data-role="combobox" data-text-field="contractCode" data-value-field="_id" data-bind="source: salesContractSource, value: data.salesContract, events: { change: change }"></select>
+                <input id="salesContract" data-bind="value: salesContractId" />
                 <h4>销售合同编号</h4>
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" data-bind="value: data.salesContract.customer" class="k-textbox" />
+                <input type="text" data-bind="value: customer" class="k-textbox" />
                 <h4>客户名称</h4>
             </td>
         </tr>
         <tr>
             <td>
                 <h4>设备清单</h4>
-                <div data-role="grid" data-sortable="true" data-editable="true" data-columns='[{ field:"eqcostNo", title: "序号" }, { field:"eqcostMaterialCode", title: "物料代码" }, { field:"eqcostProductName", title: "产品名称" }, { field:"eqcostProductType", title: "规格型号" }, { field:"eqcostUnit", title: "单位" }, { field:"eqcostAmount", title: "数量" }, { field:"eqcostBrand", title: "品牌" }, { field:"eqcostMemo", title: "备注" }, {"command": "destroy"}]' data-bind="source: data.eqcostList"></div>
+                <div id="equipments-grid" ></div>
             </td>
         </tr>
         </tbody>
