@@ -90,11 +90,14 @@ public class ApiFilter extends AbstractController implements Filter {
     }
 
     private void loginCheck(HttpServletRequest request) {
-        if (InitBean.loginPath.contains(request.getPathInfo())) {
+        
+        if(request.getPathInfo().indexOf("login") == -1){
+//        if (InitBean.loginPath.contains(request.getPathInfo())) {
             if (request.getSession().getAttribute(UserBean.USER_ID) == null) {
                 logger.debug("Login requried for path : " + request.getPathInfo());
                 throw new ApiLoginException();
             }
+//        }
         }
 
     }

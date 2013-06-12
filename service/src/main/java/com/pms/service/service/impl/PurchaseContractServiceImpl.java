@@ -1,5 +1,6 @@
 package com.pms.service.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,10 +11,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.BaseEntity;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
+import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.PurchaseRequestOrder;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
@@ -71,7 +74,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract) {
-        return updatePurchase(contract, DBBean.PURCHASE_CONTRACT, "contract_");
+        return updatePurchase(contract, DBBean.PURCHASE_CONTRACT, "contract_", new PurchaseContract());
     }
  
 
@@ -106,12 +109,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> order) {
-        return updatePurchase(order, DBBean.PURCHASE_ORDER, "order_");
+        return updatePurchase(order, DBBean.PURCHASE_ORDER, "order_", new PurchaseRequestOrder());
     }
     
     public Map<String, Object> getPurchaseOrder(HashMap<String, Object> parameters){
-        
-        return this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
+        Map<String, Object> result =  this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);        
+        return mergeProjectInfo(result, result.get("salesContractCode").toString());
     }
 
     public Map<String, Object> approvePurchaseContract(HashMap<String, Object> order) {
@@ -207,12 +210,16 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
     
     public Map<String, Object> updatePurchaseRequest(Map<String, Object> order) {
-        return updatePurchase(order, DBBean.PURCHASE_REQUEST, "request_");
+        return updatePurchase(order, DBBean.PURCHASE_REQUEST, "request_", new PurchaseRequestOrder());
     }
     
-    public Map<String, Object> updatePurchase(Map<String, Object> parameters, String db, String prefix) {
+    public Map<String, Object> updatePurchase(Map<String, Object> parameters, String db, String prefix, BaseEntity entity) {
 
-        PurchaseRequestOrder request = (PurchaseRequestOrder) new PurchaseRequestOrder().toEntity(parameters);
+//        if(parameters.get("signDate") !=null){
+//            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//            parameters.put("signDate", format.format(parameters.get("signDate")));
+//        }
+        PurchaseRequestOrder request = (PurchaseRequestOrder) entity.toEntity(parameters);
 
         if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
             
@@ -255,7 +262,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
     
     public Map<String, Object> getPurchaseRequest(HashMap<String, Object> parameters){
-        return this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
+
+        Map<String,Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
+        return mergeProjectInfo(result, result.get("salesContractCode").toString());
+
     }
 
     
@@ -265,8 +275,23 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
        
     
     public Map<String, Object> getBackRequestForSelect(HashMap<String, Object> parameters){
-        
-       return backService.loadBack(parameters);
+       Map<String, Object> result = backService.loadBack(parameters);
+       
+       return mergeProjectInfo(result, result.get(PurchaseBack.salesContract_code).toString());
+    }
+
+
+    private Map<String, Object> mergeProjectInfo(Map<String, Object> result, String scId) {
+           
+           Map<String, Object> query = new HashMap<String, Object>();
+           query.put(SalesContractBean.SC_ID, scId);
+           Map<String, Object> relatedProjectInfo = getRelatedProjectInfo(query);
+           
+           result.put("salesContractCode", scId);
+           result.put("projectName", relatedProjectInfo.get(ProjectBean.PROJECT_NAME));
+           result.put("projectCode", relatedProjectInfo.get(ProjectBean.PROJECT_CODE));
+
+           return result;
     }
 
 

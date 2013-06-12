@@ -211,8 +211,7 @@ function edit(data) {
 	$("#purchaseOrderCode").html(dataItem.purchaseOrderCode);
 	$("#projectName").html(dataItem.projectName);
 	$("#projectCode").html(dataItem.projectCode);
-	$("#projectContractCode").html(dataItem.projectContractCode);
-	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
+	$("#salesContractCode").html(dataItem.salesContractCode);
 	$("#purchaseorder-edit-item").show();
 
 	var editKendoGrid = $("#purchaseorder-edit-grid").data("kendoGrid");

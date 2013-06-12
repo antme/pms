@@ -31,7 +31,7 @@ $(document).ready(function() {
 				field : "purchaseOrderCode",
 				title : "订单编号"
 			}, {
-				field : "projectContractCode",
+				field : "salesContractCode",
 				title : "客户合同编号"
 			}, {
 				field : "purchaseRequestCode",
