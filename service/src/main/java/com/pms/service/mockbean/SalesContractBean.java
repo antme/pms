@@ -53,7 +53,9 @@ public class SalesContractBean {
 	//包装字段
 	public static final String SC_EXECUTION_INFO = "scExecutionInfo";
 	public static final String SC_INVOICE_INFO = "scInvoiceInfo";
-	public static final String SC_GOT_MONEY_INFO = "scGotMoneyInfo"; 
+	public static final String SC_GOT_MONEY_INFO = "scGotMoneyInfo";
+	public static final String SC_MONTH_SHIPMENTS_INFO = "scMonthShipmentsInfo";
+	public static final String SC_YEAR_SHIPMENTS_INFO = "scYearShipmentsInfo"; 
 	
 	public static final String SC_SHIPMENTS_MONEY = "scShipmentsMoney"; //==发货金额
 	public static final String SC_INVOICE_MONEY = "scInvoiceMoney";  //==开票金额
@@ -63,6 +65,9 @@ public class SalesContractBean {
 	public static final String SC_NO_EXECUTION_MONEY = "scNoExecutionMoney";  //==未执行款
 
 	public static final String SC_INVOICE_DATE = "scInvoiceDate"; //==开票日期
+
+	public static final String SC_MONTH_SHIPMENTS_MONTH = "month";
+	public static final String SC_YEAR_SHIPMENTS_YEAR = "year";
 	
 	public static final String SC_ID = "scId"; // 其他表外键引用SC 时用此字段名 （eg. 开票表，收款表）
 	

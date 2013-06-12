@@ -97,6 +97,24 @@ public class SalesContractController extends AbstractController {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.listGotMoneyForSC(params), request, response);
     }
+    
+    @RequestMapping("/monthshipments/add")
+    public void addMonthShipmentsForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.addMonthShipmentsForSC(params), request, response);
+    }
+    
+    @RequestMapping("/monthshipments/update")
+    public void updateMonthShipmentsForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.addMonthShipmentsForSC(params), request, response);
+    }
+    
+    @RequestMapping("/monthshipments/list")
+    public void listMonthShipmentsForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.listMonthShipmentsForSC(params), request, response);
+    }
 
 	public ISalesContractService getSalesContractService() {
 		return salesContractService;

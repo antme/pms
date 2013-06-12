@@ -11,11 +11,6 @@ var scModel = kendo.data.Model.define({
 				required : true
 			}
 		},
-//		customer : {
-//			validation : {
-//				required : true
-//			}
-//		},
 		archiveStatus : {},
 		runningStatus : {},
 		contractAmount : {},
@@ -178,23 +173,11 @@ $(document).ready(function() {
 		dataSource : projectItems,
 	});
 	
-//	var customerItems = new kendo.data.DataSource({
-//		transport : {
-//			read : {
-//				url : "/service/customer/list",
-//				dataType : "jsonp"
-//			}
-//		}
-//	});
-//	$("#customer").kendoDropDownList({
-//		dataTextField : "name",
-//		dataValueField : "_id",
-//        optionLabel: "选择客户...",
-//		dataSource : customerItems,
-//	});
-	
 	//合同签订日期控件
-	$("#contractDate").kendoDatePicker();
+	$("#contractDate").kendoDatePicker({
+		format: "yyyy/MM/dd",
+		parseFormats: ["yyyy/MM/dd"]
+	});
 	
 	$("#contractAmount").kendoNumericTextBox({
 		min:0
@@ -281,11 +264,11 @@ $(document).ready(function() {
 		
 function saveSC(){
 	var _id = scm.get("_id");
+	var contractDate = $("#contractDate").val();
+	scm.set("contractDate", contractDate);
 	var data = eqCostListDataSource.data();
 	scm.set("eqcostList", data);
-	if (_id == null){
-		dataSource.add(scm);
-	}
+	dataSource.add(scm);
 	dataSource.sync();
 	loadPage("scList");
 };

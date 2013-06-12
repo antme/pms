@@ -34,11 +34,13 @@ var scModel = kendo.data.Model.define({
 		contractMemo : {},
 		eqcostList : {},
 		scInvoiceInfo : {},
-		scGotMoneyInfo : {}
+		scGotMoneyInfo : {},
+		scMonthShipmentsInfo : {},
+		scYearShipmentsInfo : {}
 	}
 });
-
 var scm;
+
 var scInvoiceModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
@@ -67,6 +69,20 @@ var scGotMoneyModel = kendo.data.Model.define({
 	}
 });
 var gmm;
+
+var scMonthShipmentsModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		_id : {
+			editable : false,
+			nullable : true
+		},
+		scShipmentsMoney:{},
+		scId:{},
+		month:{}
+	}
+});
+var msm;
 
 var invoiceDataSource = new kendo.data.DataSource({
 	transport : {
@@ -134,6 +150,39 @@ var gotMoneyDataSource = new kendo.data.DataSource({
 		model : scGotMoneyModel
 	}
 });
+
+var monthShipmentsSource = new kendo.data.DataSource({
+	transport : {
+		read : {
+			url : "../service/sc/monthshipments/list",
+			dataType : "jsonp"
+		},
+		update : {
+			url : "../service/sc/monthshipments/update",
+			dataType : "jsonp",
+			method : "post"
+		},
+		create : {
+			url : "../service/sc/monthshipments/add",
+			dataType : "jsonp",
+			method : "post"
+		},
+
+		parameterMap : function(options, operation) {
+			if (operation !== "read" && options.models) {
+				return {
+					models : kendo.stringify(options.models)
+				};
+			}
+		}
+	},
+	pageSize: 10,
+	batch : true,
+	
+	schema : {
+		model : scMonthShipmentsModel
+	}
+});
 var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
@@ -189,7 +238,6 @@ var eqCostListDataSourceNew = new kendo.data.DataSource({
 
 
 $(document).ready(function() {
-	console.log("*******************************************8");
 	//选项卡
 	if (!$("#tabstrip").data("kendoTabStrip")){
 		$("#tabstrip").kendoTabStrip({
@@ -439,23 +487,56 @@ function edit(data){
 			scrollable : true
 		});
 	}
+	
+	monthShipmentsSource.data(scm.scMonthShipmentsInfo);
+	if (!$("#monthShipmentsGrid").data("kendoGrid")){
+		$("#monthShipmentsGrid").kendoGrid({
+			dataSource : monthShipmentsSource,
+			editable : "popup",
+			toolbar : [ {
+				template : kendo.template($("#addMonthShipmentsButtonTem").html())
+			} ],
+			//toolbar : [ { name:"create",text:"新收款" } ],
+			columns : [ {
+					field : "month",
+					title : "发货月份"
+				},{
+					field : "scShipmentsMoney",
+					title : "发货金额金额"
+				}],
+			scrollable : true
+		});
+	}
+	
+	if (!$("#yearShipmentsGrid").data("kendoGrid")){
+		$("#yearShipmentsGrid").kendoGrid({
+			dataSource : scm.scYearShipmentsInfo,
+			columns : [ {
+					field : "year",
+					title : "发货年份"
+				},{
+					field : "scShipmentsMoney",
+					title : "发货金额金额"
+				}],
+			scrollable : true
+		});
+	}
 	kendo.bind($("#editSalesContract"), scm);
 }
 		
 function saveSC(){
 	var _id = scm.get("_id");
-	var data = eqCostListDataSource.data();
+	var data = eqCostListDataSourceNew.data();
 	scm.set("eqcostList", data);
-	if (_id == null){
+//	if (_id == null){
 		dataSource.add(scm);
-	}
+//	}
 	dataSource.sync();
 	loadPage("scList");
 };
 
 function addInvoice(){
 	im = new scInvoiceModel();
-	console.log(redirectParams._id+"&&&&&&&&&&&&&&&&&&&&&&&&&");
 	kendo.bind($("#invoice-edit"), im);
 	var options = {id:"invoice-edit", width:"450px", height: "300px", title:"新开票"};
 	openWindow(options);
@@ -497,6 +578,37 @@ function saveGotMoney(){
 	var grid = $("#gotMoneyList");
 	if (grid.data("kendoGrid")) {
 		grid.data("kendoGrid").refresh();
+	}
+}
+
+function addMonthShipments(){
+	msm = new scMonthShipmentsModel();
+	kendo.bind($("#month-shipments-edit"), msm);
+	var options = {id:"month-shipments-edit", width:"450px", height: "300px", title:"新发货金额"};
+	openWindow(options);
+}
+
+function saveMonthShipments(){
+	msm.set("scId", redirectParams._id);
+	monthShipmentsSource.add(msm);
+	monthShipmentsSource.sync();
+	var window = $("#month-shipments-edit");
+
+	if (window.data("kendoWindow")) {
+		window.data("kendoWindow").close();
+	}
+	
+	var grid = $("#monthShipmentsGrid");
+	if (grid.data("kendoGrid")) {
+		grid.data("kendoGrid").refresh();
+	}
+}
+
+function closeWindow(windowId){
+	var window = $("#"+windowId);
+
+	if (window.data("kendoWindow")) {
+		window.data("kendoWindow").close();
 	}
 }
 	

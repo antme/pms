@@ -21,5 +21,9 @@ public interface ISalesContractService {
 	
 	public Map<String, Object> listGotMoneyForSC(Map<String, Object> params);
 	
+	public Map<String, Object> addMonthShipmentsForSC(Map<String, Object> params);
+	
+	public Map<String, Object> listMonthShipmentsForSC(Map<String, Object> params);
+	
 	public Map<String, Object> getRelatedProjectInfo(Map<String, Object> params);
 }

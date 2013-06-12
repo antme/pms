@@ -87,6 +87,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			return addedContract;
 		}else{//Update
 			contract.put(ApiConstants.MONGO_ID, _id);
+			
+			//更新销售合同变更次数
 			Map<String, Object> existContractQuery = new HashMap<String, Object>();
 			existContractQuery.put(ApiConstants.MONGO_ID, _id);
 			existContractQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_MODIFY_TIMES, SalesContractBean.SC_AMOUNT});
@@ -97,6 +99,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				int newVersion = ApiUtil.getIntegerParam(existContract, SalesContractBean.SC_MODIFY_TIMES);
 				contract.put(SalesContractBean.SC_MODIFY_TIMES, newVersion++);
 			}
+			
+			//添加成本设备清单记录
+			if (!eqcostList.isEmpty()){
+				addEqCostListForContract(eqcostList, _id);
+			}
+			
 			return dao.updateById(contract, DBBean.SALES_CONTRACT);
 		}
 	}
@@ -193,15 +201,29 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> invoiceList = dao.list(invoiceQuery, DBBean.SC_INVOICE);
 		List<Map<String, Object>> invoiceListData = (List<Map<String, Object>>) invoiceList.get(ApiConstants.RESULTS_DATA); 
 		
-		//后去相关收款信息列表数据
+		//获取相关收款信息列表数据
 		Map<String, Object> gotMoneyQuery = new HashMap<String, Object>();
 		gotMoneyQuery.put(SalesContractBean.SC_ID, _id);
 		Map<String, Object> gotMoneyList = dao.list(gotMoneyQuery, DBBean.SC_GOT_MONEY);
 		List<Map<String, Object>> gotMoneyListData = (List<Map<String, Object>>) gotMoneyList.get(ApiConstants.RESULTS_DATA);
 		
+		//获取相关 按月发货金额
+		Map<String, Object> monthShipmentsQuery = new HashMap<String, Object>();
+		monthShipmentsQuery.put(SalesContractBean.SC_ID, _id);
+		Map<String, Object> monthShipmentsList = dao.list(gotMoneyQuery, DBBean.SC_MONTH_SHIPMENTS);
+		List<Map<String, Object>> monthShipmentsListData = (List<Map<String, Object>>) monthShipmentsList.get(ApiConstants.RESULTS_DATA);
+		
+		//获取相关 按年发货金额
+		Map<String, Object> yearShipmentsQuery = new HashMap<String, Object>();
+		yearShipmentsQuery.put(SalesContractBean.SC_ID, _id);
+		Map<String, Object> yearShipmentsList = dao.list(yearShipmentsQuery, DBBean.SC_YEAR_SHIPMENTS);
+		List<Map<String, Object>> yearShipmentsListData = (List<Map<String, Object>>) yearShipmentsList.get(ApiConstants.RESULTS_DATA);
+		
 		sc.put(SalesContractBean.SC_EQ_LIST, eqListData);
 		sc.put(SalesContractBean.SC_INVOICE_INFO, invoiceListData);
 		sc.put(SalesContractBean.SC_GOT_MONEY_INFO, gotMoneyListData);
+		sc.put(SalesContractBean.SC_MONTH_SHIPMENTS_INFO, monthShipmentsListData);
+		sc.put(SalesContractBean.SC_YEAR_SHIPMENTS_INFO, yearShipmentsListData);
 		return sc;
 	}
 
@@ -262,5 +284,29 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		String pId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
 		return dao.findOne(ApiConstants.MONGO_ID, pId, DBBean.PROJECT);
+	}
+
+	@Override
+	public Map<String, Object> addMonthShipmentsForSC(Map<String, Object> params) {
+		String _id = (String) params.get(ApiConstants.MONGO_ID);
+		if (_id == null || _id.length() == 0){//Add
+			Map<String, Object> ms = new HashMap<String, Object>();
+			ms.put(SalesContractBean.SC_SHIPMENTS_MONEY, params.get(SalesContractBean.SC_SHIPMENTS_MONEY));
+			ms.put(SalesContractBean.SC_MONTH_SHIPMENTS_MONTH, params.get(SalesContractBean.SC_MONTH_SHIPMENTS_MONTH));
+			ms.put(SalesContractBean.SC_ID, params.get(SalesContractBean.SC_ID));
+			return dao.add(ms, DBBean.SC_MONTH_SHIPMENTS);
+		}else{//Update
+			
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> listMonthShipmentsForSC(
+			Map<String, Object> params) {
+		String scId = (String) params.get(SalesContractBean.SC_ID);
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(SalesContractBean.SC_ID, scId);
+		return dao.list(query, DBBean.SC_MONTH_SHIPMENTS);
 	}
 }

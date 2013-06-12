@@ -13,6 +13,10 @@
 .got-money-edit {
 	display: none;
 }
+
+.month-shipments-edit {
+	display: none;
+}
 </style>
 
 <script  src="js/salescontract/editsc.js"></script>
@@ -23,6 +27,10 @@
 
 <script type="text/x-kendo-template" id="addGotMoneyButtonTem">
     <button class="k-button"  onclick="addGotMoney();">新增</button>
+</script>
+
+<script type="text/x-kendo-template" id="addMonthShipmentsButtonTem">
+    <button class="k-button"  onclick="addMonthShipments();">新增</button>
 </script>
 
 <body>
@@ -282,7 +290,15 @@
                
                <div><!-- 第 6 个Tab -->
                    <div><!-- 工程数据 -->
-                       
+                       <br/>
+                   		<h3>按月发货金额列表</h3>
+                       <div id="monthShipmentsGrid"></div>
+                       <br/>
+                       <hr/>
+                       <br/>
+                       <h3>按年发货金额列表</h3>
+                       <div id="yearShipmentsGrid"></div>
+                       <br/>
                    </div>
                </div>
                
@@ -315,10 +331,10 @@
 					data-bind="value:scInvoiceDate">
 			</div>
 			<button class="k-button k-button-icontext k-grid-update" onclick="saveInvoice()">
-				<span class="k-icon k-update"></span>Update
+				<span class="k-icon k-update"></span>保存
 			</button>
-			<button class="k-button k-button-icontext k-grid-cancel">
-				<span class="k-icon k-cancel"></span>Cancel
+			<button class="k-button k-button-icontext k-grid-cancel" onclick='closeWindow("invoice-edit")'>
+				<span class="k-icon k-cancel"></span>取消
 			</button>
 		</div>
 
@@ -342,10 +358,37 @@
 					data-bind="value:scGotMoneyDate">
 			</div>
 			<button class="k-button k-button-icontext k-grid-update" onclick="saveGotMoney()">
-				<span class="k-icon k-update"></span>Update
+				<span class="k-icon k-update"></span>保存
 			</button>
-			<button class="k-button k-button-icontext k-grid-cancel">
-				<span class="k-icon k-cancel"></span>Cancel
+			<button class="k-button k-button-icontext k-grid-cancel" onclick='closeWindow("got-money-edit")'>
+				<span class="k-icon k-cancel"></span>取消
+			</button>
+		</div>
+
+	</div>
+	
+	<div class="month-shipments-edit" id="month-shipments-edit">
+
+		<div class="k-edit-form-container">
+			<div class="k-edit-label ">
+				<label for="scShipmentsMoney">发货金额</label>
+			</div>
+			<div data-container-for="scShipmentsMoney" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="scShipmentsMoney" id="scShipmentsMoney"
+					required="required" data-bind="value:scShipmentsMoney">
+			</div>
+			<div class="k-edit-label ">
+				<label for="month">发货月份</label>
+			</div>
+			<div data-container-for="month" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="month" id="month"
+					data-bind="value:month">
+			</div>
+			<button class="k-button k-button-icontext k-grid-update" onclick="saveMonthShipments()">
+				<span class="k-icon k-update"></span>保存
+			</button>
+			<button class="k-button k-button-icontext k-grid-cancel" onclick='closeWindow("month-shipments-edit")'>
+				<span class="k-icon k-cancel"></span>取消
 			</button>
 		</div>
 
