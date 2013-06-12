@@ -20,7 +20,7 @@ import com.pms.service.util.ApiUtil;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
 
-    private static final String APPROVED = "approved";
+    private static final String APPROVED = PurchaseOrder.STATUS_APPROVED;
     private static final Logger logger = LogManager.getLogger(PurchaseContractServiceImpl.class);
     
     @Override
@@ -64,10 +64,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         if (ApiUtil.isEmpty(contract.get(ApiConstants.MONGO_ID))) {
             contract.put("purchaseContractCode","Contract_" + String.valueOf(new Date().getTime()));
+            contract.put("eqcostRequestedAmoun", contract.get("eqcostApplyAmount"));
+            
             return this.dao.add(contract, DBBean.PURCHASE_CONTRACT);
         } else {
             Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, contract.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
             contract.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+            contract.put("eqcostRequestedAmoun", contract.get("eqcostApplyAmount"));
             return dao.updateById(contract, DBBean.PURCHASE_CONTRACT);
         }
     }
@@ -89,7 +92,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> order) {
         if (ApiUtil.isEmpty(order.get(ApiConstants.MONGO_ID))) {
-            order.put(PurchaseOrder.PROCESS_STATUS, "New");
+            order.put(PurchaseOrder.PROCESS_STATUS, PurchaseOrder.STATUS_DRAFT);
             order.put(PurchaseOrder.ORDER_CODE, "Order" + String.valueOf(new Date().getTime()));
             return this.dao.add(order, DBBean.PURCHASE_ORDER);
         } else {
@@ -116,7 +119,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> rejectPurchaseContract(HashMap<String, Object> order) {
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
         order.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        order.put(PurchaseOrder.PROCESS_STATUS, "rejected");
+        order.put(PurchaseOrder.PROCESS_STATUS, PurchaseOrder.STATUS_REJECTED);
         order.put(PurchaseOrder.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 
         return dao.updateById(order, DBBean.PURCHASE_CONTRACT);
@@ -134,7 +137,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> rejectPurchaseOrder(HashMap<String, Object> order) {
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
         order.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        order.put(PurchaseOrder.PROCESS_STATUS, "rejected");
+        order.put(PurchaseOrder.PROCESS_STATUS, PurchaseOrder.STATUS_REJECTED);
         order.put(PurchaseOrder.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 
         return dao.updateById(order, DBBean.PURCHASE_ORDER);
@@ -154,14 +157,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> listPurchaseRequestForSelect(){
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseBack.status, "approved");
+        query.put(PurchaseBack.status, APPROVED);
         query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.code, PurchaseBack.salesContract_code });
         return dao.list(query, DBBean.PURCHASE_REQUEST);
     }
     
     public Map<String, Object> updatePurchaseRequest(Map<String, Object> order){
         if (ApiUtil.isEmpty(order.get(ApiConstants.MONGO_ID))) {
-            order.put(PurchaseOrder.PROCESS_STATUS, "New");
+            order.put(PurchaseOrder.PROCESS_STATUS, PurchaseOrder.STATUS_DRAFT);
             order.put(PurchaseOrder.ORDER_CODE, "Request" + String.valueOf(new Date().getTime()));
             return this.dao.add(order, DBBean.PURCHASE_REQUEST);
         } else {
@@ -183,7 +186,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> rejectPurchaseRequest(HashMap<String, Object> order){
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
         order.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        order.put(PurchaseOrder.PROCESS_STATUS, "rejected");
+        order.put(PurchaseOrder.PROCESS_STATUS, PurchaseOrder.STATUS_REJECTED);
         order.put(PurchaseOrder.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 
         return dao.updateById(order, DBBean.PURCHASE_REQUEST);

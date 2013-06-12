@@ -138,6 +138,11 @@ function submitOrder(status) {
 	if(!requestDataItem.status){
 		requestDataItem.status = status;
 	}
+	
+	if(itemDataSource.at(0)){
+		//force set haschanges = true
+		itemDataSource.at(0).set("uid", kendo.guid());
+	}
 	// 同步数据
 	itemDataSource.sync();
 

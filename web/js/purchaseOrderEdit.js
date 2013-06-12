@@ -1,7 +1,7 @@
 
 //添加采购申请的时候先选择备货申请
 var selectUrl = "/service/purcontract/request/select/list";
-var editUrl = "/service/purcontract/request/get";
+var editUrl = "/service/purcontract/order/get";
 var saveUrl =  "/service/purcontract/order/update";
 var addUrl =  "/service/purcontract/order/add";
 var getSelectUrl = "/service/purcontract/request/get";
@@ -137,6 +137,11 @@ function loadRequest(data){
 function submitOrder(status) {
 	if(!requestDataItem.status){
 		requestDataItem.status = status;
+	}
+	
+	if(itemDataSource.at(0)){
+		//force set haschanges = true
+		itemDataSource.at(0).set("uid", kendo.guid());
 	}
 	// 同步数据
 	itemDataSource.sync();
@@ -293,7 +298,6 @@ function edit(data) {
 
 								for (i = 0; i < data.length; i++) {
 									var item = data[i];
-
 									if (!item.eqcostContractTotalMoney) {
 										item.eqcostContractTotalMoney = 0;
 									}
@@ -355,6 +359,7 @@ function edit(data) {
 
 								if (refresh) {
 									var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
+									console.log("========= refresh");
 									grid1.refresh();
 								}
 
