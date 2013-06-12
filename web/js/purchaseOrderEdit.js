@@ -48,8 +48,8 @@ var model = kendo.data.Model.define({
 });
 
 // 声明一个总的对象用来传递数据
-var requestDataItem;
-var selectedRequest;
+var requestDataItem = undefined;
+var selectedRequest = undefined;
 
 $(document).ready(function() {
 		$("#purchaseRequest").kendoDropDownList({
@@ -114,10 +114,10 @@ var sumDataSource = new kendo.data.DataSource({
 function showOrderWindow() {
 
 	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
-	var kendoGrid = $("#purchaseRequest").data("kendoDropDownList");
+	var purchaseRequestGrid = $("#purchaseRequest").data("kendoDropDownList");
 	
 	if (!selectedRequest) {
-		selectedRequest = kendoGrid.dataSource.at(0);
+		selectedRequest = purchaseRequestGrid.dataSource.at(0);
 	}
 	
 	console.log(selectedRequest);
@@ -206,8 +206,8 @@ function edit(data) {
 	$("#purchaseOrderCode").html(dataItem.purchaseOrderCode);
 	$("#projectName").html(dataItem.projectName);
 	$("#projectCode").html(dataItem.projectCode);
-	$("#projectContractCode").html(dataItem.projectContractCode);
-	$("#customerRequestContractId").html(dataItem.customerRequestContractId);
+	$("#salesContractCode").html(dataItem.salesContractCode);
+	$("#purchaseRequestCode").html(dataItem.purchaseRequestCode);
 	$("#purchaseorder-edit-item").show();
 
 	var editKendoGrid = $("#purchaseorder-edit-grid").data("kendoGrid");

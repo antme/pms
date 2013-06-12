@@ -219,7 +219,7 @@ function edit(data) {
 	$("#purchaseOrderCode").html(requestDataItem.purchaseOrderCode);
 	$("#projectName").html(requestDataItem.projectName);
 	$("#projectCode").html(requestDataItem.projectCode);
-	$("#projectContractCode").html(requestDataItem.projectContractCode);
+	$("#salesContractCode").html(requestDataItem.salesContractCode);
 	$("#customerRequestContractId").html(requestDataItem.customerRequestContractId);
 
 	$("#signDate").kendoDatePicker();

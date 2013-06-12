@@ -1,7 +1,6 @@
 package com.pms.service.mockbean;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class PurchaseContract extends PurchaseRequestOrder{
     
@@ -13,7 +12,7 @@ public class PurchaseContract extends PurchaseRequestOrder{
     
     private String supplierNameContact;
     
-    private Date signDate;
+    private String signDate;
     
     private BigDecimal firstPay;
     
@@ -70,14 +69,12 @@ public class PurchaseContract extends PurchaseRequestOrder{
 
 
 
-
-
-    public Date getSignDate() {
+    public String getSignDate() {
         return signDate;
     }
 
 
-    public void setSignDate(Date signDate) {
+    public void setSignDate(String signDate) {
         this.signDate = signDate;
     }
 

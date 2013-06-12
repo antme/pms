@@ -1,5 +1,6 @@
 package com.pms.service.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -112,8 +113,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
     
     public Map<String, Object> getPurchaseOrder(HashMap<String, Object> parameters){
-        
-        return this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
+        Map<String, Object> result =  this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);        
+        return mergeProjectInfo(result, result.get("salesContractCode").toString());
     }
 
     public Map<String, Object> approvePurchaseContract(HashMap<String, Object> order) {
@@ -214,6 +215,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> updatePurchase(Map<String, Object> parameters, String db, String prefix, BaseEntity entity) {
 
+//        if(parameters.get("signDate") !=null){
+//            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//            parameters.put("signDate", format.format(parameters.get("signDate")));
+//        }
         PurchaseRequestOrder request = (PurchaseRequestOrder) entity.toEntity(parameters);
 
         if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
@@ -257,7 +262,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
     
     public Map<String, Object> getPurchaseRequest(HashMap<String, Object> parameters){
-        return this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
+
+        Map<String,Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
+        return mergeProjectInfo(result, result.get("salesContractCode").toString());
+
     }
 
     
@@ -267,8 +275,23 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
        
     
     public Map<String, Object> getBackRequestForSelect(HashMap<String, Object> parameters){
-        
-       return backService.loadBack(parameters);
+       Map<String, Object> result = backService.loadBack(parameters);
+       
+       return mergeProjectInfo(result, result.get(PurchaseBack.salesContract_code).toString());
+    }
+
+
+    private Map<String, Object> mergeProjectInfo(Map<String, Object> result, String scId) {
+           
+           Map<String, Object> query = new HashMap<String, Object>();
+           query.put(SalesContractBean.SC_ID, scId);
+           Map<String, Object> relatedProjectInfo = getRelatedProjectInfo(query);
+           
+           result.put("salesContractCode", scId);
+           result.put("projectName", relatedProjectInfo.get(ProjectBean.PROJECT_NAME));
+           result.put("projectCode", relatedProjectInfo.get(ProjectBean.PROJECT_CODE));
+
+           return result;
     }
 
 
