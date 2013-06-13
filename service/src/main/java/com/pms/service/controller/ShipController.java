@@ -28,6 +28,12 @@ public class ShipController extends AbstractController {
 		this.shipService = shipService;
 	}
 
+	@RequestMapping("/get")
+    public void get(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(shipService.get(params), request, response);
+    }
+    
 	@RequestMapping("/list")
     public void list(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
