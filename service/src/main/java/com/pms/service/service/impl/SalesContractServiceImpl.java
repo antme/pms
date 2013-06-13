@@ -172,7 +172,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		List<String> pmIds = new ArrayList<String>();
 		List<String> custIds = new ArrayList<String>();
 		for (Map<String, Object> sc:list){
-			pIdList.add((String)sc.get(SalesContractBean.SC_PROJECT_ID));
+			String proId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
+			if (proId != null && proId.length() > 0){
+				pIdList.add(proId);
+			}
 		}
 		
 		Map<String, Object> queryProject = new HashMap<String, Object>();
@@ -202,17 +205,23 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		for (Map<String, Object> sc:list){
 			String pId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
 			Map<String, Object> pro = (Map<String, Object>) pInfoMap.get(pId);
-			String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER);
-			String cusId =(String) pro.get(ProjectBean.PROJECT_CUSTOMER); 
-			
-			sc.put(ProjectBean.PROJECT_CODE, pro.get(ProjectBean.PROJECT_CODE));
-			sc.put(ProjectBean.PROJECT_NAME, pro.get(ProjectBean.PROJECT_NAME));
-			
-			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
-			sc.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
-			
-			Map<String, Object> cusInfo = (Map<String, Object>) customerData.get(cusId);
-			sc.put(ProjectBean.PROJECT_CUSTOMER, cusInfo.get(CustomerBean.NAME));
+			if (pro != null){
+				String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER);
+				String cusId =(String) pro.get(ProjectBean.PROJECT_CUSTOMER); 
+				
+				sc.put(ProjectBean.PROJECT_CODE, pro.get(ProjectBean.PROJECT_CODE));
+				sc.put(ProjectBean.PROJECT_NAME, pro.get(ProjectBean.PROJECT_NAME));
+				
+				Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
+				if (pmInfo != null){
+					sc.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+				}
+				
+				Map<String, Object> cusInfo = (Map<String, Object>) customerData.get(cusId);
+				if (cusInfo != null){
+					sc.put(ProjectBean.PROJECT_CUSTOMER, cusInfo.get(CustomerBean.NAME));
+				}
+			}
 		}
 	}
 
@@ -340,5 +349,68 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(SalesContractBean.SC_ID, scId);
 		return dao.list(query, DBBean.SC_MONTH_SHIPMENTS);
+	}
+
+	/**
+	 * 根据销售合同_id，获取销售合同相关的 信息：销售合同编号，客户名称
+	 * 支持批量获取
+	 */
+	@Override
+	public Map<String, Object> getSCAndCustomerInfo(Map<String, Object> params) {
+		Object scId = params.get(SalesContractBean.SC_ID);
+		List<String> scIds = new ArrayList<String>();
+		if (scId instanceof String){
+			scIds.add(scId.toString());
+		}else{
+			scIds = (List<String>) scId;
+		}
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, scIds));
+		query.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID});
+		Map<String, Object> result = dao.list(query, DBBean.SALES_CONTRACT);
+		List<Map<String, Object>> resultListData = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
+		
+		List<String> pids = new ArrayList<String>();
+		for (Map<String, Object> sc : resultListData){
+			String pId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
+			if (!ApiUtil.isEmpty(pId)){
+				pids.add(pId);
+			}
+		}
+		Map<String, Object> pQuery = new HashMap<String, Object>();
+		pQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pids));
+		pQuery.put(ApiConstants.LIMIT_KEYS, new String[] {ProjectBean.PROJECT_CUSTOMER});
+		Map<String, Object> pResult = dao.listToOneMapAndIdAsKey(pQuery, DBBean.PROJECT);
+//		List<Map<String, Object>> pResultListData = (List<Map<String, Object>>) pResult.get(ApiConstants.RESULTS_DATA);
+		pResult.remove(ApiConstants.RESULTS_DATA);
+		pResult.remove(ApiConstants.PAGENATION);
+		
+		List<String> cids = new ArrayList<String>();
+		for (Entry<String, Object> en:pResult.entrySet()){
+			Map<String, Object> p = (Map<String, Object>) en.getValue();
+			String cId = (String) p.get(ProjectBean.PROJECT_CUSTOMER);
+			if (!ApiUtil.isEmpty(cId)){
+				cids.add(cId);
+			}
+		}
+		
+		Map<String, Object> cusQuery = new HashMap<String, Object>();
+		cusQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, cids));
+		cusQuery.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
+		Map<String, Object> cResult = dao.listToOneMapAndIdAsKey(cusQuery, DBBean.CUSTOMER);
+		
+		for (Entry<String, Object> en:pResult.entrySet()){
+			Map<String, Object> p = (Map<String, Object>) en.getValue();
+			Map<String, Object> c = (Map<String, Object>) cResult.get(p.get(ProjectBean.PROJECT_CUSTOMER));
+			p.put(ProjectBean.PROJECT_CUSTOMER, c.get(CustomerBean.NAME));
+		}
+		
+		for (Map<String, Object> sc : resultListData){
+			String pId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
+			Map<String, Object> p = (Map<String, Object>) pResult.get(pId);
+			sc.put(ProjectBean.PROJECT_CUSTOMER, p.get(ProjectBean.PROJECT_CUSTOMER));
+		}
+		
+		return result;
 	}
 }

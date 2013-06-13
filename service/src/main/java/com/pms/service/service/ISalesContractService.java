@@ -33,4 +33,6 @@ public interface ISalesContractService {
 	public Map<String,Object> getEqBaseInfoBySalesContractIds(String id);
 	
 	public Map<String,Object> getEqBaseInfoByIds(String ids);
+	
+	public Map<String, Object> getSCAndCustomerInfo(Map<String, Object> params);
 }
