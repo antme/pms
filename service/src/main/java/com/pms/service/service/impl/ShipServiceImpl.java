@@ -1,16 +1,19 @@
 package com.pms.service.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.PurchaseRequestOrder;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IShipService;
+import com.pms.service.util.ApiUtil;
 
 public class ShipServiceImpl extends AbstractService implements IShipService {
 	
@@ -80,6 +83,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 
 	public Map<String, Object> create(Map<String, Object> params) {
+		params.put(ShipBean.SHIP_STATUS, 0);
+		params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		return dao.add(params, DBBean.SHIP);
 	}
 	
@@ -88,5 +93,27 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		res.put(ApiConstants.RESULTS_DATA, pService.listApprovedPurchaseContractCosts((String) params.get(ShipBean.SHIP_SALES_CONTRACT_NO)));
 		return res;
 	}
+
+	@Override
+	public Map<String, Object> approve(Map<String, Object> params) {
+        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
+        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+        params.put(ShipBean.SHIP_STATUS, 1);
+
+        Map<String, Object> result =  dao.updateById(params, DBBean.SHIP);
+        
+        return result;
+    }
+
+	@Override
+	public Map<String, Object> reject(Map<String, Object> params) {
+        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
+        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+        params.put(ShipBean.SHIP_STATUS, 2);
+
+        Map<String, Object> result =  dao.updateById(params, DBBean.SHIP);
+        
+        return result;
+    }
 
 }

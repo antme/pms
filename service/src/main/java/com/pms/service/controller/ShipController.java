@@ -58,6 +58,16 @@ public class ShipController extends AbstractController {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(shipService.create(params), request, response);
     }
+
+    @RequestMapping("/approve")
+    public void approve(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(shipService.approve(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/reject")
+    public void reject(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(shipService.reject(parserJsonParameters(request, false)), request, response);
+    }
     
     @RequestMapping("/eqlist")
     public void eqlist(HttpServletRequest request, HttpServletResponse response) {

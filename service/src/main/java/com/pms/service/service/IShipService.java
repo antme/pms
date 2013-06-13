@@ -15,4 +15,8 @@ public interface IShipService {
 	public Map<String, Object> create(Map<String, Object> params);
 
 	public Map<String, Object> eqlist(Map<String, Object> params);
+
+	public Map<String, Object> approve(Map<String, Object> params);
+	
+	public Map<String, Object> reject(Map<String, Object> params);
 }

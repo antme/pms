@@ -7,6 +7,8 @@ public class ShipBean {
     public static final String SHIP_DEPARTMENT = "applicationDepartment"; // 申请部门
     
     public static final String SHIP_DATE = "applicationDate"; // 申请日期
+    
+    public static final String SHIP_STATUS = "status"; // 申请状态
 
     public static final String SHIP_SALES_CONTRACT_ID = "salesContractId"; // 销售合同数据库id-外键
     
