@@ -374,7 +374,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		Map<String,Object> map = dao.list(query, DBBean.PURCHASE_ALLOCATE);
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
 		
-		System.out.println(list.toString());
 		for(Object obj : list){
 			Map<String, Object> allot = (Map<String, Object>)obj;
 			Map<String,Double> eqMap = (Map<String,Double>)allot.get(PurchaseBack.eqcostList);
