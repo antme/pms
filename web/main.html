@@ -23,9 +23,9 @@
 </style>
   <script id="treeview-template" type="text/kendo-ui-template">
             # if (!item.items) { #
-                <a class='delete-link' id="'#:item.id#'" onclick="loadPage('#:item.id#');" href='\##:item.id#'>#: item.text #</a>
+                <a class='delete-link' id="'#:item.id#'" access="'#:item.access#'" onclick="loadPage('#:item.id#');" href='\##:item.id#'>#: item.text #</a>
             # } else{ #
-                <a class='delete-link' id="'#:item.id#'" onclick="loadPage('#:item.id#');" href='\##:item.id#'>#: item.text #</a>    
+                <a class='delete-link' id="'#:item.id#'" access="'#:item.access#'" href='\##:item.id#'>#: item.text #</a>    
             #}#
         </script>
 </head>
