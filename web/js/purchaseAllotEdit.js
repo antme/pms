@@ -138,10 +138,8 @@ $(document).ready(function () {
 		var backId = redirectParams.backId;
 		var id = redirectParams._id;
 		if(backId) {
-			alert(backId);
 			postAjaxRequest(baseUrl+"/prepare", {_id:backId}, edit);
 		}else if(id) {
-			alert(id);
 			postAjaxRequest(baseUrl+"/load", {_id:backId}, edit);
 		}
 	}
