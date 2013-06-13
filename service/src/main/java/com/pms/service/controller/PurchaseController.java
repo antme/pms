@@ -37,7 +37,7 @@ public class PurchaseController extends AbstractController {
     }
     
     @RequestMapping("/back/save")
-    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_BACK_MANAGEMENT, desc = RoleValidConstants.PURCHASE_BACK_MANAGEMENT_DESC)
     public void saveBack(HttpServletRequest request, HttpServletResponse response) {
     	Map<String,Object> obj = purchaseService.saveBack(parserJsonParameters(request,  false));
     	responseWithData(obj, request, response, "update_success");
@@ -105,13 +105,13 @@ public class PurchaseController extends AbstractController {
     }
     
     @RequestMapping("/allot/submit")
-    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ALLOCATE_MANAGEMENT, desc = RoleValidConstants.PURCHASE_ALLOCATE_MANAGEMENT_DESC)
     public void submitAllotBack(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.submitAllot(parserJsonParameters(request,  false)), request, response);
     }
     
     @RequestMapping("/allot/approve")
-    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ALLOCATE_PROCESS, desc = RoleValidConstants.PURCHASE_ALLOCATE_PROCESS_DESC)
     public void approveAllotForBack(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.approveAllot(parserJsonParameters(request,  false)), request, response);
     }

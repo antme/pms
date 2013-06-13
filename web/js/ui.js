@@ -39,6 +39,8 @@ $(document).ready(function() {
 	
 });
 
+
+var userMenus = [];
 function init(data){
 	
 	roles = data.data;
@@ -48,9 +50,9 @@ function init(data){
 	             },
 
 	             {
-	                 text: "项目执行", id: "projectex", imageUrl: "/images/ccontract.png",
+	                 text: "项目执行", id: "projectex", access:"purchase_request_management", imageUrl: "/images/ccontract.png",
 	                 items: [
-	                         { text: "备货申请", id: "purchaseBack", imageUrl: "/images/order.png" },
+	                         { text: "备货申请", id: "purchaseBack",  access:"project_management", imageUrl: "/images/order.png" },
 	                         { text: "采购申请", id: "purchaseRequestByAssistant", access:"purchase_request_management", imageUrl: "/images/ccontract.png"},
 	                         { text: "开票申请", id: "purchaseorder", access:"user_management", imageUrl: "/images/ccontract.png" },
 	                         { text: "发货申请", id: "ship", access:"user_management", imageUrl: "/images/ccontract.png"},
@@ -64,10 +66,14 @@ function init(data){
 	             
 
 	             {
-	                 text: "采购合同", id: "purchasecontract", expanded: false, imageUrl: "/images/contract.png",
+		                text : "采购合同",
+						id : "purchasecontract",
+						access : "purchase_allocate_process_purchase_request_management_purchase_request_process_purchase_order_management_purchase_order_process_user_management",
+						expanded : false,
+						imageUrl : "/images/contract.png",
 	                 items: [
-	                     { text: "备货申请", id: "purchaseAllot", imageUrl: "/images/order.png" },
-	                     { text: "调拨申请", id: "purchaseAllotManage",  imageUrl: "/images/ccontract.png" },
+	                     { text: "备货申请", id: "purchaseAllot",  access:"purchase_request_management_purchase_allocate_management", imageUrl: "/images/order.png" },
+	                     { text: "调拨申请", id: "purchaseAllotManage",  access:"purchase_allocate_process, purchase_allocate_management", imageUrl: "/images/ccontract.png" },
 	                     { text: "采购申请", id: "purchaseRequestApprove", access: "purchase_request_process", imageUrl: "/images/ccontract.png"},
 	                     { text: "采购订单", id: "purchaseorder", access: "purchase_order_management, purchase_order_process", imageUrl: "/images/ccontract.png"},
 	                     { text: "采购合同", id: "purchasecontract", access: "purchase_contract_management, purchase_contract_process", imageUrl: "/images/order.png" },
@@ -103,7 +109,6 @@ function init(data){
 	
 	removeTreeItems(menus);
 	
-	
 	for(i in menus){
 		if(menus[i].items){
 			removeTreeItems(menus[i].items);
@@ -129,30 +134,29 @@ function init(data){
 	});
 }
 
-function removeTreeItems(items){
-	
-	if(items){
-		
-		for(i in items){
-			if(items[i].access){
-				var hasAccess = false;
-				var roleId = items[i].access;
-				for(j in roles){	
-					if(roleId.indexOf(roles[j].roleID)>=0){
-						hasAccess = true;
-						break;
-					}
-				}
-				
-				if(!hasAccess){
-					items.splice(i,i+1);
-					removeTreeItems(items);
-				}
+function removeTreeItems(items) {
+	var newItems = items.slice(0);
 
-				
+	for (i in newItems) {
+
+		if (newItems[i].access) {
+			var hasAccess = false;
+			var roleId = newItems[i].access;
+			for (j in roles) {
+				if (roleId.indexOf(roles[j].roleID) >= 0) {
+					hasAccess = true;
+					break;
+				}
 			}
+
+			if (!hasAccess) {
+				var node = items.indexOf(newItems[i]);
+				items.splice(node, 1);
+			}
+
 		}
 	}
+
 }
 
 function onAjaxFail(data) {
