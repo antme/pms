@@ -264,9 +264,12 @@ function edit(data) {
 				title : "单价",
 				width : 50
 			}, {
-				field : "eqcostContractTotalMoney",
+				field : "requestedTotalMoney",
 				title : "小计金额",
 				width : 80
+			}, {
+				field : "eqcostApplyAmount",
+				title : "本次采购数量"
 			}, {
 				field : "logisticsStatus",
 				title : "货品物流状态",

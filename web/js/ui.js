@@ -113,7 +113,6 @@ function init(data){
 	$("#tree-nav").kendoTreeView({
     	template: kendo.template($("#treeview-template").html()),
         dataSource: menus
-
     });
 	var page = getUrlParser().attr("anchor");
 
@@ -234,24 +233,24 @@ function loadPage(page, parameters) {
 	
 	
 	if(!page.endWith(".html")){
-		page = "html/supplier/supplier.html";
-	}
+		alert("暂未开放");
+	}else{
 	
 
-	var url = page + "?_uid=" + uid;
-
-	if (page.indexOf("?") != -1) {
-		url = page + "&_uid=" + uid;
-
+		var url = page + "?_uid=" + uid;
+	
+		if (page.indexOf("?") != -1) {
+			url = page + "&_uid=" + uid;
+	
+		}
+		$.ajax({
+			url : url,
+			success : function(data) {
+				$("#main_right").html(data);
+			},
+			error : onAjaxFail
+		});
 	}
-	$.ajax({
-		url : url,
-		success : function(data) {
-			$("#main_right").html(data);
-		},
-		error : onAjaxFail
-	});
-
 }
 
 
