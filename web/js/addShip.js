@@ -1,4 +1,4 @@
-var contractCode, model, crudServiceBaseUrl = "../service";
+var contractCode, model, eqDataSource, crudServiceBaseUrl = "../service";
 
 var ship = kendo.data.Model.define( {
     id: "_id",
@@ -6,13 +6,14 @@ var ship = kendo.data.Model.define( {
     	shipNo: {},
     	applicationDepartment: {},
     	salesContractId: {},
+    	contractCode: {},
     	customer: {},
     	eqcostList: {}
     }
 });
 
 var eqModel = kendo.data.Model.define( {
-    id: "eqcostNo",
+    id: "_id",
     fields: {
     	eqcostNo: { editable: false },
     	eqcostMaterialCode: { editable: false },
@@ -66,9 +67,13 @@ $(document).ready(function() {
             }
         }),
         change: function(e) {
-        	contractCode = this.value();
+        	var dataItem = this.dataItem();
+        	model.set("customer", dataItem.customer);
+        	model.set("contractCode", dataItem.contractCode);
         	
-        	var eqDataSource = new kendo.data.DataSource({
+        	contractCode = this.text();
+        	
+        	eqDataSource = new kendo.data.DataSource({
                 transport: {
                     read: {
                         url: crudServiceBaseUrl + "/ship/eqlist",
@@ -126,6 +131,8 @@ function save() {
     } else {
     	console.log(kendo.stringify(model));
         var _id = model.get("_id");
+        var data = eqDataSource.data();
+        model.set("eqcostList", data);
         listDataSource.add(model);
     	listDataSource.sync();
         loadPage("ship");
