@@ -172,7 +172,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		List<String> pmIds = new ArrayList<String>();
 		List<String> custIds = new ArrayList<String>();
 		for (Map<String, Object> sc:list){
-			pIdList.add((String)sc.get(SalesContractBean.SC_PROJECT_ID));
+			String proId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
+			if (proId != null && proId.length() > 0){
+				pIdList.add(proId);
+			}
 		}
 		
 		Map<String, Object> queryProject = new HashMap<String, Object>();
@@ -202,17 +205,23 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		for (Map<String, Object> sc:list){
 			String pId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
 			Map<String, Object> pro = (Map<String, Object>) pInfoMap.get(pId);
-			String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER);
-			String cusId =(String) pro.get(ProjectBean.PROJECT_CUSTOMER); 
-			
-			sc.put(ProjectBean.PROJECT_CODE, pro.get(ProjectBean.PROJECT_CODE));
-			sc.put(ProjectBean.PROJECT_NAME, pro.get(ProjectBean.PROJECT_NAME));
-			
-			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
-			sc.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
-			
-			Map<String, Object> cusInfo = (Map<String, Object>) customerData.get(cusId);
-			sc.put(ProjectBean.PROJECT_CUSTOMER, cusInfo.get(CustomerBean.NAME));
+			if (pro != null){
+				String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER);
+				String cusId =(String) pro.get(ProjectBean.PROJECT_CUSTOMER); 
+				
+				sc.put(ProjectBean.PROJECT_CODE, pro.get(ProjectBean.PROJECT_CODE));
+				sc.put(ProjectBean.PROJECT_NAME, pro.get(ProjectBean.PROJECT_NAME));
+				
+				Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
+				if (pmInfo != null){
+					sc.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+				}
+				
+				Map<String, Object> cusInfo = (Map<String, Object>) customerData.get(cusId);
+				if (cusInfo != null){
+					sc.put(ProjectBean.PROJECT_CUSTOMER, cusInfo.get(CustomerBean.NAME));
+				}
+			}
 		}
 	}
 
