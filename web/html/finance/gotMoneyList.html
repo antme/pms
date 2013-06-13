@@ -1,0 +1,56 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<style>
+
+.got-money-edit {
+	display: none;
+}
+
+</style>
+
+<script  src="js/finance/gotMoneyList.js"></script>
+
+<script type="text/x-kendo-template" id="tool-bar-template">
+	<button class="k-button" onclick="toolbar_addGotMoney();">新增</button>
+</script>
+
+<body>
+	<div>
+		<div class="k-edit-label ">
+			<label for="scId">选择合同</label>
+		</div>
+		<div data-container-for="scId" class="k-edit-field ">
+			<input type="text" class="pro-dropdownlist" name="scId" id="scId"><button class="k-button" onclick="selectASC();">确定</button>
+		</div>
+	</div>
+	<div id="gotMoneyList" class="k-content">
+		<div id="gotMoneyGrid"></div>
+	</div>
+	
+	<div class="got-money-edit" id="got-money-edit">
+
+		<div class="k-edit-form-container">
+			<div class="k-edit-label ">
+				<label for="scGotMoney">收款金额</label>
+			</div>
+			<div data-container-for="scGotMoney" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="scGotMoney" id="scGotMoney"
+					required="required" data-bind="value:scGotMoney">
+			</div>
+			<div class="k-edit-label ">
+				<label for="scGotMoneyDate">收款日期</label>
+			</div>
+			<div data-container-for="scGotMoneyDate" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="scGotMoneyDate" id="scGotMoneyDate"
+					data-bind="value:scGotMoneyDate">
+			</div>
+			<button class="k-button k-button-icontext k-grid-update" onclick="saveGotMoney()">
+				<span class="k-icon k-update"></span>保存
+			</button>
+			<button class="k-button k-button-icontext k-grid-cancel" onclick='closeWindow("got-money-edit")'>
+				<span class="k-icon k-cancel"></span>取消
+			</button>
+		</div>
+
+	</div>
+</body>
