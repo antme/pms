@@ -82,8 +82,8 @@ function init(data){
                 text: "财务",  id: "finance", imageUrl: "/images/finance.png",
                 items: [
                         { text: "财务资料", id: "contract", imageUrl: "/images/order.png" },
-                        { text: "开票信息", id: "contract", imageUrl: "/images/ccontract.png" },
-                        { text: "收款信息", id: "contract", imageUrl: "/images/ccontract.png"},
+                        { text: "开票信息", id: "invoiceList", imageUrl: "/images/ccontract.png" },
+                        { text: "收款信息", id: "gotMoneyList", imageUrl: "/images/ccontract.png"},
                         { text: "付款信息", id: "contract", imageUrl: "/images/ccontract.png"}
                     ]
             },
@@ -159,6 +159,10 @@ function loadPage(page, parameters) {
 		page = "html/salescontract/addsc.html";
 	} else if (page == "editsc") {
 		page = "html/salescontract/editsc.html";
+	} else if (page == "invoiceList") {
+		page = "html/finance/invoiceList.html";
+	} else if (page == "gotMoneyList") {
+		page = "html/finance/gotMoneyList.html";
 	}else if (page == "group") {
 		page = "html/user/group.html";
 	} else if (page == "customer") {

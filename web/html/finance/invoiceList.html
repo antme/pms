@@ -1,0 +1,61 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<style>
+.invoice-edit {
+	display: none;
+}
+</style>
+
+<script  src="js/finance/invoiceList.js"></script>
+
+<script type="text/x-kendo-template" id="tool-bar-template">
+	<button class="k-button" onclick="toolbar_addInvoice();">新增</button>
+</script>
+
+<body>
+	<div>
+		<div class="k-edit-label ">
+			<label for="scId">选择合同</label>
+		</div>
+		<div data-container-for="scId" class="k-edit-field ">
+			<input type="text" class="pro-dropdownlist" name="scId" id="scId"><button class="k-button" onclick="selectASC();">确定</button>
+		</div>
+	</div>
+	<div id="invoiceList" class="k-content">
+		<div id="invoiceGrid"></div>
+	</div>
+	
+	<div class="invoice-edit" id="invoice-edit">
+
+		<div class="k-edit-form-container">
+			<div class="k-edit-label ">
+				<label for="scInvoiceMoney">开票金额</label>
+			</div>
+			<div data-container-for="scInvoiceMoney" class="k-edit-field ">
+				<input type="text" name="scInvoiceMoney" id="scInvoiceMoney"
+					required="required" data-bind="value:scInvoiceMoney">
+			</div>
+			<div class="k-edit-label ">
+				<label for="invoiceType">开票类型</label>
+			</div>
+			<div data-container-for="invoiceType" class="k-edit-field ">
+				<input type="text" class="pro-dropdownlist" name="invoiceType" id="addInvoiceType"
+					required="required" data-bind="value:invoiceType">
+			</div>
+			<div class="k-edit-label ">
+				<label for="scInvoiceDate">开票日期</label>
+			</div>
+			<div data-container-for="scInvoiceDate" class="k-edit-field ">
+				<input type="text" class="k-input k-textbox" name="scInvoiceDate" id="scInvoiceDate"
+					data-bind="value:scInvoiceDate">
+			</div>
+			<button class="k-button k-button-icontext k-grid-update" onclick="saveInvoice()">
+				<span class="k-icon k-update"></span>保存
+			</button>
+			<button class="k-button k-button-icontext k-grid-cancel" onclick='closeWindow("invoice-edit")'>
+				<span class="k-icon k-cancel"></span>取消
+			</button>
+		</div>
+
+	</div>
+</body>
