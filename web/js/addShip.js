@@ -8,6 +8,12 @@ var ship = kendo.data.Model.define( {
     	salesContractId: {},
     	contractCode: {},
     	customer: {},
+    	deliveryContact: {},
+    	deliveryContactWay: {},
+    	deliveryUnit: {},
+    	deliveryAddress: {},
+    	deliveryTime: {},
+    	deliveryRequirements: {},
     	eqcostList: {}
     }
 });
@@ -25,6 +31,8 @@ var eqModel = kendo.data.Model.define( {
     	eqcostMemo: { editable: false }
     }
 });
+
+var grid;
 
 var listDataSource = new kendo.data.DataSource({
     transport: {
@@ -74,21 +82,21 @@ $(document).ready(function() {
         	contractCode = this.text();
         	
         	eqDataSource = new kendo.data.DataSource({
-                transport: {
-                    read: {
-                        url: crudServiceBaseUrl + "/ship/eqlist",
-                        dataType: "jsonp",
-                        data: {
-                        	contractCode: contractCode
-                        }
-                    }
-                },
-                batch: true,
-                schema: {
-                    model: eqModel
-                }
-            });
-        	var grid = $("#equipments-grid").data("kendoGrid");
+        	    transport: {
+        	        read: {
+        	            url: crudServiceBaseUrl + "/ship/eqlist",
+        	            dataType: "jsonp",
+        	            data: {
+        	            	contractCode: contractCode
+        	            }
+        	        }
+        	    },
+        	    batch: true,
+        	    schema: {
+        	        model: eqModel
+        	    }
+        	});
+        	
         	grid.setDataSource(eqDataSource);
         }
     });
@@ -107,7 +115,7 @@ $(document).ready(function() {
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	    editable: true
 	});
-	
+	grid = $("#equipments-grid").data("kendoGrid");
     
     if (redirectParams) {//Edit
 		postAjaxRequest("/service/ship/get", redirectParams, edit);
@@ -121,6 +129,15 @@ $(document).ready(function() {
 function edit(data) {
 	model = new ship(data);
 	kendo.bind($("#addShip"), model);
+	eqDataSource = new kendo.data.DataSource({
+	    data: model.eqcostList,
+	    batch: true,
+	    schema: {
+	        model: eqModel
+	    }
+	});
+	
+	grid.setDataSource(eqDataSource);
 }
 
 function save() {
