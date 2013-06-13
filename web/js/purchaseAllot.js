@@ -52,17 +52,17 @@ $(document).ready(function () {
 	    selectable : "row",
 	    toolbar: kendo.template($("#template").html()),
 	    columns: [
-	        { field: "code", title: "申请编号" },
+	        { field: "code", title: "备货编号" },
 	        { field: "type", title:"采购类别" ,width:"120px"},
 	        { field: "contractCode", title:"销售合同编号" },
-	        { field: "purchaseOrderCode", title:"采购订单编号" },
-	        { field: "purchaseContractCode", title:"采购合同编号" },
+	        /*{ field: "purchaseOrderCode", title:"采购订单编号" },
+	        { field: "purchaseContractCode", title:"采购合同编号" },*/
 	        { field: "customer", title:"客户名" },
 	        { field: "projectManager", title:"PM" },
 	        { field: "status", title:"申请状态" },
 	        { field: "approveDate", title:"批准时间" },
 	        { field: "money", title:"金额" },
-	        { field: "backRequestCount", title:"合同下申请单数量" }
+	        { field: "backRequestCount", title:"备货单数量" }
 	    ]
 	});
 	
@@ -73,22 +73,7 @@ function generateAllot() {
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else {
-		$.ajax({
-			url : baseUrl+"/allot/submit",
-			success : function(responsetxt) {
-				var res;
-				eval("res=" + responsetxt);
-				if (res.status == "0") {
-					alert(res.msg);
-				} else {
-					loadPage("purchaseAllotManage");
-				}
-			}, error : function() {
-				alert("连接Service失败");
-			}, data : {
-				_id : row._id
-			},method : "post"
-		});
+		loadPage("purchaseAllotEdit",{backId:row._id});
 	}
 }
 /*function editAllot(){

@@ -31,9 +31,9 @@ $(document).ready(function () {
                     id: "_id",
                     fields: {
                     	applicationDepartment: {},
-                    	applicationDate: {},
-                    	salesContractNo: {},
-                    	customerName: {}
+                    	createdOn: {},
+                    	contractCode: {},
+                    	customer: {}
                     }
                 }
             }
@@ -42,17 +42,28 @@ $(document).ready(function () {
     $("#grid").kendoGrid({
         dataSource: dataSource,
         pageable: true,
+        selectable: "row",
         toolbar: [ { template: kendo.template($("#template").html()) } ],
         columns: [
             { field:"applicationDepartment", title: "申请部门" },
-            { field: "applicationDate", title:"申请日期", format: "{0:MM/dd/yyyy HH:mm tt}" },
-            { field: "salesContractNo", title:"销售合同编号" },
-            { field: "customerName", title:"客户名称" },
-            { command: ["edit", "destroy"], title: "&nbsp;", width: "160px" }],
+            { field: "createdOn", title:"申请日期", format: "{0:MM/dd/yyyy HH:mm tt}" },
+            { field: "contractCode", title:"销售合同编号" },
+            { field: "customer", title:"客户名称" },
+            { command: ["destroy"], title: "&nbsp;", width: "160px" }],
         editable: "popup"
     });
 });
 
 function toolbar_add() {
 	loadPage("addShip");
+}
+
+function toolbar_edit() {
+	var rowData = getSelectedRowDataByGrid("grid");
+	if (rowData == null){
+		alert("请点击选择一条记录！");
+		return;
+	}
+	
+	loadPage("addShip",{_id:rowData._id});
 }
