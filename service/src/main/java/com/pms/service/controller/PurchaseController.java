@@ -1,5 +1,6 @@
 package com.pms.service.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,14 +58,20 @@ public class PurchaseController extends AbstractController {
     @RequestMapping("/back/reject")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void rejectBack(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(purchaseService.rejectAllot(parserJsonParameters(request,  false)), request, response);
+    	//responseWithData(purchaseService.rejectAllot(parserJsonParameters(request,  false)), request, response);
     }
-        
+ 
+    @RequestMapping("/back/pending")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void pendingBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.pendingBack(parserJsonParameters(request,  false)), request, response);
+    }
+    
     @RequestMapping("/back/destroy")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void destoryBack(HttpServletRequest request, HttpServletResponse response) {
     	purchaseService.destoryBack(parserJsonParameters(request,  false));
-    	responseWithData(null, request, response);
+    	responseWithData(new HashMap(), request, response);
     }
     
     @RequestMapping("/back/list")
@@ -77,6 +84,12 @@ public class PurchaseController extends AbstractController {
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void listHasCheckedBack(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.listCheckedBack(parserJsonParameters(request,  false)), request, response);
+    }
+
+    @RequestMapping("/allot/prepare")
+    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
+    public void prepareAllot(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.prepareAllot(parserJsonParameters(request,  false)), request, response);
     }
     
     @RequestMapping("/allot/list")

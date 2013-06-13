@@ -59,8 +59,8 @@ $(document).ready(function () {
 	    columns: [
 	        { field: "code", title: "申请编号" },
 	        { field: "contractCode", title:"销售合同编号" },
-	        { field: "purchaseOrderCode", title:"采购订单编号" },
-	        { field: "purchaseContractCode", title:"采购合同编号" },
+	        /*{ field: "purchaseOrderCode", title:"采购订单编号" },
+	        { field: "purchaseContractCode", title:"采购合同编号" },*/
 	        { field: "customer", title:"客户名" },
 	        { field: "projectManager", title:"PM" },
 	        { field: "status", title:"申请状态" },

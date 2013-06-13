@@ -42,67 +42,77 @@ $(document).ready(function() {
 function init(data){
 	
 	roles = data.data;
+	var menus = [
+	             {
+	                 text: "项目管理", id: "projectList", access:"project_management", imageUrl: "/images/product.png"
+	             },
+
+	             {
+	                 text: "项目执行", id: "projectex", imageUrl: "/images/ccontract.png",
+	                 items: [
+	                         { text: "备货申请", id: "purchaseBack", imageUrl: "/images/order.png" },
+	                         { text: "采购申请", id: "purchaseRequestByAssistant", access:"purchase_request_management", imageUrl: "/images/ccontract.png"},
+	                         { text: "开票申请", id: "purchaseorder", access:"user_management", imageUrl: "/images/ccontract.png" },
+	                         { text: "发货申请", id: "ship", access:"user_management", imageUrl: "/images/ccontract.png"},
+	                         { text: "借货申请", id: "contract", access:"user_management", imageUrl: "/images/ccontract.png"},
+	                         { text: "还货申请", id: "contract", access:"user_management", imageUrl: "/images/ccontract.png"}
+	                     ]
+	             },
+	             {
+	                 text: "销售合同",  id: "scList", access:"project_management", imageUrl: "/images/user.png"
+	             },
+	             
+
+	             {
+	                 text: "采购合同", id: "purchasecontract", expanded: false, imageUrl: "/images/contract.png",
+	                 items: [
+	                     { text: "备货申请", id: "purchaseAllot", imageUrl: "/images/order.png" },
+	                     { text: "调拨申请", id: "purchaseAllotManage",  imageUrl: "/images/ccontract.png" },
+	                     { text: "采购申请", id: "purchaseRequestApprove", access: "purchase_request_process", imageUrl: "/images/ccontract.png"},
+	                     { text: "采购订单", id: "purchaseorder", access: "purchase_order_management, purchase_order_process", imageUrl: "/images/ccontract.png"},
+	                     { text: "采购合同", id: "purchasecontract", access: "purchase_contract_management, purchase_contract_process", imageUrl: "/images/order.png" },
+	                     { text: "入库申请单", id: "contract", access:"user_management", imageUrl: "/images/ccontract.png" },
+	                     { text: "直发入库申请单", id: "contract", access:"user_management", imageUrl: "/images/ccontract.png"}
+	                 ]
+	             },                                               
+	             {
+	                 text: "财务",  id: "finance", access:"user_management", imageUrl: "/images/finance.png",
+	                 items: [
+	                         { text: "财务资料", id: "contract",  imageUrl: "/images/order.png" },
+	                         { text: "开票信息", id: "contract", imageUrl: "/images/ccontract.png" },
+	                         { text: "收款信息", id: "contract", imageUrl: "/images/ccontract.png"},
+	                         { text: "付款信息", id: "contract", imageUrl: "/images/ccontract.png"}
+	                     ]
+	             },
+	                                 
+	             {
+	                 text: "基础信息",  id: "customer", access:"user_management", imageUrl: "/images/user.png",
+	                 	items: [
+	                             { text: "客户", id: "customer", imageUrl: "/images/toy.png" },
+	                             { text: "供应商", id: "supplier", imageUrl: "/images/ccontract.png" }
+	                         ]
+	             } , {
+	                 text: "权限管理", id: "userman", access:"user_management", expanded: false, imageUrl: "/images/friends_group.png",
+	                 items: [
+	                         { text: "用户管理", id: "userman", imageUrl: "/images/toy.png" },
+	                         { text: "角色管理", id: "group", imageUrl: "/images/ccontract.png" }
+	                     ]
+	             }
+	         ];
+	
+	
+	removeTreeItems(menus);
+	
+	
+	for(i in menus){
+		if(menus[i].items){
+			removeTreeItems(menus[i].items);
+		}
+	}
 	$("#user_info").html(data.userName);
 	$("#tree-nav").kendoTreeView({
     	template: kendo.template($("#treeview-template").html()),
-        dataSource: [
-            {
-                text: "项目管理", id: "projectList", imageUrl: "/images/product.png"
-            },
-
-            {
-                text: "项目执行", id: "projectex", imageUrl: "/images/ccontract.png",
-                items: [
-                        { text: "备货申请", id: "purchaseBack", imageUrl: "/images/order.png" },
-                        { text: "采购申请", id: "purchaseRequestByAssistant", imageUrl: "/images/ccontract.png"},
-                        { text: "开票申请", id: "purchaseorder", imageUrl: "/images/ccontract.png" },
-                        { text: "发货申请", id: "ship", imageUrl: "/images/ccontract.png"},
-                        { text: "借货申请", id: "contract", imageUrl: "/images/ccontract.png"},
-                        { text: "还货申请", id: "contract", imageUrl: "/images/ccontract.png"}
-                    ]
-            },
-            {
-                text: "销售合同",  id: "scList", imageUrl: "/images/user.png"
-            },
-            
-
-            {
-                text: "采购合同", id: "purchasecontract", expanded: false, imageUrl: "/images/contract.png",
-                items: [
-                    { text: "备货申请", id: "purchaseAllot", imageUrl: "/images/order.png" },
-                    { text: "调拨申请", id: "purchaseAllotManage", imageUrl: "/images/ccontract.png" },
-                    { text: "采购申请", id: "purchaseRequestApprove", imageUrl: "/images/ccontract.png"},
-                    { text: "采购订单", id: "purchaseorder", imageUrl: "/images/ccontract.png"},
-                    { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
-                    { text: "入库申请单", id: "contract", imageUrl: "/images/ccontract.png" },
-                    { text: "直发入库申请单", id: "contract", imageUrl: "/images/ccontract.png"}
-                ]
-            },                                               
-            {
-                text: "财务",  id: "finance", imageUrl: "/images/finance.png",
-                items: [
-                        { text: "财务资料", id: "contract", imageUrl: "/images/order.png" },
-                        { text: "开票信息", id: "contract", imageUrl: "/images/ccontract.png" },
-                        { text: "收款信息", id: "contract", imageUrl: "/images/ccontract.png"},
-                        { text: "付款信息", id: "contract", imageUrl: "/images/ccontract.png"}
-                    ]
-            },
-                                
-            {
-                text: "基础信息",  id: "customer", imageUrl: "/images/user.png",
-                	items: [
-                            { text: "客户", id: "customer", imageUrl: "/images/toy.png" },
-                            { text: "供应商", id: "supplier", imageUrl: "/images/ccontract.png" }
-                        ]
-            } , {
-                text: "权限管理", id: "userman", expanded: false, imageUrl: "/images/friends_group.png",
-                items: [
-                        { text: "用户管理", id: "userman", imageUrl: "/images/toy.png" },
-                        { text: "角色管理", id: "group", imageUrl: "/images/ccontract.png" }
-                    ]
-            }
-        ]
-
+        dataSource: menus
     });
 	var page = getUrlParser().attr("anchor");
 
@@ -117,6 +127,32 @@ function init(data){
 	$("#user-info").click(function() {
 		loadPage("default");
 	});
+}
+
+function removeTreeItems(items){
+	
+	if(items){
+		
+		for(i in items){
+			if(items[i].access){
+				var hasAccess = false;
+				var roleId = items[i].access;
+				for(j in roles){	
+					if(roleId.indexOf(roles[j].roleID)>=0){
+						hasAccess = true;
+						break;
+					}
+				}
+				
+				if(!hasAccess){
+					items.splice(i,i+1);
+					removeTreeItems(items);
+				}
+
+				
+			}
+		}
+	}
 }
 
 function onAjaxFail(data) {
@@ -197,24 +233,24 @@ function loadPage(page, parameters) {
 	
 	
 	if(!page.endWith(".html")){
-		page = "html/supplier/supplier.html";
-	}
+		alert("暂未开放");
+	}else{
 	
 
-	var url = page + "?_uid=" + uid;
-
-	if (page.indexOf("?") != -1) {
-		url = page + "&_uid=" + uid;
-
+		var url = page + "?_uid=" + uid;
+	
+		if (page.indexOf("?") != -1) {
+			url = page + "&_uid=" + uid;
+	
+		}
+		$.ajax({
+			url : url,
+			success : function(data) {
+				$("#main_right").html(data);
+			},
+			error : onAjaxFail
+		});
 	}
-	$.ajax({
-		url : url,
-		success : function(data) {
-			$("#main_right").html(data);
-		},
-		error : onAjaxFail
-	});
-
 }
 
 
@@ -320,7 +356,6 @@ function checkRoles(){
 			}
 		}
 		
-		console.log(hasAccess);
 		if(!hasAccess){
 			node.hide();
 		}else{

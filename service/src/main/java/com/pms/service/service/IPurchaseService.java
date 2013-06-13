@@ -33,4 +33,9 @@ public interface IPurchaseService {
 	public Map<String,Object> approveAllot(Map<String,Object> params);	
 	/**加载备货申请详情*/
 	public Map<String,Object> loadAllot(Map<String,Object> params);	
+	public Map<String, Object> prepareAllot(Map<String, Object> params);
+	/**根据合同id获取调拨清单列表*/
+	public Map<String,Double> getAllotEqCountBySalesContractId(String saleId);
+	/**根据合同id获取备货清单列表*/
+	public Map<String,Double> getBackEqCountBySalesContractId(String saleId);
 }
