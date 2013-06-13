@@ -371,9 +371,14 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		query.put(PurchaseBack.status, PurchaseStatus.approved.toString());
 		query.put(ApiConstants.LIMIT_KEYS, new String[]{PurchaseBack.eqcostList});
 		
-		List<Object> list = dao.listLimitKeyValues(query, DBBean.PURCHASE_ALLOCATE);
+		Map<String,Object> map = dao.list(query, DBBean.PURCHASE_ALLOCATE);
+		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
+		
+		System.out.println(list.toString());
 		for(Object obj : list){
-			Map<String, Double> eqMap = (Map<String, Double>)obj;
+			Map<String, Object> allot = (Map<String, Object>)obj;
+			Map<String,Double> eqMap = (Map<String,Double>)allot.get(PurchaseBack.eqcostList);
+			
 			for(Map.Entry<String, Double> entry: eqMap.entrySet()){
 				String key = entry.getKey();
 				Double value = entry.getValue();
