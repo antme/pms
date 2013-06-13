@@ -1,0 +1,272 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<style>
+
+.pro-dropdownlist{
+	width:250px;
+}
+
+</style>
+
+<script  src="js/salescontract/viewsc.js"></script>
+
+<body>
+	
+	<div id="editSalesContract" class="k-content test">
+		<div>
+			<button class="k-button"  onclick='loadPage("scList");'>返回</button>
+		</div>
+	
+		<div>
+           <div id="tabstrip">
+               <ul>
+                   <li class="k-state-active">
+                   		基础信息
+                   </li>
+                   <li>
+                                                            商务信息
+                   </li>
+                   <li>
+                                                            成本设备清单
+                   </li>
+                   <li>
+                                                            执行信息
+                   </li>
+                   <li>
+                                                            财务数据
+                   </li>
+                   <li>
+                                                            工程数据
+                   </li>
+               </ul>
+               
+               <div><!-- 第一个Tab -->
+                   <div class="k-edit-form-container"><!-- 基础信息-->
+                   
+	                   <div class="k-edit-label ">
+							<label for="contractCode">合同编号</label>
+						</div>
+						<div data-container-for="contractCode" class="k-edit-field ">
+							<input type="text" class="k-input k-textbox" name="contractCode" id="contractCode"
+								readonly  data-bind="value: contractCode">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="contractPerson">签订人</label>
+						</div>
+						<div data-container-for="contractPerson" class="k-edit-field ">
+							<input type="text" class="k-input k-textbox" name="contractPerson" id="contractPerson"
+								readonly data-bind="value: contractPerson">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="projectId">关联项目</label>
+						</div>
+						<div data-container-for="projectId" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="projectId" id="projectId"
+								readonly data-bind="value: projectId">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="contractType">合同类型</label>
+						</div>
+						<div data-container-for="contractType" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="contractType" id="contractType"
+								readonly data-bind="value: contractType">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="archiveStatus">归档状态</label>
+						</div>
+						<div data-container-for="archiveStatus" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="archiveStatus" id="archiveStatus"
+								readonly data-bind="value: archiveStatus">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="runningStatus">执行状态</label>
+						</div>
+						<div data-container-for="runningStatus" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="runningStatus" id="runningStatus"
+								readonly data-bind="value: runningStatus">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="contractDate">签订日期</label>
+						</div>
+						<div data-container-for="contractDate" class="k-edit-field ">
+							<input name="contractDate" readonly id="contractDate" data-bind="value: contractDate">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="contractDownPayment">首付</label>
+						</div>
+						<div data-container-for="contractDownPayment" class="k-edit-field ">
+							<input type="text" name="contractDownPayment" id="contractDownPayment"
+								readonly data-bind="value: contractDownPayment">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="progressPayment">进度款</label>
+						</div>
+						<div data-container-for="progressPayment" class="k-edit-field ">
+							<input type="text" name="progressPayment" id="progressPayment"
+								readonly data-bind="value: progressPayment">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="qualityMoney">质保金</label>
+						</div>
+						<div data-container-for="qualityMoney" class="k-edit-field ">
+							<input type="text" name="qualityMoney" id="qualityMoney"
+								readonly data-bind="value: qualityMoney">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="contractMemo">备注</label>
+						</div>
+						<div data-container-for="contractMemo" class="k-edit-field ">
+							<textarea readonly id="contractMemo" rows="4" cols="120" class="k-textbox" data-bind="value: contractMemo"></textarea>
+						</div>
+						
+                   </div>
+               </div>
+               
+               <div><!-- 第2个Tab -->
+                   <div class="k-edit-form-container"><!-- 商务信息-->
+	                   <div class="k-edit-label ">
+							<label for="contractAmount">合同金额</label>
+						</div>
+						<div data-container-for="contractAmount" class="k-edit-field ">
+							<input type="number" min="0" name="contractAmount" id="contractAmount"
+								readonly validationMessage="必填" data-bind="value: contractAmount">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="estimateEqCost0">预估设备成本（增）</label>
+						</div>
+						<div data-container-for="estimateEqCost0" class="k-edit-field ">
+							<input type="number" min="0" name="estimateEqCost0" id="estimateEqCost0"
+								readonly data-bind="value: estimateEqCost0">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="estimateEqCost1">预估设备成本（非增）</label>
+						</div>
+						<div data-container-for="estimateEqCost1" class="k-edit-field ">
+							<input type="text" name="estimateEqCost1" id="estimateEqCost1"
+								readonly data-bind="value: estimateEqCost1">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="estimateSubCost">预估分包成本</label>
+						</div>
+						<div data-container-for="estimateSubCost" class="k-edit-field ">
+							<input type="text" name="estimateSubCost" id="estimateSubCost"
+								readonly data-bind="value: estimateSubCost">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="estimatePMCost">预估项目管理成本</label>
+						</div>
+						<div data-container-for="estimatePMCost" class="k-edit-field ">
+							<input type="text" name="estimatePMCost" id="estimatePMCost"
+								readonly data-bind="value: estimatePMCost">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="estimateDeepDesignCost">预估深化设计成本</label>
+						</div>
+						<div data-container-for="estimateDeepDesignCost" class="k-edit-field ">
+							<input type="text" name="estimateDeepDesignCost" id="estimateDeepDesignCost"
+								readonly data-bind="value: estimateDeepDesignCost">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="estimateDebugCost">预估调试费</label>
+						</div>
+						<div data-container-for="estimateDebugCost" class="k-edit-field ">
+							<input type="text" name="estimateDebugCost" id="estimateDebugCost"
+								readonly data-bind="value: estimateDebugCost">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="estimateOtherCost">预估其他成本</label>
+						</div>
+						<div data-container-for="estimateOtherCost" class="k-edit-field ">
+							<input type="text" name="estimateOtherCost" id="estimateOtherCost"
+								readonly data-bind="value: estimateOtherCost">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="invoiceType">发票类型</label>
+						</div>
+						<div data-container-for="invoiceType" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="invoiceType" id="invoiceType"
+								readonly data-bind="value: invoiceType">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="debugCostType">调试费类型</label>
+						</div>
+						<div data-container-for="" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="debugCostType" id="debugCostType"
+								readonly data-bind="value: debugCostType">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="taxType">税收类型</label>
+						</div>
+						<div data-container-for="taxType" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="taxType" id="taxType"
+								readonly data-bind="value: taxType">
+						</div>
+                   </div>
+               </div>
+               
+               <div><!-- 第 3 个Tab -->
+                   <div><!-- 成本设备清单 -->
+                       <h3>已有设备成本列表数据：</h3>	
+                       <div id="scEqCostListOld"></div>
+                       <br/>
+                   </div>
+               </div>
+               
+               <div><!-- 第 4 个Tab -->
+                   <div><!-- 执行信息 -->
+                       
+                   </div>
+               </div>
+               
+               <div><!-- 第 5 个Tab -->
+                   <div><!-- 财务数据 -->
+                   	<br/>
+                   		<h3>开票信息列表</h3>
+                       <div id="invoiceList"></div>
+                       <br/>
+                       <hr/>
+                       <br/>
+                       <h3>收款信息列表</h3>
+                       <div id="gotMoneyList"></div>
+                       <br/>
+                   </div>
+               </div>
+               
+               <div><!-- 第 6 个Tab -->
+                   <div><!-- 工程数据 -->
+                       <br/>
+                   		<h3>按月发货金额列表</h3>
+                       <div id="monthShipmentsGrid"></div>
+                       <br/>
+                       <hr/>
+                       <br/>
+                       <h3>按年发货金额列表</h3>
+                       <div id="yearShipmentsGrid"></div>
+                       <br/>
+                   </div>
+               </div>
+               
+           </div>
+         </div>
+	</div>
+</body>
