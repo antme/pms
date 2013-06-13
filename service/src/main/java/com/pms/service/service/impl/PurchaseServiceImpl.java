@@ -70,9 +70,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		newObj.put(PurchaseBack.status, PurchaseStatus.saved.toString());
 		newObj.put(PurchaseBack.operateDate, new Date());
 		newObj.put(PurchaseBack.planDate, params.get(PurchaseBack.planDate));
-		newObj.put(PurchaseBack.code, produceCode("pb"));
+		
 		newObj.putAll(countEqcostList(params));
 		if(params.get(ApiConstants.MONGO_ID) == null){
+			newObj.put(PurchaseBack.code, produceCode("pb",DBBean.PURCHASE_BACK));
 			return dao.add(newObj, DBBean.PURCHASE_BACK);
 		}else{
 			return dao.updateById(newObj, DBBean.PURCHASE_BACK);
@@ -82,6 +83,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
 	@Override
 	public Map<String, Object> submitBack(Map<String, Object> params) {
+		params.put(PurchaseBack.status, PurchaseStatus.submited.toString());
 		Map<String,Object> newObj = new HashMap<String,Object>();
 		newObj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
 		newObj.put(PurchaseBack.department, params.get(PurchaseBack.department));
@@ -92,7 +94,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		newObj.put(PurchaseBack.status, PurchaseStatus.submited.toString());
 		newObj.put(PurchaseBack.submitDate, new Date());
 		newObj.put(PurchaseBack.operateDate, new Date());
-		if(params.get(PurchaseBack.code) == null) newObj.put(PurchaseBack.code, produceCode("pb"));
+		if(params.get(PurchaseBack.code) == null) newObj.put(PurchaseBack.code, produceCode("pb",DBBean.PURCHASE_BACK));
 		newObj.putAll(countEqcostList(params));
 		dao.updateCount(ApiConstants.MONGO_ID, params.get(PurchaseBack.salesContract_id), SalesContractBean.SC_BACK_REQUEST_COUNT, DBBean.SALES_CONTRACT, 1);
 		if(params.get(ApiConstants.MONGO_ID) == null){
@@ -108,7 +110,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		String status = String.valueOf(obj.get(PurchaseBack.status));
 		if(PurchaseStatus.approved.toString().equals(status)){
 			status = PurchaseStatus.checked.toString();
-			obj.put(PurchaseBack.code, produceCode("pb"));
+			obj.put(PurchaseBack.code, produceCode("pb",DBBean.PURCHASE_BACK));
 		}else {
 			status = PurchaseStatus.approved.toString();
 		}
@@ -124,12 +126,14 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
 		obj.put(PurchaseBack.status, PurchaseStatus.rejected.toString());
 		obj.put(PurchaseBack.operateDate, new Date());
+		obj.putAll(countAllotEqcostList(params));
 		return dao.updateById(obj, DBBean.PURCHASE_ALLOCATE);
 	}
 
 	@Override
 	public Map<String, Object> pendingBack(Map<String, Object> params) {
 		Map<String,Object> obj = new HashMap<String,Object>();
+		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
 		obj.put(PurchaseBack.status, PurchaseStatus.interruption.toString());
 		obj.put(PurchaseBack.operateDate, new Date());
 		return dao.updateById(obj, DBBean.PURCHASE_BACK);
@@ -138,22 +142,31 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	///////////////////////////allot 调拨///////////
 	@Override
 	public Map<String, Object> submitAllot(Map<String, Object> params) {
-		Map<String,Object> back = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
 		Map<String,Object> obj = new HashMap<String,Object>();
-		obj.put(PurchaseBack.salesContract_id, back.get(PurchaseBack.salesContract_id));
-		obj.put(PurchaseBack.purchaseBack_id, params.get(ApiConstants.MONGO_ID));
+		obj.put(PurchaseBack.salesContract_id, params.get(PurchaseBack.salesContract_id));
+		obj.put(PurchaseBack.purchaseBack_id, params.get(PurchaseBack.purchaseBack_id));
 		obj.put(PurchaseBack.status, PurchaseStatus.submited.toString());
-		obj.put(PurchaseBack.code, produceCode("pa"));
+		obj.put(PurchaseBack.code, produceCode("pa",DBBean.PURCHASE_ALLOCATE));
+		obj.putAll(countAllotEqcostList(params));
 		return dao.add(obj, DBBean.PURCHASE_ALLOCATE);
 	}
 
 	public Map<String, Object> loadAllot(Map<String, Object> params) {
 		Map<String,Object> allot = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ALLOCATE);
-		String backId = (String)allot.get(PurchaseBack.purchaseBack_id);
-		Map<String,Object> back = dao.findOne(ApiConstants.MONGO_ID, backId, DBBean.PURCHASE_BACK);
-		mergeEqcost(back);
-		back.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
-		return back;
+		mergeSalesContract(allot);
+		mergeEqcostForAllot(allot);
+		return allot;
+	}
+
+	public Map<String, Object> prepareAllot(Map<String, Object> params) {
+		Map<String,Object> obj = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
+		mergeSalesContract(obj);
+		mergeEqcost(obj);
+		obj.put(PurchaseBack.purchaseBack_id, params.get(ApiConstants.MONGO_ID));
+		obj.put(PurchaseBack.status, PurchaseStatus.unsaved.toString());
+		obj.put(ApiConstants.MONGO_ID, null);
+		obj.put(PurchaseBack.code, null);
+		return obj;
 	}
 	
 	public Map<String, Object> approveAllot(Map<String, Object> params) {
@@ -161,7 +174,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
 		obj.put(PurchaseBack.status, PurchaseStatus.approved.toString());
 		obj.put(PurchaseBack.operateDate, new Date());
-		obj.put(PurchaseBack.eqcostList, countAllotEqcostList(params));	
+		obj.putAll(countAllotEqcostList(params));
 		return dao.updateById(obj, DBBean.PURCHASE_ALLOCATE);
 	}
 	
@@ -177,6 +190,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		for(Map<String,Object> re : list){
 			saleIds.add((String)re.get(PurchaseBack.salesContract_id));
 		}
+		saleIds.remove(null);
 		Map<String,Object> baseInfoMap = salesContractService.getBaseInfoByIds(new ArrayList(saleIds));
 		for(Map<String,Object> re : list){
 			re.putAll((Map)baseInfoMap.get(re.get(PurchaseBack.salesContract_id)));
@@ -197,6 +211,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		for(Map<String,Object> re : list){
 			saleIds.add((String)re.get(PurchaseBack.salesContract_id));
 		}
+		saleIds.remove(null);
 		Map<String,Object> baseInfoMap = salesContractService.getBaseInfoByIds(new ArrayList(saleIds));
 		for(Map<String,Object> re : list){
 			re.putAll((Map)baseInfoMap.get(re.get(PurchaseBack.salesContract_id)));
@@ -207,7 +222,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
 	@Override
 	public Map<String, Object> listAllot(Map<String, Object> params) {
-		
 		Map<String,Object> map = dao.list(null, DBBean.PURCHASE_ALLOCATE);
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
 		Set<String> saleIds = new HashSet<String>();
@@ -232,9 +246,9 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		dao.deleteByIds(ids, DBBean.PURCHASE_BACK);
 	}
 
-	private String produceCode(String flag){
+	private String produceCode(String flag,String db){
 		String str = new SimpleDateFormat("yyyyMMdd").format(new Date());
-		int count = dao.count(null, DBBean.PURCHASE_BACK);
+		int count = dao.count(null, db);
 		str = str.substring(2) + "-" + String.valueOf(count+1);
 		if(flag !=null) str = flag + str;
 		return str;
@@ -259,81 +273,145 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		Map<String, Object> eqMap = dao.list(query, DBBean.EQ_COST);
 		List<Map<String,Object>> eqList = (List<Map<String,Object>>)eqMap.get(ApiConstants.RESULTS_DATA);
 		
-		//如果已提交，则只加载已申请的货物清单
-		if(PurchaseStatus.saved.toString().equals(status)){
-			List<Map<String,Object>> backList = (List<Map<String,Object>>)params.get(PurchaseBack.eqcostList);
-			Map<String,Object> backMap = new HashMap<String,Object>();
-			for(Map<String,Object> eq : backList){
-				backMap.put((String)eq.get(ApiConstants.MONGO_ID), eq);
-			}
+		Map<String,Object> backEqData = (Map<String,Object>)params.get(PurchaseBack.eqcostList);
+		if(backEqData == null) backEqData = new HashMap<String,Object>();
+		
+		if(PurchaseStatus.submited.toString().equals(status)){
 			for(Map<String,Object> obj : eqList){
-				obj.putAll((Map<String,Object>)backMap.get(obj.get(ApiConstants.MONGO_ID)));
+				String id = String.valueOf(obj.get(ApiConstants.MONGO_ID));
+				if(backEqData.containsKey(id)){
+					obj.put(PurchaseBack.backTotalCount, ApiUtil.getDouble(backEqData, id, 0));
+				}else {
+					eqList.remove(obj);
+				}
 			}
-			params.put(PurchaseBack.eqcostList, eqList);
-		} else if(PurchaseStatus.submited.toString().equals(status)){
-			List<Map<String,Object>> list = (List<Map<String,Object>>)params.get(PurchaseBack.eqcostList);
-			Map<String,Object> map = new HashMap<String,Object>();
-			for(Map<String,Object> eq : eqList){
-				map.put((String)eq.get(ApiConstants.MONGO_ID), eq);
-			}
-			for(Map<String,Object> obj : list){
-				obj.putAll((Map<String,Object>)map.get(obj.get(ApiConstants.MONGO_ID)));
-			}
-			params.put(PurchaseBack.eqcostList, list);
 		} else {
-			params.put(PurchaseBack.eqcostList, eqList);
+			for(Map<String,Object> obj : eqList){
+				String id = String.valueOf(obj.get(ApiConstants.MONGO_ID));
+				if(backEqData.containsKey(id)){
+					obj.put(PurchaseBack.backTotalCount, ApiUtil.getDouble(backEqData, id, 0));
+				}else {
+					obj.put(PurchaseBack.backTotalCount, 0);
+				}
+			}
 		}
+		
+		params.put(PurchaseBack.eqcostList, eqList);
 	}
+
+	private void mergeEqcostForAllot(Map<String,Object> params){
+		Map<String,Object> allotEq = (Map<String,Object>)params.get(PurchaseBack.eqcostList);
+		if(allotEq == null) allotEq = new HashMap<String,Object>();
+		
+		String backId = (String) params.get(PurchaseBack.purchaseBack_id);
+		Map<String,Object> back = dao.findOne(ApiConstants.MONGO_ID, backId,  DBBean.PURCHASE_BACK);
+		mergeEqcost(back);
+		List<Map<String,Object>> eqList = (List<Map<String,Object>>)back.get(PurchaseBack.eqcostList);
+		if(eqList == null) eqList = new ArrayList();
+		for(Map<String,Object> obj : eqList){
+			String id = String.valueOf(obj.get(ApiConstants.MONGO_ID));
+			if(allotEq.containsKey(id)){
+				obj.put(PurchaseBack.allotCount, ApiUtil.getDouble(allotEq, id, 0));
+			}else {
+				eqList.remove(obj);
+			}
+		}
+		params.put(PurchaseBack.department, back.get(PurchaseBack.department));
+		params.put(PurchaseBack.planDate, back.get(PurchaseBack.planDate));
+		params.put(PurchaseBack.type, back.get(PurchaseBack.type));
+		params.put(PurchaseBack.eqcostList, eqList);
+	}	
 	
 	//验证并记录申请货物清单列表，计算申请总额
 	public Map<String,Object> countEqcostList(Map<String,Object> params) {
 		Object eqList = params.get(PurchaseBack.eqcostList);
 		String status = (String) params.get(PurchaseBack.status);
 		Map<String,Object> result = new HashMap<String,Object>();
-		List<Map<String,Object>> newList = new ArrayList<Map<String,Object>>();
+		
+		Map<String,Double> eqData = new HashMap<String,Double>();
 		Double totalMoney = 0.00;
 		List list = new Gson().fromJson(eqList.toString(), List.class);
 		for(Object obj : list){
 			Map<String,Object> map = (Map<String,Object>)obj;
-			Map<String,Object> newMap = new HashMap<String,Object>();
+			String id = (String)map.get(ApiConstants.MONGO_ID);
 			Double applyCount = ApiUtil.getDouble(map, PurchaseBack.backTotalCount,0);
 			Double price = ApiUtil.getDouble(map, SalesContractBean.SC_EQ_LIST_BASE_PRICE,0);
 			
-			newMap.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID));
-			newMap.put(SalesContractBean.SC_EQ_LIST_NO, map.get(SalesContractBean.SC_EQ_LIST_NO));
-			newMap.put(PurchaseBack.backTotalCount, applyCount);
-			newMap.put(PurchaseBack.backLeftCount, applyCount);
-			newMap.put(PurchaseBack.backUsedCount, 0);
-			newList.add(newMap);
 			if(PurchaseStatus.submited.toString().equals(status)){
 				dao.updateCount(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID), EqCostListBean.EQ_LIST_LEFT_AMOUNT, DBBean.EQ_COST, -applyCount);
 			}
 			totalMoney += applyCount*price;
-			
+			eqData.put(id, applyCount);
 		}
-		result.put(PurchaseBack.eqcostList, newList);
+		result.put(PurchaseBack.eqcostList, eqData);
 		result.put(PurchaseBack.money, totalMoney);
 		return result;
 	}	
-	public List countAllotEqcostList(Map<String,Object> params) {
+	public Map<String,Object> countAllotEqcostList(Map<String,Object> params) {
 		Object eqList = params.get(PurchaseBack.eqcostList);
-		List<Map<String,Object>> newList = new ArrayList<Map<String,Object>>();
+		Map<String,Object> result = new HashMap<String,Object>();
+		
+		Map<String,Double> eqData = new HashMap<String,Double>();
 		List list = new Gson().fromJson(eqList.toString(), List.class);
 		for(Object obj : list){
 			Map<String,Object> map = (Map<String,Object>)obj;
-			Map<String,Object> newMap = new HashMap<String,Object>();
-			newMap.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID));
-			newMap.put(SalesContractBean.SC_EQ_LIST_NO, map.get(SalesContractBean.SC_EQ_LIST_NO));
-			Double allotCount = ApiUtil.getDouble(map, PurchaseBack.allotCount,0);
-			newMap.put(PurchaseBack.allotCount, allotCount);
-			newList.add(newMap);
+			String id = (String)map.get(ApiConstants.MONGO_ID);
+			Double applyCount = ApiUtil.getDouble(map, PurchaseBack.allotCount,0);
+			eqData.put(id, applyCount);
 		}
-		
-		return newList;
+		result.put(PurchaseBack.eqcostList, eqData);
+		return result;
 	}
 	
+	/**{_id:allotCount}*/
+	public Map<String,Double> getAllotEqCountBySalesContractId(String saleId){
+		Map<String,Double> result = new HashMap<String,Double>(); 
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(PurchaseBack.salesContract_id, saleId);
+		query.put(PurchaseBack.status, PurchaseStatus.approved.toString());
+		query.put(ApiConstants.LIMIT_KEYS, new String[]{PurchaseBack.eqcostList});
+		
+		List<Object> list = dao.listLimitKeyValues(query, DBBean.PURCHASE_ALLOCATE);
+		for(Object obj : list){
+			Map<String, Double> eqMap = (Map<String, Double>)obj;
+			for(Map.Entry<String, Double> entry: eqMap.entrySet()){
+				String key = entry.getKey();
+				Double value = entry.getValue();
+				if(result.containsKey(key)){
+					result.put(key, result.get(key)+value);
+				}else{
+					result.put(key, value);
+				}
+			}
+		}
+		return result;
+	}
 	
-    public enum PurchaseStatus {
+    @Override
+	public Map<String, Double> getBackEqCountBySalesContractId(String saleId) {
+		Map<String,Double> result = new HashMap<String,Double>(); 
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(PurchaseBack.salesContract_id, saleId);
+		query.put(PurchaseBack.status, PurchaseStatus.approved.toString());
+		query.put(ApiConstants.LIMIT_KEYS, new String[]{PurchaseBack.eqcostList});
+		
+		List<Object> list = dao.listLimitKeyValues(query, DBBean.PURCHASE_ALLOCATE);
+		for(Object obj : list){
+			Map<String, Double> eqMap = (Map<String, Double>)obj;
+			for(Map.Entry<String, Double> entry: eqMap.entrySet()){
+				String key = entry.getKey();
+				Double value = entry.getValue();
+				if(result.containsKey(key)){
+					result.put(key, result.get(key)+value);
+				}else{
+					result.put(key, value);
+				}
+			}
+		}
+		return result;
+	}
+
+	public enum PurchaseStatus {
     	unsaved,saved,submited,approved,checked,rejected,interruption,allotting,allotted,requested;
 		@Override
 		public String toString() {

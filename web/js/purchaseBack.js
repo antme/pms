@@ -57,7 +57,7 @@ $(document).ready(function () {
 	    selectable : "row",
 	    toolbar: kendo.template($("#template").html()),
 	    columns: [
-	        { field: "code", title: "申请编号" },
+	        { field: "code", title: "备货编号" },
 	        { field: "type", title:"采购类别" ,width:"120px"},
 	        { field: "contractCode", title:"销售合同编号" },
 	        { field: "purchaseOrderCode", title:"采购订单编号" },
@@ -92,7 +92,7 @@ function pending() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.status == "已提交"){
+	} else {
 		$.ajax({
 			url : baseUrl+"/pending",
 			success : function(responsetxt) {
@@ -101,7 +101,7 @@ function pending() {
 				if (res.status == "0") {
 					alert(res.msg);
 				} else {
-					alert("批准成功");
+					alert("中止成功");
 					listDatasource.read();
 				}
 			}, error : function() {
@@ -117,7 +117,7 @@ function destroy() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.status == "已保存"){
+	} else if(row.status == "已保存") {
 		$.ajax({
 			url : baseUrl+"/destroy",
 			success : function(responsetxt) {
@@ -126,14 +126,15 @@ function destroy() {
 				if (res.status == "0") {
 					alert(res.msg);
 				} else {
-					alert("拒绝成功");
 					listDatasource.read();
 				}
 			}, error : function() {
 				alert("连接Service失败");
 			}, data : {
 				_id : row._id
-			}, method : "post"
+			},method : "post"
 		});
+	}else{
+		alert("'已提交'数据不能删除");
 	}
 }

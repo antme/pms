@@ -1,6 +1,6 @@
 $(document).ready(function () {
 	var currentObj;
-	var baseUrl = "../../service/purchase/back";
+	var baseUrl = "../../service/purchase/allot";
 	var subModel = kendo.data.Model.define({
 		id : "eqcostNo",
 		fields : {
@@ -58,16 +58,15 @@ $(document).ready(function () {
 			specialRequire: {},
 			comment: {},
 			money: {},
-			project_name: {},
-			project_code: {},
-			project_managerName: {},
-			customer_name: {},
-			customer_code: {},
+			projectName: {},
+			projectCode: {},
+			projectManager: {},
+			customer: {},
 			salesContract_id:{},
-			salesContract_code: {},
-			salesContract_money: {},
-			purchaseOrder_code: {},
-			purchaseContract_code: {}
+			scontractCode: {},
+			contractAmount: {},
+			purchaseOrderCode: {},
+			purchaseContractCode: {}
 		}
 	});
 	
@@ -78,7 +77,7 @@ $(document).ready(function () {
 			},
 			aggregate: [ 
 			    { field: "eqcostNo", aggregate: "count" },
-			    { field: "backUsedCount", aggregate: "sum" },
+			    { field: "allotCount", aggregate: "sum" },
 			    { field: "backTotalCount", aggregate: "sum" },
 			]			
 		},
@@ -88,7 +87,7 @@ $(document).ready(function () {
 			{ field: "eqcostProductName", title: "产品名称" },
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
-			{ field: "backUsedCount", title: "调拨数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
+			{ field: "allotCount", title: "调拨数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
 			{ field: "backTotalCount", title: "本次申请数量", footerTemplate: "总共: #=sum#"},
 			{ field: "eqcostBasePrice", title: "预估单价￥" },
 			{ field: "eqcostBrand", title: "品牌" },
@@ -100,10 +99,32 @@ $(document).ready(function () {
 
 	$(".submitform").click(function(){
 		if(confirm(this.value + "表单，确认？")){
-			postAjaxRequest( baseUrl+"/approveallot", {models:kendo.stringify(currentObj)} , saveSuccess);
+			postAjaxRequest( baseUrl+"/submit", {models:kendo.stringify(currentObj)} , saveSuccess);
 		}
 	});
-	
+	function generateAllot() {
+		var row = getSelectedRowDataByGrid("grid");
+		if (!row) {
+			alert("点击列表可以选中数据");
+		} else {
+			$.ajax({
+				url : baseUrl+"/allot/prepare",
+				success : function(responsetxt) {
+					var res;
+					eval("res=" + responsetxt);
+					if (res.status == "0") {
+						alert(res.msg);
+					} else {
+						alert("调拨申请成功");
+					}
+				}, error : function() {
+					alert("连接Service失败");
+				}, data : {
+					_id : row._id
+				},method : "post"
+			});
+		}
+	}	
 	function edit(e){
 		currentObj = new myModel(e);
 		kendo.bind($("#form-container"), currentObj);
@@ -114,10 +135,15 @@ $(document).ready(function () {
 	}
 	$(".foredit").attr("disabled","disabled");
 	if(redirectParams){
-		var backId = redirectParams._id;
+		var backId = redirectParams.backId;
+		var id = redirectParams._id;
 		if(backId) {
+			alert(backId);
+			postAjaxRequest(baseUrl+"/prepare", {_id:backId}, edit);
+		}else if(id) {
+			alert(id);
 			postAjaxRequest(baseUrl+"/load", {_id:backId}, edit);
-		}	
+		}
 	}
 	
 	
