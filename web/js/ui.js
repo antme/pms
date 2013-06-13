@@ -50,7 +50,7 @@ function init(data){
 	             },
 
 	             {
-	                 text: "项目执行", id: "projectex", access:"purchase_request_management", imageUrl: "/images/ccontract.png",
+	                 text: "项目执行", id: "projectex", access:"project_management_purchase_request_management", imageUrl: "/images/ccontract.png",
 	                 items: [
 	                         { text: "备货申请", id: "purchaseBack",  access:"project_management", imageUrl: "/images/order.png" },
 	                         { text: "采购申请", id: "purchaseRequestByAssistant", access:"purchase_request_management", imageUrl: "/images/ccontract.png"},
@@ -199,6 +199,8 @@ function loadPage(page, parameters) {
 		page = "html/salescontract/addsc.html";
 	} else if (page == "editsc") {
 		page = "html/salescontract/editsc.html";
+	} else if (page == "viewsc") {
+		page = "html/salescontract/viewsc.html";
 	} else if (page == "invoiceList") {
 		page = "html/finance/invoiceList.html";
 	} else if (page == "gotMoneyList") {
