@@ -146,11 +146,16 @@ function save() {
 	if (!validator.validate()) {
 		return;
     } else {
-    	console.log(kendo.stringify(model));
-        var _id = model.get("_id");
         var data = eqDataSource.data();
         model.set("eqcostList", data);
+        
+        console.log(kendo.stringify(model));
+        
+        
         listDataSource.add(model);
+        
+        console.log(listDataSource.hasChanges());
+        
     	listDataSource.sync();
         loadPage("ship");
     }
