@@ -327,7 +327,7 @@ function postAjaxRequest(url, parameters, callback) {
 		success : function(responsetxt) {
 			var res;
 			eval("res=" + responsetxt);
-			if (res.status == "0") {
+			if (res.status && res.status == "0" && res.msg) {
 				alert(res.msg);
 			} else {
 				eval("callback(res)");
