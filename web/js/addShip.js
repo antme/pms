@@ -149,13 +149,13 @@ function save() {
         var data = eqDataSource.data();
         model.set("eqcostList", data);
         
-        console.log(kendo.stringify(model));
-        
-        
         listDataSource.add(model);
         
-        console.log(listDataSource.hasChanges());
-        
+    	if(listDataSource.at(0)){
+    		//force set haschanges = true
+    		listDataSource.at(0).set("uid", kendo.guid());
+    	}
+    	
     	listDataSource.sync();
         loadPage("ship");
     }
