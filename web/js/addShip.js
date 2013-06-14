@@ -79,7 +79,7 @@ $(document).ready(function() {
         	model.set("customer", dataItem.customer);
         	model.set("contractCode", dataItem.contractCode);
         	
-        	contractCode = this.text();
+        	salesContractId = this.value();
         	
         	eqDataSource = new kendo.data.DataSource({
         	    transport: {
@@ -87,7 +87,7 @@ $(document).ready(function() {
         	            url: crudServiceBaseUrl + "/ship/eqlist",
         	            dataType: "jsonp",
         	            data: {
-        	            	contractCode: contractCode
+        	            	salesContractId: salesContractId
         	            }
         	        }
         	    },
