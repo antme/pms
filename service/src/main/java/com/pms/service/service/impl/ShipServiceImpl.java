@@ -8,28 +8,29 @@ import java.util.Map;
 
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
-import com.pms.service.mockbean.PurchaseRequestOrder;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
+import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.IShipService;
 import com.pms.service.util.ApiUtil;
 
 public class ShipServiceImpl extends AbstractService implements IShipService {
 	
 	private IPurchaseContractService pService;
-//	private ISalesContractService salesContractService;
-//
-//	public ISalesContractService getSalesContractService() {
-//		return salesContractService;
-//	}
-//
-//	public void setSalesContractService(ISalesContractService salesContractService) {
-//		this.salesContractService = salesContractService;
-//	}
+	
+	private IPurchaseService purchaseService;
 
 	public IPurchaseContractService getpService() {
 		return pService;
+	}
+
+	public IPurchaseService getPurchaseService() {
+		return purchaseService;
+	}
+
+	public void setPurchaseService(IPurchaseService purchaseService) {
+		this.purchaseService = purchaseService;
 	}
 
 	public void setpService(IPurchaseContractService pService) {
@@ -47,29 +48,6 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 
 	public Map<String, Object> list(Map<String, Object> params) {
 		return dao.list(null, DBBean.SHIP);
-//		Map<String, Object> result = dao.list(null, DBBean.SHIP);
-//		
-//		List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
-//		
-//		List<String> pId = new ArrayList<String>();
-//		for (Map<String, Object> p:list){
-//			pId.add(p.get(ShipBean.SHIP_SALES_CONTRACT_ID).toString());
-//		}
-//		
-//		Map<String, Object> scParams = new HashMap<String, Object>();
-//		scParams.put(SalesContractBean.SC_ID, pId);
-//		Map<String, Object> cInfoMap = salesContractService.getSCAndCustomerInfo(scParams);
-//		
-//		for (Map<String, Object> p:list){
-//			String scId = p.get(ShipBean.SHIP_SALES_CONTRACT_ID).toString();
-//			Map<String, Object> scMap = (Map<String, Object>) cInfoMap.get(scId);
-//			if (scMap != null) {
-//				p.put(ShipBean.SHIP_SALES_CONTRACT_NO, scMap.get(SalesContractBean.SC_CODE));
-//				p.put(ShipBean.SHIP_CUSTOMER_NAME, scMap.get(ProjectBean.PROJECT_CUSTOMER));
-//			}
-//		}
-//		
-//		return result;
 	}
 
 	public Map<String, Object> update(Map<String, Object> params) {
@@ -90,7 +68,12 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	
 	public Map<String, Object> eqlist(Map<String, Object> params) {
 		Map<String, Object> res = new HashMap<String, Object>();
-		res.put(ApiConstants.RESULTS_DATA, pService.listApprovedPurchaseContractCosts((String) params.get(ShipBean.SHIP_SALES_CONTRACT_NO)));
+		String saleId = (String) params.get(ShipBean.SHIP_SALES_CONTRACT_ID);
+		
+		Map<String, Double> asdf = purchaseService.getAllotEqCountBySalesContractId(saleId);
+		
+		List<Map<String, Object>> list = pService.listApprovedPurchaseContractCosts(saleId);
+		res.put(ApiConstants.RESULTS_DATA, list);
 		return res;
 	}
 

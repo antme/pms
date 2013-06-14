@@ -96,6 +96,7 @@
 		id="shipService">
 		<property name="dao" ref="commonDao"></property>
 		<property name="pService" ref="purchaseContractService"></property>
+		<property name="purchaseService" ref="purchaseService"></property>
 	</bean>
 
 	<bean
