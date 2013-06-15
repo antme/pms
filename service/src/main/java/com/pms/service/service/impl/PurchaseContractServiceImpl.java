@@ -328,7 +328,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> getBackRequestForSelect(HashMap<String, Object> parameters){
        Map<String, Object> result = backService.loadBack(parameters);
        
-       return mergeProjectInfo(result, result.get(PurchaseBack.salesContract_code).toString());
+       return mergeProjectInfo(result, result.get(SalesContractBean.SC_CODE).toString());
     }
 
 
