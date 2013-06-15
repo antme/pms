@@ -128,7 +128,6 @@ function init(user){
 	
 	userRoles = user.data;
 
-	console.log(userRoles);
 	//一级菜单权限验证
 	removeTreeItems(menus);
 	
@@ -389,7 +388,6 @@ function checkRoles(){
 		var roleId = node.attr("access");
 		var hasAccess = false;
 		for(i in userRoles){	
-			console.log(userRoles[i].roleID + "====" + roleId);
 			if(userRoles[i].roleID == roleId){
 				hasAccess = true;
 				break;
