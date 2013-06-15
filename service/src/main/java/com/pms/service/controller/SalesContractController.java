@@ -119,6 +119,12 @@ public class SalesContractController extends AbstractController {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.listMonthShipmentsForSC(params), request, response);
     }
+    
+    @RequestMapping("/eq/get")
+    public void getSCeqById(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.getSCeqByIds(params), request, response);
+    }
 
 	public ISalesContractService getSalesContractService() {
 		return salesContractService;
