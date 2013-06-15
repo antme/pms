@@ -240,7 +240,7 @@ function loadPage(page, parameters) {
 	} else if(page == "purchaseAllotManageEdit"){
 		page = "html/purchasecontract/purchaseAllotManageEdit.html";
 	} else if(page == "borrowing"){
-		page = "html/execution/borrowing.html";	
+		page = "html/execution/borrowing.html";
 	}
 	
 	
