@@ -56,8 +56,8 @@ function init(data){
 	                         { text: "采购申请", id: "purchaseRequestByAssistant", access:"purchase_request_management", imageUrl: "/images/ccontract.png"},
 	                         { text: "开票申请", id: "purchaseorder", access:"user_management", imageUrl: "/images/ccontract.png" },
 	                         { text: "发货申请", id: "ship", access:"user_management", imageUrl: "/images/ccontract.png"},
-	                         { text: "借货申请", id: "contract", access:"user_management", imageUrl: "/images/ccontract.png"},
-	                         { text: "还货申请", id: "contract", access:"user_management", imageUrl: "/images/ccontract.png"}
+	                         { text: "借货申请", id: "borrowing", access:"user_management", imageUrl: "/images/ccontract.png"},
+	                         { text: "还货申请", id: "borrowing", access:"user_management", imageUrl: "/images/ccontract.png"}
 	                     ]
 	             },
 	             {
@@ -205,7 +205,7 @@ function loadPage(page, parameters) {
 		page = "html/finance/invoiceList.html";
 	} else if (page == "gotMoneyList") {
 		page = "html/finance/gotMoneyList.html";
-	}else if (page == "group") {
+	} else if (page == "group") {
 		page = "html/user/group.html";
 	} else if (page == "customer") {
 		page = "html/customer/customer.html";
@@ -215,13 +215,13 @@ function loadPage(page, parameters) {
 		page = "html/execution/allocate.html";
 	} else if (page == "purchasecontract") {
 		page = "html/purchasecontract/purchasecontract.html";
-	}else if (page == "purchaseorder" ) {
+	} else if (page == "purchaseorder" ) {
 		page = "html/purchasecontract/purchaseOrder.html";
-	}else if (page == "purchaseRequestByAssistant") {
+	} else if (page == "purchaseRequestByAssistant") {
 		page = "html/purchasecontract/purchaseRequest.html";
-	}else if (page == "purchaseRequestApprove") {
+	} else if (page == "purchaseRequestApprove") {
 		page = "html/purchasecontract/purchaseRequestApprove.html";
-	}else if (page == "addProject") {
+	} else if (page == "addProject") {
 		page = "html/project/addProject.html";
 	}  else if (page == "ship") {
 		page = "html/execution/ship.html";
@@ -237,8 +237,10 @@ function loadPage(page, parameters) {
 		page = "html/purchasecontract/purchaseAllotEdit.html";		
 	} else if(page == "purchaseAllotManage"){
 		page = "html/purchasecontract/purchaseAllotManage.html";		
-	}else if(page == "purchaseAllotManageEdit"){
-		page = "html/purchasecontract/purchaseAllotManageEdit.html";		
+	} else if(page == "purchaseAllotManageEdit"){
+		page = "html/purchasecontract/purchaseAllotManageEdit.html";
+	} else if(page == "borrowing"){
+		page = "html/execution/borrowing.html";	
 	}
 	
 	
