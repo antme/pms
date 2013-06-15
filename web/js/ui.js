@@ -267,6 +267,8 @@ function loadPage(page, parameters) {
 		page = "html/purchasecontract/purchaseAllotManageEdit.html";
 	} else if(page == "borrowing"){
 		page = "html/execution/borrowing.html";
+	} else if (page == "addBorrowing") {
+		page = "html/execution/addBorrowing.html";
 	}
 	
 	
