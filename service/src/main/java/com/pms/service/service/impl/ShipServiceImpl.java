@@ -70,7 +70,11 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		Map<String, Object> res = new HashMap<String, Object>();
 		String saleId = (String) params.get(ShipBean.SHIP_SALES_CONTRACT_ID);
 		
-		Map<String, Double> asdf = purchaseService.getAllotEqCountBySalesContractId(saleId);
+		Map<String, Double> alloeq = purchaseService.getAllotEqCountBySalesContractId(saleId);
+		
+		for (Map.Entry mapEntry : alloeq.entrySet()) {
+			
+		}
 		
 		List<Map<String, Object>> list = pService.listApprovedPurchaseContractCosts(saleId);
 		res.put(ApiConstants.RESULTS_DATA, list);
