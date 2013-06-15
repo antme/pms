@@ -386,9 +386,9 @@ function checkRoles(){
 		var node = jQuery(buttons[index]);
 		var roleId = node.attr("access");
 		var hasAccess = false;
-		for(i in roles){	
-			console.log(roles[i].roleID + "====" + roleId);
-			if(roles[i].roleID == roleId){
+		for(i in userRoles){	
+			console.log(userRoles[i].roleID + "====" + roleId);
+			if(userRoles[i].roleID == roleId){
 				hasAccess = true;
 				break;
 			}
