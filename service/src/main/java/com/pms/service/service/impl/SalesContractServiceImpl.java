@@ -413,4 +413,18 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		return result;
 	}
+
+	@Override
+	public Map<String, Object> getSCeqByIds(Map<String, Object> params) {
+		Object eqIds = params.get("eqIds");
+		Map<String, Object> query = new HashMap<String, Object>();
+		List<String> ids = null;
+		if (eqIds instanceof String){
+			query.put(ApiConstants.MONGO_ID, (String)eqIds);
+		} else {
+			ids = (List<String>) eqIds;
+			query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
+		}
+		return dao.list(query, DBBean.EQ_COST);
+	}
 }
