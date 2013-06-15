@@ -85,8 +85,8 @@ function init(data){
 	                 text: "财务",  id: "finance", access:"user_management", imageUrl: "/images/finance.png",
 	                 items: [
 	                         { text: "财务资料", id: "contract",  imageUrl: "/images/order.png" },
-	                         { text: "开票信息", id: "contract", imageUrl: "/images/ccontract.png" },
-	                         { text: "收款信息", id: "contract", imageUrl: "/images/ccontract.png"},
+	                         { text: "开票信息", id: "invoiceList", imageUrl: "/images/ccontract.png" },
+	                         { text: "收款信息", id: "gotMoneyList", imageUrl: "/images/ccontract.png"},
 	                         { text: "付款信息", id: "contract", imageUrl: "/images/ccontract.png"}
 	                     ]
 	             },
