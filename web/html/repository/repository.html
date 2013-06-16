@@ -9,8 +9,9 @@
 </style>
 
 
-<script type="text/javascript" src="js/purchaseRequest.js"></script>
+<script type="text/javascript" src="js/repository/repository.js"></script>
 <script type="text/javascript" src="js/common/process.js"></script>
+
 </head>
 
 <body>
@@ -18,8 +19,9 @@
     
     <div class="k-toolbar k-grid-toolbar">
         <button access="purchase_request_management" class="k-button access" onclick="add();">新增</button>
-        <button access="purchase_request_management" class="k-button access" onclick="edit();">编辑</button>
-        <button access="purchase_request_management" class="k-button access" onclick="cancel();">废止</button>
+        <button access="purchase_request_management" class="k-button access" onclick="edit();">修改</button>
+        <button access="purchase_request_management" class="k-button access" onclick="cancel();">中止</button>
+        <button access="purchase_request_management" class="k-button access" onclick="confirm();">确认</button>
     </div>
         <div id="grid"></div>
     </div>

@@ -1,12 +1,9 @@
-
 //添加采购申请的时候先选择备货申请
 var selectUrl = "/service/purcontract/back/select/list";
 var editUrl = "/service/purcontract/request/get";
 var saveUrl =  "/service/purcontract/request/update";
 var addUrl =  "/service/purcontract/order/add";
 var getSelectUrl = "/service/purcontract/back/get";
-
-
 
 //抽象model对象， datasource对象必须绑定一个model为了方便解析parameterMap中需要提交的参数
 var model = kendo.data.Model.define({
@@ -53,7 +50,7 @@ var model = kendo.data.Model.define({
 		eqcostProductType: {
 			editable : false
 		},
-		eqcostAvailableAmount{
+		eqcostAvailableAmount: {
 			editable : false
 		}
 	}
@@ -63,29 +60,6 @@ var model = kendo.data.Model.define({
 var requestDataItem;
 var selectedRequest;
 
-$(document).ready(function() {
-		$("#purchaseRequest").kendoDropDownList({
-				dataTextField : "code",
-				dataValueField : "_id",
-				dataSource : {
-					transport : {
-						read : {
-							dataType : "jsonp",
-							url : selectUrl
-						}
-					}
-				},
-
-				// 当用户选择不同的采购申请时候赋值给requestDataItem对象
-				select : function(e) {
-					selectedRequest = this.dataSource.at(e.item.index());
-				}
-			});
-
-			if (redirectParams) {
-				postAjaxRequest(editUrl, redirectParams, edit);
-			}
-});
 
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
@@ -115,13 +89,41 @@ var itemDataSource = new kendo.data.DataSource({
 	}
 });
 
-function checkStatus(data) {
-	loadPage("purchaseRequestByAssistant", null);
-}
-// 计算成本数据的datasouce
+
+//计算成本数据的datasouce
 var sumDataSource = new kendo.data.DataSource({
 
 });
+
+
+$(document).ready(function() {
+		$("#purchaseRequest").kendoDropDownList({
+				dataTextField : "code",
+				dataValueField : "_id",
+				dataSource : {
+					transport : {
+						read : {
+							dataType : "jsonp",
+							url : selectUrl
+						}
+					}
+				},
+
+				// 当用户选择不同的采购申请时候赋值给requestDataItem对象
+				select : function(e) {
+					selectedRequest = this.dataSource.at(e.item.index());
+				}
+			});
+
+		    //如果是编辑
+			if (redirectParams) {
+				postAjaxRequest(editUrl, redirectParams, edit);
+			}
+});
+
+function checkStatus(data) {
+	loadPage("purchaseRequestByAssistant", null);
+}
 
 function showOrderWindow() {
 

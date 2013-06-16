@@ -183,7 +183,7 @@ public abstract class AbstractController {
                    
                 } else {
                     //不返回任何数据           
-                        jsonReturn =  callback + "();";              
+                        jsonReturn =  callback + "([]);";              
                 }
 
             }

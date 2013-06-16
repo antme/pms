@@ -44,18 +44,15 @@ var menus = [
              
 
              {
-	                text : "采购合同",
-					id : "purchasecontract",						
-					expanded : false,
-					imageUrl : "/images/contract.png",
+	             text : "采购合同", id : "purchasecontract", expanded : false, imageUrl : "/images/contract.png",
                  items: [
                      { text: "备货申请", id: "purchaseAllot", imageUrl: "/images/order.png" },
                      { text: "调拨申请", id: "purchaseAllotManage", imageUrl: "/images/ccontract.png" },
                      { text: "采购申请", id: "purchaseRequestApprove", imageUrl: "/images/ccontract.png"},
                      { text: "采购订单", id: "purchaseorder",  imageUrl: "/images/ccontract.png"},
                      { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
-                     { text: "入库申请单", id: "contract", imageUrl: "/images/ccontract.png" },
-                     { text: "直发入库申请单", id: "contract", imageUrl: "/images/ccontract.png"}
+                     { text: "入库申请单", id: "repository", imageUrl: "/images/ccontract.png" },
+                     { text: "直发入库申请单", id: "directRepository", imageUrl: "/images/ccontract.png"}
                  ]
              },                                               
              {
@@ -129,12 +126,14 @@ function init(user){
 	userRoles = user.data;
 
 	//一级菜单权限验证
-	removeTreeItems(menus);
-	
-	for(i in menus){
-		if(menus[i].items){
-			//二级菜单权限验证
-			removeTreeItems(menus[i].items);
+	if(menus){
+		removeTreeItems(menus);
+		
+		for(i in menus){
+			if(menus[i].items){
+				//二级菜单权限验证
+				removeTreeItems(menus[i].items);
+			}
 		}
 	}
 	
@@ -268,6 +267,10 @@ function loadPage(page, parameters) {
 		page = "html/execution/borrowing.html";
 	} else if (page == "addBorrowing") {
 		page = "html/execution/addBorrowing.html";
+	}else if (page == "repository") {
+		page = "html/repository/repository.html";
+	}else if (page == "directRepository") {
+		page = "html/repository/directRepository.html";
 	}
 	
 	
