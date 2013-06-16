@@ -1,0 +1,120 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script  src="js/addBorrowing.js"></script>
+
+<body>
+    <div id="addBorrowing" class="k-content">
+    
+    <button onclick="save()" class="k-button">保存</button>
+    <button onclick='loadPage("borrowing");' class="k-button">取消</button>
+    
+    <table class="metrotable">
+        <tbody>
+        <tr>
+            <td>
+                <input type="text" data-bind="value: borrowNo" class="k-textbox" />
+                <h4>编号</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" data-bind="value: applicant" class="k-textbox" />
+                <h4>申请人</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="in-projects" data-bind="value: inProjectId" />
+                <h4>调入项目编号</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="inSalesContract" data-bind="value: inSalesContractId" />
+                <h4>调入销售合同编号</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="out-projects" data-bind="value: outProjectId" />
+                <h4>调出项目编号</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="outSalesContract" data-bind="value: outSalesContractId" />
+                <h4>调出销售合同编号</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h4>设备清单</h4>
+                <div id="equipments-grid" ></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    
+    <style scoped>
+        .metrotable {
+
+            width: 100%;
+        }
+
+        .metrotable > tbody > tr > td {
+            display: table-cell;
+            padding: 5px 5px 5px 0;
+            font-size: 1em;
+            text-transform: none;
+        }
+
+        .metrotable td > .k-textbox,
+        .metrotable td > .k-dropdown,
+        .metrotable td > .k-combobox,
+        .metrotable td > .k-datepicker,
+        .metrotable td > .k-numerictextbox,
+        .metrotable td > .k-timepicker,
+        .metrotable td > .k-slider {
+            float: right;
+        }
+
+        .metrotable td > .k-slider {
+            margin-bottom: 10px;
+        }
+
+        .metrotable > tbody > tr > th {
+            border-bottom: 1px solid #ccc;
+            color: #787878;
+            font-size: 1.4em;
+            font-weight: lighter;
+            padding: 0 1em 0 0;
+            text-align: left;
+        }
+        
+        .metrotable > tbody > tr > td {
+		    text-align: left;
+		    font-weight: lighter;
+		    color: #787878;
+		    border-bottom: 1px solid #e1e1e1;
+		}
+
+        td h4 {
+            margin: 0;
+            padding: 7px 0;
+            font-weight: normal;
+        }
+
+        td label {
+            float: left;
+            clear: left;
+        }
+
+        td pre {
+            font-size: 11px;
+        }
+    </style>
+</div>
+
+
+</body>
+</html>
