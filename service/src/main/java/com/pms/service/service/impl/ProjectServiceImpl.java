@@ -89,10 +89,26 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	@Override
 	public Map<String, Object> listProjectsForSelect(Map<String, Object> params) {
 		// TODO Add logic to filter the projects which in progresss
-		String[] limitKeys = {ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE};
+		String[] limitKeys = {ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER};
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		Map<String, Object> result = dao.list(query, DBBean.PROJECT);
+		
+		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
+		List<String> pmIds = new ArrayList<String>();
+		for(Map<String, Object> p : resultList){
+			pmIds.add((String)p.get(ProjectBean.PROJECT_MANAGER));
+		}
+		Map<String, Object> pmQuery = new HashMap<String, Object>();
+		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pmIds));
+		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME});
+		Map<String, Object> pms = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
+		
+		for (Map<String, Object> p : resultList){
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
+			Map<String, Object> pmInfo = (Map<String, Object>) pms.get(pmid);
+			p.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+		}
 		
 		return result;
 	}
