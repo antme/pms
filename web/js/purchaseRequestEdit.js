@@ -43,6 +43,18 @@ var model = kendo.data.Model.define({
 		},
 		eqcostProductName : {
 			editable : false
+		},
+		eqcostNo : {
+			editable : false
+		},
+		eqcostMaterialCode :{
+			editable : false
+		},		
+		eqcostProductType: {
+			editable : false
+		},
+		eqcostAvailableAmount{
+			editable : false
 		}
 	}
 });
