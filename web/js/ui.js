@@ -1,6 +1,89 @@
 var redirectParams = undefined;
 var redirecPage = undefined;
-var roles = undefined;
+var userRoles = undefined;
+var accessRoles = {
+	projectList : "project_management",
+	projectex : "project_management, purchase_request_management",
+	purchaseBack : "project_management",
+	purchaseRequestByAssistant : "purchase_request_management",
+	purchaseorder : "user_management",
+	ship : "user_management",
+	contract : "user_management",
+	scList : "project_management",
+	purchasecontract : "purchase_allocate_process, purchase_request_management, purchase_request_process, purchase_order_management, purchase_order_process, user_management",
+	purchaseAllot : "purchase_request_management, purchase_allocate_management",
+	purchaseAllotManage : "purchase_allocate_process, purchase_allocate_management",
+	purchaseRequestApprove : "purchase_request_process",
+	purchaseorder : "purchase_order_management, purchase_order_process",
+	purchasecontract : "purchase_contract_management, purchase_contract_process",
+	finance : "user_management",
+	customer : "user_management",
+	userman : "user_management"
+};
+
+
+var menus = [
+             {
+                 text: "项目管理", id: "projectList", imageUrl: "/images/product.png"
+             },
+
+             {
+                 text: "项目执行", id: "projectex", imageUrl: "/images/ccontract.png",
+                 items: [
+                         { text: "备货申请", id: "purchaseBack", imageUrl: "/images/order.png" },
+                         { text: "采购申请", id: "purchaseRequestByAssistant", imageUrl: "/images/ccontract.png"},
+                         { text: "开票申请", id: "purchaseorder", imageUrl: "/images/ccontract.png" },
+                         { text: "发货申请", id: "ship", imageUrl: "/images/ccontract.png"},
+                         { text: "借货申请", id: "borrowing", imageUrl: "/images/ccontract.png"},
+                         { text: "还货申请", id: "borrowing", imageUrl: "/images/ccontract.png"}
+                     ]
+             },
+             {
+                 text: "销售合同",  id: "scList", imageUrl: "/images/user.png"
+             },
+             
+
+             {
+	                text : "采购合同",
+					id : "purchasecontract",						
+					expanded : false,
+					imageUrl : "/images/contract.png",
+                 items: [
+                     { text: "备货申请", id: "purchaseAllot", imageUrl: "/images/order.png" },
+                     { text: "调拨申请", id: "purchaseAllotManage", imageUrl: "/images/ccontract.png" },
+                     { text: "采购申请", id: "purchaseRequestApprove", imageUrl: "/images/ccontract.png"},
+                     { text: "采购订单", id: "purchaseorder",  imageUrl: "/images/ccontract.png"},
+                     { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
+                     { text: "入库申请单", id: "contract", imageUrl: "/images/ccontract.png" },
+                     { text: "直发入库申请单", id: "contract", imageUrl: "/images/ccontract.png"}
+                 ]
+             },                                               
+             {
+                 text: "财务",  id: "finance",  imageUrl: "/images/finance.png",
+                 items: [
+                         { text: "财务资料", id: "contract",  imageUrl: "/images/order.png" },
+                         { text: "开票信息", id: "invoiceList", imageUrl: "/images/ccontract.png" },
+                         { text: "收款信息", id: "gotMoneyList", imageUrl: "/images/ccontract.png"},
+                         { text: "付款信息", id: "contract", imageUrl: "/images/ccontract.png"}
+                     ]
+             },
+                                 
+             {
+                 text: "基础信息",  id: "customer", imageUrl: "/images/user.png",
+                 	items: [
+                             { text: "客户", id: "customer", imageUrl: "/images/toy.png" },
+                             { text: "供应商", id: "supplier", imageUrl: "/images/ccontract.png" }
+                         ]
+             } , {
+                 text: "权限管理", id: "userman", expanded: false, imageUrl: "/images/friends_group.png",
+                 items: [
+                         { text: "用户管理", id: "userman", imageUrl: "/images/toy.png" },
+                         { text: "角色管理", id: "group", imageUrl: "/images/ccontract.png" }
+                     ]
+             }
+  ];
+
+
 
 $(document).ready(function() {
 
@@ -41,80 +124,22 @@ $(document).ready(function() {
 
 
 var userMenus = [];
-function init(data){
+function init(user){
 	
-	roles = data.data;
-	var menus = [
-	             {
-	                 text: "项目管理", id: "projectList", access:"project_management", imageUrl: "/images/product.png"
-	             },
+	userRoles = user.data;
 
-	             {
-	                 text: "项目执行", id: "projectex", access:"project_management_purchase_request_management", imageUrl: "/images/ccontract.png",
-	                 items: [
-	                         { text: "备货申请", id: "purchaseBack",  access:"project_management", imageUrl: "/images/order.png" },
-	                         { text: "采购申请", id: "purchaseRequestByAssistant", access:"purchase_request_management", imageUrl: "/images/ccontract.png"},
-	                         { text: "开票申请", id: "purchaseorder", access:"user_management", imageUrl: "/images/ccontract.png" },
-	                         { text: "发货申请", id: "ship", access:"user_management", imageUrl: "/images/ccontract.png"},
-	                         { text: "借货申请", id: "borrowing", access:"user_management", imageUrl: "/images/ccontract.png"},
-	                         { text: "还货申请", id: "borrowing", access:"user_management", imageUrl: "/images/ccontract.png"}
-	                     ]
-	             },
-	             {
-	                 text: "销售合同",  id: "scList", access:"project_management", imageUrl: "/images/user.png"
-	             },
-	             
-
-	             {
-		                text : "采购合同",
-						id : "purchasecontract",
-						access : "purchase_allocate_process_purchase_request_management_purchase_request_process_purchase_order_management_purchase_order_process_user_management",
-						expanded : false,
-						imageUrl : "/images/contract.png",
-	                 items: [
-	                     { text: "备货申请", id: "purchaseAllot",  access:"purchase_request_management_purchase_allocate_management", imageUrl: "/images/order.png" },
-	                     { text: "调拨申请", id: "purchaseAllotManage",  access:"purchase_allocate_process, purchase_allocate_management", imageUrl: "/images/ccontract.png" },
-	                     { text: "采购申请", id: "purchaseRequestApprove", access: "purchase_request_process", imageUrl: "/images/ccontract.png"},
-	                     { text: "采购订单", id: "purchaseorder", access: "purchase_order_management, purchase_order_process", imageUrl: "/images/ccontract.png"},
-	                     { text: "采购合同", id: "purchasecontract", access: "purchase_contract_management, purchase_contract_process", imageUrl: "/images/order.png" },
-	                     { text: "入库申请单", id: "contract", access:"user_management", imageUrl: "/images/ccontract.png" },
-	                     { text: "直发入库申请单", id: "contract", access:"user_management", imageUrl: "/images/ccontract.png"}
-	                 ]
-	             },                                               
-	             {
-	                 text: "财务",  id: "finance", access:"user_management", imageUrl: "/images/finance.png",
-	                 items: [
-	                         { text: "财务资料", id: "contract",  imageUrl: "/images/order.png" },
-	                         { text: "开票信息", id: "invoiceList", imageUrl: "/images/ccontract.png" },
-	                         { text: "收款信息", id: "gotMoneyList", imageUrl: "/images/ccontract.png"},
-	                         { text: "付款信息", id: "contract", imageUrl: "/images/ccontract.png"}
-	                     ]
-	             },
-	                                 
-	             {
-	                 text: "基础信息",  id: "customer", access:"user_management", imageUrl: "/images/user.png",
-	                 	items: [
-	                             { text: "客户", id: "customer", imageUrl: "/images/toy.png" },
-	                             { text: "供应商", id: "supplier", imageUrl: "/images/ccontract.png" }
-	                         ]
-	             } , {
-	                 text: "权限管理", id: "userman", access:"user_management", expanded: false, imageUrl: "/images/friends_group.png",
-	                 items: [
-	                         { text: "用户管理", id: "userman", imageUrl: "/images/toy.png" },
-	                         { text: "角色管理", id: "group", imageUrl: "/images/ccontract.png" }
-	                     ]
-	             }
-	         ];
-	
-	
+	//一级菜单权限验证
 	removeTreeItems(menus);
 	
 	for(i in menus){
 		if(menus[i].items){
+			//二级菜单权限验证
 			removeTreeItems(menus[i].items);
 		}
 	}
-	$("#user_info").html(data.userName);
+	
+	
+	$("#user_info").html(user.userName);
 	$("#tree-nav").kendoTreeView({
     	template: kendo.template($("#treeview-template").html()),
         dataSource: menus
@@ -135,28 +160,28 @@ function init(data){
 }
 
 function removeTreeItems(items) {
+	
+	//拷贝数据
 	var newItems = items.slice(0);
 
 	for (i in newItems) {
-
-		if (newItems[i].access) {
+		var id = newItems[i].id;
+		var accRoles = "";
+		eval("accRoles = accessRoles."+id);	
+		if(accRoles){
 			var hasAccess = false;
-			var roleId = newItems[i].access;
-			for (j in roles) {
-				if (roleId.indexOf(roles[j].roleID) >= 0) {
+			for (j in userRoles) {
+				if (accRoles.indexOf(userRoles[j].roleID) >= 0) {
 					hasAccess = true;
 					break;
 				}
 			}
-
 			if (!hasAccess) {
 				var node = items.indexOf(newItems[i]);
 				items.splice(node, 1);
 			}
-
 		}
 	}
-
 }
 
 function onAjaxFail(data) {
@@ -241,6 +266,8 @@ function loadPage(page, parameters) {
 		page = "html/purchasecontract/purchaseAllotManageEdit.html";
 	} else if(page == "borrowing"){
 		page = "html/execution/borrowing.html";
+	} else if (page == "addBorrowing") {
+		page = "html/execution/addBorrowing.html";
 	}
 	
 	
@@ -360,9 +387,8 @@ function checkRoles(){
 		var node = jQuery(buttons[index]);
 		var roleId = node.attr("access");
 		var hasAccess = false;
-		for(i in roles){	
-			console.log(roles[i].roleID + "====" + roleId);
-			if(roles[i].roleID == roleId){
+		for(i in userRoles){	
+			if(userRoles[i].roleID == roleId){
 				hasAccess = true;
 				break;
 			}

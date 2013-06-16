@@ -34,4 +34,6 @@ public class DBBean {
     
     public static final String SHIP = "ship";
     
+    public static final String BORROWING = "borrowing";
+    
 }
