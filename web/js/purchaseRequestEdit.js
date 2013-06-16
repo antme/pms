@@ -53,7 +53,7 @@ var model = kendo.data.Model.define({
 		eqcostProductType: {
 			editable : false
 		},
-		eqcostAvailableAmount{
+		eqcostAvailableAmount: {
 			editable : false
 		}
 	}

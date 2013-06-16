@@ -75,6 +75,8 @@ $(document).ready(function() {
 		pageable : true,
 		editable : "popup",
 		selectable : "multiple",
+		height: "500px",
+
 		toolbar : [ {
 			name : "create",
 			text : "创建用户"
