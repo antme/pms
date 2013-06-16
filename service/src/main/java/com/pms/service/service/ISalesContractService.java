@@ -37,4 +37,6 @@ public interface ISalesContractService {
 	public Map<String, Object> getSCAndCustomerInfo(Map<String, Object> params);
 	
 	public Map<String, Object> getSCeqByIds(Map<String, Object> params);
+	
+	public Map<String, Object> listSCByProject(Map<String, Object> params);
 }

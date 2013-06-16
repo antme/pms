@@ -427,4 +427,22 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}
 		return dao.list(query, DBBean.EQ_COST);
 	}
+
+	@Override
+	public Map<String, Object> listSCByProject(Map<String, Object> params) {
+		String pId = (String) params.get(SalesContractBean.SC_PROJECT_ID);
+		Map<String, Object> project = dao.findOne(ApiConstants.MONGO_ID, pId, DBBean.PROJECT);
+		Map<String, Object> customer = dao.findOne(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_CUSTOMER), DBBean.CUSTOMER);
+		String cName = (String) customer.get(CustomerBean.NAME);
+
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(SalesContractBean.SC_PROJECT_ID, pId);
+		query.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE});
+		Map<String, Object> result = dao.list(query, DBBean.SALES_CONTRACT);
+		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+		for (Map<String, Object> sc : resultList){
+			sc.put(ProjectBean.PROJECT_CUSTOMER, cName);
+		}
+		return result;
+	}
 }

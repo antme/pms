@@ -125,6 +125,12 @@ public class SalesContractController extends AbstractController {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.getSCeqByIds(params), request, response);
     }
+    
+    @RequestMapping("/listbyproject")
+    public void listSCByProject(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.listSCByProject(params), request, response);
+    }
 
 	public ISalesContractService getSalesContractService() {
 		return salesContractService;
