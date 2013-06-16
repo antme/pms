@@ -57,4 +57,18 @@ public interface IPurchaseContractService {
     public void deletePurchaseRequest(Map<String, Object> order);
 
     public Map<String, Object> getBackRequestForSelect(HashMap<String, Object> parserJsonParameters);
+
+    public Map<String, Object> listRepositoryRequests();
+
+    public void addRepositoryRequest(HashMap<String, Object> parserListJsonParameters);
+
+    public Map<String, Object> getRepositoryRequest(HashMap<String, Object> parserListJsonParameters);
+
+    public void deleteRepositoryRequest(HashMap<String, Object> parserJsonParameters);
+
+    public void updateRepositoryRequest(HashMap<String, Object> parserListJsonParameters);
+
+    public Map<String, Object> approveRepositoryRequest(HashMap<String, Object> parserJsonParameters);
+
+    public Map<String, Object> rejectRepositoryRequest(HashMap<String, Object> parserJsonParameters);
 }

@@ -383,7 +383,54 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
 
-    
+    @Override
+    public Map<String, Object> listRepositoryRequests() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public void addRepositoryRequest(HashMap<String, Object> parserListJsonParameters) {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    @Override
+    public Map<String, Object> getRepositoryRequest(HashMap<String, Object> parserListJsonParameters) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public void deleteRepositoryRequest(HashMap<String, Object> parserJsonParameters) {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    @Override
+    public void updateRepositoryRequest(HashMap<String, Object> parserListJsonParameters) {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    @Override
+    public Map<String, Object> approveRepositoryRequest(HashMap<String, Object> parserJsonParameters) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public Map<String, Object> rejectRepositoryRequest(HashMap<String, Object> parserJsonParameters) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
     public ISalesContractService getScs() {
         return scs;
     }
@@ -403,8 +450,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         this.backService = backService;
     }
 
-    
-    
     
     
 

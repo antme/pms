@@ -1,4 +1,4 @@
-var url = "/service/purcontract/request/list";
+var listUrl = "/service/purcontract/request/list";
 var approveUrl = "/service/purcontract/request/approve";
 var rejectUrl = "/service/purcontract/request/reject";
 var cancelUrl = "/service/purcontract/request/cancel";
@@ -7,7 +7,7 @@ var cancelUrl = "/service/purcontract/request/cancel";
 var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
-			url : url,
+			url : listUrl,
 			dataType : "jsonp"
 		}
 	},
@@ -23,11 +23,6 @@ $(document).ready(function() {
 			dataSource : dataSource,
 			pageable : true,
 			selectable : "row",
-			width : "1000px",
-			dataBound : function(e) {
-				kendo.ui.progress($("#grid"), false);
-			},
-
 			columns : [ {
 				field : "purchaseRequestCode",
 				title : "采购申请编号"
@@ -77,44 +72,6 @@ $(document).ready(function() {
 	}
 
 });
-
-function checkStatus(data) {
-	if (data._id !== "") {
-		requestDataItem.set("_id", data._id);
-	}
-}
-
-function approveStatusCheck(response) {
-	alert("操作成功");
-	dataSource.read();
-}
-
-
-function approve() {
-	process(approveUrl);
-}
-
-function cancel(){
-	process(cancelUrl);
-}
-
-
-function process(url){
-
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	if (row) {
-		var param = {
-			"_id" : row._id
-		};
-		postAjaxRequest(url, param,
-				approveStatusCheck);
-
-	}
-}
-
-function reject() {
-	process(rejectUrl);
-}
 
 function edit() {
 	// 如果是从订单列表页点击edit过来的数据
