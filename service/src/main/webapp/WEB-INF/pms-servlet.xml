@@ -92,4 +92,9 @@
         <property name="shipService" ref="shipService"></property>
     </bean>  
 
+    <bean name="borrowingController" class="com.pms.service.controller.BorrowingController"
+        id="borrowingController">
+        <property name="borrowingService" ref="borrowingService"></property>
+    </bean>  
+
 </beans>

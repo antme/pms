@@ -1,4 +1,4 @@
-var contractCode, model, eqDataSource, crudServiceBaseUrl = "../service";
+var model, eqDataSource, crudServiceBaseUrl = "../service";
 
 var ship = kendo.data.Model.define( {
     id: "_id",
@@ -79,7 +79,7 @@ $(document).ready(function() {
         	model.set("customer", dataItem.customer);
         	model.set("contractCode", dataItem.contractCode);
         	
-        	salesContractId = this.value();
+        	var salesContractId = this.value();
         	
         	eqDataSource = new kendo.data.DataSource({
         	    transport: {

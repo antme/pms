@@ -171,6 +171,47 @@ public class PurchaseContractController extends AbstractController {
     public void rejectPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.rejectPurchaseOrder(parserJsonParameters(request, false)), request, response);
     }
+    
+    @RequestMapping("/repository/list")
+    public void listRepositoryRequests(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listRepositoryRequests(), request, response);
+    }
+
+    @RequestMapping("/repository/add")
+    public void addRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
+        pService.addRepositoryRequest(parserListJsonParameters(request, false));
+        responseWithData(null, request, response, "save_success");
+    }
+    
+    @RequestMapping("/repository/get")
+    public void getRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.getRepositoryRequest(parserListJsonParameters(request, false)), request, response);
+    }
+
+    @RequestMapping("/repository/delete")
+    public void deleteRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
+        pService.deleteRepositoryRequest(parserJsonParameters(request, false));
+        responseWithData(null, request, response);
+    }
+
+    @RequestMapping("/repository/update")
+    public void updateRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
+        pService.updateRepositoryRequest(parserListJsonParameters(request, false));
+        responseWithData(null, request, response, "save_success");
+    }
+
+    @RequestMapping("/repository/approve")
+    public void approveRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.approveRepositoryRequest(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/repository/reject")
+    public void rejectRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.rejectRepositoryRequest(parserJsonParameters(request, false)), request, response);
+    }
+
+    
+    
 
     public IPurchaseContractService getpService() {
         return pService;
