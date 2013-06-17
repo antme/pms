@@ -100,11 +100,19 @@ var sumDataSource = new kendo.data.DataSource({
 
 $(document).ready(function() {
 
+	console.log(popupParams);
+	
 	// 如果是编辑
-	if (redirectParams) {
+	if (redirectParams || popupParams) {
 		$("#purchase-back-select").hide();
 		$("#purchase-request-edit-item").show();
-		postAjaxRequest(editUrl, redirectParams, edit);
+		
+		if(popupParams){
+			postAjaxRequest(editUrl, popupParams, edit);
+			$("#popup button").hide();
+		}else{
+			postAjaxRequest(editUrl, redirectParams, edit);
+		}
 	} else {
 		$("#purchase-back-select").show();
 		$("#purchase-request-edit-item").hide();
