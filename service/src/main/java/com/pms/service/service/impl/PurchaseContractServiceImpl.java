@@ -175,7 +175,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
      */
     public Map<String, Object> listBackRequestForSelect() {
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseBack.pbStatus, PurchaseStatus.submited);
+        query.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
 
         query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode});
 
