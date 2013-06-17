@@ -2,7 +2,7 @@ package com.pms.service.mockbean;
 
 import java.math.BigDecimal;
 
-public class PurchaseRequest extends PurchaseBean {
+public class PurchaseOrder extends PurchaseBean {
 
     private BigDecimal requestedTotalMoney;
 

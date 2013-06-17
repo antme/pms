@@ -110,7 +110,7 @@ $(document).ready(function() {
 		$("#purchase-request-edit-item").hide();
 		//如果是新增
 		$("#purchaseBackSelect").kendoDropDownList({
-			dataTextField : "code",
+			dataTextField : "pbCode",
 			dataValueField : "_id",
 			dataSource : {
 				transport : {
@@ -137,55 +137,22 @@ function checkStatus(data) {
 	loadPage("purchaseRequestByAssistant", null);
 }
 
-function selectBackRequest() {
-	if (selectBackId) {
-		// 服务器查询数据并回调loadBackRequest
-		postAjaxRequest(getSelectUrl, { _id : selectBackId }, loadBackRequest);
-	} else {
-		alert("暂时没有可选的备货申请")
-	}
-}
 
-function loadBackRequest(data) {
-
-	$("#purchase-request-edit-item").show();
-
-	// 把完整的采购申请赋值给requestDataItem
-	requestDataItem = data;
-
-	console.log(requestDataItem);
-	// 初始化数据
-	if (!requestDataItem.purchaseOrderCode) {
-		requestDataItem.purchaseOrderCode = "";
-	}
-
-	for (i in requestDataItem.eqcostList) {
-		requestDataItem.eqcostList[i].eqcostRequestedAmount = requestDataItem.eqcostList[i].backTotalCount;
-		requestDataItem.eqcostList[i].eqcostAvailableAmount = requestDataItem.eqcostList[i].eqcostLeftAmount;
-		requestDataItem.eqcostList[i].eqcostApplyAmount  = requestDataItem.eqcostList[i].backTotalCount;
-	}
-	
-	// // 新增，所以设置_id为空
-	requestDataItem._id = "";
-	edit();
-
-}
-
-function submitOrder(status) {
+function save(status) {
 	if(!requestDataItem.status){
 		requestDataItem.status = "草稿";
 	}
+	
 	if(status){
 		requestDataItem.status = status;
 	}
 	
-	if(itemDataSource.at(0)){
+	if(itemDataSource.at(0)){		
 		//force set haschanges = true
 		itemDataSource.at(0).set("uid", kendo.guid());
 	}
 	
-	requestDataItem.backRequestCode = requestDataItem.code;
-	
+
 	console.log(requestDataItem);
 	// 同步数据
 	itemDataSource.sync();
@@ -222,6 +189,43 @@ function sumOrders(e) {
 
 }
 
+
+function selectBackRequest() {
+	if (selectBackId) {
+		// 服务器查询数据并回调loadBackRequest
+		postAjaxRequest(getSelectUrl, { _id : selectBackId }, loadBackRequest);
+	} else {
+		alert("暂时没有可选的备货申请")
+	}
+}
+
+function loadBackRequest(data) {
+	
+	$("#purchase-request-edit-item").show();
+	// 把完整的采购申请赋值给requestDataItem
+	requestDataItem = data;
+
+	//新增时候初始化数据
+	for (i in requestDataItem.eqcostList) {
+		requestDataItem.eqcostList[i].eqcostRequestedAmount = requestDataItem.eqcostList[i].backTotalCount;
+		requestDataItem.eqcostList[i].eqcostAvailableAmount = requestDataItem.eqcostList[i].eqcostLeftAmount;
+		requestDataItem.eqcostList[i].eqcostApplyAmount  = requestDataItem.eqcostList[i].backTotalCount;
+		requestDataItem.eqcostList[i].eqcostProductUnitPrice = requestDataItem.eqcostList[i].eqcostBasePrice;
+		requestDataItem.eqcostList[i].eqcostApplyAmount = requestDataItem.eqcostList[i].pbTotalCount;
+	}
+	
+	requestDataItem.backRequestId = requestDataItem._id;
+	requestDataItem.backRequestCode = requestDataItem.pbCode;
+	requestDataItem.salesContractId = requestDataItem.scId;
+	requestDataItem.salesContractCode = requestDataItem.scCode;
+	
+	
+	// // 新增，所以设置_id为空
+	requestDataItem._id = "";	
+	console.log(requestDataItem);
+	edit();
+}
+
 function edit(data) {
 
 	// 初始化空对象
@@ -243,7 +247,7 @@ function edit(data) {
 	$("#purchaseOrderCode").html(dataItem.purchaseOrderCode);
 	$("#projectName").html(dataItem.projectName);
 	$("#projectCode").html(dataItem.projectCode);
-	$("#salesContractCode").html(dataItem.salesContractCode);
+	$("#salesContractCode").html(dataItem.scCode);
 
 	var editKendoGrid = $("#purchase-request-edit-grid").data("kendoGrid");
 	if (!editKendoGrid) {
