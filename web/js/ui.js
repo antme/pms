@@ -1,5 +1,6 @@
 var redirectParams = undefined;
 var redirecPage = undefined;
+var fromPage = undefined;
 var userRoles = undefined;
 var accessRoles = {
 	projectList : "project_management",
@@ -207,6 +208,7 @@ function loadPage(page, parameters) {
 		$(".k-window").hide();
 		$(".k-overlay").hide();
 	}
+	fromPage = redirecPage;
 	redirecPage = page;
 	redirectParams = parameters;
 	
@@ -405,6 +407,16 @@ function checkRoles(){
 		
 	});
 }
+
+function back() {
+
+	if (fromPage) {
+		loadPage(fromPage);
+	} else {
+		loadPage(redirectPage);
+	}
+}
+
 
 String.prototype.endWith = function(s) {
 	if (s == null || s == "" || this.length == 0 || s.length > this.length)

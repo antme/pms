@@ -1,8 +1,8 @@
 //添加采购申请的时候先选择备货申请
-var selectUrl = "/service/purcontract/back/select/list";
+var selectBackUrl = "/service/purcontract/back/select/list";
 var editUrl = "/service/purcontract/request/get";
 var saveUrl =  "/service/purcontract/request/update";
-var addUrl =  "/service/purcontract/order/add";
+var addUrl =  "/service/purcontract/request/add";
 var getSelectUrl = "/service/purcontract/back/get";
 
 //抽象model对象， datasource对象必须绑定一个model为了方便解析parameterMap中需要提交的参数
@@ -57,8 +57,10 @@ var model = kendo.data.Model.define({
 });
 
 // 声明一个总的对象用来传递数据
-var requestDataItem;
-var selectedRequest;
+var requestDataItem = undefined;
+
+//申明选择备货申请的id
+var selectBackId = undefined;
 
 
 var itemDataSource = new kendo.data.DataSource({
@@ -97,56 +99,76 @@ var sumDataSource = new kendo.data.DataSource({
 
 
 $(document).ready(function() {
-		$("#purchaseRequest").kendoDropDownList({
-				dataTextField : "code",
-				dataValueField : "_id",
-				dataSource : {
-					transport : {
-						read : {
-							dataType : "jsonp",
-							url : selectUrl
-						}
+
+	// 如果是编辑
+	if (redirectParams) {
+		$("#purchase-back-select").hide();
+		$("#purchase-request-edit-item").show();
+		postAjaxRequest(editUrl, redirectParams, edit);
+	} else {
+		$("#purchase-back-select").show();
+		$("#purchase-request-edit-item").hide();
+		//如果是新增
+		$("#purchaseBackSelect").kendoDropDownList({
+			dataTextField : "code",
+			dataValueField : "_id",
+			dataSource : {
+				transport : {
+					read : {
+						dataType : "jsonp",
+						url : selectBackUrl
 					}
-				},
-
-				// 当用户选择不同的采购申请时候赋值给requestDataItem对象
-				select : function(e) {
-					selectedRequest = this.dataSource.at(e.item.index());
 				}
-			});
-
-		    //如果是编辑
-			if (redirectParams) {
-				postAjaxRequest(editUrl, redirectParams, edit);
+			},
+			dataBound : function(e) {
+				if (this.dataSource.at(0)) {
+					selectBackId = this.dataSource.at(0)._id;
+				}
+			},
+			// 当用户选择不同的采购申请时候赋值给requestDataItem对象
+			select : function(e) {
+				selectBackId = this.dataSource.at(e.item.index())._id;
 			}
+		});
+	}
 });
 
 function checkStatus(data) {
 	loadPage("purchaseRequestByAssistant", null);
 }
 
-function showOrderWindow() {
-
-	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
-	var kendoGrid = $("#purchaseRequest").data("kendoDropDownList");
-	
-	if (!selectedRequest) {
-		selectedRequest = kendoGrid.dataSource.at(0);
+function selectBackRequest() {
+	if (selectBackId) {
+		// 服务器查询数据并回调loadBackRequest
+		postAjaxRequest(getSelectUrl, { _id : selectBackId }, loadBackRequest);
+	} else {
+		alert("暂时没有可选的备货申请")
 	}
-
-	postAjaxRequest(getSelectUrl, {_id: selectedRequest._id}, loadRequest);
 }
 
-function loadRequest(data){
+function loadBackRequest(data) {
+
+	$("#purchase-request-edit-item").show();
+
+	// 把完整的采购申请赋值给requestDataItem
 	requestDataItem = data;
+
 	console.log(requestDataItem);
+	// 初始化数据
 	if (!requestDataItem.purchaseOrderCode) {
 		requestDataItem.purchaseOrderCode = "";
 	}
 
+	for (i in requestDataItem.eqcostList) {
+		requestDataItem.eqcostList[i].eqcostRequestedAmount = requestDataItem.eqcostList[i].backTotalCount;
+		requestDataItem.eqcostList[i].eqcostAvailableAmount = requestDataItem.eqcostList[i].eqcostLeftAmount;
+		requestDataItem.eqcostList[i].eqcostApplyAmount  = requestDataItem.eqcostList[i].backTotalCount;
+	}
+	
 	// // 新增，所以设置_id为空
-	requestDataItem._id="";
+	requestDataItem._id = "";
 	edit();
+
 }
 
 function submitOrder(status) {
@@ -162,10 +184,7 @@ function submitOrder(status) {
 		itemDataSource.at(0).set("uid", kendo.guid());
 	}
 	
-	requestDataItem.eqcostRequestedAmoun = requestDataItem.eqcostApplyAmount;
 	requestDataItem.backRequestCode = requestDataItem.code;
-	requestDataItem.backRequestCode = requestDataItem.code;
-	requestDataItem.salesContractCode = requestDataItem.salesContract_code;
 	
 	console.log(requestDataItem);
 	// 同步数据
@@ -194,7 +213,7 @@ function sumOrders(e) {
 		eqcostApplyAmount = e.values.eqcostApplyAmount
 	}
 
-	var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
+	var grid1 = $("#purchase-request-edit-grid").data("kendoGrid");
 	// will trigger dataBound event
 	e.model.set("eqcostContractTotalMoney", eqcostBasePrice * eqcostApplyAmount);
 	e.model.set("requestedTotalMoney", eqcostProductUnitPrice * eqcostApplyAmount);
@@ -208,7 +227,6 @@ function edit(data) {
 	// 初始化空对象
 	var dataItem = new model();
 	if (data) {
-		$("#purchase-request-select").hide();
 		requestDataItem = data;
 	}
 	if (requestDataItem) {
@@ -226,11 +244,10 @@ function edit(data) {
 	$("#projectName").html(dataItem.projectName);
 	$("#projectCode").html(dataItem.projectCode);
 	$("#salesContractCode").html(dataItem.salesContractCode);
-	$("#purchaseorder-edit-item").show();
 
-	var editKendoGrid = $("#purchaseorder-edit-grid").data("kendoGrid");
+	var editKendoGrid = $("#purchase-request-edit-grid").data("kendoGrid");
 	if (!editKendoGrid) {
-		$("#purchaseorder-edit-grid")
+		$("#purchase-request-edit-grid")
 				.kendoGrid(
 						{
 							dataSource : itemDataSource,
@@ -287,10 +304,10 @@ function edit(data) {
 							width : "950px",
 							save : sumOrders,
 							dataBound : function(e) {
-								var kendoGrid = $("#purchaseorder-sum-grid")
+								var kendoGrid = $("#purchase-request-sum-grid")
 										.data("kendoGrid");
 								if (!kendoGrid) {
-									$("#purchaseorder-sum-grid").kendoGrid({
+									$("#purchase-request-sum-grid").kendoGrid({
 										columns : [ {
 											field : "requestedTotalMoney",
 											title : "申请金额"
@@ -383,7 +400,7 @@ function edit(data) {
 								}
 
 								if (refresh) {
-									var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
+									var grid1 = $("#purchase-request-edit-grid").data("kendoGrid");
 									grid1.refresh();
 								}
 
@@ -413,7 +430,7 @@ function edit(data) {
 											numbersPercentOfContract : totalPercent,
 											moneyPercentOfContract : requestActureMoneyPercent
 										});
-								kendoGrid = $("#purchaseorder-sum-grid").data(
+								kendoGrid = $("#purchase-request-sum-grid").data(
 										"kendoGrid");
 								kendoGrid.setDataSource(sumDataSource);
 

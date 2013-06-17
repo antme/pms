@@ -98,7 +98,6 @@ $(document).ready(function() {
 		optionLabel : "选择项目状态...",
 		dataSource : proStatusItems
 	});
-	var proCategoryItems = [{ text: "产品", value: "1" }, { text: "工程", value: "2" }, { text: "服务", value: "3" }];
 	$("#projectType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
