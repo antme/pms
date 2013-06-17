@@ -18,6 +18,7 @@ import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseContract;
+import com.pms.service.mockbean.PurchaseRequestBean;
 import com.pms.service.mockbean.PurchaseRequestOrder;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
@@ -169,7 +170,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> listBackRequestForSelect() {
         Map<String, Object> query = new HashMap<String, Object>();
 //        query.put(PurchaseBack.status, PurchaseBack.status_approved);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.code, PurchaseBack.salesContract_code });
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode});
         return dao.list(query, DBBean.PURCHASE_BACK);
     }
     
@@ -237,7 +238,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> listApprovedPurchaseRequestForSelect(){
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseBack.status, APPROVED);
+        query.put(PurchaseRequestBean.STATUS, APPROVED);
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "purchaseRequestCode" });
         return dao.list(query, DBBean.PURCHASE_REQUEST);
     }

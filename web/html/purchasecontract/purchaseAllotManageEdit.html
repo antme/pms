@@ -25,28 +25,37 @@
 		<h2>审核调拨申请</h2>
 		<div id="form-container">
 			<div>
-				<table style="width: 80%">
+				<table style="width: 90%">
 					<tr>
 						<td>项目名： <span data-bind="text: projectName"></span></td>	
 						<td>项目编号： <span data-bind="text: projectCode"></span></td>
 						<td>合同编号： <span data-bind="text: contractCode"></span></td>
 						<td>客户名称： <span data-bind="text: customer"></span></td>
-						<td>申请编号：<span data-bind="text: code" ></span></td>
-						<td>状态：<span data-bind="text: status" ></span></td>
+						<td>备货编号：<span data-bind="text: pbCode" ></span></td>
+					</tr>
+				</table>
+				<hr>
+				<table style="width: 90%">
+					<tr>
+						<td>调拨编号：<span data-bind="text: paCode" ></span></td>
+						<td>调拨状态：<span data-bind="text: paStatus" ></span></td>
+						<td>提交时间：<span data-bind="text: paSubmitDate" ></span></td>
+						<td>批准时间：</td>
+						<td></td>
 					</tr>
 				</table>
 			</div>
 			<hr>
 			<div>
 				<ul>
-					<li>申请部门: <input type="text" class="k-textbox foredit" data-bind="value: department" /></li>
-					<li>采购类别: <select data-bind="value: type" class="foredit" >
+					<li>申请部门: <input type="text" class="k-textbox foredit" data-bind="value: pbDepartment" /></li>
+					<li>采购类别: <select data-bind="value: pbType" class="foredit" >
 										<option value="上海代理产品采购">上海代理产品采购</option>
 										<option value="同方自主产品采购">同方自主产品采购</option>
 										<option value="其它渠道采购">其它渠道采购</option>
 								</select>
 					</li>
-					<li>到货要求日期: <input data-role="datepicker"  data-format="yyyymmdd" data-bind="value: planDate" class="foredit"  /></li>
+					<li>到货要求日期: <input data-role="datepicker" data-bind="value: pbPlanDate" class="foredit"  /></li>
 				</ul>
 			</div>
 			<br><br>
@@ -57,13 +66,13 @@
             <br><br>
             <div>
             	<label>备注:</label>
-            	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: comment" ></textarea>
+            	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: paComment" ></textarea>
             </div>
             <br>
             <div>
-            	<input class="submitform" type="button" value="批准">
-            	<input class="submitform" type="button" value="拒绝">
-            	<input class="submitform" type="button" value="取消">
+            	<input class="submitform foreditbt" type="button" value="批准">
+            	<input class="submitform foreditbt" type="button" value="拒绝">
+            	<input class="submitform foreditbt" type="button" value="取消">
             </div>
 		</div>
 </div>		

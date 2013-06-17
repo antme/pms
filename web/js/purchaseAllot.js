@@ -10,14 +10,14 @@ $(document).ready(function () {
 				editable : false,
 				nullable : true
 			},
-			code:{},
-			department:{},
-			submitDate:{},
-			planDate:{},
-			type:{},
-			status:{},
-			comment:{},
-			money:{},
+			pbCode:{},
+			pbDepartment:{},
+			pbSubmitDate:{},
+			pbPlanDate:{},
+			pbType:{},
+			pbStatus:{},
+			pbComment:{},
+			pbMoney:{},
 			eqcostList:{},
 			projectCode : {},
 			projectName : {},
@@ -26,8 +26,8 @@ $(document).ready(function () {
 			contractCode : {},
 			contractAmount:{},
 			backRequestCount:{},
-			purchaseOrderCode: {},
-			purchaseContractCode: {}
+			poCode: {},
+			pcCode: {}
 		}
 	});
 
@@ -52,17 +52,15 @@ $(document).ready(function () {
 	    selectable : "row",
 	    toolbar: kendo.template($("#template").html()),
 	    columns: [
-	        { field: "code", title: "备货编号" },
-	        { field: "type", title:"采购类别" ,width:"120px"},
+	        { field: "pbCode", title: "备货编号" ,width:"125px"},
+	        { field: "pbType", title:"采购类别" ,width:"120px"},
 	        { field: "contractCode", title:"销售合同编号" },
-	        /*{ field: "purchaseOrderCode", title:"采购订单编号" },
-	        { field: "purchaseContractCode", title:"采购合同编号" },*/
 	        { field: "customer", title:"客户名" },
 	        { field: "projectManager", title:"PM" },
-	        { field: "status", title:"申请状态" },
-	        { field: "approveDate", title:"批准时间" },
-	        { field: "money", title:"金额" },
-	        { field: "backRequestCount", title:"备货单数量" }
+	        { field: "pbStatus", title:"申请状态" },
+	        { field: "pbSubmitDate", title:"提交时间" },
+	        { field: "pbMoney", title:"金额" },
+	        { field: "backRequestCount", title:"合同下备货单数量" }
 	    ]
 	});
 	
@@ -76,16 +74,6 @@ function generateAllot() {
 		loadPage("purchaseAllotEdit",{backId:row._id});
 	}
 }
-/*function editAllot(){
-	var row = getSelectedRowDataByGrid("grid");
-	if (!row) {
-		alert("点击列表可以选中数据");
-	} else if(row.status == "调拨中"){
-		loadPage("purchaseAllotEdit",{_id:row._id});
-	}else{
-		alert("请选择‘调拨中’的数据");
-	}
-}*/
 
 function generateRequest(){}
 

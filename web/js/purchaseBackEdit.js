@@ -35,36 +35,33 @@ $(document).ready(function () {
             eqcostLeftAmount: {
             	editable : false
             },
-            backTotalCount: {
+            pbTotalCount: {
             	type: "number",
-            	 validation: { // validation rules
-                     //required: true, // the field is required
-                     min: 0 // the minimum value is 1
-                 },
-            }
+            	 validation: {
+                     min: 0
+                 }
+            },
+            pbComment: {}
 		}
 	});	
 	var myModel = kendo.data.Model.define({
 		id : "_id",
 		fields : {
-			department: {},
-			submitDate: {},
-			approveDate: {},
-			planDate: {},
-			type: {},
-			status: {},
-			specialRequire: {},
-			comment: {},
-			money: {},
+			pbCode:{},
+			pbDepartment:{},
+			pbSubmitDate:{},
+			pbPlanDate:{},
+			pbType:{},
+			pbStatus:{},
+			pbComment:{},
+			pbMoney:{},
 			projectName: {},
 			projectCode: {},
 			projectManager: {},
 			customer: {},
-			salesContract_id:{},
-			scontractCode: {},
-			contractAmount: {},
-			purchaseOrderCode: {},
-			purchaseContractCode: {}
+			scId:{},
+			contractCode: {},
+			contractAmount: {}
 		}
 	});
 	
@@ -75,9 +72,9 @@ $(document).ready(function () {
 			},
 			aggregate: [ 
 			    { field: "eqcostNo", aggregate: "count" },
-			    { field: "backTotalCount", aggregate: "sum" },
+			    { field: "pbTotalCount", aggregate: "sum" },
 			    { field: "eqcostLeftAmount", aggregate: "sum" },
-			    { field: "eqcostAmount", aggregate: "count" }
+			    { field: "eqcostAmount", aggregate: "sum" }
 			]			
 		},
 	    columns: [
@@ -86,10 +83,10 @@ $(document).ready(function () {
 			{ field: "eqcostProductName", title: "产品名称" },
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
-			{ field: "backTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
+			{ field: "pbTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
 			{ field: "eqcostLeftAmount", title: "可申请数量",footerTemplate: "总共: #=sum#"},
-			{ field: "eqcostAmount", title: "总数" ,footerTemplate: "总共: #=count#"},
-			{ field: "eqcostBasePrice", title: "预估单价￥" },
+			{ field: "eqcostAmount", title: "总数" ,footerTemplate: "总共: #=sum#"},
+			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostBrand", title: "品牌" },
 			{ field: "eqcostMemo", title: "备注" }
 	  	],	 
@@ -125,7 +122,7 @@ $(document).ready(function () {
 	$("#searchbt").click(function(){
 		var vv = $("#searchfor").val();
 		if(vv != ""){
-			postAjaxRequest(baseUrl+"/prepare", {salesContract_id:vv}, edit);
+			postAjaxRequest(baseUrl+"/prepare", {scId:vv}, edit);
 		}else{
 			alert("请选择合同编号");
 		}
@@ -133,8 +130,9 @@ $(document).ready(function () {
 	
 	function edit(e){
 		if(e){
-			if(e.status == "已提交"){
+			if(e.pbStatus == "已提交"){
 				$(".foredit").attr("disabled","disabled");
+				$(".foreditbt").hide();
 			}
 		}
 		currentObj = new myModel(e);
@@ -144,6 +142,7 @@ $(document).ready(function () {
 	function saveSuccess(){
 		location.reload();
 	}
+	
 	if(redirectParams){
 		var backId = redirectParams._id;
 		var saleId = redirectParams.salesContract_id;
@@ -151,8 +150,8 @@ $(document).ready(function () {
 		if(backId) {
 			postAjaxRequest(baseUrl+"/load", {_id:backId}, edit);
 		}else if(saleId){
-			postAjaxRequest(baseUrl+"/prepare", {salesContract_id:saleId}, edit);
-		}		
+			postAjaxRequest(baseUrl+"/prepare", {scId:saleId}, edit);
+		}
 	}
 
 	

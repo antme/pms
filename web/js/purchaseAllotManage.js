@@ -10,24 +10,18 @@ $(document).ready(function () {
 				editable : false,
 				nullable : true
 			},
-			code:{},
-			department:{},
-			submitDate:{},
-			planDate:{},
-			type:{},
-			status:{},
-			comment:{},
-			money:{},
+			paCode:{},
+			paStatus:{},
+			paSubmitDate:{},
+			paApproveDate:{},
+			pbCode:{},
 			eqcostList:{},
 			projectCode : {},
 			projectName : {},
 			projectManager : {},
 			customer : {},
 			contractCode : {},
-			contractAmount:{},
-			backRequestCount:{},
-			purchaseOrderCode: {},
-			purchaseContractCode: {}
+			contractAmount:{}
 		}
 	});
 
@@ -57,14 +51,13 @@ $(document).ready(function () {
 	    selectable : "row",
 	    toolbar: kendo.template($("#template").html()),
 	    columns: [
-	        { field: "code", title: "申请编号" },
+	        { field: "paCode", title: "调拨编号" },
 	        { field: "contractCode", title:"销售合同编号" },
-	        /*{ field: "purchaseOrderCode", title:"采购订单编号" },
-	        { field: "purchaseContractCode", title:"采购合同编号" },*/
 	        { field: "customer", title:"客户名" },
 	        { field: "projectManager", title:"PM" },
-	        { field: "status", title:"申请状态" },
-	        { field: "approveDate", title:"批准时间" }
+	        { field: "paStatus", title:"调拨状态" },
+	        { field: "paSubmitDate", title:"提交时间" },
+	        { field: "paApproveDate", title:"批准时间" }
 	    ]
 	});
 	

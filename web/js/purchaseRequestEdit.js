@@ -98,7 +98,7 @@ var sumDataSource = new kendo.data.DataSource({
 
 $(document).ready(function() {
 		$("#purchaseRequest").kendoDropDownList({
-				dataTextField : "code",
+				dataTextField : "pbCode",
 				dataValueField : "_id",
 				dataSource : {
 					transport : {
