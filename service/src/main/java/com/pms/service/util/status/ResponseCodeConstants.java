@@ -19,4 +19,6 @@ public class ResponseCodeConstants {
     public static final String  ADMIN_DELETE_DISABLED = "admin_delete_disabled";
     public static final String  ADMIN_GROUP_EDIT_DISABLED = "admin_group_edit_disabled";
     public static final String  ADMIN_GROUP_DELETE_DISABLED = "admin_group_delete_disabled";
+    
+    public static final String PROJECT_ID_IS_EMPTY = "project_id_is_empty";
 }

@@ -174,10 +174,11 @@ $(document).ready(function() {
 	});
 	
 	//合同签订日期控件
-	$("#contractDate").kendoDatePicker({
+	var ddd = $("#contractDate").kendoDatePicker({
 		format: "yyyy/MM/dd",
 		parseFormats: ["yyyy/MM/dd"]
 	});
+	//ddd.value("2013/06/06");
 	
 	$("#contractAmount").kendoNumericTextBox({
 		min:0
