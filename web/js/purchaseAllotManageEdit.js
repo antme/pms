@@ -35,18 +35,16 @@ $(document).ready(function () {
             eqcostLeftAmount: {
             	editable : false
             },
-            backTotalCount: {
-            	type: "number",
-            	 validation: { // validation rules
-                     //required: true, // the field is required
-                     min: 0 // the minimum value is 1
-                 }
+            pbTotalCount: {
+            	editable : false
             },
-            allotCount:{
+            pbLeftCount: {
+            	editable : false
+            },
+            paCount:{
             	type: "number",
-           	 	validation: { // validation rules
-                    //required: true, // the field is required
-                    min: 0 // the minimum value is 1
+           	 	validation: {
+                    min: 0
                 }
            }
 		}
@@ -54,24 +52,23 @@ $(document).ready(function () {
 	var myModel = kendo.data.Model.define({
 		id : "_id",
 		fields : {
-			department: {},
-			submitDate: {},
-			approveDate: {},
-			planDate: {},
-			type: {},
-			status: {},
-			specialRequire: {},
-			comment: {},
-			money: {},
+			paCode:{},
+			paStatus:{},
+			paSubmitDate: {},
+			paApproveDate: {},
+			pbDepartment: {},
+			pbType: {},
+			pbStatus: {},
+			pbSpecialRequire: {},
+			pbComment: {},
+			pbMoney: {},
 			projectName: {},
 			projectCode: {},
 			projectManager: {},
 			customer: {},
-			salesContract_id:{},
-			scontractCode: {},
+			scId:{},
+			contractCode: {},
 			contractAmount: {},
-			purchaseOrderCode: {},
-			purchaseContractCode: {}
 		}
 	});
 	
@@ -82,9 +79,9 @@ $(document).ready(function () {
 			},
 			aggregate: [ 
 			    { field: "eqcostNo", aggregate: "count" },
-			    { field: "allotCount", aggregate: "sum" },
-			    { field: "backTotalCount", aggregate: "sum" },
-			    { field: "eqcostAmount", aggregate: "sum" }
+			    { field: "paCount", aggregate: "sum" },
+			    { field: "pbLeftCount", aggregate: "sum" },
+			    { field: "pbTotalCount", aggregate: "sum" }
 			]			
 		},
 	    columns: [
@@ -93,9 +90,10 @@ $(document).ready(function () {
 			{ field: "eqcostProductName", title: "产品名称" },
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
-			{ field: "allotCount", title: "调拨数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
-			{ field: "backTotalCount", title: "备货数量",footerTemplate: "总共: #=sum#"},
-			{ field: "eqcostBasePrice", title: "预估单价￥" },
+			{ field: "paCount", title: "调拨数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
+			{ field: "pbLeftCount", title: "备货剩余数量",footerTemplate: "总共: #=sum#"},
+			{ field: "pbTotalCount", title: "备货数量",footerTemplate: "总共: #=sum#"},
+			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostBrand", title: "品牌" },
 			{ field: "eqcostMemo", title: "备注" }
 	  	],	 
@@ -116,22 +114,21 @@ $(document).ready(function () {
 	});
 	$(".foredit ").attr("disabled","disabled");
 	function edit(e){
+		if(e.paStatus !="已提交"){
+			$(".foreditbt").hide();
+		}
+		
 		currentObj = new myModel(e);
 		kendo.bind($("#form-container"), currentObj);
 	}
-	
 	function saveSuccess(){
 		loadPage("purchaseAllotManage");
 	}
-	
-	
 	if(redirectParams){
 		if(redirectParams._id) {
 			postAjaxRequest(baseUrl+"/allot/load", {_id:redirectParams._id}, edit);
 		}	
 	}
-
-	
 	
 });
 

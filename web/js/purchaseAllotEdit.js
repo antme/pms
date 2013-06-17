@@ -35,38 +35,40 @@ $(document).ready(function () {
             eqcostLeftAmount: {
             	editable : false
             },
-            backTotalCount: {
+            pbTotalCount: {
             	editable : false
             },
-            backUsedCount: {
-            	type: "number",
-           	 	validation: {
-                    min: 0
-                },
-           }
+            pbLeftCount: {
+            	editable : false
+           },
+           paCount:{
+        	   type: "number",
+               validation: {
+                   min: 0
+               }
+           },
+           pbSubmitDate:{}
 		}
-	});	
+	});
 	var myModel = kendo.data.Model.define({
 		id : "_id",
 		fields : {
-			department: {},
-			submitDate: {},
-			approveDate: {},
-			planDate: {},
-			type: {},
-			status: {},
-			specialRequire: {},
-			comment: {},
-			money: {},
+			pbCode:{},
+			pbDepartment:{},
+			pbSubmitDate:{},
+			pbPlanDate:{},
+			pbType:{},
+			pbStatus:{},
+			pbComment:{},
+			pbMoney:{},
 			projectName: {},
 			projectCode: {},
 			projectManager: {},
 			customer: {},
-			salesContract_id:{},
-			scontractCode: {},
+			scId:{},
+			contractCode: {},
 			contractAmount: {},
-			purchaseOrderCode: {},
-			purchaseContractCode: {}
+			eqcostList:{}
 		}
 	});
 	
@@ -77,8 +79,9 @@ $(document).ready(function () {
 			},
 			aggregate: [ 
 			    { field: "eqcostNo", aggregate: "count" },
-			    { field: "allotCount", aggregate: "sum" },
-			    { field: "backTotalCount", aggregate: "sum" },
+			    { field: "paCount", aggregate: "sum" },
+			    { field: "pbLeftCount", aggregate: "sum" },
+			    { field: "pbTotalCount", aggregate: "sum" },
 			]			
 		},
 	    columns: [
@@ -87,9 +90,10 @@ $(document).ready(function () {
 			{ field: "eqcostProductName", title: "产品名称" },
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
-			{ field: "allotCount", title: "调拨数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
-			{ field: "backTotalCount", title: "本次申请数量", footerTemplate: "总共: #=sum#"},
-			{ field: "eqcostBasePrice", title: "预估单价￥" },
+			{ field: "paCount", title: "调拨数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
+			{ field: "pbLeftCount", title: "备货剩余数量", footerTemplate: "总共: #=sum#"},
+			{ field: "pbTotalCount", title: "备货数量", footerTemplate: "总共: #=sum#"},
+			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostBrand", title: "品牌" },
 			{ field: "eqcostMemo", title: "备注" }
 	  	],	 

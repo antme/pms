@@ -5,10 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.google.gson.Gson;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
+import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
@@ -19,6 +18,7 @@ import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ISalesContractService;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.status.ResponseCodeConstants;
 
 public class SalesContractServiceImpl extends AbstractService implements ISalesContractService {
 
@@ -431,6 +431,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> listSCByProject(Map<String, Object> params) {
 		String pId = (String) params.get(SalesContractBean.SC_PROJECT_ID);
+		if (ApiUtil.isEmpty(pId)){
+			throw new ApiResponseException(String.format("Project id is empty", params), ResponseCodeConstants.PROJECT_ID_IS_EMPTY.toString());
+		}
 		Map<String, Object> project = dao.findOne(ApiConstants.MONGO_ID, pId, DBBean.PROJECT);
 		Map<String, Object> customer = dao.findOne(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_CUSTOMER), DBBean.CUSTOMER);
 		String cName = (String) customer.get(CustomerBean.NAME);

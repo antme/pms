@@ -27,9 +27,6 @@ $(document).ready(function() {
 				field : "purchaseRequestCode",
 				title : "采购申请编号"
 			}, {
-				field : "salesContractCode",
-				title : "客户合同编号"
-			}, {
 				field : "backRequestCode",
 				title : "备货申请编号"
 			}, {
