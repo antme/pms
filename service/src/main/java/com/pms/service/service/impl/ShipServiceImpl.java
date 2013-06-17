@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.pms.service.dbhelper.DBQuery;
+import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ShipBean;
@@ -73,7 +75,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		Map<String, Double> alloeq = purchaseService.getAllotEqCountBySalesContractId(saleId);
 		
 		for (Map.Entry mapEntry : alloeq.entrySet()) {
-			
+			mapEntry.getKey();
 		}
 		
 		List<Map<String, Object>> list = pService.listApprovedPurchaseContractCosts(saleId);
@@ -81,7 +83,14 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		return res;
 	}
 
-	@Override
+	public Map<String, Object> shipedList(Map<String, Object> params) {
+		String saleId = (String) params.get(ShipBean.SHIP_SALES_CONTRACT_ID);
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.EQUAILS, 1));
+		parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, new DBQuery(DBQueryOpertion.EQUAILS, saleId));
+		return dao.list(parameters, DBBean.SHIP);
+	}
+
 	public Map<String, Object> approve(Map<String, Object> params) {
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
         params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
@@ -92,7 +101,6 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         return result;
     }
 
-	@Override
 	public Map<String, Object> reject(Map<String, Object> params) {
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
         params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
