@@ -26,6 +26,7 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISalesContractService;
+import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
@@ -174,8 +175,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
      */
     public Map<String, Object> listBackRequestForSelect() {
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseBack.status, PurchaseBack.status_submited);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.code, PurchaseBack.salesContract_code, PurchaseBack.salesContract_id });
+        query.put(PurchaseBack.pbStatus, PurchaseStatus.submited);
+
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode});
+
         return dao.list(query, DBBean.PURCHASE_BACK);
     }
     
@@ -242,7 +245,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> listApprovedPurchaseRequestForSelect(){
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseBack.status, APPROVED);
+//        query.put(PurchaseRequestBean.STATUS, APPROVED);
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "purchaseRequestCode" });
         return dao.list(query, DBBean.PURCHASE_REQUEST);
     }
