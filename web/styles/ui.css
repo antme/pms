@@ -129,3 +129,11 @@ body {
 .access{
 	display: none;
 }
+
+a{
+    cursor: pointer !important;
+}
+
+#popup{
+	display: none;
+}

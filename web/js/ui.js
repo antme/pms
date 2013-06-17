@@ -1,7 +1,19 @@
+//记录页面跳转参数
 var redirectParams = undefined;
+
+//记录弹出窗口（远程页面）参数
+var popupParams = undefined;
+
+//记录跳转的页面
 var redirecPage = undefined;
+
+//记录跳转前的页面
 var fromPage = undefined;
+
+//用户的权限，用来显示隐藏按钮，菜单等
 var userRoles = undefined;
+
+//定义菜单所需权限，目前写死在JS文件中, KEY对应menus变量中的菜单ID
 var accessRoles = {
 	projectList : "project_management",
 	projectex : "project_management, purchase_request_management",
@@ -22,7 +34,7 @@ var accessRoles = {
 	userman : "user_management"
 };
 
-
+//定义左边菜单
 var menus = [
              {
                  text: "项目管理", id: "projectList", imageUrl: "/images/product.png"
@@ -202,16 +214,18 @@ function getUrlParser(){
 }
 
 
-function loadPage(page, parameters) {
+function loadPage(page, parameters, popupDiv) {
 	
 	if($(".k-window").length>0 && $(".k-overlay").length>0){
 		$(".k-window").hide();
 		$(".k-overlay").hide();
 	}
-	fromPage = redirecPage;
-	redirecPage = page;
-	redirectParams = parameters;
 	
+	if(!popupDiv){
+		fromPage = redirecPage;
+		redirecPage = page;
+		redirectParams = parameters;
+	}
 
 	var uid = kendo.guid();
 
@@ -290,7 +304,12 @@ function loadPage(page, parameters) {
 		$.ajax({
 			url : url,
 			success : function(data) {
-				$("#main_right").html(data);
+				if(popupDiv){
+					$("#"+popupDiv).html(data);
+				}else{
+					$("#main_right").html(data);
+
+				}
 			},
 			error : onAjaxFail
 		});
@@ -414,6 +433,36 @@ function back() {
 		loadPage(fromPage);
 	} else {
 		loadPage(redirectPage);
+	}
+}
+
+
+
+function openRemotePageWindow(options, page, parameter) {
+	var window = $("#popup");
+	$("#popup").show();
+
+	var kendoWindow = window.data("kendoWindow");
+	if (!kendoWindow) {
+		window.kendoWindow({
+			width : options.width,
+			height : options.height,
+			title : options.title,
+			activate : function(e){
+				popupParams = parameter;
+				loadPage(page, null, "popup");
+			},
+			close : function(e){
+				$("#popup").html("")
+				popupParams = undefined;
+			},
+			actions: ["Maximize", "Close"]
+		});
+		kendoWindow = window.data("kendoWindow");
+		kendoWindow.center();
+	} else {
+		kendoWindow.open();
+		kendoWindow.center();
 	}
 }
 

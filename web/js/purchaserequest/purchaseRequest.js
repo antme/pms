@@ -25,7 +25,10 @@ $(document).ready(function() {
 			selectable : "row",
 			columns : [ {
 				field : "purchaseRequestCode",
-				title : "采购申请编号"
+				title : "采购申请编号",
+				template : function(dataItem) {
+					return '<a  class="k-in" onclick="opRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.purchaseRequestCode + '</a>';
+				}
 			}, {
 				field : "backRequestCode",
 				title : "备货申请编号"
@@ -84,5 +87,10 @@ function edit() {
 
 function add(){
 	loadPage("html/purchasecontract/purchaseRequestEdit.html");
+}
+
+function opRequestViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"采购申请信息"};
+	openRemotePageWindow(options, "html/purchasecontract/purchaseRequestEdit.html", {_id : param});
 }
 
