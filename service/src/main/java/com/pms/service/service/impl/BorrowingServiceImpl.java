@@ -8,12 +8,10 @@ import java.util.Map;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
-import com.pms.service.mockbean.AllocateBean;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.BorrowingBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
-import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IBorrowingService;
@@ -50,8 +48,8 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	
 	public Map<String, Object> get(Map<String, Object> params) {
 		Map<String, Object> result = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
-		String inProjectId = result.get(BorrowingBean.BORROW_IN_PROJECT_ID).toString();
-		String outProjectId = result.get(BorrowingBean.BORROW_OUT_PROJECT_ID).toString();
+//		String inProjectId = result.get(BorrowingBean.BORROW_IN_PROJECT_ID).toString();
+//		String outProjectId = result.get(BorrowingBean.BORROW_OUT_PROJECT_ID).toString();
 		return result;
 	}
 
@@ -147,7 +145,6 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		return res;
 	}
 
-	@Override
 	public Map<String, Object> approve(Map<String, Object> params) {
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
         params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
@@ -158,7 +155,6 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
         return result;
     }
 
-	@Override
 	public Map<String, Object> reject(Map<String, Object> params) {
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
         params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
