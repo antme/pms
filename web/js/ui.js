@@ -74,7 +74,7 @@ var menus = [
                          { text: "财务资料", id: "contract",  imageUrl: "/images/order.png" },
                          { text: "开票信息", id: "invoiceList", imageUrl: "/images/ccontract.png" },
                          { text: "收款信息", id: "gotMoneyList", imageUrl: "/images/ccontract.png"},
-                         { text: "付款信息", id: "contract", imageUrl: "/images/ccontract.png"}
+                         { text: "付款信息", id: "payMoney", imageUrl: "/images/ccontract.png"}
                      ]
              },
                                  
@@ -287,6 +287,8 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/repository/repository.html";
 	}else if (page == "directRepository") {
 		page = "html/repository/directRepository.html";
+	}else if(page == "payMoney"){
+		page = "html/finance/payMoney.html";
 	}
 	
 	
