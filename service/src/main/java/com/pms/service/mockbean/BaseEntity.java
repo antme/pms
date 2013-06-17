@@ -13,7 +13,11 @@ public class BaseEntity {
     private String updatedOn;
 
     private String creator;
-
+    
+    private String status;
+    
+    private int updateTimes;
+    
     public String get_id() {
         return _id;
     }
@@ -44,6 +48,23 @@ public class BaseEntity {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+    public int getUpdateTimes() {
+        return updateTimes;
+    }
+
+    public void setUpdateTimes(int updateTimes) {
+        this.updateTimes = updateTimes;
     }
 
     public String toString() {

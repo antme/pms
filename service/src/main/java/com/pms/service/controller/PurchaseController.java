@@ -49,12 +49,6 @@ public class PurchaseController extends AbstractController {
     	responseWithData(purchaseService.submitBack(parserJsonParameters(request,  false)), request, response);
     }
     
-    @RequestMapping("/back/approve")
-    //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
-    public void approveBack(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(purchaseService.approveBack(parserJsonParameters(request,  false)), request, response);
-    }
-    
     @RequestMapping("/back/reject")
     //@RoleValidate(roleID=RoleValidConstants.ROLE_LIST, desc = RoleValidConstants.ROLE_LIST_DESC)
     public void rejectBack(HttpServletRequest request, HttpServletResponse response) {

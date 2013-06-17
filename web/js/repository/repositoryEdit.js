@@ -36,7 +36,7 @@ $(document).ready(function() {
 
 	
 	if (redirectParams) {
-		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
+		postAjaxRequest("/service/purcontract/repository/get", redirectParams, edit);
 	} 
 	
 });
@@ -46,12 +46,12 @@ $(document).ready(function() {
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
 		update : {
-			url : "/service/purcontract/update",
+			url : "/service/purcontract/repository/update",
 			dataType : "jsonp",
 			type : "post"
 		},
 		create : {
-			url : "/service/purcontract/add",
+			url : "/service/purcontract/repository/add",
 			dataType : "jsonp",
 			type : "post"
 		},
@@ -73,9 +73,6 @@ var itemDataSource = new kendo.data.DataSource({
 });
 
 
-var itemListDataSource = new kendo.data.DataSource({
-	data: []
-});
 
 function save(status) {
 	if(!requestDataItem.status){
@@ -85,20 +82,12 @@ function save(status) {
 		requestDataItem.status = status;
 	}
 	
+	
 	if(itemDataSource.at(0)){
 		//force set haschanges = true
 		itemDataSource.at(0).set("uid", kendo.guid());
 	}
 
-	
-	if(requestDataItem.supplierName && requestDataItem.supplierName._id){
-		requestDataItem.supplierName = requestDataItem.supplierName._id
-	}
-	
-	if(!requestDataItem.supplierName){
-		var dl = $("#supplierName").data("kendoDropDownList");
-		requestDataItem.supplierName = dl.dataSource.at(0)._id;
-	}
 
 	// 同步数据
 	itemDataSource.sync();
@@ -107,39 +96,23 @@ function save(status) {
 }
 
 function checkStatus() {
-	loadPage("purchasecontract", null);
+	loadPage("repository", null);
 }
 // 计算成
 
 function showOrderWindow() {
 	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
-	var kendoGrid = $("#purchasecontractselect").data("kendoDropDownList");
+	var purchaseRequestGrid = $("#purchasecontractselect").data("kendoDropDownList");
 
-	var dataItems = kendoGrid.dataSource.data();
-	var selectedValues = kendoGrid.value();
-	for(id in selectedValues){	
-		for(index in dataItems){			
-			if(dataItems[index]._id == selectedValues[id]){
-				var eqcostList = dataItems[index].eqcostList;
-				for(listIndex in eqcostList){
-					if(eqcostList[listIndex].uid){
-						if(!eqcostList[listIndex].logisticsType ){
-							eqcostList[listIndex].logisticsType="";
-						}
-						itemListDataSource.add(eqcostList[listIndex]);
-					}
-				}
-				break;
-			}
-		}
-		
+	
+	if (!selectedRequest) {
+		selectedRequest = purchaseRequestGrid.dataSource.at(0);
 	}
 	
-	console.log(selectedValues);
+	console.log(selectedRequest);
 	requestDataItem = new model({});
-	requestDataItem.eqcostList = itemListDataSource.data();
-	
-	
+	requestDataItem.eqcostList = selectedRequest.eqcostList;
+	requestDataItem.supplierName = selectedRequest.supplierName;
 
 	edit();
 }
@@ -149,10 +122,10 @@ function edit(data) {
 	// 初始化空对象
 	var dataItem = new model();
 	if(data){
-		$("#purchaserepository-edit").hide();
+		$("#purchaserepository-div").hide();
 		requestDataItem = data;
 	}else{
-		$("#purchaserepository-edit").show();
+		$("#purchaserepository-div").show();
 	}
 
 	if (requestDataItem) {

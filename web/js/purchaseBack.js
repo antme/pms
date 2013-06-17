@@ -10,14 +10,14 @@ $(document).ready(function () {
 				editable : false,
 				nullable : true
 			},
-			code:{},
-			department:{},
-			submitDate:{},
-			planDate:{},
-			type:{},
-			status:{},
-			comment:{},
-			money:{},
+			pbCode:{},
+			pbDepartment:{},
+			pbSubmitDate:{},
+			pbPlanDate:{},
+			pbType:{},
+			pbStatus:{},
+			pbComment:{},
+			pbMoney:{},
 			eqcostList:{},
 			projectCode : {},
 			projectName : {},
@@ -26,8 +26,8 @@ $(document).ready(function () {
 			contractCode : {},
 			contractAmount:{},
 			backRequestCount:{},
-			purchaseOrderCode: {},
-			purchaseContractCode: {}
+			poCode: {},
+			pcCode: {}
 		}
 	});
 
@@ -57,19 +57,17 @@ $(document).ready(function () {
 	    selectable : "row",
 	    toolbar: kendo.template($("#template").html()),
 	    columns: [
-	        { field: "code", title: "备货编号" },
-	        { field: "type", title:"采购类别" ,width:"120px"},
+	        { field: "pbCode", title: "备货编号" ,width:"125px"},
+	        { field: "pbType", title:"采购类别" ,width:"120px"},
 	        { field: "contractCode", title:"销售合同编号" },
-	        { field: "purchaseOrderCode", title:"采购订单编号" },
-	        { field: "purchaseContractCode", title:"采购合同编号" },
+	        { field: "poCode", title:"采购订单编号" },
+	        { field: "pcCode", title:"采购合同编号" },
 	        { field: "customer", title:"客户名" },
 	        { field: "projectManager", title:"PM" },
-	        { field: "status", title:"申请状态" },
-	        { field: "approveDate", title:"批准时间" },
-	        { field: "money", title:"金额" },
-	        { field: "backRequestCount", title:"合同下申请单数量" }/*,
-	        { field: "percentUsedGoods", title:"合同下已成功申请请货物%" },
-	        { field: "costUsedGoods", title:"合同下已成功申请货物金额%" }*/
+	        { field: "pbStatus", title:"申请状态" },
+	        { field: "pbSubmitDate", title:"提交时间" },
+	        { field: "pbMoney", title:"金额" },
+	        { field: "backRequestCount", title:"合同下备货单数量" }
 	    ]
 	});
 	
@@ -117,7 +115,7 @@ function destroy() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.status == "已保存") {
+	} else if(row.pbStatus == "已保存") {
 		$.ajax({
 			url : baseUrl+"/destroy",
 			success : function(responsetxt) {
@@ -135,6 +133,6 @@ function destroy() {
 			},method : "post"
 		});
 	}else{
-		alert("'已提交'数据不能删除");
+		alert("数据不能删除");
 	}
 }

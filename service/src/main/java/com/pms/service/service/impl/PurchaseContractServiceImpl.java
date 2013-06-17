@@ -18,6 +18,7 @@ import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseContract;
+import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.PurchaseRequestOrder;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
@@ -25,6 +26,7 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISalesContractService;
+import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
@@ -89,7 +91,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract) {
-        return updatePurchase(contract, DBBean.PURCHASE_CONTRACT, "contract_", new PurchaseContract());
+        return updatePurchase(contract, DBBean.PURCHASE_CONTRACT);
     }
  
 
@@ -124,7 +126,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> order) {
-        return updatePurchase(order, DBBean.PURCHASE_ORDER, "order_", new PurchaseRequestOrder());
+        return updatePurchase(order, DBBean.PURCHASE_ORDER);
     }
     
     public Map<String, Object> getPurchaseOrder(HashMap<String, Object> parameters){
@@ -166,10 +168,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return processRequest(order, DBBean.PURCHASE_ORDER, PurchaseRequestOrder.STATUS_REJECTED);
     }
 
+    /**
+     * 
+     * 选择已批准的备货申请，返回_id, salesContract_code, salesContract_id, code字段
+     * 
+     */
     public Map<String, Object> listBackRequestForSelect() {
         Map<String, Object> query = new HashMap<String, Object>();
-//        query.put(PurchaseBack.status, PurchaseBack.status_approved);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.code, PurchaseBack.salesContract_code });
+        query.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
+
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode});
+
         return dao.list(query, DBBean.PURCHASE_BACK);
     }
     
@@ -189,16 +198,15 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> results = dao.list(roleQuery, DBBean.PURCHASE_REQUEST);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
         
-        for(Map<String, Object> data: list){
-            //FIXME
-            Map<String, Object> query = new HashMap<String, Object>();
-            query.put(SalesContractBean.SC_ID, data.get(PurchaseRequestOrder.SALES_CONTRACT_CODE));
-            
-            
-            Map<String, Object> relatedProjectInfo = getRelatedProjectInfo(query);
-            data.put("customerName", relatedProjectInfo.get(ProjectBean.PROJECT_CUSTOMER));
-            data.put("projectName", relatedProjectInfo.get("projectName"));
-            data.put("projectManager", relatedProjectInfo.get("projectManager"));
+        for (Map<String, Object> data : list) {
+     
+            Map<String, Object> relatedProjectInfo = getRelatedProjectInfo(data);
+
+            if (relatedProjectInfo != null) {
+                data.put("customerName", relatedProjectInfo.get(ProjectBean.PROJECT_CUSTOMER));
+                data.put("projectName", relatedProjectInfo.get("projectName"));
+                data.put("projectManager", relatedProjectInfo.get("projectManager"));
+            }
         }
         
         return results;
@@ -206,9 +214,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     
     public Map<String, Object> getRelatedProjectInfo(Map<String, Object> params){
-        String scId = (String) params.get(SalesContractBean.SC_ID);
+        String id = (String) params.get("salesContract_id");
         Map<String, Object> querySC = new HashMap<String, Object>();
-        querySC.put(SalesContractBean.SC_CODE, scId);
+        querySC.put(ApiConstants.MONGO_ID, id);
         querySC.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_PROJECT_ID });
         Map<String, Object> sc = dao.findOneByQuery(querySC, DBBean.SALES_CONTRACT);
 
@@ -237,60 +245,41 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> listApprovedPurchaseRequestForSelect(){
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseBack.status, APPROVED);
+//        query.put(PurchaseRequestBean.STATUS, APPROVED);
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "purchaseRequestCode" });
         return dao.list(query, DBBean.PURCHASE_REQUEST);
     }
     
-    public Map<String, Object> updatePurchaseRequest(Map<String, Object> order) {
-        return updatePurchase(order, DBBean.PURCHASE_REQUEST, "request_", new PurchaseRequestOrder());
-    }
-    
-    public Map<String, Object> updatePurchase(Map<String, Object> parameters, String db, String prefix, BaseEntity entity) {
-
-//        if(parameters.get("signDate") !=null){
-//            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//            parameters.put("signDate", format.format(parameters.get("signDate")));
-//        }
-        PurchaseRequestOrder request = (PurchaseRequestOrder) entity.toEntity(parameters);
-
-        Map<String, Object> result = null;
+    public Map<String, Object> updatePurchaseRequest(Map<String, Object> parameters) {
+        PurchaseRequest request = (PurchaseRequest) new PurchaseRequest().toEntity(parameters);
         if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
-            
-            if(request.getStatus() !=null){
+            if (request.getStatus() != null) {
                 request.setStatus(PurchaseRequestOrder.STATUS_DRAFT);
             }
+            request.setPurchaseRequestCode("request_" + String.valueOf(new Date().getTime()));
+            parameters = request.toMap();
+        }
+        
 
-            if (db == DBBean.PURCHASE_REQUEST) {
-                request.setPurchaseRequestCode(prefix + String.valueOf(new Date().getTime()));
-            }
+        return updatePurchase(parameters, DBBean.PURCHASE_REQUEST);
+    }
+    
+    public Map<String, Object> updatePurchase(Map<String, Object> parameters, String db) {
+        Map<String, Object> result = null;
 
-            if (db == DBBean.PURCHASE_ORDER) {
-                request.setPurchaseOrderCode(prefix + String.valueOf(new Date().getTime()));
-            }
-
-            if (db == DBBean.PURCHASE_CONTRACT) {
-                request.setPurchaseContractCode(prefix + String.valueOf(new Date().getTime()));
-            }
-
-            Map<String, Object> map = request.toMap();
-            map.put(SalesContractBean.SC_EQ_LIST, parameters.get(SalesContractBean.SC_EQ_LIST));
-
-            result = this.dao.add(map, db);
+        if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
+            parameters.put(SalesContractBean.SC_EQ_LIST, parameters.get(SalesContractBean.SC_EQ_LIST));
+            result = this.dao.add(parameters, db);
         } else {
+            result = dao.updateById(parameters, db);
+        }
 
-            Map<String, Object> map = request.toMap();
-            map.put(SalesContractBean.SC_EQ_LIST, parameters.get(SalesContractBean.SC_EQ_LIST));
-            result =  dao.updateById(map, db);
-        }
-        
-        
-        Map<String, Object> cc =this.dao.findOne(ApiConstants.MONGO_ID, result.get(ApiConstants.MONGO_ID), new String[]{PurchaseRequestOrder.SALES_CONTRACT_CODE}, db);
-        if(cc.get(PurchaseRequestOrder.SALES_CONTRACT_CODE)!=null){
-            updateSummaryUnderContract(db, cc.get(PurchaseRequestOrder.SALES_CONTRACT_CODE).toString());
-        }
-        
-        return this.dao.findOne(ApiConstants.MONGO_ID, result.get(ApiConstants.MONGO_ID), new String[]{PurchaseRequestOrder.SALES_CONTRACT_CODE}, db);
+//        Map<String, Object> cc = this.dao.findOne(ApiConstants.MONGO_ID, result.get(ApiConstants.MONGO_ID), new String[] { PurchaseRequestOrder.SALES_CONTRACT_CODE }, db);
+//        if (cc.get(PurchaseRequestOrder.SALES_CONTRACT_CODE) != null) {
+//            updateSummaryUnderContract(db, cc.get(PurchaseRequestOrder.SALES_CONTRACT_CODE).toString());
+//        }
+
+        return result;
 
     }
 
@@ -385,49 +374,44 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> listRepositoryRequests() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.dao.list(null, DBBean.REPOSITORY);
     }
 
 
     @Override
-    public void addRepositoryRequest(HashMap<String, Object> parserListJsonParameters) {
-        // TODO Auto-generated method stub
+    public Map<String, Object> addRepositoryRequest(HashMap<String, Object> parserListJsonParameters) {
+        return updatePurchase(parserListJsonParameters, DBBean.REPOSITORY);
         
     }
 
 
     @Override
-    public Map<String, Object> getRepositoryRequest(HashMap<String, Object> parserListJsonParameters) {
-        // TODO Auto-generated method stub
-        return null;
+    public Map<String, Object> getRepositoryRequest(HashMap<String, Object> parameters) {
+        return this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.REPOSITORY);
     }
 
 
     @Override
     public void deleteRepositoryRequest(HashMap<String, Object> parserJsonParameters) {
-        // TODO Auto-generated method stub
         
     }
 
 
     @Override
-    public void updateRepositoryRequest(HashMap<String, Object> parserListJsonParameters) {
-        // TODO Auto-generated method stub
+    public Map<String, Object> updateRepositoryRequest(HashMap<String, Object> parameters) {
+        return updatePurchase(parameters, DBBean.REPOSITORY);
         
     }
 
 
     @Override
     public Map<String, Object> approveRepositoryRequest(HashMap<String, Object> parserJsonParameters) {
-        // TODO Auto-generated method stub
         return null;
     }
 
 
     @Override
     public Map<String, Object> rejectRepositoryRequest(HashMap<String, Object> parserJsonParameters) {
-        // TODO Auto-generated method stub
         return null;
     }
 

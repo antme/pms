@@ -2,58 +2,41 @@ package com.pms.service.mockbean;
 
 public class PurchaseBack {
 	
-	public static final String code = "code";
-	public static final String department = "department";
-	public static final String submitDate = "submitDate";
-	public static final String approveDate = "approveDate";
-	public static final String operateDate = "operateDate";
-	public static final String checkDate = "checkDate";
-	public static final String planDate = "planDate";
-	public static final String type = "type";
-	public static final String status = "status";
-	public static final String specialRequire = "specialRequire";
-	public static final String comment = "comment";
-	public static final String commentHistory = "commentHistory";
-	public static final String money = "money";
-	public static final String cost = "cost";
-	public static final String costUsedGoods = "costUsedGoods";
-	public static final String countUsedRquest = "countUsedRquest";
-	public static final String percentUsedGoods = "percentUsedGoods";
+	public static final String pbCode = "pbCode";
+	public static final String pbType = "pbType";
+	public static final String pbStatus = "pbStatus";
+	public static final String pbSubmitDate = "pbSubmitDate";
+	public static final String pbPlanDate = "pbPlanDate";
+	public static final String pbDepartment = "pbDepartment";
+	public static final String pbMoney = "pbMoney";
+	public static final String pbComment = "pbComment";
+	public static final String pbCommentHistory = "pbCommentHistory";
+	public static final String pbSpecialRequire = "pbSpecialRequire";
+	public static final String pbTotalCount = "pbTotalCount";//备货申请总数
+	public static final String pbLeftCount = "pbLeftCount";//备货申请剩余数
 	
-	public static final String status_new = "未保存";
-	public static final String status_saved = "已保存";
-	public static final String status_submited = "已提交";
-	public static final String status_approved = "已批准";
-	public static final String status_rejected = "已拒绝";
-
+	public static final String eqcostList = "eqcostList";//设备成本清单字段
 	
-	public static final String salesContract_id = "salesContract_id";//销售合同id
-	public static final String salesContract_code = "salesContract_code";//销售合同编号
-	public static final String salesContract_money = "salesContract_money";//销售合同金额
-	
-	public static final String project_name = "project_name";
-	public static final String project_code = "project_code";
-	public static final String project_managerName = "project_managerName";
-	public static final String customer_name = "customer_name";
-	public static final String customer_code = "customer_code";
-	
-	//设备成本清单字段
-	public static final String eqcostList = "eqcostList";
-	public static final String backTotalCount = "backTotalCount";//备货申请总数，用于备货申请
-	public static final String backUsedCount = "backUsedCount";//备货申请已用数，用于调拨
-	public static final String backLeftCount = "backLeftCount";//备货申请剩余数，用于采购申请
-	
-	public static final String purchaseOrder_code = "purchaseOrder_code";
-	public static final String purchaseOrder_id = "purchaseOrder_id";
-	public static final String purchaseContract_code = "purchaseContract_code";
-	public static final String purchaseContract_id = "purchaseContract_id";
-	
-	public static final String purchaseBack_id = "purchaseBack_id";
-	public static final String purchaseAllot_id = "purchaseAllot_id";
-	
-	public static final String allotCount = "allotCount";//调拨申请数
+	public static final String scId = "scId";//销售合同id
+	public static final String scCode = "scCode";//销售合同id
+	public static final String poId = "poId";//采购订单id
+	public static final String pcId = "pcId";//采购合同id
+	public static final String pbId = "pbId";//备货申请id
+	public static final String paId = "paId";//调拨申请id
 	
 	
+	
+//调拨申请字段	
+	public static final String paCode = "paCode";
+	public static final String paSubmitterId = "paSubmitterId";
+	public static final String paApproverId = "paApproverId";
+	public static final String paCheckerId = "paCheckerId";
+	public static final String paStatus = "paStatus";
+	public static final String paSubmitDate = "paSubmitDate";
+	public static final String paApproveDate = "paApproveDate";
+	public static final String paCheckDate = "paCheckDate";
+	public static final String paCount = "paCount";//调拨申请数
+	public static final String paComment = "paComment";
 	
 	
 }

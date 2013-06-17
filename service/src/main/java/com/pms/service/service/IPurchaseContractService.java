@@ -60,13 +60,13 @@ public interface IPurchaseContractService {
 
     public Map<String, Object> listRepositoryRequests();
 
-    public void addRepositoryRequest(HashMap<String, Object> parserListJsonParameters);
+    public Map<String, Object> addRepositoryRequest(HashMap<String, Object> parserListJsonParameters);
 
     public Map<String, Object> getRepositoryRequest(HashMap<String, Object> parserListJsonParameters);
 
     public void deleteRepositoryRequest(HashMap<String, Object> parserJsonParameters);
 
-    public void updateRepositoryRequest(HashMap<String, Object> parserListJsonParameters);
+    public Map<String, Object> updateRepositoryRequest(HashMap<String, Object> parserListJsonParameters);
 
     public Map<String, Object> approveRepositoryRequest(HashMap<String, Object> parserJsonParameters);
 
