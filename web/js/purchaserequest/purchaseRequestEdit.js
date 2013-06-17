@@ -109,7 +109,7 @@ $(document).ready(function() {
 		
 		if(popupParams){
 			postAjaxRequest(editUrl, popupParams, edit);
-			$("#popup button").hide();
+			disableAllInPoppup();
 		}else{
 			postAjaxRequest(editUrl, redirectParams, edit);
 		}

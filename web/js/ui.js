@@ -466,6 +466,12 @@ function openRemotePageWindow(options, page, parameter) {
 	}
 }
 
+function disableAllInPoppup(){
+	$("#popup button").hide();
+	$("#popup textarea").attr("disabled",true); 
+	$("#popup input").attr("disabled",true);
+}
+
 
 String.prototype.endWith = function(s) {
 	if (s == null || s == "" || this.length == 0 || s.length > this.length)
