@@ -40,15 +40,22 @@ label{
         </div>
     
         <div id="purchase-request-edit-item">
-            <div id="purchase-request-edit-header">
-                <div>
-                    <label>项目名: <span id="projectName"></span></label> 
-                    <label>项目ID:<span id="projectCode"></span></label> 
-                    <label>合同ID: <span id="salesContractCode"></span></label> 
-                </div>
-            </div>
+    
             <div>
-                <div><label>提示: 点击单元格可以编辑</label></div>
+                <table style="width: 80%">
+                    <tr>
+                        <td>项目名： <strong><span data-bind="text: projectName"></span></strong></td>   
+                        <td>项目编号： <strong><span data-bind="text: projectCode"></span></strong></td>
+                        <td>合同编号： <strong><span data-bind="text: contractCode"></span></strong></td>
+                        <td>客户名称： <strong><span data-bind="text: customer"></span></strong></td>
+                        <td>申请编号：<strong><span data-bind="text: purchaseRequestCode" ></span></strong></td>
+                        <td>状态：<span data-bind="text: status" ></span></td>
+                    </tr>
+                </table>
+            </div>
+            <hr>
+            <div>
+                <div style="margin-bottom:5px; margin-top:5px;"><label>提示: 点击单元格可以编辑:</label></div>
                 <div id="purchase-request-edit-grid"></div>        
             </div>
             <div style="width:400px; margin-top:50px;">
