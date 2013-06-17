@@ -219,11 +219,9 @@ function edit(data) {
 	// 渲染成本编辑列表
 	itemDataSource.data(dataItem.eqcostList);
 
-	$("#purchaseOrderCode").html(dataItem.purchaseOrderCode);
-	$("#projectName").html(dataItem.projectName);
-	$("#projectCode").html(dataItem.projectCode);
-	$("#salesContractCode").html(dataItem.salesContractCode);
-	$("#purchaseRequestCode").html(dataItem.purchaseRequestCode);
+
+	
+	kendo.bind($("#purchaseorder-edit-item"), dataItem);
 	$("#purchaseorder-edit-item").show();
 
 	var editKendoGrid = $("#purchaseorder-edit-grid").data("kendoGrid");
