@@ -31,7 +31,7 @@ $(document).ready(function() {
 				field : "purchaseRequestCode",
 				title : "采购申请编号",
 				template : function(dataItem) {
-					return '<a  class="k-in" onclick="opRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.purchaseRequestCode + '</a>';
+					return '<a  onclick="opRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.purchaseRequestCode + '</a>';
 				}
 			}, {
 				field : "backRequestCode",

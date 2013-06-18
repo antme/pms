@@ -34,6 +34,11 @@ public class ApiConstants {
     public static final String PAGE = "page";
     public static final String SKIP = "skip";
 
-    
+    public static final String HISTORY_KEY = "key";
+    public static final String HISTORY_OLD = "oldValue";
+    public static final String HISTORY_NEW = "newValue";
+    public static final String HISTORY_DATA_ID = "dataId";
+    public static final String HISTORY_OPERATOR = "operator";
+    public static final String HISTORY_TIME = "time";
     
 }

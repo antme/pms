@@ -71,4 +71,12 @@ public interface IPurchaseContractService {
     public Map<String, Object> approveRepositoryRequest(HashMap<String, Object> parserJsonParameters);
 
     public Map<String, Object> rejectRepositoryRequest(HashMap<String, Object> parserJsonParameters);
+    
+    public Map<String, Object> listSelectForPayment(HashMap<String, Object> params);
+    
+    public Map<String, Object> listPaymoney(HashMap<String, Object> params);
+
+    public Map<String, Object> addPaymoney(HashMap<String, Object> params);
+    
+    public Map<String, Object> updatePaymoney(HashMap<String, Object> params);
 }
