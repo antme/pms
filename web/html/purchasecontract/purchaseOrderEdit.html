@@ -21,7 +21,7 @@ label{
 </style>
 
 
-<script type="text/javascript" src="js/purchaseOrderEdit.js"></script>
+<script type="text/javascript" src="js/purchaseorder/purchaseOrderEdit.js"></script>
 </head>
 
 
@@ -31,21 +31,27 @@ label{
     <div id="purchaseorder-edit" class="k-content">
         <div id="purchase-request-select" class="k-content">
             <div>
-                <label>选择采购申请: </label><input id="purchaseRequest" style="width: 250px" /><button onclick="showOrderWindow();">确定</button>
+                <label>选择采购申请: </label><input id="purchaseRequest" style="width: 250px" /><button onclick="selectRequest();">确定</button>
             </div>  
         </div>
     
         <div id="purchaseorder-edit-item">
-            <div id="purchaseorder-edit-header">
-                <div>
-                    <label>项目名: <span id="projectName"></span></label> 
-                    <label>项目ID:<span id="projectCode"></span></label> 
-                    <label>合同ID: <span id="salesContractCode"></span></label> 
-                    <label>采购申请ID:<span id="purchaseRequestCode"></span></label> 
-                </div>
+  
+             <div>
+                <table style="width: 80%">
+                    <tr>
+                        <td>项目名： <strong><span data-bind="text: projectName"></span></strong></td>   
+                        <td>项目编号： <strong><span data-bind="text: projectCode"></span></strong></td>
+                        <td>合同编号： <strong><span data-bind="text: salesContractCode"></span></strong></td>
+                        <td>客户名称： <strong><span data-bind="text: customer"></span></strong></td>
+                        <td>申请编号：<strong><span data-bind="text: purchaseOrderCode" ></span></strong></td>
+                        <td>状态：<span data-bind="text: status" ></span></td>
+                    </tr>
+                </table>
             </div>
+              <hr>
             <div>
-                <div><label>提示: 点击单元格可以编辑</label></div>
+                <div style="margin-bottom:5px; margin-top:5px;"><label>提示: 点击单元格可以编辑</label></div>
                 <div id="purchaseorder-edit-grid"></div>        
             </div>
             <div style="width:400px; margin-top:50px;">

@@ -6,10 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.pms.service.dbhelper.DBQuery;
+import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.BorrowingBean;
 import com.pms.service.mockbean.DBBean;
-import com.pms.service.mockbean.ShipBean;
+import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IBorrowingService;
 import com.pms.service.service.IPurchaseContractService;
@@ -44,11 +47,71 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	}
 	
 	public Map<String, Object> get(Map<String, Object> params) {
-		return dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
+		Map<String, Object> result = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
+//		String inProjectId = result.get(BorrowingBean.BORROW_IN_PROJECT_ID).toString();
+//		String outProjectId = result.get(BorrowingBean.BORROW_OUT_PROJECT_ID).toString();
+		return result;
 	}
 
 	public Map<String, Object> list(Map<String, Object> params) {
-		return dao.list(null, DBBean.BORROWING);
+		Map<String, Object> result = dao.list(null, DBBean.BORROWING);
+		
+		List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+		
+		List<String> pId = new ArrayList<String>();
+		for (Map<String, Object> p:list){
+			pId.add(p.get(BorrowingBean.BORROW_IN_PROJECT_ID).toString());
+			pId.add(p.get(BorrowingBean.BORROW_OUT_PROJECT_ID).toString());
+		}
+		
+		// 获取project信息
+		Map<String, Object> queryContract = new HashMap<String, Object>();
+		queryContract.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pId));
+		Map<String, Object> cInfoMap = dao.listToOneMapByKey(queryContract, DBBean.PROJECT, ApiConstants.MONGO_ID);
+		
+		List<String> pmId = new ArrayList<String>();
+		
+		for (Map<String, Object> p:list){
+			String inProjectId = p.get(BorrowingBean.BORROW_IN_PROJECT_ID).toString();
+			Map<String, Object> inProjectMap = (Map<String, Object>) cInfoMap.get(inProjectId);
+			if (inProjectMap != null) {
+				p.put(BorrowingBean.BORROW_IN_PROJECT_CODE, inProjectMap.get(ProjectBean.PROJECT_CODE));
+				p.put(BorrowingBean.BORROW_IN_PROJECT_NAME, inProjectMap.get(ProjectBean.PROJECT_NAME));
+				p.put(BorrowingBean.BORROW_IN_PROJECT_MANAGER, inProjectMap.get(ProjectBean.PROJECT_MANAGER));
+				pmId.add(inProjectMap.get(ProjectBean.PROJECT_MANAGER).toString());
+			}
+			
+			String outProjectId = p.get(BorrowingBean.BORROW_OUT_PROJECT_ID).toString();
+			Map<String, Object> outProjectMap = (Map<String, Object>) cInfoMap.get(outProjectId);
+			if (outProjectMap != null) {
+				p.put(BorrowingBean.BORROW_OUT_PROJECT_CODE, outProjectMap.get(ProjectBean.PROJECT_CODE));
+				p.put(BorrowingBean.BORROW_OUT_PROJECT_NAME, outProjectMap.get(ProjectBean.PROJECT_NAME));
+				p.put(BorrowingBean.BORROW_OUT_PROJECT_MANAGER, outProjectMap.get(ProjectBean.PROJECT_MANAGER));
+				pmId.add(outProjectMap.get(ProjectBean.PROJECT_MANAGER).toString());
+			}
+		}
+		
+		// 获取项目负责人信息
+		Map<String, Object> pmQueryContract = new HashMap<String, Object>();
+		pmQueryContract.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pmId));
+		pmQueryContract.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME});
+		Map<String, Object> pmMap = dao.listToOneMapByKey(pmQueryContract, DBBean.USER, ApiConstants.MONGO_ID);
+		
+		for (Map<String, Object> p:list){
+			String inPmId = p.get(BorrowingBean.BORROW_IN_PROJECT_MANAGER).toString();
+			Map<String, Object> inPmMap = (Map<String, Object>) pmMap.get(inPmId);
+			if (inPmMap != null) {
+				p.put(BorrowingBean.BORROW_IN_PROJECT_MANAGER, inPmMap.get(UserBean.USER_NAME));
+			}
+			
+			String outPmId = p.get(BorrowingBean.BORROW_OUT_PROJECT_MANAGER).toString();
+			Map<String, Object> outPmMap = (Map<String, Object>) pmMap.get(outPmId);
+			if (outPmMap != null) {
+				p.put(BorrowingBean.BORROW_OUT_PROJECT_MANAGER, outPmMap.get(UserBean.USER_NAME));
+			}
+		}
+		
+		return result;
 	}
 
 	public Map<String, Object> update(Map<String, Object> params) {
@@ -82,7 +145,6 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		return res;
 	}
 
-	@Override
 	public Map<String, Object> approve(Map<String, Object> params) {
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
         params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
@@ -93,7 +155,6 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
         return result;
     }
 
-	@Override
 	public Map<String, Object> reject(Map<String, Object> params) {
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
         params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));

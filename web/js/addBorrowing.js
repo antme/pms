@@ -1,4 +1,6 @@
-var model, eqDataSource, crudServiceBaseUrl = "../service";
+var grid, inSalesContract, outSalesContract, model;
+var inProjectId, outProjectId;
+var eqDataSource, crudServiceBaseUrl = "../service";
 
 var borrowing = kendo.data.Model.define( {
     id: "_id",
@@ -26,8 +28,6 @@ var eqModel = kendo.data.Model.define( {
     	eqcostMemo: { editable: false }
     }
 });
-
-var grid;
 
 var listDataSource = new kendo.data.DataSource({
     transport: {
@@ -73,23 +73,27 @@ $(document).ready(function() {
         dataSource: projectDataSource,
         change: function(e) {
         	inSalesContract.value(null);
-        	var dataSource = new kendo.data.DataSource({
-                transport: {
-                    read: {
-                        url: crudServiceBaseUrl + "/sc/listbyproject",
-                        dataType: "jsonp",
-        	            data: {
-        	            	projectId: inprojects.value()
-        	            }
-                    }
-                }
-            });
-        	inSalesContract.setDataSource(dataSource);
+        	inProjectId = this.value();
+        	inSalesContract.dataSource.read();
         	inSalesContract.readonly(false);
         }
     }).data("kendoComboBox");
 	
-	var inSalesContract = $("#inSalesContract").kendoComboBox({
+	inSalesContract = $("#inSalesContract").kendoComboBox({
+		autoBind: false,
+		dataSource: new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: crudServiceBaseUrl + "/sc/listbyproject",
+                    dataType: "jsonp",
+    	            data: {
+    	            	projectId: function() {
+                            return inProjectId;
+                        }
+    	            }
+                }
+            }
+        }),
         placeholder: "销售合同编号",
         dataTextField: "contractCode",
         dataValueField: "_id",
@@ -108,23 +112,27 @@ $(document).ready(function() {
         dataSource: projectDataSource,
         change: function(e) {
         	outSalesContract.value(null);
-        	var dataSource = new kendo.data.DataSource({
-                transport: {
-                    read: {
-                        url: crudServiceBaseUrl + "/sc/listbyproject",
-                        dataType: "jsonp",
-        	            data: {
-        	            	projectId: outprojects.value()
-        	            }
-                    }
-                }
-            });
-        	outSalesContract.setDataSource(dataSource);
+        	outProjectId = this.value();
+        	outSalesContract.dataSource.read();
         	outSalesContract.readonly(false);
         }
     }).data("kendoComboBox");
 	
-	var outSalesContract = $("#outSalesContract").kendoComboBox({
+	outSalesContract = $("#outSalesContract").kendoComboBox({
+		autoBind: false,
+		dataSource: new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: crudServiceBaseUrl + "/sc/listbyproject",
+                    dataType: "jsonp",
+    	            data: {
+    	            	projectId: function() {
+                            return outProjectId;
+                        }
+    	            }
+                }
+            }
+        }),
         placeholder: "销售合同编号",
         dataTextField: "contractCode",
         dataValueField: "_id",
@@ -185,7 +193,19 @@ $(document).ready(function() {
 
 function edit(data) {
 	model = new borrowing(data);
+
+	if (model.inProjectId) {
+		inProjectId = model.inProjectId;
+    	inSalesContract.readonly(false);
+	}
+	
+	if (model.outProjectId) {
+		outProjectId = model.outProjectId;
+    	outSalesContract.readonly(false);
+	}
+	
 	kendo.bind($("#addBorrowing"), model);
+	
 	eqDataSource = new kendo.data.DataSource({
 	    data: model.eqcostList,
 	    batch: true,

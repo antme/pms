@@ -59,30 +59,43 @@ var model = kendo.data.Model.define({
 
 // 声明一个总的对象用来传递数据
 var requestDataItem = undefined;
-var selectedRequest = undefined;
+
+//申明选择采购申请的id
+var selectedRequestId = undefined;
 
 $(document).ready(function() {
+
+	if (redirectParams) {
+		$("#purchase-request-select").hide();
+		$("#purchaseorder-edit-item").show();
+		postAjaxRequest(editUrl, redirectParams, edit);
+	} else {
+		$("#purchase-request-select").show();
+		$("#purchaseorder-edit-item").hide();
 		$("#purchaseRequest").kendoDropDownList({
-				dataTextField : "purchaseRequestCode",
-				dataValueField : "_id",
-				dataSource : {
-					transport : {
-						read : {
-							dataType : "jsonp",
-							url : selectUrl
-						}
+			dataTextField : "purchaseRequestCode",
+			dataValueField : "_id",
+			dataSource : {
+				transport : {
+					read : {
+						dataType : "jsonp",
+						url : selectUrl
 					}
-				},
-
-				// 当用户选择不同的采购申请时候赋值给requestDataItem对象
-				select : function(e) {
-					selectedRequest = this.dataSource.at(e.item.index());
 				}
-			});
+			},
 
-			if (redirectParams) {
-				postAjaxRequest(editUrl, redirectParams, edit);
+			dataBound : function(e) {
+				if (this.dataSource.at(0)) {
+					selectedRequestId = this.dataSource.at(0)._id;
+				}
+			},
+			// 当用户选择不同的采购申请时候赋值给requestDataItem对象
+			select : function(e) {
+				selectedRequestId = this.dataSource.at(e.item.index())._id;
 			}
+		});
+
+	}
 });
 
 var itemDataSource = new kendo.data.DataSource({
@@ -121,26 +134,19 @@ var sumDataSource = new kendo.data.DataSource({
 
 });
 
-function showOrderWindow() {
-
-	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
-	var purchaseRequestGrid = $("#purchaseRequest").data("kendoDropDownList");
-	
-	if (!selectedRequest) {
-		selectedRequest = purchaseRequestGrid.dataSource.at(0);
+function selectRequest() {
+	if (selectedRequestId) {
+		// 服务器查询数据并回调loadBackRequest
+		postAjaxRequest(getSelectUrl, { _id : selectedRequestId }, loadRequest);
+	} else {
+		alert("暂时没有可选的采购申请")
 	}
-	
-	console.log(selectedRequest);
-
-	postAjaxRequest(getSelectUrl, {_id: selectedRequest._id}, loadRequest);
 }
 
 function loadRequest(data){
 	requestDataItem = data;
-	if (!requestDataItem.purchaseOrderCode) {
-		requestDataItem.purchaseOrderCode = "";
-	}
-
+	
+	requestDataItem.status = "草稿";
 	// // 新增，所以设置_id为空
 	requestDataItem._id="";
 	edit();
@@ -213,11 +219,9 @@ function edit(data) {
 	// 渲染成本编辑列表
 	itemDataSource.data(dataItem.eqcostList);
 
-	$("#purchaseOrderCode").html(dataItem.purchaseOrderCode);
-	$("#projectName").html(dataItem.projectName);
-	$("#projectCode").html(dataItem.projectCode);
-	$("#salesContractCode").html(dataItem.salesContractCode);
-	$("#purchaseRequestCode").html(dataItem.purchaseRequestCode);
+
+	
+	kendo.bind($("#purchaseorder-edit-item"), dataItem);
 	$("#purchaseorder-edit-item").show();
 
 	var editKendoGrid = $("#purchaseorder-edit-grid").data("kendoGrid");
