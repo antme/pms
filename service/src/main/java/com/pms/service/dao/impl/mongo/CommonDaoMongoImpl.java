@@ -234,11 +234,11 @@ public class CommonDaoMongoImpl implements ICommonDao {
             String id = clone.get(ApiConstants.MONGO_ID).toString();
             clone.remove(ApiConstants.MONGO_ID);
             clone.remove(ApiConstants.CREATED_ON);
-            clone.put(ApiConstants.UPDATED_ON, new Date().getTime());
             
             //Before update we record the modify trace
-            //addUpdateHistoryLog(clone, id, collection);
-            
+            addUpdateHistoryLog(clone, id, collection);
+
+            clone.put(ApiConstants.UPDATED_ON, new Date().getTime());
             BasicDBObject doc = new BasicDBObject(clone);
             result = this.getConnection(ConfigurationManager.getDbName(), collection).update(new BasicDBObject(ApiConstants.MONGO_ID, new ObjectId(id)),
                     new BasicDBObject("$set", doc));
@@ -260,7 +260,8 @@ public class CommonDaoMongoImpl implements ICommonDao {
 			limitKeysList.add(entry.getKey());
 		}
 		limitKeysList.remove(ApiConstants.UPDATED_ON);
-		String[] limitKeys = (String[]) limitKeysList.toArray();
+		int limitKeysSize = limitKeysList.size();
+		String[] limitKeys = (String[]) limitKeysList.toArray(new String[limitKeysSize]);
 		
 		Map<String, Object> oldQuery = new HashMap<String, Object>();
 		oldQuery.put(ApiConstants.MONGO_ID, _id);
@@ -270,10 +271,22 @@ public class CommonDaoMongoImpl implements ICommonDao {
 		oldMap.remove(ApiConstants.CREATED_ON);
 		oldMap.remove(ApiConstants.UPDATED_ON);
 		
-		//TODO call generateModifiedMaps  then do logic continue
+		List<Map<String, Object>> changeFieldList = generateModifiedMaps(_id, oldMap, newMap);
+		for (Map<String, Object> map : changeFieldList){
+			add(map, cName);
+		}
 		
 	}
     
+    /**
+     * 更新一条数据库记录前，比较待更新数据与数据库中各字段。
+     * 提取出改变的字段。
+     * 
+     * @param _id
+     * @param oldMap
+     * @param newMap
+     * @return
+     */
     public List<Map<String, Object>> generateModifiedMaps(String _id, Map<String, Object> oldMap, Map<String, Object> newMap){
     	List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		String operator = ApiThreadLocal.getCurrentUserId();
@@ -283,10 +296,12 @@ public class CommonDaoMongoImpl implements ICommonDao {
     		String key = entry.getKey();
     		Object newValue = entry.getValue();
     		Object oldValue = oldMap.get(key);
-    		if (newValue == null && oldValue == null){
+    		if (oldValue == null && newValue == null){
     			continue;
     		}
-    		if (oldValue instanceof String && oldValue.equals(newValue)){
+    		
+    		if (!(oldValue instanceof Map) && !(oldValue instanceof List) && String.valueOf(oldValue).equals(String.valueOf(newValue))){
+    			//基本数据类型，且值相等
     			continue;
     		}
 
@@ -295,13 +310,31 @@ public class CommonDaoMongoImpl implements ICommonDao {
     		historyItem.put(ApiConstants.HISTORY_DATA_ID, _id);
     		historyItem.put(ApiConstants.HISTORY_OPERATOR, operator);
     		historyItem.put(ApiConstants.HISTORY_TIME, now);
-    		if (newValue != null && oldValue == null){
+    		if (oldValue == null && newValue != null){//老数据没有值，新数据有值
     			historyItem.put(ApiConstants.HISTORY_OLD, oldValue);
         		historyItem.put(ApiConstants.HISTORY_NEW, newValue);
         		result.add(historyItem);
         		continue;
     		}
-    		//TODO add logic continue
+    		
+    		if (!(oldValue instanceof Map) && !(oldValue instanceof List) && !(String.valueOf(oldValue).equals(String.valueOf(newValue)))){
+    			//基本数据类型，且值不相等
+    			historyItem.put(ApiConstants.HISTORY_OLD, oldValue);
+        		historyItem.put(ApiConstants.HISTORY_NEW, newValue);
+        		result.add(historyItem);
+    			continue;
+    		}
+    		
+    		if (oldValue instanceof Map){
+    			//字段存储一个 Map
+    			continue;
+    		}
+    		
+    		if (oldValue instanceof List){
+    			//字段存储一个 List
+    			continue;
+    		}
+    		
     	}
     	return result;
     }

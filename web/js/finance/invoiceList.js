@@ -28,21 +28,22 @@ var invoiceDataSource = new kendo.data.DataSource({
 			url : "../service/sc/invoice/add",
 			dataType : "jsonp",
 			method : "post"
-		},
-
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					//options.models.set("cid":"aaaaaaaaaaaaaa");
-					models : kendo.stringify(options.models)
-				};
-			}
+		}
+	},
+	parameterMap : function(options, operation) {
+		if (operation !== "read" && options.models) {
+			return {
+				//options.models.set("cid":"aaaaaaaaaaaaaa");
+				models : kendo.stringify(options.models)
+			};
 		}
 	},
 	pageSize: 10,
 	batch : true,
 	
 	schema : {
+		data:"data",
+		total:"total",
 		model : scInvoiceModel
 	}
 });
@@ -53,6 +54,9 @@ var contractItems = new kendo.data.DataSource({
 			url : "../service/sc/list",
 			dataType : "jsonp"
 		}
+	},
+	schema: {
+	    data: "data"
 	}
 });
 

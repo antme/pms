@@ -71,16 +71,16 @@ var dataSource = new kendo.data.DataSource({
 			url : "../service/project/add",
 			dataType : "jsonp",
 			method : "post"
-		},
-
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
 		}
 	},
+	parameterMap : function(options, operation) {
+		if (operation !== "read" && options.models) {
+			return {
+				models : kendo.stringify(options.models)
+			};
+		}
+	},
+	
 	pageSize: 10,
 	batch : true,
 	
@@ -98,6 +98,7 @@ $(document).ready(function() {
 		optionLabel : "选择项目状态...",
 		dataSource : proStatusItems
 	});
+	var proCategoryItems = [{ text: "产品", value: "1" }, { text: "工程", value: "2" }, { text: "服务", value: "3" }];
 	$("#projectType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
@@ -111,6 +112,9 @@ $(document).ready(function() {
 				url : "/service/user/list",
 				dataType : "jsonp"
 			}
+		},
+		schema: {
+		    data: "data"
 		}
 	});
 	//var proManagerItems = [{ text: "Danny", value: "1" }, { text: "Dylan", value: "2" }, { text: "Jacky", value: "3" }];
@@ -127,6 +131,9 @@ $(document).ready(function() {
 				url : "/service/customer/list",
 				dataType : "jsonp"
 			}
+		},
+		schema: {
+		    data: "data"
 		}
 	});
 	$("#customer").kendoDropDownList({
