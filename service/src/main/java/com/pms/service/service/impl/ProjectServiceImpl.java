@@ -30,13 +30,13 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	@Override
 	public Map<String, Object> listProjects(Map<String, Object> params) {
 		// Get parameters from the input params
-		int limit = ApiUtil.getInteger(params, "pageSize", 10);
-		int limitStart = ApiUtil.getInteger(params, "skip", 0);
+		int limit = ApiUtil.getInteger(params, ApiConstants.PAGE_SIZE, 10);
+		int limitStart = ApiUtil.getInteger(params, ApiConstants.SKIP, 0);
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		String[] limitKeys = new String[] {ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CUSTOMER,
 				ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_ABBR};
-//		queryMap.put(ApiConstants.LIMIT, limit);
-//		queryMap.put(ApiConstants.LIMIT_START, limitStart);
+		queryMap.put(ApiConstants.LIMIT, limit);
+		queryMap.put(ApiConstants.LIMIT_START, limitStart);
 		queryMap.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		Map<String, Object> result = this.dao.list(queryMap, DBBean.PROJECT);
 		

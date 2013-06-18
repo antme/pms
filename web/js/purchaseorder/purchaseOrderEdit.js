@@ -81,6 +81,10 @@ $(document).ready(function() {
 						dataType : "jsonp",
 						url : selectUrl
 					}
+				},
+				schema : {
+					total: "total", // total is returned in the "total" field of the response
+					data: "data"
 				}
 			},
 

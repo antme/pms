@@ -15,13 +15,18 @@ var dataSource = new kendo.data.DataSource({
 			dataType : "jsonp",
 			method : "post"
 		},
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
+	},
+	parameterMap : function(options, operation) {
+		if (operation !== "read" && options.models) {
+			return {
+				models : kendo.stringify(options.models)
+			};
 		}
+	},
+
+	schema: {
+	    //total: "total", // total is returned in the "total" field of the response
+	    data: "data"
 	},
 	pageSize: 10,
 	batch : true//,

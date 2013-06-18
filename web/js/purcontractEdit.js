@@ -62,6 +62,10 @@ $(document).ready(function() {
 						dataType : "jsonp",
 						url : "/service/purcontract/order/list",
 					}
+				},
+				schema : {
+					total: "total", // total is returned in the "total" field of the response
+					data: "data"
 				}
 			}
 		});
@@ -78,6 +82,10 @@ $(document).ready(function() {
 					dataType : "jsonp",
 					url : "/service/suppliers/list"
 				}
+			},
+			schema : {
+				total: "total", // total is returned in the "total" field of the response
+				data: "data"
 			}
 		}
 	});
