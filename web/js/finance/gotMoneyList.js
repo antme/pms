@@ -27,20 +27,21 @@ var gotMoneyDataSource = new kendo.data.DataSource({
 			url : "../service/sc/gotmoney/add",
 			dataType : "jsonp",
 			method : "post"
-		},
-
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
+		}
+	},
+	parameterMap : function(options, operation) {
+		if (operation !== "read" && options.models) {
+			return {
+				models : kendo.stringify(options.models)
+			};
 		}
 	},
 	pageSize: 10,
 	batch : true,
 	
 	schema : {
+		data:"data",
+		total:"total",
 		model : scGotMoneyModel
 	}
 });
@@ -51,6 +52,9 @@ var contractItems = new kendo.data.DataSource({
 			url : "../service/sc/list",
 			dataType : "jsonp"
 		}
+	},
+	schema: {
+	    data: "data"
 	}
 });
 
