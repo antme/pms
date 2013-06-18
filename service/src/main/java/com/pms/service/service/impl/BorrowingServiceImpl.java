@@ -192,22 +192,15 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		return res;
 	}
 
-	public Map<String, Object> approve(Map<String, Object> params) {
-        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
-        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        params.put(BorrowingBean.BORROW_STATUS, 1);
+	public Map<String, Object> option(Map<String, Object> params) {
+		Map<String, Object> result = null;
+		if (params.containsKey(BorrowingBean.BORROW_STATUS)) {
+			Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
+	        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+	        params.put(BorrowingBean.BORROW_STATUS, params.get(BorrowingBean.BORROW_STATUS));
 
-        Map<String, Object> result =  dao.updateById(params, DBBean.BORROWING);
-        
-        return result;
-    }
-
-	public Map<String, Object> reject(Map<String, Object> params) {
-        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
-        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        params.put(BorrowingBean.BORROW_STATUS, 2);
-
-        Map<String, Object> result =  dao.updateById(params, DBBean.BORROWING);
+	        result =  dao.updateById(params, DBBean.BORROWING);
+		}
         
         return result;
     }
