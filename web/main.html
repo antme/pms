@@ -23,7 +23,7 @@
 </style>
   <script id="treeview-template" type="text/kendo-ui-template">
             # if (!item.items) { #
-                <a class='delete-link' id="'#:item.id#'" access="'#:item.access#'" onclick="loadPage('#:item.id#');" href='\##:item.id#'>#: item.text #</a>
+                <a class='delete-link' id="'#:item.id#'" access="'#:item.access#'" onclick="loadTreePage('#:item.id#');" href='\##:item.id#'>#: item.text #</a>
             # } else{ #
                 <a class='delete-link' id="'#:item.id#'" access="'#:item.access#'" >#: item.text #</a>    
             #}#
@@ -37,7 +37,7 @@
 		</div>
 
 		<ul>
-			<li><a href="#" id="user-m"><span class="user_m">我的任务</span></a></li>
+			<li><a href="" id="user-m"><span class="user_m">我的任务</span></a></li>
 			<li><a href="#" id="user-info"><span class="user_info" id="user_info"></span></a></li>
 			<li><a href="#" id="logout-button"><span class="user_logout">登出</span></a></li>
 		</ul>
@@ -47,8 +47,14 @@
 		<div class="left">
 		  <div id="tree-nav"></div>
 		</div>
-		
+
 		<div class="right">
+		    <div id="myTask" style="margin-left: 215px;">
+		      <span><strong>我的任务:</strong></span>
+		      <div id="tabMyTask">
+               </div>
+            </div>
+	    
 			<div  id="main_right" style="margin-left: 210px;">
 			</div>
 		</div>

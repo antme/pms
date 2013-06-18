@@ -133,7 +133,6 @@ $(document).ready(function() {
 });
 
 
-var userMenus = [];
 function init(user){
 	
 	userRoles = user.data;
@@ -158,16 +157,17 @@ function init(user){
     });
 	var page = getUrlParser().attr("anchor");
 
-	if (!page) {
-		page = "html/local-data.html";
+	if(page){
+		loadPage(page);
+	}else{
+		loadPage("mytask");
 	}
-	loadPage(page);
-
+	
 	$("#user-m").click(function() {
-		loadPage("userman");
+		loadPage("mytask");
 	});
 	$("#user-info").click(function() {
-		loadPage("default");
+		loadPage("myinfo");
 	});
 }
 
@@ -201,9 +201,6 @@ function onAjaxFail(data) {
 }
 
 function displayMsg(result) {
-	// $('#error').show();
-	// $("#error").html(result.msg);
-	// $('#error').delay(2000).hide(0);
 	alert(result.msg);
 
 }
@@ -213,6 +210,10 @@ function getUrlParser(){
 	return jQuery.url.setUrl(urlStr);	
 }
 
+function loadTreePage(page){
+	$("#myTask").hide();
+	loadPage(page);
+}
 
 function loadPage(page, parameters, popupDiv) {
 	
@@ -291,17 +292,47 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/finance/payMoney.html";
 	}
 	
-	
-	if(!page.endWith(".html")){
+
+	if (page == "mytask") {
+		$("#myTask").show();
+		var tabMyTask = $("#tabMyTask").data("kendoTabStrip");
+
+		if (!tabMyTask) {
+			$("#tabMyTask").kendoTabStrip({
+				select : function(e) {
+
+					var text = e.item.innerText;
+					if (text == "备货申请") {
+						loadPage("purchaseBack");
+					}else if (text == "采购申请") {
+						loadPage("purchaseRequestApprove");
+					}
+					console.log(e.item.innerText);
+				}
+			});
+			tabMyTask = $("#tabMyTask").data("kendoTabStrip");
+			tabMyTask.append([ {
+				text : "备货申请"
+			}, {
+				text : "采购申请"
+			}, {
+				text : "采购订单"
+			}, {
+				text : "采购合同"
+			}
+
+			]);
+			tabMyTask.select(0);
+		}
+		var tabMyTask = $("#tabMyTask").data("kendoTabStrip");
+
+	}else if(!page.endWith(".html")){
 		alert("暂未开放");
 	}else{
-	
-
 		var url = page + "?_uid=" + uid;
 	
 		if (page.indexOf("?") != -1) {
-			url = page + "&_uid=" + uid;
-	
+			url = page + "&_uid=" + uid;	
 		}
 		$.ajax({
 			url : url,

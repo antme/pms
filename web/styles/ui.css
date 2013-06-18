@@ -1,9 +1,11 @@
 body {
 	background-color: #f6f6f6;
 }
+
 .k-grid-toolbar {
-    height: 25px;
+	height: 25px;
 }
+
 .edit-hidden {
 	display: none;
 }
@@ -13,10 +15,11 @@ body {
 	background-color: #142849;
 }
 
-.k-content {	
-    border: 1px solid #c5c5c5;
-    padding: 10px;
+.k-content {
+	border: 1px solid #c5c5c5;
+	padding: 10px;
 }
+
 .view-login .container {
 	width: 500px;
 	position: absolute;
@@ -77,13 +80,13 @@ body {
 	padding-top: 5px;
 }
 
-.user_logout{
+.user_logout {
 	background-image: url("../images/block.png");
-    background-repeat: no-repeat;
-    padding-left: 35px;
-    height: 40px;
-    display: block;
-    padding-top: 5px;
+	background-repeat: no-repeat;
+	padding-left: 35px;
+	height: 40px;
+	display: block;
+	padding-top: 5px;
 }
 
 .user_info {
@@ -104,7 +107,6 @@ body {
 	padding-top: 5px
 }
 
-
 .left {
 	width: 200px;
 	float: left;
@@ -122,18 +124,19 @@ body {
 	cursor: pointer !important;
 }
 
-.k-grid-header .k-header{
+.k-grid-header .k-header {
 	white-space: normal;
 }
 
-.access{
+.access {
 	display: none;
 }
 
-a{
-    cursor: pointer !important;
+a {
+	cursor: pointer !important;
 }
 
-#popup{
+#popup {
 	display: none;
 }
+
