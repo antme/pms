@@ -1,5 +1,6 @@
 package com.pms.service.service;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IShipService {
@@ -15,6 +16,8 @@ public interface IShipService {
 	public Map<String, Object> create(Map<String, Object> params);
 
 	public Map<String, Object> eqlist(Map<String, Object> params);
+	
+	public List<Map<String,Object>> shipedList(String saleId);
 
 	public Map<String, Object> approve(Map<String, Object> params);
 	

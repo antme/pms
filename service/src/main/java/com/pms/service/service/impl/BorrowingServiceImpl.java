@@ -11,30 +11,31 @@ import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.BorrowingBean;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IBorrowingService;
 import com.pms.service.service.IPurchaseContractService;
-import com.pms.service.service.IPurchaseService;
+import com.pms.service.service.IShipService;
 import com.pms.service.util.ApiUtil;
 
 public class BorrowingServiceImpl extends AbstractService implements IBorrowingService {
 	
 	private IPurchaseContractService pService;
 	
-	private IPurchaseService purchaseService;
+	private IShipService shipService;
+
+	public IShipService getShipService() {
+		return shipService;
+	}
+
+	public void setShipService(IShipService shipService) {
+		this.shipService = shipService;
+	}
 
 	public IPurchaseContractService getpService() {
 		return pService;
-	}
-
-	public IPurchaseService getPurchaseService() {
-		return purchaseService;
-	}
-
-	public void setPurchaseService(IPurchaseService purchaseService) {
-		this.purchaseService = purchaseService;
 	}
 
 	public void setpService(IPurchaseContractService pService) {
@@ -54,7 +55,13 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	}
 
 	public Map<String, Object> list(Map<String, Object> params) {
-		Map<String, Object> result = dao.list(null, DBBean.BORROWING);
+		int limit = ApiUtil.getInteger(params, ApiConstants.PAGE_SIZE, 15);
+		int limitStart = ApiUtil.getInteger(params, ApiConstants.SKIP, 0);
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put(ApiConstants.LIMIT, limit);
+		queryMap.put(ApiConstants.LIMIT_START, limitStart);
+		
+		Map<String, Object> result = dao.list(queryMap, DBBean.BORROWING);
 		
 		List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
 		
@@ -131,17 +138,57 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	}
 	
 	public Map<String, Object> eqlist(Map<String, Object> params) {
-		Map<String, Object> res = new HashMap<String, Object>();
+		
 		String saleId = (String) params.get(BorrowingBean.BORROW_OUT_SALES_CONTRACT_ID);
 		
-		Map<String, Double> alloeq = purchaseService.getAllotEqCountBySalesContractId(saleId);
+		// 已批准的 采购合同 的设备清单
+		List<Map<String, Object>> purchaseEqList = pService.listApprovedPurchaseContractCosts(saleId);
 		
-		for (Map.Entry mapEntry : alloeq.entrySet()) {
-			
+		// 已发货的设备清单
+		List<Map<String, Object>> shipedEqList = shipService.shipedList(saleId);
+		
+		Map<String, Double> alloEqList = new HashMap<String, Double>();
+
+		// 采购
+		for (Map<String, Object> p:purchaseEqList){
+			String id = p.get(ApiConstants.MONGO_ID).toString();
+			Double amount = (Double) p.get(EqCostListBean.EQ_LIST_AMOUNT);
+			if (alloEqList.containsKey(id)) {
+				alloEqList.put(id, amount);
+			}
 		}
 		
-		List<Map<String, Object>> list = pService.listApprovedPurchaseContractCosts(saleId);
-		res.put(ApiConstants.RESULTS_DATA, list);
+		// - 已发货
+		for (Map<String, Object> s:shipedEqList){
+			String id = s.get(ApiConstants.MONGO_ID).toString();
+			if (alloEqList.containsKey(id)) {
+				Double amount = (Double) s.get(EqCostListBean.EQ_LIST_AMOUNT);
+				Double aAmount = alloEqList.get(id);
+				alloEqList.put(id, aAmount-amount);
+			}
+		}
+		
+		// 取设备信息
+		List<String> eqId = new ArrayList<String>();
+		for (String id : alloEqList.keySet()) {
+			eqId.add(id);
+		}
+		Map<String, Object> queryContract = new HashMap<String, Object>();
+		queryContract.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, eqId));
+		Map<String, Object> eqInfoMap = dao.listToOneMapByKey(queryContract, DBBean.EQ_COST, ApiConstants.MONGO_ID);
+		
+		// 封装结果数据
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		for (Map.Entry mapEntry : alloEqList.entrySet()) {
+			Map<String, Object> eqMap = (Map<String, Object>) eqInfoMap.get(mapEntry.getKey().toString());
+			if (eqMap != null) {
+				eqMap.put(EqCostListBean.EQ_LIST_AMOUNT, mapEntry.getValue());
+				result.add(eqMap);
+			}
+		}
+		
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put(ApiConstants.RESULTS_DATA, result);
 		return res;
 	}
 

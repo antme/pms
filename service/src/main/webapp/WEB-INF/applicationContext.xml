@@ -103,7 +103,7 @@
 		id="borrowingService">
 		<property name="dao" ref="commonDao"></property>
 		<property name="pService" ref="purchaseContractService"></property>
-		<property name="purchaseService" ref="purchaseService"></property>
+		<property name="shipService" ref="shipService"></property>
 	</bean>
 
 	<bean
