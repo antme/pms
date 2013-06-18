@@ -173,11 +173,11 @@ public abstract class AbstractController {
                 }
 
                 if (data != null && data instanceof Map) {
-                    Object responseMap = data.get("data");
+                    Object responseMap = null; //data.get("data");
                     
-                    if(responseMap == null){
+                    //if(responseMap == null){
                         responseMap = data;
-                    }
+                    //}
                         //返回
                         jsonReturn = callback + "(" + new Gson().toJson(responseMap) + ");";
                    

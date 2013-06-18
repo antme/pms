@@ -19,7 +19,8 @@ var dataSource = new kendo.data.DataSource({
 	},
 	
 	schema: {
-	    total: "total" // total is returned in the "total" field of the response
+	    total: "total", // total is returned in the "total" field of the response
+	    data: "data"
 	},
 
 	pageSize: 5,
