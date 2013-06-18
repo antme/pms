@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -234,8 +235,11 @@ public class CommonDaoMongoImpl implements ICommonDao {
             clone.remove(ApiConstants.MONGO_ID);
             clone.remove(ApiConstants.CREATED_ON);
             clone.put(ApiConstants.UPDATED_ON, new Date().getTime());
+            
+            //Before update we record the modify trace
+            //addUpdateHistoryLog(clone, id, collection);
+            
             BasicDBObject doc = new BasicDBObject(clone);
-
             result = this.getConnection(ConfigurationManager.getDbName(), collection).update(new BasicDBObject(ApiConstants.MONGO_ID, new ObjectId(id)),
                     new BasicDBObject("$set", doc));
             clone.put(ApiConstants.MONGO_ID, id);
@@ -246,6 +250,62 @@ public class CommonDaoMongoImpl implements ICommonDao {
         return null;
 
     }
+    
+    public void addUpdateHistoryLog(Map<String, Object> newMap, String _id, String collection) {
+		String cName = collection + "_history";
+		
+		List<String> limitKeysList = new ArrayList<String>();
+
+		for (Entry<String, Object> entry : newMap.entrySet()){
+			limitKeysList.add(entry.getKey());
+		}
+		limitKeysList.remove(ApiConstants.UPDATED_ON);
+		String[] limitKeys = (String[]) limitKeysList.toArray();
+		
+		Map<String, Object> oldQuery = new HashMap<String, Object>();
+		oldQuery.put(ApiConstants.MONGO_ID, _id);
+		oldQuery.put(ApiConstants.LIMIT_KEYS, limitKeys);
+		Map<String, Object> oldMap = findOneByQuery(oldQuery, collection);
+		oldMap.remove(ApiConstants.MONGO_ID);
+		oldMap.remove(ApiConstants.CREATED_ON);
+		oldMap.remove(ApiConstants.UPDATED_ON);
+		
+		//TODO call generateModifiedMaps  then do logic continue
+		
+	}
+    
+    public List<Map<String, Object>> generateModifiedMaps(String _id, Map<String, Object> oldMap, Map<String, Object> newMap){
+    	List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		String operator = ApiThreadLocal.getCurrentUserId();
+		double now = new Date().getTime();
+		
+    	for (Entry<String, Object> entry : newMap.entrySet()){
+    		String key = entry.getKey();
+    		Object newValue = entry.getValue();
+    		Object oldValue = oldMap.get(key);
+    		if (newValue == null && oldValue == null){
+    			continue;
+    		}
+    		if (oldValue instanceof String && oldValue.equals(newValue)){
+    			continue;
+    		}
+
+    		Map<String, Object> historyItem = new HashMap<String, Object>();
+    		historyItem.put(ApiConstants.HISTORY_KEY, key);
+    		historyItem.put(ApiConstants.HISTORY_DATA_ID, _id);
+    		historyItem.put(ApiConstants.HISTORY_OPERATOR, operator);
+    		historyItem.put(ApiConstants.HISTORY_TIME, now);
+    		if (newValue != null && oldValue == null){
+    			historyItem.put(ApiConstants.HISTORY_OLD, oldValue);
+        		historyItem.put(ApiConstants.HISTORY_NEW, newValue);
+        		result.add(historyItem);
+        		continue;
+    		}
+    		//TODO add logic continue
+    	}
+    	return result;
+    }
+    
     public Map<String, Object> updateNoDateById(Map<String, Object> parameters, String collection) {
         Map<String, Object> clone = DBQueryUtil.generateQueryFields(parameters);
         WriteResult result = null;
