@@ -384,13 +384,15 @@ public class CommonDaoMongoImpl implements ICommonDao {
         
         Map<String, Object> results  = listMongoObjects(parameters, cursor, collection, mergeToOneMap, mapKey);
         if (page != null) {
-            page.setTotal(cursor.count());
-            Map<String, Object> pageMap = new HashMap<String, Object>();
-            pageMap.put(ApiConstants.LIMIT, page.getLimit());
-            pageMap.put(ApiConstants.LIMIT_START, page.getLimitStart());
-            pageMap.put(ApiConstants.TOTAL_PAGES, page.getTotalPages());
-            pageMap.put(ApiConstants.TOTAL, page.getTotal());
-            results.put(ApiConstants.PAGENATION, pageMap);
+//            page.setTotal(cursor.count());
+//            Map<String, Object> pageMap = new HashMap<String, Object>();
+//            pageMap.put(ApiConstants.LIMIT, page.getLimit());
+//            pageMap.put(ApiConstants.LIMIT_START, page.getLimitStart());
+//            pageMap.put(ApiConstants.TOTAL_PAGES, page.getTotalPages());
+//            pageMap.put(ApiConstants.TOTAL, page.getTotal());
+//            results.put(ApiConstants.PAGENATION, pageMap);
+        	
+        	results.put(ApiConstants.TOTAL, cursor.count());
         }
         
         return results;

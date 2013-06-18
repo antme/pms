@@ -184,6 +184,11 @@ public class DBQueryUtil {
         ignoreKyes.add(ApiConstants.LIMIT_KEYS);
         ignoreKyes.add(ApiConstants.DB_QUERY_ORDER_BY);
         ignoreKyes.add("token");
+        
+        ignoreKyes.add(ApiConstants.PAGE);
+        ignoreKyes.add(ApiConstants.PAGE_SIZE);
+        ignoreKyes.add(ApiConstants.SKIP);
+        ignoreKyes.add(ApiConstants.TAKE);
         return ignoreKyes;
     }
     

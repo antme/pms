@@ -26,6 +26,13 @@ public class ApiConstants {
     public static final String TOTAL_PAGES = "totalPages";
     public static final String RESULTS_DATA = "data";
     public static final String PAGENATION = "pagination";
+    
+
+    public static final String PAGE_SIZE = "pageSize";
+    public static final String TAKE = "take";
+    
+    public static final String PAGE = "page";
+    public static final String SKIP = "skip";
 
     
     

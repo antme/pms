@@ -15,36 +15,45 @@ var dataSource = new kendo.data.DataSource({
 			url : "/service/project/add",
 			dataType : "jsonp",
 			method : "post"
-		},
-
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
 		}
 	},
-	pageSize: 10,
-	batch : true
+	
+	schema: {
+	    total: "total" // total is returned in the "total" field of the response
+	},
+
+	pageSize: 5,
+    serverPaging: true,
+	batch : true,
+	
+	parameterMap : function(options, operation) {
+		if (operation !== "read" && options.models) {
+			return {
+				models : kendo.stringify(options.models)
+//				json_p : kendo.stringify(options.models)
+			};
+		}
+	}
+
 });
 
 $(document).ready(function() {
 	
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
-		pageable : {
-			buttonCount:5,
-			//input:true,
-			//pageSizes:true
-		},
+		pageable : true,
+//		pageable : {
+//			buttonCount:5,
+//			//input:true,
+//			//pageSizes:true
+//		},
 		editable : "popup",
 		toolbar : [ { template: kendo.template($("#template").html()) } ],
 		selectable: "row",
-        sortable: {
-            mode: "multiple",
-            allowUnsort: true
-        },
+//        sortable: {
+//            mode: "multiple",
+//            allowUnsort: true
+//        },
 		columns : [ {
 			field : "projectCode",
 			title : "项目编号"
@@ -88,21 +97,7 @@ $(document).ready(function() {
 		}, {
 			field : "customer",
 			title : "客户名"
-		}
-//		, {
-//			field : "totalAmount",
-//			title : "项目总金额"
-//		}, {
-//			field : "invoiceAmount",
-//			title : "开票金额"
-//		}, {
-//			field : "getAmount",
-//			title : "到款金额"
-//		}, {
-//			field : "purchaseAmount",
-//			title : "采购金额"
-//		}
-		]
+		}]
 	});
 });//end dom ready	
 	
