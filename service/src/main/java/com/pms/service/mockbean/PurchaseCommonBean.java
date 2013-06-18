@@ -1,7 +1,7 @@
 package com.pms.service.mockbean;
 
 
-public class PurchaseBean extends BaseEntity {
+public class PurchaseCommonBean extends BaseEntity {
     
     private String projectId;
     
@@ -24,6 +24,8 @@ public class PurchaseBean extends BaseEntity {
     private String purchaseRequestCode;
     
     private String purchaseRequestId;
+    
+    private String comment;
 
 
     public String getProjectId() {
@@ -118,9 +120,13 @@ public class PurchaseBean extends BaseEntity {
         this.purchaseRequestId = purchaseRequestId;
     }
 
+    public String getComment() {
+        return comment;
+    }
 
-
-
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     public static final String PROCESS_STATUS = "status";
     public static final String APPROVED_DATE = "approvedDate";

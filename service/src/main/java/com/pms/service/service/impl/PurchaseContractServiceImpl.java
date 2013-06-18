@@ -16,7 +16,7 @@ import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
-import com.pms.service.mockbean.PurchaseBean;
+import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.PurchaseRequestOrder;
 import com.pms.service.mockbean.SalesContractBean;
@@ -25,6 +25,7 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISalesContractService;
+import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
@@ -179,17 +180,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     /**
      * 
-     * 选择已批准的备货申请，返回_id, salesContract_code, salesContract_id, code字段
+     * 选择已批准的备货申请，返回_id, pbCode, scCode 字段
      * 
      */
-    public Map<String, Object> listBackRequestForSelect() {
-        
-        Map<String, Object> query = new HashMap<String, Object>();
-        
-//        query.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
-        
+    public Map<String, Object> listBackRequestForSelect() {        
+        Map<String, Object> query = new HashMap<String, Object>();      
+        query.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());        
         query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode, PurchaseBack.scCode});
-
         return dao.list(query, DBBean.PURCHASE_BACK);
     }
     
@@ -229,7 +226,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> getRelatedProjectInfo(Map<String, Object> params){
 
         //FIXME: code refine
-        PurchaseBean request = (PurchaseBean) new PurchaseBean().toEntity(params);
+        PurchaseCommonBean request = (PurchaseCommonBean) new PurchaseCommonBean().toEntity(params);
         
         Map<String, Object> project = dao.findOne(ApiConstants.MONGO_ID, request.getProjectId(), DBBean.PROJECT);
 
