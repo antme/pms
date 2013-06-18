@@ -111,7 +111,11 @@ public class CommonDaoMongoImpl implements ICommonDao {
     
     public Map<String, Object> listToOneMapAndIdAsKey(Map<String, Object> parameters, String collection){
         DBObject query = DBQueryUtil.buildQueryObject(parameters, true, true);
-        return doPageNationQuery(parameters, collection, query, true, null);
+        Map<String, Object> result = doPageNationQuery(parameters, collection, query, true, null);
+        result.remove(ApiConstants.TOTAL);
+        result.remove(ApiConstants.RESULTS_DATA);
+        result.remove(ApiConstants.PAGENATION);
+        return result;
         
     }
     
