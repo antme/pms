@@ -42,11 +42,19 @@ $(document).ready(function () {
             	template:function(dataItem) {
 					var name = "";
 					if (dataItem.status == 0){
-						name = "申请中";
+						name = "借货申请中";
 					} else if (dataItem.status == 1){
-						name = "已发货";
-					} else { // status=2
-						name = "打回";
+						name = "借货申请已批准";
+					} else if (dataItem.status == 2){
+						name = "还货申请中";
+					} else if (dataItem.status == 3){
+						name = "还货申请已批准";
+					} else if (dataItem.status == -1){
+						name = "借货申请被拒绝";
+					} else if (dataItem.status == -3){
+						name = "还货申请被拒绝";
+					} else {
+						name = "未知";
 					}
 					return name;
 				}
@@ -70,27 +78,40 @@ function toolbar_edit() {
 	loadPage("addBorrowing",{_id:rowData._id});
 }
 
-function toolbar_approve() {
+function toolbar_option(op) {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		var param = {
-			_id : row._id
-		};
-		postAjaxRequest(crudServiceBaseUrl + "/approve", param,
-				callback);
-
-	}
-
-}
-
-function toolbar_reject() {
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	if (row) {
-		var param = {
-			"_id" : row._id
-		};
-		postAjaxRequest(crudServiceBaseUrl + "/reject", param,
-				callback);
+		
+		var nextStatus = false;
+		
+		if (op == 1) { // 批准操作
+			if (row.status == 0) { // 借货申请
+				nextStatus = 1;
+			} else if (row.status == 2) { // 还货申请
+				nextStatus = 3;
+			}
+		} else if (op == 2) { // 拒绝操作
+			if (row.status == 0) { // 借货申请
+				nextStatus = -1;
+			} else if (row.status == 2) { // 还货申请
+				nextStatus = -3;
+			}
+		} else if (op == 3) { // 还货操作
+			if (row.status == 1) {
+				nextStatus = 2;
+			}
+		}
+		
+		if (nextStatus) {
+			var param = {
+					"_id" : row._id,
+					"status" : nextStatus
+				};
+			postAjaxRequest(crudServiceBaseUrl + "/option", param,
+						callback);
+		} else {
+			alert("无法执行该操作");
+		}
 	}
 }
 
