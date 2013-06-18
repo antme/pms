@@ -11,6 +11,10 @@ var dataSource = new kendo.data.DataSource({
 			dataType : "jsonp"
 		}
 	},
+	schema : {
+		total: "total", // total is returned in the "total" field of the response
+		data: "data"
+	},
 	pageSize : 20
 });
 

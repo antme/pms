@@ -49,8 +49,9 @@ $(document).ready(function() {
 						}
 					}
 				}
-			}
-
+			},
+		total: "total", // total is returned in the "total" field of the response
+		data: "data"
 		}
 	});
 
@@ -119,6 +120,10 @@ $(document).ready(function() {
 					dataType : "jsonp",
 					url : "/service/user/role/list"
 				}
+			},
+			schema : {
+				total: "total", // total is returned in the "total" field of the response
+				data: "data"
 			}
 		},
 		height : 300

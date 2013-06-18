@@ -9,6 +9,10 @@ $(document).ready(function() {
 				url : "/service/user/group/list",
 				dataType : "jsonp"
 			}
+		},
+		schema : {
+			total: "total", // total is returned in the "total" field of the response
+			data: "data"
 		}
 	});
 	
@@ -65,8 +69,9 @@ $(document).ready(function() {
 						}
 					}
 				}
-			}
-
+			},
+		total: "total", // total is returned in the "total" field of the response
+		data: "data"
 		}
 	});
 
@@ -128,31 +133,6 @@ $(document).ready(function() {
 });
 
 
-
-function roleMultSelectEditor(container, options) {
-	var uid = kendo.guid();
-	var editor = $('<input  data-bind="value:' + options.field + '"/>');
-	editor.appendTo(container);
-	editor.kendoMultiSelect({
-		dataTextField : "description",
-		dataValueField : "_id",
-		placeholder : "选择权限...",
-		dataSource : {
-			transport : {
-				read : {
-					dataType : "jsonp",
-					url : "/service/user/role/list"
-				}
-			}
-		},
-		change : function(e) {
-			options.model.roles = this.value();
-		},
-		height : 300
-	});
-}
-
-
 function groupMultSelectEditor(container, options) {
 	var uid = kendo.guid();
 	var editor = $('<input  data-bind="value:' + options.field + '"/>');
@@ -167,6 +147,10 @@ function groupMultSelectEditor(container, options) {
 					dataType : "jsonp",
 					url : "/service/user/group/list"
 				}
+			},
+			schema : {
+				total: "total", // total is returned in the "total" field of the response
+				data: "data"
 			}
 		},
 		change : function(e) {

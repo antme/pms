@@ -59,7 +59,10 @@ var dataSource = new kendo.data.DataSource({
 	batch : true,
 	pageSize : 20,
 	schema : {
-		model : model
+		model : model,
+		total: "total", // total is returned in the "total" field of the response
+		data: "data"
+
 	}
 });
 var dm = new model();
