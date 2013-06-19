@@ -279,7 +279,6 @@ $(document).ready(function() {
 
 	//合同类型
 	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
-	var contractTypeItems = [{ text: "弱电工程", value: 1 }, { text: "产品集成（灯控/布线，楼控，其他）", value: 2 }, { text: "产品销售", value: 3 }, { text: "维护及服务", value: 4 }];
 	$("#contractType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
