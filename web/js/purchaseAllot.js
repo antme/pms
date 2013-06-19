@@ -42,7 +42,8 @@ $(document).ready(function () {
 	    batch: true,
 	    pageSize: 10,
 	    schema: {
-	        model: requestModel
+	        model: requestModel,
+	        data:"data"
 	    }
 	});	
 	

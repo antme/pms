@@ -79,4 +79,12 @@ public interface IPurchaseContractService {
     public Map<String, Object> addPaymoney(HashMap<String, Object> params);
     
     public Map<String, Object> updatePaymoney(HashMap<String, Object> params);
+    
+    public Map<String, Object> listGetInvoice(HashMap<String, Object> params);
+
+    public Map<String, Object> addGetInvoice(HashMap<String, Object> params);
+    
+    public Map<String, Object> updateGetInvoice(HashMap<String, Object> params);
+    
+    public void destroyGetInvoice(HashMap<String, Object> params);
 }

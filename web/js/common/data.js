@@ -19,6 +19,7 @@ var accessRoles = {
 	projectList : "project_management",
 	projectex : "project_management, purchase_request_management",
 	purchaseBack : "project_management",
+	getInvoice : "project_management",
 	purchaseRequestByAssistant : "purchase_request_management",
 	purchaseorder : "user_management",
 	ship : "user_management",
@@ -75,7 +76,8 @@ var menus = [
                          { text: "财务资料", id: "contract",  imageUrl: "/images/order.png" },
                          { text: "开票信息", id: "invoiceList", imageUrl: "/images/ccontract.png" },
                          { text: "收款信息", id: "gotMoneyList", imageUrl: "/images/ccontract.png"},
-                         { text: "付款信息", id: "payMoney", imageUrl: "/images/ccontract.png"}
+                         { text: "付款信息", id: "payMoney", imageUrl: "/images/ccontract.png"},
+                         { text: "收票信息", id: "getInvoice", imageUrl: "/images/ccontract.png"}
                      ]
              },
                                  

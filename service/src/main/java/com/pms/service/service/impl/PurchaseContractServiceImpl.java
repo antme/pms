@@ -491,15 +491,35 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 		return dao.updateById(obj, DBBean.PAY_MONEY);
 	}
 
+	@Override
+	public Map<String, Object> listGetInvoice(HashMap<String, Object> params) {
+		return dao.list(null, DBBean.GET_INVOICE);
+	}
+
+	@Override
+	public Map<String, Object> addGetInvoice(HashMap<String, Object> params) {
+		return dao.add(params, DBBean.GET_INVOICE);
+	}
+
+	@Override
+	public Map<String, Object> updateGetInvoice(HashMap<String, Object> params) {
+		return dao.updateById(params, DBBean.GET_INVOICE);
+	}
+
+	@Override
+	public void destroyGetInvoice(HashMap<String, Object> params) {
+		List<String> ids = new ArrayList<String>();
+		ids.add(String.valueOf(params.get(ApiConstants.MONGO_ID)));
+		dao.deleteByIds(ids, DBBean.GET_INVOICE);
+	}
+
 	public ISalesContractService getScs() {
         return scs;
     }
 
-
     public void setScs(ISalesContractService scs) {
         this.scs = scs;
     }
-
 
     public IPurchaseService getBackService() {
         return backService;
@@ -509,8 +529,5 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public void setBackService(IPurchaseService backService) {
         this.backService = backService;
     }
-
-    
-    
 
 }
