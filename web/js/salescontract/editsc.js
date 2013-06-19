@@ -453,10 +453,9 @@ function edit(data){
 		$("#invoiceList").kendoGrid({
 			dataSource : invoiceDataSource,
 			editable : "popup",
-			toolbar : [ {
-				template : kendo.template($("#addInvoiceButtonTem").html())
-			} ],
-			//toolbar : [ { name:"create",text:"新开票" } ],
+//			toolbar : [ {
+//				template : kendo.template($("#addInvoiceButtonTem").html())
+//			} ],
 			columns : [ {
 				field : "scInvoiceMoney",
 				title : "开票金额"
@@ -476,10 +475,9 @@ function edit(data){
 		$("#gotMoneyList").kendoGrid({
 			dataSource : gotMoneyDataSource,
 			editable : "popup",
-			toolbar : [ {
-				template : kendo.template($("#addGotMoneyButtonTem").html())
-			} ],
-			//toolbar : [ { name:"create",text:"新收款" } ],
+//			toolbar : [ {
+//				template : kendo.template($("#addGotMoneyButtonTem").html())
+//			} ],
 			columns : [ {
 				field : "scGotMoney",
 				title : "收款金额"
@@ -496,10 +494,9 @@ function edit(data){
 		$("#monthShipmentsGrid").kendoGrid({
 			dataSource : monthShipmentsSource,
 			editable : "popup",
-			toolbar : [ {
-				template : kendo.template($("#addMonthShipmentsButtonTem").html())
-			} ],
-			//toolbar : [ { name:"create",text:"新收款" } ],
+//			toolbar : [ {
+//				template : kendo.template($("#addMonthShipmentsButtonTem").html())
+//			} ],
 			columns : [ {
 					field : "month",
 					title : "发货月份"

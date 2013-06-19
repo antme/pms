@@ -279,7 +279,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
 	}
     
     /**
-     * 更新一条数据库记录前，比较待更新数据与数据库中各字段。
+     * 更新一条数据库记录前，比较待更新数据与数据库中对应数据 各字段。
      * 提取出改变的字段。
      * 
      * @param _id
@@ -326,12 +326,50 @@ public class CommonDaoMongoImpl implements ICommonDao {
     		}
     		
     		if (oldValue instanceof Map){
-    			//字段存储一个 Map
+    			//字段存储一个 Map.只考虑 Map 中的每个value都是 基本数据类型 ： eg. {k0="abc",k1="efg"}
+    			Map<String, Object> newValueMap = (Map<String, Object>)newValue;
+    			Map<String, Object> oldValueMap = (Map<String, Object>)oldValue;
+    			for (Entry<String, Object> e : newValueMap.entrySet()){//记录两种case: 1.新数据中有的key，老数据中没有此key；2. 新老数据都有的key，但value有变化；
+    				String k = e.getKey();
+    				Object newItemValue = e.getValue();
+    				Object oldItemValue = oldValueMap.get(k);
+    				oldValueMap.remove(k);
+    				if (!(oldItemValue instanceof Map) && !(oldItemValue instanceof List) && 
+    						!(String.valueOf(oldItemValue).equals(String.valueOf(newItemValue)))){
+    	    			//基本数据类型，且值不相等
+    					Map<String, Object> hi = new HashMap<String, Object>();
+    					hi.put(ApiConstants.HISTORY_KEY, key+"."+ k);
+    					hi.put(ApiConstants.HISTORY_DATA_ID, _id);
+    					hi.put(ApiConstants.HISTORY_OPERATOR, operator);
+    					hi.put(ApiConstants.HISTORY_TIME, now);
+    					hi.put(ApiConstants.HISTORY_OLD, oldValue);
+    					hi.put(ApiConstants.HISTORY_NEW, newValue);
+    	        		result.add(hi);
+    	    			continue;
+    	    		}
+    			}//end for loop
+    			
+				if (!oldValueMap.isEmpty()){//记录1中case： 1.老数据中有key，新数据中无此key。相当于删除了此key
+					for (Entry<String, Object> oldEn : oldValueMap.entrySet()){
+						String k = oldEn.getKey();
+						Map<String, Object> hi = new HashMap<String, Object>();
+    					hi.put(ApiConstants.HISTORY_KEY, key+"."+ k);
+    					hi.put(ApiConstants.HISTORY_DATA_ID, _id);
+    					hi.put(ApiConstants.HISTORY_OPERATOR, operator);
+    					hi.put(ApiConstants.HISTORY_TIME, now);
+    					hi.put(ApiConstants.HISTORY_OLD, oldEn.getValue());
+    					hi.put(ApiConstants.HISTORY_NEW, null);
+    	        		result.add(hi);
+    	    			continue;
+					}//end for loop
+				}
+				
     			continue;
     		}
     		
     		if (oldValue instanceof List){
-    			//字段存储一个 List
+    			//字段存储一个 List.只考虑List 中存放的是 基本数据类型.eg. ["abc","abcd","efg"]
+    			//暂时不记录此种数据痕迹
     			continue;
     		}
     		
