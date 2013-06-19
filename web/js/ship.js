@@ -35,7 +35,10 @@ $(document).ready(function () {
             { field: "applicationDate", title:"申请日期" },
             {
             	field: "contractCode",
-            	title:"销售合同编号"
+            	title:"销售合同编号",
+				template : function(dataItem) {
+					return '<a  onclick="openScViewWindow(\'' + dataItem.salesContractId + '\');">' + dataItem.contractCode + '</a>';
+				}
             },
             { field: "customer", title:"客户名称" },
             {
@@ -107,4 +110,9 @@ function toolbar_reject() {
 function callback(response) {
 	alert("操作成功");
 	dataSource.read();
+}
+
+function openScViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"销售合同信息"};
+	openRemotePageWindow(options, "html/salescontract/viewsc.html", {_id : param});
 }

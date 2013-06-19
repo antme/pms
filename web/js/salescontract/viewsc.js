@@ -164,7 +164,13 @@ $(document).ready(function() {
 		min:0
 	});
 	
-	postAjaxRequest("/service/sc/get", redirectParams, edit);
+	if(popupParams){
+		postAjaxRequest("/service/sc/get", popupParams, edit);
+		disableAllInPoppup();
+	}else if (redirectParams) {//Edit
+		postAjaxRequest("/service/sc/get", redirectParams, edit);
+	}
+	
 	
 });//end dom ready	
 
