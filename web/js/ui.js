@@ -205,9 +205,9 @@ function loadPage(page, parameters, popupDiv) {
 				select : function(e) {
 
 					var text = e.item.innerText;
-					if (text == "备货申请") {
+					if (text == "我的草稿") {
 						loadPage("purchaseBack");
-					}else if (text == "采购申请") {
+					}else if (text == "我的待批") {
 						loadPage("purchaseRequestApprove");
 					}
 					console.log(e.item.innerText);
@@ -215,13 +215,15 @@ function loadPage(page, parameters, popupDiv) {
 			});
 			tabMyTask = $("#tabMyTask").data("kendoTabStrip");
 			tabMyTask.append([ {
-				text : "备货申请"
+				text : "我的草稿"
 			}, {
-				text : "采购申请"
+				text : "我的待批"
 			}, {
-				text : "采购订单"
+				text : "我的退回"
 			}, {
-				text : "采购合同"
+				text : "我的已批"
+			}, {
+				text : "系统提醒"
 			}
 
 			]);
