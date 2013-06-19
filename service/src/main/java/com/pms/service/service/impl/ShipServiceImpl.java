@@ -59,6 +59,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 
 	public Map<String, Object> update(Map<String, Object> params) {
+		params.put(ShipBean.SHIP_STATUS, 0);
 		return dao.updateById(params, DBBean.SHIP);
 	}
 
@@ -150,7 +151,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		}
 		return eqList;
 	}
-
+	
+	// 批准
 	public Map<String, Object> approve(Map<String, Object> params) {
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
         params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
@@ -160,11 +162,12 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         
         return result;
     }
-
+	
+	// 拒绝
 	public Map<String, Object> reject(Map<String, Object> params) {
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
         params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        params.put(ShipBean.SHIP_STATUS, 2);
+        params.put(ShipBean.SHIP_STATUS, -1);
 
         Map<String, Object> result =  dao.updateById(params, DBBean.SHIP);
         
