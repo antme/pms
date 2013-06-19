@@ -149,16 +149,14 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     public void deleteUserGroup(Map<String, Object> userGroup) {        
         Map<String, Object> group = dao.findOne(ApiConstants.MONGO_ID, userGroup.get(ApiConstants.MONGO_ID), DBBean.USER_GROUP);
 
-        if (group != null && group.get(GroupBean.GROUP_NAME).equals(GroupBean.GROUP_ADMIN_VALUE)) {
-            throw new ApiResponseException("Not allowed to delete admin group!", ResponseCodeConstants.ADMIN_GROUP_EDIT_DISABLED);
+        if (group != null && group.get(ApiConstants.CREATOR) == null) {
+            throw new ApiResponseException("Not allowed to delete system default group!", ResponseCodeConstants.ADMIN_GROUP_DELETE_DISABLED);
         }
             
         List<String> ids = new ArrayList<String>();
         ids.add(userGroup.get(ApiConstants.MONGO_ID).toString());
         dao.deleteByIds(ids, DBBean.USER_GROUP);
     }
-    
-    
 
     
     public Map<String, Object> listUserRoles(String userId){

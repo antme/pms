@@ -90,6 +90,13 @@ $(document).ready(function() {
 		}
 	});
 	
+	$("#purchaseContractType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择合同类型...",
+		dataSource : purchaseContractType,
+	});
+	
 	
 	if (redirectParams) {
 		postAjaxRequest("/service/purcontract/get", redirectParams, edit);

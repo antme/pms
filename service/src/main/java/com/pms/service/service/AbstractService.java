@@ -141,12 +141,14 @@ public abstract class AbstractService {
 
     }
 
+    //部门助理
     protected boolean isDepartMentAssistant() {
 
         return inGroup(GroupBean.DEPARTMENT_ASSISTANT_VALUE);
 
     }
 
+    //部门经理
     protected boolean isDepartmentManager() {
 
         return inGroup(GroupBean.DEPARTMENT_MANAGER_VALUE);
@@ -159,15 +161,25 @@ public abstract class AbstractService {
 
     }
 
+    //采购
     protected boolean isPurchase() {
 
         return inGroup(GroupBean.PURCHASE_VALUE);
 
     }
 
+    
+    //库管
     protected boolean isDepotManager() {
 
         return inGroup(GroupBean.DEPOT_MANAGER_VALUE);
+
+    }
+    
+    //财务
+    protected boolean isFinance() {
+
+        return inGroup(GroupBean.FINANCE);
 
     }
     

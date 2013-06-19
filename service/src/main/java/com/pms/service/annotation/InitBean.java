@@ -52,7 +52,7 @@ public class InitBean {
     
 
     private static void createSystemDefaultGroups(ICommonDao dao) {
-        String[] groupNames = new String[] { GroupBean.DEPARTMENT_ASSISTANT_VALUE, GroupBean.DEPARTMENT_MANAGER_VALUE, GroupBean.COO_VALUE, GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE };
+        String[] groupNames = new String[] { GroupBean.DEPARTMENT_ASSISTANT_VALUE, GroupBean.DEPARTMENT_MANAGER_VALUE, GroupBean.COO_VALUE, GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE, GroupBean.FINANCE };
 
         for (String name : groupNames) {
             Map<String, Object> adminGroup = new HashMap<String, Object>();

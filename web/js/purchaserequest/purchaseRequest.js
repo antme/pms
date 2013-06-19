@@ -31,11 +31,14 @@ $(document).ready(function() {
 				field : "purchaseRequestCode",
 				title : "采购申请编号",
 				template : function(dataItem) {
-					return '<a  onclick="opRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.purchaseRequestCode + '</a>';
+					return '<a  onclick="opPurchaseRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.purchaseRequestCode + '</a>';
 				}
 			}, {
 				field : "backRequestCode",
-				title : "备货申请编号"
+				title : "备货申请编号",
+				template : function(dataItem) {
+					return '<a  onclick="opBackRequestViewWindow(\'' + dataItem.backRequestId + '\');">' + dataItem.backRequestCode + '</a>';
+				}
 			}, {
 				field : "salesContractCode",
 				title : "销售合同编号"
@@ -44,7 +47,10 @@ $(document).ready(function() {
 				title : "订单编号"
 			}, {
 				field : "projectName",
-				title : "项目名"
+				title : "项目名",
+				template : function(dataItem) {
+					return '<a  onclick="opProjectViewWindow(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
+				}
 			}, {
 				field : "customerName",
 				title : "客户名"
@@ -93,8 +99,19 @@ function add(){
 	loadPage("html/purchasecontract/purchaseRequestEdit.html");
 }
 
-function opRequestViewWindow(param){
+function opPurchaseRequestViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"采购申请信息"};
 	openRemotePageWindow(options, "html/purchasecontract/purchaseRequestEdit.html", {_id : param});
+}
+
+function opBackRequestViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"备货申请信息"};
+	openRemotePageWindow(options, "purchaseBackEdit", {_id : param});
+}
+
+
+function opProjectViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"项目信息"};
+	openRemotePageWindow(options, "html/project/addProject.html", {_id : param});
 }
 
