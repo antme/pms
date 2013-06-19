@@ -96,9 +96,11 @@ var menus = [
 
 
 
-
+//销售合同相关的数据
 //弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
 var contractTypeItems = [{ text: "弱电工程", value: 1 }, { text: "产品集成（灯控/布线，楼控，其他）", value: 2 }, { text: "产品销售", value: 3 }, { text: "维护及服务", value: 4 }];
 
+
+//采购合同相关数据
 //合同类型
 var purchaseContractType = [{text : "代理产品", value: "代理产品"}, {text : "非代理产品", value: "非代理产品"}, {text : "同方采购", value: "同方采购"}];
