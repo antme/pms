@@ -143,7 +143,10 @@ $(document).ready(function () {
 		location.reload();
 	}
 	
-	if(redirectParams){
+	if(popupParams){
+		postAjaxRequest(baseUrl+"/load", popupParams, edit);
+		disableAllInPoppup();
+	}else if(redirectParams){
 		var backId = redirectParams._id;
 		var saleId = redirectParams.salesContract_id;
 		$("#searchDiv").hide();
