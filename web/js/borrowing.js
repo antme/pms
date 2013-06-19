@@ -37,7 +37,11 @@ $(document).ready(function () {
             	field: "inProjectName",
             	title:"调入项目名称",
 				template : function(dataItem) {
-					return '<a  onclick="openProjectViewWindow(\'' + dataItem.inProjectId + '\');">' + dataItem.inProjectName + '</a>';
+					if (dataItem.outProjectName) {
+						return '<a  onclick="openProjectViewWindow(\'' + dataItem.inProjectId + '\');">' + dataItem.inProjectName + '</a>';
+					} else {
+						return '';
+					}
 				}
             },
             { field: "inProjectManager", title:"调入项目负责人" },
@@ -45,7 +49,11 @@ $(document).ready(function () {
             	field: "outProjectName",
             	title:"调出项目名称",
 				template : function(dataItem) {
-					return '<a  onclick="openProjectViewWindow(\'' + dataItem.outProjectId + '\');">' + dataItem.outProjectName + '</a>';
+					if (dataItem.outProjectName) {
+						return '<a  onclick="openProjectViewWindow(\'' + dataItem.outProjectId + '\');">' + dataItem.outProjectName + '</a>';
+					} else {
+						return '';
+					}
 				}
             },
             { field: "outProjectManager", title:"调出项目负责人" },

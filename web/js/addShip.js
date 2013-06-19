@@ -155,8 +155,10 @@ function save() {
 	if (!validator.validate()) {
 		return;
     } else {
-        var data = eqDataSource.data();
-        model.set("eqcostList", data);
+    	if (eqDataSource) {
+    		var data = eqDataSource.data();
+            model.set("eqcostList", data);
+		}
         
         listDataSource.add(model);
         
