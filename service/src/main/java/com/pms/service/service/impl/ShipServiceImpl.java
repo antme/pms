@@ -9,6 +9,7 @@ import java.util.Map;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.BorrowingBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.ShipBean;
@@ -152,24 +153,15 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		return eqList;
 	}
 	
-	// 批准
-	public Map<String, Object> approve(Map<String, Object> params) {
-        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
-        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        params.put(ShipBean.SHIP_STATUS, 1);
+	public Map<String, Object> option(Map<String, Object> params) {
+		Map<String, Object> result = null;
+		if (params.containsKey(ShipBean.SHIP_STATUS)) {
+			Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
+	        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
+	        params.put(ShipBean.SHIP_STATUS, params.get(ShipBean.SHIP_STATUS));
 
-        Map<String, Object> result =  dao.updateById(params, DBBean.SHIP);
-        
-        return result;
-    }
-	
-	// 拒绝
-	public Map<String, Object> reject(Map<String, Object> params) {
-        Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
-        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-        params.put(ShipBean.SHIP_STATUS, -1);
-
-        Map<String, Object> result =  dao.updateById(params, DBBean.SHIP);
+	        result =  dao.updateById(params, DBBean.SHIP);
+		}
         
         return result;
     }
