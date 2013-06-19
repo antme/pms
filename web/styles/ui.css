@@ -140,3 +140,7 @@ a {
 	display: none;
 }
 
+
+table{
+	word-break: break-all;
+}

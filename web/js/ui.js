@@ -376,6 +376,7 @@ function back() {
 
 function openRemotePageWindow(options, page, parameter) {
 	var window = $("#popup");
+	$("#popup").html("")
 	$("#popup").show();
 
 	var kendoWindow = window.data("kendoWindow");
@@ -384,22 +385,22 @@ function openRemotePageWindow(options, page, parameter) {
 			width : options.width,
 			height : options.height,
 			title : options.title,
-			activate : function(e){
-				popupParams = parameter;
-				loadPage(page, null, "popup");
-			},
-			close : function(e){
-				$("#popup").html("")
+			close : function(e) {
 				popupParams = undefined;
 			},
-			actions: ["Maximize", "Close"]
+			actions : [ "Maximize", "Close" ]
 		});
 		kendoWindow = window.data("kendoWindow");
 		kendoWindow.center();
 	} else {
+		kendoWindow.setOptions(options);
 		kendoWindow.open();
 		kendoWindow.center();
 	}
+
+	popupParams = parameter;
+	loadPage(page, null, "popup");
+
 }
 
 function disableAllInPoppup(){

@@ -31,13 +31,13 @@ $(document).ready(function() {
 				field : "purchaseRequestCode",
 				title : "采购申请编号",
 				template : function(dataItem) {
-					return '<a  onclick="opPurchaseRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.purchaseRequestCode + '</a>';
+					return '<a  onclick="openPurchaseRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.purchaseRequestCode + '</a>';
 				}
 			}, {
 				field : "backRequestCode",
 				title : "备货申请编号",
 				template : function(dataItem) {
-					return '<a  onclick="opBackRequestViewWindow(\'' + dataItem.backRequestId + '\');">' + dataItem.backRequestCode + '</a>';
+					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem.backRequestId + '\');">' + dataItem.backRequestCode + '</a>';
 				}
 			}, {
 				field : "salesContractCode",
@@ -49,7 +49,7 @@ $(document).ready(function() {
 				field : "projectName",
 				title : "项目名",
 				template : function(dataItem) {
-					return '<a  onclick="opProjectViewWindow(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
+					return '<a  onclick="openProjectViewWindow(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
 				}
 			}, {
 				field : "customerName",
@@ -99,18 +99,18 @@ function add(){
 	loadPage("html/purchasecontract/purchaseRequestEdit.html");
 }
 
-function opPurchaseRequestViewWindow(param){
+function openPurchaseRequestViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"采购申请信息"};
 	openRemotePageWindow(options, "html/purchasecontract/purchaseRequestEdit.html", {_id : param});
 }
 
-function opBackRequestViewWindow(param){
+function openBackRequestViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"备货申请信息"};
 	openRemotePageWindow(options, "purchaseBackEdit", {_id : param});
 }
 
 
-function opProjectViewWindow(param){
+function openProjectViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"项目信息"};
 	openRemotePageWindow(options, "html/project/addProject.html", {_id : param});
 }
