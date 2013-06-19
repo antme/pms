@@ -122,6 +122,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	}
 
 	public Map<String, Object> update(Map<String, Object> params) {
+		params.put(BorrowingBean.BORROW_STATUS, 0);
 		return dao.updateById(params, DBBean.BORROWING);
 	}
 
@@ -151,41 +152,47 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 
 		// 采购
 		for (Map<String, Object> p:purchaseEqList){
-			String id = p.get(ApiConstants.MONGO_ID).toString();
-			Double amount = (Double) p.get(EqCostListBean.EQ_LIST_AMOUNT);
-			if (alloEqList.containsKey(id)) {
+			if (p != null) {
+				String id = p.get(ApiConstants.MONGO_ID).toString();
+				Double amount = (Double) p.get(EqCostListBean.EQ_LIST_AMOUNT);
 				alloEqList.put(id, amount);
 			}
 		}
 		
-		// - 已发货
-		for (Map<String, Object> s:shipedEqList){
-			String id = s.get(ApiConstants.MONGO_ID).toString();
-			if (alloEqList.containsKey(id)) {
-				Double amount = (Double) s.get(EqCostListBean.EQ_LIST_AMOUNT);
-				Double aAmount = alloEqList.get(id);
-				alloEqList.put(id, aAmount-amount);
-			}
-		}
-		
-		// 取设备信息
-		List<String> eqId = new ArrayList<String>();
-		for (String id : alloEqList.keySet()) {
-			eqId.add(id);
-		}
-		Map<String, Object> queryContract = new HashMap<String, Object>();
-		queryContract.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, eqId));
-		Map<String, Object> eqInfoMap = dao.listToOneMapByKey(queryContract, DBBean.EQ_COST, ApiConstants.MONGO_ID);
-		
-		// 封装结果数据
+		// 结果数据
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-		for (Map.Entry mapEntry : alloEqList.entrySet()) {
-			Map<String, Object> eqMap = (Map<String, Object>) eqInfoMap.get(mapEntry.getKey().toString());
-			if (eqMap != null) {
-				eqMap.put(EqCostListBean.EQ_LIST_AMOUNT, mapEntry.getValue());
-				result.add(eqMap);
+		
+		if (alloEqList != null) {
+			// - 已发货
+			for (Map<String, Object> s:shipedEqList){
+				String id = s.get(ApiConstants.MONGO_ID).toString();
+				if (alloEqList.containsKey(id)) {
+					Double amount = (Double) s.get(EqCostListBean.EQ_LIST_AMOUNT);
+					Double aAmount = alloEqList.get(id);
+					alloEqList.put(id, aAmount-amount);
+				}
+			}
+			
+			// 取设备信息
+			List<String> eqId = new ArrayList<String>();
+			for (String id : alloEqList.keySet()) {
+				eqId.add(id);
+			}
+			Map<String, Object> queryContract = new HashMap<String, Object>();
+			queryContract.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, eqId));
+			Map<String, Object> eqInfoMap = dao.listToOneMapByKey(queryContract, DBBean.EQ_COST, ApiConstants.MONGO_ID);
+			
+			// 封装结果数据
+			for (Map.Entry mapEntry : alloEqList.entrySet()) {
+				Map<String, Object> eqMap = (Map<String, Object>) eqInfoMap.get(mapEntry.getKey().toString());
+				if (eqMap != null) {
+					eqMap.put(EqCostListBean.EQ_LIST_AMOUNT, mapEntry.getValue());
+					result.add(eqMap);
+				}
 			}
 		}
+		
+		
 		
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put(ApiConstants.RESULTS_DATA, result);

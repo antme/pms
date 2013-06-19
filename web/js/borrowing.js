@@ -33,9 +33,21 @@ $(document).ready(function () {
         columns: [
             { field:"applicant", title: "申请人" },
             { field: "applicationDate", title:"申请日期" },
-            { field: "inProjectName", title:"调入项目名称" },
+            {
+            	field: "inProjectName",
+            	title:"调入项目名称",
+				template : function(dataItem) {
+					return '<a  onclick="openProjectViewWindow(\'' + dataItem.inProjectId + '\');">' + dataItem.inProjectName + '</a>';
+				}
+            },
             { field: "inProjectManager", title:"调入项目负责人" },
-            { field: "outProjectName", title:"调出项目名称" },
+            {
+            	field: "outProjectName",
+            	title:"调出项目名称",
+				template : function(dataItem) {
+					return '<a  onclick="openProjectViewWindow(\'' + dataItem.outProjectId + '\');">' + dataItem.outProjectName + '</a>';
+				}
+            },
             { field: "outProjectManager", title:"调出项目负责人" },
             {
             	field: "status", title:"状态",
@@ -69,13 +81,14 @@ function toolbar_add() {
 }
 
 function toolbar_edit() {
-	var rowData = getSelectedRowDataByGrid("grid");
-	if (rowData == null){
-		alert("请点击选择一条记录！");
-		return;
+	var rowData = getSelectedRowDataByGridWithMsg("grid");
+	if (rowData) {
+		if (rowData.status == 0 || rowData.status == -1){
+			loadPage("addBorrowing",{_id:rowData._id});
+		} else {
+			alert("无法执行该操作");
+		}
 	}
-	
-	loadPage("addBorrowing",{_id:rowData._id});
 }
 
 function toolbar_option(op) {
@@ -85,9 +98,9 @@ function toolbar_option(op) {
 		var nextStatus = false;
 		
 		if (op == 1) { // 批准操作
-			if (row.status == 0) { // 借货申请
+			if (row.status == 0 || row.status == -1) { // 借货申请
 				nextStatus = 1;
-			} else if (row.status == 2) { // 还货申请
+			} else if (row.status == 2 || row.status == -3) { // 还货申请
 				nextStatus = 3;
 			}
 		} else if (op == 2) { // 拒绝操作
@@ -118,4 +131,9 @@ function toolbar_option(op) {
 function callback(response) {
 	alert("操作成功");
 	dataSource.read();
+}
+
+function openProjectViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"项目信息"};
+	openRemotePageWindow(options, "html/project/addProject.html", {_id : param});
 }

@@ -6,7 +6,7 @@
 		height: 25px;
 	}
 	</style>
-	<script type="text/javascript" src="js/userman.js"></script>
+	<script type="text/javascript" src="js/user/userman.js"></script>
 	<script id="groupTemplate" type="text/x-kendo-tmpl">
         <div id="role-edit"   src="/../../images/padlock.png" />#:#</div>
     </script>
@@ -15,9 +15,13 @@
     </script>
 </head>
 	<body>
-		<div id="roleitem" class="k-content">
+	    <div class="k-toolbar k-grid-toolbar">
+            <button access="user_management" class="k-button " onclick="add();">新增</button>
+            <button access="user_management" class="k-button " onclick="edit();">编辑</button>
+            <button access="user_management" class="k-button " onclick="del();">删除</button>
+         </div>
+		<div id="roleitem">
 			<div id="grid"></div>
-	
 		</div>
 	</body>
 </html>
