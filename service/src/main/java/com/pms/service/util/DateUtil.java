@@ -64,9 +64,10 @@ public class DateUtil {
 	}
 	
 	public static String getDateStringByLong(Long times){
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	    return sdf.format(new Date(times));
 	}
+	
 	public static Date setDateZero(Long dl){
 		Date date = new Date(dl);
 		date.setHours(0);

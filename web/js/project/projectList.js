@@ -94,10 +94,16 @@ $(document).ready(function() {
 			}
 		}, {
 			field : "projectManager",
-			title : "PM"
+			title : "PM",
+			template : function(dataItem) {
+				return '<a  onclick="viewPM(\'' + dataItem.pmId + '\');">' + dataItem.projectManager + '</a>';
+			}
 		}, {
 			field : "customer",
-			title : "客户名"
+			title : "客户名",
+			template : function(dataItem) {
+				return '<a  onclick="viewCustomer(\'' + dataItem.cId + '\');">' + dataItem.customer + '</a>';
+			}
 		}]
 	});
 });//end dom ready	
@@ -141,6 +147,16 @@ function toolbar_setupProject() {//1:正式立项；2：预立项；3：内部�
 function setupProjectCallBack(){
 	alert("正式立项成功");
 	dataSource.read();
+}
+
+function viewPM(param){
+//	var options = { width:"680px", height: "400px", title:"项目经理信息"};
+//	openRemotePageWindow(options, "html/user/useredit.html", {_id : param});
+}
+
+function viewCustomer(param){
+//	var options = { width:"680px", height: "400px", title:"客户信息"};
+//	openRemotePageWindow(options, "html/customer/.html", {_id : param});
 }
 	
 	
