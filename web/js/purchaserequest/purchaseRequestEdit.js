@@ -52,6 +52,9 @@ var model = kendo.data.Model.define({
 		},
 		eqcostAvailableAmount: {
 			editable : false
+		},
+		comment : {
+			
 		}
 	}
 });
@@ -241,22 +244,16 @@ function loadBackRequest(data) {
 function edit(data) {
 
 	// 初始化空对象
-	var dataItem = new model();
 	if (data) {
 		requestDataItem = data;
 	}
-	if (requestDataItem) {
-		// 如果是从采购申请选择过来的
-		dataItem = requestDataItem;
-	}
 
-	// 隐藏选择采购申请
-	// $("#purchase-request-select").hide();
+	requestDataItem = new model(requestDataItem);
+
 
 	// 渲染成本编辑列表
-	itemDataSource.data(dataItem.eqcostList);
-
-	kendo.bind($("#purchase-request-edit-item"), dataItem);
+	itemDataSource.data(requestDataItem.eqcostList);
+	kendo.bind($("#purchase-request-edit-item"), requestDataItem);
 
 
 	var editKendoGrid = $("#purchase-request-edit-grid").data("kendoGrid");
