@@ -222,8 +222,7 @@ public class PurchaseContractController extends AbstractController {
 
     @RequestMapping("/paymoney/add")
     public void addPaymoney(HttpServletRequest request, HttpServletResponse response) {
-        pService.addPaymoney(parserJsonParameters(request, false));
-        responseWithData(null, request, response, "save_success");
+        responseWithData(pService.addPaymoney(parserJsonParameters(request, false)), request, response, "save_success");
     }
     
     @RequestMapping("/paymoney/update")

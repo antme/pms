@@ -3,8 +3,10 @@ package com.pms.service.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -434,35 +436,47 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     	Map<String,Object> query = new HashMap<String,Object>();
     	query.put(ApiConstants.LIMIT_KEYS, new String[]{"purchaseContractCode","supplierName"});
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
-        List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
-        for(Map<String, Object> data: list){
-            Map<String, Object> query2 = new HashMap<String, Object>();
-            query2.put(ApiConstants.MONGO_ID, data.get("supplierName"));
-            Map<String, Object> relatedProjectInfo = this.dao.findOneByQuery(query2, DBBean.SUPPLIER);
-            data.put("supplierName", relatedProjectInfo.get("supplierName"));
-            data.put("supplierCardName", relatedProjectInfo.get("supplierName"));
-            data.put("supplierCardCode", relatedProjectInfo.get("supplierName"));
-        }        
         return results;
 	}
 
 	@Override
 	public Map<String, Object> listPaymoney(HashMap<String, Object> params) {
-		//String pcId = (String) params.get(PayMoneyBean.purchaseContractId);
 		Map<String,Object> query1 = new HashMap<String,Object>();
-		Map<String,Object> mapPay = dao.list(query1, DBBean.PAY_MONEY);
-		return mapPay;
+		Map<String,Object> map1 = dao.list(query1, DBBean.PAY_MONEY);
+		List<Map<String,Object>> list1 = (List<Map<String,Object>>)map1.get(ApiConstants.RESULTS_DATA);
+		
+		Set<String> suIds = new HashSet<String>();
+		for(Map<String,Object> obj : list1){
+			suIds.add((String)obj.get(PayMoneyBean.supplierId));
+		}
+		suIds.remove(null);
+		if(!suIds.isEmpty()){
+		Map<String,Object> query02 = new HashMap<String,Object>();
+		query02.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList(suIds)));
+		Map<String,Object> map2 = dao.listToOneMapAndIdAsKey(query02, DBBean.SUPPLIER);
+		for(Map<String,Object> obj : list1){
+			String id = (String)obj.get(PayMoneyBean.supplierId);
+			if(map2.containsKey(id)){
+				Map<String,Object> su = (Map<String,Object>)map2.get(id);
+				obj.put("supplierName", su.get("supplierName"));
+			}
+		}
+		}
+		return map1;
 	}
 
 	@Override
 	public Map<String, Object> addPaymoney(HashMap<String, Object> params) {
 		Map<String,Object> obj = new HashMap<String,Object>();
-		obj.put(PayMoneyBean.payMoney, params.get(PayMoneyBean.payMoney));
+		obj.put(PayMoneyBean.payMoney, ApiUtil.getDouble(params,PayMoneyBean.payMoney));
 		obj.put(PayMoneyBean.payDate, params.get(PayMoneyBean.payDate));
 		obj.put(PayMoneyBean.purchaseContractId, params.get(PayMoneyBean.purchaseContractId));
 		obj.put(PayMoneyBean.supplierCardCode, params.get(PayMoneyBean.supplierCardCode));
 		obj.put(PayMoneyBean.supplierCardName, params.get(PayMoneyBean.supplierCardName));
-		return dao.add(params, DBBean.PAY_MONEY);
+		Map<String,Object> pc = dao.findOne(ApiConstants.MONGO_ID, params.get(PayMoneyBean.purchaseContractId),new String[]{"supplierName","purchaseContractCode"}, DBBean.PURCHASE_CONTRACT);
+		obj.put(PayMoneyBean.purchaseContractCode, pc.get("purchaseContractCode"));
+		obj.put(PayMoneyBean.supplierId, pc.get("supplierName"));
+		return dao.add(obj, DBBean.PAY_MONEY);
 	}
 
 	@Override
@@ -474,7 +488,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 		obj.put(PayMoneyBean.purchaseContractId, params.get(PayMoneyBean.purchaseContractId));
 		obj.put(PayMoneyBean.supplierCardCode, params.get(PayMoneyBean.supplierCardCode));
 		obj.put(PayMoneyBean.supplierCardName, params.get(PayMoneyBean.supplierCardName));
-		return dao.updateById(params, DBBean.PAY_MONEY);
+		return dao.updateById(obj, DBBean.PAY_MONEY);
 	}
 
 	public ISalesContractService getScs() {
