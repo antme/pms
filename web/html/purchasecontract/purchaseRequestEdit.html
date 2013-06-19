@@ -29,10 +29,6 @@ label{
 <body>
    
     <div id="purchase-request-edit">
-        <div class="k-content">
-            <button onclick="back();">返回</button>
-        </div>
-        
         <div id="purchase-back-select" class="k-content">
             <div>
                 <label>选择备货申请: </label><input id="purchaseBackSelect" style="width: 250px" /><button onclick="selectBackRequest();">确定</button>
@@ -46,10 +42,10 @@ label{
                     <tr>
                         <td>项目名： <strong><span data-bind="text: projectName"></span></strong></td>   
                         <td>项目编号： <strong><span data-bind="text: projectCode"></span></strong></td>
-                        <td>合同编号： <strong><span data-bind="text: contractCode"></span></strong></td>
-                        <td>客户名称： <strong><span data-bind="text: customer"></span></strong></td>
+                        <td>合同编号： <strong><span data-bind="text: salesContractCode"></span></strong></td>
+                        <td>客户名称： <strong><span data-bind="text: customerName"></span></strong></td>
                         <td>申请编号：<strong><span data-bind="text: purchaseRequestCode" ></span></strong></td>
-                        <td>状态：<span data-bind="text: status" ></span></td>
+                        <td>状态：<strong><span data-bind="text: status" ></span></strong></td>
                     </tr>
                 </table>
             </div>
@@ -70,6 +66,7 @@ label{
                 <div>
                     <button onclick="save();">保存</button>
                     <button onclick="save('审批中');">提交申请</button>
+                    <button onclick="back();">取消</button>
                 </div>
             </div>
         

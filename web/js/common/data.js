@@ -103,4 +103,12 @@ var contractTypeItems = [{ text: "弱电工程", value: 1 }, { text: "产品集�
 
 //采购合同相关数据
 //合同类型
-var purchaseContractType = [{text : "代理产品", value: "代理产品"}, {text : "非代理产品", value: "非代理产品"}, {text : "同方采购", value: "同方采购"}];
+var purchaseContractType = [{text : "代理产品"}, {text : "非代理产品"}, {text : "同方采购"}];
+
+//货物递送方式
+var eqcostDeliveryType = [{text : "直发现场"}, {text : "直发入库"}];
+var executeType1 = [{text : "内部流程中"}, {text : "备货中"}, {text : "备货待发"}, {text : "发货完毕"}, {text : "结束"}];
+var executeType2 = [{text : "内部流程中"}, {text : "备货中"}, {text : "备货待发"}, {text : "入库完毕"}, {text : "结束"}];
+
+
+
