@@ -1,3 +1,18 @@
+//记录页面跳转参数
+var redirectParams = undefined;
+
+//记录弹出窗口（远程页面）参数
+var popupParams = undefined;
+
+//记录跳转的页面
+var redirecPage = undefined;
+
+//记录跳转前的页面
+var fromPage = undefined;
+
+//用户的权限，用来显示隐藏按钮，菜单等
+var userRoles = undefined;
+
 
 //定义菜单所需权限，目前写死在JS文件中, KEY对应menus变量中的菜单ID
 var accessRoles = {

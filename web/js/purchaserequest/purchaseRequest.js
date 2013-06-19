@@ -47,7 +47,10 @@ $(document).ready(function() {
 				title : "订单编号"
 			}, {
 				field : "projectName",
-				title : "项目名"
+				title : "项目名",
+				template : function(dataItem) {
+					return '<a  onclick="opProjectViewWindow(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
+				}
 			}, {
 				field : "customerName",
 				title : "客户名"
@@ -104,5 +107,11 @@ function opPurchaseRequestViewWindow(param){
 function opBackRequestViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"备货申请信息"};
 	openRemotePageWindow(options, "purchaseBackEdit", {_id : param});
+}
+
+
+function opProjectViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"项目信息"};
+	openRemotePageWindow(options, "html/project/addProject.html", {_id : param});
 }
 

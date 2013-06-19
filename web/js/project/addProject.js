@@ -142,8 +142,10 @@ $(document).ready(function() {
         optionLabel: "选择客户...",
 		dataSource : customerItems,
 	});
-	
-	if (redirectParams) {//Edit
+	if(popupParams){
+		postAjaxRequest("/service/project/get", popupParams, edit);
+		disableAllInPoppup();
+	}else if (redirectParams) {//Edit
 		postAjaxRequest("/service/project/get", redirectParams, edit);
 	} else {//Add
 		//添加表单绑定一个空的 Model
