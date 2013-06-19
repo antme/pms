@@ -207,25 +207,18 @@ function sumOrders(e) {
 function edit(data) {
 
 	// 初始化空对象
-	var dataItem = new model();
 	if (data) {
 		$("#purchase-request-select").hide();
 		requestDataItem = data;
 	}
-	if (requestDataItem) {
-		// 如果是从采购申请选择过来的
-		dataItem = requestDataItem;
-	}
 
-	// 隐藏选择采购申请
-	// $("#purchase-request-select").hide();
+	requestDataItem = new model(requestDataItem);
 
 	// 渲染成本编辑列表
-	itemDataSource.data(dataItem.eqcostList);
-
+	itemDataSource.data(requestDataItem.eqcostList);
 
 	
-	kendo.bind($("#purchaseorder-edit-item"), dataItem);
+	kendo.bind($("#purchaseorder-edit-item"), requestDataItem);
 	$("#purchaseorder-edit-item").show();
 
 	var editKendoGrid = $("#purchaseorder-edit-grid").data("kendoGrid");

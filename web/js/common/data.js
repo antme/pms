@@ -98,9 +98,17 @@ var menus = [
 
 //销售合同相关的数据
 //弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
-var contractTypeItems = [{ text: "弱电工程", value: 1 }, { text: "产品集成（灯控/布线，楼控，其他）", value: 2 }, { text: "产品销售", value: 3 }, { text: "维护及服务", value: 4 }];
+var contractTypeItems = [{ text: "弱电工程", value: "弱电工程" }, { text: "产品集成（灯控/布线）", value: "产品集成（灯控/布线）" }, { text: "产品集成（楼控）", value: "产品集成（楼控）" }, { text: "产品集成（其他）", value: "产品集成（其他）" }, { text: "产品销售（灯控/布线）", value: "产品销售（灯控/布线）" }, { text: "产品销售（楼控）", value: "产品销售（楼控）" }, { text: "产品销售（其他）", value: "产品销售（其他）" }, { text: "维护及服务", value: "维护及服务" }];
 
 
 //采购合同相关数据
 //合同类型
-var purchaseContractType = [{text : "代理产品", value: "代理产品"}, {text : "非代理产品", value: "非代理产品"}, {text : "同方采购", value: "同方采购"}];
+var purchaseContractType = [{text : "代理产品"}, {text : "非代理产品"}, {text : "同方采购"}];
+
+//货物递送方式
+var eqcostDeliveryType = [{text : "直发现场"}, {text : "直发入库"}];
+var executeType1 = [{text : "内部流程中"}, {text : "备货中"}, {text : "备货待发"}, {text : "发货完毕"}, {text : "结束"}];
+var executeType2 = [{text : "内部流程中"}, {text : "备货中"}, {text : "备货待发"}, {text : "入库完毕"}, {text : "结束"}];
+
+
+

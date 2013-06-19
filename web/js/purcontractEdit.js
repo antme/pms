@@ -92,12 +92,37 @@ $(document).ready(function() {
 	
 	$("#purchaseContractType").kendoDropDownList({
 		dataTextField : "text",
-		dataValueField : "value",
-        optionLabel: "选择合同类型...",
-		dataSource : purchaseContractType,
+		dataValueField : "text",
+		dataSource : purchaseContractType
 	});
 	
+	$("#eqcostDeliveryType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : eqcostDeliveryType,
+		select : function(e){
+			if(e.item[0].innerText == "直发入库"){
+				$("#executeStatus").kendoDropDownList({
+					dataTextField : "text",
+					dataValueField : "text",
+					dataSource : executeType2
+				});
+			}else{
+				$("#executeStatus").kendoDropDownList({
+					dataTextField : "text",
+					dataValueField : "text",
+					dataSource : executeType1
+				});
+			}
+		}
+	});
 	
+	$("#executeStatus").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : executeType1
+	});
+		
 	if (redirectParams) {
 		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
 	} 

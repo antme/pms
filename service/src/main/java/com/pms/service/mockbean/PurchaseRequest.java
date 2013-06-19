@@ -84,9 +84,6 @@ public class PurchaseRequest extends PurchaseCommonBean {
         this.moneyPercentOfContract = moneyPercentOfContract;
     }
 
-    public static final String PROCESS_STATUS = "status";
-    public static final String APPROVED_DATE = "approvedDate";
-    public static final String SALES_CONTRACT_CODE = "salesContractCode";
 
     public static final String STATUS_DRAFT = "草稿";
     public static final String STATUS_NEW = "审批中";

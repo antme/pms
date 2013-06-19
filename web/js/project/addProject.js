@@ -165,7 +165,8 @@ function saveProject(){
 	if (!validator.validate()) {
 		return;
     } else {
-        var _id = pModel.get("_id");
+        //var _id = pModel.get("_id");
+    	//console.log(kendo.stringify(pModel));
     	dataSource.add(pModel);
     	dataSource.sync();
     	loadPage("projectList");
