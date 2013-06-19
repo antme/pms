@@ -140,7 +140,10 @@ a {
 	display: none;
 }
 
-
-table{
+table {
 	word-break: break-all;
+}
+
+td a {
+	TEXT-DECORATION: underline
 }

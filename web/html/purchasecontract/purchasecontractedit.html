@@ -46,7 +46,9 @@
 							</div>
 							<div data-container-for="purchaseContractType"
 								class="k-edit-field ">
-						  
+						          <input type="text" 
+                                    name="purchaseContractType" id="purchaseContractType"
+                                    required="required" data-bind="value: purchaseContractType">
 							</div>
 
 							<div class="k-edit-label ">
@@ -79,11 +81,20 @@
                                 <label for="eqcostDeliveryType">货物递送方式</label>
                             </div>
                             <div data-container-for="eqcostDeliveryType" class="k-edit-field ">
-                                <select name="eqcostDeliveryType" data-bind="value: eqcostDeliveryType" id="eqcostDeliveryType" required data-required-msg="Select Contract Type">
-                                    <option>直发现场</option>
-                                    <option>直发入库</option>
-                                </select>
+                                 <input type="text" 
+                                    name="eqcostDeliveryType" id="eqcostDeliveryType"
+                                    required="required" data-bind="value: eqcostDeliveryType">
                             </div>
+                            
+                            <div class="k-edit-label ">
+                                <label for="executeStatus">执行状态</label>
+                            </div>
+                            <div data-container-for="executeStatus" class="k-edit-field ">
+                                 <input type="text" 
+                                    name="executeStatus" id="executeStatus"
+                                    required="required" data-bind="value: executeStatus">
+                            </div>
+                            
                             <div class="k-edit-label ">
                                 <label for="contractProperty">采购合同性质</label>
                             </div>
@@ -152,11 +163,19 @@
 								<label for="description">采购合同描述</label>
 							</div>
 							<div data-container-for="description" class="k-edit-field ">
-								<textarea id="description" rows="4" cols="120" class="k-textbox"
+								<textarea id="description" rows="4" cols="220" class="k-textbox"
 									data-bind="value: description"></textarea>
 							</div>
 
+						<div class="k-edit-label ">
+							<label for="comment">备注</label>
 						</div>
+						<div  data-container-for="comment"  class="k-edit-field ">
+							<textarea rows="4" cols="220" class="k-textbox"
+								data-bind="value: comment"></textarea>
+						</div>
+
+					</div>
 					</div>
 				</div>
 
