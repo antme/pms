@@ -16,20 +16,22 @@ var dataSource = new kendo.data.DataSource({
 			method : "post"
 		},
 	},
+	schema: {
+	    total: "total", // total is returned in the "total" field of the response
+	    data: "data"
+	},
+
+	pageSize: 5,
+    serverPaging: true,
+	batch : true,
+	
 	parameterMap : function(options, operation) {
 		if (operation !== "read" && options.models) {
 			return {
 				models : kendo.stringify(options.models)
 			};
 		}
-	},
-
-	schema: {
-	    total: "total", // total is returned in the "total" field of the response
-	    data: "data"
-	},
-	pageSize: 10,
-	batch : true
+	}
 });
 
 $(document).ready(function() {
