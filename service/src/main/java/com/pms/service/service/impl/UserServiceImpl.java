@@ -1,7 +1,6 @@
 package com.pms.service.service.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,7 @@ import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
+import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.RoleBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
@@ -159,16 +159,16 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     }
 
     
-    public Map<String, Object> listUserRoles(String userId){
-        if(userId == null){
-            return null;
-        }
-        List<String> ids = listUserRoleIds(userId);       
+    public Map<String, Object> listUserHomePageData() {
+        String userId = ApiThreadLocal.getCurrentUserId();
+        List<String> ids = listUserRoleIds(userId);
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));        
-        Map<String, Object> roles =  this.dao.list(query, DBBean.ROLE_ITEM);
-        roles.put(UserBean.USER_NAME, ApiThreadLocal.getCurrentUserName());
-        return roles;
+        query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
+        Map<String, Object> homeData = this.dao.list(query, DBBean.ROLE_ITEM);
+        homeData.put(UserBean.USER_NAME, ApiThreadLocal.getCurrentUserName());
+
+        homeData.put("mytasks", listMyTasks());
+        return homeData;
     }
     
     public void checkUserRole(String userId, String path) {
@@ -191,6 +191,36 @@ public class UserServiceImpl extends AbstractService implements IUserService {
                 logger.debug("Role requried for path : " + path);
                 throw new ApiResponseException(String.format("No role to for user[%s] and path[%s]", userId, path), "role_required");
             }
+        }
+    }
+    
+    
+    public Map<String, Object> listMyTasks(){
+        List<Map<String, Object>> draftList = new ArrayList<Map<String, Object>>();
+        
+        
+        Map<String, Object> myDraftPurchaseRequest = new HashMap<String, Object>();
+        myDraftPurchaseRequest.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
+        myDraftPurchaseRequest.put("status", PurchaseRequest.STATUS_DRAFT);
+       
+        getCount(draftList, myDraftPurchaseRequest, DBBean.PURCHASE_REQUEST);
+        getCount(draftList, myDraftPurchaseRequest, DBBean.PURCHASE_BACK);
+        getCount(draftList, myDraftPurchaseRequest, DBBean.PURCHASE_ORDER);
+        getCount(draftList, myDraftPurchaseRequest, DBBean.PURCHASE_CONTRACT);
+        
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("draft", draftList);
+         
+        return result;
+    }
+
+    private void getCount(List<Map<String, Object>> results, Map<String, Object> myDraftPurchaseRequest, String db) {
+        int count = this.dao.count(myDraftPurchaseRequest, db);
+        Map<String, Object> countMap = new HashMap<String, Object>();
+        if (count > 0) {
+            countMap.put("db", db);
+            countMap.put("count", count);
+            results.add(countMap);
         }
     }
 

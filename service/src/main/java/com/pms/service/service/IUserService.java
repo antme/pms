@@ -24,7 +24,7 @@ public interface IUserService {
     public void deleteUserGroup(Map<String, Object> userGroup);
     
  
-    public Map<String, Object> listUserRoles(String userId);
+    public Map<String, Object> listUserHomePageData();
     
     
     public void checkUserRole(String userId, String path);
@@ -32,6 +32,9 @@ public interface IUserService {
     public Map<String, Object> listUsers();
 
     public Map<String, Object> listNotUserRoleItems(Map<String, Object> roles);
+    
+    
+    public Map<String, Object> listMyTasks();
 
     
 }

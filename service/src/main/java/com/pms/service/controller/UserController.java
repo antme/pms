@@ -94,9 +94,9 @@ public class UserController extends AbstractController {
     }
     
     
-    @RequestMapping("/role/mine/list")
+    @RequestMapping("/home")
     public void listUserRoleItems(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(userService.listUserRoles(ApiThreadLocal.getCurrentUserId()), request, response);
+        responseWithData(userService.listUserHomePageData(), request, response);
     }
     
     @RequestMapping("/group/list")
@@ -124,6 +124,13 @@ public class UserController extends AbstractController {
         userService.deleteUserGroup(parserJsonParameters(request,  false));
         responseWithData(null, request, response);
     }
+    
+    
+    @RequestMapping("/mytasks")
+    public void listMyTasks(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(userService.listMyTasks(), request, response);
+    }
+       
 
 
 
