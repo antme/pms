@@ -290,7 +290,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
     public List<Map<String, Object>> generateModifiedMaps(String _id, Map<String, Object> oldMap, Map<String, Object> newMap){
     	List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		String operator = ApiThreadLocal.getCurrentUserId();
-		double now = new Date().getTime();
+		Long now = new Date().getTime();
 		
     	for (Entry<String, Object> entry : newMap.entrySet()){
     		String key = entry.getKey();
@@ -310,7 +310,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
     		historyItem.put(ApiConstants.HISTORY_DATA_ID, _id);
     		historyItem.put(ApiConstants.HISTORY_OPERATOR, operator);
     		historyItem.put(ApiConstants.HISTORY_TIME, now);
-    		if (oldValue == null && newValue != null){//老数据没有值，新数据有值
+    		if (oldValue == null && newValue != null && !ApiConstants.UPDATED_ON.equals(key)){//老数据没有值，新数据有值
     			historyItem.put(ApiConstants.HISTORY_OLD, oldValue);
         		historyItem.put(ApiConstants.HISTORY_NEW, newValue);
         		result.add(historyItem);

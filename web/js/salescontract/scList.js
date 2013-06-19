@@ -58,7 +58,10 @@ $(document).ready(function() {
 			title : "项目编号"
 		}, {
 			field : "projectName",
-			title : "项目名"
+			title : "项目名",
+			template : function(dataItem) {
+				return '<a  onclick="viewProject(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
+			}
 		}, {
 			field : "projectManager",
 			title : "PM"
@@ -108,8 +111,13 @@ function toolbar_viewSalesContract() {
 };
 
 function openTraceWindow(param){
-	var options = { width:"600px", height: "400px", title:"销售合同金额变更痕迹"};
+	var options = { width:"680px", height: "400px", title:"合同金额变更历史"};
 	openRemotePageWindow(options, "html/salescontract/traceSCAmount.html", {_id : param});
+}
+
+function viewProject(param){
+	var options = { width:"680px", height: "480px", title:"项目信息"};
+	openRemotePageWindow(options, "html/project/addProject.html", {_id : param});
 }
 
 

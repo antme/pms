@@ -161,13 +161,14 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		
 		for (Map<String, Object> pro : resultListData){
 			String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER);
+			pro.put("pmId", pmId);
 			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
 			if (pmInfo != null){
 				pro.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
 			}
-			
 
 			String cId = (String) pro.get(ProjectBean.PROJECT_CUSTOMER);
+			pro.put("cId", cId);
 			Map<String, Object> cInfo = (Map<String, Object>) customerData.get(cId);
 			if (cInfo != null){
 				pro.put(ProjectBean.PROJECT_CUSTOMER, cInfo.get(CustomerBean.NAME));

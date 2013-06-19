@@ -50,8 +50,10 @@ $(document).ready(function () {
             	template:function(dataItem) {
 					var name = "";
 					if (dataItem.status == 0){
-						name = "申请中";
+						name = "草稿";
 					} else if (dataItem.status == 1){
+						name = "申请中";
+					} else if (dataItem.status == 2){
 						name = "已发货";
 					} else if (dataItem.status == -1){
 						name = "拒绝";
@@ -81,29 +83,31 @@ function toolbar_edit() {
 	}
 }
 
-function toolbar_approve() {
+function toolbar_option(op) {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if (row.status == 0 || row.status == -1) {
-			var param = {
-					_id : row._id
-				};
-			postAjaxRequest(crudServiceBaseUrl + "/approve", param,
-						callback);
-		} else {
-			alert("无法执行该操作");
+		
+		var nextStatus = false;
+		
+		if (op == 1) { // 提交申请
+			if (row.status == 0) {
+				nextStatus = 1;
+			}
+		} else if (op == 2) { // 批准
+			if (row.status == 1 || row.status == -1) {
+				nextStatus = 2;
+			}
+		} else if (op == 3) { // 拒绝
+			if (row.status == 1) {
+				nextStatus = -1;
+			}
 		}
-	}
-}
-
-function toolbar_reject() {
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	if (row) {
-		if (row.status == 0) {
+		if (nextStatus) {
 			var param = {
-					"_id" : row._id
+					_id : row._id,
+					"status" : nextStatus
 				};
-			postAjaxRequest(crudServiceBaseUrl + "/reject", param,
+			postAjaxRequest(crudServiceBaseUrl + "/option", param,
 						callback);
 		} else {
 			alert("无法执行该操作");
