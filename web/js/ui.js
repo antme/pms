@@ -193,6 +193,8 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/repository/directRepository.html";
 	}else if(page == "payMoney"){
 		page = "html/finance/payMoney.html";
+	}else if(page == "getInvoice"){
+		page = "html/finance/getInvoice.html";
 	}
 	
 

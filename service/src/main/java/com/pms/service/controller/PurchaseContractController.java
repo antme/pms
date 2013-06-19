@@ -1,5 +1,7 @@
 package com.pms.service.controller;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -229,7 +231,27 @@ public class PurchaseContractController extends AbstractController {
     public void updatePaymoney(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.updatePaymoney(parserJsonParameters(request, false)), request, response);
     }
+    @RequestMapping("/invoice/list")
+    public void listGetInvoice(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listGetInvoice(parserJsonParameters(request, false)), request, response);
+    }
 
+    @RequestMapping("/invoice/add")
+    public void addGetInvoice(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.addGetInvoice(parserJsonParameters(request, false)), request, response, "save_success");
+    }
+    
+    @RequestMapping("/invoice/update")
+    public void updateGetInvoice(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.updateGetInvoice(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/invoice/destroy")
+    public void destoryBack(HttpServletRequest request, HttpServletResponse response) {
+    	pService.destroyGetInvoice(parserJsonParameters(request,  false));
+    	responseWithData(new HashMap(), request, response);
+    }    
+    
     public IPurchaseContractService getpService() {
         return pService;
     }

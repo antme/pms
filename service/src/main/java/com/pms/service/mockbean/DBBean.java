@@ -40,4 +40,5 @@ public class DBBean {
  
     public static final String PAY_MONEY = "payMoney";
     
+    public static final String GET_INVOICE = "getInvoice";
 }
