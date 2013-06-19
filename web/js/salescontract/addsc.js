@@ -54,13 +54,14 @@ var dataSource = new kendo.data.DataSource({
 			url : "../service/sc/add",
 			dataType : "jsonp",
 			method : "post"
-		}
-	},
-	parameterMap : function(options, operation) {
-		if (operation !== "read" && options.models) {
-			return {
-				models : kendo.stringify(options.models)
-			};
+		},
+
+		parameterMap : function(options, operation) {
+			if (operation !== "read" && options.models) {
+				return {
+					models : kendo.stringify(options.models)
+				};
+			}
 		}
 	},
 	pageSize: 10,
@@ -75,8 +76,6 @@ var dataSource = new kendo.data.DataSource({
 var eqCostListDataSource = new kendo.data.DataSource({
 //	data:[],
 	schema : {
-		data:"data",
-		total:"total",
 		model : {
             fields: {
             	eqcostNo: { type: "string" },

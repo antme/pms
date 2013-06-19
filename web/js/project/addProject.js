@@ -71,13 +71,13 @@ var dataSource = new kendo.data.DataSource({
 			url : "../service/project/add",
 			dataType : "jsonp",
 			method : "post"
-		}
-	},
-	parameterMap : function(options, operation) {
-		if (operation !== "read" && options.models) {
-			return {
-				models : kendo.stringify(options.models)
-			};
+		},
+		parameterMap : function(options, operation) {
+			if (operation !== "read" && options.models) {
+				return {
+					models : kendo.stringify(options.models)
+				};
+			}
 		}
 	},
 	
