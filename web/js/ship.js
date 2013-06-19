@@ -20,16 +20,8 @@ $(document).ready(function () {
         batch: true,
         pageSize: 15,
         schema: {
-            model: {
-                id: "_id",
-                fields: {
-                	applicationDepartment: {},
-                	applicationDate: {},
-                	contractCode: {},
-                	customer: {},
-                	status: {}
-                }
-            }
+        	total: "total",
+        	data: "data"
         }
     });
 

@@ -115,6 +115,9 @@ $(document).ready(function() {
 				url : "../service/project/listforselect",
 				dataType : "jsonp"
 			}
+		},
+		schema: {
+		    data: "data"
 		}
 	});
 	$("#projectId").kendoDropDownList({

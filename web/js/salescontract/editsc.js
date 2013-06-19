@@ -99,21 +99,21 @@ var invoiceDataSource = new kendo.data.DataSource({
 			url : "../service/sc/invoice/add",
 			dataType : "jsonp",
 			method : "post"
-		},
-
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					//options.models.set("cid":"aaaaaaaaaaaaaa");
-					models : kendo.stringify(options.models)
-				};
-			}
+		}
+	},
+	parameterMap : function(options, operation) {
+		if (operation !== "read" && options.models) {
+			return {
+				//options.models.set("cid":"aaaaaaaaaaaaaa");
+				models : kendo.stringify(options.models)
+			};
 		}
 	},
 	pageSize: 10,
 	batch : true,
 	
 	schema : {
+		data:"data",
 		model : scInvoiceModel
 	}
 });
@@ -133,20 +133,20 @@ var gotMoneyDataSource = new kendo.data.DataSource({
 			url : "../service/sc/gotmoney/add",
 			dataType : "jsonp",
 			method : "post"
-		},
-
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
 		}
 	},
+	parameterMap : function(options, operation) {
+		if (operation !== "read" && options.models) {
+			return {
+				models : kendo.stringify(options.models)
+			};
+		}
+	}
 	pageSize: 10,
 	batch : true,
 	
 	schema : {
+		data:"data",
 		model : scGotMoneyModel
 	}
 });
@@ -166,20 +166,20 @@ var monthShipmentsSource = new kendo.data.DataSource({
 			url : "../service/sc/monthshipments/add",
 			dataType : "jsonp",
 			method : "post"
-		},
-
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
+		}
+	},
+	parameterMap : function(options, operation) {
+		if (operation !== "read" && options.models) {
+			return {
+				models : kendo.stringify(options.models)
+			};
 		}
 	},
 	pageSize: 10,
 	batch : true,
 	
 	schema : {
+		data:"data",
 		model : scMonthShipmentsModel
 	}
 });
@@ -198,20 +198,21 @@ var dataSource = new kendo.data.DataSource({
 			url : "../service/sc/add",
 			dataType : "jsonp",
 			method : "post"
-		},
-
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
+		}
+	},
+	parameterMap : function(options, operation) {
+		if (operation !== "read" && options.models) {
+			return {
+				models : kendo.stringify(options.models)
+			};
 		}
 	},
 	pageSize: 10,
 	batch : true,
 	
 	schema : {
+		data:"data",
+		total:"total",
 		model : scModel
 	}
 });
@@ -311,6 +312,9 @@ $(document).ready(function() {
 				url : "../service/project/listforselect",
 				dataType : "jsonp"
 			}
+		},
+		schema: {
+		    data: "data"
 		}
 	});
 	$("#projectId").kendoDropDownList({

@@ -70,8 +70,15 @@ $(document).ready(function() {
             transport: {
                 read: {
                     url: crudServiceBaseUrl + "/sc/list",
-                    dataType: "jsonp"
+                    dataType: "jsonp",
+    	            data: {
+    	            	limit: 0
+    	            }
                 }
+            },
+            schema: {
+            	total: "total",
+            	data: "data"
             }
         }),
         change: function(e) {
@@ -93,7 +100,9 @@ $(document).ready(function() {
         	    },
         	    batch: true,
         	    schema: {
-        	        model: eqModel
+        	        model: eqModel,
+        	        total: "total",
+                	data: "data"
         	    }
         	});
         	

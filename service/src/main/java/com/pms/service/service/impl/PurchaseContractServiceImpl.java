@@ -3,8 +3,10 @@ package com.pms.service.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +16,7 @@ import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.PayMoneyBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
@@ -427,8 +430,56 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> rejectRepositoryRequest(HashMap<String, Object> parserJsonParameters) {
         return null;
     }
+    
+    //采购合同列表为付款
+	public Map<String, Object> listSelectForPayment(HashMap<String, Object> params) {
+    	Map<String,Object> query = new HashMap<String,Object>();
+    	query.put(ApiConstants.LIMIT_KEYS, new String[]{"purchaseContractCode","supplierName"});
+        Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
+        List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
+        for(Map<String, Object> data: list){
+            Map<String, Object> query2 = new HashMap<String, Object>();
+            query2.put(ApiConstants.MONGO_ID, data.get("supplierName"));
+            Map<String, Object> relatedProjectInfo = this.dao.findOneByQuery(query2, DBBean.SUPPLIER);
+            data.put("supplierName", relatedProjectInfo.get("supplierName"));
+            data.put("supplierCardName", relatedProjectInfo.get("supplierName"));
+            data.put("supplierCardCode", relatedProjectInfo.get("supplierName"));
+        }        
+        return results;
+	}
 
-    public ISalesContractService getScs() {
+	@Override
+	public Map<String, Object> listPaymoney(HashMap<String, Object> params) {
+		//String pcId = (String) params.get(PayMoneyBean.purchaseContractId);
+		Map<String,Object> query1 = new HashMap<String,Object>();
+		Map<String,Object> mapPay = dao.list(query1, DBBean.PAY_MONEY);
+		return mapPay;
+	}
+
+	@Override
+	public Map<String, Object> addPaymoney(HashMap<String, Object> params) {
+		Map<String,Object> obj = new HashMap<String,Object>();
+		obj.put(PayMoneyBean.payMoney, params.get(PayMoneyBean.payMoney));
+		obj.put(PayMoneyBean.payDate, params.get(PayMoneyBean.payDate));
+		obj.put(PayMoneyBean.purchaseContractId, params.get(PayMoneyBean.purchaseContractId));
+		obj.put(PayMoneyBean.supplierCardCode, params.get(PayMoneyBean.supplierCardCode));
+		obj.put(PayMoneyBean.supplierCardName, params.get(PayMoneyBean.supplierCardName));
+		return dao.add(params, DBBean.PAY_MONEY);
+	}
+
+	@Override
+	public Map<String, Object> updatePaymoney(HashMap<String, Object> params) {
+		Map<String,Object> obj = new HashMap<String,Object>();
+		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		obj.put(PayMoneyBean.payMoney, params.get(PayMoneyBean.payMoney));
+		obj.put(PayMoneyBean.payDate, params.get(PayMoneyBean.payDate));
+		obj.put(PayMoneyBean.purchaseContractId, params.get(PayMoneyBean.purchaseContractId));
+		obj.put(PayMoneyBean.supplierCardCode, params.get(PayMoneyBean.supplierCardCode));
+		obj.put(PayMoneyBean.supplierCardName, params.get(PayMoneyBean.supplierCardName));
+		return dao.updateById(params, DBBean.PAY_MONEY);
+	}
+
+	public ISalesContractService getScs() {
         return scs;
     }
 

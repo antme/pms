@@ -59,8 +59,15 @@ $(document).ready(function() {
         transport: {
             read: {
                 url: "../service/project/listforselect",
-                dataType: "jsonp"
+                dataType: "jsonp",
+	            data: {
+	            	limit: 0
+	            }
             }
+        },
+        schema: {
+        	total: "total",
+        	data: "data"
         }
     });
 	
@@ -92,6 +99,10 @@ $(document).ready(function() {
                         }
     	            }
                 }
+            },
+            schema: {
+            	total: "total",
+            	data: "data"
             }
         }),
         placeholder: "销售合同编号",
@@ -131,6 +142,10 @@ $(document).ready(function() {
                         }
     	            }
                 }
+            },
+            schema: {
+            	total: "total",
+            	data: "data"
             }
         }),
         placeholder: "销售合同编号",
@@ -157,7 +172,9 @@ $(document).ready(function() {
         	    },
         	    batch: true,
         	    schema: {
-        	        model: eqModel
+        	        model: eqModel,
+        	        total: "total",
+                	data: "data"
         	    }
         	});
         	

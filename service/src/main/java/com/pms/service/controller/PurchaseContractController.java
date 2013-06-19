@@ -210,8 +210,26 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.rejectRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
 
+    @RequestMapping("/listforselect/paymoney")
+    public void listSelectForPayment(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listSelectForPayment(parserListJsonParameters(request, false)), request, response);
+    }
     
+    @RequestMapping("/paymoney/list")
+    public void listPaymoney(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listPaymoney(parserJsonParameters(request, false)), request, response);
+    }
+
+    @RequestMapping("/paymoney/add")
+    public void addPaymoney(HttpServletRequest request, HttpServletResponse response) {
+        pService.addPaymoney(parserJsonParameters(request, false));
+        responseWithData(null, request, response, "save_success");
+    }
     
+    @RequestMapping("/paymoney/update")
+    public void updatePaymoney(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.updatePaymoney(parserJsonParameters(request, false)), request, response);
+    }
 
     public IPurchaseContractService getpService() {
         return pService;

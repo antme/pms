@@ -59,14 +59,9 @@ public class BorrowingController extends AbstractController {
         responseWithData(borrowingService.create(params), request, response);
     }
 
-    @RequestMapping("/approve")
+    @RequestMapping("/option")
     public void approve(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(borrowingService.approve(parserJsonParameters(request, false)), request, response);
-    }
-    
-    @RequestMapping("/reject")
-    public void reject(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(borrowingService.reject(parserJsonParameters(request, false)), request, response);
+    	responseWithData(borrowingService.option(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/eqlist")

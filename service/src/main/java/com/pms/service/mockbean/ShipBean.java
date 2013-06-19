@@ -28,4 +28,6 @@ public class ShipBean {
     
     public static final String SHIP_DELIVERY_REQUIREMENTS = "deliveryRequirements"; // 货运要求
     
+    public static final String SHIP_EQ_LIST = "eqcostList"; // 货运要求
+    
 }
