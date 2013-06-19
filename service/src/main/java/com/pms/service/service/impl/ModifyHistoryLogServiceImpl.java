@@ -33,6 +33,7 @@ public class ModifyHistoryLogServiceImpl extends AbstractService implements IMod
         
         String[] limitKeys = {ApiConstants.HISTORY_KEY, ApiConstants.HISTORY_OLD, ApiConstants.HISTORY_NEW,
         		ApiConstants.HISTORY_OPERATOR, ApiConstants.HISTORY_TIME, ApiConstants.HISTORY_DATA_ID};
+        query.put(ApiConstants.LIMIT_KEYS, limitKeys);
         
         Map<String, Object> result = dao.list(query, collection+"_history");
 		return result;
@@ -57,6 +58,25 @@ public class ModifyHistoryLogServiceImpl extends AbstractService implements IMod
 		for (String dataId : ids){
 			result.add(this.listHistoryByCollectionAndId(sonCollection, dataId, keys));
 		}
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> listHistoryForAKey(String collection, String id,
+			String key) {
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.HISTORY_DATA_ID, id);
+		query.put(ApiConstants.HISTORY_KEY, key);
+		
+		Map<String, Object> order = new LinkedHashMap<String, Object>();
+        order.put(ApiConstants.HISTORY_TIME, ApiConstants.DB_QUERY_ORDER_BY_DESC);
+        query.put(ApiConstants.DB_QUERY_ORDER_BY, order);
+        
+        String[] limitKeys = {ApiConstants.HISTORY_KEY, ApiConstants.HISTORY_OLD, ApiConstants.HISTORY_NEW,
+        		ApiConstants.HISTORY_OPERATOR, ApiConstants.HISTORY_TIME, ApiConstants.HISTORY_DATA_ID};
+        query.put(ApiConstants.LIMIT_KEYS, limitKeys);
+        
+        Map<String, Object> result = dao.list(query, collection+"_history");
 		return result;
 	}
 
