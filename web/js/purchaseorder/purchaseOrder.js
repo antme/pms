@@ -26,6 +26,7 @@ $(document).ready(function() {
 			dataSource : dataSource,
 			pageable : true,
 			selectable : "row",
+			sortable : true,
 			width : "1000px",
 			columns : [ {
 				field : "purchaseOrderCode",

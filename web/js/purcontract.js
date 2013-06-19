@@ -21,6 +21,7 @@ $(document).ready(function() {
 		dataSource : dataSource,
 		pageable : true,
 		selectable : "row",
+		sortable : true,
 		columns : [ {
 			field : "purchaseContractCode",
 			title : "采购合同编号"

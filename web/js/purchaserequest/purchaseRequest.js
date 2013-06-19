@@ -26,6 +26,7 @@ $(document).ready(function() {
 		$("#grid").kendoGrid({
 			dataSource : dataSource,
 			pageable : true,
+			sortable : true,
 			selectable : "row",
 			columns : [ {
 				field : "purchaseRequestCode",
