@@ -69,13 +69,14 @@ function toolbar_add() {
 }
 
 function toolbar_edit() {
-	var rowData = getSelectedRowDataByGrid("grid");
-	if (rowData == null){
-		alert("请点击选择一条记录！");
-		return;
+	var rowData = getSelectedRowDataByGridWithMsg("grid");
+	if (rowData) {
+		if (rowData.status == 0 || rowData.status == -1){
+			loadPage("addBorrowing",{_id:rowData._id});
+		} else {
+			alert("无法执行该操作");
+		}
 	}
-	
-	loadPage("addBorrowing",{_id:rowData._id});
 }
 
 function toolbar_option(op) {
@@ -85,9 +86,9 @@ function toolbar_option(op) {
 		var nextStatus = false;
 		
 		if (op == 1) { // 批准操作
-			if (row.status == 0) { // 借货申请
+			if (row.status == 0 || row.status == -1) { // 借货申请
 				nextStatus = 1;
-			} else if (row.status == 2) { // 还货申请
+			} else if (row.status == 2 || row.status == -3) { // 还货申请
 				nextStatus = 3;
 			}
 		} else if (op == 2) { // 拒绝操作
