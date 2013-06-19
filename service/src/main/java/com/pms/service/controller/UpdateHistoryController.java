@@ -16,14 +16,14 @@ import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.IModifyHistoryLogService;
 
 @Controller
-@RequestMapping("/history123")
+@RequestMapping("/history")
 public class UpdateHistoryController extends AbstractController {
 	
 	private static Logger logger = LogManager.getLogger(UpdateHistoryController.class);
 	
 	private IModifyHistoryLogService historyService;
 
-    @RequestMapping("/scamount")
+    @RequestMapping("/sc/amount")
     public void listHistoryForSCAmount(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
     	responseWithData(historyService.listHistoryForAKey(DBBean.SALES_CONTRACT, (String)params.get(ApiConstants.MONGO_ID), 

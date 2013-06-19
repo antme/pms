@@ -9,8 +9,12 @@ import java.util.Map;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IModifyHistoryLogService;
+import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DateUtil;
 
 public class ModifyHistoryLogServiceImpl extends AbstractService implements IModifyHistoryLogService {
 
@@ -77,6 +81,26 @@ public class ModifyHistoryLogServiceImpl extends AbstractService implements IMod
         query.put(ApiConstants.LIMIT_KEYS, limitKeys);
         
         Map<String, Object> result = dao.list(query, collection+"_history");
+        List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+        
+        List<String> operatorIds = new ArrayList<String>();
+        for (Map<String, Object> map : resultList){
+        	operatorIds.add((String)map.get(ApiConstants.HISTORY_OPERATOR));
+        }
+        
+        Map<String, Object> operatorQuery = new HashMap<String, Object>();
+        operatorQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, operatorIds));
+        operatorQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME});
+        Map<String, Object> userMap = dao.listToOneMapAndIdAsKey(operatorQuery, DBBean.USER);
+        
+        for (Map<String, Object> map : resultList){
+        	String operatorId = (String)map.get(ApiConstants.HISTORY_OPERATOR);
+        	Map<String, Object> userInfo = (Map<String, Object>) userMap.get(operatorId);
+
+        	map.put(ApiConstants.HISTORY_OPERATOR, userInfo.get(UserBean.USER_NAME));
+        	Long times = ApiUtil.getLongParam(map, ApiConstants.HISTORY_TIME);
+        	map.put(ApiConstants.HISTORY_TIME, DateUtil.getDateStringByLong(times));
+        }
 		return result;
 	}
 

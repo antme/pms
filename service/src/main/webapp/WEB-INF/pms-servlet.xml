@@ -97,9 +97,9 @@
         <property name="borrowingService" ref="borrowingService"></property>
     </bean> 
 
-    <!-- <bean name="historyController" class="com.pms.service.controller.UpdateHistoryController"
-        id="historyController">
+    <bean name="updateHistoryController" class="com.pms.service.controller.UpdateHistoryController"
+        id="updateHistoryController">
         <property name="historyService" ref="historyService"></property>
-    </bean>  --> 
+    </bean>  
 
 </beans>
