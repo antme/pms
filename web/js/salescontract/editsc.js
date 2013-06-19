@@ -22,8 +22,8 @@ var scModel = kendo.data.Model.define({
 		estimateDeepDesignCost:{},
 		estimateDebugCost:{},
 		estimateOtherCost:{},
-		debugCostType:{},
-		taxType:{},
+//		debugCostType:{},
+//		taxType:{},
 		contractCode : {},
 		contractPerson : {},
 		contractType : {},
@@ -260,22 +260,22 @@ $(document).ready(function() {
 	});
 	
 	//税收类型
-	var taxTypeItems = [{ text: "taxType1", value: "1" }, { text: "taxType2", value: "2" }, { text: "taxType3", value: "3" }];
-	$("#taxType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
-        optionLabel: "选择税收类型...",
-		dataSource : taxTypeItems,
-	});
+//	var taxTypeItems = [{ text: "taxType1", value: "1" }, { text: "taxType2", value: "2" }, { text: "taxType3", value: "3" }];
+//	$("#taxType").kendoDropDownList({
+//		dataTextField : "text",
+//		dataValueField : "value",
+//        optionLabel: "选择税收类型...",
+//		dataSource : taxTypeItems,
+//	});
 	
 	//调试费用类型
-	var debugCostTypeItems = [{ text: "debugCostType1", value: "1" }, { text: "debugCostType2", value: "2" }, { text: "debugCostType3", value: "3" }];
-	$("#debugCostType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
-        optionLabel: "选择调试费用类型...",
-		dataSource : debugCostTypeItems,
-	});
+//	var debugCostTypeItems = [{ text: "debugCostType1", value: "1" }, { text: "debugCostType2", value: "2" }, { text: "debugCostType3", value: "3" }];
+//	$("#debugCostType").kendoDropDownList({
+//		dataTextField : "text",
+//		dataValueField : "value",
+//        optionLabel: "选择调试费用类型...",
+//		dataSource : debugCostTypeItems,
+//	});
 
 	//合同类型
 	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
@@ -452,10 +452,9 @@ function edit(data){
 		$("#invoiceList").kendoGrid({
 			dataSource : invoiceDataSource,
 			editable : "popup",
-			toolbar : [ {
-				template : kendo.template($("#addInvoiceButtonTem").html())
-			} ],
-			//toolbar : [ { name:"create",text:"新开票" } ],
+//			toolbar : [ {
+//				template : kendo.template($("#addInvoiceButtonTem").html())
+//			} ],
 			columns : [ {
 				field : "scInvoiceMoney",
 				title : "开票金额"
@@ -475,10 +474,9 @@ function edit(data){
 		$("#gotMoneyList").kendoGrid({
 			dataSource : gotMoneyDataSource,
 			editable : "popup",
-			toolbar : [ {
-				template : kendo.template($("#addGotMoneyButtonTem").html())
-			} ],
-			//toolbar : [ { name:"create",text:"新收款" } ],
+//			toolbar : [ {
+//				template : kendo.template($("#addGotMoneyButtonTem").html())
+//			} ],
 			columns : [ {
 				field : "scGotMoney",
 				title : "收款金额"
@@ -495,10 +493,9 @@ function edit(data){
 		$("#monthShipmentsGrid").kendoGrid({
 			dataSource : monthShipmentsSource,
 			editable : "popup",
-			toolbar : [ {
-				template : kendo.template($("#addMonthShipmentsButtonTem").html())
-			} ],
-			//toolbar : [ { name:"create",text:"新收款" } ],
+//			toolbar : [ {
+//				template : kendo.template($("#addMonthShipmentsButtonTem").html())
+//			} ],
 			columns : [ {
 					field : "month",
 					title : "发货月份"

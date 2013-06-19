@@ -37,7 +37,11 @@ $(document).ready(function () {
             	field: "contractCode",
             	title:"销售合同编号",
 				template : function(dataItem) {
-					return '<a  onclick="openScViewWindow(\'' + dataItem.salesContractId + '\');">' + dataItem.contractCode + '</a>';
+					if (dataItem.contractCode) {
+						return '<a  onclick="openScViewWindow(\'' + dataItem.salesContractId + '\');">' + dataItem.contractCode + '</a>';
+					} else {
+						return '';
+					}
 				}
             },
             { field: "customer", title:"客户名称" },

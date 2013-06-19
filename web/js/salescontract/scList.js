@@ -67,10 +67,14 @@ $(document).ready(function() {
 			title : "客户名"
 		}, {
 			field : "contractAmount",
-			title : "合同金额"
+			title : "合同金额",
+			template : function(dataItem) {
+				return '<a  onclick="openTraceWindow(\'' + dataItem._id + '\');">' + dataItem.contractAmount + '</a>';
+			}
 		}, {
 			field : "contractDate",
-			title : "签订日期"
+			title : "签订日期",
+			format: "{0:yyyy/MM/dd}"
 		}]
 	});
 });//end dom ready	
@@ -102,6 +106,11 @@ function toolbar_viewSalesContract() {
 	}
 	loadPage("viewsc",{_id:rowData._id});
 };
+
+function openTraceWindow(param){
+	var options = { width:"600px", height: "400px", title:"销售合同金额变更痕迹"};
+	openRemotePageWindow(options, "html/salescontract/traceSCAmount.html", {_id : param});
+}
 
 
 	

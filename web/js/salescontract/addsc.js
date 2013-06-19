@@ -22,8 +22,8 @@ var scModel = kendo.data.Model.define({
 		estimateDeepDesignCost:{},
 		estimateDebugCost:{},
 		estimateOtherCost:{},
-		debugCostType:{},
-		taxType:{},
+		//debugCostType:{},
+		//taxType:{},
 		contractCode : {},
 		contractPerson : {},
 		contractType : {},
@@ -115,21 +115,21 @@ $(document).ready(function() {
 		dataSource : invoiceTypeItems,
 	});
 	
-	var taxTypeItems = [{ text: "taxType1", value: "1" }, { text: "taxType2", value: "2" }, { text: "taxType3", value: "3" }];
-	$("#taxType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
-        optionLabel: "选择税收类型...",
-		dataSource : taxTypeItems,
-	});
+//	var taxTypeItems = [{ text: "taxType1", value: "1" }, { text: "taxType2", value: "2" }, { text: "taxType3", value: "3" }];
+//	$("#taxType").kendoDropDownList({
+//		dataTextField : "text",
+//		dataValueField : "value",
+//        optionLabel: "选择税收类型...",
+//		dataSource : taxTypeItems,
+//	});
 	
-	var debugCostTypeItems = [{ text: "debugCostType1", value: "1" }, { text: "debugCostType2", value: "2" }, { text: "debugCostType3", value: "3" }];
-	$("#debugCostType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
-        optionLabel: "选择调试费用类型...",
-		dataSource : debugCostTypeItems,
-	});
+//	var debugCostTypeItems = [{ text: "debugCostType1", value: "1" }, { text: "debugCostType2", value: "2" }, { text: "debugCostType3", value: "3" }];
+//	$("#debugCostType").kendoDropDownList({
+//		dataTextField : "text",
+//		dataValueField : "value",
+//        optionLabel: "选择调试费用类型...",
+//		dataSource : debugCostTypeItems,
+//	});
 
 	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
 	$("#contractType").kendoDropDownList({
