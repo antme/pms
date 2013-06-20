@@ -13,7 +13,7 @@ import com.pms.service.cfg.ConfigurationManager;
 
 public class EmailUtil {
 
-    public static void sendMail(String subject, String toEmail, String content) {
+    public static void sendMail(String subject, String toEmail, String toName,  String content) {
         SimpleEmail email = new SimpleEmail();
 
         try {
@@ -21,7 +21,7 @@ public class EmailUtil {
             email.setHostName(ConfigurationManager.getProperty("smtp"));
 
             // 设置收件人邮箱
-            email.addTo(toEmail);
+            email.addTo(toEmail, toName);
 
             // 发件人邮箱
             email.setFrom(ConfigurationManager.getProperty("email"), "工程管理系统");
