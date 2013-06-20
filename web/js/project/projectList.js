@@ -23,7 +23,7 @@ var dataSource = new kendo.data.DataSource({
 	    data: "data"
 	},
 
-	pageSize: 5,
+	pageSize: 10,
     serverPaging: true,
 	batch : true,
 	
@@ -65,32 +65,10 @@ $(document).ready(function() {
 			title : "项目缩写"
 		}, {
 			field : "projectStatus",
-			title : "项目状态",
-			template:function(dataItem) {
-				var name = "";
-				if (dataItem.projectStatus == 1){
-					name = "正式立项";
-				} else if (dataItem.projectStatus == 2){
-					name = "预立项";
-				} else {//projectStatus=3
-					name = "内部立项";
-				}
-				return name;
-			}
+			title : "项目状态"
 		}, {
 			field : "projectType",
-			title : "项目类型",
-			template:function(dataItem) {
-				var name = "";
-				if (dataItem.projectType == 1){
-					name = "产品";
-				} else if (dataItem.projectType == 2){
-					name = "工程";
-				} else {
-					name = "服务";
-				}
-				return name;
-			}
+			title : "项目类型"
 		}, {
 			field : "projectManager",
 			title : "PM",

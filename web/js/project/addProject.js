@@ -91,14 +91,14 @@ var dataSource = new kendo.data.DataSource({
 
 $(document).ready(function() {
 	//表单中的各种控件
-	var proStatusItems = [{ text: "正式立项", value: "1" }, { text: "预立项", value: "2" }, { text: "内部立项", value: "3" }];
+	var proStatusItems = [{ text: "正式立项", value: "正式立项" }, { text: "预立项", value: "预立项" }, { text: "内部立项", value: "内部立项" }];
 	$("#projectStatus").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
 		optionLabel : "选择项目状态...",
 		dataSource : proStatusItems
 	});
-	var proCategoryItems = [{ text: "产品", value: "1" }, { text: "工程", value: "2" }, { text: "服务", value: "3" }];
+	var proCategoryItems = [{ text: "产品", value: "产品" }, { text: "工程", value: "工程" }, { text: "服务", value: "服务" }];
 	$("#projectType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
