@@ -60,7 +60,7 @@ $(document).ready(function() {
 				transport : {
 					read : {
 						dataType : "jsonp",
-						url : "/service/purcontract/order/list",
+						url : "/service/purcontract/order/select/list",
 					}
 				},
 				schema : {
@@ -214,6 +214,13 @@ function showOrderWindow() {
 						if(!eqcostList[listIndex].logisticsType ){
 							eqcostList[listIndex].logisticsType="";
 						}
+						eqcostList[listIndex].projectId = dataItems[index].projectId;
+						eqcostList[listIndex].salesContractId = dataItems[index].salesContractId;
+						eqcostList[listIndex].salesContractCode = dataItems[index].salesContractCode;
+						eqcostList[listIndex].purchaseOrderId = dataItems[index].purchaseOrderId;
+						eqcostList[listIndex].purchaseOrderCode = dataItems[index].purchaseOrderCode;
+						eqcostList[listIndex].purchaseRequestId = dataItems[index].purchaseRequestId;
+						eqcostList[listIndex].purchaseRequestCode = dataItems[index].purchaseRequestCode;
 						itemListDataSource.add(eqcostList[listIndex]);
 					}
 				}
@@ -225,21 +232,12 @@ function showOrderWindow() {
 	
 	requestDataItem = new model({});
 	requestDataItem.eqcostList = itemListDataSource.data();
-	
-	
-	
-//	if (!requestDataItem) {
-//		requestDataItem = kendoGrid.dataSource.at(0);
-//	}
-//	// 新增，所以设置_id为空
-//	requestDataItem.set("_id", "");
+
 	edit();
 }
 
 function edit(data) {
 
-	// 初始化空对象
-	var dataItem = new model();
 	if(data){
 		$("#purchasecontractselect").hide();
 		requestDataItem = data;

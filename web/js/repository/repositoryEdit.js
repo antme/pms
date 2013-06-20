@@ -16,15 +16,19 @@ $(document).ready(function() {
 	
 	if (!$("#purchasecontractselect").data("kendoDropDownList")) {
 		$("#purchasecontractselect").kendoDropDownList({
-			dataTextField : "purchaseContractCode",
+			dataTextField : "projectName",
 			dataValueField : "_id",
-			placeholder : "选择采购合同...",
+			placeholder : "选择项目...",
 			dataSource : {
 				transport : {
 					read : {
 						dataType : "jsonp",
-						url : "/service/purcontract/list",
+						url : "/service/project/listforselect",
 					}
+				},
+				schema : {
+					total: "total", // total is returned in the "total" field of the response
+					data: "data"
 				}
 			},
 			// 当用户选择不同的采购申请时候赋值给requestDataItem对象
