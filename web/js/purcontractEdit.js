@@ -180,12 +180,12 @@ function save(status) {
 
 	
 	if(requestDataItem.supplierName && requestDataItem.supplierName._id){
-		requestDataItem.supplierName = requestDataItem.supplierName._id
+		requestDataItem.supplier= requestDataItem.supplier._id
 	}
 	
-	if(!requestDataItem.supplierName){
+	if(!requestDataItem.supplier){
 		var dl = $("#supplierName").data("kendoDropDownList");
-		requestDataItem.supplierName = dl.dataSource.at(0)._id;
+		requestDataItem.supplier = dl.dataSource.at(0)._id;
 	}
 
 	// 同步数据
