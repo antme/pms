@@ -11,4 +11,7 @@ public interface ISupplierService {
 	public void destroy(Map<String, Object> params);
 	
 	public Map<String, Object> create(Map<String, Object> params);
+	
+    public Map<String,Object> importSupplier(Map<String,Object> params);
+
 }

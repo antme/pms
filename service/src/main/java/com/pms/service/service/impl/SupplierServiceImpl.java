@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ISupplierService;
@@ -33,5 +34,13 @@ public class SupplierServiceImpl extends AbstractService implements ISupplierSer
 	public Map<String, Object> create(Map<String, Object> params) {
 		return dao.add(params, DBBean.SUPPLIER);
 	}
+	
+    public Map<String, Object> importSupplier(Map<String, Object> params) {
+        Map<String, Object> supplier = dao.findOne("supplierName", params.get("supplierName"), DBBean.SUPPLIER);
+        if (supplier == null) {
+            supplier = dao.add(supplier, DBBean.SUPPLIER);
+        }
+        return supplier;
+    }
 
 }

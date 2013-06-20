@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
@@ -49,4 +50,13 @@ public class CustomerServiceImpl extends AbstractService implements ICustomerSer
 	public Map<String, Object> list(Map<String, Object> params) {
 		return dao.list(params, DBBean.CUSTOMER);
 	}
+	
+    public Map<String, Object> importCustomer(Map<String, Object> params) {
+        Map<String, Object> customer = dao.findOne(CustomerBean.NAME, params.get(CustomerBean.NAME), DBBean.CUSTOMER);
+        if (customer == null) {
+            customer = dao.add(customer, DBBean.CUSTOMER);
+        }
+        return customer;
+    }
+	    
 }
