@@ -16,10 +16,17 @@ import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
+import com.pms.service.service.ICustomerService;
 import com.pms.service.service.IProjectService;
+import com.pms.service.service.IUserService;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.ExcleUtil;
 
 public class ProjectServiceImpl extends AbstractService implements IProjectService {
+	
+	private IUserService userService;
+	
+	private ICustomerService customerService;
 
 	@Override
 	public String geValidatorFileName() {
@@ -58,13 +65,6 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		projectBean.put(ProjectBean.PROJECT_MEMO, params.get(ProjectBean.PROJECT_MEMO));
 		projectBean.put(ProjectBean.PROJECT_CUSTOMER, params.get(ProjectBean.PROJECT_CUSTOMER));
 		projectBean.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
-		
-		//初始化项目列表的4个金额字段
-		//FIXME
-		/*projectBean.put(ProjectBean.PROJECT_TOTAL_AMOUNT, 0);
-		projectBean.put(ProjectBean.PROJECT_INVOICE_AMOUNT, 0);
-		projectBean.put(ProjectBean.PROJECT_GET_AMOUNT, 0);
-		projectBean.put(ProjectBean.PROJECT_PURCHASE_AMOUNT, 0);*/
 		
 		if (_id == null){//Add
 			return dao.add(projectBean, DBBean.PROJECT);
@@ -199,6 +199,66 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		cQuery.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
 		Map<String, Object> customer = dao.findOneByQuery(cQuery, DBBean.CUSTOMER);
 		return (String) customer.get(CustomerBean.NAME);
+	}
+
+	@Override
+	public void importProjectAndSCData(Map<String, Object> params) {
+		String filePath = (String) params.get("filePath");
+		ExcleUtil excleUtil = new ExcleUtil(filePath);
+		List<String[]> list = excleUtil.getAllData(0);
+		List<Map<String, Object>> projects = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> scs = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+		for (int i=0; i<list.size(); i++){
+			if (i>3){
+				Map<String, Object> row = new HashMap<String, Object>();
+				row.put("projectName", list.get(i)[9].trim());
+				row.put("projectAbbr", list.get(i)[4].trim());
+				row.put(ProjectBean.PROJECT_CUSTOMER, list.get(i)[8].trim());
+				row.put(ProjectBean.PROJECT_MANAGER, list.get(i)[5].trim());
+				row.put("projectStatus", list.get(i)[34].trim());
+				row.put("projectType", list.get(i)[12].trim());
+				
+				row.put("contractCode", list.get(i)[2].trim());
+				row.put("contractPerson", list.get(i)[7].trim());
+				row.put("contractType", list.get(i)[10].trim());
+				row.put("contractDate", list.get(i)[14].trim());
+				row.put("contractAmount", list.get(i)[23].trim());
+				
+				rows.add(row);
+			}
+		}
+		
+		for(Map<String, Object> row : rows){
+			Map<String, Object> customerQuery = new HashMap<String, Object>();
+			customerQuery.put(CustomerBean.NAME, row.get(ProjectBean.PROJECT_CUSTOMER));
+			Map<String, Object> customerMap = customerService.importCustomer(customerQuery);
+			String customerId = (String) customerMap.get(ApiConstants.MONGO_ID);
+			
+			Map<String, Object> pmQuery = new HashMap<String, Object>();
+			pmQuery.put(UserBean.USER_NAME, row.get(ProjectBean.PROJECT_MANAGER));
+			Map<String, Object> pmMap = userService.importUser(pmQuery);
+			String pmId = (String) pmMap.get(ApiConstants.MONGO_ID);
+			
+			Map<String, Object> project = new HashMap<String, Object>();
+			//todo
+		}
+	}
+
+	public IUserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(IUserService userService) {
+		this.userService = userService;
+	}
+
+	public ICustomerService getCustomerService() {
+		return customerService;
+	}
+
+	public void setCustomerService(ICustomerService customerService) {
+		this.customerService = customerService;
 	}
 
 }

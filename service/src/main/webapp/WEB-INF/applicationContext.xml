@@ -45,6 +45,8 @@
 
 	<bean name="projectService" class="com.pms.service.service.impl.ProjectServiceImpl" id="projectService">
 		<property name="dao" ref="commonDao"></property>
+		<property name="userService" ref="userService"></property>
+		<property name="customerService" ref="customerService"></property>
 	</bean>
 
 
