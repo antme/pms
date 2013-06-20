@@ -64,6 +64,9 @@ public class RoleValidConstants {
     
     public static final String SALES_CONTRACT_MANAGEMENT = "salse_contract_management";
     public static final String SALES_CONTRACT_MANAGEMENT_DESC = "销售合同管理";
+    
+    public static final String FINANCE_MANAGEMENT = "finance_management";
+    public static final String FINANCE_MANAGEMENT_DESC = "财务管理";
 
 
 }

@@ -70,12 +70,14 @@ public class SalesContractController extends AbstractController {
     }
     
     @RequestMapping("/invoice/add")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void addInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addInvoiceForSC(params), request, response);
     }
     
     @RequestMapping("/invoice/update")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void updateInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addInvoiceForSC(params), request, response);
@@ -88,12 +90,14 @@ public class SalesContractController extends AbstractController {
     }
     
     @RequestMapping("/gotmoney/add")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void addGotMoneyForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addGotMoneyForSC(params), request, response);
     }
     
     @RequestMapping("/gotmoney/update")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void updateGotMoneyForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addGotMoneyForSC(params), request, response);
