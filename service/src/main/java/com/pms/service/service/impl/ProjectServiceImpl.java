@@ -18,6 +18,7 @@ import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ICustomerService;
 import com.pms.service.service.IProjectService;
+import com.pms.service.service.ISalesContractService;
 import com.pms.service.service.IUserService;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.ExcleUtil;
@@ -27,6 +28,8 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	private IUserService userService;
 	
 	private ICustomerService customerService;
+	
+	private ISalesContractService salesContractService;
 
 	@Override
 	public String geValidatorFileName() {
@@ -206,24 +209,22 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		String filePath = (String) params.get("filePath");
 		ExcleUtil excleUtil = new ExcleUtil(filePath);
 		List<String[]> list = excleUtil.getAllData(0);
-		List<Map<String, Object>> projects = new ArrayList<Map<String, Object>>();
-		List<Map<String, Object>> scs = new ArrayList<Map<String, Object>>();
 		List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
 		for (int i=0; i<list.size(); i++){
 			if (i>3){
 				Map<String, Object> row = new HashMap<String, Object>();
-				row.put("projectName", list.get(i)[9].trim());
-				row.put("projectAbbr", list.get(i)[4].trim());
+				row.put(ProjectBean.PROJECT_NAME, list.get(i)[9].trim());
+				row.put(ProjectBean.PROJECT_ABBR, list.get(i)[4].trim());
 				row.put(ProjectBean.PROJECT_CUSTOMER, list.get(i)[8].trim());
 				row.put(ProjectBean.PROJECT_MANAGER, list.get(i)[5].trim());
-				row.put("projectStatus", list.get(i)[34].trim());
-				row.put("projectType", list.get(i)[12].trim());
+				row.put(ProjectBean.PROJECT_STATUS, list.get(i)[34].trim());
+				row.put(ProjectBean.PROJECT_TYPE, list.get(i)[12].trim());
 				
-				row.put("contractCode", list.get(i)[2].trim());
-				row.put("contractPerson", list.get(i)[7].trim());
-				row.put("contractType", list.get(i)[10].trim());
-				row.put("contractDate", list.get(i)[14].trim());
-				row.put("contractAmount", list.get(i)[23].trim());
+				row.put(SalesContractBean.SC_CODE, list.get(i)[2].trim());
+				row.put(SalesContractBean.SC_PERSON, list.get(i)[7].trim());
+				row.put(SalesContractBean.SC_TYPE, list.get(i)[10].trim());
+				row.put(SalesContractBean.SC_DATE, list.get(i)[14].trim());
+				row.put(SalesContractBean.SC_AMOUNT, list.get(i)[23].trim());
 				
 				rows.add(row);
 			}
@@ -241,7 +242,24 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			String pmId = (String) pmMap.get(ApiConstants.MONGO_ID);
 			
 			Map<String, Object> project = new HashMap<String, Object>();
-			//todo
+
+			project.put(ProjectBean.PROJECT_NAME, row.get(ProjectBean.PROJECT_NAME));
+			project.put(ProjectBean.PROJECT_ABBR, row.get(ProjectBean.PROJECT_ABBR));
+			project.put(ProjectBean.PROJECT_CUSTOMER, customerId);
+			project.put(ProjectBean.PROJECT_MANAGER, row.get(pmId));
+			project.put(ProjectBean.PROJECT_STATUS, row.get(ProjectBean.PROJECT_STATUS));
+			project.put(ProjectBean.PROJECT_TYPE, row.get(ProjectBean.PROJECT_TYPE));
+			Map<String, Object> projectMap = addProject(project);
+			String proId = (String) projectMap.get(ApiConstants.MONGO_ID);
+			
+			Map<String, Object> sc = new HashMap<String, Object>();
+			sc.put(SalesContractBean.SC_CODE, row.get(SalesContractBean.SC_CODE));
+			sc.put(SalesContractBean.SC_PERSON, row.get(SalesContractBean.SC_PERSON));
+			sc.put(SalesContractBean.SC_TYPE, row.get(SalesContractBean.SC_TYPE));
+			sc.put(SalesContractBean.SC_DATE, row.get(SalesContractBean.SC_DATE));
+			sc.put(SalesContractBean.SC_AMOUNT, row.get(SalesContractBean.SC_AMOUNT));
+			sc.put(SalesContractBean.SC_PROJECT_ID, proId);
+			salesContractService.addSC(sc);
 		}
 	}
 
@@ -259,6 +277,14 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
 	public void setCustomerService(ICustomerService customerService) {
 		this.customerService = customerService;
+	}
+
+	public ISalesContractService getSalesContractService() {
+		return salesContractService;
+	}
+
+	public void setSalesContractService(ISalesContractService salesContractService) {
+		this.salesContractService = salesContractService;
 	}
 
 }

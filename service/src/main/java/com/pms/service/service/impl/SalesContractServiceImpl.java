@@ -87,8 +87,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
 			
 			//添加成本设备清单记录
-			if (!eqcostList.isEmpty()){
-				addEqCostListForContract(eqcostList, (String)addedContract.get(ApiConstants.MONGO_ID));
+			if (eqcostList != null && !eqcostList.isEmpty()){
+				addEqCostListForContract(eqcostList, (String)addedContract.get(ApiConstants.MONGO_ID), 
+						(String)addedContract.get(SalesContractBean.SC_PROJECT_ID) );
 			}
 			
 			return addedContract;
@@ -98,7 +99,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			//更新销售合同变更次数
 			Map<String, Object> existContractQuery = new HashMap<String, Object>();
 			existContractQuery.put(ApiConstants.MONGO_ID, _id);
-			existContractQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_MODIFY_TIMES, SalesContractBean.SC_AMOUNT});
+			existContractQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_PROJECT_ID, 
+					SalesContractBean.SC_MODIFY_TIMES, SalesContractBean.SC_AMOUNT});
 			Map<String, Object> existContract = dao.findOneByQuery(existContractQuery, DBBean.SALES_CONTRACT);
 			float oldAmount = ApiUtil.getFloatParam(existContract, SalesContractBean.SC_AMOUNT);
 			float newAmount = ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT);
@@ -109,15 +111,16 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			
 			//添加成本设备清单记录
 			if (!eqcostList.isEmpty()){
-				addEqCostListForContract(eqcostList, _id);
+				addEqCostListForContract(eqcostList, _id, (String) existContract.get(SalesContractBean.SC_PROJECT_ID));
 			}
 			
 			return dao.updateById(contract, DBBean.SALES_CONTRACT);
 		}
 	}
 	
-	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId){
+	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId, String proId){
 		for (Map<String, Object> item : eqcostList){
+			item.put(SalesContractBean.SC_PROJECT_ID, proId);
 			item.put(EqCostListBean.EQ_LIST_SC_ID, cId);
 			item.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, item.get(EqCostListBean.EQ_LIST_AMOUNT));
 			dao.add(item, DBBean.EQ_COST);

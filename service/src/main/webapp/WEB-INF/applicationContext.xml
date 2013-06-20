@@ -47,6 +47,7 @@
 		<property name="dao" ref="commonDao"></property>
 		<property name="userService" ref="userService"></property>
 		<property name="customerService" ref="customerService"></property>
+		<property name="salesContractService" ref="salesContractService"></property>
 	</bean>
 
 
