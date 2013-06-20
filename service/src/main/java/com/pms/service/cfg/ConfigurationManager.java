@@ -45,6 +45,12 @@ public class ConfigurationManager {
     public static String getDbName() {
         return properties.getProperty(DB_NAME);
     }
+    
+    public static String getProperty(String key) {
+
+        return properties.getProperty(key);
+    }
+
 
     public static String getSystemMessage(String type) {
 
