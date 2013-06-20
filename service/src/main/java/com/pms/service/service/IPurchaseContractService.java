@@ -39,7 +39,7 @@ public interface IPurchaseContractService {
     
     public List<Map<String,Object>> listApprovedPurchaseContractCosts(String salesContractCode);
     
-    
+    public Map<String, Object> listApprovedPurchaseOrderForSelect();
     
     public Map<String, Object> listPurchaseRequests();
     

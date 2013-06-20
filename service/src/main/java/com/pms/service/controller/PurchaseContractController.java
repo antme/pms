@@ -135,6 +135,11 @@ public class PurchaseContractController extends AbstractController {
     public void listPurchaseOrders(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listPurchaseOrders(), request, response);
     }
+    
+    @RequestMapping("/order/select/list")
+    public void listOrdersForSelect(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listApprovedPurchaseOrderForSelect(), request, response);
+    }
 
     @RequestMapping("/order/add")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_MANAGEMENT, desc = RoleValidConstants.PURCHASE_ORDER_MANAGEMENT_DESC)
