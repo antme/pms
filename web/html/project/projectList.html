@@ -1,22 +1,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <style>
-.pro-dropdownlist{
-	width:250px;
+.pro-dropdownlist {
+	width: 250px;
 }
 </style>
 
-<script  src="js/project/projectList.js"></script>
-
-<script type="text/x-kendo-template" id="template">
-	<button class="k-button" onclick="toolbar_addProject();">新增</button>
-	<button class="k-button" onclick="toolbar_editProject();">修改</button>
-	<button class="k-button" onclick="toolbar_setupProject();">正式立项</button>
-	<button class="k-button" onclick="toolbar_deleteProject();">删除</button>
-</script>
+<script src="js/project/projectList.js"></script>
 
 <body>
 	<div id="projectList" class="k-content">
+		<div class="k-toolbar k-grid-toolbar">
+			<button access="project_management" class="k-button access" onclick="toolbar_addProject();">新增</button>
+			<button access="project_management" class="k-button access" onclick="toolbar_editProject();">修改</button>
+			<button access="project_management" class="k-button access" onclick="toolbar_setupProject();">正式立项</button>
+			<button access="project_management" class="k-button access" onclick="toolbar_deleteProject();">删除</button>
+		</div>
 		<div id="grid"></div>
 	</div>
 </body>

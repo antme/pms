@@ -3,17 +3,16 @@
 <style>
 </style>
 
-<script  src="js/salescontract/scList.js"></script>
-
-<script type="text/x-kendo-template" id="template">
-	<button class="k-button" onclick="toolbar_addSalesContract();">新增</button>
-	<button class="k-button" onclick="toolbar_modifySalesContract();">变更</button>
-	<button class="k-button" onclick="toolbar_viewSalesContract();">查看</button>
-	<button class="k-button" onclick="toolbar_deleteSalesContract();">删除</button>
-</script>
+<script src="js/salescontract/scList.js"></script>
 
 <body>
 	<div id="salesContractList" class="k-content">
+		<div class="k-toolbar k-grid-toolbar">
+			<button access="salse_contract_management" class="k-button access" onclick="toolbar_addSalesContract();">新增</button>
+			<button access="salse_contract_management" class="k-button access" onclick="toolbar_modifySalesContract();">变更</button>
+			<button access="salse_contract_management" class="k-button access" onclick="toolbar_viewSalesContract();">查看</button>
+			<button access="salse_contract_management"  class="k-button access" onclick="toolbar_deleteSalesContract();">删除</button>
+		</div>
 		<div id="grid"></div>
 	</div>
 </body>

@@ -1,6 +1,7 @@
 var dataSource, crudServiceBaseUrl = "../service/borrowing";
 
 $(document).ready(function () {
+	checkRoles();
     dataSource = new kendo.data.DataSource({
         transport: {
             read:  {
@@ -29,7 +30,6 @@ $(document).ready(function () {
         dataSource: dataSource,
         pageable: true,
         selectable: "row",
-        toolbar: [ { template: kendo.template($("#template").html()) } ],
         columns: [
             { field:"applicant", title: "申请人" },
             { field: "applicationDate", title:"申请日期" },

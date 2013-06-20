@@ -35,7 +35,7 @@ var dataSource = new kendo.data.DataSource({
 });
 
 $(document).ready(function() {
-	
+	checkRoles();
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : {
@@ -44,7 +44,6 @@ $(document).ready(function() {
 			//pageSizes:true
 		},
 		editable : "popup",
-		toolbar : [ { template: kendo.template($("#template").html()) } ],
 		selectable: "row",
         sortable: {
             mode: "multiple",

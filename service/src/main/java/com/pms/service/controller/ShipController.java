@@ -10,10 +10,15 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.pms.service.annotation.LoginRequired;
+import com.pms.service.annotation.RoleValidConstants;
+import com.pms.service.annotation.RoleValidate;
 import com.pms.service.service.IShipService;
 
 @Controller
 @RequestMapping("/ship")
+@RoleValidate
+@LoginRequired
 public class ShipController extends AbstractController {
 	
 	private static Logger logger = LogManager.getLogger(ShipController.class);
@@ -41,12 +46,14 @@ public class ShipController extends AbstractController {
     }
     
     @RequestMapping("/update")
+    @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT, desc = RoleValidConstants.SHIP_MANAGEMENT_DESC)
     public void update(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(shipService.update(params), request, response);
     }
 
     @RequestMapping("/destroy")
+    @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT, desc = RoleValidConstants.SHIP_MANAGEMENT_DESC)
     public void destroy(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         shipService.destroy(params);
@@ -54,12 +61,14 @@ public class ShipController extends AbstractController {
     }
     
     @RequestMapping("/create")
+    @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT, desc = RoleValidConstants.SHIP_MANAGEMENT_DESC)
     public void create(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(shipService.create(params), request, response);
     }
 
     @RequestMapping("/option")
+    @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT_PROCESS, desc = RoleValidConstants.SHIP_MANAGEMENT_PROCESS_DESC)
     public void approve(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(shipService.option(parserJsonParameters(request, false)), request, response);
     }
