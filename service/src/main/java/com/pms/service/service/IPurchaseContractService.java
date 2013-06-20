@@ -10,6 +10,14 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listPurchaseContracts();
     
+    public Map<String, Object> listContractsForRepositorySelect();
+    
+    public Map<String, Object> listContractsByProjectId(Map<String, Object> contract);
+    
+    public Map<String, Object> listContractsSuppliersByProjectId(HashMap<String, Object> contract);
+    
+    public Map<String, Object> listContractsByProjectAndSupplier(HashMap<String, Object> params);
+    
     public void deletePurchaseContract(Map<String, Object> contract);
     
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract);
@@ -87,4 +95,7 @@ public interface IPurchaseContractService {
     public Map<String, Object> updateGetInvoice(HashMap<String, Object> params);
     
     public void destroyGetInvoice(HashMap<String, Object> params);
+
+   
+
 }

@@ -1,5 +1,4 @@
 var requestDataItem;
-var selectedRequest;
 
 var model = kendo.data.Model.define({
 	id : "_id",
@@ -12,10 +11,7 @@ var model = kendo.data.Model.define({
 
 
 $(document).ready(function() {
-
-	
-	if (!$("#purchasecontractselect").data("kendoDropDownList")) {
-		$("#purchasecontractselect").kendoDropDownList({
+	$("#purchasecontractselect").kendoDropDownList({
 			dataTextField : "projectName",
 			dataValueField : "_id",
 			placeholder : "选择项目...",
@@ -23,21 +19,22 @@ $(document).ready(function() {
 				transport : {
 					read : {
 						dataType : "jsonp",
-						url : "/service/project/listforselect",
+						url : "/service/purcontract/repository/contract/list",
 					}
 				},
 				schema : {
-					total: "total", // total is returned in the "total" field of the response
+					total: "total", 
 					data: "data"
-				}
+				}		
 			},
-			// 当用户选择不同的采购申请时候赋值给requestDataItem对象
 			select : function(e) {
-				selectedRequest = this.dataSource.at(e.item.index());
+				updateSupplier();
+			},
+			dataBound : function(e){		
+				updateSupplier();
 			}
 		});
-	}
-
+	
 	
 	if (redirectParams) {
 		postAjaxRequest("/service/purcontract/repository/get", redirectParams, edit);
@@ -45,6 +42,32 @@ $(document).ready(function() {
 	
 });
 
+
+function updateSupplier(){
+	$("#supplierName").kendoDropDownList({
+		dataTextField : "supplierName",
+		dataValueField : "_id",
+		dataSource :{
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "/service/purcontract/project/contract/suppliers/list",
+				},
+			
+				parameterMap : function(options, operation) {
+					return {
+						// 解析成json_p模式
+						json_p : '{"projectId" : ' + $("#purchasecontractselect").data("kendoDropDownList").value() + '}'
+					}
+				}
+			},
+			schema : {
+				total: "total",
+				data: "data"
+			}
+		}
+	});
+}
 
 
 var itemDataSource = new kendo.data.DataSource({
@@ -88,7 +111,7 @@ function save(status) {
 	
 	
 	if(itemDataSource.at(0)){
-		//force set haschanges = true
+		// force set haschanges = true
 		itemDataSource.at(0).set("uid", kendo.guid());
 	}
 
@@ -104,21 +127,20 @@ function checkStatus() {
 }
 // 计算成
 
-function showOrderWindow() {
-	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
-	var purchaseRequestGrid = $("#purchasecontractselect").data("kendoDropDownList");
+function selectContracts() {
 
+	var projectId = $("#purchasecontractselect").data("kendoDropDownList").value();
+	var supplierId = $("#supplierName").data("kendoDropDownList").value();
 	
-	if (!selectedRequest) {
-		selectedRequest = purchaseRequestGrid.dataSource.at(0);
-	}
+	var param = {"projectId": projectId, "supplier" : supplierId};
 	
-	console.log(selectedRequest);
-	requestDataItem = new model({});
-	requestDataItem.eqcostList = selectedRequest.eqcostList;
-	requestDataItem.supplierName = selectedRequest.supplierName;
+	postAjaxRequest("/service/purcontract/get/byproject_supplier", param, loadContracts);
+}
 
-	edit();
+function loadContracts(data){
+	
+	console.log(data);
+	
 }
 
 function edit(data) {

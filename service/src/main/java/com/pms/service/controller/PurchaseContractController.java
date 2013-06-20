@@ -26,6 +26,27 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listPurchaseContracts(), request, response);
     }
     
+    @RequestMapping("/repository/contract/list")
+    public void listContractsForRepositorySelect(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listContractsForRepositorySelect(), request, response);
+    }
+    
+    @RequestMapping("/project/contract/list")
+    public void listContractsByProjectId(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listContractsByProjectId(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/project/contract/suppliers/list")
+    public void listContractsSuppliersByProjectId(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listContractsSuppliersByProjectId(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/get/byproject_supplier")
+    public void listContractsByProjectAndSupplier(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listContractsByProjectAndSupplier(parserJsonParameters(request, false)), request, response);
+    }
+    
+    
     @RequestMapping("/get")
     public void getPurchaseContract(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.getPurchaseContract(parserJsonParameters(request, false)), request, response, "save_success");

@@ -84,15 +84,6 @@ public class PurchaseOrder extends PurchaseCommonBean {
         this.moneyPercentOfContract = moneyPercentOfContract;
     }
 
-    public static final String PROCESS_STATUS = "status";
-    public static final String APPROVED_DATE = "approvedDate";
-    public static final String SALES_CONTRACT_CODE = "salesContractCode";
 
-    public static final String STATUS_DRAFT = "草稿";
-    public static final String STATUS_NEW = "审批中";
-    public static final String STATUS_APPROVED = "审批通过";
-    public static final String STATUS_REJECTED = "审批拒绝";
-    public static final String MANAGER_APPROVED = "经理审批通过";
-    public static final String STATUS_CANCELLED = "已废止";
 
 }
