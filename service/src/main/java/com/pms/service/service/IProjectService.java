@@ -23,4 +23,6 @@ public interface IProjectService {
 	public String getCustomerIdByProId(String pId);
 	
 	public String getCustomerNameByProId(String pId);
+	
+	public void importProjectAndSCData(Map<String, Object> params);
 }

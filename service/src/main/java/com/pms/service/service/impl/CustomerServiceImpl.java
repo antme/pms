@@ -54,7 +54,7 @@ public class CustomerServiceImpl extends AbstractService implements ICustomerSer
     public Map<String, Object> importCustomer(Map<String, Object> params) {
         Map<String, Object> customer = dao.findOne(CustomerBean.NAME, params.get(CustomerBean.NAME), DBBean.CUSTOMER);
         if (customer == null) {
-            customer = dao.add(customer, DBBean.CUSTOMER);
+            customer = dao.add(params, DBBean.CUSTOMER);
         }
         return customer;
     }

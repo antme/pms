@@ -107,7 +107,7 @@ $(document).ready(function() {
 	};
 	
 	//表单中的各种控件
-	var invoiceTypeItems = [{ text: "增值税专用", value: 1 }, { text: "增值税普通", value: 2 }, { text: "建筑业发票", value: 3 }, { text: "服务业发票", value: 4 }];
+	
 	$("#invoiceType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
@@ -140,7 +140,7 @@ $(document).ready(function() {
 	});
 	
 	//已归档，未归档
-	var archiveStatusItems = [{ text: "已归档", value: 1 }, { text: "未归档", value: 2 }];
+	
 	$("#archiveStatus").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
@@ -149,7 +149,7 @@ $(document).ready(function() {
 	});
 	
 	//执行中、收尾阶段、质保期、结束、中止或暂停、作废
-	var runningStatusItems = [{ text: "执行中", value: 1 }, { text: "中止或暂停", value: 2 }, { text: "收尾阶段", value: 3 }, { text: "结束", value: 4 }, { text: "质保期", value: 5 }, { text: "作废", value: 6 }];
+	
 	$("#runningStatus").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",

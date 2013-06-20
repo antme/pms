@@ -21,7 +21,7 @@ var dataSource = new kendo.data.DataSource({
 	    data: "data"
 	},
 
-	pageSize: 5,
+	pageSize: 10,
     serverPaging: true,
 	batch : true,
 	

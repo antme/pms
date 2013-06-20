@@ -55,7 +55,7 @@ $(document).ready(function() {
 	
 	//表单中的各种控件
 	//发票类型
-	var invoiceTypeItems = [{ text: "增值税专用", value: 1 }, { text: "增值税普通", value: 2 }, { text: "建筑业发票", value: 3 }, { text: "服务业发票", value: 4 }];
+	//var invoiceTypeItems = [{ text: "增值税专用", value: 1 }, { text: "增值税普通", value: 2 }, { text: "建筑业发票", value: 3 }, { text: "服务业发票", value: 4 }];
 	$("#invoiceType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
@@ -91,7 +91,7 @@ $(document).ready(function() {
 	});
 	
 	//归档状态：已归档，未归档
-	var archiveStatusItems = [{ text: "已归档", value: 1 }, { text: "未归档", value: 2 }];
+	//var archiveStatusItems = [{ text: "已归档", value: 1 }, { text: "未归档", value: 2 }];
 	$("#archiveStatus").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
@@ -100,7 +100,7 @@ $(document).ready(function() {
 	});
 	
 	//执行状态： 执行中、中止或暂停、收尾阶段、结束、质保期、作废
-	var runningStatusItems = [{ text: "执行中", value: 1 }, { text: "中止或暂停", value: 2 }, { text: "收尾阶段", value: 3 }, { text: "结束", value: 4 }, { text: "质保期", value: 5 }, { text: "作废", value: 6 }];
+	//var runningStatusItems = [{ text: "执行中", value: 1 }, { text: "中止或暂停", value: 2 }, { text: "收尾阶段", value: 3 }, { text: "结束", value: 4 }, { text: "质保期", value: 5 }, { text: "作废", value: 6 }];
 	$("#runningStatus").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
