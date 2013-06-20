@@ -1,26 +1,5 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="js/highcharts/highcharts.js"></script>
+<script src="js/highcharts/modules/exporting.js"></script>
+<script src="js/allocate.js"></script>
 
-<script  src="js/allocate.js"></script>
-
-<script id="template" type="text/x-kendo-template">
-	<a class="k-button" href="\#" onclick="return toolbar_add()">添加/修改</a>
-</script>
-
-<script id="submit-template" type="text/x-kendo-template">
-	<a class="k-button" href="\#" onclick="return toolbar_submit()">提交</a>
-</script>
-
-<body>
-	<div id="allocate" class="k-content">
-    	<div id="grid"></div>
-	</div>
-
-	<div id="allocate-edit" class="allocate-edit" style="display:none">
-		<label for="in-projects">调入项目:</label><input id="in-projects" data-bind="value: inProjectId" />
-		<label for="out-projects">调出项目:</label><input id="out-projects" data-bind="value: outProjectId" />
-		<label for="allocateType">调拨类型:</label>
-        <input type="text" id="allocateType" class="k-textbox" data-bind="value: allocateType" />
-		<div id="equipments-grid"></div>
-	</div>
-</body>
-</html>
+<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
