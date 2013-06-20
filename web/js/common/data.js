@@ -18,10 +18,7 @@ var user = undefined;
 
 //定义菜单所需权限，目前写死在JS文件中, KEY对应menus变量中的菜单ID
 var accessRoles = {
-	projectList : "project_management",
-	scList : "salse_contract_management",
 	finance : "finance_management",
-	system : "user_management",
 	user : "user_management"
 };
 

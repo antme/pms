@@ -120,11 +120,29 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> listContractsByProjectAndSupplier(HashMap<String, Object> params) {
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put("eqcostList.projectId", params.get("projectId"));
+        Object projectId = params.get("projectId");
+        query.put("eqcostList.projectId", projectId);
         query.put("supplier", params.get("supplier"));
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
         
-        return this.dao.list(query, DBBean.PURCHASE_CONTRACT);
+        Map<String, Object>  results = this.dao.list(query, DBBean.PURCHASE_CONTRACT);
+        List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
+
+        List<Map<String, Object>> eqclist = new ArrayList<Map<String, Object>>();
+        
+        for (Map<String, Object> data : list) {
+            List<Map<String, Object>> pList = (List<Map<String, Object>>) data.get("eqcostList");
+
+            for (Map<String, Object> p : pList) {
+                if(p.get("projectId").equals(projectId)){
+                    eqclist.add(p);
+                }
+            }            
+        }
+        
+        Map<String, Object> lresult= new HashMap<String, Object>();
+        lresult.put("data", eqclist);
+        return lresult;
 
     }
     

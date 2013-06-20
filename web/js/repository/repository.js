@@ -11,7 +11,11 @@ var dataSource = new kendo.data.DataSource({
 			dataType : "jsonp"
 		}
 	},
-	pageSize : 20
+	pageSize : 20,
+	schema : {
+		total: "total",
+		data: "data"
+	}
 });
 
 $(document).ready(function() {

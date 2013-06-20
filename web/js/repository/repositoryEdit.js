@@ -138,9 +138,9 @@ function selectContracts() {
 }
 
 function loadContracts(data){
-	
-	console.log(data);
-	
+	requestDataItem = new model();
+	requestDataItem.eqcostList = data.data;
+	edit();
 }
 
 function edit(data) {
