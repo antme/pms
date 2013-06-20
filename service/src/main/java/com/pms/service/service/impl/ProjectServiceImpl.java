@@ -217,7 +217,6 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 				row.put(ProjectBean.PROJECT_ABBR, list.get(i)[4].trim());
 				row.put(ProjectBean.PROJECT_CUSTOMER, list.get(i)[8].trim());
 				row.put(ProjectBean.PROJECT_MANAGER, list.get(i)[5].trim());
-				row.put(ProjectBean.PROJECT_STATUS, list.get(i)[34].trim());
 				row.put(ProjectBean.PROJECT_TYPE, list.get(i)[12].trim());
 				
 				row.put(SalesContractBean.SC_CODE, list.get(i)[2].trim());
@@ -225,6 +224,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 				row.put(SalesContractBean.SC_TYPE, list.get(i)[10].trim());
 				row.put(SalesContractBean.SC_DATE, list.get(i)[14].trim());
 				row.put(SalesContractBean.SC_AMOUNT, list.get(i)[23].trim());
+				row.put(SalesContractBean.SC_RUNNING_STATUS, list.get(i)[34].trim());
 				
 				rows.add(row);
 			}
@@ -246,8 +246,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			project.put(ProjectBean.PROJECT_NAME, row.get(ProjectBean.PROJECT_NAME));
 			project.put(ProjectBean.PROJECT_ABBR, row.get(ProjectBean.PROJECT_ABBR));
 			project.put(ProjectBean.PROJECT_CUSTOMER, customerId);
-			project.put(ProjectBean.PROJECT_MANAGER, row.get(pmId));
-			project.put(ProjectBean.PROJECT_STATUS, row.get(ProjectBean.PROJECT_STATUS));
+			project.put(ProjectBean.PROJECT_MANAGER, pmId);
 			project.put(ProjectBean.PROJECT_TYPE, row.get(ProjectBean.PROJECT_TYPE));
 			Map<String, Object> projectMap = addProject(project);
 			String proId = (String) projectMap.get(ApiConstants.MONGO_ID);
@@ -258,6 +257,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			sc.put(SalesContractBean.SC_TYPE, row.get(SalesContractBean.SC_TYPE));
 			sc.put(SalesContractBean.SC_DATE, row.get(SalesContractBean.SC_DATE));
 			sc.put(SalesContractBean.SC_AMOUNT, row.get(SalesContractBean.SC_AMOUNT));
+			row.put(SalesContractBean.SC_RUNNING_STATUS, row.get(SalesContractBean.SC_RUNNING_STATUS));
 			sc.put(SalesContractBean.SC_PROJECT_ID, proId);
 			salesContractService.addSC(sc);
 		}

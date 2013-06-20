@@ -20,6 +20,7 @@ import com.pms.service.mockbean.PayMoneyBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
+import com.pms.service.mockbean.PurchaseOrder;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.PurchaseRequestOrder;
 import com.pms.service.mockbean.SalesContractBean;
@@ -114,6 +115,15 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         return results;
         
+    }
+    
+    public Map<String, Object> listApprovedPurchaseOrderForSelect() {
+
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(PurchaseOrder.PROCESS_STATUS, PurchaseOrder.STATUS_APPROVED);
+        
+        return dao.list(query, DBBean.PURCHASE_ORDER);
+
     }
 
     @Override
