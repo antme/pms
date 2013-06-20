@@ -38,10 +38,35 @@ public class RoleValidConstants {
 
     public static final String PURCHASE_ALLOCATE_PROCESS = "purchase_allocate_process";
     public static final String PURCHASE_ALLOCATE_PROCESS_DESC = "调拨申请审批";
-
+    
     public static final String PROJECT_MANAGEMENT = "project_management";
     public static final String PROJECT_MANAGEMENT_DESC = "项目管理";
     
+    public static final String SHIP_MANAGEMENT = "ship_management";
+    public static final String SHIP_MANAGEMENT_DESC = "发货管理";
+        
+    public static final String SHIP_MANAGEMENT_PROCESS = "ship_management_process";
+    public static final String SHIP_MANAGEMENT_PROCESS_DESC = "发货审批";
     
+    public static final String BORROWING_MANAGEMENT = "borrowing_management";
+    public static final String BORROWING_MANAGEMENT_DESC = "借货还货管理";
+        
+    public static final String BORROWING_MANAGEMENT_PROCESS = "borrowing_management_process";
+    public static final String BORROWING_MANAGEMENT_PROCESS_DESC = "借货还货审批";
+    
+    
+    public static final String REPOSITORY_MANAGEMENT = "repository_management";
+    public static final String REPOSITORY_MANAGEMENT_DESC = "入库管理";
+        
+    public static final String REPOSITORY_MANAGEMENT_PROCESS = "repository_management_process";
+    public static final String REPOSITORY_MANAGEMENT_PROCESS_DESC = "入库审批";
+    
+    
+    public static final String SALES_CONTRACT_MANAGEMENT = "salse_contract_management";
+    public static final String SALES_CONTRACT_MANAGEMENT_DESC = "销售合同管理";
+    
+    public static final String FINANCE_MANAGEMENT = "finance_management";
+    public static final String FINANCE_MANAGEMENT_DESC = "财务管理";
+
 
 }

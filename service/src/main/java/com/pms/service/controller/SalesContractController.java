@@ -10,12 +10,15 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.pms.service.annotation.LoginRequired;
 import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.annotation.RoleValidate;
 import com.pms.service.service.ISalesContractService;
 
 @Controller
 @RequestMapping("/sc")
+@RoleValidate
+@LoginRequired
 public class SalesContractController extends AbstractController {
 	
 	private static Logger logger = LogManager.getLogger(SalesContractController.class);
@@ -41,14 +44,14 @@ public class SalesContractController extends AbstractController {
     }
     
     @RequestMapping("/add")
-    @RoleValidate(roleID=RoleValidConstants.PROJECT_MANAGEMENT, desc = RoleValidConstants.PROJECT_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_MANAGEMENT, desc = RoleValidConstants.SALES_CONTRACT_MANAGEMENT_DESC)
     public void addSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addSC(params), request, response);
     }
     
     @RequestMapping("/update")
-    @RoleValidate(roleID=RoleValidConstants.PROJECT_MANAGEMENT, desc = RoleValidConstants.PROJECT_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_MANAGEMENT, desc = RoleValidConstants.SALES_CONTRACT_MANAGEMENT_DESC)
     public void updateSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addSC(params), request, response);
@@ -67,12 +70,14 @@ public class SalesContractController extends AbstractController {
     }
     
     @RequestMapping("/invoice/add")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void addInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addInvoiceForSC(params), request, response);
     }
     
     @RequestMapping("/invoice/update")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void updateInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addInvoiceForSC(params), request, response);
@@ -85,12 +90,14 @@ public class SalesContractController extends AbstractController {
     }
     
     @RequestMapping("/gotmoney/add")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void addGotMoneyForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addGotMoneyForSC(params), request, response);
     }
     
     @RequestMapping("/gotmoney/update")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void updateGotMoneyForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addGotMoneyForSC(params), request, response);

@@ -1,18 +1,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<script  src="js/ship.js"></script>
+<script src="js/ship.js"></script>
 
-<script id="template" type="text/x-kendo-template">
-	<button class="k-button" onclick="return toolbar_add()">新增</button>
-	<button class="k-button" onclick="return toolbar_edit()">编辑</button>
-	<button class="k-button" onclick="return toolbar_option(1)">提交申请</button>
-	<button class="k-button" onclick="return toolbar_option(2)">批准</button>
-	<button class="k-button" onclick="return toolbar_option(3)">拒绝</button>
-</script>
 
 <body>
 	<div id="ship" class="k-content">
-    	<div id="grid"></div>
+		<div class="k-toolbar k-grid-toolbar">
+			<button access="ship_management" class="k-button access" onclick="return toolbar_add()">新增</button>
+			<button access="ship_management" class="k-button access" onclick="return toolbar_edit()">编辑</button>
+			<button access="ship_management" class="k-button access" onclick="return toolbar_option(1)">提交申请</button>
+			<button access="ship_management_process" class="k-button access" onclick="return toolbar_option(2)">批准</button>
+			<button access="ship_management_process" class="k-button access" onclick="return toolbar_option(3)">拒绝</button>
+		</div>
+		<div id="grid"></div>
 	</div>
 </body>
-</html>

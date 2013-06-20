@@ -2,7 +2,7 @@ var baseUrl = "../../service/purchase";
 var requestModel;
 var listDatasource;
 $(document).ready(function () {	
-	
+	checkRoles();
 	requestModel = kendo.data.Model.define({
 		id : "_id",
 		fields : {
@@ -50,7 +50,6 @@ $(document).ready(function () {
 	    dataSource: listDatasource,
 	    pageable: true,
 	    selectable : "row",
-	    toolbar: kendo.template($("#template").html()),
 	    columns: [
 	        { field: "paCode", title: "调拨编号" },
 	        { field: "contractCode", title:"销售合同编号" },

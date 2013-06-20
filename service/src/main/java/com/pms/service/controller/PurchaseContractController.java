@@ -223,11 +223,13 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/paymoney/add")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void addPaymoney(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.addPaymoney(parserJsonParameters(request, false)), request, response, "save_success");
     }
     
     @RequestMapping("/paymoney/update")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void updatePaymoney(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.updatePaymoney(parserJsonParameters(request, false)), request, response);
     }
@@ -237,16 +239,19 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/invoice/add")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void addGetInvoice(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.addGetInvoice(parserJsonParameters(request, false)), request, response, "save_success");
     }
     
     @RequestMapping("/invoice/update")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void updateGetInvoice(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.updateGetInvoice(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/invoice/destroy")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void destoryBack(HttpServletRequest request, HttpServletResponse response) {
     	pService.destroyGetInvoice(parserJsonParameters(request,  false));
     	responseWithData(new HashMap(), request, response);

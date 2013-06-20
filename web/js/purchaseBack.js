@@ -2,7 +2,7 @@ var baseUrl = "../../service/purchase/back";
 var requestModel;
 var listDatasource;
 $(document).ready(function () {	
-	
+	checkRoles();
 	requestModel = kendo.data.Model.define({
 		id : "_id",
 		fields : {
@@ -56,7 +56,6 @@ $(document).ready(function () {
 	    dataSource: listDatasource,
 	    pageable: true,
 	    selectable : "row",
-	    toolbar: kendo.template($("#template").html()),
 	    columns: [
 	        { field: "pbCode", title: "备货编号" ,width:"125px"},
 	        { field: "pbType", title:"采购类别" ,width:"120px"},

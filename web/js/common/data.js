@@ -19,23 +19,10 @@ var user = undefined;
 //定义菜单所需权限，目前写死在JS文件中, KEY对应menus变量中的菜单ID
 var accessRoles = {
 	projectList : "project_management",
-	projectex : "project_management, purchase_request_management",
-	purchaseBack : "project_management",
-	getInvoice : "project_management",
-	purchaseRequestByAssistant : "purchase_request_management",
-	purchaseorder : "user_management",
-	ship : "user_management",
-	contract : "user_management",
-	scList : "project_management",
-	purchasecontract : "purchase_allocate_process, purchase_request_management, purchase_request_process, purchase_order_management, purchase_order_process, user_management",
-	purchaseAllot : "purchase_request_management, purchase_allocate_management",
-	purchaseAllotManage : "purchase_allocate_process, purchase_allocate_management",
-	purchaseRequestApprove : "purchase_request_process",
-	purchaseorder : "purchase_order_management, purchase_order_process",
-	purchasecontract : "purchase_contract_management, purchase_contract_process",
-	finance : "user_management",
-	customer : "user_management",
-	userman : "user_management"
+	scList : "salse_contract_management",
+	finance : "finance_management",
+	system : "user_management",
+	user : "user_management"
 };
 
 //定义左边菜单
@@ -84,13 +71,13 @@ var menus = [
              },
                                  
              {
-                 text: "基础信息",  id: "customer", imageUrl: "/images/user.png",
+                 text: "基础信息",  id: "system", imageUrl: "/images/user.png",
                  	items: [
                              { text: "客户", id: "customer", imageUrl: "/images/toy.png" },
                              { text: "供应商", id: "supplier", imageUrl: "/images/ccontract.png" }
                          ]
              } , {
-                 text: "权限管理", id: "userman", expanded: false, imageUrl: "/images/friends_group.png",
+                 text: "权限管理", id: "user", expanded: false, imageUrl: "/images/friends_group.png",
                  items: [
                          { text: "用户管理", id: "userman", imageUrl: "/images/toy.png" },
                          { text: "角色管理", id: "group", imageUrl: "/images/ccontract.png" }
