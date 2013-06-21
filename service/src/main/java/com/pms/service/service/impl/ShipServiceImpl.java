@@ -140,7 +140,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		
-		parameters.put(ShipBean.SHIP_STATUS, 1);
+		parameters.put(ShipBean.SHIP_STATUS, 2);
 		parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, saleId);
 		
 		Map<String, Object> result = dao.list(parameters, DBBean.SHIP);
