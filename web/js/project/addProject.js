@@ -115,7 +115,6 @@ $(document).ready(function() {
 		    data: "data"
 		}
 	});
-	//var proManagerItems = [{ text: "Danny", value: "1" }, { text: "Dylan", value: "2" }, { text: "Jacky", value: "3" }];
 	$("#projectManager").kendoDropDownList({
 		dataTextField : "userName",
 		dataValueField : "_id",
