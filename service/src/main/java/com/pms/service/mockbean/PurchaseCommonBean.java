@@ -26,6 +26,8 @@ public class PurchaseCommonBean extends BaseEntity {
     private String purchaseRequestId;
     
     private String comment;
+    
+    private String scContractType;
 
 
     public String getProjectId() {
@@ -127,6 +129,18 @@ public class PurchaseCommonBean extends BaseEntity {
     public void setComment(String comment) {
         this.comment = comment;
     }
+    
+    
+
+    public String getScContractType() {
+        return scContractType;
+    }
+
+    public void setScContractType(String scContractType) {
+        this.scContractType = scContractType;
+    }
+
+
 
     public static final String PROCESS_STATUS = "status";
     public static final String APPROVED_DATE = "approvedDate";

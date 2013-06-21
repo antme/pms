@@ -405,7 +405,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             // 根据销售合同id查询项目和客户ID
             Map<String, Object> query = new HashMap<String, Object>();
             query.put(ApiConstants.MONGO_ID, request.getSalesContractId());
-            query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_CUSTOMER_ID });
+            query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_CUSTOMER_ID, SalesContractBean.SC_TYPE });
 
             Map<String, Object> sc = this.dao.findOneByQuery(query, DBBean.SALES_CONTRACT);
             request.setProjectId(sc.get(SalesContractBean.SC_PROJECT_ID).toString());
