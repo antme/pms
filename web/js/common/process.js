@@ -3,30 +3,26 @@ function process(url) {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		$("#approve-comment").val("");
-		$("#approve-comment").attr("disabled",false); 
-		$("#approve").show();
+		$("#approve-comment").attr("disabled", false);
 		processUrl = url;
 		var options = {
 			width : 500,
 			height : 200,
 			actions : [ "Maximize", "Close" ]
 		};
-		var kendoWindow = $("#approve").data("kendoWindow");
-		if (!kendoWindow) {
-			$("#approve").kendoWindow(options);
-			kendoWindow = $("#approve").data("kendoWindow");
-			kendoWindow.center();
-		} else {
-			kendoWindow.setOptions(options);
-			kendoWindow.open();
-			kendoWindow.center();
-		}
+		$("#approve").kendoWindow({
+			width : options.width,
+			height : options.height,
+			title : options.title
+		});
 
+		kendoWindow = $("#approve").data("kendoWindow");
+		kendoWindow.open();
+		kendoWindow.center();
 	}
 }
 
-
-function approveSubmit(){
+function approveSubmit() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		var param = {
@@ -55,4 +51,3 @@ function cancel() {
 function reject() {
 	process(rejectUrl);
 }
-
