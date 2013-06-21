@@ -22,7 +22,19 @@ $(document).ready(function () {
         pageSize: 15,
         schema: {
         	total: "total",
-        	data: "data"
+        	data: "data",
+        	model: {
+                id: "_id",
+                fields: {
+                	applicant: {},
+                	applicationDate: {},
+                	inProjectName: {},
+                	inProjectManager: {},
+                	outProjectName: {},
+                	outProjectManager: {},
+                	status: {}
+                }
+            }
         }
     });
 

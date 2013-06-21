@@ -22,7 +22,17 @@ $(document).ready(function () {
         pageSize: 15,
         schema: {
         	total: "total",
-        	data: "data"
+        	data: "data",
+        	model: {
+                id: "_id",
+                fields: {
+                	applicationDepartment: {},
+                	applicationDate: {},
+                	contractCode: {},
+                	customer: {},
+                	status: {}
+                }
+            }
         }
     });
 
@@ -118,6 +128,14 @@ function toolbar_option(op) {
 function callback(response) {
 	alert("操作成功");
 	dataSource.read();
+}
+
+function toolbar_view(){
+	var rowData = getSelectedRowDataByGridWithMsg("grid");
+	if (rowData) {
+		var options = { width:"1080px", height: "600px", title:"发货信息"};
+		openRemotePageWindow(options, "html/execution/addShip.html", {_id : rowData._id});
+	}
 }
 
 function openScViewWindow(param){

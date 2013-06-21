@@ -7,24 +7,19 @@ var model = kendo.data.Model.define({
 			editable : false,
 			nullable : true
 		},
-		supplierName : {
-			validation : {
-				required : true
-			}
-		},
-		supplierAddress : {
-			validation : {
-				required : true,
-				min : 1
-			}
-		},
-		supplierContact : {},
-		supplierContactPhone : {
-			validation : {
-				min : 0,
-				required : true
-			}
-		}
+		supplierCode: { validation: { required: true } },
+		supplierName: { validation: { required: true } },
+		supplierDescription: { validation: { required: true } },
+		supplierBankName: { validation: { required: true } },
+		supplierBankAccount: { validation: { required: true } },
+		supplierTaxAccount: { validation: { required: true } },
+		supplierContact: { validation: { required: true } },
+		supplierLocation: {},
+		supplierAddress: {},
+		supplierContactPhone: { validation: { required: true } },
+		supplierEmail: {},
+		supplierFax: {},
+		supplierRemark: {}
 	}
 
 });
@@ -75,26 +70,22 @@ $(document).ready(function() {
 		toolbar : [ {
 			template : kendo.template($("#template").html())
 		} ],
-		columns : [ {
-			field : "supplierName",
-			title : "供应商名字"
-		}, {
-			field : "supplierAddress",
-			title : "供应商地址",
-			width : "100px"
-		}, {
-			field : "supplierContact",
-			title : "供应商联系人",
-			width : "100px"
-		}, {
-			field : "supplierContactPhone",
-			title : "供应商联系人电话",
-			width : "100px"
-		}, {
-			command : [ "edit", "destroy" ],
-			title : "&nbsp;",
-			width : "160px"
-		} ],
+		columns : [
+		    { field : "supplierCode", title : "供应商编号" },
+	        { field : "supplierName", title : "供应商名称" },
+	        { field : "supplierDescription", title : "供应商描述" },
+	        { field : "supplierBankName", title : "开户行" },
+	        { field : "supplierBankAccount", title : "银行账号" },
+	        { field : "supplierTaxAccount", title : "税号" },
+	        { field : "supplierContact", title : "供应商联系人" },
+	        { field : "supplierLocation", title : "供应商所在地" },
+	        { field : "supplierAddress", title : "地址" },
+	        { field : "supplierContactPhone", title : "联系人电话" },
+	        { field : "supplierEmail", title : "联系人邮箱" },
+	        { field : "supplierFax", title : "传真" },
+	        { field : "supplierRemark", title : "备注" },
+	        { command : [ "edit", "destroy" ], title : "&nbsp;" }
+        ],
 		editable : "popup"
 	});
 });

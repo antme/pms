@@ -83,30 +83,35 @@ $(document).ready(function() {
         }),
         change: function(e) {
         	var dataItem = this.dataItem();
-        	model.set("customer", dataItem.customer);
-        	model.set("contractCode", dataItem.contractCode);
-        	
-        	var salesContractId = this.value();
-        	
-        	eqDataSource = new kendo.data.DataSource({
-        	    transport: {
-        	        read: {
-        	            url: crudServiceBaseUrl + "/ship/eqlist",
-        	            dataType: "jsonp",
-        	            data: {
-        	            	salesContractId: salesContractId
-        	            }
-        	        }
-        	    },
-        	    batch: true,
-        	    schema: {
-        	        model: eqModel,
-        	        total: "total",
-                	data: "data"
-        	    }
-        	});
-        	
-        	grid.setDataSource(eqDataSource);
+        	if (dataItem) {
+        		model.set("customer", dataItem.customer);
+            	model.set("contractCode", dataItem.contractCode);
+            	
+            	var salesContractId = this.value();
+            	
+            	eqDataSource = new kendo.data.DataSource({
+            	    transport: {
+            	        read: {
+            	            url: crudServiceBaseUrl + "/ship/eqlist",
+            	            dataType: "jsonp",
+            	            data: {
+            	            	salesContractId: salesContractId
+            	            }
+            	        }
+            	    },
+            	    batch: true,
+            	    schema: {
+            	        model: eqModel,
+            	        total: "total",
+                    	data: "data"
+            	    }
+            	});
+            	
+            	grid.setDataSource(eqDataSource);
+			} else {
+				this.value("");
+				this.text("");
+			}
         }
     });
 	
@@ -126,7 +131,10 @@ $(document).ready(function() {
 	});
 	grid = $("#equipments-grid").data("kendoGrid");
     
-    if (redirectParams) {//Edit
+	if(popupParams){
+		postAjaxRequest("/service/ship/get", popupParams, edit);
+		disableAllInPoppup();
+	} else if (redirectParams) {//Edit
 		postAjaxRequest("/service/ship/get", redirectParams, edit);
 	} else {//Add
 		//添加表单绑定一个空的 Model
@@ -157,18 +165,19 @@ function save() {
     } else {
     	if (eqDataSource) {
     		var data = eqDataSource.data();
-            model.set("eqcostList", data);
+    		if (data.length > 0) {
+    			model.set("eqcostList", data);
+    			listDataSource.add(model);
+    	        
+    	    	if(listDataSource.at(0)){
+    	    		//force set haschanges = true
+    	    		listDataSource.at(0).set("uid", kendo.guid());
+    	    	}
+    	    	
+    	    	listDataSource.sync();
+    	        loadPage("ship");
+			}
 		}
-        
-        listDataSource.add(model);
-        
-    	if(listDataSource.at(0)){
-    		//force set haschanges = true
-    		listDataSource.at(0).set("uid", kendo.guid());
-    	}
-    	
-    	listDataSource.sync();
-        loadPage("ship");
     }
 }
 
