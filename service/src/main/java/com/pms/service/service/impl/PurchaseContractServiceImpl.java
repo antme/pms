@@ -299,11 +299,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         Map<String, Object> roleQuery = new HashMap<String, Object>();
         
-        if(params.get("query")!=null){
-            
-            params.remove("query");
+        if(params.get("approvePage")!=null){           
+            params.remove("approvePage");
             params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED}));
-
         }
         
         if(isDepartmentManager()){
