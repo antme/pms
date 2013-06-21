@@ -1,4 +1,8 @@
 var listUrl = "/service/purcontract/request/list";
+
+if($("#requestApprove").length>0){
+	listUrl = "/service/purcontract/request/list?query=approve";
+}
 var approveUrl = "/service/purcontract/request/approve";
 var rejectUrl = "/service/purcontract/request/reject";
 var cancelUrl = "/service/purcontract/request/cancel";

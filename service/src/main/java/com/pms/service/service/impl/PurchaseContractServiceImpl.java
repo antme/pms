@@ -50,6 +50,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters) {
+
         Map<String, Object> results = dao.list(parameters, DBBean.PURCHASE_CONTRACT);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
@@ -297,6 +298,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> listPurchaseRequests(Map<String, Object> params){
         
         Map<String, Object> roleQuery = new HashMap<String, Object>();
+        
+        if(params.get("query")!=null){
+            
+            params.remove("query");
+            params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED}));
+
+        }
         
         if(isDepartmentManager()){
             params.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_NEW);

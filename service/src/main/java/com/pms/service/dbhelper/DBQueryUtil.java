@@ -68,7 +68,20 @@ public class DBQueryUtil {
 
                 } else if (dbQuery.getOperation() == DBQueryOpertion.NOT_IN){
                     BasicDBList dbList = new BasicDBList();
-                    List<Object> arrayValues = (List<Object>) dbQuery.getValue();
+                    List<Object> arrayValues = new ArrayList<Object>();
+                    if(dbQuery.getValue() instanceof String){  
+                        String[] s = new String[] {(String) dbQuery.getValue()};
+                        for(String v: s){
+                            arrayValues.add(v);
+                        }
+                    }else if(dbQuery.getValue() instanceof String[]){
+                        String[] s = (String[]) (dbQuery.getValue());
+                        for(String v: s){
+                            arrayValues.add(v);
+                        }
+                    }else{
+                         arrayValues = (List<Object>) dbQuery.getValue();
+                    }
                     for (Object aValue : arrayValues) {
                         if (key == ApiConstants.MONGO_ID) {
                             dbList.add(new ObjectId(aValue.toString()));
