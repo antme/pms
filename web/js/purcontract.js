@@ -12,7 +12,10 @@ var dataSource = new kendo.data.DataSource({
 		total: "total", // total is returned in the "total" field of the response
 		data: "data"
 	},
-	pageSize : 20
+    pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
 });
 
 $(document).ready(function() {
@@ -21,7 +24,8 @@ $(document).ready(function() {
 		dataSource : dataSource,
 		pageable : true,
 		selectable : "row",
-		sortable : true,
+	    sortable : true,
+		filterable : filterable,
 		columns : [ {
 			field : "purchaseContractCode",
 			title : "采购合同编号"

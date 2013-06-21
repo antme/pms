@@ -15,7 +15,10 @@ var dataSource = new kendo.data.DataSource({
 		total: "total", // total is returned in the "total" field of the response
 		data: "data"
 	},
-	pageSize : 20
+    pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
 });
 
 $(document).ready(function() {
@@ -26,7 +29,8 @@ $(document).ready(function() {
 		$("#grid").kendoGrid({
 			dataSource : dataSource,
 			pageable : true,
-			sortable : true,
+		    sortable : true,
+			filterable : filterable,
 			selectable : "row",
 			columns : [ {
 				field : "purchaseRequestCode",

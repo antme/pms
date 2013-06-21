@@ -104,17 +104,7 @@ $(document).ready(function() {
 		dataSource : proCategoryItems
 	});
 	
-	var proManagerItems = new kendo.data.DataSource({
-		transport : {
-			read : {
-				url : "/service/user/list",
-				dataType : "jsonp"
-			}
-		},
-		schema: {
-		    data: "data"
-		}
-	});
+
 	$("#projectManager").kendoDropDownList({
 		dataTextField : "userName",
 		dataValueField : "_id",

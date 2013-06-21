@@ -1,5 +1,6 @@
 package com.pms.service.service.impl;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISalesContractService;
 import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DateUtil;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
 
@@ -47,8 +49,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
 
     @Override
-    public Map<String, Object> listPurchaseContracts() {
-        Map<String, Object> results = dao.list(null, DBBean.PURCHASE_CONTRACT);
+    public Map<String, Object> listPurchaseContracts(HashMap<String, Object> parameters) {
+        Map<String, Object> results = dao.list(parameters, DBBean.PURCHASE_CONTRACT);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
         for(Map<String, Object> data: list){
@@ -513,8 +515,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> updateRepositoryRequest(HashMap<String, Object> parameters) {
+        if (parameters.get("inDate") != null) {
+            try {
+                parameters.put("inDate", DateUtil.getDate(parameters.get("inDate").toString()));
+            } catch (ParseException e) {
+                logger.error(e);
+            }
+
+        }
+
         return updatePurchase(parameters, DBBean.REPOSITORY);
-        
+
     }
 
 

@@ -8,7 +8,7 @@ public interface IPurchaseContractService {
 
     public Map<String, Object> getPurchaseContract(HashMap<String, Object> parameters);
     
-    public Map<String, Object> listPurchaseContracts();
+    public Map<String, Object> listPurchaseContracts(HashMap<String, Object> parameters);
     
     public Map<String, Object> listContractsForRepositorySelect();
     

@@ -23,7 +23,7 @@ public class PurchaseContractController extends AbstractController {
 
     @RequestMapping("/list")
     public void listPurchaseContracts(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listPurchaseContracts(), request, response);
+        responseWithData(pService.listPurchaseContracts(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/repository/contract/list")
