@@ -61,7 +61,7 @@ $(document).ready(function() {
                 url: "../service/project/listforselect",
                 dataType: "jsonp",
 	            data: {
-	            	limit: 0
+	            	pageSize: 0
 	            }
             }
         },
