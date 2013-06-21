@@ -32,6 +32,16 @@ var model = kendo.data.Model.define({
 		supplierNameContact : {
 
 		},
+		eqcostProductUnitPrice : {
+			type : "number"
+		},
+		eqcostApplyAmount : {
+			type : "number"
+		},
+		requestedTotalMoney : {
+			type : "number",
+			editable : false
+		},
 		firstPay : {
 
 		},
@@ -221,6 +231,7 @@ function showOrderWindow() {
 						eqcostList[listIndex].purchaseOrderCode = dataItems[index].purchaseOrderCode;
 						eqcostList[listIndex].purchaseRequestId = dataItems[index].purchaseRequestId;
 						eqcostList[listIndex].purchaseRequestCode = dataItems[index].purchaseRequestCode;
+						
 						itemListDataSource.add(eqcostList[listIndex]);
 					}
 				}
@@ -300,14 +311,15 @@ function edit(data) {
 			}, {
 				field : "eqcostProductUnitPrice",
 				title : "单价",
-				width : 50
+				width : 100
 			}, {
 				field : "requestedTotalMoney",
 				title : "小计金额",
 				width : 80
 			}, {
 				field : "eqcostApplyAmount",
-				title : "本次采购数量"
+				title : "本次采购数量",
+				width : 80
 			}, {
 				field : "logisticsStatus",
 				title : "货品物流状态",
@@ -332,7 +344,48 @@ function edit(data) {
 			}],
 			scrollable : true,
 			editable : true,
-			width : "800px"
+			width : "800px",
+			dataBound : function(e) {
+				var data = itemDataSource.data();			
+				// 订单实际总价格
+				var requestActureMoney = 0;
+				var refresh = false;
+
+				for (i = 0; i < data.length; i++) {
+					var item = data[i];
+					
+					if (!item.eqcostProductUnitPrice) {
+						item.eqcostProductUnitPrice = 0;
+					}
+					
+					if (!item.eqcostApplyAmount) {
+						item.eqcostApplyAmount = 0;
+					}
+					
+					if (!item.requestedTotalMoney) {
+						item.requestedTotalMoney = 0;
+					}
+					
+					var requestedTotalMoney = item.requestedTotalMoney;
+					requestActureMoney = requestActureMoney
+							+ item.eqcostApplyAmount
+							* item.eqcostProductUnitPrice;
+					
+					item.requestedTotalMoney = item.eqcostApplyAmount
+							* item.eqcostProductUnitPrice;
+
+					if ( requestedTotalMoney != item.requestedTotalMoney) {
+						refresh = true;
+					}
+				}
+
+				if (refresh) {
+					var grid1 = $("#purchasecontract-edit-grid").data("kendoGrid");
+					grid1.refresh();
+				}
+				
+				$("#requestedTotalMoney").val(requestActureMoney);
+			}
 
 		});
 	}
