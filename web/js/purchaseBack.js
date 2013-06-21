@@ -67,6 +67,7 @@ $(document).ready(function () {
 					ui: function(e){
 						e.kendoDropDownList({
 							dataSource : pbTypeItems,
+							optionLabel : "...",
 							dataTextField : "text",
 							dataValueField : "text"
 						});

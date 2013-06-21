@@ -66,6 +66,7 @@ $(document).ready(function() {
 				ui: function(e){
 					e.kendoDropDownList({
 						dataSource : proStatusItems,
+						optionLabel : "...",
 						dataTextField : "text",
 						dataValueField : "value"
 					});
@@ -78,6 +79,7 @@ $(document).ready(function() {
 				ui: function(e){
 					e.kendoDropDownList({
 						dataSource : proCategoryItems,
+						optionLabel : "...",
 						dataTextField : "text",
 						dataValueField : "value"
 					});
