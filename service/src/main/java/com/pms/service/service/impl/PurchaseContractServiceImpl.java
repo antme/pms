@@ -159,14 +159,31 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
     
     
-    public List<Map<String,Object>> listApprovedPurchaseContractCosts(String salesContractCode){
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_EQ_LIST});
-        query.put(PurchaseRequest.PROCESS_STATUS, APPROVED);
+    public List<Map<String, Object>> listApprovedPurchaseContractCosts(String salesContractId) {
 
-        Map<String, Object>  results = this.dao.findOneByQuery(query, DBBean.PURCHASE_CONTRACT);
-        List<Map<String,Object>> list = (List<Map<String, Object>>) results.get("eqcostList");
-        return list;
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put("eqcostList.scId", salesContractId);
+        query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_EQ_LIST });
+
+        Map<String, Object> results = this.dao.list(query, DBBean.PURCHASE_CONTRACT);
+        List<Map<String, Object>> list = (List<Map<String, Object>>) results.get("eqcostList");
+
+        List<Map<String, Object>> eqclist = new ArrayList<Map<String, Object>>();
+
+        if (list != null) {
+            for (Map<String, Object> data : list) {
+                List<Map<String, Object>> pList = (List<Map<String, Object>>) data.get("eqcostList");
+
+                for (Map<String, Object> p : pList) {
+                    if (p.get("scId").equals(salesContractId)) {
+                        eqclist.add(p);
+                    }
+                }
+            }
+        }
+
+        return eqclist;
     }
     
     public Map<String, Object> getPurchaseContract(Map<String, Object> parameters){
