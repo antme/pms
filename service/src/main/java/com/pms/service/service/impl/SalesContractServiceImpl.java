@@ -12,6 +12,7 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
+import com.pms.service.mockbean.InvoiceBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
@@ -288,11 +289,25 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			invoice.put(SalesContractBean.SC_ID, params.get(SalesContractBean.SC_ID));
 			return dao.add(invoice, DBBean.SC_INVOICE);
 		}else{
-			
+			//初始化表单
+			return prepareInvoiceForSC(params);
 		}
-		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	private Map<String,Object> prepareInvoiceForSC(Map<String, Object> params){
+		String scId = (String)params.get("contractCode");
+		List<String> ids = new ArrayList<String>();
+		ids.add(scId);
+		Map<String,Object> map = getBaseInfoByIds(ids);
+		Map<String,Object> info = (Map<String,Object>)map.get(scId);
+		Map<String,Object> newObj = new HashMap<String,Object>();
+		newObj.put(InvoiceBean.payInvoiceItemList, new ArrayList());
+		newObj.putAll(info);
+		return newObj;
+	}
+	
+	
 	@Override
 	public Map<String, Object> listInvoiceForSC(Map<String, Object> params) {
 		String scId = (String) params.get(SalesContractBean.SC_ID);

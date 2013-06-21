@@ -1,0 +1,57 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script  src="js/purchaseBackEdit.js"></script>
+<body>
+<div>
+		<h2>开票申请单</h2>
+		<div id="searchDiv">
+			<label>选择合同:</label>
+			<input id="searchfor" type="text" value=""/>
+			<input id="searchbt" type="button" value="确定"/>
+		</div>
+		<br><hr>
+		<div id="form-container">
+			<div>
+				<table style="width: 80%">
+					<tr>
+						<td>项目名： <span data-bind="text: projectName"></span></td>	
+						<td>项目编号： <span data-bind="text: projectCode"></span></td>
+						<td>合同编号： <span data-bind="text: contractCode"></span></td>
+						<td>客户名称： <span data-bind="text: customer"></span></td>
+						<td>申请人： <span data-bind="text: customer"></td>
+						<td>状态：<span data-bind="text: payInvoiceStatus" ></span></td>
+					</tr>
+				</table>
+			</div>
+			<hr>
+			<div>
+				<ul>
+					<li>申请部门: <input type="text" class="k-textbox foredit" data-bind="value: payInvoiceDepartment" /></li>
+					<li>票种类别: <select data-bind="value: invoiceType" class="foredit" >
+										<option value="增值税专用">增值税专用</option>
+										<option value="增值税普通">增值税普通</option>
+										<option value="建筑业发票">建筑业发票</option>
+										<option value="服务业发票">服务业发票</option>
+										<option value="其它">其它</option>
+								</select>
+					</li>
+					<li>要求日期: <input data-role="datepicker" data-bind="value: payInvoicePlanDate" class="foredit"  /></li>
+				</ul>
+			</div>
+			<br><br>
+            <div>
+				<h4>成本设备清单</h4>
+				<div id="subGrid" data-bind="source: payInvoiceItemList"></div>
+            </div>
+            <br><br>
+            <div>
+            	<label>备注:</label>
+            	<textarea rows="4" cols="120" class="k-textbox  foredit" style="width:300px;" data-bind="value: payInvoiceComment" ></textarea>
+            </div>
+            <br>
+            <div>
+            	<input class="submitform foreditbt" type="button" value="提交">
+            	<input class="submitform foreditbt" type="button" value="取消">
+            </div>
+		</div>
+</div>		
+</body>
