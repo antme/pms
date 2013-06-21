@@ -124,6 +124,7 @@ public abstract class AbstractController {
         
         
         
+        
         if(parametersMap.get(ApiConstants.PAGE_SIZE)!=null){
             parametersMap.put(ApiConstants.LIMIT, parametersMap.get(ApiConstants.PAGE_SIZE));
             parametersMap.remove(ApiConstants.PAGE_SIZE);
@@ -135,6 +136,7 @@ public abstract class AbstractController {
         }
         
         parametersMap.remove("filter[logic]");
+        parametersMap.remove("filter");
   
         //FIXME: only support sort by one column
         if (parametersMap.get("sort[0][field]") != null) {

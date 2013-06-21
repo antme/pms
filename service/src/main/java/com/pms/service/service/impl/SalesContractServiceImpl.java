@@ -32,16 +32,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> listSC(Map<String, Object> params) {
 
-		int limit = ApiUtil.getInteger(params, ApiConstants.PAGE_SIZE, 10);
-		int limitStart = ApiUtil.getInteger(params, ApiConstants.SKIP, 0);
-		
-		Map<String, Object> queryMap = new HashMap<String, Object>();
 		String[] limitKeys = {SalesContractBean.SC_CODE, SalesContractBean.SC_AMOUNT, 
 				SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID};
-		queryMap.put(ApiConstants.LIMIT, limit);
-		queryMap.put(ApiConstants.LIMIT_START, limitStart);
-		queryMap.put(ApiConstants.LIMIT_KEYS, limitKeys);
-		Map<String, Object> result = dao.list(queryMap, DBBean.SALES_CONTRACT);
+		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
+		Map<String, Object> result = dao.list(params, DBBean.SALES_CONTRACT);
 		
 		mergeProjectInfoForSC(result);
 		return result;

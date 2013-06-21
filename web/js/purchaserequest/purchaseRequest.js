@@ -1,4 +1,8 @@
 var listUrl = "/service/purcontract/request/list";
+
+if($("#requestApprove").length>0){
+	listUrl = "/service/purcontract/request/list?approvePage=approve";
+}
 var approveUrl = "/service/purcontract/request/approve";
 var rejectUrl = "/service/purcontract/request/reject";
 var cancelUrl = "/service/purcontract/request/cancel";
@@ -15,7 +19,10 @@ var dataSource = new kendo.data.DataSource({
 		total: "total", // total is returned in the "total" field of the response
 		data: "data"
 	},
-	pageSize : 20
+    pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true
 });
 
 $(document).ready(function() {
@@ -26,7 +33,8 @@ $(document).ready(function() {
 		$("#grid").kendoGrid({
 			dataSource : dataSource,
 			pageable : true,
-			sortable : true,
+		    sortable : true,
+			filterable : filterable,
 			selectable : "row",
 			columns : [ {
 				field : "purchaseRequestCode",

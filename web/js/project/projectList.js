@@ -5,16 +5,6 @@ var dataSource = new kendo.data.DataSource({
 		read : {
 			url : "/service/project/list",
 			dataType : "jsonp"
-		},
-		update : {
-			url : "/service/project/update",
-			dataType : "jsonp",
-			method : "post"
-		},
-		create : {
-			url : "/service/project/add",
-			dataType : "jsonp",
-			method : "post"
 		}
 	},
 	
@@ -31,9 +21,6 @@ var dataSource = new kendo.data.DataSource({
 	
 	
 	parameterMap : function(options, operation) {
-		var sort = this.dataSource.sort();
-		console.log(sort);
-		console.log(options.models);
 		if (operation !== "read" && options.models) {
 			return {
 				models : kendo.stringify(options.models)

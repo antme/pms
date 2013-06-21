@@ -103,6 +103,10 @@ $(document).ready(function () {
 					dataType : "jsonp",
 					url : "/service/sc/listforselect",
 				}
+			},
+			schema : {
+				total: "total",
+				data: "data"
 			}
 		}
 	});	

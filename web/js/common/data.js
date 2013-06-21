@@ -129,3 +129,14 @@ var proCategoryItems = [{ text: "产品", value: "产品" }, { text: "工程", v
 //项目状态
 var proStatusItems = [{ text: "正式立项", value: "正式立项" }, { text: "预立项", value: "预立项" }, { text: "内部立项", value: "内部立项" }];
 
+var proManagerItems = new kendo.data.DataSource({
+	transport : {
+		read : {
+			url : "/service/user/list",
+			dataType : "jsonp"
+		}
+	},
+	schema: {
+	    data: "data"
+	}
+});

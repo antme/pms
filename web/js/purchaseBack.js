@@ -35,19 +35,18 @@ $(document).ready(function () {
 	    transport: {
 	        read:  {
 	            url: baseUrl + "/list",
-	            dataType: "jsonp",
-	            type : "post"
-	        },
-	        parameterMap: function(options, operation) {
-	            if (operation !== "read" && options.models) {
-	                return {models: kendo.stringify(options.models)};
-	            }
+	            dataType: "jsonp"
 	        }
 	    },
+
 	    batch: true,
 	    pageSize: 10,
+		serverPaging: true,
+		serverSorting: true,
+		serverFiltering : true,
 	    schema: {
 	        model: requestModel,
+	        total: "total",
 	        data:"data"
 	    }
 	});	
@@ -56,6 +55,8 @@ $(document).ready(function () {
 	    dataSource: listDatasource,
 	    pageable: true,
 	    selectable : "row",
+	    sortable : true,
+		filterable : filterable,
 	    columns: [
 	        { field: "pbCode", title: "备货编号" ,width:"125px"},
 	        { field: "pbType", title:"采购类别" ,width:"120px"},
