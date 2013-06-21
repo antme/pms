@@ -22,7 +22,31 @@ var accessRoles = {
 	user : "user_management"
 };
 
-//定义左边菜单
+
+var filterable = {
+	extra : false,
+	operators : {
+		string : {
+			like : "匹配",
+			neq : "不等于"
+		},
+		number : {
+			lt : "小于",
+			gt : "大于",
+			eq : "等于"
+		},
+		date : {
+			eq : "等于"
+		}
+	},
+	messages : {
+		filter : "过滤",
+		clear : "清除",
+		info : "选择过滤条件"
+	}
+};
+
+// 定义左边菜单
 var menus = [
              {
                  text: "项目管理", id: "projectList", imageUrl: "/images/product.png"
@@ -100,5 +124,8 @@ var eqcostDeliveryType = [{text : "直发现场"}, {text : "直发入库"}];
 var executeType1 = [{text : "内部流程中"}, {text : "备货中"}, {text : "备货待发"}, {text : "发货完毕"}, {text : "结束"}];
 var executeType2 = [{text : "内部流程中"}, {text : "备货中"}, {text : "备货待发"}, {text : "入库完毕"}, {text : "结束"}];
 
-
+//项目类型
+var proCategoryItems = [{ text: "产品", value: "产品" }, { text: "工程", value: "工程" }, { text: "服务", value: "服务" }];
+//项目状态
+var proStatusItems = [{ text: "正式立项", value: "正式立项" }, { text: "预立项", value: "预立项" }, { text: "内部立项", value: "内部立项" }];
 

@@ -88,6 +88,9 @@ public class DBQueryUtil {
                 } else if (dbQuery.getOperation() == DBQueryOpertion.LARGER_THAN) {
                     DBObject notEquals = new BasicDBObject("$gt", dbQuery.getValue());
                     object = new BasicDBObject(key, notEquals);
+                } else if (dbQuery.getOperation() == DBQueryOpertion.LESS_THAN) {
+                    DBObject notEquals = new BasicDBObject("$lt", dbQuery.getValue());
+                    object = new BasicDBObject(key, notEquals);
                 } else if (dbQuery.getOperation() == DBQueryOpertion.GREATER_THAN_EQUALS) {
                     DBObject largerThanEquals = new BasicDBObject("$gte", dbQuery.getValue());
                     object = new BasicDBObject(key, largerThanEquals);
