@@ -528,6 +528,7 @@ function edit(data){
 function saveSC(){
 	var validator = $("#editSalesContract").kendoValidator().data("kendoValidator");
 	if (!validator.validate()) {
+		alert("表单验证不通过！");
 		return;
     } else {
 		var _id = scm.get("_id");

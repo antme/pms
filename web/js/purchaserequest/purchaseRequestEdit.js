@@ -53,6 +53,15 @@ var model = kendo.data.Model.define({
 		eqcostAvailableAmount: {
 			editable : false
 		},
+		orderEqcostName : {
+			
+		},
+		orderEqcostModel : {
+			
+		},
+		eqcostProductUnitPrice:{
+			
+		},
 		comment : {
 			
 		}
@@ -283,7 +292,10 @@ function edit(data) {
 								title : "可申请数量"
 							}, {
 								field : "eqcostApplyAmount",
-								title : "本次申请数量"
+								title : "本次申请数量",
+								template : function(dataItem){
+									return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
+								}
 							}, {
 								field : "eqcostBasePrice",
 								title : "参考单价"
@@ -292,16 +304,38 @@ function edit(data) {
 								title : "小计金额"
 							}, {
 								field : "orderEqcostCode",
-								title : "订单货品编号"
+								title : "订单货品编号",
+								template : function(dataItem){
+									if(dataItem.orderEqcostCode){
+										return '<span class="edit-tip">' + dataItem.orderEqcostCode + '</span>';
+									}
+									return "";
+								}
 							}, {
 								field : "orderEqcostName",
-								title : "订单货品名"
+								title : "订单货品名",
+								template : function(dataItem){
+									if(dataItem.orderEqcostName){
+										return '<span class="edit-tip">' + dataItem.orderEqcostName + '</span>';
+									}
+									return "";
+								}
+									
 							}, {
 								field : "orderEqcostModel",
-								title : "订单货品型号"
+								title : "订单货品型号",
+								template : function(dataItem){
+									if(dataItem.orderEqcostModel){
+										return '<span class="edit-tip">' + dataItem.orderEqcostModel + '</span>';
+									}
+									return "";
+								}
 							}, {
 								field : "eqcostProductUnitPrice",
-								title : "订单货品单价"
+								title : "订单货品单价",
+								template : function(dataItem){
+									return '<span class="edit-tip">' + dataItem.eqcostProductUnitPrice + '</span>';
+								}
 							}, {
 								field : "requestedTotalMoney",
 								title : "订单实际小计金额"
@@ -309,6 +343,9 @@ function edit(data) {
 								field : "differenceAmount",
 								title : "金额差值"
 							} ],
+							schemal :{
+								model: model
+							},
 
 							editable : true,
 							scrollable : true,

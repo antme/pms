@@ -272,6 +272,7 @@ function saveSC(){
 		validatestatus.text("表单验证不通过！")
         .removeClass("valid")
         .addClass("invalid");
+		alert("表单验证不通过！");
 		return;
     } else {
 		var _id = scm.get("_id");

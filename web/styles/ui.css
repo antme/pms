@@ -148,6 +148,10 @@ td a {
 	TEXT-DECORATION: underline
 }
 
+.edit-tip{
+	color: red;
+}
+
 
 /**********JACK*******************/
 .table_form td {padding: 3px 10px;}

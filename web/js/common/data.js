@@ -56,11 +56,11 @@ var menus = [
                  text: "项目执行", id: "projectex", imageUrl: "/images/ccontract.png",
                  items: [
                          { text: "备货申请", id: "purchaseBack", imageUrl: "/images/order.png" },
-                         { text: "采购申请", id: "purchaseRequestByAssistant", imageUrl: "/images/ccontract.png"},
-                         { text: "开票申请", id: "purchaseorder", imageUrl: "/images/ccontract.png" },
-                         { text: "发货申请", id: "ship", imageUrl: "/images/ccontract.png"},
-                         { text: "借货申请", id: "borrowing", imageUrl: "/images/ccontract.png"},
-                         { text: "还货申请", id: "borrowing", imageUrl: "/images/ccontract.png"}
+                         { text: "采购申请", id: "purchaseRequestByAssistant", imageUrl: "/images/purchase.png"},
+                         { text: "开票申请", id: "purchaseorder", imageUrl: "/images/involce.png" },
+                         { text: "发货申请", id: "ship", imageUrl: "/images/borrowing.png"},
+                         { text: "借货申请", id: "borrowing", imageUrl: "/images/sign_in.png"},
+                         { text: "还货申请", id: "borrowing", imageUrl: "/images/sign_out.png"}
                      ]
              },
              {
@@ -72,8 +72,8 @@ var menus = [
 	             text : "采购合同", id : "purchasecontract", expanded : false, imageUrl : "/images/contract.png",
                  items: [
                      { text: "备货申请", id: "purchaseAllot", imageUrl: "/images/order.png" },
-                     { text: "调拨申请", id: "purchaseAllotManage", imageUrl: "/images/ccontract.png" },
-                     { text: "采购申请", id: "purchaseRequestApprove", imageUrl: "/images/ccontract.png"},
+                     { text: "调拨申请", id: "purchaseAllotManage", imageUrl: "/images/allocate.png" },
+                     { text: "采购申请", id: "purchaseRequestApprove", imageUrl: "/images/purchase.png"},
                      { text: "采购订单", id: "purchaseorder",  imageUrl: "/images/ccontract.png"},
                      { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
                      { text: "入库申请单", id: "repository", imageUrl: "/images/ccontract.png" },
@@ -128,6 +128,11 @@ var executeType2 = [{text : "内部流程中"}, {text : "备货中"}, {text : "�
 var proCategoryItems = [{ text: "产品", value: "产品" }, { text: "工程", value: "工程" }, { text: "服务", value: "服务" }];
 //项目状态
 var proStatusItems = [{ text: "正式立项", value: "正式立项" }, { text: "预立项", value: "预立项" }, { text: "内部立项", value: "内部立项" }];
+
+
+//备货申请 - 采购类别
+var pbTypeItems = [{ text: "上海代理产品采购"}, { text: "同方自主产品采购"}, { text: "其它渠道采购"}];
+
 
 var proManagerItems = new kendo.data.DataSource({
 	transport : {

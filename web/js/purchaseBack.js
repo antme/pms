@@ -35,7 +35,8 @@ $(document).ready(function () {
 	    transport: {
 	        read:  {
 	            url: baseUrl + "/list",
-	            dataType: "jsonp"
+	            dataType: "jsonp",
+	            type : "post"
 	        }
 	    },
 
@@ -59,7 +60,20 @@ $(document).ready(function () {
 		filterable : filterable,
 	    columns: [
 	        { field: "pbCode", title: "备货编号" ,width:"125px"},
-	        { field: "pbType", title:"采购类别" ,width:"120px"},
+	        { 	field: "pbType", 
+	        	title:"采购类别" ,
+	        	width:"120px",
+	        	filterable : {
+					ui: function(e){
+						e.kendoDropDownList({
+							dataSource : pbTypeItems,
+							dataTextField : "text",
+							dataValueField : "text"
+						});
+					}
+				}
+	        	
+	        },
 	        { field: "contractCode", title:"销售合同编号" },
 	        { field: "poCode", title:"采购订单编号" },
 	        { field: "prCode", title:"采购申请编号" },

@@ -53,6 +53,10 @@ var model = kendo.data.Model.define({
 		
 		eqcostProductType :{
 			editable : false
+		},
+		
+		eqcostAvailableAmount :{
+			editable : false
 		}
 	}
 });
@@ -250,7 +254,10 @@ function edit(data) {
 								title : "可申请数量"
 							}, {
 								field : "eqcostApplyAmount",
-								title : "本次申请数量"
+								title : "本次申请数量",
+								template : function(dataItem){
+									return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
+								}
 							}, {
 								field : "eqcostBasePrice",
 								title : "参考单价"
@@ -268,7 +275,10 @@ function edit(data) {
 								title : "订单货品型号"
 							}, {
 								field : "eqcostProductUnitPrice",
-								title : "订单货品单价"
+								title : "订单货品单价",
+								template : function(dataItem){
+									return '<span class="edit-tip">' + dataItem.eqcostProductUnitPrice + '</span>';
+								}
 							}, {
 								field : "requestedTotalMoney",
 								title : "订单实际小计金额"

@@ -12,7 +12,8 @@ var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
 			url : listUrl,
-			dataType : "jsonp"
+			dataType : "jsonp",
+			type : "post"
 		}
 	},
 	schema : {

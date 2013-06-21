@@ -4,7 +4,8 @@ var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
 			url : "/service/project/list",
-			dataType : "jsonp"
+			dataType : "jsonp",
+			type : "post"
 		}
 	},
 	

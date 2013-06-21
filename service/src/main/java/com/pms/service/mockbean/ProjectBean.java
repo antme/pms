@@ -21,12 +21,12 @@ public class ProjectBean {
 	public static final String PROJECT_CUSTOMER = "customer"; // 和 销售合同 都存放了该字段
 	
 	//项目类型数据
-	public static final int PROJECT_TYPE_PRODUCT = 1;  //产品
-	public static final int PROJECT_TYPE_PROJECT = 2;  //工程
-	public static final int PROJECT_TYPE_SERVICE = 3;  //服务
+	public static final String PROJECT_TYPE_PRODUCT = "产品";  //产品
+	public static final String PROJECT_TYPE_PROJECT = "工程";  //工程
+	public static final String PROJECT_TYPE_SERVICE = "服务";  //服务
 	
 	//项目状态数据
-	public static final int PROJECT_STATUS_OFFICIAL = 1;  //正式立项
-	public static final int PROJECT_STATUS_PRE = 2;       //预立项
-	public static final int PROJECT_STATUS_INNER = 3;     //内部立项
+	public static final String PROJECT_STATUS_OFFICIAL = "正式立项";  //正式立项
+	public static final String PROJECT_STATUS_PRE = "预立项";       //预立项
+	public static final String PROJECT_STATUS_INNER = "内部立项";     //内部立项
 }
