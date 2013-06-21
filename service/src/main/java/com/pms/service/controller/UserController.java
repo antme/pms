@@ -55,7 +55,7 @@ public class UserController extends AbstractController {
 
     @RequestMapping("/load")
     public void loadUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        responseWithKeyValue(ApiConstants.MONGO_ID, "test", request, response);
+        responseWithData(userService.loadUserInfo(parserJsonParameters(request,  false)), request, response);
     }
     
     @RequestMapping("/list")

@@ -250,14 +250,24 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 request.setStatus(PurchaseRequest.STATUS_DRAFT);
             }
             request.setApprovedDate(null);
-            request.setPurchaseOrderCode("order_" + String.valueOf(new Date().getTime()));
-            Object eqList = parameters.get(SalesContractBean.SC_EQ_LIST);            
+            request.setPurchaseOrderCode("o_" + String.valueOf(new Date().getTime()));
+            Object eqList = parameters.get(SalesContractBean.SC_EQ_LIST);
             parameters = request.toMap();
             parameters.put(SalesContractBean.SC_EQ_LIST, eqList);
 
         }
 
-        return updatePurchase(parameters, DBBean.PURCHASE_ORDER);
+        Map<String, Object> order = updatePurchase(parameters, DBBean.PURCHASE_ORDER);
+
+        Map<String, Object> prequest = this.dao.findOne(ApiConstants.MONGO_ID, order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID), new String[] { PurchaseCommonBean.PURCHASE_ORDER_ID }, DBBean.PURCHASE_REQUEST);
+
+        if (prequest != null) {
+            prequest.put(PurchaseCommonBean.PURCHASE_ORDER_ID, order.get(ApiConstants.MONGO_ID));
+            prequest.put(PurchaseCommonBean.PURCHASE_ORDER_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
+            this.dao.updateById(prequest, DBBean.PURCHASE_REQUEST);
+        }
+
+        return order;
     }
     
     public Map<String, Object> getPurchaseOrder(Map<String, Object> parameters){
@@ -283,8 +293,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             updateSummaryUnderContract(db, cc.get(PurchaseRequest.SALES_CONTRACT_CODE).toString());
         }
         
-        return result;
-        
+        return result;        
     }
 
     public Map<String, Object> rejectPurchaseContract(Map<String, Object> order) {       
@@ -304,17 +313,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
      * 选择已批准的备货申请，返回_id, pbCode, scCode 字段
      * 
      */
-    public Map<String, Object> listBackRequestForSelect() {        
-        Map<String, Object> query = new HashMap<String, Object>();      
-        query.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());        
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode, PurchaseBack.scCode});
+    public Map<String, Object> listBackRequestForSelect() {
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
+        query.put(PurchaseBack.prId, null);
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode, PurchaseBack.scCode });
         return dao.list(query, DBBean.PURCHASE_BACK);
     }
     
     
     public Map<String, Object> listPurchaseRequests(Map<String, Object> params){
         
-        Map<String, Object> roleQuery = new HashMap<String, Object>();
         
         if(params.get("approvePage")!=null){           
             params.remove("approvePage");
@@ -378,34 +387,50 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> listApprovedPurchaseRequestForSelect(){
         Map<String, Object> query = new HashMap<String, Object>();
-//        query.put(PurchaseRequestBean.STATUS, APPROVED);
+        query.put(PurchaseCommonBean.PROCESS_STATUS, APPROVED);
+        query.put(PurchaseCommonBean.PURCHASE_ORDER_ID, null);
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "purchaseRequestCode" });
         return dao.list(query, DBBean.PURCHASE_REQUEST);
     }
     
     public Map<String, Object> updatePurchaseRequest(Map<String, Object> parameters) {
         PurchaseRequest request = (PurchaseRequest) new PurchaseRequest().toEntity(parameters);
+        boolean adding = false;
         if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
-            
+
             if (request.getStatus() == null) {
                 request.setStatus(PurchaseRequest.STATUS_DRAFT);
             }
-            
-            //根据销售合同id查询项目和客户ID
+
+            // 根据销售合同id查询项目和客户ID
             Map<String, Object> query = new HashMap<String, Object>();
             query.put(ApiConstants.MONGO_ID, request.getSalesContractId());
-            query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_CUSTOMER_ID});
-            
+            query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_CUSTOMER_ID, SalesContractBean.SC_TYPE });
+
             Map<String, Object> sc = this.dao.findOneByQuery(query, DBBean.SALES_CONTRACT);
             request.setProjectId(sc.get(SalesContractBean.SC_PROJECT_ID).toString());
-            request.setPurchaseRequestCode("request_" + String.valueOf(new Date().getTime()));
+            request.setPurchaseRequestCode("r_" + String.valueOf(new Date().getTime()));
             Object eqList = parameters.get(SalesContractBean.SC_EQ_LIST);
             parameters = request.toMap();
             parameters.put(SalesContractBean.SC_EQ_LIST, eqList);
+
+            adding = true;
+        }
+
+        Map<String, Object> prequest = updatePurchase(parameters, DBBean.PURCHASE_REQUEST);
+        
+        if (adding) {
+            updateRequestIdForBack(prequest);
         }
         
+        return prequest;
+    }
 
-        return updatePurchase(parameters, DBBean.PURCHASE_REQUEST);
+
+    private void updateRequestIdForBack(Map<String, Object> prequest) {
+        Map<String, Object> back = this.dao.findOne(ApiConstants.MONGO_ID, prequest.get("backRequestId"), new String[] { PurchaseBack.prId }, DBBean.PURCHASE_BACK);
+        back.put(PurchaseBack.prId, prequest.get(ApiConstants.MONGO_ID));
+        this.dao.updateById(back, DBBean.PURCHASE_BACK);
     }
     
     public Map<String, Object> updatePurchase(Map<String, Object> parameters, String db) {

@@ -24,7 +24,7 @@ var userModel = kendo.data.Model.define({
 
 });
 
-
+var editUrl = "/service/user/load";
 var editUser = new userModel({});
 var groupDataSource = new kendo.data.DataSource({
 		transport : {
@@ -63,10 +63,27 @@ $(document).ready(function() {
 		dataSource : contractTypeItems
 	});
 	
-	kendo.bind($("#user-form"), editUser);
+	// 如果是编辑
+	if (redirectParams || popupParams) {
+		if(popupParams){
+			postAjaxRequest(editUrl, popupParams, edit);
+		}else{
+			postAjaxRequest(editUrl, redirectParams, edit);
+		}
+	}else{
+		edit();
+	}
+
+	
 	
 });
 
+
+function edit(user){
+	editUser = new userModel(user);
+	kendo.bind($("#user-form"), editUser);
+
+}
 
 function save(){
 	var multiselect = $("#groups").data("kendoMultiSelect");

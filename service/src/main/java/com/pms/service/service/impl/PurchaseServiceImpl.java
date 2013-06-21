@@ -18,6 +18,7 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.PurchaseBack;
+import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseService;
@@ -179,7 +180,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	@Override
 	public Map<String, Object> listAllBack(Map<String, Object> params) {
 		String[] keys = new String[]{PurchaseBack.pbCode,PurchaseBack.pbType,PurchaseBack.pbStatus,
-				PurchaseBack.pbMoney,PurchaseBack.scId,PurchaseBack.pbSubmitDate};
+				PurchaseBack.pbMoney,PurchaseBack.scId,PurchaseBack.pbSubmitDate, PurchaseBack.prId, PurchaseBack.poId};
 		params.put(ApiConstants.LIMIT_KEYS, keys);
 		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
@@ -192,6 +193,19 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		for(Map<String,Object> re : list){
 			re.putAll((Map)baseInfoMap.get(re.get(PurchaseBack.scId)));
 		}
+
+		//查询采购申请数据
+		Map<String, Object> prQuery = new HashMap<String, Object>();
+		prQuery.put(ApiConstants.LIMIT_KEYS, PurchaseCommonBean.PURCHASE_REQUEST_CODE);		
+		Map<String, Object> request = this.dao.listToOneMapAndIdAsKey(prQuery, DBBean.PURCHASE_REQUEST);
+
+        for (Map<String, Object> re : list) {
+            if (re.get(PurchaseBack.prId) != null) {
+                Map<String, Object> prmap = (Map<String, Object>)request.get(re.get(PurchaseBack.prId));                
+                re.put(PurchaseBack.prCode, prmap.get(PurchaseCommonBean.PURCHASE_REQUEST_CODE));
+            }
+        }
+		  
 		return map;
 	}
 
@@ -514,7 +528,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			String value = "undefine";
 			switch(this){
 				case unsaved: value="未保存"; break;
-				case saved: value="已保存"; break;
+				case saved: value="草稿"; break;
 				case submited: value="已提交"; break;
 				case approved: value="已批准"; break;
 				case checked: value="已审核"; break;

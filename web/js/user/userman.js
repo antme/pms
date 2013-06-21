@@ -79,7 +79,12 @@ function add(){
 }
 
 function edit(){
-	loadPage("html/user/useredit.html");
+	var row = getSelectedRowDataByGridWithMsg("grid");	
+	if(row){
+		loadPage("html/user/useredit.html", {
+			_id : row._id
+		});
+	}
 }
 
 function del() {

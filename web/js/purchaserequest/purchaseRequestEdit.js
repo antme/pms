@@ -233,7 +233,7 @@ function loadBackRequest(data) {
 	requestDataItem.backRequestCode = requestDataItem.pbCode;
 	requestDataItem.salesContractId = requestDataItem.scId;
 	requestDataItem.salesContractCode = requestDataItem.scCode;
-	
+	requestDataItem.comment = "";
 	
 	// // 新增，所以设置_id为空
 	requestDataItem._id = "";	

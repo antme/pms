@@ -26,6 +26,8 @@ public class PurchaseCommonBean extends BaseEntity {
     private String purchaseRequestId;
     
     private String comment;
+    
+    private String scContractType;
 
 
     public String getProjectId() {
@@ -127,6 +129,18 @@ public class PurchaseCommonBean extends BaseEntity {
     public void setComment(String comment) {
         this.comment = comment;
     }
+    
+    
+
+    public String getScContractType() {
+        return scContractType;
+    }
+
+    public void setScContractType(String scContractType) {
+        this.scContractType = scContractType;
+    }
+
+
 
     public static final String PROCESS_STATUS = "status";
     public static final String APPROVED_DATE = "approvedDate";
@@ -137,6 +151,13 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String STATUS_APPROVED = "审批通过";
     public static final String STATUS_REJECTED = "审批拒绝";
     public static final String MANAGER_APPROVED = "经理审批通过";
-    public static final String STATUS_CANCELLED = "已废止";
+    public static final String STATUS_CANCELLED = "已中止";
+    
+    
+    public static final String PURCHASE_REQUEST_CODE = "purchaseRequestCode";
+    public static final String PURCHASE_REQUEST_ID = "purchaseRequestId";
+    public static final String PURCHASE_ORDER_CODE = "purchaseOrderCode";
+    public static final String PURCHASE_ORDER_ID = "purchaseOrderId";
+
 
 }

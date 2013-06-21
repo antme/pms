@@ -20,7 +20,8 @@ public class PurchaseBack {
 	public static final String scId = "scId";//销售合同id
 	public static final String scCode = "scCode";//销售合同id
 	public static final String poId = "poId";//采购订单id
-	public static final String pcId = "pcId";//采购合同id
+	public static final String prId = "prId";//采购申请id
+	public static final String prCode = "prCode";//采购申请编号
 	public static final String pbId = "pbId";//备货申请id
 	public static final String paId = "paId";//调拨申请id
 	
