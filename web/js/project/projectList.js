@@ -142,8 +142,8 @@ function setupProjectCallBack(){
 }
 
 function viewPM(param){
-//	var options = { width:"680px", height: "400px", title:"项目经理信息"};
-//	openRemotePageWindow(options, "html/user/useredit.html", {_id : param});
+	var options = { width:"680px", height: "400px", title:"项目经理信息"};
+	openRemotePageWindow(options, "html/user/userview.html", {_id : param});
 }
 
 function viewCustomer(param){

@@ -528,7 +528,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			String value = "undefine";
 			switch(this){
 				case unsaved: value="未保存"; break;
-				case saved: value="已保存"; break;
+				case saved: value="草稿"; break;
 				case submited: value="已提交"; break;
 				case approved: value="已批准"; break;
 				case checked: value="已审核"; break;
