@@ -4,141 +4,78 @@
 
 <body>
     <div id="addShip" class="k-content">
-    
-    <button onclick="save()" class="k-button">保存</button>
-    <button onclick='loadPage("ship");' class="k-button">取消</button>
-    
-    <table class="metrotable">
-        <tbody>
-        <tr>
-            <td>
-                <input type="text" data-bind="value: shipNo" class="k-textbox" />
-                <h4>编号</h4>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" data-bind="value: applicationDepartment" class="k-textbox" />
-                <h4>申请部门</h4>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input id="salesContract" data-bind="value: salesContractId" />
-                <h4>销售合同编号</h4>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" data-bind="value: customer" class="k-textbox" />
-                <h4>客户名称</h4>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" data-bind="value: deliveryContact" class="k-textbox" />
-                <h4>收货联系人</h4>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" data-bind="value: deliveryContactWay" class="k-textbox" />
-                <h4>联系方式</h4>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" data-bind="value: deliveryUnit" class="k-textbox" />
-                <h4>收货单位</h4>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" data-bind="value: deliveryAddress" class="k-textbox" />
-                <h4>交货地点</h4>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" data-bind="value: deliveryTime" class="k-textbox" />
-                <h4>货运时间</h4>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" data-bind="value: deliveryRequirements" class="k-textbox" />
-                <h4>货运要求</h4>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h4>设备清单</h4>
-                <div id="equipments-grid" ></div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    
-    <style scoped>
-        .metrotable {
-
-            width: 100%;
-        }
-
-        .metrotable > tbody > tr > td {
-            display: table-cell;
-            padding: 5px 5px 5px 0;
-            font-size: 1em;
-            text-transform: none;
-        }
-
-        .metrotable td > .k-textbox,
-        .metrotable td > .k-dropdown,
-        .metrotable td > .k-combobox,
-        .metrotable td > .k-datepicker,
-        .metrotable td > .k-numerictextbox,
-        .metrotable td > .k-timepicker,
-        .metrotable td > .k-slider {
-            float: right;
-        }
-
-        .metrotable td > .k-slider {
-            margin-bottom: 10px;
-        }
-
-        .metrotable > tbody > tr > th {
-            border-bottom: 1px solid #ccc;
-            color: #787878;
-            font-size: 1.4em;
-            font-weight: lighter;
-            padding: 0 1em 0 0;
-            text-align: left;
-        }
-        
-        .metrotable > tbody > tr > td {
-		    text-align: left;
-		    font-weight: lighter;
-		    color: #787878;
-		    border-bottom: 1px solid #e1e1e1;
-		}
-
-        td h4 {
-            margin: 0;
-            padding: 7px 0;
-            font-weight: normal;
-        }
-
-        td label {
-            float: left;
-            clear: left;
-        }
-
-        td pre {
-            font-size: 11px;
-        }
-    </style>
-</div>
-
+	    
+	    <div>
+		    <button onclick="save()" class="k-button">保存</button>
+		    <button onclick='loadPage("ship");' class="k-button">取消</button>
+	    </div>
+	    
+	    <div class="k-edit-form-container">
+	    	<div class="k-edit-label">
+	    		<label for="shipNo">编号</label>
+	    	</div>
+	    	<div data-container-for="shipNo" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox" name="shipNo" required="required" data-bind="value:shipNo">
+	    	</div>
+	    	<div class="k-edit-label">
+	    		<label for="applicationDepartment">申请部门</label>
+	    	</div>
+	    	<div data-container-for="applicationDepartment" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox" name="applicationDepartment" required="required" data-bind="value:applicationDepartment">
+	    	</div>
+	    	<div class="k-edit-label">
+	    		<label for="salesContract">销售合同编号</label>
+	    	</div>
+	    	<div data-container-for="salesContract" class="k-edit-field">
+	    		<input id="salesContract" name="salesContract" required="required" data-bind="value:salesContractId">
+	    	</div>
+	    	<div class="k-edit-label">
+	    		<label for="customer">客户名称</label>
+	    	</div>
+	    	<div data-container-for="customer" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox" name="customer" required="required" data-bind="value:customer">
+	    	</div>
+	    	<div class="k-edit-label">
+	    		<label for="deliveryContact">收货联系人</label>
+	    	</div>
+	    	<div data-container-for="deliveryContact" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox" name="deliveryContact" required="required" data-bind="value:deliveryContact">
+	    	</div>
+	    	<div class="k-edit-label">
+	    		<label for="deliveryContactWay">联系方式</label>
+	    	</div>
+	    	<div data-container-for="deliveryContactWay" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox" name="deliveryContactWay" required="required" data-bind="value:deliveryContactWay">
+	    	</div>
+	    	<div class="k-edit-label">
+	    		<label for="deliveryUnit">收货单位</label>
+	    	</div>
+	    	<div data-container-for="deliveryUnit" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox" name="deliveryUnit" required="required" data-bind="value:deliveryUnit">
+	    	</div>
+	    	<div class="k-edit-label">
+	    		<label for="deliveryAddress">交货地点</label>
+	    	</div>
+	    	<div data-container-for="deliveryAddress" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox" name="deliveryAddress" required="required" data-bind="value:deliveryAddress">
+	    	</div>
+	    	<div class="k-edit-label">
+	    		<label for="deliveryTime">货运时间</label>
+	    	</div>
+	    	<div data-container-for="deliveryTime" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox" name="deliveryTime" required="required" data-bind="value:deliveryTime">
+	    	</div>
+	    	<div class="k-edit-label">
+	    		<label for="deliveryRequirements">货运要求</label>
+	    	</div>
+	    	<div data-container-for="deliveryRequirements" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox" name="deliveryRequirements" required="required" data-bind="value:deliveryRequirements">
+	    	</div>
+	    </div>
+	    
+	    <div id="equipments-grid" ></div>
+	    
+	</div>
 
 </body>
 </html>
