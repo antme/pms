@@ -18,7 +18,7 @@ var dataSource = new kendo.data.DataSource({
     pageSize: 10,
 	serverPaging: true,
 	serverSorting: true,
-	serverFiltering : true,
+	serverFiltering : true
 });
 
 $(document).ready(function() {
