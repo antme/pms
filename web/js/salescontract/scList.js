@@ -4,34 +4,25 @@ var dataSource = new kendo.data.DataSource({
 		read : {
 			url : "../service/sc/list",
 			dataType : "jsonp"
-		},
-		update : {
-			url : "../service/sc/update",
-			dataType : "jsonp",
-			method : "post"
-		},
-		create : {
-			url : "../service/sc/add",
-			dataType : "jsonp",
-			method : "post"
-		},
+		}
 	},
-	schema: {
-	    total: "total", // total is returned in the "total" field of the response
-	    data: "data"
+	schema : {
+		total : "total", 
+		data : "data",
+		model : {
+			fields : {
+				contractAmount : {
+					type : "number"
+				}
+			}
+		}
 	},
 
 	pageSize: 10,
-    serverPaging: true,
-	batch : true,
-	
-	parameterMap : function(options, operation) {
-		if (operation !== "read" && options.models) {
-			return {
-				models : kendo.stringify(options.models)
-			};
-		}
-	}
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
+	batch : true
 });
 
 $(document).ready(function() {
@@ -45,10 +36,8 @@ $(document).ready(function() {
 		},
 		editable : "popup",
 		selectable: "row",
-        sortable: {
-            mode: "multiple",
-            allowUnsort: true
-        },
+	    sortable : true,
+		filterable : filterable,
 		columns : [ {
 			field : "contractCode",
 			title : "合同编号"

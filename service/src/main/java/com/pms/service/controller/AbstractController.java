@@ -15,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.pms.service.cfg.ConfigurationManager;
+import com.pms.service.dbhelper.DBQuery;
+import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.util.ApiUtil;
@@ -78,6 +80,7 @@ public abstract class AbstractController {
 
         String parameters = request.getParameter(ApiConstants.JSON_PARAMETERS_LABEL);
 
+        int filterLength = 0;
         if (parameters != null) {
             try {
                 parametersMap = new Gson().fromJson(parameters, HashMap.class);
@@ -89,16 +92,71 @@ public abstract class AbstractController {
             Enumeration<?> parameterNames = request.getParameterNames();
             while (parameterNames.hasMoreElements()) {
                 String pName = parameterNames.nextElement().toString();
-                parametersMap.put(pName, request.getParameter(pName));
+                
+                if(pName.toLowerCase().startsWith("filter[filters]".toLowerCase())){
+                    filterLength++;
+                }else{
+                    parametersMap.put(pName, request.getParameter(pName));
+                }
             }
         }
-
+        
+        
+        
+        if (filterLength > 0) {
+            //每三个为一组
+            int filters = (int) filterLength / 3;
+            for (int i = 0; i < filters; i++) {
+                String key = request.getParameter("filter[filters][" + i + "][field]");
+                String operator = request.getParameter("filter[filters][" + i + "][operator]");
+                String value =  request.getParameter("filter[filters][" + i + "][value]");               
+                parametersMap.put(key, new DBQuery(DBQueryOpertion.getOperation(operator), value));   
+            }
+        }
         if (!emptyParameter && (parametersMap == null || parametersMap.isEmpty())) {
             throw new ApiResponseException(String.format("Parameters required for path [%s]", request.getPathInfo()), ResponseCodeConstants.PARAMETERS_EMPTY.toString());
         }
 
         parametersMap.remove("_");
         parametersMap.remove("callback");
+        parametersMap.remove("page");
+        parametersMap.remove("take"); 
+        
+        
+        
+        
+        if(parametersMap.get(ApiConstants.PAGE_SIZE)!=null){
+            parametersMap.put(ApiConstants.LIMIT, parametersMap.get(ApiConstants.PAGE_SIZE));
+            parametersMap.remove(ApiConstants.PAGE_SIZE);
+        }
+        
+        if(parametersMap.get(ApiConstants.SKIP)!=null){
+            parametersMap.put(ApiConstants.LIMIT_START, parametersMap.get(ApiConstants.SKIP));
+            parametersMap.remove(ApiConstants.SKIP);
+        }
+        
+        parametersMap.remove("filter[logic]");
+        parametersMap.remove("filter");
+  
+        //FIXME: only support sort by one column
+        if (parametersMap.get("sort[0][field]") != null) {
+            Map<String, Object> orderBy = new HashMap<String, Object>();
+            int orderDir = ApiConstants.DB_QUERY_ORDER_BY_ASC;
+            if (parametersMap.get("sort[0][dir]") != null) {
+                if (!parametersMap.get("sort[0][dir]").toString().equalsIgnoreCase("asc")) {
+                    orderDir = ApiConstants.DB_QUERY_ORDER_BY_DESC;
+                }
+            }
+            orderBy.put(parametersMap.get("sort[0][field]").toString(), orderDir);
+
+            parametersMap.remove("sort[0][field]");
+            parametersMap.remove("sort[0][dir]");
+           
+            
+            parametersMap.put(ApiConstants.DB_QUERY_ORDER_BY, orderBy);
+            
+        }
+
         return parametersMap;
     }
     

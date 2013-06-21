@@ -180,9 +180,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	public Map<String, Object> listAllBack(Map<String, Object> params) {
 		String[] keys = new String[]{PurchaseBack.pbCode,PurchaseBack.pbType,PurchaseBack.pbStatus,
 				PurchaseBack.pbMoney,PurchaseBack.scId,PurchaseBack.pbSubmitDate};
-		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(ApiConstants.LIMIT_KEYS, keys);
-		Map<String,Object> map = dao.list(query,null, DBBean.PURCHASE_BACK);
+		params.put(ApiConstants.LIMIT_KEYS, keys);
+		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
 		Set<String> saleIds = new HashSet<String>();
 		for(Map<String,Object> re : list){

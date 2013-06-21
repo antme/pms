@@ -35,6 +35,17 @@ $(document).ready(function() {
 			}
 		});
 	
+	$("#operator").kendoDropDownList({
+		dataTextField : "userName",
+		dataValueField : "_id",
+        optionLabel: "选择入库人...",
+		dataSource : proManagerItems,
+	});
+	
+	$("#inDate").kendoDatePicker({
+	    format: "yyyy/MM/dd",
+	    parseFormats: ["yyyy/MM/dd"]
+	});
 	
 	if (redirectParams) {
 		postAjaxRequest("/service/purcontract/repository/get", redirectParams, edit);
@@ -115,6 +126,13 @@ function save(status) {
 		itemDataSource.at(0).set("uid", kendo.guid());
 	}
 
+	if(projectId){
+		requestDataItem.projectId = projectId;		
+	}
+	
+	if(supplierId){
+		requestDataItem.supplierId = supplierId;	
+	}
 
 	// 同步数据
 	itemDataSource.sync();
@@ -126,11 +144,13 @@ function checkStatus() {
 	loadPage("repository", null);
 }
 // 计算成
+var projectId = undefined;
+var supplierId = undefined;
 
 function selectContracts() {
 
-	var projectId = $("#purchasecontractselect").data("kendoDropDownList").value();
-	var supplierId = $("#supplierName").data("kendoDropDownList").value();
+	 projectId = $("#purchasecontractselect").data("kendoDropDownList").value();
+	 supplierId = $("#supplierName").data("kendoDropDownList").value();
 	
 	var param = {"projectId": projectId, "supplier" : supplierId};
 	
@@ -158,6 +178,8 @@ function edit(data) {
 		requestDataItem = new model(requestDataItem);
 
 	}
+	
+//	requestDataItem.inDate = "10/10/2013";
 
 	kendo.bind($("#purchaserepository-edit-item"), requestDataItem);
 
@@ -190,10 +212,10 @@ function edit(data) {
 
 			}, {
 				field : "eqcostApplyAmount",
-				title : "本次采购数量"
+				title : "本次入库数量"
 			}],
 			scrollable : true,
-			editable : false,
+			editable : true,
 			width : "800px"
 
 		});

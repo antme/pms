@@ -29,11 +29,8 @@ $(document).ready(function() {
 			selectable : "row",
 			width : "1000px",
 			columns : [ {
-				field : "repositoryRequestCode",
+				field : "code",
 				title : "申请编号"
-			}, {
-				field : "purchaseContractCode",
-				title : "采购合同编号"
 			}, {
 				field : "customerName",
 				title : "供应商"

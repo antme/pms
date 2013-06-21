@@ -15,7 +15,10 @@ var dataSource = new kendo.data.DataSource({
 		total: "total", // total is returned in the "total" field of the response
 		data: "data"
 	},
-	pageSize : 20
+    pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true
 });
 
 $(document).ready(function() {
@@ -26,7 +29,8 @@ $(document).ready(function() {
 		$("#grid").kendoGrid({
 			dataSource : dataSource,
 			pageable : true,
-			sortable : true,
+		    sortable : true,
+			filterable : filterable,
 			selectable : "row",
 			columns : [ {
 				field : "purchaseRequestCode",
@@ -68,13 +72,10 @@ $(document).ready(function() {
 				field : "requestedTotalMoney",
 				title : "金额"
 			}, {
-				field : "requestTotalOfCountract",
-				title : "合同下采购申请单数量"
-			}, {
-				field : "allRequestedNumbersOfCountract",
+				field : "numbersPercentOfContract",
 				title : "合同下已申请采购货品%"
 			}, {
-				field : "totalRequestedMoneyOfContract",
+				field : "moneyPercentOfContract",
 				title : "合同下已申请采购金额%"
 			} ]
 

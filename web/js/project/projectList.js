@@ -5,16 +5,6 @@ var dataSource = new kendo.data.DataSource({
 		read : {
 			url : "/service/project/list",
 			dataType : "jsonp"
-		},
-		update : {
-			url : "/service/project/update",
-			dataType : "jsonp",
-			method : "post"
-		},
-		create : {
-			url : "/service/project/add",
-			dataType : "jsonp",
-			method : "post"
 		}
 	},
 	
@@ -24,8 +14,11 @@ var dataSource = new kendo.data.DataSource({
 	},
 
 	pageSize: 10,
-    serverPaging: true,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
 	batch : true,
+	
 	
 	parameterMap : function(options, operation) {
 		if (operation !== "read" && options.models) {
@@ -43,8 +36,10 @@ $(document).ready(function() {
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
-//		pageable : {
-//			buttonCount:5,
+		sortable : true,
+		filterable : filterable,
+// pageable : {
+// buttonCount:5,
 //			//input:true,
 //			//pageSizes:true
 //		},
@@ -65,19 +60,39 @@ $(document).ready(function() {
 			title : "项目缩写"
 		}, {
 			field : "projectStatus",
-			title : "项目状态"
+			title : "项目状态",
+			filterable : {
+				ui: function(e){
+					e.kendoDropDownList({
+						dataSource : proStatusItems,
+						dataTextField : "text",
+						dataValueField : "value"
+					});
+				}
+			}
 		}, {
 			field : "projectType",
-			title : "项目类型"
+			title : "项目类型",
+			filterable : {
+				ui: function(e){
+					e.kendoDropDownList({
+						dataSource : proCategoryItems,
+						dataTextField : "text",
+						dataValueField : "value"
+					});
+				}
+			}
 		}, {
 			field : "projectManager",
 			title : "PM",
+			filterable : false,
 			template : function(dataItem) {
 				return '<a  onclick="viewPM(\'' + dataItem.pmId + '\');">' + dataItem.projectManager + '</a>';
 			}
 		}, {
 			field : "customer",
 			title : "客户名",
+			filterable : false,
 			template : function(dataItem) {
 				return '<a  onclick="viewCustomer(\'' + dataItem.cId + '\');">' + dataItem.customer + '</a>';
 			}
