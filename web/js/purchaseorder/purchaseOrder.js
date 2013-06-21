@@ -59,13 +59,10 @@ $(document).ready(function() {
 				field : "requestedTotalMoney",
 				title : "金额"
 			}, {
-				field : "requestTotalOfCountract",
-				title : "合同下采购订单数量"
-			}, {
-				field : "allRequestedNumbersOfCountract",
+				field : "numbersPercentOfContract",
 				title : "合同下已申请采购货品%"
 			}, {
-				field : "totalRequestedMoneyOfContract",
+				field : "moneyPercentOfContract",
 				title : "合同下已申请采购金额%"
 			} ]
 

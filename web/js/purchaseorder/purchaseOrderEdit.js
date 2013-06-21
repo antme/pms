@@ -151,6 +151,8 @@ function loadRequest(data){
 	requestDataItem = data;
 	
 	requestDataItem.status = "草稿";
+	requestDataItem.purchaseRequestId = requestDataItem._id;
+	requestDataItem.comment = "";
 	// // 新增，所以设置_id为空
 	requestDataItem._id="";
 	edit();

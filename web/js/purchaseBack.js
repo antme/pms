@@ -62,7 +62,7 @@ $(document).ready(function () {
 	        { field: "pbType", title:"采购类别" ,width:"120px"},
 	        { field: "contractCode", title:"销售合同编号" },
 	        { field: "poCode", title:"采购订单编号" },
-	        { field: "pcCode", title:"采购合同编号" },
+	        { field: "prCode", title:"采购申请编号" },
 	        { field: "customer", title:"客户名" },
 	        { field: "projectManager", title:"PM" },
 	        { field: "pbStatus", title:"申请状态" },

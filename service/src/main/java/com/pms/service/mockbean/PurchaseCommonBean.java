@@ -138,5 +138,12 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String STATUS_REJECTED = "审批拒绝";
     public static final String MANAGER_APPROVED = "经理审批通过";
     public static final String STATUS_CANCELLED = "已废止";
+    
+    
+    public static final String PURCHASE_REQUEST_CODE = "purchaseRequestCode";
+    public static final String PURCHASE_REQUEST_ID = "purchaseRequestId";
+    public static final String PURCHASE_ORDER_CODE = "purchaseOrderCode";
+    public static final String PURCHASE_ORDER_ID = "purchaseOrderId";
+
 
 }
