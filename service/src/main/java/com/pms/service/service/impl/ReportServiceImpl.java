@@ -2,14 +2,23 @@ package com.pms.service.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.Gson;
+import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.GetInvoiceBean;
+import com.pms.service.mockbean.PayMoneyBean;
+import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IReportService;
+import com.pms.service.util.ApiUtil;
 import com.pms.service.util.ExcleUtil;
 
 public class ReportServiceImpl extends AbstractService implements IReportService  {
@@ -21,79 +30,145 @@ public class ReportServiceImpl extends AbstractService implements IReportService
 		return null;
 	}
 	
-	public static Map<String,Object> importPurchaseContract(Map<String,Object> params){
+	public Map<String, Object> importPurchaseContract(Map<String, Object> params) {
 		String path = "D:\\excel\\采购合同数据-上海自采 (1) - 副本.xlsx";
 		ExcleUtil excel = new ExcleUtil(path);
 		List<String[]> list = excel.getAllData(0);
-		List<Map<String,Object>> itemList = new ArrayList<Map<String,Object>>();
-		for(String[] row : list){
-			Map<String,Object> item = new HashMap<String,Object>();
-			for(String str : row){
-				//开始组装对象
-				item.put("purchaseContractCode", row[0]);
-				item.put("signDate", row[0]);
-				item.put("", row[0]);//是否完成
-				
-				item.put("purchaseContractNo", row[1]);//序号
-				item.put("purchaseContractCode", row[2]);//编号
-				item.put("signDate", row[3]);//签订日期
-				item.put("goodType", row[4]);//产品类型
-				item.put("", row[5]);//供应商名称
-				
-				item.put("", row[6]);//联系人名称
-				item.put("", row[7]);//销售合同编号
-				item.put("", row[8]);//项目名称
-				item.put("", row[9]);//合同金额
-				item.put("", row[10]);//到货金额
-				
-				item.put("", row[11]);//到货%
-				item.put("", row[12]);//付款金额
-				item.put("", row[13]);//2010
-				item.put("", row[14]);//2011
-				item.put("", row[15]);//2012.1
-				//
-				item.put("", row[16]);//2012.2
-				item.put("", row[17]);//2012.3
-				item.put("", row[18]);//2012.4
-				item.put("", row[19]);//2012.5
-				item.put("", row[20]);//2012.6
-				
-				item.put("", row[21]);//2012.7
-				item.put("", row[22]);//2012.8
-				item.put("", row[23]);//2012.9
-				item.put("", row[24]);//2012.10
-				item.put("", row[21]);//2012.11
-				item.put("", row[22]);//2012.12
-				item.put("", row[23]);//付款百分比
-				item.put("", row[24]);//已收发票金额
-				item.put("", row[25]);//发票2010
-				
-				item.put("", row[26]);//发票2011
-				item.put("", row[27]);//发票2012.
-				item.put("", row[28]);//发票2012.1
-				item.put("", row[29]);//发票2012.2
-				item.put("", row[30]);//发票2012.3
-				item.put("", row[31]);//发票2012.4
-				item.put("", row[32]);//发票2012.5
-				item.put("", row[33]);//发票2012.6
-				item.put("", row[34]);//发票2012.7
-				item.put("", row[35]);//发票2012.8
-				item.put("", row[24]);//发票2012.9
-				item.put("", row[26]);//发票2012.10
-				item.put("", row[27]);//发票2012.11
-				item.put("", row[28]);//发票2012.12
-				item.put("", row[29]);//发票%
-				
-				item.put("", row[30]);//付款方式
-				item.put("", row[31]);//备注
-				item.put("", row[32]);//是否执行完
-				item.put("", row[33]);//空白--------
-				item.put("", row[34]);//未付款金额
-				item.put("", row[35]);//未到货金额
-				item.put("", row[24]);//未收发票金额		
-			}
-		}
+		List<Map<String, Object>> itemList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> payList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> invoiceList = new ArrayList<Map<String, Object>>();
 		
+		list.remove(0);list.remove(0);
+		String[] row = list.get(0);
+		//for(String[] row : list){
+			Map<String, Object> item = new LinkedHashMap<String, Object>();
+			// 1.
+			item.put("isFinish", row[0]);// 是否完成
+			item.put("purchaseContractNo", ApiUtil.getInteger(row[1]));// 序号
+			item.put("purchaseContractCode", row[2]);// 编号
+			item.put("signDate", row[3]);// 签订日期
+			item.put("goodType", row[4]);// 产品类型
+	
+			item.put("supplierName", row[5]);// 供应商名称
+			item.put("supplierNameContact", row[6]);// 联系人名称
+			item.put("supplier", getSupplierId(row[5], row[6]));
+	
+			item.put("salesContractCode", row[7]);// 销售合同编号
+			item.put("salesContractId", getSalesContactId(row[7]));
+	
+			item.put("projectName", row[8]);// 项目名称
+			String projectId = getProjectId(row[8]);
+			item.put("projectId", projectId);
+	
+			item.put("purchaseContractMoney", ApiUtil.getDouble(row[9]));// 合同金额
+			item.put("purchaseContractReceivedGoodMoney", ApiUtil.getDouble(row[10]));// 到货金额1.1
+			item.put("purchaseContractReceivedGoodPercent", ApiUtil.getDouble(row[11]));// 到货%1.2
+			item.put("purchaseContractPayMoney", ApiUtil.getDouble(row[12]));// 付款金额2.1
+	
+			// 2. PayMoney object
+			int begin = 13;
+			for (int i = 0; i < 14; i++) {
+				Map<String, Object> obj = new HashMap<String, Object>();
+				obj.put("projectId", projectId);
+				obj.put(PayMoneyBean.payMoney, ApiUtil.getDouble(row[begin + i]));
+				if (i == 0) {
+					obj.put(PayMoneyBean.payDate, "2010/01/01");
+				} else if (i == 1) {
+					obj.put(PayMoneyBean.payDate, "2011/01/01");
+				} else {
+					int mm = i - 1;
+					String dt = "2012/" + mm + "/01";
+					obj.put(PayMoneyBean.payDate, dt);
+				}
+				payList.add(obj);
+			}
+	
+			// 3.
+			item.put("purchaseContractPayMoneyPercent", ApiUtil.getDouble(row[27]));// 付款百分比2.2
+			item.put("purchaseContractReceivedInvoiceMoney", ApiUtil.getDouble(row[28]));// 已收发票金额3.1
+	
+			// 4.Invoice Object
+			begin = 29;
+			for (int i = 0; i < 14; i++) {
+				Map<String, Object> obj = new HashMap<String, Object>();
+				obj.put("projectId", projectId);
+				obj.put(GetInvoiceBean.getInvoiceMoney, ApiUtil.getDouble(row[begin + i]));
+				if (i == 0) {
+					obj.put(GetInvoiceBean.getInvoiceDate, "2010/01/01");
+				} else if (i == 1) {
+					obj.put(GetInvoiceBean.getInvoiceDate, "2011/01/01");
+				} else {
+					int mm = i - 1;
+					String dt = "2012/" + mm + "/01";
+					obj.put(GetInvoiceBean.getInvoiceDate, dt);
+				}
+				invoiceList.add(obj);
+			}
+	
+			// 5.
+			item.put("purchaseContractReceivedInvoicePercent", ApiUtil.getDouble(row[43]));// 发票%3.2
+			item.put("purchaseContractPayType", row[44]);// 付款方式
+			item.put("comment", row[45]);// 备注
+			item.put("purchaseContractIsExecuteFinish", row[46]);// 是否执行完
+			// item.put("", row[47]);//空白--------
+			item.put("purchaseContractUnPayMoney", ApiUtil.getDouble(row[48]));// 未付款金额2.2
+			item.put("purchaseContractUnReceivedGoodMoney", ApiUtil.getDouble(row[49]));// 未到货金额1.3
+			item.put("purchaseContractUnReceivedInvoiceMoney", ApiUtil.getDouble(row[50]));// 未收发票金额3.3
+	
+			itemList.add(item);
+		//}
+		System.out.println(new Gson().toJson(itemList));
+		System.out.println(new Gson().toJson(payList));
+		System.out.println(new Gson().toJson(invoiceList));
 		return null;
 	}
+
+	private String getProjectId(String name){
+		Map<String,Object> obj = dao.findOne(ProjectBean.PROJECT_NAME, name, new String[]{ApiConstants.MONGO_ID}, DBBean.PROJECT);
+		if(obj == null){
+			return "testid";
+		}
+		return (String) obj.get(ApiConstants.MONGO_ID);
+	}
+
+	private String getSupplierId(String supplierName, String supplierContact){
+		Map<String,Object> obj = dao.findOne("supplierName", supplierName, DBBean.SUPPLIER);
+		if(obj == null){
+			return "testid";
+		}
+		return (String) obj.get(ApiConstants.MONGO_ID);
+	}
+	
+	private String getSalesContactId(String code){
+		Map<String,Object> obj = dao.findOne(SalesContractBean.SC_CODE, code,DBBean.SALES_CONTRACT);
+		if(obj == null){
+			return "testid";
+		}
+		return (String) obj.get(ApiConstants.MONGO_ID);
+	}	
+	
+/*	private Map<String,Object> getProjectNameAndId(){
+		Map<String,Object> result = new HashMap<String,Object>();
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME});
+		Map<String,Object> map = dao.list(query, DBBean.PROJECT);
+		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
+		for(Map<String,Object> obj : list){
+			result.put(String.valueOf(obj.get(ProjectBean.PROJECT_NAME)),obj.get(ApiConstants.MONGO_ID));
+		}
+		return result;
+	}
+	
+	private Map<String,Object> getSupplierNameAndId(){
+		Map<String,Object> result = new HashMap<String,Object>();
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put(ApiConstants.LIMIT_KEYS, new String[]{"supplierName"});
+		Map<String,Object> map = dao.list(query, DBBean.SUPPLIER);
+		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
+		for(Map<String,Object> obj : list){
+			result.put(String.valueOf("supplierName"),obj.get(ApiConstants.MONGO_ID));
+		}
+		return result;
+	}	
+	*/
 }

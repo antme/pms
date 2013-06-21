@@ -5,7 +5,7 @@ public class GetInvoiceBean {
 	public static final String getInvoiceCode = "getInvoiceCode";
 	public static final String getInvoiceType = "getInvoiceType";
 	public static final String getInvoiceDate = "getInvoiceDate";
-	
+	public static final String getInvoiceMoney = "getInvoiceMoney";
 	
 	
 }

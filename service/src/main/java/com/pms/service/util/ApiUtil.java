@@ -1,5 +1,6 @@
 package com.pms.service.util;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -92,6 +93,35 @@ public class ApiUtil {
         return in;
     }
 
+    //转换 String==>double（保留两位小数）
+    public static Double getDouble(String value) {
+        Double in = 0.00;
+        if (value != null && !value.trim().isEmpty()) {
+            try {
+            	DecimalFormat df = new DecimalFormat("#.00");
+            	in = Double.valueOf(value);
+            	in = Double.valueOf(df.format(in));
+            } catch (Exception e) {
+                throw new ApiResponseException(String.format("Double parameter illegal [%s]", value),
+                        ResponseCodeConstants.NUMBER_PARAMETER_ILLEGAL);
+            }
+        }        
+        return in;
+    }
+ 
+    public static Double getDouble(String value,double defaultValue) {
+        Double in = null;
+        if (value != null) {
+            try {
+            	in = Double.valueOf(value);
+            } catch (Exception e) {
+                throw new ApiResponseException(String.format("Double parameter illegal [%s]", value), ResponseCodeConstants.NUMBER_PARAMETER_ILLEGAL);
+            }
+        }
+        if(in == null) in = defaultValue;
+        return in;
+    }
+    
     public static Double getDouble(Map<String, Object> params, String key) {
         Object value = null;
         if (params != null){
@@ -139,6 +169,26 @@ public class ApiUtil {
 
         }
 
+        return result;
+    }
+
+    public  static Integer getInteger(Object value,int defaultValue) {
+        Integer result = null;
+
+        if (value != null) {
+            try {
+                result = (int) Float.parseFloat(String.valueOf(value));
+            } catch (NumberFormatException e) {
+                try {
+                    result = Integer.parseInt(String.valueOf(value));
+                } catch (NumberFormatException e1) {
+                    throw new ApiResponseException(String.format("Integer parameter illegal [%s]", value),
+                            ResponseCodeConstants.NUMBER_PARAMETER_ILLEGAL);
+                }
+            }
+
+        }
+        if(result == null) result = defaultValue;
         return result;
     }
     
