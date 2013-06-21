@@ -99,7 +99,7 @@ public class PurchaseContractController extends AbstractController {
     
     @RequestMapping("/request/list")
     public void listPurchaseRequestByAssistant(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listPurchaseRequests(), request, response);
+        responseWithData(pService.listPurchaseRequests(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/request/add")
@@ -154,7 +154,7 @@ public class PurchaseContractController extends AbstractController {
     
     @RequestMapping("/order/list")
     public void listPurchaseOrders(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listPurchaseOrders(), request, response);
+        responseWithData(pService.listPurchaseOrders(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/order/select/list")
@@ -202,7 +202,7 @@ public class PurchaseContractController extends AbstractController {
     
     @RequestMapping("/repository/list")
     public void listRepositoryRequests(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listRepositoryRequests(), request, response);
+        responseWithData(pService.listRepositoryRequests(parserJsonParameters(request, false)), request, response);
     }
 
     @RequestMapping("/repository/add")
