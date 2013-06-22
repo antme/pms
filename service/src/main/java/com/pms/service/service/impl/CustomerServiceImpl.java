@@ -33,6 +33,12 @@ public class CustomerServiceImpl extends AbstractService implements ICustomerSer
 	public Map<String,Object> create(Map<String, Object> params) {
 		return dao.add(params, DBBean.CUSTOMER);
 	}
+	
+	
+	public Map<String,Object> get(Map<String,Object> params){
+	    
+	    return this.dao.findOneByQuery(params, DBBean.CUSTOMER);
+	}
 
 	@Override
 	public Map<String,Object> update(Map<String, Object> params) {

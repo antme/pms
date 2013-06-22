@@ -6,6 +6,9 @@ public interface ICustomerService {
     
 	public Map<String,Object> create(Map<String,Object> params);
 	
+    public Map<String,Object> get(Map<String,Object> params);
+	    
+	
 	public Map<String,Object> update(Map<String,Object> params);
 	
 	public Map<String,Object> importCustomer(Map<String,Object> params);
