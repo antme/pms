@@ -64,10 +64,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             
             data.put("supplierName", supplier.get("supplierName"));
         }
-        
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(SalesContractBean.SC_ID, "51b8045cba339c5e77197ea7");
-        listEqcostListForShipByScIDAndType(params);
+
         Map<String, Object> scList =   listSalesContractsForShipSelect(null);
         logger.info(scList);
         
@@ -160,8 +157,28 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         Map<String, Object> scQuery = new HashMap<String, Object>();
         scQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(scIdsList)));
-        scQuery.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID});
+        scQuery.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE});
         Map<String, Object> scList = this.dao.list(scQuery, DBBean.SALES_CONTRACT);
+        
+        
+        Map<String, Object> customers = this.dao.listToOneMapAndIdAsKey(null, DBBean.CUSTOMER);
+        Map<String, Object> projects = this.dao.listToOneMapAndIdAsKey(null, DBBean.PROJECT);
+        
+        
+        List<Map<String, Object>> scListItems = (List<Map<String, Object>>) scList.get(ApiConstants.RESULTS_DATA);
+        
+        for(Map<String, Object> scMap: scListItems){
+            Map<String, Object>  project = (Map<String, Object>) projects.get(scMap.get(SalesContractBean.SC_PROJECT_ID));
+            
+            scMap.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
+            scMap.put(SalesContractBean.SC_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
+            
+            Map<String, Object> customer = (Map<String, Object>) customers.get(project.get(ProjectBean.PROJECT_CUSTOMER ));
+            scMap.put("customerName", customer.get(CustomerBean.NAME));
+            scMap.put(SalesContractBean.SC_CUSTOMER_ID, project.get(ProjectBean.PROJECT_CUSTOMER ));
+            
+        }
+        
    
         return scList;
 
@@ -179,7 +196,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList" });
         List<Object> scResults = this.dao.listLimitKeyValues(query, DBBean.REPOSITORY);
 
-        Map<String, Object> result = new HashMap<String, Object>();
         Map<String, Object> scQuery = new HashMap<String, Object>();
         scQuery.put(ApiConstants.LIMIT_KEYS, new String[] {  SalesContractBean.SC_PROJECT_ID });
         scQuery.put(ApiConstants.MONGO_ID, params.get(SalesContractBean.SC_ID));
