@@ -64,7 +64,7 @@ function edit() {
 	});
 }
 
-function confirm(){
+function confirmRepository(){
 	
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
