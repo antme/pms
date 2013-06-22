@@ -5,29 +5,34 @@ $(document).ready(function () {
 		id : "itemNo",
 		fields : {
 			itemNo: {nullable: true},
-			itemMonth: {editable: false,nullable: true},
-			itemContent: {editable: false,nullable:true},
-			itemComment: {editable: false},
-			itemMoney: {editable: false,type: "number",validation: {min: 0}}
+			itemMonth: {nullable: true},
+			itemContent: {nullable:true},
+			itemComment: {},
+			itemMoney: {type: "number",validation: {min: 0}}
 		}
 	});	
 	var myModel = kendo.data.Model.define({
 		id : "_id",
 		fields : {
-			payInvoiceDepartment: {editable: false, nullable: true},
-			payInvoiceProposerId: {editable: false},
-			payInvoiceProposerName: {editable: false},
-			payInvoicePlanDate: {editable: false},
-			payInvoiceReceivedMoneyStatus: {editable: false},
-			payInvoiceSubmitDate: {editable: false},
-			payInvoiceApproveDate: {editable: false},
-			payInvoiceCheckDate: {editable: false},
-			payInvoiceSignDate: {editable: false},
-			payInvoiceMoney: {editable: false},
-			payInvoiceItemList: {editable: false}
+			payInvoiceDepartment: {nullable: true},
+			payInvoiceProposerId: {},
+			payInvoiceProposerName: {},
+			payInvoicePlanDate: {nullable: true},
+			payInvoiceReceivedMoneyStatus:{},
+			payInvoiceSubmitDate: {},
+			payInvoiceApproveDate: {},
+			payInvoiceCheckDate: {},
+			payInvoiceSignDate: {},
+			payInvoiceMoney: {},
+			payInvoiceItemList: {nullable: true},
+			invoiceType:{},
+			salesContractId:{},
+			contractCode:{},
+			projectId:{},
+			operateType:{}
 		}
 	});
-	
+	var currentObj = new myModel();
 	$("#subGrid").kendoGrid({
 		dataSource: {
 			schema: {
@@ -46,7 +51,7 @@ $(document).ready(function () {
 			{ field: "itemMoney", title: "金额",footerTemplate: "总共: #=sum#" }
 	  	],	 
 	  	editable:true,
-	  	toolbar: [{text:"保存",name:"save"}]
+	  	toolbar: [{text:"新增",name:"create"},{text:"计算",name:"save"}]
 	});
 
 	$("#searchfor").kendoDropDownList({
@@ -56,42 +61,40 @@ $(document).ready(function () {
 			transport : {
 				read : {
 					dataType : "jsonp",
-					url : "/service/sc/listforselect",
+					url : "/service/sc/listforselect"
 				}
-			}
+			},
+			schema: {data:"data"}
 		}
 	});	
 
 	$(".submitform").click(function(){
 		if(confirm(this.value + "表单，确认？")){
 			if(this.value == "提交"){
-				postAjaxRequest( baseUrl+"/purcontract/invoice/add", {models:kendo.stringify(currentObj)} , saveSuccess);
+				currentObj.operateType="add";
+				postAjaxRequest( baseUrl+"/sc/invoice/add", {models:kendo.stringify(currentObj)} , saveSuccess);
 			}else if(this.value=="取消"){
 				location.reload();
 			}
 		}
 	});
-
 	$("#searchbt").click(function(){
 		var vv = $("#searchfor").val();
 		if(vv != ""){
-			postAjaxRequest(baseUrl+"/purcontract/invoice/add", {contractCode:vv}, edit);
+			currentObj.operateType="prepare";
+			currentObj.contractCode=vv;
+			postAjaxRequest(baseUrl+"/sc/invoice/add", {models:kendo.stringify(currentObj)}, edit);
 		}else{
 			alert("请选择合同编号");
 		}
 	});	
-	
 	function edit(e){
 		currentObj = new myModel(e);
 		kendo.bind($("#form-container"), currentObj);
 	}
-	
 	function saveSuccess(){
 		location.reload();
 	}
-	
-	
-	
 });
 
 

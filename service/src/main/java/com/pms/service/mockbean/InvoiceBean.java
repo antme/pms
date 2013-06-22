@@ -26,6 +26,6 @@ public class InvoiceBean {
 
 	
 	
-	
+	public static final String salesContractId = "salesContractId";//票金额
 	
 }

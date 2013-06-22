@@ -1,25 +1,26 @@
-var baseUrl = "../../service/purcontract";
+var baseUrl = "../../service/sc";
 var requestModel;
 var listDatasource;
 $(document).ready(function () {	
 	requestModel = kendo.data.Model.define({
 		id : "_id",
 		fields : {
-			_id : {
-				editable : false,
-				nullable : true
-			},
-			getInvoiceCode:{
-				nullable : true
-			},
-			getInvoiceType:{
-				type: "number",
-				nullable : true
-			},
-			getInvoiceDate:{
-				type:"date",
-				nullable : true
-			}
+			payInvoiceDepartment: {nullable: true},
+			payInvoiceProposerId: {},
+			payInvoiceProposerName: {},
+			payInvoicePlanDate: {type:"date",nullable: true},
+			payInvoiceReceivedMoneyStatus:{},
+			payInvoiceSubmitDate: {type:"date"},
+			payInvoiceApproveDate: {type:"date"},
+			payInvoiceCheckDate: {type:"date"},
+			payInvoiceSignDate: {type:"date"},
+			payInvoiceMoney: {},
+			payInvoiceItemList: {nullable: true},
+			invoiceType:{},
+			salesContractId:{},
+			contractCode:{},
+			projectId:{},
+			operateType:{}
 		}
 	});
 
@@ -30,27 +31,11 @@ $(document).ready(function () {
 	            dataType: "jsonp",
 	            type : "post"
             },
-            update: {
-	            url: baseUrl + "/invoice/update",
-	            dataType: "jsonp",
-	            type : "post"
-            },
-            destroy: {
-	            url: baseUrl + "/invoice/destroy",
-	            dataType: "jsonp",
-	            type : "post"
-            },
-            create: {
-	            url: baseUrl + "/invoice/add",
-	            dataType: "jsonp",
-	            type : "post"
-            },
             parameterMap: function(options, operation) {
                 if (operation !== "read" && options.models) {
                     return {models: kendo.stringify(options.models)};
                 }
             }
-	        
 	    },
 	    batch: true,
 	    pageSize: 10,
@@ -63,14 +48,19 @@ $(document).ready(function () {
 	$("#grid").kendoGrid({
 	    dataSource: listDatasource,
 	    pageable: true,
-	    toolbar: [{name:"create",text:"新增"}],
+	    selectable : "row",
+	    sortable : true,
+		filterable : filterable,
 	    columns: [
-	        {field:"getInvoiceCode", title:"收票编号"},
-	        {field:"getInvoiceDate", title:"收票日期",format: "{0:yyyy/MM/dd hh:mm}"},
-	        {field:"getInvoiceType", title:"类型"},
-	        {command: [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}] }
-	    ],
-	    editable: "popup"
+	        {field:"payInvoiceMoney", title:"合计开票金额"},
+	        {field:"payInvoicePlanDate", title:"建议出票日期",format: "{0:yyyy/MM/dd}"},
+	        {field:"payInvoiceSignDate", title:"出票日期",format: "{0:yyyy/MM/dd hh:mm}"},
+	        {field:"payInvoiceReceivedMoneyStatus", title:"收款情况"},
+	        {field:"invoiceType", title:"开票类型"},
+	        {field:"contractCode", title:"销售合同编号"}
+	    ]
 	});
 });
-
+function add(){
+	loadPage("payInvoiceEdit");
+}
