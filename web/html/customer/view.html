@@ -1,0 +1,83 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+<head>
+<style>
+.k-grid-toolbar {
+	height: 25px;
+}
+</style>
+<script type="text/javascript">
+
+
+  function view(data){
+	  console.log(data);
+	    kendo.bind($("#view-form"), new userModel(data));
+  }
+
+	$(document).ready(function() {
+		if (popupParams) {
+			postAjaxRequest("/service/customer/get", popupParams, view);
+		} 
+	})
+	
+	
+</script>
+
+</head>
+<body>
+
+	<div class="k-edit-form-container" id="view-form">
+		<div class="k-edit-label ">
+			<label for="code">客户编号:</label>
+		</div>
+		<div class="k-edit-field ">
+			<span data-bind="value:code"></span>
+		</div>
+
+		<div class="k-edit-label ">
+			<label for="name">客户名称:</label>
+		</div>
+		<div class="k-edit-field ">
+			<span data-bind="text:name"></span>
+		</div>
+
+
+		<div class="k-edit-label ">
+			<label for="name">客户联系人:</label>
+		</div>
+		<div class="k-edit-field ">
+			<span data-bind="text:contact"></span>
+		</div>
+
+		<div class="k-edit-label ">
+			<label for="location">客户所在地:</label>
+		</div>
+		<div class="k-edit-field ">
+			<span data-bind="text:location"></span>
+		</div>
+
+		<div class="k-edit-label ">
+			<label for="address">地址:</label>
+		</div>
+		<div class="k-edit-field ">
+			<span data-bind="text:address"></span>
+		</div>
+
+		<div class="k-edit-label ">
+			<label for="phone">联系人电话:</label>
+		</div>
+		<div class="k-edit-field ">
+			<span data-bind="text:phone"></span>
+		</div>
+
+
+		<div class="k-edit-label ">
+			<label for="email">联系人邮箱:</label>
+		</div>
+		<div class="k-edit-field ">
+			<span data-bind="text:email"></span>
+		</div>
+	</div>
+
+</body>
+</html>

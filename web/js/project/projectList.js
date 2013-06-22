@@ -150,8 +150,8 @@ function viewPM(param){
 }
 
 function viewCustomer(param){
-//	var options = { width:"680px", height: "400px", title:"客户信息"};
-//	openRemotePageWindow(options, "html/customer/.html", {_id : param});
+	var options = { width:"680px", height: "400px", title:"客户信息"};
+	openRemotePageWindow(options, "html/customer/view.html", {_id : param});
 }
 	
 	

@@ -29,6 +29,11 @@ public class CustomerController extends AbstractController {
     	Map<String,Object> obj = parserJsonParameters(request,  false);
     	responseWithData(customerService.create(obj), request, response, "add_success");
     }
+    
+    @RequestMapping("/get")
+    public void getCustomer(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(customerService.get(parserJsonParameters(request,  false)), request, response);
+    }
 
     @RequestMapping("/destroy")
     @RoleValidate(roleID=RoleValidConstants.CUSTOMER_MANAGEMENT, desc = RoleValidConstants.CUSTOMER_MANAGEMENT_DESC)
