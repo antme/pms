@@ -42,6 +42,7 @@ $(document).ready(function () {
             	editable : false
             },
             paCount:{
+            	editable : false,
             	type: "number",
            	 	validation: {
                     min: 0

@@ -1,6 +1,7 @@
 package com.pms.service.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,9 @@ import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ISalesContractService;
+import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DateUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
 
 public class SalesContractServiceImpl extends AbstractService implements ISalesContractService {
@@ -141,7 +144,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	
 	public Map<String,Object> getBaseInfoByIds(List<String> ids){
 		String[] keys = new String[]{SalesContractBean.SC_CODE,SalesContractBean.SC_AMOUNT, SalesContractBean.SC_PROJECT_ID,
-				SalesContractBean.SC_CUSTOMER_ID,SalesContractBean.SC_BACK_REQUEST_COUNT};
+				SalesContractBean.SC_CUSTOMER_ID,SalesContractBean.SC_BACK_REQUEST_COUNT,SalesContractBean.SC_INVOICE_TYPE};
 		Map<String,Object> query = new HashMap<String,Object>();
 		query.put(ApiConstants.LIMIT_KEYS, keys);
 		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
@@ -274,28 +277,43 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	@Override
 	public Map<String, Object> addInvoiceForSC(Map<String, Object> params) {
+		String operateType = String.valueOf(params.get("operateType"));
+		if(operateType.endsWith("prepare")){
+			return prepareInvoiceForSC(params);
+		}
 		String _id = (String) params.get(ApiConstants.MONGO_ID);
 		if (_id == null || _id.length() == 0){
 			Map<String, Object> invoice = new HashMap<String, Object>();
-			invoice.put(SalesContractBean.SC_INVOICE_MONEY, params.get(SalesContractBean.SC_INVOICE_MONEY));
 			invoice.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
-			invoice.put(SalesContractBean.SC_INVOICE_DATE, params.get(SalesContractBean.SC_INVOICE_DATE));
-			invoice.put(SalesContractBean.SC_ID, params.get(SalesContractBean.SC_ID));
+			invoice.put(InvoiceBean.payInvoiceComment, params.get(InvoiceBean.payInvoiceComment));
+			invoice.put(InvoiceBean.payInvoiceDepartment, params.get(InvoiceBean.payInvoiceDepartment));
+			invoice.put(InvoiceBean.payInvoicePlanDate, params.get(InvoiceBean.payInvoicePlanDate));
+			invoice.put(InvoiceBean.payInvoiceReceivedMoneyStatus, params.get(InvoiceBean.payInvoiceReceivedMoneyStatus));
+			invoice.put(InvoiceBean.payInvoiceStatus, PurchaseStatus.submited.toString());
+			invoice.put(InvoiceBean.payInvoiceSubmitDate, DateUtil.getDateString(new Date()));
+			invoice.put("projectId", params.get("projectId"));
+			invoice.put("contractCode", params.get("contractCode"));
+			List<Map<String,Object>> items = (List<Map<String,Object>>) params.get(InvoiceBean.payInvoiceItemList);
+			double total = 0.0;
+			for(Map<String,Object> item : items){
+				total += ApiUtil.getDouble(item, InvoiceBean.itemMoney, 0);
+			}
+			invoice.put(InvoiceBean.payInvoiceItemList, items);
+			invoice.put(InvoiceBean.payInvoiceMoney, total);
 			return dao.add(invoice, DBBean.SC_INVOICE);
-		}else{
-			//初始化表单
-			return prepareInvoiceForSC(params);
 		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String,Object> prepareInvoiceForSC(Map<String, Object> params){
+	public Map<String,Object> prepareInvoiceForSC(Map<String, Object> params){
 		String scId = (String)params.get("contractCode");
 		List<String> ids = new ArrayList<String>();
 		ids.add(scId);
 		Map<String,Object> map = getBaseInfoByIds(ids);
 		Map<String,Object> info = (Map<String,Object>)map.get(scId);
 		Map<String,Object> newObj = new HashMap<String,Object>();
+		newObj.put(InvoiceBean.salesContractId, scId);
 		newObj.put(InvoiceBean.payInvoiceItemList, new ArrayList());
 		newObj.putAll(info);
 		return newObj;
@@ -304,10 +322,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	
 	@Override
 	public Map<String, Object> listInvoiceForSC(Map<String, Object> params) {
-		String scId = (String) params.get(SalesContractBean.SC_ID);
-		Map<String, Object> query = new HashMap<String, Object>();
-		query.put(SalesContractBean.SC_ID, scId);
-		return dao.list(query, DBBean.SC_INVOICE);
+		Map<String, Object> result = dao.list(null, DBBean.SC_INVOICE);
+		return result;
 	}
 
 	@Override
