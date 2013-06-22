@@ -19,7 +19,7 @@ $(document).ready(function() {
 				transport : {
 					read : {
 						dataType : "jsonp",
-						url : "/service/purcontract/repository/contract/list",
+						url : "/service/purcontract/repository/in/project/list",
 					}
 				},
 				schema : {
@@ -32,7 +32,7 @@ $(document).ready(function() {
 	$("#operator").kendoDropDownList({
 		dataTextField : "userName",
 		dataValueField : "_id",
-        optionLabel: "选择入库人...",
+        optionLabel: "选择出库人...",
 		dataSource : proManagerItems,
 	});
 	
@@ -52,12 +52,12 @@ $(document).ready(function() {
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
 		update : {
-			url : "/service/purcontract/repository/update",
+			url : "/service/purcontract/repository/update?type=out",
 			dataType : "jsonp",
 			type : "post"
 		},
 		create : {
-			url : "/service/purcontract/repository/add",
+			url : "/service/purcontract/repository/add?type=out",
 			dataType : "jsonp",
 			type : "post"
 		},
@@ -109,7 +109,7 @@ function save(status) {
 }
 
 function checkStatus() {
-	loadPage("repository", null);
+	loadPage("repositoryOut", null);
 }
 // 计算成
 var projectId = undefined;
@@ -118,14 +118,14 @@ var supplierId = undefined;
 function selectContracts() {
 
 	 projectId = $("#purchasecontractselect").data("kendoDropDownList").value();
-	 supplierId = $("#supplierName").data("kendoDropDownList").value();
 	
-	var param = {"projectId": projectId, "supplier" : supplierId};
+	var param = {"projectId": projectId};
 	
-	postAjaxRequest("/service/purcontract/get/byproject_supplier", param, loadContracts);
+	postAjaxRequest("/service/purcontract/repository/list/byproject", param, loadContracts);
 }
 
 function loadContracts(data){
+	console.log(data);
 	requestDataItem = new model();
 	requestDataItem.eqcostList = data.data;
 	edit();
@@ -180,7 +180,7 @@ function edit(data) {
 
 			}, {
 				field : "eqcostApplyAmount",
-				title : "本次入库数量"
+				title : "本次出库数量"
 			}],
 			scrollable : true,
 			editable : true,

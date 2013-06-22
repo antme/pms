@@ -1,7 +1,7 @@
 var listUrl = "/service/purcontract/repository/list?type=out";
-var approveUrl = "/service/purcontract/repository/out/approve?type=out";
-var deleteUrl = "/service/purcontract/repository/out/delete?type=out";
-var cancelUrl = "/service/purcontract/repository/out/cancel?type=out";
+var approveUrl = "/service/purcontract/repository/approve?type=out";
+var deleteUrl = "/service/purcontract/repository/delete?type=out";
+var cancelUrl = "/service/purcontract/repository/cancel?type=out";
 
 // 外面列表页的datasource对象
 var dataSource = new kendo.data.DataSource({
@@ -32,17 +32,17 @@ $(document).ready(function() {
 				field : "code",
 				title : "申请编号"
 			}, {
-				field : "customerName",
-				title : "供应商"
+				field : "customer",
+				title : "需方名称"
 			}, {
 				field : "status",
-				title : "入库状态"
+				title : "出库状态"
 			}, {
 				field : "approvedDate",
-				title : "入库时间"
+				title : "出库时间"
 			}, {
 				field : "repositoryTotalAmount",
-				title : "入库总数"
+				title : "出库总数"
 			} ]
 
 		});
@@ -59,7 +59,7 @@ function add(){
 function edit() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
-	loadPage("html/repository/repositoryEdit.html", {
+	loadPage("html/repository/repositoryOutEdit.html", {
 		_id : row._id
 	});
 }

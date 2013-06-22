@@ -659,7 +659,9 @@ public class CommonDaoMongoImpl implements ICommonDao {
             mergeDefaultValue(parameters, collection, map);
 
             if (key != null) {
-                data.add(map.get(key));
+                if(map.get(key)!=null){
+                    data.add(map.get(key));
+                }
             } else {
                 data.add(map);
             }
