@@ -195,6 +195,8 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/finance/payMoney.html";
 	}else if(page == "getInvoice"){
 		page = "html/finance/getInvoice.html";
+	}else if (page == "repositoryOut") {
+		page = "html/repository/repositoryout.html";
 	}
 	
 

@@ -540,7 +540,31 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> listRepositoryRequests(Map<String, Object> params) {
         return this.dao.list(params, DBBean.REPOSITORY);
     }
+    public Map<String, Object> listRepositoryByProjectId(HashMap<String, Object> params){
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_IN_REPOSITORY);
+        query.put(PurchaseRequest.PROJECT_ID, params.get(PurchaseRequest.PROJECT_ID));
+        
+        Map<String, Object> result = this.dao.list(query, DBBean.REPOSITORY);
+        List<Map<String, Object>> finalEqList = new ArrayList<Map<String, Object>>();
 
+        if(result !=null){
+            List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+            
+            
+            for(Map<String, Object> res: list){
+                if(res.get(SalesContractBean.SC_EQ_LIST) !=null){
+                    List<Map<String, Object>> eqList = (List<Map<String, Object>>) res.get(SalesContractBean.SC_EQ_LIST);
+                    finalEqList.addAll(eqList);
+                        
+                }
+            }
+            
+        }
+        Map<String, Object> rep = new HashMap<String, Object>();
+        rep.put(ApiConstants.RESULTS_DATA, finalEqList);
+        return rep;
+    }
 
     @Override
     public Map<String, Object> addRepositoryRequest(Map<String, Object> parserListJsonParameters) {
@@ -578,14 +602,35 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
 
     @Override
-    public Map<String, Object> approveRepositoryRequest(Map<String, Object> parserJsonParameters) {
-        return null;
+    public Map<String, Object> approveRepositoryRequest(Map<String, Object> params) {
+        if (params.get("type") != null && params.get("type").toString().equalsIgnoreCase("in")) {
+            return processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_IN_REPOSITORY);
+        } else {
+            return processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_OUT_REPOSITORY);
+        }
+    }
+    
+    public Map<String, Object> listProjectsFromRepositoryIn(HashMap<String, Object> params) {
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_IN_REPOSITORY);
+        query.put(ApiConstants.LIMIT_KEYS, PurchaseRequest.PROJECT_ID);
+
+        List<Object> projectIds = this.dao.listLimitKeyValues(query, DBBean.REPOSITORY);
+        Map<String, Object> pquery = new HashMap<String, Object>();
+        pquery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, projectIds));
+        pquery.put(ApiConstants.LIMIT_KEYS, ProjectBean.PROJECT_NAME);
+
+        return this.dao.list(pquery, DBBean.PROJECT);
     }
 
 
     @Override
     public Map<String, Object> rejectRepositoryRequest(Map<String, Object> parserJsonParameters) {
         return null;
+    }
+    
+    public Map<String, Object> cancelRepositoryRequest(HashMap<String, Object> params){
+        return processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_CANCELLED);
     }
     
     //采购合同列表为付款

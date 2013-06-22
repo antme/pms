@@ -88,29 +88,26 @@ public abstract class AbstractController {
                 // TODO
             }
 
-        } else {
-            Enumeration<?> parameterNames = request.getParameterNames();
-            while (parameterNames.hasMoreElements()) {
-                String pName = parameterNames.nextElement().toString();
-                
-                if(pName.toLowerCase().startsWith("filter[filters]".toLowerCase())){
-                    filterLength++;
-                }else{
-                    parametersMap.put(pName, request.getParameter(pName));
-                }
+        }
+        Enumeration<?> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String pName = parameterNames.nextElement().toString();
+
+            if (pName.toLowerCase().startsWith("filter[filters]".toLowerCase())) {
+                filterLength++;
+            } else {
+                parametersMap.put(pName, request.getParameter(pName));
             }
         }
-        
-        
-        
+
         if (filterLength > 0) {
-            //每三个为一组
+            // 每三个为一组
             int filters = (int) filterLength / 3;
             for (int i = 0; i < filters; i++) {
                 String key = request.getParameter("filter[filters][" + i + "][field]");
                 String operator = request.getParameter("filter[filters][" + i + "][operator]");
-                String value =  request.getParameter("filter[filters][" + i + "][value]");               
-                parametersMap.put(key, new DBQuery(DBQueryOpertion.getOperation(operator), value));   
+                String value = request.getParameter("filter[filters][" + i + "][value]");
+                parametersMap.put(key, new DBQuery(DBQueryOpertion.getOperation(operator), value));
             }
         }
         if (!emptyParameter && (parametersMap == null || parametersMap.isEmpty())) {
@@ -120,25 +117,22 @@ public abstract class AbstractController {
         parametersMap.remove("_");
         parametersMap.remove("callback");
         parametersMap.remove("page");
-        parametersMap.remove("take"); 
-        
-        
-        
-        
-        if(parametersMap.get(ApiConstants.PAGE_SIZE)!=null){
+        parametersMap.remove("take");
+
+        if (parametersMap.get(ApiConstants.PAGE_SIZE) != null) {
             parametersMap.put(ApiConstants.LIMIT, parametersMap.get(ApiConstants.PAGE_SIZE));
             parametersMap.remove(ApiConstants.PAGE_SIZE);
         }
-        
-        if(parametersMap.get(ApiConstants.SKIP)!=null){
+
+        if (parametersMap.get(ApiConstants.SKIP) != null) {
             parametersMap.put(ApiConstants.LIMIT_START, parametersMap.get(ApiConstants.SKIP));
             parametersMap.remove(ApiConstants.SKIP);
         }
-        
+
         parametersMap.remove("filter[logic]");
         parametersMap.remove("filter");
-  
-        //FIXME: only support sort by one column
+
+        // FIXME: only support sort by one column
         if (parametersMap.get("sort[0][field]") != null) {
             Map<String, Object> orderBy = new HashMap<String, Object>();
             int orderDir = ApiConstants.DB_QUERY_ORDER_BY_ASC;
@@ -151,10 +145,9 @@ public abstract class AbstractController {
 
             parametersMap.remove("sort[0][field]");
             parametersMap.remove("sort[0][dir]");
-           
-            
+
             parametersMap.put(ApiConstants.DB_QUERY_ORDER_BY, orderBy);
-            
+
         }
 
         return parametersMap;

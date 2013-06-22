@@ -1,0 +1,38 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="js/repository/repositoryEditOut.js"></script>
+
+<div id="purchaserepository-edit" class="k-content">
+	<div class="k-edit-field " id="purchaserepository-div"
+		style="width: 1200px;">
+		<input type="text" name="purchasecontractselect" style="width: 500px;"
+			id="purchasecontractselect" required="required">
+		  <button onclick="selectContracts();">确定</button>
+	</div>
+
+
+
+	<div id="purchaserepository-edit-item">
+
+        <div>
+            <label>出库人:</label> <input type="text" data-bind="value: operator" id="operator" />
+            <label>出库日期:</label> <input type="text" data-role="datepicker"  data-bind="value: inDate" id="outDate" />
+            <label>需方名称:</label> <input type="text" data-bind="value: inType" id="customer" />           
+            <label>单据编号:</label> <input type="text" data-bind="value: code" id="code" />
+        </div>
+        <div>
+            <div id="purchaserepository-edit-grid"></div>
+        </div>
+        
+        <div>
+             <label>备注:</label>
+             <textarea rows="4" cols="120" class="k-textbox  foredit" style="width:300px;" data-bind="value: pbComment" ></textarea>
+        </div>
+
+
+		<div>
+			<button onclick="save();">保存</button>
+			<button onclick="save('出库中');">出库申请</button>
+		</div>
+	</div>
+
+</div>

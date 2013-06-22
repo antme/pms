@@ -1,7 +1,7 @@
-var listUrl = "/service/purcontract/repository/list";
-var approveUrl = "/service/purcontract/repository/confirm";
-var deleteUrl = "/service/purcontract/repository/delete";
-var cancelUrl = "/service/purcontract/repository/cancel";
+var listUrl = "/service/purcontract/repository/list?type=in";
+var approveUrl = "/service/purcontract/repository/approve?type=in";
+var deleteUrl = "/service/purcontract/repository/delete?type=in";
+var cancelUrl = "/service/purcontract/repository/cancel?type=in";
 
 // 外面列表页的datasource对象
 var dataSource = new kendo.data.DataSource({
@@ -63,3 +63,18 @@ function edit() {
 		_id : row._id
 	});
 }
+
+function confirmRepository(){
+	
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "已入库"){
+			alert("此申请已入库，不需要再次入库");
+		}else{
+			process(approveUrl);
+		}
+	}
+}
+
+
+
