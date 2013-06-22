@@ -55,7 +55,7 @@ public class PurchaseContractController extends AbstractController {
     
     @RequestMapping("/repository/eqcostList/forship/select_by_scid")
     public void listEqcostListForShipByScID(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listEqcostListForShipByScID(parserJsonParameters(request, false)), request, response);
+        responseWithData(pService.listEqcostListForShipByScIDAndType(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/get")

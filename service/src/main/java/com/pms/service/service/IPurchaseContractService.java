@@ -20,7 +20,7 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listSalesContractsForShipSelect(Map<String, Object> params);  
     
-    public Map<String, Object> listEqcostListForShipByScID(Map<String, Object> params);  
+    public Map<String, Object> listEqcostListForShipByScIDAndType(Map<String, Object> params);  
     
     public void deletePurchaseContract(Map<String, Object> contract);
     

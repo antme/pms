@@ -67,7 +67,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(SalesContractBean.SC_ID, "51b8045cba339c5e77197ea7");
-        listEqcostListForShipByScID(params);
+        listEqcostListForShipByScIDAndType(params);
         Map<String, Object> scList =   listSalesContractsForShipSelect(null);
         logger.info(scList);
         
@@ -167,7 +167,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     }
     
-    public Map<String, Object> listEqcostListForShipByScID(Map<String, Object> params) {
+    public Map<String, Object> listEqcostListForShipByScIDAndType(Map<String, Object> params) {
 
         // String scId = params.get(SalesContractBean.SC_ID).toString();
 //        String type = params.get("type").toString();
