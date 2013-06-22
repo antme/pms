@@ -578,14 +578,18 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
 
     @Override
-    public Map<String, Object> approveRepositoryRequest(Map<String, Object> parserJsonParameters) {
-        return null;
+    public Map<String, Object> approveRepositoryRequest(Map<String, Object> params) {
+        return processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_IN_REPOSITORY);
     }
 
 
     @Override
     public Map<String, Object> rejectRepositoryRequest(Map<String, Object> parserJsonParameters) {
         return null;
+    }
+    
+    public Map<String, Object> cancelRepositoryRequest(HashMap<String, Object> params){
+        return processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_CANCELLED);
     }
     
     //采购合同列表为付款

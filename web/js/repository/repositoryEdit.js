@@ -84,12 +84,12 @@ function updateSupplier(){
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
 		update : {
-			url : "/service/purcontract/repository/update",
+			url : "/service/purcontract/repository/update?type=in",
 			dataType : "jsonp",
 			type : "post"
 		},
 		create : {
-			url : "/service/purcontract/repository/add",
+			url : "/service/purcontract/repository/add?type=in",
 			dataType : "jsonp",
 			type : "post"
 		},

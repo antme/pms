@@ -237,6 +237,11 @@ public class PurchaseContractController extends AbstractController {
     public void rejectRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.rejectRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
+    
+    @RequestMapping("/repository/cancel")
+    public void cancelRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.cancelRepositoryRequest(parserJsonParameters(request, false)), request, response);
+    }
 
     @RequestMapping("/listforselect/paymoney")
     public void listSelectForPayment(HttpServletRequest request, HttpServletResponse response) {
