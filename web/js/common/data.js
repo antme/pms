@@ -74,20 +74,20 @@ var menus = [
                      { text: "备货申请", id: "purchaseAllot", imageUrl: "/images/order.png" },
                      { text: "调拨申请", id: "purchaseAllotManage", imageUrl: "/images/allocate.png" },
                      { text: "采购申请", id: "purchaseRequestApprove", imageUrl: "/images/purchase.png"},
-                     { text: "采购订单", id: "purchaseorder",  imageUrl: "/images/ccontract.png"},
+                     { text: "采购订单", id: "purchaseorder",  imageUrl: "/images/porder.png"},
                      { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
-                     { text: "入库申请单", id: "repository", imageUrl: "/images/ccontract.png" },
-                     { text: "出库申请单", id: "repositoryOut", imageUrl: "/images/ccontract.png"}
+                     { text: "入库申请单", id: "repository", imageUrl: "/images/repository.png" },
+                     { text: "出库申请单", id: "repositoryOut", imageUrl: "/images/rout.png"}
                  ]
              },                                               
              {
                  text: "财务",  id: "finance",  imageUrl: "/images/finance.png",
                  items: [
                          { text: "财务资料", id: "contract",  imageUrl: "/images/order.png" },
-                         { text: "开票信息", id: "invoiceList", imageUrl: "/images/ccontract.png" },
-                         { text: "收款信息", id: "gotMoneyList", imageUrl: "/images/ccontract.png"},
-                         { text: "付款信息", id: "payMoney", imageUrl: "/images/ccontract.png"},
-                         { text: "收票信息", id: "getInvoice", imageUrl: "/images/ccontract.png"}
+                         { text: "开票信息", id: "invoiceList", imageUrl: "/images/calender.png" },
+                         { text: "收款信息", id: "gotMoneyList", imageUrl: "/images/invoice.png"},
+                         { text: "付款信息", id: "payMoney", imageUrl: "/images/license.png"},
+                         { text: "收票信息", id: "getInvoice", imageUrl: "/images/milestone.png"}
                      ]
              },
                                  

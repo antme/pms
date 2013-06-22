@@ -333,7 +333,13 @@ function edit(data) {
 			}, {
 				field : "logisticsArrivedTime",
 				title : "货品预计到达时间"
-			}, {
+			},{
+				field : "salesContractCode",
+				title : "销售合同编号"
+			},{
+				field : "purchaseOrderCode",
+				title : "订单编号"
+			},{
 				command : [  {
 					name : "destroy",
 					title : "删除",

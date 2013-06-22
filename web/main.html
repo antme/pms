@@ -54,15 +54,17 @@
 		      <span><strong>我的任务:</strong></span>
 		      <div id="tabMyTask">
 		          <ul>
-	                   <li class="k-state-active">我的草稿<span style="color:red; margin-left:2px;">(6)</span></li>
-	                   <li>我的待批</li>
-	                   <li>我的退回</li>
-	                   <li>我的已批</li>
-	                   <li>系统提醒</li>
+	                   <li class="k-state-active">我的草稿<span style="color:red; margin-left:2px;" id="draft-length"></span></li>
+	                   <li>我的待批<span style="color:red; margin-left:2px;" id="inprogress-length"></span></li>
+	                   <li>我的退回<span style="color:red; margin-left:2px;" id="rejected-length"></span></li>
+	                   <li>我的已批<span style="color:red; margin-left:2px;" id="approved-length"></span></li>
+	                   <li>系统提醒<span style="color:red; margin-left:2px;" id="tip-length"></span></li>
                   </ul>
-                  <div><div id="mydraft"></div></div>
-                  <div></div>
-                  <div></div>
+                  <div><div id="draft"></div></div>
+                  <div><div id="inprogress"></div></div>
+                  <div><div id="rejected"></div></div>
+                  <div><div id="approved"></div></div>
+                  <div><div id="tip"></div></div>
                </div>
             </div>
 	    

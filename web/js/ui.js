@@ -202,24 +202,26 @@ function loadPage(page, parameters, popupDiv) {
 
 		if (!tabMyTask) {
 			$("#tabMyTask").kendoTabStrip({
-				select : function(e) {
-					
-					var text = e.item.innerText;
-					if (text == "我的草稿") {
-						initMyDraftTasks();
-					}else if (text == "我的待批") {
-						
-					}
-					console.log(e.item.innerText);
-				}
+	
 			});
 			
 			tabMyTask = $("#tabMyTask").data("kendoTabStrip");			
 			tabMyTask.select(0);
-			initMyDraftTasks();
+			initMyDraftTasks("draft", user.mytasks.draft);
+			initMyDraftTasks("inprogress", user.mytasks.inprogress);
+			initMyDraftTasks("rejected", user.mytasks.rejected);
+			initMyDraftTasks("approved", user.mytasks.approved);
+			initMyDraftTasks("tip", user.mytasks.tip);
+		
 		}
 		var tabMyTask = $("#tabMyTask").data("kendoTabStrip");
 
+		$("#draft-length").html("(" + user.mytasks.draftLength + ")");
+		$("#inprogress-length").html("(" + user.mytasks.inprogressLength + ")");
+		$("#rejected-length").html("(" + user.mytasks.rejectedLength + ")");
+		$("#approved-length").html("(" + user.mytasks.approvedLength + ")");
+		$("#tip-length").html("(0)");
+		
 	}else if(!page.endWith(".html")){
 		alert("暂未开放");
 	}else{
@@ -245,56 +247,62 @@ function loadPage(page, parameters, popupDiv) {
 	}
 }
 
-function initMyDraftTasks(){
-	
-	$("#mydraft").kendoGrid({
-		dataSource : user.mytasks.draft,
-		pageable : false,
-		selectable : "row",
-		columns : [ {
-			field : "db",
-			title : "我的模块",
-			template : function(dataItem){
-				
-				if(dataItem.db == "purchaseRequest"){
-					return "采购申请";
-				}
-				
-				if(dataItem.db == "purchaseBack"){
-					return "备货申请";
-				}
-				if(dataItem.db == "purchaseContract"){
-					return "采购合同";
-				}
-				if(dataItem.db == "purchaseOrder"){
-					return "采购订单";
-				}
-			}
-		}, {
-			field : "count",
-			title : "任务",
-			template : function(dataItem){
-				
-				if(dataItem.db == "purchaseRequest"){
-					return '<a onclick="loadTreePage(' + "'purchaseRequestByAssistant'" +')">' + dataItem.count + '</a>';
-				}
-				
-				if(dataItem.db == "purchaseBack"){
-					return '<a onclick="">' + dataItem.count + '</a>';
-				}
-				if(dataItem.db == "purchaseContract"){
-					return '<a onclick="">' + dataItem.count + '</a>';
-				}
-				if(dataItem.db == "purchaseOrder"){
-					return '<a onclick="">' + dataItem.count + '</a>';
-				}
-				
-			
-			}
-		}
-		]
+function initMyDraftTasks(id, data){
+	console.log(data);
 
-	});
+	if(!data || data.length==0){
+		$("#" +id).html("无数据");
+	}else{
+		$("#" +id).kendoGrid({
+			dataSource : data,
+			pageable : false,
+			selectable : "row",
+			columns : [ {
+				field : "db",
+				title : "我的模块",
+				template : function(dataItem){
+					
+					if(dataItem.db == "purchaseRequest"){
+						return "采购申请";
+					}
+					
+					if(dataItem.db == "purchaseBack"){
+						return "备货申请";
+					}
+					if(dataItem.db == "purchaseContract"){
+						return "采购合同";
+					}
+					if(dataItem.db == "purchaseOrder"){
+						return "采购订单";
+					}
+	
+				}
+			}, {
+				field : "count",
+				title : "任务",
+				template : function(dataItem){
+
+					if(dataItem.db == "purchaseRequest"){
+						return '<a onclick="loadTreePage(' + "'purchaseRequestByAssistant'" +')">' + dataItem.count + '</a>';
+					}
+					
+					if(dataItem.db == "purchaseBack"){
+						return '<a onclick="loadTreePage(' + "'purchaseBack'" +')">' + dataItem.count + '</a>';
+					}
+					if(dataItem.db == "purchaseContract"){
+						return '<a onclick="loadTreePage(' + "'purchasecontract'" +')">' + dataItem.count + '</a>';
+					}
+					if(dataItem.db == "purchaseOrder"){
+						return '<a onclick="loadTreePage(' + "'purchaseorder'" +')">'+ dataItem.count + '</a>';
+					}
+					
+				
+				}
+			}
+			]
+	
+		});
+	}
 }
 
 function getSelectedRowDataByGrid(gridId) {

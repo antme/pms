@@ -207,22 +207,48 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     }
     
     
-    public Map<String, Object> listMyTasks(){
-        List<Map<String, Object>> draftList = new ArrayList<Map<String, Object>>();
-        
-        
+    public Map<String, Object> listMyTasks() {
         Map<String, Object> myDraftPurchaseRequest = new HashMap<String, Object>();
+
         myDraftPurchaseRequest.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
         myDraftPurchaseRequest.put("status", PurchaseRequest.STATUS_DRAFT);
-       
-        getCount(draftList, myDraftPurchaseRequest, DBBean.PURCHASE_REQUEST);
-        getCount(draftList, myDraftPurchaseRequest, DBBean.PURCHASE_BACK);
-        getCount(draftList, myDraftPurchaseRequest, DBBean.PURCHASE_ORDER);
-        getCount(draftList, myDraftPurchaseRequest, DBBean.PURCHASE_CONTRACT);
-        
+
         Map<String, Object> result = new HashMap<String, Object>();
-        result.put("draft", draftList);
-         
+        queryTasks("draft", result, myDraftPurchaseRequest);
+
+        myDraftPurchaseRequest = new HashMap<String, Object>();
+        myDraftPurchaseRequest.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
+        myDraftPurchaseRequest.put("status", PurchaseRequest.STATUS_NEW);
+        queryTasks("inprogress", result, myDraftPurchaseRequest);
+
+        myDraftPurchaseRequest = new HashMap<String, Object>();
+        myDraftPurchaseRequest.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
+        myDraftPurchaseRequest.put("status", PurchaseRequest.STATUS_REJECTED);
+        queryTasks("rejected", result, myDraftPurchaseRequest);
+
+        myDraftPurchaseRequest = new HashMap<String, Object>();
+        myDraftPurchaseRequest.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
+        myDraftPurchaseRequest.put("status", PurchaseRequest.STATUS_APPROVED);
+        queryTasks("approved", result, myDraftPurchaseRequest);
+
+        return result;
+    }
+
+    private Map<String, Object> queryTasks(String key, Map<String, Object> result, Map<String, Object> query) {
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        
+
+        getCount(list, query, DBBean.PURCHASE_REQUEST);
+        getCount(list, query, DBBean.PURCHASE_BACK);
+        getCount(list, query, DBBean.PURCHASE_ORDER);
+        getCount(list, query, DBBean.PURCHASE_CONTRACT);
+        
+        result.put(key, list);
+        int count = 0;
+        for(Map<String, Object>  item: list){
+            count = count + Integer.parseInt(item.get("count").toString());
+        }
+        result.put(key + "Length", count);
         return result;
     }
 

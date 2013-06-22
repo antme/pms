@@ -430,14 +430,14 @@ function edit(data) {
 											* item.eqcostProductUnitPrice;
 
 									eqcostContractTotalMoney = eqcostContractTotalMoney
-											+ item.eqcostApplyAmount
+											+ item.eqcostAmount
 											* item.eqcostBasePrice;
-									item.eqcostContractTotalMoney = item.eqcostApplyAmount
+									item.eqcostContractTotalMoney = item.eqcostAmount
 											* item.eqcostBasePrice;
 
 									item.differenceAmount = item.eqcostApplyAmount
 											* item.eqcostProductUnitPrice
-											- item.eqcostApplyAmount
+											- item.eqcostAmount
 											* item.eqcostBasePrice;
 
 									if ( requestedTotalMoney != item.requestedTotalMoney
