@@ -12,6 +12,12 @@
 	    
 	    <div class="k-edit-form-container">
 	    	<div class="k-edit-label">
+	    		<label for="type">发货类型</label>
+	    	</div>
+	    	<div data-container-for="type" class="k-edit-field">
+	    		<input id="type" name="type" required="required" data-bind="value:type">
+	    	</div>
+	    	<div class="k-edit-label">
 	    		<label for="shipNo">编号</label>
 	    	</div>
 	    	<div data-container-for="shipNo" class="k-edit-field">
@@ -24,10 +30,22 @@
 	    		<input type="text" class="k-input k-textbox" name="applicationDepartment" required="required" data-bind="value:applicationDepartment">
 	    	</div>
 	    	<div class="k-edit-label">
+	    		<label for="warehouse">仓库</label>
+	    	</div>
+	    	<div data-container-for="warehouse" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox" name="warehouse" data-bind="value:warehouse">
+	    	</div>
+	    	<div class="k-edit-label">
 	    		<label for="salesContract">销售合同编号</label>
 	    	</div>
 	    	<div data-container-for="salesContract" class="k-edit-field">
 	    		<input id="salesContract" name="salesContract" required="required" data-bind="value:salesContractId">
+	    	</div>
+	    	<div class="k-edit-label">
+	    		<label for="projectName">项目名称</label>
+	    	</div>
+	    	<div data-container-for="projectName" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox" name="projectName" required="required" data-bind="value:projectName">
 	    	</div>
 	    	<div class="k-edit-label">
 	    		<label for="customer">客户名称</label>

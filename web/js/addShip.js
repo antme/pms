@@ -3,10 +3,14 @@ var model, eqDataSource, crudServiceBaseUrl = "../service";
 var ship = kendo.data.Model.define( {
     id: "_id",
     fields: {
+    	type: {},
     	shipNo: {},
     	applicationDepartment: {},
+    	warehouse: {},
     	salesContractId: {},
     	contractCode: {},
+    	projectId: {},
+    	projectName: {},
     	customer: {},
     	deliveryContact: {},
     	deliveryContactWay: {},
@@ -60,6 +64,18 @@ var listDataSource = new kendo.data.DataSource({
 
 $(document).ready(function() {
 	
+	var data = [
+                { text: "供应商直发", value: "供应商直发" },
+                { text: "非供应商直发", value: "非供应商直发" }
+            ];
+	
+	$("#type").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        optionLabel : "选择发货类型...",
+        dataSource: data
+    });
+	
 	$("#salesContract").kendoComboBox({
         placeholder: "销售合同编号",
         dataTextField: "contractCode",
@@ -84,6 +100,8 @@ $(document).ready(function() {
         change: function(e) {
         	var dataItem = this.dataItem();
         	if (dataItem) {
+        		model.set("projectId", dataItem.projectId);
+            	model.set("projectName", dataItem.projectName);
         		model.set("customer", dataItem.customer);
             	model.set("contractCode", dataItem.contractCode);
             	
