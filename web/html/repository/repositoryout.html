@@ -1,0 +1,35 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+<head>
+<style>
+.k-grid-toolbar {
+    height: 25px;
+}
+
+</style>
+
+
+<script type="text/javascript" src="js/repository/repositoryout.js"></script>
+<script type="text/javascript" src="js/common/process.js"></script>
+
+</head>
+
+<body>
+    <div id="purchaseorder" class="k-content">
+    
+    <div class="k-toolbar k-grid-toolbar">
+        <button access="purchase_request_management" class="k-button access" onclick="add();">新增</button>
+        <button access="purchase_request_management" class="k-button access" onclick="edit();">修改</button>
+        <button access="purchase_request_management" class="k-button access" onclick="cancel();">中止</button>
+        <button access="purchase_request_management" class="k-button access" onclick="confirm();">确认</button>
+    </div>
+        <div id="grid"></div>
+    </div>
+    <div id="approve" style="display:none;">
+           <label>备注:</label>
+           <textarea rows="8" cols="220" class="k-textbox  foredit" style="width:400px;" id="approve-comment"></textarea>
+           <br>
+           <button onclick="approveSubmit();">提交</button>
+     </div>
+</body>
+</html>
