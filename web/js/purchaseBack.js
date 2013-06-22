@@ -131,7 +131,7 @@ function destroy() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.pbStatus == "已保存") {
+	} else if(row.pbStatus == "草稿") {
 		$.ajax({
 			url : baseUrl+"/destroy",
 			success : function(responsetxt) {

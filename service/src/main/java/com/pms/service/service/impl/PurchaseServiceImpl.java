@@ -160,7 +160,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(PurchaseBack.paComment, params.get(PurchaseBack.paComment));
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.approved.toString());
 		obj.put(PurchaseBack.paApproveDate, DateUtil.getDateString(new Date()));
-		obj.putAll(countAllotEqcostList(params));
+		//obj.putAll(countAllotEqcostList(params));
 		return dao.updateById(obj, DBBean.PURCHASE_ALLOCATE);
 	}
 	

@@ -49,6 +49,8 @@ var projectModel = kendo.data.Model.define({
 			validation : {
 				required : true
 			}
+		},projectStatus: {
+			 defaultValue: "销售立项"
 		}
 	}
 
@@ -93,7 +95,7 @@ $(document).ready(function() {
 	//表单中的各种控件
 	$("#projectStatus").kendoDropDownList({
 		dataTextField : "text",
-		dataValueField : "value",
+		dataValueField : "text",
 		optionLabel : "选择项目状态...",
 		dataSource : proStatusItems
 	});

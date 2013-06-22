@@ -68,7 +68,7 @@ $(document).ready(function() {
 						dataSource : proStatusItems,
 						optionLabel : "...",
 						dataTextField : "text",
-						dataValueField : "value"
+						dataValueField : "text"
 					});
 				}
 			}

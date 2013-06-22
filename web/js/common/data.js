@@ -127,11 +127,13 @@ var executeType2 = [{text : "内部流程中"}, {text : "备货中"}, {text : "�
 //项目类型
 var proCategoryItems = [{ text: "产品", value: "产品" }, { text: "工程", value: "工程" }, { text: "服务", value: "服务" }];
 //项目状态
-var proStatusItems = [{ text: "正式立项", value: "正式立项" }, { text: "预立项", value: "预立项" }, { text: "内部立项", value: "内部立项" }];
+var proStatusItems = [{ text: "正式立项"}, { text: "预立项"}, { text: "销售立项"}];
 
 
 //备货申请 - 采购类别
 var pbTypeItems = [{ text: "上海代理产品采购"}, { text: "同方自主产品采购"}, { text: "其它渠道采购"}];
+
+var departmentItems =  [{ text: "销售部"}, { text: "工程部"}, { text: "产品部"} , { text: "服务部"}];
 
 
 var proManagerItems = new kendo.data.DataSource({
