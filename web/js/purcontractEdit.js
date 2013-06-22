@@ -167,7 +167,8 @@ var itemDataSource = new kendo.data.DataSource({
 	schema : {
 		model : model
 	},
-	batch : true
+	batch : true,
+	group: { field: "purchaseOrderCode" }
 });
 
 
@@ -291,6 +292,11 @@ function edit(data) {
 	if (!$("#purchasecontract-edit-grid").data("kendoGrid")) {
 		$("#purchasecontract-edit-grid").kendoGrid({
 			dataSource : itemDataSource,
+			 groupable: {
+				    messages: {
+				      empty: "拖动订单编号到此可以分组操作"
+				    }
+			 },
 			columns : [ {
 				field : "eqcostNo",
 				title : "货品编号",
