@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dom4j.tree.AbstractProcessingInstruction;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
@@ -64,6 +65,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             data.put("supplierName", supplier.get("supplierName"));
         }
         
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(SalesContractBean.SC_ID, "51b8045cba339c5e77197ea7");
+        listEqcostListForShipByScID(params);
         Map<String, Object> scList =   listSalesContractsForShipSelect(null);
         logger.info(scList);
         
@@ -123,7 +127,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     }
     
-    public Map<String, Object> listSalesContractsForShipSelect(HashMap<String, Object> params) {
+    public Map<String, Object> listSalesContractsForShipSelect(Map<String, Object> params) {
 
         
 //        if(params.get("type") ==null ){
@@ -162,6 +166,56 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return scList;
 
     }
+    
+    public Map<String, Object> listEqcostListForShipByScID(Map<String, Object> params) {
+
+        // String scId = params.get(SalesContractBean.SC_ID).toString();
+//        String type = params.get("type").toString();
+
+        Map<String, Object> query = new HashMap<String, Object>();
+        // query.put(PurchaseCommonBean.PROCESS_STATUS,
+        // PurchaseCommonBean.STATUS_OUT_REPOSITORY);
+        query.put("eqcostList.scId", params.get(SalesContractBean.SC_ID));
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList" });
+        List<Object> scResults = this.dao.listLimitKeyValues(query, DBBean.REPOSITORY);
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> scQuery = new HashMap<String, Object>();
+        scQuery.put(ApiConstants.LIMIT_KEYS, new String[] {  SalesContractBean.SC_PROJECT_ID });
+        scQuery.put(ApiConstants.MONGO_ID, params.get(SalesContractBean.SC_ID));
+        Map<String, Object> map = this.dao.findOneByQuery(scQuery, DBBean.SALES_CONTRACT);
+
+        Map<String, Object> customers = this.dao.listToOneMapAndIdAsKey(null, DBBean.CUSTOMER);
+
+        List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
+        for (Object eq : scResults) {
+            List<Map<String, Object>> eqMaps = (List<Map<String, Object>>) eq;
+            
+            for (Map<String, Object> eqmap : eqMaps) {
+                if (eqmap.get(SalesContractBean.SC_ID).toString().equalsIgnoreCase(params.get(SalesContractBean.SC_ID).toString())) {
+                    eqList.add(eqmap);
+                }
+            }
+        }
+        
+        Map<String, Object> proQuery = new HashMap<String, Object>();
+        proQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_CUSTOMER });
+        proQuery.put(ApiConstants.MONGO_ID, map.get(SalesContractBean.SC_PROJECT_ID));
+        Map<String, Object> project = this.dao.findOneByQuery(proQuery, DBBean.PROJECT);
+        
+        Map<String, Object> eqResult = new HashMap<String, Object>();
+        eqResult.put(SalesContractBean.SC_CUSTOMER_ID, project.get(ProjectBean.PROJECT_CUSTOMER ));
+        Map<String, Object> customer = (Map<String, Object>) customers.get(project.get(ProjectBean.PROJECT_CUSTOMER ));
+        eqResult.put("customerName", customer.get(CustomerBean.NAME));
+        eqResult.put(SalesContractBean.SC_PROJECT_ID, map.get(SalesContractBean.SC_PROJECT_ID));
+        eqResult.put(SalesContractBean.SC_EQ_LIST, eqList);
+        
+        logger.info(eqResult);
+        
+        return eqResult;
+    }
+    
+    
     
     public Map<String, Object> listContractsByProjectAndSupplier(Map<String, Object> params) {
         Map<String, Object> query = new HashMap<String, Object>();
@@ -583,7 +637,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> listRepositoryRequests(Map<String, Object> params) {
         return this.dao.list(params, DBBean.REPOSITORY);
     }
-    public Map<String, Object> listRepositoryByProjectId(HashMap<String, Object> params){
+    public Map<String, Object> listRepositoryByProjectId(Map<String, Object> params){
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_IN_REPOSITORY);
         query.put(PurchaseRequest.PROJECT_ID, params.get(PurchaseRequest.PROJECT_ID));
@@ -653,7 +707,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
     }
     
-    public Map<String, Object> listProjectsFromRepositoryIn(HashMap<String, Object> params) {
+    public Map<String, Object> listProjectsFromRepositoryIn(Map<String, Object> params) {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_IN_REPOSITORY);
         query.put(ApiConstants.LIMIT_KEYS, PurchaseRequest.PROJECT_ID);
@@ -672,7 +726,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return null;
     }
     
-    public Map<String, Object> cancelRepositoryRequest(HashMap<String, Object> params){
+    public Map<String, Object> cancelRepositoryRequest(Map<String, Object> params){
         return processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_CANCELLED);
     }
     
@@ -774,5 +828,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public void setBackService(IPurchaseService backService) {
         this.backService = backService;
     }
+
+
+
 
 }
