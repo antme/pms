@@ -15,6 +15,20 @@ var userRoles = undefined;
 
 var user = undefined;
 
+var listUrl;
+
+var commonListOptions = {
+		schema : {
+			total: "total", // total is returned in the "total" field of the response
+			data: "data"
+		},
+		pageSize: 10,
+		serverPaging: true,
+		serverSorting: true,
+		serverFiltering : true
+}
+
+
 
 //定义菜单所需权限，目前写死在JS文件中, KEY对应menus变量中的菜单ID
 var accessRoles = {

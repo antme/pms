@@ -2,6 +2,22 @@ listUrl = "/service/purcontract/order/list";
 var approveUrl = "/service/purcontract/order/approve";
 var rejectUrl = "/service/purcontract/order/reject";
 
+
+var gridOptions = {
+		transport : {
+			read : {
+				url : listUrl,
+				dataType : "jsonp",
+				type : "post"
+			}
+		}
+}
+gridOptions =  $.extend( gridOptions, commonListOptions);
+
+//外面列表页的datasource对象
+var listDataSource = new kendo.data.DataSource(gridOptions);
+
+
 $(document).ready(function() {
 	checkRoles();
 	

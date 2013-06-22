@@ -56,6 +56,38 @@ $(document).ready(function() {
 function checkStatus(data) {
 	loadPage("purchaseorder", null);
 }
+
+
+
+//编辑页面数据同步对象
+var itemDataSource = new kendo.data.DataSource({
+	transport : {
+		update : {
+			url : saveUrl,
+			dataType : "jsonp",
+			type : "post"
+		},
+		create : {
+			url : addUrl,
+			dataType : "jsonp",
+			type : "post"
+		},
+		parameterMap : function(options, operation) {
+			if (operation !== "read" && options.models) {
+				return {
+					// 解析成json_p模式
+					json_p : kendo.stringify(requestDataItem),
+					mycallback : "checkStatus"
+				}
+			}
+		}
+	},
+	batch : true,
+	schema : {
+		model : model
+	}
+});
+
 // 计算成本数据的datasouce
 var sumDataSource = new kendo.data.DataSource({
 
