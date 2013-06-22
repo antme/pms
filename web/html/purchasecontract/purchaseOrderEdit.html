@@ -39,13 +39,20 @@ label{
   
              <div>
                 <table style="width: 80%">
-                    <tr>
+                    
+                     <tr>
+                        <td>申请编号：<strong><span data-bind="text: purchaseRequestCode" ></span></strong></td>                    
                         <td>项目名： <strong><span data-bind="text: projectName"></span></strong></td>   
-                        <td>项目编号： <strong><span data-bind="text: projectCode"></span></strong></td>
+                        <td>项目负责人： <strong><span data-bind="text: projectManager"></span></strong></td>
                         <td>合同编号： <strong><span data-bind="text: salesContractCode"></span></strong></td>
-                        <td>客户名称： <strong><span data-bind="text: customer"></span></strong></td>
-                        <td>申请编号：<strong><span data-bind="text: purchaseOrderCode" ></span></strong></td>
-                        <td>状态：<span data-bind="text: status" ></span></td>
+                        <td>客户名称： <strong><span data-bind="text: customer"></span></strong></td>                  
+                    </tr>
+                    <tr>
+                        <td>申请部门：<strong><span data-bind="text: pbDepartment" ></span></strong></td>
+                        <td>状态：<strong><span data-bind="text: status" ></span></strong></td>
+                        <td> 到货要求日期: <span data-bind="text: pbPlanDate" class="foredit"  ></span></td>
+                        <td> 申请日期: <span data-bind="text: requestedDate" class="foredit"  ></span></td>
+                        <td> 采购类别: <span data-bind="text: pbType" class="foredit"  ></span></td>
                     </tr>
                 </table>
             </div>

@@ -64,6 +64,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             data.put("supplierName", supplier.get("supplierName"));
         }
         
+        Map<String, Object> scList =   listSalesContractsForShipSelect(null);
+        logger.info(scList);
+        
         return results;
         
     }
@@ -117,6 +120,46 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> suppliers = this.dao.list(supplierQuery, DBBean.SUPPLIER);
 
         return suppliers;
+
+    }
+    
+    public Map<String, Object> listSalesContractsForShipSelect(HashMap<String, Object> params) {
+
+        
+//        if(params.get("type") ==null ){
+//            return new HashMap<String, Object>();
+//        }        query.put("type", value)
+
+        
+        Map<String, Object> query = new HashMap<String, Object>();
+//        query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_OUT_REPOSITORY);
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.scId", "eqcostList.projectId"});
+        Set<Object> scIdsList = new HashSet();
+        
+        String db  = DBBean.REPOSITORY;
+//        if(params.get("type").toString().equalsIgnoreCase("1")){
+//            db = DBBean.REPOSITORY
+//        }
+ 
+        List<Object> scResults = this.dao.listLimitKeyValues(query, DBBean.REPOSITORY);
+        
+        //2个LIMIT_KEYS字段以上是返回的list中的对象是MAP
+        for(Object sc: scResults){
+            Map<String, Object> scMap = (Map<String, Object>) sc;
+            List<Map<String, Object>> list = (List<Map<String, Object>>) scMap.get(SalesContractBean.SC_EQ_LIST);
+            for(Map<String, Object> eqsc: list){
+                scIdsList.add(eqsc.get(SalesContractBean.SC_ID));
+            }
+            
+        }
+        
+        
+        Map<String, Object> scQuery = new HashMap<String, Object>();
+        scQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(scIdsList)));
+        scQuery.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID});
+        Map<String, Object> scList = this.dao.list(scQuery, DBBean.SALES_CONTRACT);
+   
+        return scList;
 
     }
     

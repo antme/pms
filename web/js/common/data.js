@@ -77,7 +77,7 @@ var menus = [
                      { text: "采购订单", id: "purchaseorder",  imageUrl: "/images/porder.png"},
                      { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
                      { text: "入库申请单", id: "repository", imageUrl: "/images/repository.png" },
-                     { text: "出库申请单", id: "repositoryOut", imageUrl: "/images/rout.png"}
+                     { text: "直发出入库申请单", id: "repositoryOut", imageUrl: "/images/rout.png"}
                  ]
              },                                               
              {

@@ -18,6 +18,8 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listContractsByProjectAndSupplier(Map<String, Object> params);
     
+    public Map<String, Object> listSalesContractsForShipSelect(HashMap<String, Object> params);    
+    
     public void deletePurchaseContract(Map<String, Object> contract);
     
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract);
@@ -102,10 +104,5 @@ public interface IPurchaseContractService {
 
     public Map<String, Object> listProjectsFromRepositoryIn(HashMap<String, Object> parserJsonParameters);
 
-   
-
-    
-
-   
 
 }
