@@ -9,9 +9,9 @@ import java.util.Map;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
-import com.pms.service.mockbean.BorrowingBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
+import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
@@ -83,8 +83,11 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		// 已批准的 调拨申请的 设备清单
 		Map<String, Double> alloEqList = purchaseService.getAllotEqCountBySalesContractId(saleId);
 		
+		params.put("scId", saleId);
+		Map<String, Object> map = pService.listEqcostListForShipByScIDAndType(params);
+		
 		// 已批准的 采购合同 的设备清单
-		List<Map<String, Object>> purchaseEqList = pService.listApprovedPurchaseContractCosts(saleId);
+		List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
 		
 		// 已发货的设备清单
 		List<Map<String, Object>> shipedEqList = shipedList(saleId);
@@ -140,7 +143,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		
-		parameters.put(ShipBean.SHIP_STATUS, 2);
+		parameters.put(ShipBean.SHIP_STATUS, "2");
 		parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, saleId);
 		
 		Map<String, Object> result = dao.list(parameters, DBBean.SHIP);

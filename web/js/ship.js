@@ -42,7 +42,21 @@ $(document).ready(function () {
         pageable: true,
         selectable: "row",
         columns: [
-            { field:"type", title: "类型" },
+            {
+            	field:"type",
+            	title: "类型",
+            	template:function(dataItem) {
+					var name = "";
+					if (dataItem.type == 0){
+						name = "供应商直发";
+					} else if (dataItem.type == 1){
+						name = "非供应商直发";
+					} else {
+						name = "未知";
+					}
+					return name;
+				}
+            },
             { field:"applicationDepartment", title: "申请部门" },
             { field: "applicationDate", title:"申请日期" },
             {
