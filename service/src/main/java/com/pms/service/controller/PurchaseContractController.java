@@ -47,7 +47,7 @@ public class PurchaseContractController extends AbstractController {
     }
     
     
-    @RequestMapping("/repository/select_ss_forship")
+    @RequestMapping("/repository/select_sc_forship")
     public void listSalesContractsForShipSelect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listSalesContractsForShipSelect(parserJsonParameters(request, false)), request, response);
     }
