@@ -199,7 +199,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         
         Map<String, Object> proQuery = new HashMap<String, Object>();
-        proQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_CUSTOMER });
+        proQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_NAME });
         proQuery.put(ApiConstants.MONGO_ID, map.get(SalesContractBean.SC_PROJECT_ID));
         Map<String, Object> project = this.dao.findOneByQuery(proQuery, DBBean.PROJECT);
         
@@ -207,7 +207,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         eqResult.put(SalesContractBean.SC_CUSTOMER_ID, project.get(ProjectBean.PROJECT_CUSTOMER ));
         Map<String, Object> customer = (Map<String, Object>) customers.get(project.get(ProjectBean.PROJECT_CUSTOMER ));
         eqResult.put("customerName", customer.get(CustomerBean.NAME));
-        eqResult.put(SalesContractBean.SC_PROJECT_ID, map.get(SalesContractBean.SC_PROJECT_ID));
+        eqResult.put(SalesContractBean.SC_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
+        eqResult.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
         eqResult.put(SalesContractBean.SC_EQ_LIST, eqList);
         
         logger.info(eqResult);
