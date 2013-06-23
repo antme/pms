@@ -76,11 +76,18 @@ public class SalesContractController extends AbstractController {
         responseWithData(salesContractService.addInvoiceForSC(params), request, response);
     }
     
+    @RequestMapping("/invoice/load")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    public void loadInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.loadInvoiceForSC(params), request, response);
+    }
+    
     @RequestMapping("/invoice/update")
     @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void updateInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(salesContractService.addInvoiceForSC(params), request, response);
+        responseWithData(salesContractService.approveInvoiceForSC(params), request, response);
     }
     
     @RequestMapping("/invoice/list")
