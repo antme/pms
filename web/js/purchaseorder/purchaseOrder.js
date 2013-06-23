@@ -1,22 +1,22 @@
-var listUrl = "/service/purcontract/order/list";
+listUrl = "/service/purcontract/order/list";
 var approveUrl = "/service/purcontract/order/approve";
 var rejectUrl = "/service/purcontract/order/reject";
 
-// 外面列表页的datasource对象
-var dataSource = new kendo.data.DataSource({
-	transport : {
-		read : {
-			url : listUrl,
-			dataType : "jsonp",
-			type : "post"
+
+var gridOptions = {
+		transport : {
+			read : {
+				url : listUrl,
+				dataType : "jsonp",
+				type : "post"
+			}
 		}
-	},
-	schema : {
-		total: "total", // total is returned in the "total" field of the response
-		data: "data"
-	},
-	pageSize : 20
-});
+}
+gridOptions =  $.extend( gridOptions, commonListOptions);
+
+//外面列表页的datasource对象
+var listDataSource = new kendo.data.DataSource(gridOptions);
+
 
 $(document).ready(function() {
 	checkRoles();
@@ -24,7 +24,7 @@ $(document).ready(function() {
 	if ($("#grid").length > 0) {
 		// 初始化采购订单列表页
 		$("#grid").kendoGrid({
-			dataSource : dataSource,
+			dataSource : listDataSource,
 			pageable : true,
 			selectable : "row",
 			sortable : true,

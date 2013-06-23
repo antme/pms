@@ -72,7 +72,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		newObj.put(PurchaseBack.scCode, sc.get(SalesContractBean.SC_CODE));
 		
 		if(params.get(PurchaseBack.pbCode) == null) {
-			newObj.put(PurchaseBack.pbCode, produceCode("PB",DBBean.PURCHASE_BACK));
+			newObj.put(PurchaseBack.pbCode, generateCode("BHSQ", DBBean.PURCHASE_BACK));
 		}
 		
 		if(params.get(ApiConstants.MONGO_ID) == null){
@@ -100,7 +100,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		newObj.put(PurchaseBack.scCode, sc.get(SalesContractBean.SC_CODE));
 		
 		if(params.get(PurchaseBack.pbCode) == null) {
-			newObj.put(PurchaseBack.pbCode, produceCode("PB",DBBean.PURCHASE_BACK));
+			newObj.put(PurchaseBack.pbCode, generateCode("BHSQ", DBBean.PURCHASE_BACK));
 		}
 		
 		dao.updateCount(ApiConstants.MONGO_ID, params.get(PurchaseBack.scId), SalesContractBean.SC_BACK_REQUEST_COUNT, DBBean.SALES_CONTRACT, 1);
@@ -132,7 +132,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
 		obj.put(PurchaseBack.paSubmitDate, DateUtil.getDateString(new Date()));
 		obj.put(PurchaseBack.paShelfCode, params.get(PurchaseBack.paShelfCode));
-		obj.put(PurchaseBack.paCode, produceCode("PA",DBBean.PURCHASE_ALLOCATE));
+		obj.put(PurchaseBack.paCode, generateCode("DBSQ", DBBean.PURCHASE_ALLOCATE));
 		obj.putAll(countAllotEqcostList(params));
 		return dao.add(obj, DBBean.PURCHASE_ALLOCATE);
 	}
@@ -258,11 +258,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		dao.deleteByIds(ids, DBBean.PURCHASE_BACK);
 	}
 
-	private String produceCode(String flag,String db){
-		String str = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
-		if(flag !=null) str = flag + str.substring(2);
-		return str;
-	}
 	
 	private Map<String,Object> mergeSalesContract(Map<String,Object> params){
 		String saleId = (String)params.get(PurchaseBack.scId);

@@ -61,44 +61,6 @@ $(document).ready(function() {
 		}
 	});
 	
-	if (!$("#purchasecontractin").data("kendoMultiSelect")) {
-		$("#purchasecontractin").kendoMultiSelect({
-			dataTextField : "purchaseOrderCode",
-			dataValueField : "_id",
-			placeholder : "选择采购订单...",
-			dataSource : {
-				transport : {
-					read : {
-						dataType : "jsonp",
-						url : "/service/purcontract/order/select/list",
-					}
-				},
-				schema : {
-					total: "total", // total is returned in the "total" field of the response
-					data: "data"
-				}
-			}
-		});
-	}
-
-	
-
-	$("#supplierName").kendoDropDownList({
-		dataTextField : "supplierName",
-		dataValueField : "_id",
-		dataSource : {
-			transport : {
-				read : {
-					dataType : "jsonp",
-					url : "/service/suppliers/list"
-				}
-			},
-			schema : {
-				total: "total", // total is returned in the "total" field of the response
-				data: "data"
-			}
-		}
-	});
 	
 	$("#purchaseContractType").kendoDropDownList({
 		dataTextField : "text",
@@ -127,6 +89,26 @@ $(document).ready(function() {
 		}
 	});
 	
+
+	
+
+	$("#supplierName").kendoDropDownList({
+		dataTextField : "supplierName",
+		dataValueField : "_id",
+		dataSource : {
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "/service/suppliers/list"
+				}
+			},
+			schema : {
+				total: "total", // total is returned in the "total" field of the response
+				data: "data"
+			}
+		}
+	});
+	
 	$("#executeStatus").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "text",
@@ -134,8 +116,33 @@ $(document).ready(function() {
 	});
 		
 	if (redirectParams) {
+		$("#purchasecontract-edit-item").show();
 		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
-	} 
+	} else{
+
+		if (!$("#purchasecontractin").data("kendoMultiSelect")) {
+			$("#purchasecontractin").kendoMultiSelect({
+				dataTextField : "purchaseOrderCode",
+				dataValueField : "_id",
+				placeholder : "选择采购订单...",
+				dataSource : {
+					transport : {
+						read : {
+							dataType : "jsonp",
+							url : "/service/purcontract/order/select/list",
+						}
+					},
+					schema : {
+						total: "total", // total is returned in the "total" field of the response
+						data: "data"
+					}
+				}
+			});
+		}
+
+		$("#purchasecontract-edit-header").show();
+		$("#purchasecontract-edit-item").hide();
+	}
 	
 });
 
@@ -167,7 +174,8 @@ var itemDataSource = new kendo.data.DataSource({
 	schema : {
 		model : model
 	},
-	batch : true
+	batch : true,
+	group: { field: "purchaseOrderCode" }
 });
 
 
@@ -176,32 +184,39 @@ var itemListDataSource = new kendo.data.DataSource({
 });
 
 function save(status) {
-	if(!requestDataItem.status){
-		requestDataItem.status = "草稿";
-	}
-	if(status){
-		requestDataItem.status = status;
-	}
-	
-	if(itemDataSource.at(0)){
-		//force set haschanges = true
-		itemDataSource.at(0).set("uid", kendo.guid());
+	var validator = $("#purchasecontract-edit-item").kendoValidator().data("kendoValidator");
+	if (validator.validate()) {
+
+		if (!itemDataSource.at(0)) {
+			alert("没有任何设备清单数据");
+		} else {
+			if (!requestDataItem.status) {
+				requestDataItem.status = "草稿";
+			}
+			if (status) {
+				requestDataItem.status = status;
+			}
+
+			if (itemDataSource.at(0)) {
+				// force set haschanges = true
+				itemDataSource.at(0).set("uid", kendo.guid());
+			}
+
+			if (requestDataItem.supplierName
+					&& requestDataItem.supplierName._id) {
+				requestDataItem.supplier = requestDataItem.supplier._id
+			}
+
+			if (!requestDataItem.supplier) {
+				var dl = $("#supplierName").data("kendoDropDownList");
+				requestDataItem.supplier = dl.dataSource.at(0)._id;
+			}
+
+			// 同步数据
+			itemDataSource.sync();
+		}
 	}
 
-	
-	if(requestDataItem.supplierName && requestDataItem.supplierName._id){
-		requestDataItem.supplier= requestDataItem.supplier._id
-	}
-	
-	if(!requestDataItem.supplier){
-		var dl = $("#supplierName").data("kendoDropDownList");
-		requestDataItem.supplier = dl.dataSource.at(0)._id;
-	}
-
-	// 同步数据
-	itemDataSource.sync();
-	
-	
 }
 
 function checkStatus() {
@@ -291,6 +306,11 @@ function edit(data) {
 	if (!$("#purchasecontract-edit-grid").data("kendoGrid")) {
 		$("#purchasecontract-edit-grid").kendoGrid({
 			dataSource : itemDataSource,
+			 groupable: {
+				    messages: {
+				      empty: "拖动订单编号到此可以分组操作"
+				    }
+			 },
 			columns : [ {
 				field : "eqcostNo",
 				title : "货品编号",

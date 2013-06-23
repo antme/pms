@@ -15,6 +15,20 @@ var userRoles = undefined;
 
 var user = undefined;
 
+var listUrl;
+
+var commonListOptions = {
+		schema : {
+			total: "total", // total is returned in the "total" field of the response
+			data: "data"
+		},
+		pageSize: 10,
+		serverPaging: true,
+		serverSorting: true,
+		serverFiltering : true
+}
+
+
 
 //定义菜单所需权限，目前写死在JS文件中, KEY对应menus变量中的菜单ID
 var accessRoles = {
@@ -77,7 +91,7 @@ var menus = [
                      { text: "采购订单", id: "purchaseorder",  imageUrl: "/images/porder.png"},
                      { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
                      { text: "入库申请单", id: "repository", imageUrl: "/images/repository.png" },
-                     { text: "出库申请单", id: "repositoryOut", imageUrl: "/images/rout.png"}
+                     { text: "直发出入库申请单", id: "repositoryOut", imageUrl: "/images/rout.png"}
                  ]
              },                                               
              {
@@ -135,8 +149,15 @@ var pbTypeItems = [{ text: "上海代理产品采购"}, { text: "同方自主产
 
 var departmentItems =  [{ text: "销售部"}, { text: "工程部"}, { text: "产品部"} , { text: "服务部"}];
 
+// 调拨类型
+var allotTypeItems = [{ text: "借货调拨"}, { text: "还货调拨"}, { text: "备货调拨"}];
+
+// 发货类型
+var shipTypeItems = [{ text: "供应商直发", value: 0 }, { text: "非供应商直发", value: 1 }];
+
 //货架编号
 var shelfCodeItems =  [{ text: "北京备货货架"}, { text: "上海备货货架"}];
+
 var proManagerItems = new kendo.data.DataSource({
 	transport : {
 		read : {

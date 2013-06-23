@@ -9,6 +9,14 @@ public class ShipBean {
     public static final String SHIP_DATE = "applicationDate"; // 申请日期
     
     public static final String SHIP_STATUS = "status"; // 申请状态
+    
+    public static final String SHIP_TYPE = "type"; // 申请类型	- 直发 or 非直发
+    
+    public static final String SHIP_WAREHOUSE = "warehouse"; // 仓库
+    
+    public static final String SHIP_PROJECT_ID = "projectId"; // 项目数据库id-外键
+    
+    public static final String SHIP_PROJECT_NAME = "projectName"; // 项目名称
 
     public static final String SHIP_SALES_CONTRACT_ID = "salesContractId"; // 销售合同数据库id-外键
     

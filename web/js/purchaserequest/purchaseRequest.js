@@ -7,32 +7,26 @@ var approveUrl = "/service/purcontract/request/approve";
 var rejectUrl = "/service/purcontract/request/reject";
 var cancelUrl = "/service/purcontract/request/cancel";
 
-// 外面列表页的datasource对象
-var dataSource = new kendo.data.DataSource({
-	transport : {
-		read : {
-			url : listUrl,
-			dataType : "jsonp",
-			type : "post"
+var gridOptions = {
+		transport : {
+			read : {
+				url : listUrl,
+				dataType : "jsonp",
+				type : "post"
+			}
 		}
-	},
-	schema : {
-		total: "total", // total is returned in the "total" field of the response
-		data: "data"
-	},
-    pageSize: 10,
-	serverPaging: true,
-	serverSorting: true,
-	serverFiltering : true
-});
+}
+gridOptions =  $.extend( gridOptions, commonListOptions);
+
+//外面列表页的datasource对象
+var listDataSource = new kendo.data.DataSource(gridOptions);
 
 $(document).ready(function() {
 	checkRoles();
-	
 	if ($("#grid").length > 0) {
 		// 初始化采购订单列表页
 		$("#grid").kendoGrid({
-			dataSource : dataSource,
+			dataSource : listDataSource,
 			pageable : true,
 		    sortable : true,
 			filterable : filterable,
@@ -91,14 +85,19 @@ $(document).ready(function() {
 });
 
 function edit() {
+	console.log(".................");
 	// 如果是从订单列表页点击edit过来的数据
-	var row = getSelectedRowDataByGrid("grid");	
-	if(row.status=="审批通过"){
-		alert("已审批通过，不允许编辑, 请先废止再编辑!");
-	}else{
-		loadPage("html/purchasecontract/purchaseRequestEdit.html", {
-			_id : row._id
-		});
+	var row = getSelectedRowDataByGridWithMsg("grid");
+
+	console.log(row);
+	if (row) {
+		if (row.status == "审批通过") {
+			alert("已审批通过，不允许编辑, 请先废止再编辑!");
+		} else {
+			loadPage("html/purchasecontract/purchaseRequestEdit.html", {
+				_id : row._id
+			});
+		}
 	}
 }
 

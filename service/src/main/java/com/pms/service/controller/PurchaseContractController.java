@@ -47,6 +47,17 @@ public class PurchaseContractController extends AbstractController {
     }
     
     
+    @RequestMapping("/repository/select_sc_forship")
+    public void listSalesContractsForShipSelect(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listSalesContractsForShipSelect(parserJsonParameters(request, false)), request, response);
+    }
+    
+    
+    @RequestMapping("/repository/eqcostList/forship/select_by_scid")
+    public void listEqcostListForShipByScID(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listEqcostListForShipByScIDAndType(parserJsonParameters(request, false)), request, response);
+    }
+    
     @RequestMapping("/get")
     public void getPurchaseContract(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.getPurchaseContract(parserJsonParameters(request, false)), request, response, "save_success");

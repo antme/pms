@@ -3,10 +3,15 @@ var model, eqDataSource, crudServiceBaseUrl = "../service";
 var ship = kendo.data.Model.define( {
     id: "_id",
     fields: {
+    	type: {},
     	shipNo: {},
     	applicationDepartment: {},
+    	warehouse: {},
     	salesContractId: {},
     	contractCode: {},
+    	contractType: {},
+    	projectId: {},
+    	projectName: {},
     	customer: {},
     	deliveryContact: {},
     	deliveryContactWay: {},
@@ -60,7 +65,32 @@ var listDataSource = new kendo.data.DataSource({
 
 $(document).ready(function() {
 	
-	$("#salesContract").kendoComboBox({
+	var data = [
+                { text: "供应商直发", value: 0 },
+                { text: "非供应商直发", value: 1 }
+            ];
+	
+	var dropdownlist = $("#type").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        optionLabel : "选择发货类型...",
+        dataSource: data,
+        change: function(e) {
+        	salesContract.value(null);
+        	salesContract.dataSource.read();
+        	salesContract.readonly(false);
+        }
+    }).data("kendoDropDownList");
+	
+	applicationDepartment = $("#applicationDepartment").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "text",
+        optionLabel : "选择申请部门...",
+        dataSource: departmentItems
+    });
+	
+	var salesContract = $("#salesContract").kendoComboBox({
+		autoBind: false,
         placeholder: "销售合同编号",
         dataTextField: "contractCode",
         dataValueField: "_id",
@@ -69,10 +99,12 @@ $(document).ready(function() {
         dataSource: new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: crudServiceBaseUrl + "/sc/list",
+                    url: crudServiceBaseUrl + "/purcontract/repository/select_sc_forship",
                     dataType: "jsonp",
     	            data: {
-    	            	limit: 0
+    	            	type: function() {
+                            return dropdownlist.value();
+                        }
     	            }
                 }
             },
@@ -84,8 +116,11 @@ $(document).ready(function() {
         change: function(e) {
         	var dataItem = this.dataItem();
         	if (dataItem) {
-        		model.set("customer", dataItem.customer);
+        		model.set("projectId", dataItem.projectId);
+            	model.set("projectName", dataItem.projectName);
+        		model.set("customer", dataItem.customerName);
             	model.set("contractCode", dataItem.contractCode);
+            	model.set("contractType", dataItem.contractType);
             	
             	var salesContractId = this.value();
             	
@@ -95,7 +130,10 @@ $(document).ready(function() {
             	            url: crudServiceBaseUrl + "/ship/eqlist",
             	            dataType: "jsonp",
             	            data: {
-            	            	salesContractId: salesContractId
+            	            	salesContractId: salesContractId,
+            	            	type: function() {
+                                    return dropdownlist.value();
+                                }
             	            }
             	        }
             	    },
@@ -113,7 +151,8 @@ $(document).ready(function() {
 				this.text("");
 			}
         }
-    });
+    }).data("kendoComboBox");
+	salesContract.readonly();
 	
 	$("#equipments-grid").kendoGrid({
 	    toolbar: [ { name: "cancel", text: "撤销编辑" } ],

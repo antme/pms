@@ -26,6 +26,7 @@ $(document).ready(function () {
         	model: {
                 id: "_id",
                 fields: {
+                	type: {},
                 	applicationDepartment: {},
                 	applicationDate: {},
                 	contractCode: {},
@@ -41,6 +42,21 @@ $(document).ready(function () {
         pageable: true,
         selectable: "row",
         columns: [
+            {
+            	field:"type",
+            	title: "类型",
+            	template:function(dataItem) {
+					var name = "";
+					if (dataItem.type == 0){
+						name = "供应商直发";
+					} else if (dataItem.type == 1){
+						name = "非供应商直发";
+					} else {
+						name = "未知";
+					}
+					return name;
+				}
+            },
             { field:"applicationDepartment", title: "申请部门" },
             { field: "applicationDate", title:"申请日期" },
             {
@@ -72,8 +88,8 @@ $(document).ready(function () {
 					}
 					return name;
 				}
-            },
-            { command: ["destroy"], title: "&nbsp;", width: "160px" }],
+            }
+        ],
         editable: "popup"
     });
 });
@@ -87,6 +103,20 @@ function toolbar_edit() {
 	if (rowData) {
 		if (rowData.status == 0 || rowData.status == -1){
 			loadPage("addShip",{_id:rowData._id});
+		} else {
+			alert("无法执行该操作");
+		}
+	}
+}
+
+function toolbar_delete() {
+	var rowData = getSelectedRowDataByGridWithMsg("grid");
+	if (rowData) {
+		if (rowData.status == 0){
+			if(confirm('确实要删除该内容吗?')) {
+				dataSource.remove(rowData);
+				dataSource.sync();
+			}
 		} else {
 			alert("无法执行该操作");
 		}

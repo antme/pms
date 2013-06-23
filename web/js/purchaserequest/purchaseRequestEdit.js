@@ -1,80 +1,16 @@
 //添加采购申请的时候先选择备货申请
 var selectBackUrl = "/service/purcontract/back/select/list";
-var editUrl = "/service/purcontract/request/get";
-var saveUrl =  "/service/purcontract/request/update";
-var addUrl =  "/service/purcontract/request/add";
+editUrl = "/service/purcontract/request/get";
+saveUrl =  "/service/purcontract/request/update";
+addUrl =  "/service/purcontract/request/add";
 var getSelectUrl = "/service/purcontract/back/get";
-
-//抽象model对象， datasource对象必须绑定一个model为了方便解析parameterMap中需要提交的参数
-var model = kendo.data.Model.define({
-	id : "_id",
-	fields : {
-		eqcostAvailableAmount : {
-			type : "number"
-		},
-
-		eqcostApplyAmount : {
-			type : "number"
-		},
-		eqcostBasePrice : {
-			type : "number",
-			editable : false
-		},
-		eqcostAmount : {
-			editable : false,
-			type : "number"
-		},
-		eqcostProductUnitPrice : {
-			type : "number"
-		},
-		requestedTotalMoney : {
-			editable : false
-		},
-		eqcostContractTotalMoney : {
-			type : "number",
-			editable : false
-		},
-		differenceAmount : {
-			type : "number",
-			editable : false
-		},
-		eqcostProductName : {
-			editable : false
-		},
-		eqcostNo : {
-			editable : false
-		},
-		eqcostMaterialCode :{
-			editable : false
-		},		
-		eqcostProductType: {
-			editable : false
-		},
-		eqcostAvailableAmount: {
-			editable : false
-		},
-		orderEqcostName : {
-			
-		},
-		orderEqcostModel : {
-			
-		},
-		eqcostProductUnitPrice:{
-			
-		},
-		comment : {
-			
-		}
-	}
-});
-
-// 声明一个总的对象用来传递数据
-var requestDataItem = undefined;
 
 //申明选择备货申请的id
 var selectBackId = undefined;
 
 
+
+//编辑页面数据同步对象
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
 		update : {
@@ -162,27 +98,6 @@ function checkStatus(data) {
 }
 
 
-function save(status) {
-	if(!requestDataItem.status){
-		requestDataItem.status = "草稿";
-	}
-	
-	if(status){
-		requestDataItem.status = status;
-	}
-	
-	if(itemDataSource.at(0)){		
-		//force set haschanges = true
-		itemDataSource.at(0).set("uid", kendo.guid());
-	}
-	
-
-	console.log(requestDataItem);
-	// 同步数据
-	itemDataSource.sync();
-
-}
-
 function sumOrders(e) {
 
 	var data = itemDataSource.data();
@@ -246,6 +161,7 @@ function loadBackRequest(data) {
 	
 	// // 新增，所以设置_id为空
 	requestDataItem._id = "";	
+	requestDataItem.status="草稿";
 	console.log(requestDataItem);
 	edit();
 }
