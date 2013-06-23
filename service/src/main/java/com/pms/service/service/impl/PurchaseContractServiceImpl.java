@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dom4j.tree.AbstractProcessingInstruction;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
@@ -281,7 +280,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_EQ_LIST });
 
         Map<String, Object> results = this.dao.list(query, DBBean.PURCHASE_CONTRACT);
-        List<Map<String, Object>> list = (List<Map<String, Object>>) results.get("eqcostList");
+        List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
         List<Map<String, Object>> eqclist = new ArrayList<Map<String, Object>>();
 
@@ -364,7 +363,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 request.setStatus(PurchaseRequest.STATUS_DRAFT);
             }
             request.setApprovedDate(null);
-            request.setPurchaseOrderCode("o_" + String.valueOf(new Date().getTime()));
+            request.setPurchaseOrderCode(generateCode("CGDD", DBBean.PURCHASE_ORDER));
             Object eqList = parameters.get(SalesContractBean.SC_EQ_LIST);
             parameters = request.toMap();
             parameters.put(SalesContractBean.SC_EQ_LIST, eqList);
@@ -523,7 +522,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
             Map<String, Object> sc = this.dao.findOneByQuery(query, DBBean.SALES_CONTRACT);
             request.setProjectId(sc.get(SalesContractBean.SC_PROJECT_ID).toString());
-            request.setPurchaseRequestCode("r_" + String.valueOf(new Date().getTime()));
+            request.setPurchaseRequestCode(generateCode("CGSQ", DBBean.PURCHASE_ORDER));
             Object eqList = parameters.get(SalesContractBean.SC_EQ_LIST);
             parameters = request.toMap();
             parameters.put(SalesContractBean.SC_EQ_LIST, eqList);
