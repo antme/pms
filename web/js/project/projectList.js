@@ -54,11 +54,22 @@ $(document).ready(function() {
 			field : "projectCode",
 			title : "项目编号",
 			template : function(dataItem) {
-				return '<a  onclick="openProjectViewWindow(\'' + dataItem._id + '\');">' + dataItem.projectCode + '</a>';
+				if(dataItem.projectCode){
+					return '<a  onclick="openProjectViewWindow(\'' + dataItem._id + '\');">' + dataItem.projectCode + '</a>';
+				}else{
+					return '';
+				}
 			}
 		}, {
 			field : "projectName",
-			title : "项目名"
+			title : "项目名",
+			template : function(dataItem) {
+				if(dataItem.projectName){
+					return '<a  onclick="openProjectViewWindow(\'' + dataItem._id + '\');">' + dataItem.projectName + '</a>';
+				}else{
+					return '';
+				}
+			}
 		}, {
 			field : "projectAbbr",
 			title : "项目缩写"
