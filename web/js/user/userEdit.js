@@ -49,6 +49,14 @@ $(document).ready(function() {
 		dataSource : groupDataSource
 	
 	});
+	
+	$("#department").kendoMultiSelect({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : departmentItems
+	
+	});
+	
 	$("#purchaseContractProcessType").kendoMultiSelect({
 		dataTextField : "text",
 		dataValueField : "value",
@@ -88,9 +96,10 @@ function edit(user){
 function save(){
 	var multiselect = $("#groups").data("kendoMultiSelect");
 	// get the value of the multiselect.
-	editUser.salesContractProcessType = $("#salesContractProcessType").data("kendoMultiSelect").value();
+//	editUser.salesContractProcessType = $("#salesContractProcessType").data("kendoMultiSelect").value();
 	editUser.groups = $("#groups").data("kendoMultiSelect").value();
-	editUser.purchaseContractProcessType = $("#purchaseContractProcessType").data("kendoMultiSelect").value();
+	editUser.department = $("#department").data("kendoMultiSelect").value();
+
 	
 	postAjaxRequest("/service/user/update", {models:kendo.stringify(editUser)} , saveSuccess);	
 }

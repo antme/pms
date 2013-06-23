@@ -27,7 +27,6 @@ import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
-import com.pms.service.service.ISalesContractService;
 import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
@@ -40,7 +39,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     private IPurchaseService backService;
     
-    private ISalesContractService scs;
     
     @Override
     public String geValidatorFileName() {
@@ -50,7 +48,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters) {
-
+//        mergeDataRoleQuery(parameters);
         Map<String, Object> results = dao.list(parameters, DBBean.PURCHASE_CONTRACT);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
@@ -321,7 +319,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> listPurchaseOrders(Map<String, Object> parameters) {
-        
+        mergeDataRoleQuery(parameters);
         Map<String, Object> results = dao.list(parameters, DBBean.PURCHASE_ORDER);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
         
@@ -450,7 +448,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         if (isPurchase()) {
             params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.MANAGER_APPROVED, PurchaseRequest.STATUS_APPROVED, PurchaseRequest.STATUS_REJECTED }));
         }
-        
+        mergeDataRoleQuery(params);
         Map<String, Object> results = dao.list(params, DBBean.PURCHASE_REQUEST);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
         
@@ -547,6 +545,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
     
     public Map<String, Object> updatePurchase(Map<String, Object> parameters, String db) {
+        
+        if (parameters.get(PurchaseCommonBean.SALES_COUNTRACT_ID) != null) {
+            scs.mergeCommonFieldsFromSc(parameters, parameters.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
+
+        }
         Map<String, Object> result = null;
 
         if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
@@ -828,13 +831,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 		dao.deleteByIds(ids, DBBean.GET_INVOICE);
 	}
 
-	public ISalesContractService getScs() {
-        return scs;
-    }
 
-    public void setScs(ISalesContractService scs) {
-        this.scs = scs;
-    }
 
     public IPurchaseService getBackService() {
         return backService;

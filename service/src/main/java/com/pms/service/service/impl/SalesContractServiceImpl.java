@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
+import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.CustomerBean;
@@ -39,6 +40,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		String[] limitKeys = {SalesContractBean.SC_CODE, SalesContractBean.SC_AMOUNT, 
 				SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
+
+		mergeDataRoleQuery(params);
+		
 		Map<String, Object> result = dao.list(params, DBBean.SALES_CONTRACT);
 		
 		mergeProjectInfoForSC(result);
@@ -74,6 +78,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		contract.put(SalesContractBean.SC_PROGRESS_PAYMENT, params.get(SalesContractBean.SC_PROGRESS_PAYMENT));
 		contract.put(SalesContractBean.SC_QUALITY_MONEY, params.get(SalesContractBean.SC_QUALITY_MONEY));
 		contract.put(SalesContractBean.SC_MEMO, params.get(SalesContractBean.SC_MEMO));
+		
+		
+		mergeCommonProjectInfo(contract, contract.get(SalesContractBean.SC_PROJECT_ID));
 		
 		List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
 		eqcostList = (List<Map<String, Object>>)params.get(SalesContractBean.SC_EQ_LIST);
@@ -571,4 +578,30 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}
 		return result;
 	}
+	
+	
+	   
+    public void mergeCommonFieldsFromSc(Map<String, Object> data, Object scId){
+        Map<String, Object> scQuery = new HashMap<String, Object>();
+        scQuery.put(ApiConstants.MONGO_ID, scId);
+        scQuery.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE});
+        
+        Map<String, Object> sc = this.dao.findOneByQuery(scQuery, DBBean.SALES_CONTRACT);
+        data.put(SalesContractBean.SC_PROJECT_ID, sc.get(SalesContractBean.SC_PROJECT_ID));
+        data.put(SalesContractBean.SC_TYPE, sc.get(SalesContractBean.SC_TYPE));
+       
+        mergeCommonProjectInfo(data, sc.get(SalesContractBean.SC_PROJECT_ID));              
+ 
+    }
+
+    private void mergeCommonProjectInfo(Map<String, Object> data, Object projectId) {
+        Map<String, Object> projectQuery = new HashMap<String, Object>();
+        projectQuery.put(ApiConstants.MONGO_ID, projectId);       
+        projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_TYPE});
+              
+        Map<String, Object> project = this.dao.findOneByQuery(projectQuery, DBBean.PROJECT);
+        data.put(ProjectBean.PROJECT_MANAGER, project.get(ProjectBean.PROJECT_MANAGER));
+        data.put(ProjectBean.PROJECT_CUSTOMER, project.get(ProjectBean.PROJECT_CUSTOMER));
+        data.put(ProjectBean.PROJECT_TYPE, project.get(ProjectBean.PROJECT_TYPE));
+    }
 }

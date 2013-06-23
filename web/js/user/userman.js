@@ -44,11 +44,19 @@ $(document).ready(function() {
 			field : "email",
 			title : "Email"
 		}, {
-			field : "salesContractProcessType",
-			title : "销售合同审批类型"
-		}, {
-			field : "purchaseContractProcessType",
-			title : "销售合同审批类型"
+			field : "department",
+			title : "部门",
+			template : function(dataItem) {
+				  var departNames = "";
+
+				  if(dataItem.department){
+					  for(i=0; i<dataItem.department.length; i++){						  
+						  departNames = departNames + dataItem.department[i] + " ";							  
+					  }
+				 }
+			      return "<strong>" + departNames + "</strong>";
+					
+		   }
 		}, {
 			field : "groups",
 			title : "角色",

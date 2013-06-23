@@ -1,7 +1,7 @@
 var approveUrl = "/service/purcontract/approve";
 var rejectUrl = "/service/purcontract/reject";
 
-var dataSource = new kendo.data.DataSource({
+var listDataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
 			url : "/service/purcontract/list",
@@ -21,7 +21,7 @@ var dataSource = new kendo.data.DataSource({
 $(document).ready(function() {
 	checkRoles();
 	$("#grid").kendoGrid({
-		dataSource : dataSource,
+		dataSource : listDataSource,
 		pageable : true,
 		selectable : "row",
 	    sortable : true,

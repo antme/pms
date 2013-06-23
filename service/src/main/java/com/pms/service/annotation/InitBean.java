@@ -52,18 +52,18 @@ public class InitBean {
     
 
     private static void createSystemDefaultGroups(ICommonDao dao) {
-        String[] groupNames = new String[] { GroupBean.DEPARTMENT_ASSISTANT_VALUE, GroupBean.DEPARTMENT_MANAGER_VALUE, GroupBean.COO_VALUE, GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE, GroupBean.FINANCE };
+        String[] groupNames = new String[] {GroupBean.FINANCE, GroupBean.PM, GroupBean.DEPARTMENT_ASSISTANT_VALUE, GroupBean.DEPARTMENT_MANAGER_VALUE, GroupBean.COO_VALUE, GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE };
 
         for (String name : groupNames) {
-            Map<String, Object> adminGroup = new HashMap<String, Object>();
-            adminGroup.put(GroupBean.GROUP_NAME, name);
+            Map<String, Object> groupQuery = new HashMap<String, Object>();
+            groupQuery.put(GroupBean.GROUP_NAME, name);
 
             // 查找是否角色已经初始化
-            Map<String, Object> group = dao.findOne(GroupBean.GROUP_NAME, GroupBean.GROUP_ADMIN_VALUE, DBBean.USER_GROUP);
+            Map<String, Object> group = dao.findOne(GroupBean.GROUP_NAME, name, DBBean.USER_GROUP);
             if (group == null) {
                 //系统角色不允许删除
-                adminGroup.put(GroupBean.IS_SYSTEM_GROUP, true);
-                dao.add(adminGroup, DBBean.USER_GROUP);
+                groupQuery.put(GroupBean.IS_SYSTEM_GROUP, true);
+                dao.add(groupQuery, DBBean.USER_GROUP);
             } else {
                 group.put(GroupBean.IS_SYSTEM_GROUP, true);
                 dao.updateById(group, DBBean.USER_GROUP);
