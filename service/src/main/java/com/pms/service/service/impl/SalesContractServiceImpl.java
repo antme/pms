@@ -328,7 +328,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String,Object> info = (Map<String,Object>)map.get(scId);
 		Map<String,Object> newObj = new HashMap<String,Object>();
 		newObj.put(InvoiceBean.salesContractId, scId);
+		newObj.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusUnSubmit);
 		newObj.put(InvoiceBean.payInvoiceItemList, new ArrayList());
+		newObj.put(InvoiceBean.payInvoiceSubmitDate, DateUtil.getDateString(new Date()));
 		newObj.putAll(info);
 		
 		////////////////////////////////////

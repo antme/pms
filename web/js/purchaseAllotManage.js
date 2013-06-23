@@ -1,51 +1,49 @@
-var baseUrl = "../../service/purchase";
-var requestModel;
-var listDatasource;
+var requestModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		_id : {
+			editable : false,
+			nullable : true
+		},
+		paCode:{},
+		paStatus:{},
+		paSubmitDate:{},
+		paApproveDate:{},
+		pbCode:{},
+		eqcostList:{},
+		projectCode : {},
+		projectName : {},
+		projectManager : {},
+		customer : {},
+		contractCode : {},
+		contractAmount:{}
+	}
+});
+
+var listDatasource = new kendo.data.DataSource({
+    transport: {
+        read:  {
+            url: baseUrl + "/purchase/allot/list",
+            dataType: "jsonp",
+            type : "post"
+        },
+        parameterMap: function(options, operation) {
+            if (operation !== "read" && options.models) {
+                return {models: kendo.stringify(options.models)};
+            }
+        }
+    },
+    batch: true,
+    pageSize: 10,
+    schema: {
+        model: requestModel,
+        data:"data"
+    }
+});	
+
 $(document).ready(function () {	
 	checkRoles();
-	requestModel = kendo.data.Model.define({
-		id : "_id",
-		fields : {
-			_id : {
-				editable : false,
-				nullable : true
-			},
-			paCode:{},
-			paStatus:{},
-			paSubmitDate:{},
-			paApproveDate:{},
-			pbCode:{},
-			eqcostList:{},
-			projectCode : {},
-			projectName : {},
-			projectManager : {},
-			customer : {},
-			contractCode : {},
-			contractAmount:{}
-		}
-	});
 
-	listDatasource = new kendo.data.DataSource({
-	    transport: {
-	        read:  {
-	            url: baseUrl + "/allot/list",
-	            dataType: "jsonp",
-	            type : "post"
-	        },
-	        parameterMap: function(options, operation) {
-	            if (operation !== "read" && options.models) {
-	                return {models: kendo.stringify(options.models)};
-	            }
-	        }
-	    },
-	    batch: true,
-	    pageSize: 10,
-	    schema: {
-	        model: requestModel,
-	        data:"data"
-	    }
-	});	
-	
 	$("#grid").kendoGrid({
 	    dataSource: listDatasource,
 	    pageable: true,

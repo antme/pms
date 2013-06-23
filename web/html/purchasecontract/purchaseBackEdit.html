@@ -8,48 +8,38 @@
 			<input id="searchfor" style="width:250px;" type="text" value=""/>
 			<input id="searchbt" type="button" value="确定"/>
 		</div>
-		<br><hr>
+		<hr>
 		<div id="form-container">
-			<div>
-				<table class="table_form">
-					<tr>
-						<td>项目名： <span data-bind="text: projectName"></span></td>	
-						<td>项目编号： <span data-bind="text: projectCode"></span></td>
-						<td>合同编号： <span data-bind="text: contractCode"></span></td>
-						<td>客户名称： <span data-bind="text: customer"></span></td>
-						<td>申请编号：<span data-bind="text: pbCode" ></span></td>
-						<td>状态：<span data-bind="text: pbStatus" ></span></td>
-					</tr>
-				</table>
-			</div>
-			<hr>
-			<div>
-				<ul>
-					<li>申请部门: <input type="text" class="k-textbox foredit" id="pbDepartment" data-bind="value: pbDepartment" /></li>
-					<li>采购类别: <select data-bind="value: pbType" class="foredit" >
-										<option value="上海代理产品采购">上海代理产品采购</option>
-										<option value="同方自主产品采购">同方自主产品采购</option>
-										<option value="其它渠道采购">其它渠道采购</option>
-								</select>
-					</li>
-					<li>到货要求日期: <input data-bind="value: pbPlanDate" class="foredit" id="pbPlanDate"  /></li>
-				</ul>
-			</div>
-			<br><br>
+			<table class="table_form">
+				<tr>
+					<td>项目名： <span data-bind="text: projectName"></span></td>	
+					<td>项目编号： <span data-bind="text: projectCode"></span></td>
+					<td>合同编号： <span data-bind="text: contractCode"></span></td>
+					<td>客户名称： <span data-bind="text: customer"></span></td>
+				</tr>
+				<tr>
+					<td>申请编号：<span data-bind="text: pbCode" ></span></td>
+					<td>状态：<span data-bind="text: pbStatus" ></span></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>申请部门: <select id="departmentItems" data-bind="value: pbDepartment"></select></td>
+					<td>采购类别: <select id="pbTypeItems" data-bind="value: pbType"></select></td>
+					<td colspan="2">到货要求日期: <input data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: pbPlanDate"/></td>
+				</tr>
+			</table>
             <div>
 				<h4>成本设备清单</h4>
 				<div id="subGrid" data-bind="source: eqcostList"></div>
-            </div>
-            <br><br>
-            <div>
-            	<label>备注:</label>
-            	<textarea rows="4" cols="120" class="k-textbox  foredit" style="width:300px;" data-bind="value: pbComment" ></textarea>
+            	<br><label>备注:</label>
+            	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: pbComment" ></textarea>
             </div>
             <br>
-            <div>
-            	<input class="submitform foreditbt" type="button" value="保存">
-            	<input class="submitform foreditbt" type="button" value="提交">
-            	<input class="submitform foreditbt" type="button" value="取消">
+            <div id="form-container-button">
+            	<input class="submitform" type="button" value="保存">
+            	<input class="submitform" type="button" value="提交">
+            	<input class="submitform" type="button" value="取消">
             </div>
 		</div>
 	</div>		

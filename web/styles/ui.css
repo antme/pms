@@ -158,3 +158,4 @@ td a {
 .table_form td {padding: 3px 0}
 #form-container ul {list-style: none;padding: 0px;display:block;}
 #form-container ul li {float: left;padding: 0px 5px;}
+#departmentItems {min-width:120px;}

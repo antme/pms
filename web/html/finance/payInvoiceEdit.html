@@ -5,51 +5,48 @@
 		<h2>开票申请单</h2>
 		<div id="searchDiv">
 			<label>选择合同:</label>
-			<input id="searchfor" type="text" value=""/>
+			<input id="searchfor"  style="width:250px;" type="text" value=""/>
 			<input id="searchbt" type="button" value="确定"/>
 		</div>
 		<br><hr>
 		<div id="form-container">
-			<div>
-				<table class="table_form">
-					<tr>
-						<td>项目名： <span data-bind="text: projectName"></span></td>	
-						<td>项目编号： <span data-bind="text: projectCode"></span></td>
-						<td>合同编号： <span data-bind="text: contractCode"></span></td>
-						<td>客户名称： <span data-bind="text: customer"></span></td>
-						<td>状态： <span data-bind="text: payInvoiceStatus"></span></td>
-					</tr>
-				</table>
-			</div>
-			<hr>
-			<div>
-				<ul>
-					<li>申请部门: <select id="departmentItems"  class="foredit" data-bind="value: payInvoiceDepartment"></select></li>
-					<li>票种类别: <select id="invoiceTypeItems" class="foredit" data-bind="value: invoiceType"></select></li>
-					<li>要求日期: <input data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: payInvoicePlanDate" class="foredit"  /></li>
-					<li>收款情况：<input type="text" data-bind=" value:payInvoiceReceivedMoneyStatus" class="foredit"/></li>
-				</ul>
-			</div>
-			<br><br>
+			<table class="table_form">
+				<tr>
+					<td>项目名： <span data-bind="text: projectName"></span></td>	
+					<td>项目编号： <span data-bind="text: projectCode"></span></td>
+					<td>合同编号： <span data-bind="text: contractCode"></span></td>
+					<td>客户名称： <span data-bind="text: customer"></span></td>
+				</tr>
+				<tr>
+					<td>申请日期： <span data-bind="text: payInvoiceSubmitDate"></span></td>
+					<td>状态： <span data-bind="text: payInvoiceStatus"></span></td>
+					<td>票种类别: <span data-bind="text: invoiceType"></span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>申请部门: <select id="departmentItems" data-bind="value: payInvoiceDepartment"></select></td>
+					<td>要求日期: <input data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: payInvoicePlanDate"/></td>
+					<td colspan="2">收款情况：<input type="text" data-bind="value:payInvoiceReceivedMoneyStatus"/></td>
+				</tr>
+			</table>
             <div>
 				<h4>详情</h4>
 				<div id="subGrid" data-bind="source: payInvoiceItemList"></div>
-            </div>
-            <br><br>
-            <div>
-            	<label>备注:</label>
-            	<textarea rows="4" cols="120" class="k-textbox  foredit" style="width:300px;" data-bind="value: payInvoiceComment" ></textarea>
+            	<br><label>备注:</label>
+            	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: payInvoiceComment" ></textarea>
             </div>
             <br>
-            <div id="foradddiv">
-            	<input class="submitform" type="button" value="提交">
-            	<input class="submitform" type="button" value="取消">	
+            <div id="form-container-button">
+	            <div id="formadd">
+	            	<input class="submitform" type="button" value="提交" name="submit">
+	            	<input class="submitform" type="button" value="取消" name="cancel">
+	            </div>
+	            <div id="formapprove">
+	            	<input class="submitform" type="button" value="批准" name="approve">
+	            	<input class="submitform" type="button" value="拒绝" name="reject">
+	            	<input class="submitform" type="button" value="取消" name="cancel">	
+	            </div>
             </div>
-            <div id="forapprovediv">
-            	<input class="submitform" type="button" value="批准">
-            	<input class="submitform" type="button" value="拒绝">
-            	<input class="submitform" type="button" value="取消">	
-            </div>            
 		</div>
 </div>		
 </body>

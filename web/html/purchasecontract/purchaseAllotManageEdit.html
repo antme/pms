@@ -4,32 +4,32 @@
 <div>
 		<h2>备货调拨审核</h2>
 		<div id="form-container">
-			<div>
-				<table class="table_form">
-					<tr>
-						<td>项目名： <span data-bind="text: projectName"></span></td>	
-						<td>项目编号： <span data-bind="text: projectCode"></span></td>
-						<td>合同编号： <span data-bind="text: contractCode"></span></td>
-						<td>客户名称： <span data-bind="text: customer"></span></td>
-					</tr>
-					<tr>
-						<td>备货编号：<span data-bind="text: pbCode" ></span></td>
-						<td>申请部门： <span data-bind="text: pbDepartment"></span></td>	
-						<td>采购类别： <span data-bind="text: pbType"></span></td>
-						<td>到货要求日期： <span data-bind="text: pbPlanDate" data-format="yyyy/MM/dd"></span></td>
-					</tr>
-					<tr>
-						<td>调拨编号：<span data-bind="text: paCode" ></span></td>
-						<td>调出货架编号: <span data-bind="text: paShelfCode"></span></td>
-						<td>调拨状态：<span data-bind="text: paStatus" ></span></td>
-					</tr>
-					<tr>
-						<td>提交时间：<span data-bind="text: paSubmitDate" ></span></td>
-						<td>批准时间：<span data-bind="text: paApproveDate" ></span></td>
-					</tr>				
-				</table>
-			</div>
-			<hr>
+			<table class="table_form">
+				<tr>
+					<td>项目名： <span data-bind="text: projectName"></span></td>	
+					<td>项目编号： <span data-bind="text: projectCode"></span></td>
+					<td>合同编号： <span data-bind="text: contractCode"></span></td>
+					<td>客户名称： <span data-bind="text: customer"></span></td>
+				</tr>
+				<tr>
+					<td>备货编号：<span data-bind="text: pbCode" ></span></td>
+					<td>申请部门： <span data-bind="text: pbDepartment"></span></td>	
+					<td>采购类别： <span data-bind="text: pbType"></span></td>
+					<td>到货要求日期： <span data-bind="text: pbPlanDate" data-format="yyyy/MM/dd"></span></td>
+				</tr>
+				<tr>
+					<td>调拨编号：<span data-bind="text: paCode" ></span></td>
+					<td>调出货架编号: <span data-bind="text: paShelfCode"></span></td>
+					<td>调拨状态：<span data-bind="text: paStatus" ></span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>提交时间：<span data-bind="text: paSubmitDate" ></span></td>
+					<td>批准时间：<span data-bind="text: paApproveDate" ></span></td>
+					<td></td>
+					<td></td>
+				</tr>				
+			</table>
             <div>
 				<h4>成本设备清单</h4>
 				<div id="subGrid" data-bind="source: eqcostList"></div>
@@ -40,7 +40,7 @@
             	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: paComment" ></textarea>
             </div>
             <br>
-            <div>
+            <div id="form-container-button">
             	<input class="submitform foreditbt" type="button" value="批准">
             	<input class="submitform foreditbt" type="button" value="拒绝">
             	<input class="submitform foreditbt" type="button" value="取消">

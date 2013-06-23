@@ -1,57 +1,55 @@
-var baseUrl = "../../service/purchase/back";
-var requestModel;
-var listDatasource;
+var requestModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		_id : {
+			editable : false,
+			nullable : true
+		},
+		pbCode:{},
+		pbDepartment:{},
+		pbSubmitDate:{},
+		pbPlanDate:{},
+		pbType:{},
+		pbStatus:{},
+		pbComment:{},
+		pbMoney:{},
+		eqcostList:{},
+		projectCode : {},
+		projectName : {},
+		projectManager : {},
+		customer : {},
+		contractCode : {},
+		contractAmount:{},
+		backRequestCount:{},
+		poCode: {},
+		pcCode: {}
+	}
+});
+
+var listDatasource = new kendo.data.DataSource({
+    transport: {
+        read:  {
+            url: baseUrl + "/purchase/back/list",
+            dataType: "jsonp",
+            type : "post"
+        }
+    },
+
+    batch: true,
+    pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
+    schema: {
+        model: requestModel,
+        total: "total",
+        data:"data"
+    }
+});	
+
 $(document).ready(function () {	
 	checkRoles();
-	requestModel = kendo.data.Model.define({
-		id : "_id",
-		fields : {
-			_id : {
-				editable : false,
-				nullable : true
-			},
-			pbCode:{},
-			pbDepartment:{},
-			pbSubmitDate:{},
-			pbPlanDate:{},
-			pbType:{},
-			pbStatus:{},
-			pbComment:{},
-			pbMoney:{},
-			eqcostList:{},
-			projectCode : {},
-			projectName : {},
-			projectManager : {},
-			customer : {},
-			contractCode : {},
-			contractAmount:{},
-			backRequestCount:{},
-			poCode: {},
-			pcCode: {}
-		}
-	});
 
-	listDatasource = new kendo.data.DataSource({
-	    transport: {
-	        read:  {
-	            url: baseUrl + "/list",
-	            dataType: "jsonp",
-	            type : "post"
-	        }
-	    },
-
-	    batch: true,
-	    pageSize: 10,
-		serverPaging: true,
-		serverSorting: true,
-		serverFiltering : true,
-	    schema: {
-	        model: requestModel,
-	        total: "total",
-	        data:"data"
-	    }
-	});	
-	
 	$("#grid").kendoGrid({
 	    dataSource: listDatasource,
 	    pageable: true,
@@ -124,7 +122,7 @@ function pending() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else {
+	} else if(row.pbStatus == "已提交"){
 		$.ajax({
 			url : baseUrl+"/pending",
 			success : function(responsetxt) {
@@ -142,6 +140,8 @@ function pending() {
 				_id : row._id
 			},method : "post"
 		});
+	}else{
+		alert("点击列表选择已提交的数据");
 	}
 }
 
@@ -151,7 +151,7 @@ function destroy() {
 		alert("点击列表可以选中数据");
 	} else if(row.pbStatus == "草稿") {
 		$.ajax({
-			url : baseUrl+"/destroy",
+			url : baseUrl+"/purchase/back/destroy",
 			success : function(responsetxt) {
 				var res;
 				eval("res=" + responsetxt);

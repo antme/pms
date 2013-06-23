@@ -1,55 +1,54 @@
-var baseUrl = "../../service/sc";
-var requestModel;
-var listDatasource;
-$(document).ready(function () {	
-	requestModel = kendo.data.Model.define({
-		id : "_id",
-		fields : {
-			payInvoiceDepartment: {nullable: true},
-			payInvoiceProposerId: {},
-			payInvoiceProposerName: {},
-			payInvoiceStatus:{},
-			payInvoicePlanDate: {type:"date",nullable: true},
-			payInvoiceReceivedMoneyStatus:{},
-			payInvoiceSubmitDate: {type:"date"},
-			payInvoiceApproveDate: {type:"date"},
-			payInvoiceCheckDate: {type:"date"},
-			payInvoiceSignDate: {type:"date"},
-			payInvoiceMoney: {},
-			payInvoiceItemList: {nullable: true},
-			payInvoiceActualMoney:{},
-			payInvoiceActualDate:{},
-			payInvoiceActualInvoiceNum:{},
-			payInvoiceActualSheetCount:{},
-			invoiceType:{},
-			salesContractId:{},
-			contractCode:{},
-			projectId:{},
-			operateType:{}
-		}
-	});
+var requestModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		payInvoiceDepartment: {nullable: true},
+		payInvoiceProposerId: {},
+		payInvoiceProposerName: {},
+		payInvoiceStatus:{},
+		payInvoicePlanDate: {type:"date",nullable: true},
+		payInvoiceReceivedMoneyStatus:{},
+		payInvoiceSubmitDate: {type:"date"},
+		payInvoiceApproveDate: {type:"date"},
+		payInvoiceCheckDate: {type:"date"},
+		payInvoiceSignDate: {type:"date"},
+		payInvoiceMoney: {},
+		payInvoiceItemList: {nullable: true},
+		payInvoiceActualMoney:{},
+		payInvoiceActualDate:{},
+		payInvoiceActualInvoiceNum:{},
+		payInvoiceActualSheetCount:{},
+		invoiceType:{},
+		salesContractId:{},
+		contractCode:{},
+		projectId:{},
+		operateType:{}
+	}
+});
 
-	listDatasource = new kendo.data.DataSource({
-	    transport: {
-            read:  {
-	            url: baseUrl + "/invoice/list",
-	            dataType: "jsonp",
-	            type : "post"
-            },
-            parameterMap: function(options, operation) {
-                if (operation !== "read" && options.models) {
-                    return {models: kendo.stringify(options.models)};
-                }
+var listDatasource = new kendo.data.DataSource({
+    transport: {
+        read:  {
+            url: baseUrl + "/sc/invoice/list",
+            dataType: "jsonp",
+            type : "post"
+        },
+        parameterMap: function(options, operation) {
+            if (operation !== "read" && options.models) {
+                return {models: kendo.stringify(options.models)};
             }
-	    },
-	    batch: true,
-	    pageSize: 10,
-	    schema: {
-	        model: requestModel,
-	        data:"data"
-	    }
-	});
-    
+        }
+    },
+    batch: true,
+    pageSize: 10,
+    schema: {
+        model: requestModel,
+        data:"data"
+    }
+});
+	
+$(document).ready(function () {	
+	checkRoles();
+	
 	$("#grid").kendoGrid({
 	    dataSource: listDatasource,
 	    pageable: true,
@@ -67,14 +66,15 @@ $(document).ready(function () {
 	    ]
 	});
 });
+
 function add(){
-	loadPage("payInvoiceEdit");
+	loadPage("payInvoiceEdit",{actionType:"add"});
 }
 function edit(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else {	
-		loadPage("payInvoiceEdit", { _id : row._id });	
+		loadPage("payInvoiceEdit", { _id : row._id ,actionType:"approve"});	
 	}
 }

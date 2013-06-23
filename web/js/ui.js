@@ -143,7 +143,7 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/salescontract/editsc.html";
 	} else if (page == "viewsc") {
 		page = "html/salescontract/viewsc.html";
-	} else if (page == "invoiceList") {
+	} else if (page == "payInvoice") {
 		page = "html/finance/payInvoice.html";
 	} else if(page == "payInvoiceEdit"){
 		page = "html/finance/payInvoiceEdit.html";

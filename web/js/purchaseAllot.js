@@ -1,57 +1,55 @@
-var baseUrl = "../../service/purchase";
-var requestModel;
-var listDatasource;
-$(document).ready(function () {	
-	
-	requestModel = kendo.data.Model.define({
-		id : "_id",
-		fields : {
-			_id : {
-				editable : false,
-				nullable : true
-			},
-			pbCode:{},
-			pbDepartment:{},
-			pbSubmitDate:{},
-			pbPlanDate:{},
-			pbType:{},
-			pbStatus:{},
-			pbComment:{},
-			pbMoney:{},
-			eqcostList:{},
-			projectCode : {},
-			projectName : {},
-			projectManager : {},
-			customer : {},
-			contractCode : {},
-			contractAmount:{},
-			backRequestCount:{},
-			poCode: {},
-			pcCode: {}
-		}
-	});
+var requestModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		_id : {
+			editable : false,
+			nullable : true
+		},
+		pbCode:{},
+		pbDepartment:{},
+		pbSubmitDate:{},
+		pbPlanDate:{},
+		pbType:{},
+		pbStatus:{},
+		pbComment:{},
+		pbMoney:{},
+		eqcostList:{},
+		projectCode : {},
+		projectName : {},
+		projectManager : {},
+		customer : {},
+		contractCode : {},
+		contractAmount:{},
+		backRequestCount:{},
+		poCode: {},
+		pcCode: {}
+	}
+});
 
-	listDatasource = new kendo.data.DataSource({
-	    transport: {
-	        read:  {
-	            url: baseUrl + "/back/listchecked",
-	            dataType: "jsonp",
-	            type : "post"
-	        }
-	    },
-	    batch: true,
-	    pageSize: 10,
-	    schema: {
-	        model: requestModel,
-	        data:"data"
-	    }
-	});	
+var listDatasource = new kendo.data.DataSource({
+    transport: {
+        read:  {
+            url: baseUrl + "/purchase/back/listchecked",
+            dataType: "jsonp",
+            type : "post"
+        }
+    },
+    batch: true,
+    pageSize: 10,
+    schema: {
+        model: requestModel,
+        data:"data"
+    }
+});
+
+$(document).ready(function () {	
+	checkRoles();
 	
 	$("#grid").kendoGrid({
 	    dataSource: listDatasource,
 	    pageable: true,
 	    selectable : "row",
-	    toolbar: kendo.template($("#template").html()),
+	    sortable : true,
 	    columns: [
 	        { field: "pbCode", title: "备货编号" ,width:"125px"},
 	        { field: "pbType", title:"采购类别" ,width:"120px"},

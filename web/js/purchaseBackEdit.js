@@ -1,72 +1,70 @@
 intSelectInput();
+var subModel = kendo.data.Model.define({
+	id : "eqcostNo",
+	fields : {
+        eqcostNo: {
+			editable : false,
+			nullable : true	
+        },
+        eqcostMaterialCode: {
+        	editable : false
+        },
+        eqcostProductName: {
+        	editable : false
+        },
+        eqcostProductType: {
+        	editable : false
+        },
+        eqcostAmount: {
+        	editable : false
+        },
+        eqcostUnit: {
+        	editable : false
+        },
+        eqcostBrand: {
+        	editable : false
+        },
+        eqcostBasePrice: {
+        	editable : false
+        },
+        eqcostMemo: {
+        	editable : false
+        },
+        eqcostLeftAmount: {
+        	editable : false
+        },
+        pbTotalCount: {
+        	type: "number",
+        	 validation: {
+                 min: 0
+             }
+        },
+        pbComment: {}
+	}
+});	
+var myModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		pbCode:{},
+		pbDepartment:{},
+		pbSubmitDate:{type:"date"},
+		pbPlanDate:{type:"date"},
+		pbType:{},
+		pbStatus:{},
+		pbComment:{},
+		pbMoney:{},
+		projectName: {},
+		projectCode: {},
+		projectManager: {},
+		customer: {},
+		scId:{},
+		contractCode: {},
+		contractAmount: {}
+	}
+});
+var currentObj = new myModel();
+
 $(document).ready(function () {
-	var baseUrl = "../../service/purchase/back";
-	var subModel = kendo.data.Model.define({
-		id : "eqcostNo",
-		fields : {
-            eqcostNo: {
-				editable : false,
-				nullable : true	
-            },
-            eqcostMaterialCode: {
-            	editable : false
-            },
-            eqcostProductName: {
-            	editable : false
-            },
-            eqcostProductType: {
-            	editable : false
-            },
-            eqcostAmount: {
-            	editable : false
-            },
-            eqcostUnit: {
-            	editable : false
-            },
-            eqcostBrand: {
-            	editable : false
-            },
-            eqcostBasePrice: {
-            	editable : false
-            },
-            eqcostMemo: {
-            	editable : false
-            },
-            eqcostLeftAmount: {
-            	editable : false
-            },
-            pbTotalCount: {
-            	type: "number",
-            	 validation: {
-                     min: 0
-                 }
-            },
-            pbComment: {}
-		}
-	});	
-	var myModel = kendo.data.Model.define({
-		id : "_id",
-		fields : {
-			pbCode:{},
-			pbDepartment:{},
-			pbSubmitDate:{type:"date"},
-			pbPlanDate:{type:"date"},
-			pbType:{},
-			pbStatus:{},
-			pbComment:{},
-			pbMoney:{},
-			projectName: {},
-			projectCode: {},
-			projectManager: {},
-			customer: {},
-			scId:{},
-			contractCode: {},
-			contractAmount: {}
-		}
-	});
-	
-	var currentObj = new myModel();
-	
 	$("#subGrid").kendoGrid({
 		dataSource: {
 			schema: {
@@ -104,7 +102,7 @@ $(document).ready(function () {
 			transport : {
 				read : {
 					dataType : "jsonp",
-					url : "/service/sc/listforselect",
+					url : baseUrl+"/sc/listforselect",
 				}
 			},
 			schema : {
@@ -114,21 +112,12 @@ $(document).ready(function () {
 		}
 	});	
 	
-	
-	$("#pbDepartment").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : departmentItems
-	});
-	
-	$("#pbPlanDate").kendoDatePicker();
-	
 	$(".submitform").click(function(){
 		if(confirm(this.value + "表单，确认？")){
 			if(this.value == "保存"){
-				postAjaxRequest( baseUrl+"/save", {models:kendo.stringify(currentObj)} , saveSuccess);
+				postAjaxRequest( baseUrl+"/purchase/back/save", {models:kendo.stringify(currentObj)} , saveSuccess);
 			} else if(this.value == "提交"){
-				postAjaxRequest( baseUrl+"/submit", {models:kendo.stringify(currentObj)} , saveSuccess);
+				postAjaxRequest( baseUrl+"/purchase/back/submit", {models:kendo.stringify(currentObj)} , saveSuccess);
 			}else if(this.value=="取消"){
 				location.reload();
 			}
@@ -138,39 +127,31 @@ $(document).ready(function () {
 	$("#searchbt").click(function(){
 		var vv = $("#searchfor").val();
 		if(vv != ""){
-			postAjaxRequest(baseUrl+"/prepare", {scId:vv}, edit);
+			postAjaxRequest(baseUrl+"/purchase/back/prepare", {scId:vv}, edit);
 		}else{
 			alert("请选择合同编号");
 		}
 	});	
 	
-	function edit(e){
-		if(e){
-			if(e.pbStatus == "已提交"){
-				$(".foredit").attr("disabled","disabled");
-				$(".foreditbt").hide();
-			}
-		}
-		currentObj = new myModel(e);
-		kendo.bind($("#form-container"), currentObj);
-	}
-	
 	if(popupParams){
-		postAjaxRequest(baseUrl+"/load", popupParams, edit);
+		postAjaxRequest(baseUrl+"/purchase/back/load", popupParams, edit);
 		disableAllInPoppup();
 	}else if(redirectParams){
-		var backId = redirectParams._id;
-		var saleId = redirectParams.salesContract_id;
-		$("#searchDiv").hide();
-		if(backId) {
-			postAjaxRequest(baseUrl+"/load", {_id:backId}, edit);
-		}else if(saleId){
-			postAjaxRequest(baseUrl+"/prepare", {scId:saleId}, edit);
-		}
+		postAjaxRequest(baseUrl+"/purchase/back/load", redirectParams, edit);
 	}
 	kendo.bind($("#form-container"), currentObj);
 });
 
 function saveSuccess(){
 	location.reload();
+}
+
+function edit(e){
+	if(!e) return;
+	if(e.pbStatus == "已提交" || e.pbStatus == "草稿"){
+		$("#searchDiv").hide();
+		if(e.pbStatus == "已提交") $("#form-container :input").attr("disabled","disabled");
+	}
+	currentObj = new myModel(e);
+	kendo.bind($("#form-container"), currentObj);			
 }

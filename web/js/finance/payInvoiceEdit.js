@@ -1,6 +1,4 @@
 intSelectInput();
-var currentObj;
-var baseUrl = "../../service/";
 var subModel = kendo.data.Model.define({
 	id : "itemNo",
 	fields : {
@@ -14,21 +12,21 @@ var subModel = kendo.data.Model.define({
 var myModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
-		payInvoiceDepartment: {nullable: true},
+		payInvoiceDepartment: {},
 		payInvoiceProposerId: {},
 		payInvoiceProposerName: {},
 		payInvoiceStatus:{},
-		payInvoicePlanDate: {nullable: true},
+		payInvoicePlanDate: {},
 		payInvoiceReceivedMoneyStatus:{},
 		payInvoiceSubmitDate: {},
 		payInvoiceApproveDate: {},
 		payInvoiceCheckDate: {},
 		payInvoiceSignDate: {},
 		payInvoiceMoney: {},
-		payInvoiceItemList: {nullable: true},
+		payInvoiceItemList: {},
 		payInvoiceActualMoney:{type:"number"},
 		payInvoiceActualDate:{type:"date"},
-		payInvoiceActualInvoiceNum:{type:"string"},
+		payInvoiceActualInvoiceNum:{},
 		payInvoiceActualSheetCount:{type:"number"},
 		invoiceType:{},
 		salesContractId:{},
@@ -37,9 +35,9 @@ var myModel = kendo.data.Model.define({
 		operateType:{}
 	}
 });
+var currentObj = new myModel();
+
 $(document).ready(function () {
-	currentObj = new myModel();
-	
 	$("#subGrid").kendoGrid({
 		dataSource: {
 			schema: {
@@ -60,24 +58,28 @@ $(document).ready(function () {
 	  	editable:true,
 	  	toolbar: [{text:"新增",name:"create"},{text:"计算",name:"save"}]
 	});
-
+	
 	$("#searchfor").kendoDropDownList({
 		dataTextField : "contractCode",
 		dataValueField : "_id",
+		template:  '${ data.projectName }:<strong>${ data.contractCode }</strong>',
 		dataSource : {
 			transport : {
 				read : {
 					dataType : "jsonp",
-					url : "/service/sc/listforselect"
+					url : baseUrl+"/sc/listforselect"
 				}
 			},
-			schema: {data:"data"}
+			schema : {
+				total: "total",
+				data: "data"
+			}
 		}
 	});	
 
 	$(".submitform").click(function(){
 		if(confirm(this.value + "表单，确认？")){
-			currentObj.operateType=this.value;
+			currentObj.operateType=this.name;
 			if(this.value == "提交"){
 				postAjaxRequest( baseUrl+"/sc/invoice/add", {models:kendo.stringify(currentObj)} , saveSuccess);
 			} else if(this.value == "批准" || this.value == "拒绝"){
@@ -87,6 +89,7 @@ $(document).ready(function () {
 			}
 		}
 	});
+	
 	$("#searchbt").click(function(){
 		var vv = $("#searchfor").val();
 		if(vv != ""){
@@ -97,27 +100,33 @@ $(document).ready(function () {
 			alert("请选择合同编号");
 		}
 	});
-	
-	function edit(e){
-		currentObj = new myModel(e);
-		kendo.bind($("#form-container"), currentObj);
-	}
-	function saveSuccess(){
-		location.reload();
-	}
-	
-	if(redirectParams){//批准
-		$("#searchDiv").hide();
-		$("#foradddiv").hide();
-		$(".foredit").attr("disabled","disabled");
-		var _id = redirectParams._id;
-		if(_id) {
-			postAjaxRequest(baseUrl+"sc/invoice/load", {_id:_id}, edit);
+
+	if(popupParams){
+		postAjaxRequest(baseUrl+"/sc/invoice/load", popupParams, edit);
+		disableAllInPoppup();
+	}else if(redirectParams){
+		var actionType = redirectParams.actionType;
+		if(actionType == "add"){
+			$("#formapprove").hide();
+		}else if(actionType == "approve"){
+			$("#searchDiv").hide();
+			$("#formadd").hide();
+			postAjaxRequest(baseUrl+"/sc/invoice/load", redirectParams, edit);
 		}
-	}else{//添加
-		$("#forapprovediv").hide();
 	}
+	
 	kendo.bind($("#form-container"), currentObj);	
 });
 
+function saveSuccess(){
+	location.reload();
+}
+function edit(e){
+	if(!e) return;
+	if(e.payInvoiceStatus == "已出票"){
+		$("#form-container :input").attr("disabled","disabled");
+	}
+	currentObj = new myModel(e);
+	kendo.bind($("#form-container"), currentObj);	
+}
 

@@ -66,7 +66,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		newObj.put(PurchaseBack.pbPlanDate, params.get(PurchaseBack.pbPlanDate));
 		newObj.put(PurchaseBack.scId, params.get(PurchaseBack.scId));
 		newObj.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
-		newObj.putAll(countEqcostList(params));
+		newObj.putAll(countEqcostList(params,false));
 		
 		Map<String,Object> sc = dao.findOne(ApiConstants.MONGO_ID, params.get(PurchaseBack.scId), new String[]{SalesContractBean.SC_CODE},DBBean.SALES_CONTRACT);
 		newObj.put(PurchaseBack.scCode, sc.get(SalesContractBean.SC_CODE));
@@ -93,7 +93,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		newObj.put(PurchaseBack.scId, params.get(PurchaseBack.scId));
 		newObj.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
 		newObj.put(PurchaseBack.pbSubmitDate, DateUtil.getDateString(new Date()));
-		newObj.putAll(countEqcostList(params));
+		newObj.putAll(countEqcostList(params,true));
 		
 		
 		Map<String,Object> sc = dao.findOne(ApiConstants.MONGO_ID, params.get(PurchaseBack.scId), new String[]{SalesContractBean.SC_CODE},DBBean.SALES_CONTRACT);
@@ -350,7 +350,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	}	
 	
 	//验证并记录申请货物清单列表，计算申请总额
-	public Map<String,Object> countEqcostList(Map<String,Object> params) {
+	public Map<String,Object> countEqcostList(Map<String,Object> params,boolean sync) {
 		
 		//1. 获取合同清单
 		Map<String, Object> eqMap = salesContractService.listEqListBySC(params);
@@ -388,6 +388,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				item.put(PurchaseBack.pbLeftCount, backCount);
 				item.put(PurchaseBack.pbComment, comment);
 				itemList.add(item);
+				
+				if(sync) dao.updateCount(ApiConstants.MONGO_ID, id, SalesContractBean.SC_EQ_LIST_LEFT_AMOUNT, DBBean.EQ_COST, -backCount);
 			}
 		}
 		Map<String,Object> result = new HashMap<String,Object>();

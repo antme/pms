@@ -31,6 +31,7 @@ public class InvoiceBean {
 	
 	public static final String salesContractId = "salesContractId";//票金额
 	
+	public static final String statusUnSubmit = "草稿";//
 	public static final String statusSubmit = "待审核";//
 	public static final String statusManagerApprove = "经理已审核";//
 	public static final String statusFinanceApprojve = "财务已审核";//
