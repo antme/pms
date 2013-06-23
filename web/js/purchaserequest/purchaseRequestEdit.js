@@ -116,7 +116,7 @@ function sumOrders(e) {
 		eqcostBasePrice = e.values.eqcostBasePrice
 	}
 
-	if (e.values.requestedTotalMoney) {
+	if (e.values.eqcostProductUnitPrice) {
 		eqcostProductUnitPrice = e.values.eqcostProductUnitPrice
 	}
 

@@ -13,8 +13,13 @@ var requestDataItem = undefined;
 var selectedRequestId = undefined;
 
 $(document).ready(function() {
-
-	if (redirectParams) {
+	
+	if(popupParams){
+		$("#purchase-request-select").hide();
+		$("#purchaseorder-edit-item").show();
+		postAjaxRequest(editUrl, popupParams, edit);
+		disableAllInPoppup();
+	}else if (redirectParams) {
 		$("#purchase-request-select").hide();
 		$("#purchaseorder-edit-item").show();
 		postAjaxRequest(editUrl, redirectParams, edit);
@@ -127,7 +132,7 @@ function sumOrders(e) {
 		eqcostBasePrice = e.values.eqcostBasePrice
 	}
 
-	if (e.values.requestedTotalMoney) {
+	if (e.values.eqcostProductUnitPrice) {
 		eqcostProductUnitPrice = e.values.eqcostProductUnitPrice
 	}
 

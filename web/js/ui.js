@@ -490,6 +490,12 @@ function openPurchaseRequestViewWindow(param){
 	openRemotePageWindow(options, "html/purchasecontract/purchaseRequestEdit.html", {_id : param});
 }
 
+
+function openPurchaseOrderViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"采购订单信息"};
+	openRemotePageWindow(options, "html/purchasecontract/purchaseOrderEdit.html", {_id : param});
+}
+
 function openBackRequestViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"备货申请信息"};
 	openRemotePageWindow(options, "purchaseBackEdit", {_id : param});
