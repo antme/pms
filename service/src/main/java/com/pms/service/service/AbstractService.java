@@ -224,7 +224,7 @@ public abstract class AbstractService {
     
     
     protected void mergeDataRoleQuery(Map<String, Object> param) {
-        if (isAdmin() || isFinance() || isPurchase() || isCoo()) {
+        if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager()) {
             // query all data
         } else {
             Map<String, Object> pmQuery = new HashMap<String, Object>();

@@ -226,7 +226,7 @@ function checkStatus() {
 function showOrderWindow() {
 	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
 	var kendoGrid = $("#purchasecontractin").data("kendoMultiSelect");
-
+	itemListDataSource.data([]);
 	var dataItems = kendoGrid.dataSource.data();
 	var selectedValues = kendoGrid.value();
 	for(id in selectedValues){	

@@ -570,7 +570,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public Map<String, Object> approvePurchaseRequest(Map<String, Object> request){
         
-        if(isDepartmentManager()){
+        if(!isPurchase()){
             return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.MANAGER_APPROVED);
         }else{
             return processRequest(request, DBBean.PURCHASE_REQUEST, APPROVED);

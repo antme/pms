@@ -216,11 +216,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    //返回PurchaseBack.prId,页面检测是否已发采购申请
 		String[] keys = new String[]{PurchaseBack.pbCode,PurchaseBack.pbType,PurchaseBack.pbStatus,
 				PurchaseBack.pbMoney,PurchaseBack.scId,PurchaseBack.pbSubmitDate, PurchaseBack.prId};
-		Map<String,Object> query = new HashMap<String,Object>();
 		params.put(ApiConstants.LIMIT_KEYS, keys);
 		params.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
 		mergeDataRoleQuery(params);
-		Map<String,Object> map = dao.list(query, DBBean.PURCHASE_BACK);
+		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
 		Set<String> saleIds = new HashSet<String>();
 		for(Map<String,Object> re : list){
