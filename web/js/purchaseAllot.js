@@ -76,6 +76,17 @@ function generateAllot() {
 	}
 }
 
-function generateRequest(){}
+function generateRequest(){
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else {
+		if(row.prId){
+			alert("此备货申请已发采购申请");
+		}else{
+			loadPage("html/purchasecontract/purchaseRequestEdit.html",{backId:row._id});
+		}
+	}
+}
 
 

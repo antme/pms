@@ -212,8 +212,9 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
 	@Override
 	public Map<String, Object> listCheckedBack(Map<String, Object> params) {
+	    //返回PurchaseBack.prId,页面检测是否已发采购申请
 		String[] keys = new String[]{PurchaseBack.pbCode,PurchaseBack.pbType,PurchaseBack.pbStatus,
-				PurchaseBack.pbMoney,PurchaseBack.scId,PurchaseBack.pbSubmitDate};
+				PurchaseBack.pbMoney,PurchaseBack.scId,PurchaseBack.pbSubmitDate, PurchaseBack.prId};
 		Map<String,Object> query = new HashMap<String,Object>();
 		query.put(ApiConstants.LIMIT_KEYS, keys);
 		query.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());

@@ -44,9 +44,6 @@ var model = kendo.data.Model.define({
 		},
 		firstPay : {
 
-		},
-		signDate : {
-			type : "date"
 		}
 	}
 });
@@ -115,6 +112,8 @@ $(document).ready(function() {
 		dataSource : executeType1
 	});
 		
+	$("#signDate").kendoDatePicker();
+
 	if (redirectParams) {
 		$("#purchasecontract-edit-item").show();
 		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
@@ -276,6 +275,7 @@ function edit(data) {
 
 	}
 
+	console.log(requestDataItem.signDate);
 	kendo.bind($("#purchasecontract-edit"), requestDataItem);
 
 	
@@ -301,7 +301,6 @@ function edit(data) {
 	$("#salesContractCode").html(requestDataItem.salesContractCode);
 	$("#customerRequestContractId").html(requestDataItem.customerRequestContractId);
 
-	$("#signDate").kendoDatePicker();
 
 	if (!$("#purchasecontract-edit-grid").data("kendoGrid")) {
 		$("#purchasecontract-edit-grid").kendoGrid({
@@ -371,6 +370,7 @@ function edit(data) {
 			scrollable : true,
 			editable : true,
 			width : "800px",
+			save : sumOrders,
 			dataBound : function(e) {
 				var data = itemDataSource.data();			
 				// 订单实际总价格
@@ -415,6 +415,32 @@ function edit(data) {
 
 		});
 	}
+}
+
+
+function sumOrders(e) {
+
+	var data = itemDataSource.data();
+	requestDataItem.eqcostList = data;
+
+	var eqcostApplyAmount = e.model.eqcostApplyAmount;
+	var eqcostProductUnitPrice = e.model.eqcostProductUnitPrice;
+
+
+	if (e.values.eqcostProductUnitPrice) {
+		eqcostProductUnitPrice = e.values.eqcostProductUnitPrice
+	}
+
+	if (e.values.eqcostApplyAmount) {
+		eqcostApplyAmount = e.values.eqcostApplyAmount
+	}
+
+	var grid1 = $("#purchasecontract-edit-grid").data("kendoGrid");
+	// will trigger dataBound event
+	e.model.set("requestedTotalMoney", eqcostProductUnitPrice * eqcostApplyAmount);
+
+	grid1.refresh();
+
 }
 
 function categoryDropDownEditor(container, options) {

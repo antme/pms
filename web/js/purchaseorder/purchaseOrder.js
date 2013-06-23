@@ -31,19 +31,30 @@ $(document).ready(function() {
 			width : "1000px",
 			columns : [ {
 				field : "purchaseOrderCode",
-				title : "订单编号"
-			}, {
-				field : "salesContractCode",
-				title : "客户合同编号"
+				title : "订单编号",
+				template : function(dataItem) {
+					return '<a  onclick="openPurchaseOrderViewWindow(\'' + dataItem._id + '\');">' + dataItem.purchaseOrderCode + '</a>';
+				}
+					
 			}, {
 				field : "purchaseRequestCode",
-				title : "采购申请编号"
+				title : "采购申请编号",
+				template : function(dataItem) {
+					return '<a  onclick="openPurchaseRequestViewWindow(\'' + dataItem.purchaseRequestId + '\');">' + dataItem.purchaseRequestCode + '</a>';
+				}
+					
 			}, {
 				field : "backRequestCode",
-				title : "备货申请编号"
+				title : "备货申请编号",
+				template : function(dataItem) {
+					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem.backRequestId + '\');">' + dataItem.backRequestCode + '</a>';
+				}
 			}, {
 				field : "salesContractCode",
-				title : "销售合同编号"
+				title : "销售合同编号",
+				template : function(dataItem) {
+					return '<a  onclick="openSCViewWindow(\'' + dataItem.salesContractId + '\');">' + dataItem.salesContractCode + '</a>';
+				}
 			}, {
 				field : "customerName",
 				title : "客户名"

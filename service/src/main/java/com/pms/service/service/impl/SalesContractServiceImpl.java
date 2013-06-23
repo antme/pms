@@ -129,8 +129,19 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> listSCsForSelect(Map<String, Object> params) {
 		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE});
-		return dao.list(query, DBBean.SALES_CONTRACT);
+		query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID});
+		
+		Map<String, Object> projectQuery = new HashMap<String, Object>();
+		projectQuery.put(ApiConstants.LIMIT_KEYS,ProjectBean.PROJECT_NAME);
+		
+		Map<String, Object> projects = this.dao.listToOneMapAndIdAsKey(projectQuery,DBBean.PROJECT);
+		Map<String, Object>  scResults = dao.list(query, DBBean.SALES_CONTRACT);
+		List<Map<String, Object>> scList = (List<Map<String, Object>>) scResults.get(ApiConstants.RESULTS_DATA);
+		for (Map<String, Object> item : scList){
+		    Map<String, Object> project = (Map<String, Object>) projects.get(item.get(SalesContractBean.SC_PROJECT_ID));
+		    item.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
+		}
+		return scResults;
 	}
 
 	@Override

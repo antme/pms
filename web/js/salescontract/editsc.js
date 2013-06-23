@@ -401,7 +401,13 @@ $(document).ready(function() {
 			scrollable : true
 		});
 	}//成本设备清单_new
-	postAjaxRequest("/service/sc/get", redirectParams, edit);
+	
+	if(popupParams){
+		postAjaxRequest("/service/sc/get", popupParams, edit);
+		disableAllInPoppup();
+	}else{
+		postAjaxRequest("/service/sc/get", redirectParams, edit);
+	}
 	
 });//end dom ready	
 

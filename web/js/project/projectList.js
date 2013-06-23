@@ -52,10 +52,24 @@ $(document).ready(function() {
 //        },
 		columns : [ {
 			field : "projectCode",
-			title : "项目编号"
+			title : "项目编号",
+			template : function(dataItem) {
+				if(dataItem.projectCode){
+					return '<a  onclick="openProjectViewWindow(\'' + dataItem._id + '\');">' + dataItem.projectCode + '</a>';
+				}else{
+					return '';
+				}
+			}
 		}, {
 			field : "projectName",
-			title : "项目名"
+			title : "项目名",
+			template : function(dataItem) {
+				if(dataItem.projectName){
+					return '<a  onclick="openProjectViewWindow(\'' + dataItem._id + '\');">' + dataItem.projectName + '</a>';
+				}else{
+					return '';
+				}
+			}
 		}, {
 			field : "projectAbbr",
 			title : "项目缩写"
@@ -90,14 +104,14 @@ $(document).ready(function() {
 			title : "PM",
 			filterable : false,
 			template : function(dataItem) {
-				return '<a  onclick="viewPM(\'' + dataItem.pmId + '\');">' + dataItem.projectManager + '</a>';
+				return '<a  onclick="openPMViewWindow(\'' + dataItem.pmId + '\');">' + dataItem.projectManager + '</a>';
 			}
 		}, {
 			field : "customer",
 			title : "客户名",
 			filterable : false,
 			template : function(dataItem) {
-				return '<a  onclick="viewCustomer(\'' + dataItem.cId + '\');">' + dataItem.customer + '</a>';
+				return '<a  onclick="openCustomerViewWindow(\'' + dataItem.cId + '\');">' + dataItem.customer + '</a>';
 			}
 		}]
 	});
@@ -144,16 +158,7 @@ function setupProjectCallBack(){
 	dataSource.read();
 }
 
-function viewPM(param){
-	var options = { width:"680px", height: "400px", title:"项目经理信息"};
-	openRemotePageWindow(options, "html/user/userview.html", {_id : param});
-}
 
-function viewCustomer(param){
-	var options = { width:"680px", height: "400px", title:"客户信息"};
-	openRemotePageWindow(options, "html/customer/view.html", {_id : param});
-}
-	
 	
 	
 	
