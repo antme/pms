@@ -466,6 +466,44 @@ function disableAllInPoppup(){
 }
 
 
+
+function openPMViewWindow(param){
+	var options = { width:"680px", height: "400px", title:"项目经理信息"};
+	openRemotePageWindow(options, "html/user/userview.html", {_id : param});
+}
+
+function openCustomerViewWindow(param){
+	var options = { width:"680px", height: "400px", title:"客户信息"};
+	openRemotePageWindow(options, "html/customer/view.html", {_id : param});
+}
+	
+
+
+function openProjectViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"项目信息"};
+	openRemotePageWindow(options, "html/project/addProject.html", {_id : param});
+}
+
+
+function openPurchaseRequestViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"采购申请信息"};
+	openRemotePageWindow(options, "html/purchasecontract/purchaseRequestEdit.html", {_id : param});
+}
+
+function openBackRequestViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"备货申请信息"};
+	openRemotePageWindow(options, "purchaseBackEdit", {_id : param});
+}
+
+function openSCViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"销售合同信息"};
+	openRemotePageWindow(options, "html/salescontract/editsc.html", {_id : param});
+}
+
+
+
+
+
 String.prototype.endWith = function(s) {
 	if (s == null || s == "" || this.length == 0 || s.length > this.length)
 		return false;

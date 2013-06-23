@@ -30,7 +30,7 @@
 		<h2>备货申请</h2>
 		<div id="searchDiv">
 			<label>选择合同:</label>
-			<input id="searchfor" type="text" value=""/>
+			<input id="searchfor" style="width:250px;" type="text" value=""/>
 			<input id="searchbt" type="button" value="确定"/>
 		</div>
 		<br><hr>
@@ -50,14 +50,14 @@
 			<hr>
 			<div>
 				<ul>
-					<li>申请部门: <input type="text" class="k-textbox foredit" data-bind="value: pbDepartment" /></li>
+					<li>申请部门: <input type="text" class="k-textbox foredit" id="pbDepartment" data-bind="value: pbDepartment" /></li>
 					<li>采购类别: <select data-bind="value: pbType" class="foredit" >
 										<option value="上海代理产品采购">上海代理产品采购</option>
 										<option value="同方自主产品采购">同方自主产品采购</option>
 										<option value="其它渠道采购">其它渠道采购</option>
 								</select>
 					</li>
-					<li>到货要求日期: <input data-bind="value: pbPlanDate" class="foredit"  /></li>
+					<li>到货要求日期: <input data-bind="value: pbPlanDate" data-role="datetPicker" class="foredit" id="pbPlanDate"  /></li>
 				</ul>
 			</div>
 			<br><br>

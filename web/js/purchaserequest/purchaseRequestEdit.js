@@ -59,7 +59,12 @@ $(document).ready(function() {
 			postAjaxRequest(editUrl, popupParams, edit);
 			disableAllInPoppup();
 		}else{
-			postAjaxRequest(editUrl, redirectParams, edit);
+			if(redirectParams.backId){
+				selectBackId = redirectParams.backId;
+				selectBackRequest();
+			}else{
+				postAjaxRequest(editUrl, redirectParams, edit);
+			}
 		}
 	} else {
 		$("#purchase-back-select").show();

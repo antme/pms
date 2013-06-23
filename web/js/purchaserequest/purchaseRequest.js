@@ -105,19 +105,4 @@ function add(){
 	loadPage("html/purchasecontract/purchaseRequestEdit.html");
 }
 
-function openPurchaseRequestViewWindow(param){
-	var options = { width:"1080px", height: "600px", title:"采购申请信息"};
-	openRemotePageWindow(options, "html/purchasecontract/purchaseRequestEdit.html", {_id : param});
-}
-
-function openBackRequestViewWindow(param){
-	var options = { width:"1080px", height: "600px", title:"备货申请信息"};
-	openRemotePageWindow(options, "purchaseBackEdit", {_id : param});
-}
-
-
-function openProjectViewWindow(param){
-	var options = { width:"1080px", height: "600px", title:"项目信息"};
-	openRemotePageWindow(options, "html/project/addProject.html", {_id : param});
-}
 

@@ -59,7 +59,14 @@ $(document).ready(function () {
 	    sortable : true,
 		filterable : filterable,
 	    columns: [
-	        { field: "pbCode", title: "备货编号" ,width:"125px"},
+	        { 
+	        	field: "pbCode", 
+	        	title: "备货编号" ,
+	        	width:"125px",
+	        	template : function(dataItem) {
+					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.pbCode + '</a>';
+				}
+	        },
 	        { 	field: "pbType", 
 	        	title:"采购类别" ,
 	        	width:"120px",
@@ -75,10 +82,21 @@ $(document).ready(function () {
 				}
 	        	
 	        },
-	        { field: "contractCode", title:"销售合同编号" },
+	        { 
+	        	field:
+	        	"contractCode", 
+	        	title:"销售合同编号" ,
+	        	template : function(dataItem) {
+					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
+				}
+	        		
+	        },
 	        { field: "poCode", title:"采购订单编号" },
 	        { field: "prCode", title:"采购申请编号" },
-	        { field: "customer", title:"客户名" },
+	        { 
+	        	field: "customer", 
+	        	title:"客户名" 
+	        },
 	        { field: "projectManager", title:"PM" },
 	        { field: "pbStatus", title:"申请状态" },
 	        { field: "pbSubmitDate", title:"提交时间" },

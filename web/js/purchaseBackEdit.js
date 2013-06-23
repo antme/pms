@@ -97,6 +97,7 @@ $(document).ready(function () {
 	$("#searchfor").kendoDropDownList({
 		dataTextField : "contractCode",
 		dataValueField : "_id",
+		template:  '${ data.projectName }:<strong>${ data.contractCode }</strong>',
 		dataSource : {
 			transport : {
 				read : {
@@ -110,7 +111,16 @@ $(document).ready(function () {
 			}
 		}
 	});	
-
+	
+	
+	$("#pbDepartment").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : departmentItems
+	});
+	
+	$("#pbPlanDate").kendoDatePicker();
+	
 	$(".submitform").click(function(){
 		if(confirm(this.value + "表单，确认？")){
 			if(this.value == "保存"){
