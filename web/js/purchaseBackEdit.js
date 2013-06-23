@@ -1,5 +1,5 @@
+intSelectInput();
 $(document).ready(function () {
-	var currentObj;
 	var baseUrl = "../../service/purchase/back";
 	var subModel = kendo.data.Model.define({
 		id : "eqcostNo",
@@ -49,8 +49,8 @@ $(document).ready(function () {
 		fields : {
 			pbCode:{},
 			pbDepartment:{},
-			pbSubmitDate:{},
-			pbPlanDate:{},
+			pbSubmitDate:{type:"date"},
+			pbPlanDate:{type:"date"},
 			pbType:{},
 			pbStatus:{},
 			pbComment:{},
@@ -64,6 +64,8 @@ $(document).ready(function () {
 			contractAmount: {}
 		}
 	});
+	
+	var currentObj = new myModel();
 	
 	$("#subGrid").kendoGrid({
 		dataSource: {
@@ -143,10 +145,6 @@ $(document).ready(function () {
 		kendo.bind($("#form-container"), currentObj);
 	}
 	
-	function saveSuccess(){
-		location.reload();
-	}
-	
 	if(popupParams){
 		postAjaxRequest(baseUrl+"/load", popupParams, edit);
 		disableAllInPoppup();
@@ -160,9 +158,9 @@ $(document).ready(function () {
 			postAjaxRequest(baseUrl+"/prepare", {scId:saleId}, edit);
 		}
 	}
-
-	
-	
+	kendo.bind($("#form-container"), currentObj);
 });
 
-
+function saveSuccess(){
+	location.reload();
+}

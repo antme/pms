@@ -135,7 +135,8 @@ var pbTypeItems = [{ text: "上海代理产品采购"}, { text: "同方自主产
 
 var departmentItems =  [{ text: "销售部"}, { text: "工程部"}, { text: "产品部"} , { text: "服务部"}];
 
-
+//货架编号
+var shelfCodeItems =  [{ text: "北京备货货架"}, { text: "上海备货货架"}];
 var proManagerItems = new kendo.data.DataSource({
 	transport : {
 		read : {

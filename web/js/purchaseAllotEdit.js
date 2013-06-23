@@ -1,3 +1,4 @@
+intSelectInput();
 $(document).ready(function () {
 	var currentObj;
 	var baseUrl = "../../service/purchase/allot";
@@ -68,7 +69,8 @@ $(document).ready(function () {
 			scId:{},
 			contractCode: {},
 			contractAmount: {},
-			eqcostList:{}
+			eqcostList:{},
+			paShelfCode:{}
 		}
 	});
 	
@@ -81,7 +83,7 @@ $(document).ready(function () {
 			    { field: "eqcostNo", aggregate: "count" },
 			    { field: "paCount", aggregate: "sum" },
 			    { field: "pbLeftCount", aggregate: "sum" },
-			    { field: "pbTotalCount", aggregate: "sum" },
+			    { field: "pbTotalCount", aggregate: "sum" }
 			]			
 		},
 	    columns: [
@@ -106,29 +108,6 @@ $(document).ready(function () {
 			postAjaxRequest( baseUrl+"/submit", {models:kendo.stringify(currentObj)} , saveSuccess);
 		}
 	});
-	function generateAllot() {
-		var row = getSelectedRowDataByGrid("grid");
-		if (!row) {
-			alert("点击列表可以选中数据");
-		} else {
-			$.ajax({
-				url : baseUrl+"/allot/prepare",
-				success : function(responsetxt) {
-					var res;
-					eval("res=" + responsetxt);
-					if (res.status == "0") {
-						alert(res.msg);
-					} else {
-						alert("调拨申请成功");
-					}
-				}, error : function() {
-					alert("连接Service失败");
-				}, data : {
-					_id : row._id
-				},method : "post"
-			});
-		}
-	}	
 	function edit(e){
 		currentObj = new myModel(e);
 		kendo.bind($("#form-container"), currentObj);
@@ -137,7 +116,7 @@ $(document).ready(function () {
 	function saveSuccess(){
 		location.reload();
 	}
-	$(".foredit").attr("disabled","disabled");
+	
 	if(redirectParams){
 		var backId = redirectParams.backId;
 		var id = redirectParams._id;
@@ -145,6 +124,7 @@ $(document).ready(function () {
 			postAjaxRequest(baseUrl+"/prepare", {_id:backId}, edit);
 		}else if(id) {
 			postAjaxRequest(baseUrl+"/load", {_id:backId}, edit);
+			$(".foredit").attr("disabled","disabled");
 		}
 	}
 	
