@@ -149,6 +149,11 @@ var pbTypeItems = [{ text: "上海代理产品采购"}, { text: "同方自主产
 
 var departmentItems =  [{ text: "销售部"}, { text: "工程部"}, { text: "产品部"} , { text: "服务部"}];
 
+// 调拨类型
+var allotTypeItems = [{ text: "借货调拨"}, { text: "还货调拨"}, { text: "备货调拨"}];
+
+// 发货类型
+var shipTypeItems = [{ text: "供应商直发", value: 0 }, { text: "非供应商直发", value: 1 }];
 
 var proManagerItems = new kendo.data.DataSource({
 	transport : {
