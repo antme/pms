@@ -71,7 +71,7 @@ var menus = [
                  items: [
                          { text: "备货申请", id: "purchaseBack", imageUrl: "/images/order.png" },
                          { text: "采购申请", id: "purchaseRequestByAssistant", imageUrl: "/images/purchase.png"},
-                         { text: "开票申请", id: "purchaseorder", imageUrl: "/images/involce.png" },
+                         { text: "开票申请", id: "invoiceList", imageUrl: "/images/involce.png" },
                          { text: "发货申请", id: "ship", imageUrl: "/images/borrowing.png"},
                          { text: "借货申请", id: "borrowing", imageUrl: "/images/sign_in.png"},
                          { text: "还货申请", id: "borrowing", imageUrl: "/images/sign_out.png"}
@@ -99,7 +99,7 @@ var menus = [
                  items: [
                          { text: "财务资料", id: "contract",  imageUrl: "/images/order.png" },
                          { text: "开票信息", id: "invoiceList", imageUrl: "/images/calender.png" },
-                         { text: "收款信息", id: "gotMoneyList", imageUrl: "/images/invoice.png"},
+                         { text: "收款信息", id: "invoiceList", imageUrl: "/images/invoice.png"},
                          { text: "付款信息", id: "payMoney", imageUrl: "/images/license.png"},
                          { text: "收票信息", id: "getInvoice", imageUrl: "/images/milestone.png"}
                      ]
