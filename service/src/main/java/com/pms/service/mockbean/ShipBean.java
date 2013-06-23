@@ -32,10 +32,14 @@ public class ShipBean {
     
     public static final String SHIP_DELIVERY_ADDRESS = "deliveryAddress"; // 交货地点
     
-    public static final String SHIP_DELIVERY_TIME = "deliveryTime"; // 货运时间
+    public static final String SHIP_ISSUE_TIME = "issueTime"; // 发出时间
+    
+    public static final String SHIP_DELIVERY_TIME = "deliveryTime"; // 送达时间
     
     public static final String SHIP_DELIVERY_REQUIREMENTS = "deliveryRequirements"; // 货运要求
     
-    public static final String SHIP_EQ_LIST = "eqcostList"; // 货运要求
+    public static final String SHIP_OTHER_DELIVERY_REQUIREMENTS = "otherDeliveryRequirements"; // 其他货运要求
+    
+    public static final String SHIP_EQ_LIST = "eqcostList"; // 设备清单
     
 }

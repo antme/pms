@@ -11,60 +11,21 @@ import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.BorrowingBean;
 import com.pms.service.mockbean.DBBean;
-import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.ProjectBean;
-import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
-import com.pms.service.service.IBorrowingService;
-import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IReturnService;
-import com.pms.service.service.IShipService;
 import com.pms.service.util.ApiUtil;
 
-public class BorrowingServiceImpl extends AbstractService implements IBorrowingService {
+public class ReturnServiceImpl extends AbstractService implements IReturnService {
 	
-	private IPurchaseContractService pService;
-	
-	private IShipService shipService;
-	
-	private IReturnService returnService;
-
-	public IShipService getShipService() {
-		return shipService;
-	}
-
-	public void setShipService(IShipService shipService) {
-		this.shipService = shipService;
-	}
-
-	public IPurchaseContractService getpService() {
-		return pService;
-	}
-
-	public void setpService(IPurchaseContractService pService) {
-		this.pService = pService;
-	}
-	
-
-	public IReturnService getReturnService() {
-		return returnService;
-	}
-
-	public void setReturnService(IReturnService returnService) {
-		this.returnService = returnService;
-	}
-
-
 	@Override
 	public String geValidatorFileName() {
-		return "borrowing";
+		return "return";
 	}
 	
 	public Map<String, Object> get(Map<String, Object> params) {
 		Map<String, Object> result = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
-//		String inProjectId = result.get(BorrowingBean.BORROW_IN_PROJECT_ID).toString();
-//		String outProjectId = result.get(BorrowingBean.BORROW_OUT_PROJECT_ID).toString();
 		return result;
 	}
 
@@ -158,116 +119,23 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		return result;
 	}
 
-	public Map<String, Object> update(Map<String, Object> params) {
-		// 变回草稿状态
-		params.put(BorrowingBean.BORROW_STATUS, "0");
-		return dao.updateById(params, DBBean.BORROWING);
-	}
-
-	public void destroy(Map<String, Object> params) {
-		List<String> ids = new ArrayList<String>();
-		ids.add(String.valueOf(params.get(ApiConstants.MONGO_ID)));
-		dao.deleteByIds(ids, DBBean.BORROWING);
-	}
-
 	public Map<String, Object> create(Map<String, Object> params) {
-		params.put(BorrowingBean.BORROW_STATUS, "0");
+		params.put(BorrowingBean.BORROW_STATUS, 0);
 		params.put(BorrowingBean.BORROW_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		return dao.add(params, DBBean.BORROWING);
 	}
 	
-	public Map<String, Object> eqlist(Map<String, Object> params) {
-		
-		String saleId = (String) params.get(BorrowingBean.BORROW_OUT_SALES_CONTRACT_ID);
-		
-		// 已批准的 采购合同 的设备清单
-		List<Map<String, Object>> purchaseEqList = pService.listApprovedPurchaseContractCosts(saleId);
-		
-		// 已发货的设备清单
-		List<Map<String, Object>> shipedEqList = shipService.shipedList(saleId);
-		
-		Map<String, Double> alloEqList = new HashMap<String, Double>();
-
-		// 采购
-		for (Map<String, Object> p:purchaseEqList){
-			if (p != null) {
-				String id = p.get(ApiConstants.MONGO_ID).toString();
-				Double amount = (Double) p.get(EqCostListBean.EQ_LIST_AMOUNT);
-				alloEqList.put(id, amount);
-			}
-		}
-		
-		// 结果数据
-		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-		
-		if (alloEqList != null) {
-			// - 已发货
-			for (Map<String, Object> s:shipedEqList){
-				String id = s.get(ApiConstants.MONGO_ID).toString();
-				if (alloEqList.containsKey(id)) {
-					Double amount = (Double) s.get(EqCostListBean.EQ_LIST_AMOUNT);
-					Double aAmount = alloEqList.get(id);
-					alloEqList.put(id, aAmount-amount);
-				}
-			}
-			
-			// 取设备信息
-			List<String> eqId = new ArrayList<String>();
-			for (String id : alloEqList.keySet()) {
-				eqId.add(id);
-			}
-			Map<String, Object> queryContract = new HashMap<String, Object>();
-			queryContract.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, eqId));
-			Map<String, Object> eqInfoMap = dao.listToOneMapByKey(queryContract, DBBean.EQ_COST, ApiConstants.MONGO_ID);
-			
-			// 封装结果数据
-			for (Map.Entry mapEntry : alloEqList.entrySet()) {
-				Map<String, Object> eqMap = (Map<String, Object>) eqInfoMap.get(mapEntry.getKey().toString());
-				if (eqMap != null) {
-					eqMap.put(EqCostListBean.EQ_LIST_AMOUNT, mapEntry.getValue());
-					result.add(eqMap);
-				}
-			}
-		}
-		
-		
-		
-		Map<String, Object> res = new HashMap<String, Object>();
-		res.put(ApiConstants.RESULTS_DATA, result);
-		return res;
-	}
-
 	public Map<String, Object> option(Map<String, Object> params) {
 		Map<String, Object> result = null;
 		if (params.containsKey(BorrowingBean.BORROW_STATUS)) {
-			String status = params.get(BorrowingBean.BORROW_STATUS).toString();
 			Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
 	        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-	        params.put(BorrowingBean.BORROW_STATUS, status);
+	        params.put(BorrowingBean.BORROW_STATUS, params.get(BorrowingBean.BORROW_STATUS));
 
 	        result =  dao.updateById(params, DBBean.BORROWING);
-	        
-	        // 库管批准借货申请
-	        if (status.equals("2")) {
-	        	createShip(params);
-	        	createReturn(params);
-			}
 		}
         
         return result;
     }
-	
-	// 生成发货申请
-	private Map<String, Object> createShip(Map<String, Object> params) {
-		Map<String, Object> shipParams = new HashMap<String, Object>();
-    	shipParams.put(ShipBean.SHIP_NO, params.get(ShipBean.SHIP_NO));
-		return shipService.create(shipParams);
-	}
-	
-	// 生产待还货记录
-	private Map<String, Object> createReturn(Map<String, Object> params) {
-		Map<String, Object> returnParams = new HashMap<String, Object>();
-		return returnService.create(returnParams);
-	}
 
 }

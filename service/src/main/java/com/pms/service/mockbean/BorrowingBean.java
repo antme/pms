@@ -11,6 +11,10 @@ public class BorrowingBean {
     public static final String BORROW_STATUS = "status"; // 申请状态
     
     public static final String BORROW_ALLOCATE_TYPE = "allocateType"; // 调拨类型
+    
+    public static final String BORROW_ADDITIONAL_DOCUMENTS  = "documents"; // 所附单据
+    
+    public static final String BORROW_DESCRIPTION = "description"; // 理由及说明
 
     public static final String BORROW_IN_PROJECT_ID = "inProjectId"; //调入项目_id-外键
 	
