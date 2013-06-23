@@ -10,8 +10,7 @@
 
 
   function view(data){
-	  console.log(data);
-	    kendo.bind($("#view-form"), new userModel(data));
+	    kendo.bind($("#view-form"), data);
   }
 
 	$(document).ready(function() {
