@@ -81,7 +81,11 @@ function generateRequest(){
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else {
-		loadPage("html/purchasecontract/purchaseRequestEdit.html",{backId:row._id});
+		if(row.prId){
+			alert("此备货申请已发采购申请");
+		}else{
+			loadPage("html/purchasecontract/purchaseRequestEdit.html",{backId:row._id});
+		}
 	}
 }
 
