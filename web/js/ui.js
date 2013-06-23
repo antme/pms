@@ -111,9 +111,9 @@ function getUrlParser(){
 	return jQuery.url.setUrl(urlStr);	
 }
 
-function loadTreePage(page){
+function loadTreePage(page, parameters){
 	$("#myTask").hide();
-	loadPage(page);
+	loadPage(page, parameters);
 }
 
 function loadPage(page, parameters, popupDiv) {
@@ -286,8 +286,10 @@ function initMyDraftTasks(id, data){
 				title : "任务",
 				template : function(dataItem){
 
+					var param = "'{status:" +id + "}'";
+					console.log(param);
 					if(dataItem.db == "purchaseRequest"){
-						return '<a onclick="loadTreePage(' + "'purchaseRequestByAssistant'" +')">' + dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'purchaseRequestByAssistant'," + param + ')">' + dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "purchaseBack"){

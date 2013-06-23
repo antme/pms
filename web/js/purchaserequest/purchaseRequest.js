@@ -23,6 +23,7 @@ var listDataSource = new kendo.data.DataSource(gridOptions);
 
 $(document).ready(function() {
 	checkRoles();
+
 	if ($("#grid").length > 0) {
 		// 初始化采购订单列表页
 		$("#grid").kendoGrid({
