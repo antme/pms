@@ -131,6 +131,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(PurchaseBack.pbId, params.get(PurchaseBack.pbId));
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
 		obj.put(PurchaseBack.paSubmitDate, DateUtil.getDateString(new Date()));
+		obj.put(PurchaseBack.paShelfCode, params.get(PurchaseBack.paShelfCode));
 		obj.put(PurchaseBack.paCode, generateCode("DBSQ", DBBean.PURCHASE_ALLOCATE));
 		obj.putAll(countAllotEqcostList(params));
 		return dao.add(obj, DBBean.PURCHASE_ALLOCATE);

@@ -514,5 +514,34 @@ String.prototype.endWith = function(s) {
 	return true;
 }
 
-
-
+function intSelectInput(){
+	var html;
+	if(document.getElementById("departmentItems")){
+		html = "";
+		for (var i=0;i < departmentItems.length; i++){
+			html += "<option value='"+departmentItems[i].text+"'>"+departmentItems[i].text+"</option>";
+		}
+		document.getElementById("departmentItems").innerHTML=html;
+	}
+	if(document.getElementById("pbTypeItems")){
+		html = "";
+		for (var i=0;i < pbTypeItems.length; i++){
+			html += "<option value='"+pbTypeItems[i].text+"'>"+pbTypeItems[i].text+"</option>";
+		}
+		document.getElementById("pbTypeItems").innerHTML=html;
+	}
+	if(document.getElementById("shelfCodeItems")){
+		html = "";
+		for (var i=0;i < shelfCodeItems.length; i++){
+			html += "<option value='"+shelfCodeItems[i].text+"'>"+shelfCodeItems[i].text+"</option>";
+		}
+		document.getElementById("shelfCodeItems").innerHTML=html;
+	}
+	if(document.getElementById("invoiceTypeItems")){
+		html = "";
+		for (var i=0;i < invoiceTypeItems.length; i++){
+			html += "<option value='"+invoiceTypeItems[i].text+"'>"+invoiceTypeItems[i].text+"</option>";
+		}
+		document.getElementById("invoiceTypeItems").innerHTML=html;
+	}
+}

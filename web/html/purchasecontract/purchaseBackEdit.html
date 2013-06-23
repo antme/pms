@@ -1,32 +1,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<style>
-.table_form td {
-	padding: 3px 10px;
-}
-.table_form td:FIRST-CHILD {
-	text-align: right;
-	width: 100px;
-}
-#form-container ul {
-	list-style: none;
-	padding: 0px;
-	display:block;
-}
-#form-container ul li {
-	float: left;
-	padding: 0px 5px;
-}
-</style>
-
 <script  src="js/purchaseBackEdit.js"></script>
 <body>
-<script id="popup-editor" type="text/x-kendo-template">
-  	<h3>申请数量</h3>
-	<span data-bind="text: eqcostNo"></span>
-</script>
-
-<div>
+	<div>
 		<h2>备货申请</h2>
 		<div id="searchDiv">
 			<label>选择合同:</label>
@@ -36,7 +11,7 @@
 		<br><hr>
 		<div id="form-container">
 			<div>
-				<table style="width: 80%">
+				<table class="table_form">
 					<tr>
 						<td>项目名： <span data-bind="text: projectName"></span></td>	
 						<td>项目编号： <span data-bind="text: projectCode"></span></td>
@@ -57,7 +32,7 @@
 										<option value="其它渠道采购">其它渠道采购</option>
 								</select>
 					</li>
-					<li>到货要求日期: <input data-bind="value: pbPlanDate" data-role="datetPicker" class="foredit" id="pbPlanDate"  /></li>
+					<li>到货要求日期: <input data-bind="value: pbPlanDate" class="foredit" id="pbPlanDate"  /></li>
 				</ul>
 			</div>
 			<br><br>
@@ -77,5 +52,5 @@
             	<input class="submitform foreditbt" type="button" value="取消">
             </div>
 		</div>
-</div>		
+	</div>		
 </body>

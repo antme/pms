@@ -38,6 +38,6 @@ public class PurchaseBack {
 	public static final String paCheckDate = "paCheckDate";
 	public static final String paCount = "paCount";//调拨申请数
 	public static final String paComment = "paComment";
-	
+	public static final String paShelfCode = "paShelfCode";//调出货架编号
 	
 }

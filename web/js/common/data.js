@@ -155,6 +155,9 @@ var allotTypeItems = [{ text: "借货调拨"}, { text: "还货调拨"}, { text: 
 // 发货类型
 var shipTypeItems = [{ text: "供应商直发", value: 0 }, { text: "非供应商直发", value: 1 }];
 
+//货架编号
+var shelfCodeItems =  [{ text: "北京备货货架"}, { text: "上海备货货架"}];
+
 var proManagerItems = new kendo.data.DataSource({
 	transport : {
 		read : {

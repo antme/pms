@@ -154,7 +154,7 @@ td a {
 
 
 /**********JACK*******************/
-.table_form td {padding: 3px 10px;}
-.table_form td:FIRST-CHILD {text-align: right;width: 100px;}
+.table_form {width: 90%}
+.table_form td {padding: 3px 0}
 #form-container ul {list-style: none;padding: 0px;display:block;}
 #form-container ul li {float: left;padding: 0px 5px;}
