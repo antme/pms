@@ -79,8 +79,14 @@ $(document).ready(function () {
 						name = "借货申请中";
 					} else if (dataItem.status == 2){
 						name = "借货申请已批准";
+					} else if (dataItem.status == 3){
+						name = "还货申请中";
+					} else if (dataItem.status == 4){
+						name = "还货申请已批准";
 					} else if (dataItem.status == -1){
 						name = "借货申请被拒绝";
+					} else if (dataItem.status == -2){
+						name = "还货申请被拒绝";
 					} else {
 						name = "未知";
 					}
@@ -114,16 +120,24 @@ function toolbar_option(op) {
 		var nextStatus = false;
 		
 		if (op == 1) { // 批准操作
-			if (row.status == 1) {
+			if (row.status == 1 || row.status == -1) {
 				nextStatus = 2;
+			} else if (row.status == 3 || row.status == -2) { // 还货申请
+				nextStatus = 4;
 			}
 		} else if (op == 2) { // 拒绝操作
 			if (row.status == 1) { // 借货申请
 				nextStatus = -1;
+			} else if (row.status == 3) { // 还货申请
+				nextStatus = -2;
 			}
 		} else if (op == 3) { // 借货申请
-			if (row.status == 0 || row.status == -1) {
+			if (row.status == 0) {
 				nextStatus = 1;
+			}
+		} else if (op == 4) { // 还货申请
+			if (row.status == 2) {
+				nextStatus = 3;
 			}
 		}
 		

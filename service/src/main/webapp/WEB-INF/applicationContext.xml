@@ -107,10 +107,16 @@
 		<property name="dao" ref="commonDao"></property>
 		<property name="pService" ref="purchaseContractService"></property>
 		<property name="shipService" ref="shipService"></property>
+		<property name="returnService" ref="returnService"></property>
 	</bean>
 
     <bean name="historyService" class="com.pms.service.service.impl.ModifyHistoryLogServiceImpl"
 		id="historyService">
+		<property name="dao" ref="commonDao"></property>
+	</bean>
+
+    <bean name="returnService" class="com.pms.service.service.impl.ReturnServiceImpl"
+		id="returnService">
 		<property name="dao" ref="commonDao"></property>
 	</bean>
 

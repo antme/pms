@@ -10,46 +10,136 @@
 	    	<button onclick='loadPage("borrowing");' class="k-button">取消</button>
 	    </div>
 	    
-	    <div class="k-edit-form-container">
-	    	<div class="k-edit-label">
-	    		<label for="borrowNo">编号</label>
-	    	</div>
-	    	<div data-container-for="borrowNo" class="k-edit-field">
-	    		<input type="text" class="k-input k-textbox" name="borrowNo" required="required" data-bind="value:borrowNo">
-	    	</div>
-	    	<div class="k-edit-label">
-	    		<label for="applicant">申请人</label>
-	    	</div>
-	    	<div data-container-for="applicant" class="k-edit-field">
-	    		<input type="text" class="k-input k-textbox" name="applicant" required="required" data-bind="value:applicant">
-	    	</div>
-	    	<div class="k-edit-label">
-	    		<label for="in-projects">调入项目编号</label>
-	    	</div>
-	    	<div data-container-for="in-projects" class="k-edit-field">
-	    		<input id="in-projects" name="in-projects" required="required" data-bind="value:inProjectId">
-	    	</div>
-	    	<div class="k-edit-label">
-	    		<label for="inSalesContract">调入销售合同编号</label>
-	    	</div>
-	    	<div data-container-for="inSalesContract" class="k-edit-field">
-	    		<input id="inSalesContract" name="inSalesContract" required="required" data-bind="value:inSalesContractId">
-	    	</div>
-	    	<div class="k-edit-label">
-	    		<label for="out-projects">调出项目编号</label>
-	    	</div>
-	    	<div data-container-for="out-projects" class="k-edit-field">
-	    		<input id="out-projects" name="out-projects" required="required" data-bind="value:outProjectId">
-	    	</div>
-	    	<div class="k-edit-label">
-	    		<label for="outSalesContract">调出销售合同编号</label>
-	    	</div>
-	    	<div data-container-for="outSalesContract" class="k-edit-field">
-	    		<input id="outSalesContract" name="outSalesContract" required="required" data-bind="value:outSalesContractId">
-	    	</div>
-	    </div>
+	    <div id="tabstrip">
+            <ul>
+                <li class="k-state-active">
+                   	 借货申请
+                </li>
+                <li>
+                   	 发货信息
+                </li>
+            </ul>
+            <div>
+                <div class="k-edit-form-container">
+			    	<div class="k-edit-label">
+			    		<label for="borrowNo">编号</label>
+			    	</div>
+			    	<div data-container-for="borrowNo" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="borrowNo" required="required" data-bind="value:borrowNo">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="applicant">申请人</label>
+			    	</div>
+			    	<div data-container-for="applicant" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="applicant" required="required" data-bind="value:applicant">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="in-projects">调入项目名称</label>
+			    	</div>
+			    	<div data-container-for="in-projects" class="k-edit-field">
+			    		<input id="in-projects" name="in-projects" required="required" data-bind="value:inProjectId">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="inSalesContract">调入销售合同编号</label>
+			    	</div>
+			    	<div data-container-for="inSalesContract" class="k-edit-field">
+			    		<input id="inSalesContract" name="inSalesContract" required="required" data-bind="value:inSalesContractId">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="out-projects">调出项目名称</label>
+			    	</div>
+			    	<div data-container-for="out-projects" class="k-edit-field">
+			    		<input id="out-projects" name="out-projects" required="required" data-bind="value:outProjectId">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="outSalesContract">调出销售合同编号</label>
+			    	</div>
+			    	<div data-container-for="outSalesContract" class="k-edit-field">
+			    		<input id="outSalesContract" name="outSalesContract" required="required" data-bind="value:outSalesContractId">
+			    	</div>
+			    </div>
+			    
+			    <div id="equipments-grid" ></div>
+            </div>
+            <div>
+                <div class="k-edit-form-container">
+			    	<div class="k-edit-label">
+			    		<label for="type">发货类型</label>
+			    	</div>
+			    	<div data-container-for="type" class="k-edit-field">
+			    		<input id="type" name="type" required="required" data-bind="value:type">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="shipNo">编号</label>
+			    	</div>
+			    	<div data-container-for="shipNo" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="shipNo" required="required" data-bind="value:shipNo">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="applicationDepartment">申请部门</label>
+			    	</div>
+			    	<div data-container-for="applicationDepartment" class="k-edit-field">
+			    		<input id="applicationDepartment" name="applicationDepartment" required="required" data-bind="value:applicationDepartment">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="warehouse">仓库</label>
+			    	</div>
+			    	<div data-container-for="warehouse" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="warehouse" data-bind="value:warehouse">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="deliveryContact">收货联系人</label>
+			    	</div>
+			    	<div data-container-for="deliveryContact" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="deliveryContact" required="required" data-bind="value:deliveryContact">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="deliveryContactWay">联系方式</label>
+			    	</div>
+			    	<div data-container-for="deliveryContactWay" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="deliveryContactWay" required="required" data-bind="value:deliveryContactWay">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="deliveryUnit">收货单位</label>
+			    	</div>
+			    	<div data-container-for="deliveryUnit" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="deliveryUnit" required="required" data-bind="value:deliveryUnit">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="deliveryAddress">交货地点</label>
+			    	</div>
+			    	<div data-container-for="deliveryAddress" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="deliveryAddress" required="required" data-bind="value:deliveryAddress">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="issueTime">发出时间</label>
+			    	</div>
+			    	<div data-container-for="issueTime" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="issueTime" data-bind="value:issueTime">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="deliveryTime">送达时间</label>
+			    	</div>
+			    	<div data-container-for="deliveryTime" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="deliveryTime" data-bind="value:deliveryTime">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="deliveryRequirements">货运要求</label>
+			    	</div>
+			    	<div data-container-for="deliveryRequirements" class="k-edit-field">
+			    		<input id="deliveryRequirements" name="deliveryRequirements" required="required" data-bind="value:deliveryRequirements">
+			    	</div>
+			    	<div class="k-edit-label">
+			    		<label for="otherDeliveryRequirements">其他货运要求</label>
+			    	</div>
+			    	<div data-container-for="otherDeliveryRequirements" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="otherDeliveryRequirements" data-bind="value:otherDeliveryRequirements">
+			    	</div>
+			    </div>
+            </div>
+        </div>
 	    
-	    <div id="equipments-grid" ></div>
+	    
 	    
 	</div>
 

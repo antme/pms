@@ -13,10 +13,12 @@ import com.pms.service.mockbean.BorrowingBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IBorrowingService;
 import com.pms.service.service.IPurchaseContractService;
+import com.pms.service.service.IReturnService;
 import com.pms.service.service.IShipService;
 import com.pms.service.util.ApiUtil;
 
@@ -25,6 +27,8 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	private IPurchaseContractService pService;
 	
 	private IShipService shipService;
+	
+	private IReturnService returnService;
 
 	public IShipService getShipService() {
 		return shipService;
@@ -41,6 +45,16 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	public void setpService(IPurchaseContractService pService) {
 		this.pService = pService;
 	}
+	
+
+	public IReturnService getReturnService() {
+		return returnService;
+	}
+
+	public void setReturnService(IReturnService returnService) {
+		this.returnService = returnService;
+	}
+
 
 	@Override
 	public String geValidatorFileName() {
@@ -145,7 +159,8 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	}
 
 	public Map<String, Object> update(Map<String, Object> params) {
-		params.put(BorrowingBean.BORROW_STATUS, 0);
+		// 变回草稿状态
+		params.put(BorrowingBean.BORROW_STATUS, "0");
 		return dao.updateById(params, DBBean.BORROWING);
 	}
 
@@ -156,7 +171,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	}
 
 	public Map<String, Object> create(Map<String, Object> params) {
-		params.put(BorrowingBean.BORROW_STATUS, 0);
+		params.put(BorrowingBean.BORROW_STATUS, "0");
 		params.put(BorrowingBean.BORROW_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		return dao.add(params, DBBean.BORROWING);
 	}
@@ -225,14 +240,34 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	public Map<String, Object> option(Map<String, Object> params) {
 		Map<String, Object> result = null;
 		if (params.containsKey(BorrowingBean.BORROW_STATUS)) {
+			String status = params.get(BorrowingBean.BORROW_STATUS).toString();
 			Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
 	        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-	        params.put(BorrowingBean.BORROW_STATUS, params.get(BorrowingBean.BORROW_STATUS));
+	        params.put(BorrowingBean.BORROW_STATUS, status);
 
 	        result =  dao.updateById(params, DBBean.BORROWING);
+	        
+	        // 库管批准借货申请
+	        if (status.equals("2")) {
+	        	createShip(params);
+	        	createReturn(params);
+			}
 		}
         
         return result;
     }
+	
+	// 生成发货申请
+	private Map<String, Object> createShip(Map<String, Object> params) {
+		Map<String, Object> shipParams = new HashMap<String, Object>();
+    	shipParams.put(ShipBean.SHIP_NO, params.get(ShipBean.SHIP_NO));
+		return shipService.create(shipParams);
+	}
+	
+	// 生产待还货记录
+	private Map<String, Object> createReturn(Map<String, Object> params) {
+		Map<String, Object> returnParams = new HashMap<String, Object>();
+		return returnService.create(returnParams);
+	}
 
 }
