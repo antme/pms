@@ -16,6 +16,10 @@ public interface ISalesContractService {
 	
 	public Map<String, Object> addInvoiceForSC(Map<String, Object> params);
 	
+	public Map<String, Object> loadInvoiceForSC(Map<String, Object> params);
+	
+	public Map<String, Object> approveInvoiceForSC(Map<String, Object> params);
+	
 	public Map<String, Object> listInvoiceForSC(Map<String, Object> params);
 	
 	public Map<String, Object> addGotMoneyForSC(Map<String, Object> params);

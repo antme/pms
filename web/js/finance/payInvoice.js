@@ -8,6 +8,7 @@ $(document).ready(function () {
 			payInvoiceDepartment: {nullable: true},
 			payInvoiceProposerId: {},
 			payInvoiceProposerName: {},
+			payInvoiceStatus:{},
 			payInvoicePlanDate: {type:"date",nullable: true},
 			payInvoiceReceivedMoneyStatus:{},
 			payInvoiceSubmitDate: {type:"date"},
@@ -16,6 +17,10 @@ $(document).ready(function () {
 			payInvoiceSignDate: {type:"date"},
 			payInvoiceMoney: {},
 			payInvoiceItemList: {nullable: true},
+			payInvoiceActualMoney:{},
+			payInvoiceActualDate:{},
+			payInvoiceActualInvoiceNum:{},
+			payInvoiceActualSheetCount:{},
 			invoiceType:{},
 			salesContractId:{},
 			contractCode:{},
@@ -54,13 +59,22 @@ $(document).ready(function () {
 	    columns: [
 	        {field:"payInvoiceMoney", title:"合计开票金额"},
 	        {field:"payInvoicePlanDate", title:"建议出票日期",format: "{0:yyyy/MM/dd}"},
-	        {field:"payInvoiceSignDate", title:"出票日期",format: "{0:yyyy/MM/dd hh:mm}"},
+	        {field:"payInvoiceActualDate", title:"出票日期",format: "{0:yyyy/MM/dd hh:mm}"},
 	        {field:"payInvoiceReceivedMoneyStatus", title:"收款情况"},
 	        {field:"invoiceType", title:"开票类型"},
-	        {field:"contractCode", title:"销售合同编号"}
+	        {field:"contractCode", title:"销售合同编号"},
+	        {field:"payInvoiceStatus", title:"状态"}
 	    ]
 	});
 });
 function add(){
 	loadPage("payInvoiceEdit");
+}
+function edit(){
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else {	
+		loadPage("payInvoiceEdit", { _id : row._id });	
+	}
 }

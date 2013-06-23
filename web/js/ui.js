@@ -111,9 +111,9 @@ function getUrlParser(){
 	return jQuery.url.setUrl(urlStr);	
 }
 
-function loadTreePage(page){
+function loadTreePage(page, parameters){
 	$("#myTask").hide();
-	loadPage(page);
+	loadPage(page, parameters);
 }
 
 function loadPage(page, parameters, popupDiv) {
@@ -286,8 +286,10 @@ function initMyDraftTasks(id, data){
 				title : "任务",
 				template : function(dataItem){
 
+					var param = "'{status:" +id + "}'";
+					console.log(param);
 					if(dataItem.db == "purchaseRequest"){
-						return '<a onclick="loadTreePage(' + "'purchaseRequestByAssistant'" +')">' + dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'purchaseRequestByAssistant'," + param + ')">' + dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "purchaseBack"){
@@ -466,6 +468,50 @@ function disableAllInPoppup(){
 }
 
 
+
+function openPMViewWindow(param){
+	var options = { width:"680px", height: "400px", title:"项目经理信息"};
+	openRemotePageWindow(options, "html/user/userview.html", {_id : param});
+}
+
+function openCustomerViewWindow(param){
+	var options = { width:"680px", height: "400px", title:"客户信息"};
+	openRemotePageWindow(options, "html/customer/view.html", {_id : param});
+}
+	
+
+
+function openProjectViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"项目信息"};
+	openRemotePageWindow(options, "html/project/addProject.html", {_id : param});
+}
+
+
+function openPurchaseRequestViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"采购申请信息"};
+	openRemotePageWindow(options, "html/purchasecontract/purchaseRequestEdit.html", {_id : param});
+}
+
+
+function openPurchaseOrderViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"采购订单信息"};
+	openRemotePageWindow(options, "html/purchasecontract/purchaseOrderEdit.html", {_id : param});
+}
+
+function openBackRequestViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"备货申请信息"};
+	openRemotePageWindow(options, "purchaseBackEdit", {_id : param});
+}
+
+function openSCViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"销售合同信息"};
+	openRemotePageWindow(options, "html/salescontract/editsc.html", {_id : param});
+}
+
+
+
+
+
 String.prototype.endWith = function(s) {
 	if (s == null || s == "" || this.length == 0 || s.length > this.length)
 		return false;
@@ -476,5 +522,34 @@ String.prototype.endWith = function(s) {
 	return true;
 }
 
-
-
+function intSelectInput(){
+	var html;
+	if(document.getElementById("departmentItems")){
+		html = "";
+		for (var i=0;i < departmentItems.length; i++){
+			html += "<option value='"+departmentItems[i].text+"'>"+departmentItems[i].text+"</option>";
+		}
+		document.getElementById("departmentItems").innerHTML=html;
+	}
+	if(document.getElementById("pbTypeItems")){
+		html = "";
+		for (var i=0;i < pbTypeItems.length; i++){
+			html += "<option value='"+pbTypeItems[i].text+"'>"+pbTypeItems[i].text+"</option>";
+		}
+		document.getElementById("pbTypeItems").innerHTML=html;
+	}
+	if(document.getElementById("shelfCodeItems")){
+		html = "";
+		for (var i=0;i < shelfCodeItems.length; i++){
+			html += "<option value='"+shelfCodeItems[i].text+"'>"+shelfCodeItems[i].text+"</option>";
+		}
+		document.getElementById("shelfCodeItems").innerHTML=html;
+	}
+	if(document.getElementById("invoiceTypeItems")){
+		html = "";
+		for (var i=0;i < invoiceTypeItems.length; i++){
+			html += "<option value='"+invoiceTypeItems[i].text+"'>"+invoiceTypeItems[i].text+"</option>";
+		}
+		document.getElementById("invoiceTypeItems").innerHTML=html;
+	}
+}

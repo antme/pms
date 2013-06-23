@@ -4,9 +4,9 @@
 <div id="purchaserepository-edit" class="k-content">
 	<div class="k-edit-field " id="purchaserepository-div"
 		style="width: 1200px;">
-		<input type="text" name="purchasecontractselect" style="width: 500px;"
+		项目： <input type="text" name="purchasecontractselect" style="width: 500px;"
 			id="purchasecontractselect" required="required">
-		<input type="text"  id="supplierName"   required="required"/>
+		供应商： <input type="text"  id="supplierName"   required="required"/>
 		
 		<button onclick="selectContracts();">确定</button>
 	</div>
@@ -14,13 +14,22 @@
 
 
 	<div id="purchaserepository-edit-item">
-
-        <div>
-            <label>入库人:</label> <input type="text" data-bind="value: operator" id="operator" />
-            <label>入库方式:</label> <input type="text" data-bind="value: inType" id="inType" />
-            <label>入库日期:</label> <input type="text" data-role="datepicker"  data-bind="value: inDate" id="inDate" />
-            <label>单据编号:</label> <input type="text" data-bind="value: code" id="code" />
-        </div>
+        <hr>
+        <table>
+            <tr>
+            <td><label>制单人:</label> <input type="text" data-bind="value: operator" id="operator" /></td>
+            <td><label>入库方式:</label> <input type="text" data-bind="value: inType" id="inType" /></td>
+            <td><label>入库日期:</label> <input type="text" data-role="datepicker"  data-bind="value: inDate" id="inDate" /></td>
+            <td><label>单据编号:</label> <input type="text" data-bind="value: code" id="code" /></td>
+            </tr>
+            <tr>
+            <td><label>批次:</label> <input type="text" data-bind="value: batchNumber" id="operator" /></td>
+            <td><label>库房:</label> <input type="text" data-bind="value: storeHouse" id="inType" /></td>
+            <td><label>货位:</label> <input type="text"  data-bind="value: goodsAllocation" id="inDate" /></td>
+            <td><label>供应商:</label> <input type="text" data-bind="value: code" id="code" /></td>
+            </tr>
+        </table>
+        <hr>
         <div>
             <div id="purchaserepository-edit-grid"></div>
         </div>

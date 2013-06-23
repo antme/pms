@@ -12,16 +12,19 @@ import org.apache.logging.log4j.Logger;
 import com.pms.service.annotation.InitBean;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
+import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.exception.ApiLoginException;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
+import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.RoleBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IUserService;
+import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DataEncrypt;
@@ -233,28 +236,43 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     }
     
     public Map<String, Object> listMyTasks() {
-        Map<String, Object> myDraftPurchaseRequest = new HashMap<String, Object>();
-
-        myDraftPurchaseRequest.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
-        myDraftPurchaseRequest.put("status", PurchaseRequest.STATUS_DRAFT);
-
+        Map<String, Object> taskQuery = new HashMap<String, Object>();
+        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());   
+        
+        Map<String, Object> statusQuery = new HashMap<String, Object>();      
+        statusQuery.put("status", PurchaseRequest.STATUS_DRAFT);
+        statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
+        //or query
+        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
+        
         Map<String, Object> result = new HashMap<String, Object>();
-        queryTasks("draft", result, myDraftPurchaseRequest);
+        queryTasks("draft", result, taskQuery);
 
-        myDraftPurchaseRequest = new HashMap<String, Object>();
-        myDraftPurchaseRequest.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
-        myDraftPurchaseRequest.put("status", PurchaseRequest.STATUS_NEW);
-        queryTasks("inprogress", result, myDraftPurchaseRequest);
+        taskQuery = new HashMap<String, Object>();
+        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
+        statusQuery = new HashMap<String, Object>();      
+        statusQuery.put("status", PurchaseRequest.STATUS_NEW);
+        statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
+        //or query
+        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));    
+        queryTasks("inprogress", result, taskQuery);
 
-        myDraftPurchaseRequest = new HashMap<String, Object>();
-        myDraftPurchaseRequest.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
-        myDraftPurchaseRequest.put("status", PurchaseRequest.STATUS_REJECTED);
-        queryTasks("rejected", result, myDraftPurchaseRequest);
+        
+        taskQuery = new HashMap<String, Object>();
+        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
+        statusQuery = new HashMap<String, Object>();      
+        statusQuery.put("status", PurchaseRequest.STATUS_REJECTED);
+        //or query
+        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));   
+        queryTasks("rejected", result, taskQuery);
 
-        myDraftPurchaseRequest = new HashMap<String, Object>();
-        myDraftPurchaseRequest.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
-        myDraftPurchaseRequest.put("status", PurchaseRequest.STATUS_APPROVED);
-        queryTasks("approved", result, myDraftPurchaseRequest);
+        taskQuery = new HashMap<String, Object>();
+        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
+        statusQuery = new HashMap<String, Object>();      
+        statusQuery.put("status", PurchaseRequest.STATUS_APPROVED);
+        //or query
+        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));  
+        queryTasks("approved", result, taskQuery);
 
         return result;
     }

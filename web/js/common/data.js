@@ -91,7 +91,7 @@ var menus = [
                      { text: "采购订单", id: "purchaseorder",  imageUrl: "/images/porder.png"},
                      { text: "采购合同", id: "purchasecontract", imageUrl: "/images/order.png" },
                      { text: "入库申请单", id: "repository", imageUrl: "/images/repository.png" },
-                     { text: "直发出入库申请单", id: "repositoryOut", imageUrl: "/images/rout.png"}
+                     { text: "直发出入库", id: "repositoryOut", imageUrl: "/images/rout.png"}
                  ]
              },                                               
              {
@@ -157,6 +157,9 @@ var shipTypeItems = [{ text: "供应商直发", value: 0 }, { text: "非供应�
 
 // 货运要求
 var deliveryRequirementsItems = [{ text: "常规汽运或快递"}, { text: "加急空运"}];
+
+//货架编号
+var shelfCodeItems =  [{ text: "北京备货货架"}, { text: "上海备货货架"}];
 
 var proManagerItems = new kendo.data.DataSource({
 	transport : {

@@ -59,7 +59,12 @@ $(document).ready(function() {
 			postAjaxRequest(editUrl, popupParams, edit);
 			disableAllInPoppup();
 		}else{
-			postAjaxRequest(editUrl, redirectParams, edit);
+			if(redirectParams.backId){
+				selectBackId = redirectParams.backId;
+				selectBackRequest();
+			}else{
+				postAjaxRequest(editUrl, redirectParams, edit);
+			}
 		}
 	} else {
 		$("#purchase-back-select").show();
@@ -111,7 +116,7 @@ function sumOrders(e) {
 		eqcostBasePrice = e.values.eqcostBasePrice
 	}
 
-	if (e.values.requestedTotalMoney) {
+	if (e.values.eqcostProductUnitPrice) {
 		eqcostProductUnitPrice = e.values.eqcostProductUnitPrice
 	}
 

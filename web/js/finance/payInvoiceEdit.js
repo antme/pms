@@ -1,38 +1,45 @@
+intSelectInput();
+var currentObj;
+var baseUrl = "../../service/";
+var subModel = kendo.data.Model.define({
+	id : "itemNo",
+	fields : {
+		itemNo: {nullable: true},
+		itemMonth: {nullable: true},
+		itemContent: {nullable:true},
+		itemComment: {},
+		itemMoney: {type: "number",validation: {min: 0}}
+	}
+});	
+var myModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		payInvoiceDepartment: {nullable: true},
+		payInvoiceProposerId: {},
+		payInvoiceProposerName: {},
+		payInvoiceStatus:{},
+		payInvoicePlanDate: {nullable: true},
+		payInvoiceReceivedMoneyStatus:{},
+		payInvoiceSubmitDate: {},
+		payInvoiceApproveDate: {},
+		payInvoiceCheckDate: {},
+		payInvoiceSignDate: {},
+		payInvoiceMoney: {},
+		payInvoiceItemList: {nullable: true},
+		payInvoiceActualMoney:{type:"number"},
+		payInvoiceActualDate:{type:"date"},
+		payInvoiceActualInvoiceNum:{type:"string"},
+		payInvoiceActualSheetCount:{type:"number"},
+		invoiceType:{},
+		salesContractId:{},
+		contractCode:{},
+		projectId:{},
+		operateType:{}
+	}
+});
 $(document).ready(function () {
-	var currentObj;
-	var baseUrl = "../../service/";
-	var subModel = kendo.data.Model.define({
-		id : "itemNo",
-		fields : {
-			itemNo: {nullable: true},
-			itemMonth: {nullable: true},
-			itemContent: {nullable:true},
-			itemComment: {},
-			itemMoney: {type: "number",validation: {min: 0}}
-		}
-	});	
-	var myModel = kendo.data.Model.define({
-		id : "_id",
-		fields : {
-			payInvoiceDepartment: {nullable: true},
-			payInvoiceProposerId: {},
-			payInvoiceProposerName: {},
-			payInvoicePlanDate: {nullable: true},
-			payInvoiceReceivedMoneyStatus:{},
-			payInvoiceSubmitDate: {},
-			payInvoiceApproveDate: {},
-			payInvoiceCheckDate: {},
-			payInvoiceSignDate: {},
-			payInvoiceMoney: {},
-			payInvoiceItemList: {nullable: true},
-			invoiceType:{},
-			salesContractId:{},
-			contractCode:{},
-			projectId:{},
-			operateType:{}
-		}
-	});
-	var currentObj = new myModel();
+	currentObj = new myModel();
+	
 	$("#subGrid").kendoGrid({
 		dataSource: {
 			schema: {
@@ -70,9 +77,11 @@ $(document).ready(function () {
 
 	$(".submitform").click(function(){
 		if(confirm(this.value + "表单，确认？")){
+			currentObj.operateType=this.value;
 			if(this.value == "提交"){
-				currentObj.operateType="add";
 				postAjaxRequest( baseUrl+"/sc/invoice/add", {models:kendo.stringify(currentObj)} , saveSuccess);
+			} else if(this.value == "批准" || this.value == "拒绝"){
+				postAjaxRequest( baseUrl+"/sc/invoice/update", {models:kendo.stringify(currentObj)} , saveSuccess);
 			}else if(this.value=="取消"){
 				location.reload();
 			}
@@ -87,7 +96,8 @@ $(document).ready(function () {
 		}else{
 			alert("请选择合同编号");
 		}
-	});	
+	});
+	
 	function edit(e){
 		currentObj = new myModel(e);
 		kendo.bind($("#form-container"), currentObj);
@@ -95,6 +105,19 @@ $(document).ready(function () {
 	function saveSuccess(){
 		location.reload();
 	}
+	
+	if(redirectParams){//批准
+		$("#searchDiv").hide();
+		$("#foradddiv").hide();
+		$(".foredit").attr("disabled","disabled");
+		var _id = redirectParams._id;
+		if(_id) {
+			postAjaxRequest(baseUrl+"sc/invoice/load", {_id:_id}, edit);
+		}
+	}else{//添加
+		$("#forapprovediv").hide();
+	}
+	kendo.bind($("#form-container"), currentObj);	
 });
 
 

@@ -1,5 +1,5 @@
+intSelectInput();
 $(document).ready(function () {
-	var currentObj;
 	var baseUrl = "../../service/purchase/back";
 	var subModel = kendo.data.Model.define({
 		id : "eqcostNo",
@@ -49,8 +49,8 @@ $(document).ready(function () {
 		fields : {
 			pbCode:{},
 			pbDepartment:{},
-			pbSubmitDate:{},
-			pbPlanDate:{},
+			pbSubmitDate:{type:"date"},
+			pbPlanDate:{type:"date"},
 			pbType:{},
 			pbStatus:{},
 			pbComment:{},
@@ -64,6 +64,8 @@ $(document).ready(function () {
 			contractAmount: {}
 		}
 	});
+	
+	var currentObj = new myModel();
 	
 	$("#subGrid").kendoGrid({
 		dataSource: {
@@ -97,6 +99,7 @@ $(document).ready(function () {
 	$("#searchfor").kendoDropDownList({
 		dataTextField : "contractCode",
 		dataValueField : "_id",
+		template:  '${ data.projectName }:<strong>${ data.contractCode }</strong>',
 		dataSource : {
 			transport : {
 				read : {
@@ -110,7 +113,16 @@ $(document).ready(function () {
 			}
 		}
 	});	
-
+	
+	
+	$("#pbDepartment").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : departmentItems
+	});
+	
+	$("#pbPlanDate").kendoDatePicker();
+	
 	$(".submitform").click(function(){
 		if(confirm(this.value + "表单，确认？")){
 			if(this.value == "保存"){
@@ -143,10 +155,6 @@ $(document).ready(function () {
 		kendo.bind($("#form-container"), currentObj);
 	}
 	
-	function saveSuccess(){
-		location.reload();
-	}
-	
 	if(popupParams){
 		postAjaxRequest(baseUrl+"/load", popupParams, edit);
 		disableAllInPoppup();
@@ -160,9 +168,9 @@ $(document).ready(function () {
 			postAjaxRequest(baseUrl+"/prepare", {scId:saleId}, edit);
 		}
 	}
-
-	
-	
+	kendo.bind($("#form-container"), currentObj);
 });
 
-
+function saveSuccess(){
+	location.reload();
+}
