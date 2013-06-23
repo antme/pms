@@ -1,6 +1,5 @@
 package com.pms.service.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,20 +8,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.google.gson.Gson;
-import com.pms.service.dbhelper.DBQuery;
-import com.pms.service.dbhelper.DBQueryOpertion;
+
+import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
-import com.pms.service.mockbean.EqCostListBean;
+import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseService;
-import com.pms.service.service.ISalesContractService;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
 
@@ -30,7 +28,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
     private static final Logger logger = LogManager.getLogger(PurchaseServiceImpl.class);
 	
-    private ISalesContractService salesContractService;
     
     /**
      * @param scId
@@ -74,6 +71,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		if(params.get(PurchaseBack.pbCode) == null) {
 			newObj.put(PurchaseBack.pbCode, generateCode("BHSQ", DBBean.PURCHASE_BACK));
 		}
+		
+		scs.mergeCommonFieldsFromSc(newObj, params.get(PurchaseBack.scId));
 		
 		if(params.get(ApiConstants.MONGO_ID) == null){
 			return dao.add(newObj, DBBean.PURCHASE_BACK);
@@ -134,6 +133,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(PurchaseBack.paShelfCode, params.get(PurchaseBack.paShelfCode));
 		obj.put(PurchaseBack.paCode, generateCode("DBSQ", DBBean.PURCHASE_ALLOCATE));
 		obj.putAll(countAllotEqcostList(params));
+		scs.mergeCommonFieldsFromSc(obj, params.get(PurchaseBack.scId));
 		return dao.add(obj, DBBean.PURCHASE_ALLOCATE);
 	}
 
@@ -183,6 +183,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		String[] keys = new String[]{PurchaseBack.pbCode,PurchaseBack.pbType,PurchaseBack.pbStatus,
 				PurchaseBack.pbMoney,PurchaseBack.scId,PurchaseBack.pbSubmitDate, PurchaseBack.prId, PurchaseBack.poId};
 		params.put(ApiConstants.LIMIT_KEYS, keys);
+		mergeDataRoleQuery(params);
 		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
 		Set<String> saleIds = new HashSet<String>();
@@ -190,7 +191,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			saleIds.add((String)re.get(PurchaseBack.scId));
 		}
 		saleIds.remove(null);
-		Map<String,Object> baseInfoMap = salesContractService.getBaseInfoByIds(new ArrayList(saleIds));
+		Map<String,Object> baseInfoMap = scs.getBaseInfoByIds(new ArrayList(saleIds));
 		for(Map<String,Object> re : list){
 			re.putAll((Map)baseInfoMap.get(re.get(PurchaseBack.scId)));
 		}
@@ -215,17 +216,17 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    //返回PurchaseBack.prId,页面检测是否已发采购申请
 		String[] keys = new String[]{PurchaseBack.pbCode,PurchaseBack.pbType,PurchaseBack.pbStatus,
 				PurchaseBack.pbMoney,PurchaseBack.scId,PurchaseBack.pbSubmitDate, PurchaseBack.prId};
-		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(ApiConstants.LIMIT_KEYS, keys);
-		query.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
-		Map<String,Object> map = dao.list(query, DBBean.PURCHASE_BACK);
+		params.put(ApiConstants.LIMIT_KEYS, keys);
+		params.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
+		mergeDataRoleQuery(params);
+		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
 		Set<String> saleIds = new HashSet<String>();
 		for(Map<String,Object> re : list){
 			saleIds.add((String)re.get(PurchaseBack.scId));
 		}
 		saleIds.remove(null);
-		Map<String,Object> baseInfoMap = salesContractService.getBaseInfoByIds(new ArrayList(saleIds));
+		Map<String,Object> baseInfoMap = scs.getBaseInfoByIds(new ArrayList(saleIds));
 		for(Map<String,Object> re : list){
 			re.putAll((Map)baseInfoMap.get(re.get(PurchaseBack.scId)));
 		}
@@ -235,7 +236,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
 	@Override
 	public Map<String, Object> listAllot(Map<String, Object> params) {
-		Map<String,Object> map = dao.list(null, DBBean.PURCHASE_ALLOCATE);
+	    mergeDataRoleQuery(params);
+		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_ALLOCATE);
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
 		Set<String> saleIds = new HashSet<String>();
 		for(Map<String,Object> re : list){
@@ -243,7 +245,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		}
 		saleIds.remove(null);
 		if(!saleIds.isEmpty()){
-			Map<String,Object> baseInfoMap = salesContractService.getBaseInfoByIds(new ArrayList(saleIds));
+			Map<String,Object> baseInfoMap = scs.getBaseInfoByIds(new ArrayList(saleIds));
 			for(Map<String,Object> re : list){
 				re.putAll((Map)baseInfoMap.get(re.get(PurchaseBack.scId)));
 			}
@@ -264,7 +266,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		String saleId = (String)params.get(PurchaseBack.scId);
 		List<String> ids = new ArrayList<String>();
 		ids.add(saleId);
-		Map<String,Object> saleInfoMap = salesContractService.getBaseInfoByIds(ids);
+		Map<String,Object> saleInfoMap = scs.getBaseInfoByIds(ids);
 		params.putAll((Map)saleInfoMap.get(saleId));
 		return params;
 	}
@@ -278,7 +280,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		String status = String.valueOf(params.get(PurchaseBack.pbStatus));
 		
 		//1. 获取合同清单
-		Map<String,Object> eqMap = salesContractService.listEqListBySC(params);
+		Map<String,Object> eqMap = scs.listEqListBySC(params);
 		List<Map<String,Object>> list1 = (List<Map<String,Object>>)eqMap.get(ApiConstants.RESULTS_DATA);
 		
 		//2. 获取备货清单
@@ -353,7 +355,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	public Map<String,Object> countEqcostList(Map<String,Object> params,boolean sync) {
 		
 		//1. 获取合同清单
-		Map<String, Object> eqMap = salesContractService.listEqListBySC(params);
+		Map<String, Object> eqMap = scs.listEqListBySC(params);
 		List<Map<String,Object>> list1 = (List<Map<String,Object>>)eqMap.get(ApiConstants.RESULTS_DATA);
 		
 		//2. 获取上传的备货清单
@@ -542,13 +544,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		}
     }
 	
-	public ISalesContractService getSalesContractService() {
-		return salesContractService;
-	}
-
-	public void setSalesContractService(ISalesContractService salesContractService) {
-		this.salesContractService = salesContractService;
-	}
 
 	@Override
 	public String geValidatorFileName() {

@@ -11,7 +11,20 @@ var borrowing = kendo.data.Model.define( {
     	inSalesContractId: {},
     	outProjectId: {},
     	outSalesContractId: {},
-    	eqcostList: {}
+    	eqcostList: {},
+    	// 发货信息
+    	type: {},
+    	shipNo: {},
+    	applicationDepartment: {},
+    	warehouse: {},
+    	deliveryContact: {},
+    	deliveryContactWay: {},
+    	deliveryUnit: {},
+    	deliveryAddress: {},
+    	issueTime: {},
+    	deliveryTime: {},
+    	deliveryRequirements: {},
+    	otherDeliveryRequirements: {}
     }
 });
 
@@ -55,20 +68,34 @@ var listDataSource = new kendo.data.DataSource({
 
 $(document).ready(function() {
 	
-	var projectDataSource = new kendo.data.DataSource({
-        transport: {
-            read: {
-                url: "../service/project/listforselect",
-                dataType: "jsonp",
-	            data: {
-	            	pageSize: 0
-	            }
+	// 选项卡
+    $("#tabstrip").kendoTabStrip({
+        animation:  {
+            open: {
+                effects: "fadeIn"
             }
-        },
-        schema: {
-        	total: "total",
-        	data: "data"
         }
+    });
+    
+    $("#type").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        optionLabel : "选择发货类型...",
+        dataSource: shipTypeItems
+    });
+	
+	$("#applicationDepartment").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "text",
+        optionLabel : "选择申请部门...",
+        dataSource: departmentItems
+    });
+	
+	$("#deliveryRequirements").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "text",
+        optionLabel : "选择货运要求...",
+        dataSource: deliveryRequirementsItems
     });
 	
 	var inprojects = $("#in-projects").kendoComboBox({
@@ -77,12 +104,29 @@ $(document).ready(function() {
         dataValueField: "_id",
         filter: "contains",
         suggest: true,
-        dataSource: projectDataSource,
+        dataSource: new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "../service/project/listforselect",
+                    dataType: "jsonp",
+    	            data: {
+    	            	pageSize: 0
+    	            }
+                }
+            },
+            schema: {
+            	total: "total",
+            	data: "data"
+            }
+        }),
         change: function(e) {
-        	inSalesContract.value(null);
-        	inProjectId = this.value();
-        	inSalesContract.dataSource.read();
-        	inSalesContract.readonly(false);
+        	var dataItem = this.dataItem();
+        	if (dataItem) {
+	        	inSalesContract.value(null);
+	        	inProjectId = this.value();
+	        	inSalesContract.dataSource.read();
+	        	inSalesContract.readonly(false);
+        	}
         }
     }).data("kendoComboBox");
 	
@@ -120,12 +164,29 @@ $(document).ready(function() {
         dataValueField: "_id",
         filter: "contains",
         suggest: true,
-        dataSource: projectDataSource,
+        dataSource: new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "../service/project/listforselect",
+                    dataType: "jsonp",
+    	            data: {
+    	            	pageSize: 0
+    	            }
+                }
+            },
+            schema: {
+            	total: "total",
+            	data: "data"
+            }
+        }),
         change: function(e) {
-        	outSalesContract.value(null);
-        	outProjectId = this.value();
-        	outSalesContract.dataSource.read();
-        	outSalesContract.readonly(false);
+        	var dataItem = this.dataItem();
+        	if (dataItem) {
+	        	outSalesContract.value(null);
+	        	outProjectId = this.value();
+	        	outSalesContract.dataSource.read();
+	        	outSalesContract.readonly(false);
+        	}
         }
     }).data("kendoComboBox");
 	
@@ -155,30 +216,32 @@ $(document).ready(function() {
         suggest: true,
         change: function(e) {
         	var dataItem = this.dataItem();
-//        	model.set("customer", dataItem.customer);
-//        	model.set("contractCode", dataItem.contractCode);
-        	
-        	var salesContractId = this.value();
-        	
-        	eqDataSource = new kendo.data.DataSource({
-        	    transport: {
-        	        read: {
-        	            url: crudServiceBaseUrl + "/borrowing/eqlist",
-        	            dataType: "jsonp",
-        	            data: {
-        	            	outSalesContractId: salesContractId
-        	            }
-        	        }
-        	    },
-        	    batch: true,
-        	    schema: {
-        	        model: eqModel,
-        	        total: "total",
-                	data: "data"
-        	    }
-        	});
-        	
-        	grid.setDataSource(eqDataSource);
+        	if (dataItem) {
+	//        	model.set("customer", dataItem.customer);
+	//        	model.set("contractCode", dataItem.contractCode);
+	        	
+	        	var salesContractId = this.value();
+	        	
+	        	eqDataSource = new kendo.data.DataSource({
+	        	    transport: {
+	        	        read: {
+	        	            url: crudServiceBaseUrl + "/borrowing/eqlist",
+	        	            dataType: "jsonp",
+	        	            data: {
+	        	            	outSalesContractId: salesContractId
+	        	            }
+	        	        }
+	        	    },
+	        	    batch: true,
+	        	    schema: {
+	        	        model: eqModel,
+	        	        total: "total",
+	                	data: "data"
+	        	    }
+	        	});
+	        	
+	        	grid.setDataSource(eqDataSource);
+        	}
         }
     }).data("kendoComboBox");
 	

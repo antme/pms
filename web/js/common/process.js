@@ -37,7 +37,7 @@ function approveStatusCheck(response) {
 	kendoWindow.close();
 	alert("操作成功");
 
-	dataSource.read();
+	listDataSource.read();
 }
 
 function approve() {

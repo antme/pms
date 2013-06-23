@@ -102,4 +102,9 @@
         <property name="historyService" ref="historyService"></property>
     </bean>  
 
+    <bean name="returnController" class="com.pms.service.controller.ReturnController"
+        id="returnController">
+        <property name="returnService" ref="returnService"></property>
+    </bean> 
+
 </beans>

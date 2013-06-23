@@ -162,5 +162,7 @@ public class PurchaseCommonBean extends BaseEntity {
     
     
     public static final String PROJECT_ID = "projectId";
+    
+    public static final String SALES_COUNTRACT_ID = "salesContractId";
 
 }

@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import com.google.gson.Gson;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
@@ -18,9 +16,7 @@ import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ICustomerService;
 import com.pms.service.service.IProjectService;
-import com.pms.service.service.ISalesContractService;
 import com.pms.service.service.IUserService;
-import com.pms.service.util.ApiUtil;
 import com.pms.service.util.ExcleUtil;
 
 public class ProjectServiceImpl extends AbstractService implements IProjectService {
@@ -29,8 +25,6 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	
 	private ICustomerService customerService;
 	
-	private ISalesContractService salesContractService;
-
 	@Override
 	public String geValidatorFileName() {
 		// TODO Auto-generated method stub
@@ -43,7 +37,8 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		String[] limitKeys = new String[] {ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CUSTOMER,
 				ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_ABBR};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
-
+		
+		mergeDataRoleQuery(params);
 		Map<String, Object> result = this.dao.list(params, DBBean.PROJECT);
 		
 		mergePMandCustomerInfo(result);
@@ -255,9 +250,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			sc.put(SalesContractBean.SC_AMOUNT, row.get(SalesContractBean.SC_AMOUNT));
 			row.put(SalesContractBean.SC_RUNNING_STATUS, row.get(SalesContractBean.SC_RUNNING_STATUS));
 			sc.put(SalesContractBean.SC_PROJECT_ID, proId);
-			salesContractService.addSC(sc);
+			scs.addSC(sc);
 		}
 	}
+
+	
+	
 
 	public IUserService getUserService() {
 		return userService;
@@ -273,14 +271,6 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
 	public void setCustomerService(ICustomerService customerService) {
 		this.customerService = customerService;
-	}
-
-	public ISalesContractService getSalesContractService() {
-		return salesContractService;
-	}
-
-	public void setSalesContractService(ISalesContractService salesContractService) {
-		this.salesContractService = salesContractService;
 	}
 
 }

@@ -3,7 +3,6 @@ package com.pms.service.service;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,10 +22,12 @@ import org.apache.commons.validator.ValidatorResults;
 import com.pms.service.dao.ICommonDao;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
+import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
+import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
@@ -35,6 +36,8 @@ import com.pms.service.validators.ValidatorUtil;
 public abstract class AbstractService {
 
     protected ICommonDao dao = null;
+    
+    protected ISalesContractService scs;
 
 
 
@@ -167,6 +170,13 @@ public abstract class AbstractService {
         return inGroup(GroupBean.PURCHASE_VALUE);
 
     }
+    
+    //采购
+    protected boolean isPM() {
+
+        return inGroup(GroupBean.PM);
+
+    }
 
     
     //库管
@@ -210,8 +220,51 @@ public abstract class AbstractService {
         }
 
     }
+
     
     
+    protected void mergeDataRoleQuery(Map<String, Object> param) {
+        if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager()) {
+            // query all data
+        } else {
+            Map<String, Object> pmQuery = new HashMap<String, Object>();
+            pmQuery.put(ProjectBean.PROJECT_MANAGER, getCurrentUserId());
+            pmQuery.put(ApiConstants.CREATOR, getCurrentUserId());
+
+            Map<String, Object> userQuery = new HashMap<String, Object>();
+            userQuery.put(ApiConstants.MONGO_ID, getCurrentUserId());
+            userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.DEPARTMENT);
+            Map<String, Object> user = this.dao.findOneByQuery(userQuery, DBBean.USER);
+
+            if (user.get(UserBean.DEPARTMENT) != null) {
+                List<String> departements = (List<String>)user.get(UserBean.DEPARTMENT);
+                List<String> rolesIn = new ArrayList<String>();
+                for(String dep:  departements){
+                    if(dep.equalsIgnoreCase(UserBean.USER_DEPARTMENT_PROJECT)){
+                        rolesIn.add(ProjectBean.PROJECT_TYPE_PROJECT);
+                    }else{
+                        rolesIn.add(ProjectBean.PROJECT_TYPE_PRODUCT);
+                        rolesIn.add(ProjectBean.PROJECT_TYPE_SERVICE);
+                    }
+                }
+                
+                pmQuery.put(ProjectBean.PROJECT_TYPE, new DBQuery(DBQueryOpertion.IN, rolesIn));
+            }
+
+            // list creator or manager's data
+            param.put(ProjectBean.PROJECT_MANAGER, DBQueryUtil.buildQueryObject(pmQuery, false));
+        }
+    }
+    
+
+    public ISalesContractService getScs() {
+        return scs;
+    }
+
+    public void setScs(ISalesContractService scs) {
+        this.scs = scs;
+    }
+
     public String generateCode(String prefix, String db) {
         return prefix + "-" + this.dao.count(null, db) + 1;
     }
@@ -223,5 +276,7 @@ public abstract class AbstractService {
     public void setDao(ICommonDao dao) {
         this.dao = dao;
     }
+    
+    
 
 }

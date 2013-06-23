@@ -40,14 +40,14 @@
 	</bean>
 
 	<bean name="userService" class="com.pms.service.service.impl.UserServiceImpl" id="userService">
-		<property name="dao" ref="commonDao"></property>
+		<property name="dao" ref="commonDao"></property>		
 	</bean>
 
 	<bean name="projectService" class="com.pms.service.service.impl.ProjectServiceImpl" id="projectService">
 		<property name="dao" ref="commonDao"></property>
 		<property name="userService" ref="userService"></property>
 		<property name="customerService" ref="customerService"></property>
-		<property name="salesContractService" ref="salesContractService"></property>
+        <property name="scs" ref="salesContractService"></property>
 	</bean>
 
 
@@ -70,7 +70,8 @@
 	<bean name="purchaseService" class="com.pms.service.service.impl.PurchaseServiceImpl"
 		id="purchaseService">
 		<property name="dao" ref="commonDao"></property>
-		<property name="salesContractService" ref="salesContractService"></property>
+        <property name="scs" ref="salesContractService"></property>
+		
 	</bean>
 
 	<bean name="supplierService" class="com.pms.service.service.impl.SupplierServiceImpl"
@@ -88,6 +89,7 @@
     <bean name="allocateService" class="com.pms.service.service.impl.AllocateServiceImpl"
 		id="allocateService">
 		<property name="dao" ref="commonDao"></property>
+        <property name="scs" ref="salesContractService"></property>
 	</bean>
     
     <bean name="salesContractService" class="com.pms.service.service.impl.SalesContractServiceImpl"
@@ -100,6 +102,7 @@
 		<property name="dao" ref="commonDao"></property>
 		<property name="pService" ref="purchaseContractService"></property>
 		<property name="purchaseService" ref="purchaseService"></property>
+        <property name="scs" ref="salesContractService"></property>
 	</bean>
 
     <bean name="borrowingService" class="com.pms.service.service.impl.BorrowingServiceImpl"
@@ -107,10 +110,17 @@
 		<property name="dao" ref="commonDao"></property>
 		<property name="pService" ref="purchaseContractService"></property>
 		<property name="shipService" ref="shipService"></property>
+		<property name="scs" ref="salesContractService"></property>
+		<property name="returnService" ref="returnService"></property>
 	</bean>
 
     <bean name="historyService" class="com.pms.service.service.impl.ModifyHistoryLogServiceImpl"
 		id="historyService">
+		<property name="dao" ref="commonDao"></property>
+	</bean>
+
+    <bean name="returnService" class="com.pms.service.service.impl.ReturnServiceImpl"
+		id="returnService">
 		<property name="dao" ref="commonDao"></property>
 	</bean>
 

@@ -71,7 +71,7 @@ var menus = [
                  items: [
                          { text: "备货申请", id: "purchaseBack", imageUrl: "/images/order.png" },
                          { text: "采购申请", id: "purchaseRequestByAssistant", imageUrl: "/images/purchase.png"},
-                         { text: "开票申请", id: "purchaseorder", imageUrl: "/images/involce.png" },
+                         { text: "开票申请", id: "invoiceList", imageUrl: "/images/involce.png" },
                          { text: "发货申请", id: "ship", imageUrl: "/images/borrowing.png"},
                          { text: "借货申请", id: "borrowing", imageUrl: "/images/sign_in.png"},
                          { text: "还货申请", id: "borrowing", imageUrl: "/images/sign_out.png"}
@@ -99,7 +99,7 @@ var menus = [
                  items: [
                          { text: "财务资料", id: "contract",  imageUrl: "/images/order.png" },
                          { text: "开票信息", id: "payInvoice", imageUrl: "/images/calender.png" },
-                         { text: "收款信息", id: "gotMoneyList", imageUrl: "/images/invoice.png"},
+                         { text: "收款信息", id: "payInvoice", imageUrl: "/images/invoice.png"},
                          { text: "付款信息", id: "payMoney", imageUrl: "/images/license.png"},
                          { text: "收票信息", id: "getInvoice", imageUrl: "/images/milestone.png"}
                      ]
@@ -154,6 +154,9 @@ var allotTypeItems = [{ text: "借货调拨"}, { text: "还货调拨"}, { text: 
 
 // 发货类型
 var shipTypeItems = [{ text: "供应商直发", value: 0 }, { text: "非供应商直发", value: 1 }];
+
+// 货运要求
+var deliveryRequirementsItems = [{ text: "常规汽运或快递"}, { text: "加急空运"}];
 
 //货架编号
 var shelfCodeItems =  [{ text: "北京备货货架"}, { text: "上海备货货架"}];

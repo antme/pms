@@ -17,8 +17,10 @@ var ship = kendo.data.Model.define( {
     	deliveryContactWay: {},
     	deliveryUnit: {},
     	deliveryAddress: {},
+    	issueTime: {},
     	deliveryTime: {},
     	deliveryRequirements: {},
+    	otherDeliveryRequirements: {},
     	eqcostList: {}
     }
 });
@@ -65,16 +67,11 @@ var listDataSource = new kendo.data.DataSource({
 
 $(document).ready(function() {
 	
-	var data = [
-                { text: "供应商直发", value: 0 },
-                { text: "非供应商直发", value: 1 }
-            ];
-	
 	var dropdownlist = $("#type").kendoDropDownList({
         dataTextField: "text",
         dataValueField: "value",
         optionLabel : "选择发货类型...",
-        dataSource: data,
+        dataSource: shipTypeItems,
         change: function(e) {
         	salesContract.value(null);
         	salesContract.dataSource.read();
@@ -82,11 +79,18 @@ $(document).ready(function() {
         }
     }).data("kendoDropDownList");
 	
-	applicationDepartment = $("#applicationDepartment").kendoDropDownList({
+	$("#applicationDepartment").kendoDropDownList({
         dataTextField: "text",
         dataValueField: "text",
         optionLabel : "选择申请部门...",
         dataSource: departmentItems
+    });
+	
+	$("#deliveryRequirements").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "text",
+        optionLabel : "选择货运要求...",
+        dataSource: deliveryRequirementsItems
     });
 	
 	var salesContract = $("#salesContract").kendoComboBox({
