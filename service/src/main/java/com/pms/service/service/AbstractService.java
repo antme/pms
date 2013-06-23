@@ -211,32 +211,11 @@ public abstract class AbstractService {
 
     }
     
-    public List<String> listUserRoleIds(String userId) {
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(ApiConstants.MONGO_ID, userId);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.GROUPS });
-        Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
-        List<String> groups = (List<String>) user.get(UserBean.GROUPS);
-        
-        Map<String, Object> limitQuery = new HashMap<String, Object>();
-        limitQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, groups));
-        limitQuery.put(ApiConstants.LIMIT_KEYS, new String[]{GroupBean.ROLES});
-        
-        List<Object> list = dao.listLimitKeyValues(limitQuery, DBBean.USER_GROUP);
-        List<String> roles = new ArrayList<String>();
-
-        for(Object role: list){
-            roles.addAll((Collection<? extends String>) role);
-        }
-        
-        if(user.get(UserBean.OTHER_ROLES)!=null){
-            roles.addAll((List<? extends String>) user.get(UserBean.OTHER_ROLES));
-        }
-
-        return roles;
+    
+    public String generateCode(String prefix, String db) {
+        return prefix + "-" + this.dao.count(null, db) + 1;
     }
-    
-    
+
     public ICommonDao getDao() {
         return dao;
     }
