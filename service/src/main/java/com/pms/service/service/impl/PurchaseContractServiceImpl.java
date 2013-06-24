@@ -443,7 +443,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED}));
         }
         
-        if(isDepartmentManager()){
+        if(isSalesManager()){
             params.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_NEW);
         }
         

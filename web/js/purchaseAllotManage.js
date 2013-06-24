@@ -48,6 +48,7 @@ $(document).ready(function () {
 	    dataSource: listDatasource,
 	    pageable: true,
 	    selectable : "row",
+	    height: "400px",
 	    columns: [
 	        { 
 	        	field: "paCode", 

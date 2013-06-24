@@ -72,7 +72,7 @@ public class ProjectController extends AbstractController {
     }
     
     @RequestMapping("/update")
-    @RoleValidate(roleID=RoleValidConstants.PROJECT_MANAGEMENT, desc = RoleValidConstants.PROJECT_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PROJECT_UPDATE, desc = RoleValidConstants.PROJECT_UPDATE_DESC)
     public void updateProject(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(projectService.addProject(params), request, response);

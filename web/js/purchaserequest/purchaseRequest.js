@@ -31,6 +31,7 @@ $(document).ready(function() {
 			pageable : true,
 		    sortable : true,
 			filterable : filterable,
+			height: "400px",
 			selectable : "row",
 			columns : [ {
 				field : "purchaseRequestCode",

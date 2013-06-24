@@ -28,6 +28,7 @@ $(document).ready(function() {
 			pageable : true,
 			selectable : "row",
 			width : "1000px",
+			height: "400px",
 			columns : [ {
 				field : "code",
 				title : "申请编号"

@@ -36,6 +36,7 @@ $(document).ready(function() {
 		},
 		editable : "popup",
 		selectable: "row",
+		height: "400px",
 	    sortable : true,
 		filterable : filterable,
 		columns : [ {

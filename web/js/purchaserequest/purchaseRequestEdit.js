@@ -151,9 +151,7 @@ function loadBackRequest(data) {
 
 	//新增时候初始化数据
 	for (i in requestDataItem.eqcostList) {
-		requestDataItem.eqcostList[i].eqcostRequestedAmount = requestDataItem.eqcostList[i].backTotalCount;
-		requestDataItem.eqcostList[i].eqcostAvailableAmount = requestDataItem.eqcostList[i].eqcostLeftAmount;
-		requestDataItem.eqcostList[i].eqcostApplyAmount  = requestDataItem.eqcostList[i].backTotalCount;
+		requestDataItem.eqcostList[i].eqcostAvailableAmount = requestDataItem.eqcostList[i].pbTotalCount;
 		requestDataItem.eqcostList[i].eqcostProductUnitPrice = requestDataItem.eqcostList[i].eqcostBasePrice;
 		requestDataItem.eqcostList[i].eqcostApplyAmount = requestDataItem.eqcostList[i].pbTotalCount;
 	}

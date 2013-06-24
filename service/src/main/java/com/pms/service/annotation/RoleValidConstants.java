@@ -42,6 +42,9 @@ public class RoleValidConstants {
     public static final String PROJECT_MANAGEMENT = "project_management";
     public static final String PROJECT_MANAGEMENT_DESC = "项目管理";
     
+    public static final String PROJECT_UPDATE = "project_update";
+    public static final String PROJECT_UPDATE_DESC = "项目修改";
+    
     public static final String SHIP_MANAGEMENT = "ship_management";
     public static final String SHIP_MANAGEMENT_DESC = "发货管理";
         

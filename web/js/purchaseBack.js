@@ -56,6 +56,7 @@ $(document).ready(function () {
 	    selectable : "row",
 	    sortable : true,
 		filterable : filterable,
+		height: "400px",
 	    columns: [
 	        { 
 	        	field: "pbCode", 

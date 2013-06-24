@@ -46,6 +46,7 @@ $(document).ready(function() {
 //		},
 		editable : "popup",
 		selectable: "row",
+		height: "400px",
 //        sortable: {
 //            mode: "multiple",
 //            allowUnsort: true
