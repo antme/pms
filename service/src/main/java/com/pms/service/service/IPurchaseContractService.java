@@ -99,6 +99,8 @@ public interface IPurchaseContractService {
 
     public Map<String, Object> addGetInvoice(Map<String, Object> params);
     
+    public Map<String, Object> prepareGetInvoice(Map<String, Object> params);
+    
     public Map<String, Object> updateGetInvoice(Map<String, Object> params);
     
     public void destroyGetInvoice(Map<String, Object> params);

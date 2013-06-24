@@ -1,5 +1,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script  src="js/finance/payInvoiceEdit.js"></script>
+<style>
+#searchDiv,#formadd,#formapprove,.invoicedone {display:none;}
+</style>
 <body>
 <div>
 		<h2>开票申请单</h2>
@@ -28,6 +31,14 @@
 					<td>要求日期: <input data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: payInvoicePlanDate"/></td>
 					<td colspan="2">收款情况：<input type="text" data-bind="value:payInvoiceReceivedMoneyStatus"/></td>
 				</tr>
+				<tr class="invoicedone">
+					<td>实际金额：<input data-role="numerictextbox" min="0" data-bind="value:payInvoiceActualMoney"/></td>
+					<td>实际日期：<input data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value:payInvoiceActualDate"/></td>
+					<td colspan="2">实际张数：<input data-role="numerictextbox" min="0" data-bind="value:payInvoiceActualSheetCount"/></td>
+				</tr>
+				<tr class="invoicedone">
+					<td colspan="4">发票编号：<input type="text" data-bind="value:payInvoiceActualInvoiceNum"/></td>
+				</tr>			
 			</table>
             <div>
 				<h4>详情</h4>
@@ -37,15 +48,10 @@
             </div>
             <br>
             <div id="form-container-button">
-	            <div id="formadd">
-	            	<input class="submitform" type="button" value="提交" name="submit">
-	            	<input class="submitform" type="button" value="取消" name="cancel">
-	            </div>
-	            <div id="formapprove">
-	            	<input class="submitform" type="button" value="批准" name="approve">
-	            	<input class="submitform" type="button" value="拒绝" name="reject">
-	            	<input class="submitform" type="button" value="取消" name="cancel">	
-	            </div>
+            	<button access="purchase_back_management" class="k-button access" value="add">提交</button>
+            	<button access="pay_invoice_process" class="k-button access" value="approve">批准</button>
+            	<button access="pay_invoice_process" class="k-button access" value="reject">拒绝</button>
+            	<button class="k-button" value="cancel">取消</button>
             </div>
 		</div>
 </div>		

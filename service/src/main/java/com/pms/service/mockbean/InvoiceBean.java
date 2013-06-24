@@ -29,7 +29,8 @@ public class InvoiceBean {
 	public static final String payInvoiceActualSheetCount = "payInvoiceActualSheetCount"; //实际开票张数
 	public static final String payInvoiceActualInvoiceNum = "payInvoiceActualInvoiceNum"; //登记的发票号码
 	
-	public static final String salesContractId = "salesContractId";//票金额
+	public static final String salesContractId = "salesContractId";
+	public static final String purchaseContractId = "purchaseContractId";//票金额
 	
 	public static final String statusUnSubmit = "草稿";//
 	public static final String statusSubmit = "待审核";//
@@ -39,7 +40,15 @@ public class InvoiceBean {
 	public static final String statusReject = "拒绝";//
 	
 	
+///////////////////////	收票///////////////
+	public static final String getInvoiceComment = "getInvoiceComment";
+	public static final String getInvoiceDepartment = "getInvoiceDepartment";
+	public static final String getInvoiceProposerId = "getInvoiceProposerId";//申请人id
+	public static final String getInvoiceReceivedMoneyStatus = "getInvoiceReceivedMoneyStatus";//收款情况
+	public static final String getInvoiceMoney = "getInvoiceMoney";//合计金额
+	public static final String getInvoiceSubmitDate = "getInvoiceSubmitDate";
+	public static final String getInvoiceStatus = "getInvoiceStatus";
+	public static final String getInvoiceItemList = "getInvoiceItemList";//	
 	
-	
-	
+	public static final String invoiceType = "invoiceType"; //票类型
 }

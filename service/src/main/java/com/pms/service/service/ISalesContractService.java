@@ -14,11 +14,15 @@ public interface ISalesContractService {
 	
 	public Map<String, Object> getSC(Map<String, Object> params);
 	
+	public Map<String,Object> prepareInvoiceForSC(Map<String, Object> params);
+	
 	public Map<String, Object> addInvoiceForSC(Map<String, Object> params);
 	
 	public Map<String, Object> loadInvoiceForSC(Map<String, Object> params);
 	
 	public Map<String, Object> approveInvoiceForSC(Map<String, Object> params);
+	
+	public Map<String, Object> rejectInvoiceForSC(Map<String, Object> params);
 	
 	public Map<String, Object> listInvoiceForSC(Map<String, Object> params);
 	

@@ -68,5 +68,10 @@ public class RoleValidConstants {
     public static final String FINANCE_MANAGEMENT = "finance_management";
     public static final String FINANCE_MANAGEMENT_DESC = "财务管理";
 
+    public static final String PAY_INVOICE_MANAGEMENT = "pay_invoice_management";
+    public static final String PAY_INVOICE_MANAGEMENT_DESC = "开票申请管理";
 
+    public static final String PAY_INVOICE_PROCESS = "pay_invoice_process";
+    public static final String PAY_INVOICE_PROCESS_DESC = "开票申请审批";
+    
 }
