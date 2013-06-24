@@ -6,6 +6,8 @@ public class ReturnBean {
     
     public static final String BORROW_CODE = "borrowCode"; // 借货申请编号
     
+    public static final String RETURN_APPLICANT = "applicant"; // 申请人
+    
     public static final String RETURN_DATE = "applicationDate"; // 申请日期
     
     public static final String RETURN_STATUS = "status"; // 申请状态

@@ -174,7 +174,6 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 
 	public Map<String, Object> create(Map<String, Object> params) {
 		params.put(BorrowingBean.BORROW_STATUS, "0");
-		params.put(BorrowingBean.BORROW_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		return dao.add(params, DBBean.BORROWING);
 	}
 	
@@ -250,6 +249,12 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 			Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
 	        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
 	        params.put(BorrowingBean.BORROW_STATUS, status);
+	        
+	        if (status.equals("1")) {
+	        	Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, getCurrentUserId(), DBBean.USER);
+	        	params.put(BorrowingBean.BORROW_APPLICANT, user.get(UserBean.USER_NAME));
+	    		params.put(BorrowingBean.BORROW_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+			}
 
 	        result =  dao.updateById(params, DBBean.BORROWING);
 	        
@@ -270,6 +275,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
     	shipParams.put(ShipBean.SHIP_CODE, params.get(ShipBean.SHIP_CODE));
     	shipParams.put(ShipBean.SHIP_DEPARTMENT, params.get(ShipBean.SHIP_DEPARTMENT));
     	shipParams.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
+    	shipParams.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
     	shipParams.put(ShipBean.SHIP_TYPE, params.get(ShipBean.SHIP_TYPE));
     	shipParams.put(ShipBean.SHIP_WAREHOUSE, params.get(ShipBean.SHIP_WAREHOUSE));
     	shipParams.put(ShipBean.SHIP_PROJECT_ID, params.get(BorrowingBean.BORROW_IN_PROJECT_ID));
