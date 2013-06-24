@@ -6,7 +6,6 @@ var borrowing = kendo.data.Model.define( {
     id: "_id",
     fields: {
     	borrowCode: {},
-    	applicant: {},
     	inProjectId: {},
     	inProjectCode: {},
     	inProjectName: {},

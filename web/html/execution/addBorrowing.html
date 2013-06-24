@@ -28,12 +28,6 @@
 			    		<input type="text" class="k-input k-textbox" name="borrowCode" required="required" data-bind="value:borrowCode">
 			    	</div>
 			    	<div class="k-edit-label">
-			    		<label for="applicant">申请人</label>
-			    	</div>
-			    	<div data-container-for="applicant" class="k-edit-field">
-			    		<input type="text" class="k-input k-textbox" name="applicant" required="required" data-bind="value:applicant">
-			    	</div>
-			    	<div class="k-edit-label">
 			    		<label for="in-projects">调入项目名称</label>
 			    	</div>
 			    	<div data-container-for="in-projects" class="k-edit-field">
@@ -136,6 +130,18 @@
 			    		<input type="text" class="k-input k-textbox" name="otherDeliveryRequirements" data-bind="value:otherDeliveryRequirements">
 			    	</div>
 			    </div>
+			    <style scoped>
+			    	.k-edit-form-container {
+						width: 100%;
+					}
+			    	.k-edit-label {
+						padding-right: 1%;
+			    		width: 10%;
+			    	}
+			    	.k-edit-field {
+			    		width: 20%;
+			    	}
+			    </style>
             </div>
         </div>
 	    

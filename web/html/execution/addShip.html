@@ -81,13 +81,13 @@
 	    		<label for="issueTime">发出时间</label>
 	    	</div>
 	    	<div data-container-for="issueTime" class="k-edit-field">
-	    		<input type="text" class="k-input k-textbox" name="issueTime" data-bind="value:issueTime">
+	    		<input data-role="datepicker" name="issueTime" data-bind="value:issueTime">
 	    	</div>
 	    	<div class="k-edit-label">
 	    		<label for="deliveryTime">送达时间</label>
 	    	</div>
 	    	<div data-container-for="deliveryTime" class="k-edit-field">
-	    		<input type="text" class="k-input k-textbox" name="deliveryTime" data-bind="value:deliveryTime">
+	    		<input data-role="datepicker" name="deliveryTime" data-bind="value:deliveryTime">
 	    	</div>
 	    	<div class="k-edit-label">
 	    		<label for="deliveryRequirements">货运要求</label>
@@ -106,21 +106,15 @@
 	    <div id="equipments-grid" ></div>
 	    
 	    <style scoped>
-	    	.container {
-				position:relative;
-				height: 800px;
+	    	.k-edit-form-container {
+				width: 100%;
 			}
-	    	.left_side {
-	    		position:absolute;
-				top:0px;
-				left:0px;
-	    		width: 400px;
+	    	.k-edit-label {
+				padding-right: 1%;
+	    		width: 10%;
 	    	}
-	    	.right_side {
-	    		position:absolute;
-				top:0px;
-				right:0px;
-	    		width: 400px;
+	    	.k-edit-field {
+	    		width: 20%;
 	    	}
 	    </style>
 	</div>

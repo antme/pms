@@ -174,6 +174,8 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 
 	public Map<String, Object> create(Map<String, Object> params) {
 		params.put(BorrowingBean.BORROW_STATUS, "0");
+		Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, getCurrentUserId(), DBBean.USER);
+    	params.put(BorrowingBean.BORROW_APPLICANT, user.get(UserBean.USER_NAME));
 		return dao.add(params, DBBean.BORROWING);
 	}
 	
@@ -251,8 +253,6 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	        params.put(BorrowingBean.BORROW_STATUS, status);
 	        
 	        if (status.equals("1")) {
-	        	Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, getCurrentUserId(), DBBean.USER);
-	        	params.put(BorrowingBean.BORROW_APPLICANT, user.get(UserBean.USER_NAME));
 	    		params.put(BorrowingBean.BORROW_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 			}
 

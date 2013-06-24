@@ -35,6 +35,8 @@ public class ReturnServiceImpl extends AbstractService implements IReturnService
 
 	public Map<String, Object> create(Map<String, Object> params) {
 		params.put(ReturnBean.RETURN_STATUS, ReturnBean.RETURN_STATUS_TOBE);
+		Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, getCurrentUserId(), DBBean.USER);
+    	params.put(ReturnBean.RETURN_APPLICANT, user.get(UserBean.USER_NAME));
 		return dao.add(params, DBBean.RETURN);
 	}
 	
@@ -47,8 +49,6 @@ public class ReturnServiceImpl extends AbstractService implements IReturnService
 	        params.put(ReturnBean.RETURN_STATUS, status);
 	        
 	        if (status.equals(ReturnBean.RETURN_STATUS_SUBMIT)) {
-	        	Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, getCurrentUserId(), DBBean.USER);
-	        	params.put(ReturnBean.RETURN_APPLICANT, user.get(UserBean.USER_NAME));
 	    		params.put(ReturnBean.RETURN_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 			}
 
