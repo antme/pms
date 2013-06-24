@@ -10,7 +10,8 @@ $(document).ready(function () {
             },
             destroy: {
                 url: crudServiceBaseUrl + "/destroy",
-                dataType: "jsonp"
+                dataType: "jsonp",
+                type: "POST"
             },
             parameterMap: function(options, operation) {
                 if (operation !== "read" && options.models) {
@@ -87,7 +88,7 @@ $(document).ready(function () {
 					return name;
 				}
             },
-            { command: ["destroy"], title: "&nbsp;", width: "160px" }],
+        ],
         editable: "popup"
     });
 });
@@ -101,6 +102,20 @@ function toolbar_edit() {
 	if (rowData) {
 		if (rowData.status == 0 || rowData.status == 1 || rowData.status == -1){
 			loadPage("addBorrowing",{_id:rowData._id});
+		} else {
+			alert("无法执行该操作");
+		}
+	}
+}
+
+function toolbar_delete() {
+	var rowData = getSelectedRowDataByGridWithMsg("grid");
+	if (rowData) {
+		if (rowData.status == 0){
+			if(confirm('确实要删除该内容吗?')) {
+				dataSource.remove(rowData);
+				dataSource.sync();
+			}
 		} else {
 			alert("无法执行该操作");
 		}
@@ -143,6 +158,14 @@ function toolbar_option(op) {
 function callback(response) {
 	alert("操作成功");
 	dataSource.read();
+}
+
+function toolbar_view(){
+	var rowData = getSelectedRowDataByGridWithMsg("grid");
+	if (rowData) {
+		var options = { width:"1080px", height: "600px", title:"借货信息"};
+		openRemotePageWindow(options, "html/execution/addBorrowing.html", {_id : rowData._id});
+	}
 }
 
 function openProjectViewWindow(param){

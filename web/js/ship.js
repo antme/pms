@@ -10,7 +10,8 @@ $(document).ready(function () {
             },
             destroy: {
                 url: crudServiceBaseUrl + "/destroy",
-                dataType: "jsonp"
+                dataType: "jsonp",
+                type: "POST"
             },
             parameterMap: function(options, operation) {
                 if (operation !== "read" && options.models) {

@@ -22,16 +22,10 @@
             <div>
                 <div class="k-edit-form-container">
 			    	<div class="k-edit-label">
-			    		<label for="borrowNo">编号</label>
+			    		<label for="borrowCode">编号</label>
 			    	</div>
-			    	<div data-container-for="borrowNo" class="k-edit-field">
-			    		<input type="text" class="k-input k-textbox" name="borrowNo" required="required" data-bind="value:borrowNo">
-			    	</div>
-			    	<div class="k-edit-label">
-			    		<label for="applicant">申请人</label>
-			    	</div>
-			    	<div data-container-for="applicant" class="k-edit-field">
-			    		<input type="text" class="k-input k-textbox" name="applicant" required="required" data-bind="value:applicant">
+			    	<div data-container-for="borrowCode" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="borrowCode" required="required" data-bind="value:borrowCode">
 			    	</div>
 			    	<div class="k-edit-label">
 			    		<label for="in-projects">调入项目名称</label>
@@ -70,10 +64,10 @@
 			    		<input id="type" name="type" required="required" data-bind="value:type">
 			    	</div>
 			    	<div class="k-edit-label">
-			    		<label for="shipNo">编号</label>
+			    		<label for="shipCode">编号</label>
 			    	</div>
-			    	<div data-container-for="shipNo" class="k-edit-field">
-			    		<input type="text" class="k-input k-textbox" name="shipNo" required="required" data-bind="value:shipNo">
+			    	<div data-container-for="shipCode" class="k-edit-field">
+			    		<input type="text" class="k-input k-textbox" name="shipCode" required="required" data-bind="value:shipCode">
 			    	</div>
 			    	<div class="k-edit-label">
 			    		<label for="applicationDepartment">申请部门</label>
@@ -136,6 +130,18 @@
 			    		<input type="text" class="k-input k-textbox" name="otherDeliveryRequirements" data-bind="value:otherDeliveryRequirements">
 			    	</div>
 			    </div>
+			    <style scoped>
+			    	.k-edit-form-container {
+						width: 100%;
+					}
+			    	.k-edit-label {
+						padding-right: 1%;
+			    		width: 10%;
+			    	}
+			    	.k-edit-field {
+			    		width: 20%;
+			    	}
+			    </style>
             </div>
         </div>
 	    

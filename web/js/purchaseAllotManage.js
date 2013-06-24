@@ -49,8 +49,20 @@ $(document).ready(function () {
 	    pageable: true,
 	    selectable : "row",
 	    columns: [
-	        { field: "paCode", title: "调拨编号" },
-	        { field: "contractCode", title:"销售合同编号" },
+	        { 
+	        	field: "paCode", 
+	        	title: "调拨编号" ,
+	        	template : function(dataItem) {
+					return '<a  onclick="openPurchaseAllotViewWindow(\'' + dataItem._id + '\');">' + dataItem.paCode + '</a>';
+				}
+	        },
+	        { 
+	        	field: "contractCode", 
+	        	title:"销售合同编号",
+	        	template : function(dataItem) {
+					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
+				}
+	        },
 	        { field: "customer", title:"客户名" },
 	        { field: "projectManager", title:"PM" },
 	        { field: "paStatus", title:"调拨状态" },

@@ -126,9 +126,27 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	
 	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId, String proId){
 		for (Map<String, Object> item : eqcostList){
+
+            Map<String, Object> realItemQuery = new HashMap<String, Object>();
+            realItemQuery.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, item.get(EqCostListBean.EQ_LIST_MATERIAL_CODE));
+            realItemQuery.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, item.get(EqCostListBean.EQ_LIST_PRODUCT_NAME));
+            realItemQuery.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
+            realItemQuery.put(ApiConstants.LIMIT_KEYS, EqCostListBean.EQ_LIST_REAL_AMOUNT);
+            Map<String, Object> realItem = dao.findOneByQuery(realItemQuery, DBBean.EQ_COST);
+            if (realItem == null) {
+                item.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, item.get(EqCostListBean.EQ_LIST_AMOUNT));
+                item.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, item.get(EqCostListBean.EQ_LIST_REAL_AMOUNT));
+            } else {
+                int applyAmount = (int)Float.parseFloat(item.get(EqCostListBean.EQ_LIST_AMOUNT).toString());
+                int totalAmount = applyAmount + (int)Float.parseFloat(realItem.get(EqCostListBean.EQ_LIST_REAL_AMOUNT).toString());
+
+                realItem.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, totalAmount);
+                realItem.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, totalAmount);
+                this.dao.updateById(realItem, DBBean.EQ_COST);
+            }
+		    
 			item.put(SalesContractBean.SC_PROJECT_ID, proId);
 			item.put(EqCostListBean.EQ_LIST_SC_ID, cId);
-			item.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, item.get(EqCostListBean.EQ_LIST_AMOUNT));
 			dao.add(item, DBBean.EQ_COST);
 		}
 	}
@@ -152,11 +170,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 
 	@Override
-	public Map<String, Object> listEqListBySC(Map<String, Object> params) {
+	public Map<String, Object> listMergedEqListBySC(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		String cId = (String) params.get(EqCostListBean.EQ_LIST_SC_ID);
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(EqCostListBean.EQ_LIST_SC_ID, cId);
+		query.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
 		Map<String, Object> result = dao.list(query, DBBean.EQ_COST);
 		return result;
 	}

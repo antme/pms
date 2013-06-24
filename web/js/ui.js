@@ -197,6 +197,8 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/finance/getInvoice.html";
 	}else if (page == "repositoryOut") {
 		page = "html/repository/repositoryout.html";
+	} else if(page == "return"){
+		page = "html/execution/return.html";
 	}
 	
 
@@ -501,6 +503,11 @@ function openPurchaseOrderViewWindow(param){
 function openBackRequestViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"备货申请信息"};
 	openRemotePageWindow(options, "purchaseBackEdit", {_id : param});
+}
+
+function openPurchaseAllotViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"调拨申请信息"};
+	openRemotePageWindow(options, "purchaseAllotManageEdit", {_id : param});
 }
 
 function openSCViewWindow(param){

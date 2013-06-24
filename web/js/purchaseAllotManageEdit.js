@@ -14,7 +14,7 @@ var subModel = kendo.data.Model.define({
         eqcostProductType: {
         	editable : false
         },
-        eqcostAmount: {
+        eqcostRealAmount: {
         	editable : false
         },
         eqcostUnit: {
@@ -113,8 +113,10 @@ $(document).ready(function () {
 		}
 	});
 	$(".foredit ").attr("disabled","disabled");
-
-	if(redirectParams){
+	if(popupParams){
+		postAjaxRequest(baseUrl+"/purchase/allot/load", popupParams, edit);
+		disableAllInPoppup();
+	}else if(redirectParams){
 		if(redirectParams._id) {
 			postAjaxRequest(baseUrl+"/purchase/allot/load", {_id:redirectParams._id}, edit);
 		}	

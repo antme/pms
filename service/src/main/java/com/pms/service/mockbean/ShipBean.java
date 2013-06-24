@@ -2,13 +2,18 @@ package com.pms.service.mockbean;
 
 public class ShipBean {
 	
-    public static final String SHIP_NO = "shipNo"; // 编号
+    public static final String SHIP_CODE = "shipCode"; // 编号
     
     public static final String SHIP_DEPARTMENT = "applicationDepartment"; // 申请部门
     
     public static final String SHIP_DATE = "applicationDate"; // 申请日期
     
     public static final String SHIP_STATUS = "status"; // 申请状态
+    
+    public static final String SHIP_STATUS_DRAFT = "0"; // 草稿
+    public static final String SHIP_STATUS_SUBMIT = "1"; // 申请中
+    public static final String SHIP_STATUS_APPROVE = "2"; // 批准
+    public static final String SHIP_STATUS_REJECT = "-1"; // 拒绝
     
     public static final String SHIP_TYPE = "type"; // 申请类型	- 直发 or 非直发
     
@@ -20,7 +25,9 @@ public class ShipBean {
 
     public static final String SHIP_SALES_CONTRACT_ID = "salesContractId"; // 销售合同数据库id-外键
     
-    public static final String SHIP_SALES_CONTRACT_NO = "contractCode"; // 销售合同编号
+    public static final String SHIP_SALES_CONTRACT_CODE = "contractCode"; // 销售合同编号
+    
+    public static final String SHIP_SALES_CONTRACT_TYPE = "contractType"; // 销售合同类型
     
     public static final String SHIP_CUSTOMER_NAME = "customer"; // 客户名称
     

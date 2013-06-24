@@ -74,7 +74,7 @@ var menus = [
                          { text: "开票申请", id: "invoiceList", imageUrl: "/images/involce.png" },
                          { text: "发货申请", id: "ship", imageUrl: "/images/borrowing.png"},
                          { text: "借货申请", id: "borrowing", imageUrl: "/images/sign_in.png"},
-                         { text: "还货申请", id: "borrowing", imageUrl: "/images/sign_out.png"}
+                         { text: "还货申请", id: "return", imageUrl: "/images/sign_out.png"}
                      ]
              },
              {
