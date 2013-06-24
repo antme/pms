@@ -1,5 +1,6 @@
 package com.pms.service.annotation;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,12 +28,11 @@ import com.pms.service.util.DataEncrypt;
 public class InitBean {
 
     public static final Set<String> loginPath = new HashSet<String>();
-    public static final Map<String, String> validationPath = new HashMap<String, String>();
     public static final Map<String, String> rolesValidationMap = new HashMap<String, String>();
     private static final Logger logger = LogManager.getLogger(InitBean.class);
 
     public static final String ADMIN_USER_NAME = "admin";
-    
+
     /**
      * 初始化数据库
      * 
@@ -48,11 +48,10 @@ public class InitBean {
         createSystemDefaultGroups(dao);
         createAdminUser(dao);
     }
-    
-    
 
     private static void createSystemDefaultGroups(ICommonDao dao) {
-        String[] groupNames = new String[] {GroupBean.FINANCE, GroupBean.PM, GroupBean.DEPARTMENT_ASSISTANT_VALUE, GroupBean.DEPARTMENT_MANAGER_VALUE, GroupBean.COO_VALUE, GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE };
+        String[] groupNames = new String[] { GroupBean.PROJECT_MANAGER_VALUE, GroupBean.PROJECT_ASSISTANT_VALUE, GroupBean.SALES_ASSISTANT_VALUE, GroupBean.PM, GroupBean.FINANCE, GroupBean.SALES_MANAGER_VALUE, GroupBean.COO_VALUE,
+                GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE, GroupBean.GROUP_ADMIN_VALUE };
 
         for (String name : groupNames) {
             Map<String, Object> groupQuery = new HashMap<String, Object>();
@@ -61,7 +60,7 @@ public class InitBean {
             // 查找是否角色已经初始化
             Map<String, Object> group = dao.findOne(GroupBean.GROUP_NAME, name, DBBean.USER_GROUP);
             if (group == null) {
-                //系统角色不允许删除
+                // 系统角色不允许删除
                 groupQuery.put(GroupBean.IS_SYSTEM_GROUP, true);
                 dao.add(groupQuery, DBBean.USER_GROUP);
             } else {
@@ -76,17 +75,15 @@ public class InitBean {
         logger.info("Init admin group");
         Map<String, Object> adminGroup = new HashMap<String, Object>();
         adminGroup.put(GroupBean.GROUP_NAME, GroupBean.GROUP_ADMIN_VALUE);
-        
-        //查找是否admin角色已经初始化
-        Map<String, Object> group = dao.findOne(GroupBean.GROUP_NAME, GroupBean.GROUP_ADMIN_VALUE, DBBean.USER_GROUP);       
-               
-        
-        //查询所有的权限赋值给admin
+
+        // 查找是否admin角色已经初始化
+        Map<String, Object> group = dao.findOne(GroupBean.GROUP_NAME, GroupBean.GROUP_ADMIN_VALUE, DBBean.USER_GROUP);
+
+        // 查询所有的权限赋值给admin
         Map<String, Object> roleItemQuery = new HashMap<String, Object>();
         roleItemQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ApiConstants.MONGO_ID });
         List<Object> list = dao.listLimitKeyValues(roleItemQuery, DBBean.ROLE_ITEM);
-        
-        
+
         if (group == null) {
             adminGroup.put(GroupBean.ROLES, list);
             dao.add(adminGroup, DBBean.USER_GROUP);
@@ -101,9 +98,8 @@ public class InitBean {
         Map<String, Object> adminUser = new HashMap<String, Object>();
         adminUser.put(UserBean.USER_NAME, ADMIN_USER_NAME);
         Map<String, Object> user = dao.findOne(UserBean.USER_NAME, ADMIN_USER_NAME, DBBean.USER);
-        
-        
-        //查找admin角色的_id
+
+        // 查找admin角色的_id
         Map<String, Object> groupQuery = new HashMap<String, Object>();
         groupQuery.put(GroupBean.GROUP_NAME, GroupBean.GROUP_ADMIN_VALUE);
         groupQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ApiConstants.MONGO_ID });
@@ -119,7 +115,6 @@ public class InitBean {
         }
     }
 
-    
     /**
      * 初始化那些path需要登录验证，数据放到内存中
      * 
@@ -157,7 +152,7 @@ public class InitBean {
 
     /**
      * 
-     * 出事化权限表，权限来至于 @RoleValidate 
+     * 出事化权限表，权限来至于 @RoleValidate
      * 
      * @param dao
      * @throws ClassNotFoundException
@@ -167,7 +162,7 @@ public class InitBean {
         scanner.addIncludeFilter(new AnnotationTypeFilter(RoleValidate.class));
         List<String> roleIds = new ArrayList<String>();
 
-        //FIXME: 删除不存在的role，但是也需要删除group， user中相关联的数据
+        // FIXME: 删除不存在的role，但是也需要删除group， user中相关联的数据
         for (BeanDefinition bd : scanner.findCandidateComponents(PackageRole.class.getPackage().getName())) {
             Class<?> classzz = Class.forName(bd.getBeanClassName());
             Method metods[] = classzz.getMethods();
@@ -179,29 +174,38 @@ public class InitBean {
             }
 
             for (Method m : metods) {
-                RoleValidate rv = m.getAnnotation(RoleValidate.class);
-                if (rv != null) {
+                Annotation annotations[] = m.getAnnotations();
 
-                    RequestMapping mapping = m.getAnnotation(RequestMapping.class);
-                    if (mapping != null) {
-                        validationPath.put(path + mapping.value()[0], rv.roleID());
-                    }
-                    if (!roleIds.contains(rv.roleID())) {
-                        roleIds.add(rv.roleID());
-                    }
-                    @SuppressWarnings("unchecked")
-                    Map<String, Object> role = dao.findOne(RoleBean.ROLE_ID, rv.roleID(), DBBean.ROLE_ITEM);
-                    if (role != null) {
-                        role.put(RoleBean.ROLE_DESC, rv.desc());
-                        dao.updateById(role, DBBean.ROLE_ITEM);
-                    } else {
-                        Map<String, Object> roleMap = new HashMap<String, Object>();
-                        roleMap.put(RoleBean.ROLE_ID, rv.roleID());
-                        roleMap.put(RoleBean.ROLE_DESC, rv.desc());
-                        dao.add(roleMap, DBBean.ROLE_ITEM);
-                    }
+                for (Annotation anno : annotations) {
 
-                    rolesValidationMap.put(path + mapping.value()[0], rv.roleID());
+                    if (anno instanceof RoleValidate) {
+                        RoleValidate rv = (RoleValidate) anno;
+
+                        RequestMapping mapping = m.getAnnotation(RequestMapping.class);
+
+                        if (!roleIds.contains(rv.roleID())) {
+                            roleIds.add(rv.roleID());
+                        }
+                        @SuppressWarnings("unchecked")
+                        Map<String, Object> role = dao.findOne(RoleBean.ROLE_ID, rv.roleID(), DBBean.ROLE_ITEM);
+                        if (role != null) {
+                            role.put(RoleBean.ROLE_DESC, rv.desc());
+                            dao.updateById(role, DBBean.ROLE_ITEM);
+                        } else {
+                            Map<String, Object> roleMap = new HashMap<String, Object>();
+                            roleMap.put(RoleBean.ROLE_ID, rv.roleID());
+                            roleMap.put(RoleBean.ROLE_DESC, rv.desc());
+                            dao.add(roleMap, DBBean.ROLE_ITEM);
+                        }
+
+                        String validPath = path + mapping.value()[0];
+                        if (rolesValidationMap.get(validPath) != null) {
+                            rolesValidationMap.put(validPath, rv.roleID() + "," + rolesValidationMap.get(validPath));
+                        } else {
+                            rolesValidationMap.put(validPath, rv.roleID());
+                        }
+
+                    }
                 }
             }
         }

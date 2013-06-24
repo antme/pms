@@ -60,6 +60,7 @@ $(document).ready(function() {
 		pageable : true,
 		editable : "popup",
 		selectable : "multiple",
+		height: "400px",
 		toolbar : [ {
 			name : "create",
 			text : "创建角色"

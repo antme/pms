@@ -145,16 +145,23 @@ public abstract class AbstractService {
     }
 
     //部门助理
-    protected boolean isDepartMentAssistant() {
+    protected boolean isProjectAssistant() {
 
-        return inGroup(GroupBean.DEPARTMENT_ASSISTANT_VALUE);
+        return inGroup(GroupBean.PROJECT_ASSISTANT_VALUE);
+
+    }
+    
+    
+    protected boolean isSalesAssistant() {
+
+        return inGroup(GroupBean.SALES_ASSISTANT_VALUE);
 
     }
 
     //部门经理
-    protected boolean isDepartmentManager() {
+    protected boolean isSalesManager() {
 
-        return inGroup(GroupBean.DEPARTMENT_MANAGER_VALUE);
+        return inGroup(GroupBean.SALES_MANAGER_VALUE);
 
     }
 
@@ -230,10 +237,11 @@ public abstract class AbstractService {
     
     
     protected void mergeDataRoleQuery(Map<String, Object> param) {
-        if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager()) {
+        Map<String, Object> pmQuery = new HashMap<String, Object>();
+
+        if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() || isSalesAssistant()) {
             // query all data
         } else {
-            Map<String, Object> pmQuery = new HashMap<String, Object>();
             pmQuery.put(ProjectBean.PROJECT_MANAGER, getCurrentUserId());
             pmQuery.put(ApiConstants.CREATOR, getCurrentUserId());
 

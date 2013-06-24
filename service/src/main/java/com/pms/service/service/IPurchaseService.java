@@ -40,4 +40,7 @@ public interface IPurchaseService {
 	public Map<String,Double> getAllotEqCountBySalesContractId(String saleId);
 	/**根据合同id获取备货清单列表*/
 	public Map<String,Double> getBackEqCountBySalesContractId(String saleId);
+	
+	//选择销售合同，如果已经有备货申请则过滤掉
+    public Map<String, Object> listSCsForSelect(Map<String, Object> params);
 }

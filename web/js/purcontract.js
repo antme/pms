@@ -26,6 +26,7 @@ $(document).ready(function() {
 		selectable : "row",
 	    sortable : true,
 		filterable : filterable,
+		height: "400px",
 		columns : [ {
 			field : "purchaseContractCode",
 			title : "采购合同编号"

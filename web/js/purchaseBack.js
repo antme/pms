@@ -56,6 +56,7 @@ $(document).ready(function () {
 	    selectable : "row",
 	    sortable : true,
 		filterable : filterable,
+		height: "400px",
 	    columns: [
 	        { 
 	        	field: "pbCode", 
@@ -107,7 +108,7 @@ $(document).ready(function () {
 function add(){
 	loadPage("purchaseBackEdit");
 }
-function edit(){
+function editPB(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");

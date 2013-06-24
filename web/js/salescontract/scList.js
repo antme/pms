@@ -36,6 +36,7 @@ $(document).ready(function() {
 		},
 		editable : "popup",
 		selectable: "row",
+		height: "400px",
 	    sortable : true,
 		filterable : filterable,
 		columns : [ {
@@ -53,6 +54,9 @@ $(document).ready(function() {
 		}, {
 			field : "projectManager",
 			title : "PM"
+		}, {
+			field : "runningStatus",
+			title : "执行状态"
 		}, {
 			field : "customer",
 			title : "客户名"

@@ -81,7 +81,6 @@ $(document).ready(function () {
 			aggregate: [ 
 			    { field: "eqcostNo", aggregate: "count" },
 			    { field: "paCount", aggregate: "sum" },
-			    { field: "pbLeftCount", aggregate: "sum" },
 			    { field: "pbTotalCount", aggregate: "sum" }
 			]			
 		},
@@ -92,7 +91,6 @@ $(document).ready(function () {
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
 			{ field: "paCount", title: "调拨数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
-			{ field: "pbLeftCount", title: "备货剩余数量", footerTemplate: "总共: #=sum#"},
 			{ field: "pbTotalCount", title: "备货数量", footerTemplate: "总共: #=sum#"},
 			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostBrand", title: "品牌" },

@@ -84,8 +84,7 @@ $(document).ready(function () {
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
 			{ field: "pbTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
-			{ field: "eqcostLeftAmount", title: "可申请数量",footerTemplate: "总共: #=sum#"},
-			{ field: "eqcostRealAmount", title: "总数" ,footerTemplate: "总共: #=sum#"},
+			{ field: "eqcostRealAmount", title: "销售合同总数" ,footerTemplate: "总共: #=sum#"},
 			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostBrand", title: "品牌" },
 			{ field: "eqcostMemo", title: "备注" }
@@ -102,7 +101,7 @@ $(document).ready(function () {
 			transport : {
 				read : {
 					dataType : "jsonp",
-					url : baseUrl+"/sc/listforselect",
+					url : baseUrl+"/purchase/sc/listforselect",
 				}
 			},
 			schema : {

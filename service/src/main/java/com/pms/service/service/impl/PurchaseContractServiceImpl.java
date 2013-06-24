@@ -61,12 +61,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             
             Map<String, Object> supplier = this.dao.findOneByQuery(query, DBBean.SUPPLIER);
             
-            data.put("supplierName", supplier.get("supplierName"));
+            if(supplier!=null){
+                data.put("supplierName", supplier.get("supplierName"));
+            }
         }
-
-        Map<String, Object> scList =   listSalesContractsForShipSelect(null);
-        logger.info(scList);
-        
         return results;
         
     }
@@ -443,7 +441,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED}));
         }
         
-        if(isDepartmentManager()){
+        if(isSalesManager()){
             params.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_NEW);
         }
         

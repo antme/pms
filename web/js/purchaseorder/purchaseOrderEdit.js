@@ -189,9 +189,6 @@ function edit(data) {
 								field : "eqcostRealAmount",
 								title : "合同中总数"
 							}, {
-								field : "eqcostAvailableAmount",
-								title : "可申请数量"
-							}, {
 								field : "eqcostApplyAmount",
 								title : "本次申请数量",
 								template : function(dataItem){
