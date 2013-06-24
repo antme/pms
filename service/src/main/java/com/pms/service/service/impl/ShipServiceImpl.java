@@ -60,7 +60,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 
 	public Map<String, Object> update(Map<String, Object> params) {
-		params.put(ShipBean.SHIP_STATUS, 0);
+		params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_DRAFT);
 		return dao.updateById(params, DBBean.SHIP);
 	}
 
@@ -71,7 +71,14 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 
 	public Map<String, Object> create(Map<String, Object> params) {
-		params.put(ShipBean.SHIP_STATUS, 0);
+		String status;
+		if (params.containsKey(ShipBean.SHIP_STATUS)) {
+			status = params.get(ShipBean.SHIP_STATUS).toString();
+		} else {
+			status = ShipBean.SHIP_STATUS_DRAFT;
+		}
+		
+		params.put(ShipBean.SHIP_STATUS, status);
 		params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		return dao.add(params, DBBean.SHIP);
 	}
@@ -143,7 +150,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		
-		parameters.put(ShipBean.SHIP_STATUS, "2");
+		parameters.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
 		parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, saleId);
 		
 		Map<String, Object> result = dao.list(parameters, DBBean.SHIP);

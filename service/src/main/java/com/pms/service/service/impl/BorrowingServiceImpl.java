@@ -13,6 +13,8 @@ import com.pms.service.mockbean.BorrowingBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.ReturnBean;
+import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
@@ -178,13 +180,17 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	
 	public Map<String, Object> eqlist(Map<String, Object> params) {
 		
-		String saleId = (String) params.get(BorrowingBean.BORROW_OUT_SALES_CONTRACT_ID);
+		String saleId = (String) params.get(BorrowingBean.BORROW_IN_SALES_CONTRACT_ID);
 		
-		// 已批准的 采购合同 的设备清单
+		// 已采购的货物
 		List<Map<String, Object>> purchaseEqList = pService.listApprovedPurchaseContractCosts(saleId);
 		
-		// 已发货的设备清单
-		List<Map<String, Object>> shipedEqList = shipService.shipedList(saleId);
+		// 已到货货品
+		Map<String, Object> scIdParam = new HashMap<String, Object>();
+		scIdParam.put("scId", saleId);
+		Map<String, Object> map = pService.listEqcostListForShipByScIDAndType(scIdParam);
+		
+		List<Map<String, Object>> shipedEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
 		
 		Map<String, Double> alloEqList = new HashMap<String, Double>();
 
@@ -201,7 +207,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		
 		if (alloEqList != null) {
-			// - 已发货
+			// - 已到货
 			for (Map<String, Object> s:shipedEqList){
 				String id = s.get(ApiConstants.MONGO_ID).toString();
 				if (alloEqList.containsKey(id)) {
@@ -249,8 +255,9 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	        
 	        // 库管批准借货申请
 	        if (status.equals("2")) {
-	        	createShip(params);
-	        	createReturn(params);
+	        	Map<String, Object> borrowing = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
+	        	createShip(borrowing);
+	        	createReturn(borrowing);
 			}
 		}
         
@@ -260,13 +267,34 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	// 生成发货申请
 	private Map<String, Object> createShip(Map<String, Object> params) {
 		Map<String, Object> shipParams = new HashMap<String, Object>();
-    	shipParams.put(ShipBean.SHIP_NO, params.get(ShipBean.SHIP_NO));
+    	shipParams.put(ShipBean.SHIP_CODE, params.get(ShipBean.SHIP_CODE));
+    	shipParams.put(ShipBean.SHIP_DEPARTMENT, params.get(ShipBean.SHIP_DEPARTMENT));
+    	shipParams.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
+    	shipParams.put(ShipBean.SHIP_TYPE, params.get(ShipBean.SHIP_TYPE));
+    	shipParams.put(ShipBean.SHIP_WAREHOUSE, params.get(ShipBean.SHIP_WAREHOUSE));
+    	shipParams.put(ShipBean.SHIP_PROJECT_ID, params.get(BorrowingBean.BORROW_IN_PROJECT_ID));
+    	shipParams.put(ShipBean.SHIP_PROJECT_NAME, params.get(BorrowingBean.BORROW_IN_PROJECT_NAME));
+    	shipParams.put(ShipBean.SHIP_SALES_CONTRACT_ID, params.get(BorrowingBean.BORROW_IN_SALES_CONTRACT_ID));
+    	shipParams.put(ShipBean.SHIP_SALES_CONTRACT_CODE, params.get(BorrowingBean.BORROW_IN_SALES_CONTRACT_CODE));
+    	shipParams.put(ShipBean.SHIP_SALES_CONTRACT_TYPE, params.get(BorrowingBean.BORROW_IN_SALES_CONTRACT_TYPE));
+    	shipParams.put(ShipBean.SHIP_CUSTOMER_NAME, params.get(BorrowingBean.BORROW_IN_PROJECT_CUSTOMER));
+    	shipParams.put(ShipBean.SHIP_DELIVERY_CONTACT, params.get(ShipBean.SHIP_DELIVERY_CONTACT));
+    	shipParams.put(ShipBean.SHIP_DELIVERY_CONTACTWAY, params.get(ShipBean.SHIP_DELIVERY_CONTACTWAY));
+    	shipParams.put(ShipBean.SHIP_DELIVERY_UNIT, params.get(ShipBean.SHIP_DELIVERY_UNIT));
+    	shipParams.put(ShipBean.SHIP_DELIVERY_ADDRESS, params.get(ShipBean.SHIP_DELIVERY_ADDRESS));
+    	shipParams.put(ShipBean.SHIP_ISSUE_TIME, params.get(ShipBean.SHIP_ISSUE_TIME));
+    	shipParams.put(ShipBean.SHIP_DELIVERY_TIME, params.get(ShipBean.SHIP_DELIVERY_TIME));
+    	shipParams.put(ShipBean.SHIP_DELIVERY_REQUIREMENTS, params.get(ShipBean.SHIP_DELIVERY_REQUIREMENTS));
+    	shipParams.put(ShipBean.SHIP_OTHER_DELIVERY_REQUIREMENTS, params.get(ShipBean.SHIP_OTHER_DELIVERY_REQUIREMENTS));
+    	shipParams.put(ShipBean.SHIP_EQ_LIST, params.get(BorrowingBean.SHIP_EQ_LIST));
 		return shipService.create(shipParams);
 	}
 	
-	// 生产待还货记录
+	// 生成待还货记录
 	private Map<String, Object> createReturn(Map<String, Object> params) {
 		Map<String, Object> returnParams = new HashMap<String, Object>();
+		returnParams.put(ReturnBean.BORROW_ID, params.get(ApiConstants.MONGO_ID));
+		returnParams.put(ReturnBean.BORROW_CODE, params.get(BorrowingBean.BORROW_CODE));
 		return returnService.create(returnParams);
 	}
 
