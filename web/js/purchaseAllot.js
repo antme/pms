@@ -51,15 +51,27 @@ $(document).ready(function () {
 	    selectable : "row",
 	    sortable : true,
 	    columns: [
-	        { field: "pbCode", title: "备货编号" ,width:"125px"},
+	        { 
+	        	field: "pbCode", 
+	        	title: "备货编号" ,
+	        	width:"125px",
+	        	template : function(dataItem) {
+					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.pbCode + '</a>';
+				}
+	        },
 	        { field: "pbType", title:"采购类别" ,width:"120px"},
-	        { field: "contractCode", title:"销售合同编号" },
+	        { 
+	        	field: "contractCode", 
+	        	title:"销售合同编号",
+	        	template : function(dataItem) {
+					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
+				}
+	        },
 	        { field: "customer", title:"客户名" },
 	        { field: "projectManager", title:"PM" },
 	        { field: "pbStatus", title:"申请状态" },
 	        { field: "pbSubmitDate", title:"提交时间" },
-	        { field: "pbMoney", title:"金额" },
-	        { field: "backRequestCount", title:"合同下备货单数量" }
+	        { field: "pbMoney", title:"金额" }
 	    ]
 	});
 	

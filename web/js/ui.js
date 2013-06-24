@@ -505,6 +505,11 @@ function openBackRequestViewWindow(param){
 	openRemotePageWindow(options, "purchaseBackEdit", {_id : param});
 }
 
+function openPurchaseAllotViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"调拨申请信息"};
+	openRemotePageWindow(options, "purchaseAllotManageEdit", {_id : param});
+}
+
 function openSCViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"销售合同信息"};
 	openRemotePageWindow(options, "html/salescontract/editsc.html", {_id : param});
