@@ -42,6 +42,9 @@ var model = kendo.data.Model.define({
 			type : "number",
 			editable : false
 		},
+		signDate:{
+			type:"date"
+		},
 		firstPay : {
 
 		}
@@ -58,6 +61,7 @@ $(document).ready(function() {
 		}
 	});
 	
+	$("#signDate").kendoDatePicker();
 	
 	$("#purchaseContractType").kendoDropDownList({
 		dataTextField : "text",
@@ -112,7 +116,6 @@ $(document).ready(function() {
 		dataSource : executeType1
 	});
 		
-	$("#signDate").kendoDatePicker();
 
 	if (redirectParams) {
 		$("#purchasecontract-edit-item").show();
@@ -275,10 +278,8 @@ function edit(data) {
 
 	}
 
-	console.log(requestDataItem.signDate);
 	kendo.bind($("#purchasecontract-edit"), requestDataItem);
 
-	
 	var eqcostList = requestDataItem.eqcostList;
 	
 	if(eqcostList){
@@ -294,12 +295,6 @@ function edit(data) {
 
 	$("#purchasecontract-edit-item").show();
 	$("#purchasecontract-select").hide();
-
-	$("#purchaseOrderCode").html(requestDataItem.purchaseOrderCode);
-	$("#projectName").html(requestDataItem.projectName);
-	$("#projectCode").html(requestDataItem.projectCode);
-	$("#salesContractCode").html(requestDataItem.salesContractCode);
-	$("#customerRequestContractId").html(requestDataItem.customerRequestContractId);
 
 
 	if (!$("#purchasecontract-edit-grid").data("kendoGrid")) {
@@ -322,7 +317,6 @@ function edit(data) {
 			}, {
 				field : "eqcostProductType",
 				title : "货品型号"
-
 			}, {
 				field : "eqcostProductUnitPrice",
 				title : "单价"
@@ -337,7 +331,7 @@ function edit(data) {
 				title : "货品物流状态"
 			}, {
 				field : "logisticsType",
-				title : "物流类型"
+				title : "物流类型",
 				editor : categoryDropDownEditor,
 				template : "#=logisticsType#"
 			}, {

@@ -40,7 +40,6 @@ function init(u){
 	
 	userRoles = u.data;
 	user = u;
-	console.log(user);
 	$("#user_info").html(user.userName);
 	
 	//一级菜单权限验证
