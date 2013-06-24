@@ -5,16 +5,22 @@ var eqDataSource, crudServiceBaseUrl = "../service";
 var borrowing = kendo.data.Model.define( {
     id: "_id",
     fields: {
-    	borrowNo: {},
+    	borrowCode: {},
     	applicant: {},
     	inProjectId: {},
+    	inProjectCode: {},
+    	inProjectName: {},
+    	inProjectManager: {},
     	inSalesContractId: {},
+    	inSalesContractCode: {},
+    	inSalesContractType: {},
+    	inProjectCustomer: {},
     	outProjectId: {},
     	outSalesContractId: {},
     	eqcostList: {},
     	// 发货信息
     	type: {},
-    	shipNo: {},
+    	shipCode: {},
     	applicationDepartment: {},
     	warehouse: {},
     	deliveryContact: {},
@@ -122,6 +128,10 @@ $(document).ready(function() {
         change: function(e) {
         	var dataItem = this.dataItem();
         	if (dataItem) {
+        		model.set("inProjectCode", dataItem.projectCode);
+        		model.set("inProjectManager", dataItem.projectManager);
+        		model.set("inProjectName", dataItem.projectName);
+        		
 	        	inSalesContract.value(null);
 	        	inProjectId = this.value();
 	        	inSalesContract.dataSource.read();
@@ -154,6 +164,35 @@ $(document).ready(function() {
         dataValueField: "_id",
         filter: "contains",
         suggest: true,
+        change: function(e) {
+        	var dataItem = this.dataItem();
+        	if (dataItem) {
+	        	model.set("inProjectCustomer", dataItem.customer);
+	        	model.set("inSalesContractCode", dataItem.contractCode);
+	        	
+	        	var salesContractId = this.value();
+	        	
+	        	eqDataSource = new kendo.data.DataSource({
+	        	    transport: {
+	        	        read: {
+	        	            url: crudServiceBaseUrl + "/borrowing/eqlist",
+	        	            dataType: "jsonp",
+	        	            data: {
+	        	            	inSalesContractId: salesContractId
+	        	            }
+	        	        }
+	        	    },
+	        	    batch: true,
+	        	    schema: {
+	        	        model: eqModel,
+	        	        total: "total",
+	                	data: "data"
+	        	    }
+	        	});
+	        	
+	        	grid.setDataSource(eqDataSource);
+        	}
+        }
     }).data("kendoComboBox");
 	
 	inSalesContract.readonly();
@@ -213,36 +252,7 @@ $(document).ready(function() {
         dataTextField: "contractCode",
         dataValueField: "_id",
         filter: "contains",
-        suggest: true,
-        change: function(e) {
-        	var dataItem = this.dataItem();
-        	if (dataItem) {
-	//        	model.set("customer", dataItem.customer);
-	//        	model.set("contractCode", dataItem.contractCode);
-	        	
-	        	var salesContractId = this.value();
-	        	
-	        	eqDataSource = new kendo.data.DataSource({
-	        	    transport: {
-	        	        read: {
-	        	            url: crudServiceBaseUrl + "/borrowing/eqlist",
-	        	            dataType: "jsonp",
-	        	            data: {
-	        	            	outSalesContractId: salesContractId
-	        	            }
-	        	        }
-	        	    },
-	        	    batch: true,
-	        	    schema: {
-	        	        model: eqModel,
-	        	        total: "total",
-	                	data: "data"
-	        	    }
-	        	});
-	        	
-	        	grid.setDataSource(eqDataSource);
-        	}
-        }
+        suggest: true
     }).data("kendoComboBox");
 	
 	outSalesContract.readonly();
@@ -262,7 +272,10 @@ $(document).ready(function() {
 	    editable: true
 	}).data("kendoGrid");
     
-    if (redirectParams) {//Edit
+	if(popupParams){
+		postAjaxRequest("/service/borrowing/get", popupParams, edit);
+		disableAllInPoppup();
+	} else if (redirectParams) {//Edit
 		postAjaxRequest("/service/borrowing/get", redirectParams, edit);
 	} else {//Add
 		//添加表单绑定一个空的 Model
@@ -305,18 +318,19 @@ function save() {
     } else {
     	if (eqDataSource) {
     		var data = eqDataSource.data();
-            model.set("eqcostList", data);
+    		if (data.length > 0) {
+    			model.set("eqcostList", data);
+    			listDataSource.add(model);
+    	        
+    	    	if(listDataSource.at(0)){
+    	    		//force set haschanges = true
+    	    		listDataSource.at(0).set("uid", kendo.guid());
+    	    	}
+    	    	
+    	    	listDataSource.sync();
+    	        loadPage("borrowing");
+    		}
 		}
-        
-        listDataSource.add(model);
-        
-    	if(listDataSource.at(0)){
-    		//force set haschanges = true
-    		listDataSource.at(0).set("uid", kendo.guid());
-    	}
-    	
-    	listDataSource.sync();
-        loadPage("borrowing");
     }
 }
 

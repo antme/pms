@@ -4,7 +4,7 @@ var ship = kendo.data.Model.define( {
     id: "_id",
     fields: {
     	type: {},
-    	shipNo: {},
+    	shipCode: {},
     	applicationDepartment: {},
     	warehouse: {},
     	salesContractId: {},

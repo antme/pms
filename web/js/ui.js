@@ -197,6 +197,8 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/finance/getInvoice.html";
 	}else if (page == "repositoryOut") {
 		page = "html/repository/repositoryout.html";
+	} else if(page == "return"){
+		page = "html/execution/return.html";
 	}
 	
 
