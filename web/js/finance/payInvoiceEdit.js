@@ -80,12 +80,10 @@ $(document).ready(function () {
 	});	
 
 	$("#form-container-button button").click(function(){
-		if(confirm("提交表单，确认？")){
-			if(this.value == "cancel") {
-				location.reload();
-			} else {
-				postAjaxRequest("/service/sc/invoice/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
-			}
+		if(this.value == "cancel") {
+			location.reload();
+		} else if(confirm("提交表单，确认？")){
+			postAjaxRequest("/service/sc/invoice/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
 		}
 	});
 	
@@ -122,12 +120,9 @@ function edit(e){
 	if(!e) return;
 	if(e.payInvoiceStatus == "已出票"){
 		$("#form-container .invoicedone").show();
-		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container button").attr("disabled","disabled");
 	} else if(e.payInvoiceStatus == "财务已审核"){
-		$("#form-container :input").attr("disabled","disabled");
 		$("#form-container .invoicedone").show();
-		$(".invoicedone :input").attr("disabled",false);
-		$(".submitform").attr("disabled",false);
 	}
 	currentObj = new myModel(e);
 	kendo.bind($("#form-container"), currentObj);

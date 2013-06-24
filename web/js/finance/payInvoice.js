@@ -74,6 +74,18 @@ function edit(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
+	} else if(row.payInvoiceStatus === "已出票" || row.payInvoiceStatus === "财务已审核"){
+		alert("请选择‘经理已审核’的数据");		
+	} else {	
+		loadPage("payInvoiceEdit", { _id : row._id ,actionType:"approve"});	
+	}
+}
+function done(){
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else if(row.payInvoiceStatus !== "财务已审核"){
+		alert("请选择‘财务已审核’的数据");
 	} else {	
 		loadPage("payInvoiceEdit", { _id : row._id ,actionType:"approve"});	
 	}

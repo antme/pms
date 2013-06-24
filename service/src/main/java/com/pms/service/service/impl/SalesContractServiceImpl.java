@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.mongodb.DBObject;
+import com.mongodb.QueryBuilder;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.dbhelper.DBQueryUtil;
@@ -20,7 +23,6 @@ import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ISalesContractService;
-import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
@@ -326,6 +328,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		invoice.put(InvoiceBean.payInvoiceSubmitDate, DateUtil.getDateString(new Date()));
 		invoice.put("projectId", params.get("projectId"));
 		invoice.put("contractCode", params.get("contractCode"));
+		
+		//add salesCotract's contractType into invoice, so department manager can approve their invoice request
+		Map<String,Object> sc = dao.findOne(ApiConstants.MONGO_ID, params.get(InvoiceBean.salesContractId), DBBean.SALES_CONTRACT);
+		invoice.put(SalesContractBean.SC_TYPE, sc.get(SalesContractBean.SC_TYPE));
+		
 		List<Map<String,Object>> items = (List<Map<String,Object>>) params.get(InvoiceBean.payInvoiceItemList);
 		double total = 0.0;
 		for(Map<String,Object> item : items){
@@ -438,27 +445,49 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	@Override
 	public Map<String, Object> listInvoiceForSC(Map<String, Object> params) {
-/*		String curId = getCurrentUserId();
-		Map<String,Object> user = dao.loadById(curId, DBBean.USER);
-		List<String> depts = (List<String>)user.get(UserBean.DEPARTMENT);
-		
-		//列出自己的 和 该自己审核的...
-		//自己的
-		
-		
-		
-		if(true){//
-			//工程经理:弱电工程、产品集成（灯控/布线，楼控，其他）、
-		}else if(true){
-			//销售经理 :产品销售（灯控/布线，楼控，其他）、维护及服务；
-		}else{
-			//财务
+		DBObject exp0 = null;
+		DBObject exp1 = null;
+		Map<String,Object> query0 = new HashMap<String,Object>();
+		query0.put(InvoiceBean.payInvoiceProposerId, getCurrentUserId());
+		exp0 = DBQueryUtil.buildQueryObject(query0, true);
+		 
+		Map<String,Object> query1 = new HashMap<String,Object>();
+		if(isDepartmentManager()){//是部门经理
+			query1.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusSubmit);
+			List<String> typeList = new ArrayList<String>();
+			if(isInDepartment(UserBean.USER_DEPARTMENT_PROJECT)){//工程部门
+				typeList.add("弱电工程");
+				typeList.add("产品集成（灯控/布线）");
+				typeList.add("产品集成（楼控）");
+				typeList.add("产品集成（其他）");
+			}
+			if(isInDepartment(UserBean.USER_DEPARTMENT_SALES)){
+				typeList.add("维护及服务");
+				typeList.add("产品销售（灯控/布线）");
+				typeList.add("产品销售（楼控）");
+				typeList.add("产品销售（其他）");
+			}
+			query1.put("contractType", new DBQuery(DBQueryOpertion.IN, typeList));
+			exp1 = DBQueryUtil.buildQueryObject(query1, true);
+		} else if(isFinance()){
+			List<String> list = new ArrayList<String>();
+			list.add(InvoiceBean.statusManagerApprove);
+			list.add(InvoiceBean.statusFinanceApprojve);
+			list.add(InvoiceBean.statusDone);
+			query1.put(InvoiceBean.payInvoiceStatus, new DBQuery(DBQueryOpertion.IN, list));
+			exp1 = DBQueryUtil.buildQueryObject(query1, true);
 		}
-		*/
-		Map<String, Object> result = dao.list(null, DBBean.SC_INVOICE);
-		return result;
+		Map<String,Object> query3 = new HashMap<String,Object>();
+		if(exp0 != null){
+			query3.put("exp0", exp0);
+		}
+		if(exp1 != null){
+			query3.put("exp1", exp1);
+		}
+		DBObject searchExp = DBQueryUtil.buildQueryObject(query3, false);
+		return dao.list(null,searchExp, DBBean.SC_INVOICE);
 	}
-
+	
 	@Override
 	public Map<String, Object> addGotMoneyForSC(Map<String, Object> params) {
 		String _id = (String) params.get(ApiConstants.MONGO_ID);
