@@ -206,7 +206,7 @@ function edit(data) {
 								title : "货品型号"
 
 							}, {
-								field : "eqcostAmount",
+								field : "eqcostRealAmount",
 								title : "合同中总数"
 							}, {
 								field : "eqcostAvailableAmount",
@@ -301,7 +301,7 @@ function edit(data) {
 								var eqcostContractTotalMoney = 0;
 
 								// 合同中总数
-								var eqcostAmount = 0;
+								var eqcostRealAmount = 0;
 								// 订单实际总价格
 								var requestActureMoney = 0;
 								var refresh = false;
@@ -316,8 +316,8 @@ function edit(data) {
 										item.requestedTotalMoney = 0;
 									}
 									
-									if (!item.eqcostAmount) {
-										item.eqcostAmount = 0;
+									if (!item.eqcostRealAmount) {
+										item.eqcostRealAmount = 0;
 									}
 
 									if (!item.eqcostApplyAmount) {
@@ -341,8 +341,8 @@ function edit(data) {
 
 									// 计算总的申请数量
 									total = total + item.eqcostApplyAmount;
-									eqcostAmount = eqcostAmount
-											+ item.eqcostAmount;
+									eqcostRealAmount = eqcostRealAmount
+											+ item.eqcostRealAmount;
 
 									requestActureMoney = requestActureMoney
 											+ item.eqcostApplyAmount
@@ -351,14 +351,14 @@ function edit(data) {
 											* item.eqcostProductUnitPrice;
 
 									eqcostContractTotalMoney = eqcostContractTotalMoney
-											+ item.eqcostAmount
+											+ item.eqcostRealAmount
 											* item.eqcostBasePrice;
-									item.eqcostContractTotalMoney = item.eqcostAmount
+									item.eqcostContractTotalMoney = item.eqcostRealAmount
 											* item.eqcostBasePrice;
 
 									item.differenceAmount = item.eqcostApplyAmount
 											* item.eqcostProductUnitPrice
-											- item.eqcostAmount
+											- item.eqcostRealAmount
 											* item.eqcostBasePrice;
 
 									if ( requestedTotalMoney != item.requestedTotalMoney
@@ -378,8 +378,8 @@ function edit(data) {
 
 								var totalPercent = 0;
 
-								if (eqcostAmount != 0) {
-									totalPercent = (total / eqcostAmount) * 100;
+								if (eqcostRealAmount != 0) {
+									totalPercent = (total / eqcostRealAmount) * 100;
 								}
 
 								var requestActureMoneyPercent = 0;

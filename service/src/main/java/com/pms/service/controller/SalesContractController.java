@@ -36,13 +36,7 @@ public class SalesContractController extends AbstractController {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
     	responseWithData(salesContractService.listSCsForSelect(params), request, response);
     }
-    
-    @RequestMapping("/eqlist")
-    public void listEquipmentListBySC(HttpServletRequest request, HttpServletResponse response) {
-    	Map<String, Object> params = this.parserJsonParameters(request, false);
-    	responseWithData(salesContractService.listEqListBySC(params), request, response);
-    }
-    
+
     @RequestMapping("/add")
     @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_MANAGEMENT, desc = RoleValidConstants.SALES_CONTRACT_MANAGEMENT_DESC)
     public void addSC(HttpServletRequest request, HttpServletResponse response) {

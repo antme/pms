@@ -16,4 +16,8 @@ public class EqCostListBean {
 	public static final String EQ_LIST_TOTAL_AMOUNT = "eqcostTotalAmount";//小计
 	public static final String EQ_LIST_MEMO = "eqcostMemo";//备注
 	public static final String EQ_LIST_DISCOUNT_RATE = "eqcostDiscountRate"; //折扣率
+	
+	//设备清单变更后的统计真实数量，固定放到设备清单某条记录中
+	public static final String EQ_LIST_REAL_AMOUNT = "eqcostRealAmount";//真实数量
+	
 }

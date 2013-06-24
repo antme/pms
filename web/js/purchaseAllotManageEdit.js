@@ -14,7 +14,7 @@ var subModel = kendo.data.Model.define({
         eqcostProductType: {
         	editable : false
         },
-        eqcostAmount: {
+        eqcostRealAmount: {
         	editable : false
         },
         eqcostUnit: {

@@ -42,7 +42,6 @@ public class SalesContractBean {
 	public static final String SC_EQ_LIST_PRODUCT_NAME = "eqcostProductName";//产品名称
 	public static final String SC_EQ_LIST_PRODUCT_TYPE = "eqcostProductType";  //规格型号
 	public static final String SC_EQ_LIST_AMOUNT = "eqcostAmount";//数量
-	public static final String SC_EQ_LIST_LEFT_AMOUNT = "eqcostLeftAmount";//数量
 	public static final String SC_EQ_LIST_UNIT = "eqcostUnit";//单位
 	public static final String SC_EQ_LIST_BRAND = "eqcostBrand";//品牌
 	public static final String SC_EQ_LIST_BASE_PRICE = "eqcostBasePrice"; //成本价
