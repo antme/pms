@@ -28,7 +28,7 @@ var commonListOptions = {
 		serverFiltering : true
 }
 
-var baseUrl = "../../service";
+var baseUrl = "/service";
 
 //定义菜单所需权限，目前写死在JS文件中, KEY对应menus变量中的菜单ID
 var accessRoles = {

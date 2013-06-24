@@ -767,7 +767,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 		for(Map<String,Object> obj : list1){
 			suIds.add((String)obj.get(PayMoneyBean.supplierId));
 		}
-		suIds.remove(null);
+		suIds.remove(null);suIds.remove("");
 		if(!suIds.isEmpty()){
 		Map<String,Object> query02 = new HashMap<String,Object>();
 		query02.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList(suIds)));
@@ -791,9 +791,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 		obj.put(PayMoneyBean.purchaseContractId, params.get(PayMoneyBean.purchaseContractId));
 		obj.put(PayMoneyBean.supplierCardCode, params.get(PayMoneyBean.supplierCardCode));
 		obj.put(PayMoneyBean.supplierCardName, params.get(PayMoneyBean.supplierCardName));
-		Map<String,Object> pc = dao.findOne(ApiConstants.MONGO_ID, params.get(PayMoneyBean.purchaseContractId),new String[]{"supplierName","purchaseContractCode"}, DBBean.PURCHASE_CONTRACT);
+		Map<String,Object> pc = dao.findOne(ApiConstants.MONGO_ID, params.get(PayMoneyBean.purchaseContractId),new String[]{"supplier","purchaseContractCode"}, DBBean.PURCHASE_CONTRACT);
 		obj.put(PayMoneyBean.purchaseContractCode, pc.get("purchaseContractCode"));
-		obj.put(PayMoneyBean.supplierId, pc.get("supplierName"));
+		obj.put(PayMoneyBean.supplierId, pc.get("supplier"));
 		return dao.add(obj, DBBean.PAY_MONEY);
 	}
 

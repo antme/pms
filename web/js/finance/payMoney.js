@@ -1,50 +1,46 @@
-var baseUrl = "../../service/purcontract";
-var requestModel;
-var listDatasource;
-$(document).ready(function () {	
-	requestModel = kendo.data.Model.define({
-		id : "_id",
-		fields : {
-			_id : {
-				editable : false,
-				nullable : true
-			},
-			payMoney:{
-				type: "number"
-			},
-			payDate:{
-				type:"date"
-			},
-			purchaseContractId:{},
-			purchaseContractCode:{},
-			supplierId:{},
-			supplierName:{},
-			supplierCardName:{},
-			supplierCardCode:{}
-		}
-	});
+var requestModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		_id : {
+			editable : false,
+			nullable : true
+		},
+		payMoney:{
+			type: "number"
+		},
+		payDate:{
+			type:"date"
+		},
+		purchaseContractId:{},
+		purchaseContractCode:{},
+		supplierId:{},
+		supplierName:{},
+		supplierCardName:{},
+		supplierCardCode:{}
+	}
+});
+var listDatasource = new kendo.data.DataSource({
+    transport: {
+        read:  {
+            url: "/service/purcontract/paymoney/list",
+            dataType: "jsonp",
+            type : "post"
+        }
+    },
+    batch: true,
+    pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
+    schema: {
+        model: requestModel,
+        total: "total",
+        data:"data"
+    }
+});
+var currentObj = new requestModel();
 
-	listDatasource = new kendo.data.DataSource({
-	    transport: {
-	        read:  {
-	            url: baseUrl + "/paymoney/list",
-	            dataType: "jsonp",
-	            type : "post"
-	        },
-	        parameterMap: function(options, operation) {
-	        	if (operation !== "read" && options.models) {
-	                return {models: kendo.stringify(options.models)};
-	            }
-	        }
-	    },
-	    batch: true,
-	    pageSize: 10,
-	    schema: {
-	        model: requestModel,
-	        data:"data"
-	    }
-	});
-    
+$(document).ready(function () {	
 	$("#grid").kendoGrid({
 	    dataSource: listDatasource,
 	    pageable: true,
@@ -66,14 +62,12 @@ $(document).ready(function () {
 	$("#showpopwindow").click(function(){
 		$("#popwindow").data("kendoWindow").open();
 	});
-	var currentObj = new requestModel();
-	kendo.bind($("#form-container"), currentObj);
 	
 	var pcdatasource = new kendo.data.DataSource({
 		transport : {
 			read : {
 				dataType : "jsonp",
-				url : baseUrl + "/listforselect/paymoney"
+				url : "/service/purcontract/listforselect/paymoney"
 			}
 		},
 	    schema: {data:"data"}
@@ -90,10 +84,12 @@ $(document).ready(function () {
 	});
 	$("#submitform").click(function(){
 		currentObj.purchaseContractId=$("#selectpc").val();
-		postAjaxRequest(baseUrl+"/paymoney/add", {models:kendo.stringify(currentObj)}, saveSuccess);
+		postAjaxRequest("/service/purcontract/paymoney/add", {models:kendo.stringify(currentObj)}, saveSuccess);
 	});
-	function saveSuccess(){
-		location.reload();
-	}
+
+	kendo.bind($("#form-container"), currentObj);
 });
 
+function saveSuccess(){
+	location.reload();
+}

@@ -1,64 +1,62 @@
-var baseUrl = "../../service/purcontract";
-var requestModel;
-var listDatasource;
-$(document).ready(function () {	
-	requestModel = kendo.data.Model.define({
-		id : "_id",
-		fields : {
-			_id : {
-				editable : false,
-				nullable : true
-			},
-			getInvoiceCode:{
-				nullable : true
-			},
-			getInvoiceType:{
-				type: "number",
-				nullable : true
-			},
-			getInvoiceDate:{
-				type:"date",
-				nullable : true
-			}
+var requestModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		_id : {
+			editable : false,
+			nullable : true
+		},
+		getInvoiceCode:{
+			nullable : true
+		},
+		getInvoiceType:{
+			type: "number",
+			nullable : true
+		},
+		getInvoiceDate:{
+			type:"date",
+			nullable : true
 		}
-	});
+	}
+});
 
-	listDatasource = new kendo.data.DataSource({
-	    transport: {
-            read:  {
-	            url: baseUrl + "/invoice/list",
-	            dataType: "jsonp",
-	            type : "post"
-            },
-            update: {
-	            url: baseUrl + "/invoice/update",
-	            dataType: "jsonp",
-	            type : "post"
-            },
-            destroy: {
-	            url: baseUrl + "/invoice/destroy",
-	            dataType: "jsonp",
-	            type : "post"
-            },
-            create: {
-	            url: baseUrl + "/invoice/add",
-	            dataType: "jsonp",
-	            type : "post"
-            },
-            parameterMap: function(options, operation) {
-                if (operation !== "read" && options.models) {
-                    return {models: kendo.stringify(options.models)};
-                }
+var listDatasource = new kendo.data.DataSource({
+    transport: {
+        read:  {
+            url: baseUrl + "/purcontract/invoice/list",
+            dataType: "jsonp",
+            type : "post"
+        },
+        update: {
+            url: baseUrl + "/purcontract/invoice/update",
+            dataType: "jsonp",
+            type : "post"
+        },
+        destroy: {
+            url: baseUrl + "/purcontract/invoice/destroy",
+            dataType: "jsonp",
+            type : "post"
+        },
+        create: {
+            url: baseUrl + "/purcontract/invoice/add",
+            dataType: "jsonp",
+            type : "post"
+        },
+        parameterMap: function(options, operation) {
+            if (operation !== "read" && options.models) {
+                return {models: kendo.stringify(options.models)};
             }
-	        
-	    },
-	    batch: true,
-	    pageSize: 10,
-	    schema: {
-	        model: requestModel,
-	        data:"data"
-	    }
-	});
+        }
+        
+    },
+    batch: true,
+    pageSize: 10,
+    schema: {
+        model: requestModel,
+        data:"data"
+    }
+});
+$(document).ready(function () {	
+
     
 	$("#grid").kendoGrid({
 	    dataSource: listDatasource,
