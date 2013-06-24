@@ -86,7 +86,7 @@ public class SalesContractBean {
 	public static final int SC_ARCHIVE_STATUS_UN_ARCHIVED = 0;  //未归档
 	
 	//执行状态
-	public static final int SC_RUNNING_STATUS_RUNNING = 1; //执行中
+	public static final String SC_RUNNING_STATUS_RUNNING = "执行中"; //执行中
 	public static final int SC_RUNNING_STATUS_PAUSE = 2; //中止或暂停
 	public static final int SC_RUNNING_STATUS_END_PHASE = 3; //收尾阶段
 	public static final int SC_RUNNING_STATUS_OVER = 4; //结束

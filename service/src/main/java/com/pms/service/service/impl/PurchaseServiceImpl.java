@@ -18,6 +18,7 @@ import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
+import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
@@ -140,6 +141,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		mergeSalesContract(obj);
 		mergeEqcost(obj);
 		obj.put(PurchaseBack.pbId, params.get(ApiConstants.MONGO_ID));
+		obj.put(PurchaseBack.pbPlanDate, params.get(PurchaseBack.pbPlanDate));
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.unsaved.toString());
 		obj.put(ApiConstants.MONGO_ID, null);
 		obj.put(PurchaseBack.paCode, null);
@@ -384,7 +386,13 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				money += price*requestedTotalCount;
 				Map<String,Object> item = new HashMap<String,Object>();
 				item.put(ApiConstants.MONGO_ID, id);
-				item.put(PurchaseBack.pbTotalCount, requestedTotalCount);
+				if(backEqMap.get(id).get(PurchaseBack.pbTotalCount) !=null){
+				    item.put(PurchaseBack.pbTotalCount, requestedTotalCount);
+				}
+				
+			    if(backEqMap.get(id).get(PurchaseBack.paCount) !=null){
+                    item.put(PurchaseBack.paCount, ApiUtil.getDouble(backEqMap.get(id), PurchaseBack.paCount,0));
+                }
 				item.put(PurchaseBack.pbComment, comment);
 				itemList.add(item);
 
@@ -508,6 +516,33 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		}
 		return result;
 	}
+    
+    @Override
+    public Map<String, Object> listSCsForSelect(Map<String, Object> params) {
+  
+        
+        Map<String,Object> query = new HashMap<String,Object>();
+        query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID});
+        query.put(SalesContractBean.SC_RUNNING_STATUS, SalesContractBean.SC_RUNNING_STATUS_RUNNING);
+        
+        Map<String, Object> purQuery = new HashMap<String, Object>();
+        purQuery.put(ApiConstants.LIMIT_KEYS, ApiConstants.MONGO_ID);        
+        query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.NOT_IN , dao.listLimitKeyValues(purQuery, DBBean.PURCHASE_BACK)));
+        
+        Map<String, Object> projectQuery = new HashMap<String, Object>();
+        projectQuery.put(ApiConstants.LIMIT_KEYS,ProjectBean.PROJECT_NAME);
+        
+        Map<String, Object> projects = this.dao.listToOneMapAndIdAsKey(projectQuery,DBBean.PROJECT);
+        Map<String, Object>  scResults = dao.list(query, DBBean.SALES_CONTRACT);
+        List<Map<String, Object>> scList = (List<Map<String, Object>>) scResults.get(ApiConstants.RESULTS_DATA);
+        for (Map<String, Object> item : scList){
+            Map<String, Object> project = (Map<String, Object>) projects.get(item.get(SalesContractBean.SC_PROJECT_ID));
+            item.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
+        }
+        return scResults;
+        
+        
+    }
 
 	public enum PurchaseStatus {
     	unsaved,saved,submited,approved,rejected,interruption;

@@ -71,7 +71,7 @@ var menus = [
                  items: [
                          { text: "备货申请", id: "purchaseBack", imageUrl: "/images/order.png" },
                          { text: "采购申请", id: "purchaseRequestByAssistant", imageUrl: "/images/purchase.png"},
-                         { text: "开票申请", id: "invoiceList", imageUrl: "/images/involce.png" },
+                         { text: "开票申请", id: "payInvoice", imageUrl: "/images/involce.png" },
                          { text: "发货申请", id: "ship", imageUrl: "/images/borrowing.png"},
                          { text: "借货申请", id: "borrowing", imageUrl: "/images/sign_in.png"},
                          { text: "还货申请", id: "return", imageUrl: "/images/sign_out.png"}

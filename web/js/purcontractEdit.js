@@ -312,41 +312,32 @@ function edit(data) {
 			 },
 			columns : [ {
 				field : "eqcostNo",
-				title : "货品编号",
-				width : 80
+				title : "货品编号"
 			}, {
 				field : "eqcostProductName",
-				title : "货品名",
-				width : 80
+				title : "货品名"
 			}, {
 				field : "eqcostProductCategory",
-				title : "货品类别",
-				width : 80
+				title : "货品类别"
 			}, {
 				field : "eqcostProductType",
-				title : "货品型号",
-				width : 80
+				title : "货品型号"
 
 			}, {
 				field : "eqcostProductUnitPrice",
-				title : "单价",
-				width : 100
+				title : "单价"
 			}, {
 				field : "requestedTotalMoney",
-				title : "小计金额",
-				width : 80
+				title : "小计金额"
 			}, {
 				field : "eqcostApplyAmount",
-				title : "本次采购数量",
-				width : 80
+				title : "本次采购数量"
 			}, {
 				field : "logisticsStatus",
-				title : "货品物流状态",
-				width : 100
+				title : "货品物流状态"
 			}, {
 				field : "logisticsType",
-				title : "物流类型",
-				width : "160px",
+				title : "物流类型"
 				editor : categoryDropDownEditor,
 				template : "#=logisticsType#"
 			}, {

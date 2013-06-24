@@ -38,7 +38,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public Map<String, Object> listSC(Map<String, Object> params) {
 
 		String[] limitKeys = {SalesContractBean.SC_CODE, SalesContractBean.SC_AMOUNT, 
-				SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID};
+				SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_RUNNING_STATUS};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 
 		mergeDataRoleQuery(params);

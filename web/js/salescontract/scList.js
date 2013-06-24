@@ -55,6 +55,9 @@ $(document).ready(function() {
 			field : "projectManager",
 			title : "PM"
 		}, {
+			field : "runningStatus",
+			title : "执行状态"
+		}, {
 			field : "customer",
 			title : "客户名"
 		}, {
