@@ -79,7 +79,6 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		}
 		
 		params.put(ShipBean.SHIP_STATUS, status);
-		params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		return dao.add(params, DBBean.SHIP);
 	}
 	
@@ -166,9 +165,14 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	public Map<String, Object> option(Map<String, Object> params) {
 		Map<String, Object> result = null;
 		if (params.containsKey(ShipBean.SHIP_STATUS)) {
+			String status = params.get(ShipBean.SHIP_STATUS).toString();
 			Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
 	        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-	        params.put(ShipBean.SHIP_STATUS, params.get(ShipBean.SHIP_STATUS));
+	        params.put(ShipBean.SHIP_STATUS, status);
+	        
+	        if (status.equals(ShipBean.SHIP_STATUS_SUBMIT)) {
+	    		params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+			}
 
 	        result =  dao.updateById(params, DBBean.SHIP);
 		}

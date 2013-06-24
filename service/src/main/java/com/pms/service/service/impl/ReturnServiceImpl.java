@@ -7,6 +7,7 @@ import java.util.Map;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ReturnBean;
+import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IReturnService;
 import com.pms.service.util.ApiUtil;
@@ -34,16 +35,22 @@ public class ReturnServiceImpl extends AbstractService implements IReturnService
 
 	public Map<String, Object> create(Map<String, Object> params) {
 		params.put(ReturnBean.RETURN_STATUS, ReturnBean.RETURN_STATUS_TOBE);
-		params.put(ReturnBean.RETURN_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+		Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, getCurrentUserId(), DBBean.USER);
+    	params.put(ReturnBean.RETURN_APPLICANT, user.get(UserBean.USER_NAME));
 		return dao.add(params, DBBean.RETURN);
 	}
 	
 	public Map<String, Object> option(Map<String, Object> params) {
 		Map<String, Object> result = null;
 		if (params.containsKey(ReturnBean.RETURN_STATUS)) {
+			String status = params.get(ReturnBean.RETURN_STATUS).toString();
 			Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.RETURN);
 	        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-	        params.put(ReturnBean.RETURN_STATUS, params.get(ReturnBean.RETURN_STATUS));
+	        params.put(ReturnBean.RETURN_STATUS, status);
+	        
+	        if (status.equals(ReturnBean.RETURN_STATUS_SUBMIT)) {
+	    		params.put(ReturnBean.RETURN_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+			}
 
 	        result =  dao.updateById(params, DBBean.RETURN);
 		}
