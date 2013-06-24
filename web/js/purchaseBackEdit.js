@@ -15,7 +15,7 @@ var subModel = kendo.data.Model.define({
         eqcostProductType: {
         	editable : false
         },
-        eqcostAmount: {
+        eqcostRealAmount: {
         	editable : false
         },
         eqcostUnit: {
@@ -74,7 +74,7 @@ $(document).ready(function () {
 			    { field: "eqcostNo", aggregate: "count" },
 			    { field: "pbTotalCount", aggregate: "sum" },
 			    { field: "eqcostLeftAmount", aggregate: "sum" },
-			    { field: "eqcostAmount", aggregate: "sum" }
+			    { field: "eqcostRealAmount", aggregate: "sum" }
 			]			
 		},
 	    columns: [
@@ -85,7 +85,7 @@ $(document).ready(function () {
 			{ field: "eqcostUnit", title: "单位" },
 			{ field: "pbTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
 			{ field: "eqcostLeftAmount", title: "可申请数量",footerTemplate: "总共: #=sum#"},
-			{ field: "eqcostAmount", title: "总数" ,footerTemplate: "总共: #=sum#"},
+			{ field: "eqcostRealAmount", title: "总数" ,footerTemplate: "总共: #=sum#"},
 			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostBrand", title: "品牌" },
 			{ field: "eqcostMemo", title: "备注" }

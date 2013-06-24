@@ -96,7 +96,7 @@ public abstract class AbstractController {
             if (pName.toLowerCase().startsWith("filter[filters]".toLowerCase())) {
                 filterLength++;
             } else {
-                parametersMap.put(pName, request.getParameter(pName));
+                parametersMap.put(pName, request.getParameter(pName).trim());
             }
         }
 

@@ -12,10 +12,9 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
-import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
@@ -280,7 +279,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		String status = String.valueOf(params.get(PurchaseBack.pbStatus));
 		
 		//1. 获取合同清单
-		Map<String,Object> eqMap = scs.listEqListBySC(params);
+		Map<String,Object> eqMap = scs.listMergedEqListBySC(params);
 		List<Map<String,Object>> list1 = (List<Map<String,Object>>)eqMap.get(ApiConstants.RESULTS_DATA);
 		
 		//2. 获取备货清单
@@ -355,7 +354,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	public Map<String,Object> countEqcostList(Map<String,Object> params,boolean sync) {
 		
 		//1. 获取合同清单
-		Map<String, Object> eqMap = scs.listEqListBySC(params);
+		Map<String, Object> eqMap = scs.listMergedEqListBySC(params);
 		List<Map<String,Object>> list1 = (List<Map<String,Object>>)eqMap.get(ApiConstants.RESULTS_DATA);
 		
 		//2. 获取上传的备货清单
@@ -375,8 +374,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		//3.1 检验货物有效性 ID 数量
 		for(String id : map2.keySet()){
 			if(map1.get(id) != null){
-				Double leftCount = ApiUtil.getDouble(map1.get(id), SalesContractBean.SC_EQ_LIST_LEFT_AMOUNT,0);
-				Double price = ApiUtil.getDouble(map1.get(id), SalesContractBean.SC_EQ_LIST_BASE_PRICE,0);
+				Double leftCount = ApiUtil.getDouble(map1.get(id), EqCostListBean.EQ_LIST_LEFT_AMOUNT,0);
+				Double price = ApiUtil.getDouble(map1.get(id), EqCostListBean.EQ_LIST_LEFT_AMOUNT,0);
 				
 				Double backCount = ApiUtil.getDouble(map2.get(id), PurchaseBack.pbTotalCount,0);
 				String comment =  (String)map2.get(id).get(PurchaseBack.pbComment);
@@ -391,7 +390,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				item.put(PurchaseBack.pbComment, comment);
 				itemList.add(item);
 				
-				if(sync) dao.updateCount(ApiConstants.MONGO_ID, id, SalesContractBean.SC_EQ_LIST_LEFT_AMOUNT, DBBean.EQ_COST, -backCount);
+				if(sync) dao.updateCount(ApiConstants.MONGO_ID, id, EqCostListBean.EQ_LIST_LEFT_AMOUNT, DBBean.EQ_COST, -backCount);
 			}
 		}
 		Map<String,Object> result = new HashMap<String,Object>();

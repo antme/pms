@@ -26,7 +26,7 @@ var model = kendo.data.Model.define({
 			type : "number",
 			editable : false
 		},
-		eqcostAmount : {
+		eqcostRealAmount : {
 			editable : false,
 			type : "number"
 		},
