@@ -124,7 +124,7 @@ function pending() {
 		alert("点击列表可以选中数据");
 	} else if(row.pbStatus == "已提交"){
 		$.ajax({
-			url : baseUrl+"/pending",
+			url : baseUrl+"/purchase/back/pending",
 			success : function(responsetxt) {
 				var res;
 				eval("res=" + responsetxt);
