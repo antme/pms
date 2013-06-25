@@ -201,6 +201,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 }
             }
         }
+        
 
         Map<String, Object> proQuery = new HashMap<String, Object>();
         proQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_NAME });
@@ -213,7 +214,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         eqResult.put("customerName", customer.get(CustomerBean.NAME));
         eqResult.put(SalesContractBean.SC_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
         eqResult.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
-        eqResult.put(SalesContractBean.SC_EQ_LIST, eqList);
+        eqResult.put(SalesContractBean.SC_EQ_LIST, mergeLoadedEqList(eqList));
 
         logger.info(eqResult);
 
@@ -281,8 +282,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 }
             }
         }
+        
+        return mergeLoadedEqList(eqclist);
 
-        return eqclist;
     }
 
     public Map<String, Object> getPurchaseContract(Map<String, Object> parameters) {
