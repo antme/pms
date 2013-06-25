@@ -26,6 +26,7 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listPurchaseContracts(parserJsonParameters(request, false)), request, response);
     }
     
+    //飞直发采购数据
     @RequestMapping("/repository/contract/list")
     public void listContractsForRepositorySelect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listContractsForRepositorySelect(), request, response);
@@ -256,7 +257,7 @@ public class PurchaseContractController extends AbstractController {
     
     @RequestMapping("/repository/list/byproject")
     public void listRepositoryByProjectId(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listRepositoryByProjectId(parserJsonParameters(request, false)), request, response);
+        responseWithData(pService.listRepositoryInByProjectId(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/repository/cancel")

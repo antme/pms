@@ -316,9 +316,6 @@ function edit(data) {
 				field : "eqcostProductName",
 				title : "货品名"
 			}, {
-				field : "eqcostProductCategory",
-				title : "货品类别"
-			}, {
 				field : "eqcostProductType",
 				title : "货品型号"
 			}, {
@@ -442,7 +439,7 @@ function categoryDropDownEditor(container, options) {
 	$('<input required data-text-field="name" data-value-field="name" data-bind="value:'
 					+ options.field + '"/>').appendTo(container)
 			.kendoDropDownList({
-				autoBind : false,
+				autoBind : true,
 				dataSource : data
 			});
 }

@@ -155,6 +155,11 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String STATUS_IN_REPOSITORY = "已入库";
     public static final String STATUS_OUT_REPOSITORY = "已出库";
     public static final String STATUS_REPOSITORY_NEW = "入库中";
+    public static final String STATUS_IN_OUT_REPOSITORY = "已入/出库";
+    
+    //物流类型
+    public static final String LOGISTICS_TYPE_VALUE_DIRECTY = "直发"; 
+    public static final String LOGISTICS_TYPE = "logisticsType";
     
     public static final String PURCHASE_REQUEST_CODE = "purchaseRequestCode";
     public static final String PURCHASE_REQUEST_ID = "purchaseRequestId";

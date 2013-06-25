@@ -202,14 +202,9 @@ function edit(data) {
 				title : "货品名",
 				width : 80
 			}, {
-				field : "eqcostProductCategory",
+				field : "eqcostProductType",
 				title : "货品类别",
 				width : 80
-			}, {
-				field : "eqcostProductType",
-				title : "货品型号",
-				width : 80
-
 			}, {
 				field : "eqcostApplyAmount",
 				title : "本次入库数量"

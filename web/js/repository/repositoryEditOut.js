@@ -5,6 +5,9 @@ var model = kendo.data.Model.define({
 	fields : {
 		repositoryRequestCode : {
 			editable : false
+		},
+		inDate:{
+			type:"date"
 		}
 	}
 });
@@ -29,17 +32,14 @@ $(document).ready(function() {
 			}
 		});
 	
-	$("#operator").kendoDropDownList({
+	$("#inOperator").kendoDropDownList({
 		dataTextField : "userName",
 		dataValueField : "_id",
-        optionLabel: "选择出库人...",
+        optionLabel: "选择入库人...",
 		dataSource : proManagerItems,
 	});
 	
-	$("#inDate").kendoDatePicker({
-	    format: "yyyy/MM/dd",
-	    parseFormats: ["yyyy/MM/dd"]
-	});
+	$("#inDate").kendoDatePicker();
 	
 	if (redirectParams) {
 		postAjaxRequest("/service/purcontract/repository/get", redirectParams, edit);
@@ -147,6 +147,8 @@ function edit(data) {
 
 	}
 	
+	requestDataItem.set("inDate", kendo.toString(requestDataItem.inDate, 'd'));
+	
 //	requestDataItem.inDate = "10/10/2013";
 
 	kendo.bind($("#purchaserepository-edit-item"), requestDataItem);
@@ -170,7 +172,7 @@ function edit(data) {
 				title : "货品名",
 				width : 80
 			}, {
-				field : "eqcostProductCategory",
+				field : "eqcostProductType",
 				title : "货品类别",
 				width : 80
 			}, {
@@ -180,7 +182,7 @@ function edit(data) {
 
 			}, {
 				field : "eqcostApplyAmount",
-				title : "本次出库数量"
+				title : "本次入库数量"
 			}],
 			scrollable : true,
 			editable : true,
