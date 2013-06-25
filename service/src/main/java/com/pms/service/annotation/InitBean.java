@@ -122,7 +122,7 @@ public class InitBean {
                 newGroup.put(GroupBean.ROLES, roles);
                 dao.add(newGroup, DBBean.USER_GROUP);
             } else {
-                group.put(GroupBean.ROLES, roles);
+//                group.put(GroupBean.ROLES, roles);
                 group.put(GroupBean.IS_SYSTEM_GROUP, true);
                 dao.updateById(group, DBBean.USER_GROUP);
             }
