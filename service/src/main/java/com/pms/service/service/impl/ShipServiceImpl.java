@@ -98,8 +98,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		for (Map<String, Object> p:purchaseEqList){
 			String id = p.get(ApiConstants.MONGO_ID).toString();
 			Double amount = 0.0;
-			if (p.containsKey(EqCostListBean.EQ_LIST_AMOUNT)) {
-				amount = (Double) p.get(EqCostListBean.EQ_LIST_AMOUNT);
+			if (p.containsKey("eqcostApplyAmount")) {
+				amount = (Double) p.get("eqcostApplyAmount");
 			}
 			
 			if (alloEqList.containsKey(id)) {

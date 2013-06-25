@@ -4,6 +4,7 @@ $(document).ready(function() {
             renderTo: 'container',
             type: 'column'
         },
+        xAxis: {},
         series: [{}]
     };
     
