@@ -58,7 +58,7 @@ function add() {
 	loadPage("html/purchasecontract/purchasecontractedit.html");
 }
 
-function edit(){
+function editCon(){
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
 
