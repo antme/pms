@@ -9,7 +9,9 @@ var gridOptions = {
 				url : listUrl,
 				dataType : "jsonp",
 				type : "post"
-			}
+			},
+			//必须放在transport内，mytasks参数来至于点击我的任务
+			parameterMap : myTaskQueryParam		
 		}
 }
 gridOptions =  $.extend( gridOptions, commonListOptions);

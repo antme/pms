@@ -93,5 +93,5 @@ $(document).ready(function () {
 });
 
 function saveSuccess(){
-	location.reload();
+	loadPage("payMoney");
 }

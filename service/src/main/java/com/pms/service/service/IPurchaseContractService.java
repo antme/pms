@@ -71,7 +71,7 @@ public interface IPurchaseContractService {
 
     public Map<String, Object> listRepositoryRequests(Map<String, Object> parameters);
     
-    public Map<String, Object> listRepositoryByProjectId(Map<String, Object> params);
+    public Map<String, Object> listRepositoryInByProjectId(Map<String, Object> params);
 
     public Map<String, Object> addRepositoryRequest(Map<String, Object> parserListJsonParameters);
 

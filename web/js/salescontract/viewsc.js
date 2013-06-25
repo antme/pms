@@ -38,7 +38,9 @@ var scModel = kendo.data.Model.define({
 		scInvoiceInfo : {},
 		scGotMoneyInfo : {},
 		scMonthShipmentsInfo : {},
-		scYearShipmentsInfo : {}
+		scYearShipmentsInfo : {},
+		estimateGrossProfit : {},
+		estimateGrossProfitRate : {}
 	}
 });
 var scm;

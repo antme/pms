@@ -14,9 +14,9 @@
 	<div id="purchaserepository-edit-item">
 
         <div>
-            <label>出库人:</label> <input type="text" data-bind="value: operator" id="operator" />
-            <label>出库日期:</label> <input type="text" data-role="datepicker"  data-bind="value: inDate" id="outDate" />
-            <label>需方名称:</label> <input type="text" data-bind="value: inType" id="customer" />           
+            <label>入库人:</label> <input type="text" data-bind="value: inOperator" id="inOperator" />
+            <label>入库日期:</label> <input type="text" data-role="datepicker"  data-bind="value: inDate" id="inDate" />
+            <label>需方名称:</label> <input type="text" data-bind="value: recustomer" id="recustomer" />           
             <label>单据编号:</label> <input type="text" data-bind="value: code" id="code" />
         </div>
         <div>
@@ -31,7 +31,7 @@
 
 		<div>
 			<button onclick="save();">保存</button>
-			<button onclick="save('出库中');">出库申请</button>
+			<button onclick="save('入库中');">直发入库申请</button>
 		</div>
 	</div>
 

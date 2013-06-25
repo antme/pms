@@ -32,7 +32,9 @@ var listDatasource = new kendo.data.DataSource({
             url: baseUrl + "/purchase/back/listchecked",
             dataType: "jsonp",
             type : "post"
-        }
+        },
+		//必须放在transport内，mytasks参数来至于点击我的任务
+		parameterMap : myTaskQueryParam
     },
     batch: true,
     pageSize: 10,

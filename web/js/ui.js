@@ -31,13 +31,15 @@ $(document).ready(function() {
 		});
 	}
 	
+	kendo.ui.progress($("#main"), true);
+	
 	postAjaxRequest("/service/user/home", null, init)
 
 });
 
 
 function init(u){
-	
+	kendo.ui.progress($("#main"), false);
 	userRoles = u.data;
 	user = u;
 	$("#user_info").html(user.userName);
@@ -255,7 +257,6 @@ function loadPage(page, parameters, popupDiv) {
 }
 
 function initMyDraftTasks(id, data){
-	console.log(data);
 
 	if(!data || data.length==0){
 		$("#" +id).html("无数据");
@@ -284,13 +285,21 @@ function initMyDraftTasks(id, data){
 					}
 					
 					if(dataItem.db == "purchaseAllocate"){
-						return "掉拨申请";
+						return "调拨申请";
 					}
 					if(dataItem.db == "repository"){
 						return "入库申请";
 					}
 					if(dataItem.db == "ship"){
 						return "发货申请";
+					}
+					
+					if(dataItem.db == "borrowing"){
+						return "借货申请";
+					}
+					
+					if(dataItem.db == "return"){
+						return "还货申请";
 					}
 	
 				}
@@ -299,34 +308,40 @@ function initMyDraftTasks(id, data){
 				title : "任务",
 				template : function(dataItem){
 
-					var param = "'{status:" +id + "}'";
-					console.log(param);
+					var param = "'" +id + "'";
 					if(dataItem.db == "purchaseRequest"){
 						return '<a onclick="loadTreePage(' + "'purchaseRequestByAssistant'," + param + ')">' + dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "purchaseBack"){
-						return '<a onclick="loadTreePage(' + "'purchaseBack'" +')">' + dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'purchaseBack'," + param + ')">' + dataItem.count + '</a>';
 					}
 					if(dataItem.db == "purchaseContract"){
-						return '<a onclick="loadTreePage(' + "'purchasecontract'" +')">' + dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'purchasecontract'," + param + ')">' + dataItem.count + '</a>';
 					}
 					if(dataItem.db == "purchaseOrder"){
-						return '<a onclick="loadTreePage(' + "'purchaseorder'" +')">'+ dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'purchaseorder'," + param + ')">'+ dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "purchaseAllocate"){
-						return '<a onclick="loadTreePage(' + "'purchaseAllotManage'" +')">'+ dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'purchaseAllotManage'," + param + ')">'+ dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "repository"){
-						return '<a onclick="loadTreePage(' + "'repository'" +')">'+ dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'repository'," + param + ')">'+ dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "ship"){
-						return '<a onclick="loadTreePage(' + "'ship'" +')">'+ dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'ship'," + param + ')">'+ dataItem.count + '</a>';
 					}
 					
+					if(dataItem.db == "borrowing"){
+						return '<a onclick="loadTreePage(' + "'borrowing'," + param + ')">'+ dataItem.count + '</a>';
+					}
+					
+					if(dataItem.db == "return"){
+						return '<a onclick="loadTreePage(' + "'return'," + param + ')">'+ dataItem.count + '</a>';
+					}
 				
 				}
 			}
@@ -550,6 +565,13 @@ function openSCViewWindow(param){
 
 
 
+function myTaskQueryParam(options, operation){
+		if(redirectParams){
+			options.mytasks = redirectParams;
+		}
+		console.log(options);
+		return options;		
+}
 
 
 String.prototype.endWith = function(s) {

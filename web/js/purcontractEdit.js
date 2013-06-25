@@ -93,7 +93,7 @@ $(document).ready(function() {
 
 	
 
-	$("#supplierName").kendoDropDownList({
+	$("#supplier").kendoDropDownList({
 		dataTextField : "supplierName",
 		dataValueField : "_id",
 		dataSource : {
@@ -212,9 +212,11 @@ function save(status) {
 			}
 
 			if (!requestDataItem.supplier) {
-				var dl = $("#supplierName").data("kendoDropDownList");
+				var dl = $("#supplier").data("kendoDropDownList");
 				requestDataItem.supplier = dl.dataSource.at(0)._id;
 			}
+			
+			console.log(requestDataItem)
 
 			// 同步数据
 			itemDataSource.sync();
@@ -313,9 +315,6 @@ function edit(data) {
 			}, {
 				field : "eqcostProductName",
 				title : "货品名"
-			}, {
-				field : "eqcostProductCategory",
-				title : "货品类别"
 			}, {
 				field : "eqcostProductType",
 				title : "货品型号"
@@ -440,7 +439,7 @@ function categoryDropDownEditor(container, options) {
 	$('<input required data-text-field="name" data-value-field="name" data-bind="value:'
 					+ options.field + '"/>').appendTo(container)
 			.kendoDropDownList({
-				autoBind : false,
+				autoBind : true,
 				dataSource : data
 			});
 }
