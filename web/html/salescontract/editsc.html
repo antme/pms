@@ -162,7 +162,7 @@
 							<label for="contractAmount">合同金额</label>
 						</div>
 						<div data-container-for="contractAmount" class="k-edit-field ">
-							<input type="number" min="0" name="contractAmount" id="contractAmount"
+							<input type="number" min="0" name="contractAmount" id="contractAmount" onchange="moneyOnChange();"
 								required="required" validationMessage="必填" data-bind="value: contractAmount">
 						</div>
 						
@@ -170,7 +170,7 @@
 							<label for="estimateEqCost0">预估设备成本（增）</label>
 						</div>
 						<div data-container-for="estimateEqCost0" class="k-edit-field ">
-							<input type="number" min="0" name="estimateEqCost0" id="estimateEqCost0"
+							<input type="number" min="0" name="estimateEqCost0" id="estimateEqCost0" onchange="moneyOnChange();"
 								required="required" data-bind="value: estimateEqCost0">
 						</div>
 						
@@ -178,7 +178,7 @@
 							<label for="estimateEqCost1">预估设备成本（非增）</label>
 						</div>
 						<div data-container-for="estimateEqCost1" class="k-edit-field ">
-							<input type="text" name="estimateEqCost1" id="estimateEqCost1"
+							<input type="text" name="estimateEqCost1" id="estimateEqCost1" onchange="moneyOnChange();"
 								required="required" data-bind="value: estimateEqCost1">
 						</div>
 						
@@ -186,7 +186,7 @@
 							<label for="estimateSubCost">预估分包成本</label>
 						</div>
 						<div data-container-for="estimateSubCost" class="k-edit-field ">
-							<input type="text" name="estimateSubCost" id="estimateSubCost"
+							<input type="text" name="estimateSubCost" id="estimateSubCost" onchange="moneyOnChange();"
 								required="required" data-bind="value: estimateSubCost">
 						</div>
 						
@@ -194,7 +194,7 @@
 							<label for="estimatePMCost">预估项目管理成本</label>
 						</div>
 						<div data-container-for="estimatePMCost" class="k-edit-field ">
-							<input type="text" name="estimatePMCost" id="estimatePMCost"
+							<input type="text" name="estimatePMCost" id="estimatePMCost" onchange="moneyOnChange();"
 								required="required" data-bind="value: estimatePMCost">
 						</div>
 						
@@ -202,7 +202,7 @@
 							<label for="estimateDeepDesignCost">预估深化设计成本</label>
 						</div>
 						<div data-container-for="estimateDeepDesignCost" class="k-edit-field ">
-							<input type="text" name="estimateDeepDesignCost" id="estimateDeepDesignCost"
+							<input type="text" name="estimateDeepDesignCost" id="estimateDeepDesignCost" onchange="moneyOnChange();"
 								required="required" data-bind="value: estimateDeepDesignCost">
 						</div>
 						
@@ -210,7 +210,7 @@
 							<label for="estimateDebugCost">预估调试费</label>
 						</div>
 						<div data-container-for="estimateDebugCost" class="k-edit-field ">
-							<input type="text" name="estimateDebugCost" id="estimateDebugCost"
+							<input type="text" name="estimateDebugCost" id="estimateDebugCost" onchange="moneyOnChange();"
 								required="required" data-bind="value: estimateDebugCost">
 						</div>
 						
@@ -218,10 +218,22 @@
 							<label for="estimateOtherCost">预估其他成本</label>
 						</div>
 						<div data-container-for="estimateOtherCost" class="k-edit-field ">
-							<input type="text" name="estimateOtherCost" id="estimateOtherCost"
+							<input type="text" name="estimateOtherCost" id="estimateOtherCost" onchange="moneyOnChange();"
 								required="required" data-bind="value: estimateOtherCost">
 						</div>
+						<div class="k-edit-label ">
+							<label for="estimateGrossProfit">预估毛利</label>
+						</div>
+						<div data-container-for="estimateGrossProfit" class="k-edit-field ">
+							<input type="text" readonly name="estimateGrossProfit" id="estimateGrossProfit" data-bind="value: estimateGrossProfit">
+						</div>
 						
+	                   <div class="k-edit-label ">
+							<label for="estimateGrossProfitRate">预估毛利率</label>
+						</div>
+						<div data-container-for="estimateGrossProfitRate" class="k-edit-field ">
+							<input type="text" readonly name="estimateGrossProfitRate" id="estimateGrossProfitRate" data-bind="value: estimateGrossProfitRate">
+						</div>
 	                   <div class="k-edit-label ">
 							<label for="invoiceType">发票类型</label>
 						</div>
