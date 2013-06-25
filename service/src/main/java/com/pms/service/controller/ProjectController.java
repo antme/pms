@@ -64,13 +64,23 @@ public class ProjectController extends AbstractController {
     	responseWithData(projectService.listEquipmentsForProject(params), request, response);
     }
     
+    /**
+     * 新建项目
+     * @param request
+     * @param response
+     */
     @RequestMapping("/add")
-    @RoleValidate(roleID=RoleValidConstants.PROJECT_MANAGEMENT, desc = RoleValidConstants.PROJECT_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PROJECT_ADD, desc = RoleValidConstants.PROJECT_ADD_DESC)
     public void addProject(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(projectService.addProject(params), request, response);
     }
     
+    /**
+     * 变更项目
+     * @param request
+     * @param response
+     */
     @RequestMapping("/update")
     @RoleValidate(roleID=RoleValidConstants.PROJECT_UPDATE, desc = RoleValidConstants.PROJECT_UPDATE_DESC)
     public void updateProject(HttpServletRequest request, HttpServletResponse response) {
@@ -85,8 +95,13 @@ public class ProjectController extends AbstractController {
         responseWithData(projectService.getProjectById(id), request, response);
     }
     
+    /**
+     * 正式立项
+     * @param request
+     * @param response
+     */
     @RequestMapping("/setup")
-    @RoleValidate(roleID=RoleValidConstants.PROJECT_MANAGEMENT, desc = RoleValidConstants.PROJECT_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PROJECT_UPDATE, desc = RoleValidConstants.PROJECT_UPDATE_DESC)
     public void setupProject(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(projectService.setupProject(params), request, response);

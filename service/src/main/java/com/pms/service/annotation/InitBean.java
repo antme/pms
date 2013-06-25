@@ -58,8 +58,11 @@ public class InitBean {
 
         Map<String, String[]> groupRoles = new HashMap<String, String[]>();
         groupRoles.put(GroupBean.PROJECT_MANAGER_VALUE, new String[] {});
-        groupRoles.put(GroupBean.PROJECT_ASSISTANT_VALUE, new String[] {});
-        groupRoles.put(GroupBean.SALES_ASSISTANT_VALUE, new String[] {});
+        groupRoles.put(GroupBean.PROJECT_ASSISTANT_VALUE, new String[] {RoleValidConstants.PROJECT_UPDATE, 
+        		RoleValidConstants.SALES_CONTRACT_UPDATE});
+        groupRoles.put(GroupBean.SALES_ASSISTANT_VALUE, new String[] {RoleValidConstants.PROJECT_ADD, 
+        		RoleValidConstants.PROJECT_UPDATE, RoleValidConstants.SALES_CONTRACT_ADD, 
+        		RoleValidConstants.SALES_CONTRACT_UPDATE});
         groupRoles.put(GroupBean.PM, new String[] {});
         groupRoles.put(GroupBean.FINANCE, new String[] {});
         groupRoles.put(GroupBean.SALES_MANAGER_VALUE, new String[] {});
