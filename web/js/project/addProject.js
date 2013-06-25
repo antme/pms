@@ -132,8 +132,14 @@ $(document).ready(function() {
 		dataSource : customerItems,
 	});
 	if(popupParams){
-		postAjaxRequest("/service/project/get", popupParams, edit);
-		disableAllInPoppup();
+		if (popupParams.scAddProject == 1){
+			pModel = new projectModel();
+			kendo.bind($("#addProject"), pModel);
+		}else{
+			postAjaxRequest("/service/project/get", popupParams, edit);
+			disableAllInPoppup();
+		}
+		
 	}else if (redirectParams) {//Edit
 		postAjaxRequest("/service/project/get", redirectParams, edit);
 	} else {//Add
@@ -158,7 +164,14 @@ function saveProject(){
     	//console.log(kendo.stringify(pModel));
     	dataSource.add(pModel);
     	dataSource.sync();
-    	loadPage("projectList");
+    	if (popupParams.scAddProject == 1){
+    		//close the window
+    		$("#popup").data("kendoWindow").close();
+    		loadPage("addsc");
+		}else{
+			loadPage("projectList");
+		}
+    	
     }
 	
 };

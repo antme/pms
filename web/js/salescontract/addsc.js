@@ -285,3 +285,8 @@ function saveSC(){
 		loadPage("scList");
     }
 };
+
+function addAProject(){
+	var options = { width:"680px", height: "520px", title:"新建一个项目"};
+	openRemotePageWindow(options, "html/project/addProject.html", {scAddProject:1});
+}
