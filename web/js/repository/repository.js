@@ -3,20 +3,22 @@ var approveUrl = "/service/purcontract/repository/approve?type=in";
 var deleteUrl = "/service/purcontract/repository/delete?type=in";
 var cancelUrl = "/service/purcontract/repository/cancel?type=in";
 
-// 外面列表页的datasource对象
-var dataSource = new kendo.data.DataSource({
-	transport : {
-		read : {
-			url : listUrl,
-			dataType : "jsonp"
+
+var gridOptions = {
+		transport : {
+			read : {
+				url : listUrl,
+				dataType : "jsonp",
+				type : "post"
+			},		
+			//必须放在transport内，mytasks参数来至于点击我的任务
+			parameterMap : myTaskQueryParam			
 		}
-	},
-	pageSize : 20,
-	schema : {
-		total: "total",
-		data: "data"
-	}
-});
+}
+gridOptions =  $.extend( gridOptions, commonListOptions);
+
+// 外面列表页的datasource对象
+var dataSource = new kendo.data.DataSource(gridOptions);
 
 $(document).ready(function() {
 	checkRoles();
@@ -26,6 +28,8 @@ $(document).ready(function() {
 		$("#grid").kendoGrid({
 			dataSource : dataSource,
 			pageable : true,
+		    sortable : true,
+			filterable : filterable,
 			selectable : "row",
 			width : "1000px",
 			height: "400px",

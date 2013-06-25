@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.UserBean;
 
 public class ApiThreadLocal {
@@ -50,5 +51,10 @@ public class ApiThreadLocal {
     public static String getCurrentUserName() {
 
         return get(UserBean.USER_NAME) == null ? null : get(UserBean.USER_NAME).toString();
+    }
+    
+    public static String getMyTask() {
+
+        return get(ApiConstants.MY_TASKS) == null ? null : get(ApiConstants.MY_TASKS).toString();
     }
 }

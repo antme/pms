@@ -8,6 +8,9 @@ public class ApiConstants {
     public static final String UPDATED_ON = "updatedOn";
     public static final String SERIAL_NUMBER = "serialNumber";
     
+    public static final String MY_TASKS = "mytasks";
+    
+    
     public static final String PATH_INFO = "pathInfo";
     public static final String IP_ADDRESS = "ipAddress";
     public static final String USER_AGENT = "user-agent";

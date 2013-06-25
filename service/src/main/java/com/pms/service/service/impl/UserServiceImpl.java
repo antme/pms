@@ -242,63 +242,24 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     
     public Map<String, Object> listMyTasks() {
         
-        // 我的草稿
-        Map<String, Object> taskQuery = new HashMap<String, Object>();
-        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
-
-        Map<String, Object> statusQuery = new HashMap<String, Object>();
-        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_DRAFT, ShipBean.SHIP_STATUS_DRAFT }));
-        statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
-
-        // or query
-        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
-
         Map<String, Object> result = new HashMap<String, Object>();
-        queryTasks("draft", result, taskQuery);
         
-        
+        queryTasks("draft", result, getMyDraftQuery());
 
-        //我的待批
-        taskQuery = new HashMap<String, Object>();
-        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
-        statusQuery = new HashMap<String, Object>();
-        statusQuery.put("status", new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_NEW, PurchaseRequest.STATUS_REPOSITORY_NEW, ShipBean.SHIP_STATUS_SUBMIT }));
-        statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
-        // or query
-        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
-        queryTasks("inprogress", result, taskQuery);
-
-        
+        queryTasks("inprogress", result, getMyInprogressQuery());
+      
         //我的回退
-        taskQuery = new HashMap<String, Object>();
-        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
-        statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseRequest.STATUS_REJECTED, ShipBean.SHIP_STATUS_REJECT}));
-        statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.rejected.toString());
-        statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.rejected.toString());
+        queryTasks("rejected", result, getMyRejectedQuey());
 
-        //or query
-        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));   
-        queryTasks("rejected", result, taskQuery);
-
-
-        //我的已批
-        taskQuery = new HashMap<String, Object>();
-        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
-        statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseRequest.STATUS_APPROVED, ShipBean.SHIP_STATUS_APPROVE, PurchaseRequest.STATUS_IN_REPOSITORY}));
-        statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.approved.toString());
-        //or query
-        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));  
-        queryTasks("approved", result, taskQuery);
+        queryTasks("approved", result, getMyApprovedQuery());
 
         return result;
     }
 
+
     private Map<String, Object> queryTasks(String key, Map<String, Object> result, Map<String, Object> query) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         
-
         getCount(list, query, DBBean.PURCHASE_REQUEST);
         getCount(list, query, DBBean.PURCHASE_BACK);
         getCount(list, query, DBBean.PURCHASE_ORDER);

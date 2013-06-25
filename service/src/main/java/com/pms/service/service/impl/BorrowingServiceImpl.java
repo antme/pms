@@ -71,13 +71,9 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	}
 
 	public Map<String, Object> list(Map<String, Object> params) {
-		int limit = ApiUtil.getInteger(params, ApiConstants.PAGE_SIZE, 15);
-		int limitStart = ApiUtil.getInteger(params, ApiConstants.SKIP, 0);
-		Map<String, Object> queryMap = new HashMap<String, Object>();
-		queryMap.put(ApiConstants.LIMIT, limit);
-		queryMap.put(ApiConstants.LIMIT_START, limitStart);
-		
-		Map<String, Object> result = dao.list(queryMap, DBBean.BORROWING);
+
+	    mergeMyTaskQuery(params);
+		Map<String, Object> result = dao.list(params, DBBean.BORROWING);
 		
 		List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
 		

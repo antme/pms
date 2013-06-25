@@ -6,7 +6,10 @@ var listDataSource = new kendo.data.DataSource({
 		read : {
 			url : "/service/purcontract/list",
 			dataType : "jsonp"
-		}		
+		},
+		//必须放在transport内，mytasks参数来至于点击我的任务
+		parameterMap : myTaskQueryParam
+
 	},
 	schema : {
 		total: "total", // total is returned in the "total" field of the response

@@ -51,12 +51,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 
 	public Map<String, Object> list(Map<String, Object> params) {
-		int limit = ApiUtil.getInteger(params, ApiConstants.PAGE_SIZE, 15);
-		int limitStart = ApiUtil.getInteger(params, ApiConstants.SKIP, 0);
-		Map<String, Object> queryMap = new HashMap<String, Object>();
-		queryMap.put(ApiConstants.LIMIT, limit);
-		queryMap.put(ApiConstants.LIMIT_START, limitStart);
-		return dao.list(queryMap, DBBean.SHIP);
+	    mergeMyTaskQuery(params);
+		return dao.list(params, DBBean.SHIP);
 	}
 
 	public Map<String, Object> update(Map<String, Object> params) {

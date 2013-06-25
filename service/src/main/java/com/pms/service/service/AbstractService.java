@@ -28,7 +28,11 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.PurchaseBack;
+import com.pms.service.mockbean.PurchaseRequest;
+import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
+import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.validators.ValidatorUtil;
@@ -268,6 +272,78 @@ public abstract class AbstractService {
 //            // list creator or manager's data
 //            param.put(ProjectBean.PROJECT_MANAGER, DBQueryUtil.buildQueryObject(pmQuery, false));
 //        }
+    }
+    
+    
+
+    protected Map<String, Object> getMyApprovedQuery() {
+        Map<String, Object> taskQuery = new HashMap<String, Object>();
+        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
+        Map<String, Object> statusQuery = new HashMap<String, Object>();      
+        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseRequest.STATUS_APPROVED, ShipBean.SHIP_STATUS_APPROVE, PurchaseRequest.STATUS_IN_REPOSITORY}));
+        statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.approved.toString());
+        //or query
+        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
+        return taskQuery;
+    }
+
+    protected Map<String, Object> getMyRejectedQuey() {
+        Map<String, Object> taskQuery = new HashMap<String, Object>();
+        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
+        Map<String, Object> statusQuery = new HashMap<String, Object>();      
+        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseRequest.STATUS_REJECTED, ShipBean.SHIP_STATUS_REJECT}));
+        statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.rejected.toString());
+        statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.rejected.toString());
+
+        //or query
+        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
+        return taskQuery;
+    }
+
+    protected Map<String, Object> getMyInprogressQuery() {
+        //我的待批
+        Map<String, Object> taskQuery = new HashMap<String, Object>();
+        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
+        Map<String, Object>  statusQuery = new HashMap<String, Object>();
+        statusQuery.put("status", new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_NEW, PurchaseRequest.STATUS_REPOSITORY_NEW, ShipBean.SHIP_STATUS_SUBMIT }));
+        statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
+        // or query
+        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
+        return taskQuery;
+    }
+
+    protected Map<String, Object> getMyDraftQuery() {
+        // 我的草稿
+        Map<String, Object> taskQuery = new HashMap<String, Object>();
+        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
+
+        Map<String, Object> statusQuery = new HashMap<String, Object>();
+        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_DRAFT, ShipBean.SHIP_STATUS_DRAFT }));
+        statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
+
+        // or query
+        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
+        return taskQuery;
+    }
+    
+    protected void mergeMyTaskQuery(Map<String, Object> param) {
+
+        if (ApiThreadLocal.getMyTask() != null) {
+
+            String task = ApiThreadLocal.getMyTask();
+
+            if (task.equalsIgnoreCase("draft")) {
+                param.putAll(getMyDraftQuery());
+            } else if (task.equalsIgnoreCase("inprogress")) {
+                param.putAll(getMyInprogressQuery());
+            } else if (task.equalsIgnoreCase("rejected")) {
+                param.putAll(getMyRejectedQuey());
+            } else if (task.equalsIgnoreCase("approved")) {
+                param.putAll(getMyApprovedQuery());
+            } else if (task.equalsIgnoreCase("tip")) {
+
+            }
+        }
     }
     
 

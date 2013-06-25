@@ -30,6 +30,7 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
+import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
 
@@ -48,6 +49,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters) {
         // mergeDataRoleQuery(parameters);
+        mergeMyTaskQuery(parameters);
         Map<String, Object> results = dao.list(parameters, DBBean.PURCHASE_CONTRACT);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
@@ -311,6 +313,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> listPurchaseOrders(Map<String, Object> parameters) {
         mergeDataRoleQuery(parameters);
+        mergeMyTaskQuery(parameters);
         Map<String, Object> results = dao.list(parameters, DBBean.PURCHASE_ORDER);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
@@ -496,6 +499,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             params.remove("approvePage");
             params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED }));
         }
+        
+        mergeMyTaskQuery(params);
 
         if (isSalesManager()) {
             params.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_NEW);
@@ -706,6 +711,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> listRepositoryRequests(Map<String, Object> params) {
+        mergeMyTaskQuery(params);
         return this.dao.list(params, DBBean.REPOSITORY);
     }
 
