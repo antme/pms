@@ -31,13 +31,15 @@ $(document).ready(function() {
 		});
 	}
 	
+	kendo.ui.progress($("#main"), true);
+	
 	postAjaxRequest("/service/user/home", null, init)
 
 });
 
 
 function init(u){
-	
+	kendo.ui.progress($("#main"), false);
 	userRoles = u.data;
 	user = u;
 	$("#user_info").html(user.userName);
@@ -289,6 +291,14 @@ function initMyDraftTasks(id, data){
 					if(dataItem.db == "ship"){
 						return "发货申请";
 					}
+					
+					if(dataItem.db == "borrowing"){
+						return "借货申请";
+					}
+					
+					if(dataItem.db == "return"){
+						return "还货申请";
+					}
 	
 				}
 			}, {
@@ -323,6 +333,13 @@ function initMyDraftTasks(id, data){
 						return '<a onclick="loadTreePage(' + "'ship'," + param + ')">'+ dataItem.count + '</a>';
 					}
 					
+					if(dataItem.db == "borrowing"){
+						return '<a onclick="loadTreePage(' + "'borrowing'," + param + ')">'+ dataItem.count + '</a>';
+					}
+					
+					if(dataItem.db == "return"){
+						return '<a onclick="loadTreePage(' + "'return'," + param + ')">'+ dataItem.count + '</a>';
+					}
 				
 				}
 			}

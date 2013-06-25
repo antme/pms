@@ -72,7 +72,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 
 	public Map<String, Object> list(Map<String, Object> params) {
 
-	    mergeMyTaskQuery(params);
+	    mergeMyTaskQuery(params, DBBean.BORROWING);
 		Map<String, Object> result = dao.list(params, DBBean.BORROWING);
 		
 		List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);

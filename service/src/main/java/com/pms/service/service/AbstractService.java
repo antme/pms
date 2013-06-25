@@ -3,6 +3,7 @@ package com.pms.service.service;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +19,9 @@ import org.apache.commons.validator.ValidatorException;
 import org.apache.commons.validator.ValidatorResources;
 import org.apache.commons.validator.ValidatorResult;
 import org.apache.commons.validator.ValidatorResults;
+import org.apache.poi.hssf.util.HSSFColor.ROYAL_BLUE;
 
+import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.dao.ICommonDao;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
@@ -30,6 +33,7 @@ import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseRequest;
+import com.pms.service.mockbean.RoleBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
@@ -237,8 +241,53 @@ public abstract class AbstractService {
         }
 
     }
-
     
+    private boolean inRole(String roleId) {
+
+        if (ApiThreadLocal.get(UserBean.USER_ID) == null) {
+            return false;
+        } else {
+            String userId = ApiThreadLocal.get(UserBean.USER_ID).toString();
+
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(RoleBean.ROLE_ID, roleId);
+            query.put(ApiConstants.LIMIT_KEYS, ApiConstants.MONGO_ID);
+
+            Map<String, Object> role = this.dao.findOneByQuery(query, DBBean.ROLE_ITEM);
+
+            List<String> roles = listUserRoleIds(userId);
+
+            return roles.contains(role.get(ApiConstants.MONGO_ID).toString());
+
+        }
+
+    }
+
+
+    public List<String> listUserRoleIds(String userId) {
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ApiConstants.MONGO_ID, userId);
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.GROUPS });
+        Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
+        List<String> groups = (List<String>) user.get(UserBean.GROUPS);
+        
+        Map<String, Object> limitQuery = new HashMap<String, Object>();
+        limitQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, groups));
+        limitQuery.put(ApiConstants.LIMIT_KEYS, new String[]{GroupBean.ROLES});
+        
+        List<Object> list = dao.listLimitKeyValues(limitQuery, DBBean.USER_GROUP);
+        List<String> roles = new ArrayList<String>();
+
+        for(Object role: list){
+            roles.addAll((Collection<? extends String>) role);
+        }
+        
+        if(user.get(UserBean.OTHER_ROLES)!=null){
+            roles.addAll((List<? extends String>) user.get(UserBean.OTHER_ROLES));
+        }
+
+        return roles;
+    }
     
     protected void mergeDataRoleQuery(Map<String, Object> param) {
 //        Map<String, Object> pmQuery = new HashMap<String, Object>();
@@ -300,16 +349,63 @@ public abstract class AbstractService {
         return taskQuery;
     }
 
-    protected Map<String, Object> getMyInprogressQuery() {
+    protected Map<String, Object> getMyInprogressQuery(String type) {
         //我的待批
-        Map<String, Object> taskQuery = new HashMap<String, Object>();
-        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
+        Map<String, Object> ownerQuery = new HashMap<String, Object>();
+        ownerQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
+
+        //FIXME 根据部门查询数据
+        if (type.equalsIgnoreCase(DBBean.PURCHASE_REQUEST)) {
+            if (inRole(RoleValidConstants.PURCHASE_REQUEST_PROCESS)) {
+                ownerQuery.remove(ApiConstants.CREATOR);
+            }
+        }
+
+        if (type.equalsIgnoreCase(DBBean.PURCHASE_ORDER)) {
+            if (inRole(RoleValidConstants.PURCHASE_ORDER_PROCESS)) {
+                ownerQuery.remove(ApiConstants.CREATOR);
+            }
+        }
+
+        if (type.equalsIgnoreCase(DBBean.PURCHASE_CONTRACT)) {
+            if (inRole(RoleValidConstants.PURCHASE_CONTRACT_PROCESS)) {
+                ownerQuery.remove(ApiConstants.CREATOR);
+            }
+        }
+
+        if (type.equalsIgnoreCase(DBBean.BORROWING)) {
+            if (inRole(RoleValidConstants.BORROWING_MANAGEMENT_PROCESS)) {
+                ownerQuery.remove(ApiConstants.CREATOR);
+            }
+        }
+
+        if (type.equalsIgnoreCase(DBBean.PURCHASE_ALLOCATE)) {
+            if (inRole(RoleValidConstants.PURCHASE_ALLOCATE_PROCESS)) {
+                ownerQuery.remove(ApiConstants.CREATOR);
+            }
+        }
+
+        if (type.equalsIgnoreCase(DBBean.REPOSITORY)) {
+            if (inRole(RoleValidConstants.PURCHASE_CONTRACT_PROCESS)) {
+                ownerQuery.remove(ApiConstants.CREATOR);
+            }
+        }
+
+        if (type.equalsIgnoreCase(DBBean.SHIP)) {
+            if (inRole(RoleValidConstants.SHIP_MANAGEMENT_PROCESS)) {
+                ownerQuery.remove(ApiConstants.CREATOR);
+            }
+        }
+        
+        
         Map<String, Object>  statusQuery = new HashMap<String, Object>();
         statusQuery.put("status", new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_NEW, PurchaseRequest.STATUS_REPOSITORY_NEW, ShipBean.SHIP_STATUS_SUBMIT }));
         statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
         // or query
-        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
-        return taskQuery;
+        ownerQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
+
+        
+        return ownerQuery;
     }
 
     protected Map<String, Object> getMyDraftQuery() {
@@ -326,7 +422,7 @@ public abstract class AbstractService {
         return taskQuery;
     }
     
-    protected void mergeMyTaskQuery(Map<String, Object> param) {
+    protected void mergeMyTaskQuery(Map<String, Object> param, String type) {
 
         if (ApiThreadLocal.getMyTask() != null) {
 
@@ -335,7 +431,7 @@ public abstract class AbstractService {
             if (task.equalsIgnoreCase("draft")) {
                 param.putAll(getMyDraftQuery());
             } else if (task.equalsIgnoreCase("inprogress")) {
-                param.putAll(getMyInprogressQuery());
+                param.putAll(getMyInprogressQuery(type));
             } else if (task.equalsIgnoreCase("rejected")) {
                 param.putAll(getMyRejectedQuey());
             } else if (task.equalsIgnoreCase("approved")) {

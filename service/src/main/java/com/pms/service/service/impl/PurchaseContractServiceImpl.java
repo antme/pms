@@ -49,7 +49,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters) {
         // mergeDataRoleQuery(parameters);
-        mergeMyTaskQuery(parameters);
+        mergeMyTaskQuery(parameters, DBBean.PURCHASE_CONTRACT);
         Map<String, Object> results = dao.list(parameters, DBBean.PURCHASE_CONTRACT);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
@@ -315,7 +315,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> listPurchaseOrders(Map<String, Object> parameters) {
         mergeDataRoleQuery(parameters);
-        mergeMyTaskQuery(parameters);
+        mergeMyTaskQuery(parameters, DBBean.PURCHASE_ORDER);
         Map<String, Object> results = dao.list(parameters, DBBean.PURCHASE_ORDER);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
@@ -502,7 +502,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED }));
         }
         
-        mergeMyTaskQuery(params);
+        mergeMyTaskQuery(params, DBBean.PURCHASE_REQUEST);
 
         if (isSalesManager()) {
             params.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_NEW);
@@ -713,7 +713,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> listRepositoryRequests(Map<String, Object> params) {
-        mergeMyTaskQuery(params);
+        mergeMyTaskQuery(params, DBBean.REPOSITORY);
         return this.dao.list(params, DBBean.REPOSITORY);
     }
 

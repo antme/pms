@@ -51,7 +51,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 
 	public Map<String, Object> list(Map<String, Object> params) {
-	    mergeMyTaskQuery(params);
+	    mergeMyTaskQuery(params, DBBean.SHIP);
 		return dao.list(params, DBBean.SHIP);
 	}
 
