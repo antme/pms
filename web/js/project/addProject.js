@@ -160,15 +160,11 @@ function saveProject(){
 	if (!validator.validate()) {
 		return;
     } else {
-        //var _id = pModel.get("_id");
-    	//console.log(kendo.stringify(pModel));
-    	dataSource.add(pModel);
-    	dataSource.sync();
-    	if (popupParams !=null && popupParams.scAddProject == 1){
-    		//close the window
-    		$("#popup").data("kendoWindow").close();
-    		loadPage("addsc");
+    	if (popupParams !=null && popupParams.scAddProject == 1){//创建销售合同是 创建项目
+    		saveProjectInAddSC(pModel.toJSON());
 		}else{
+	    	dataSource.add(pModel);
+	    	dataSource.sync();
 			loadPage("projectList");
 		}
     	
@@ -183,4 +179,19 @@ function cancelAddProject(){
 	}else{
 		loadPage("projectList");
 	}
+}
+
+function saveProjectInAddSC(data){
+	postAjaxRequest("/service/project/add", data, saveProjectInAddSCCallBack);
+}
+
+function saveProjectInAddSCCallBack(data){
+	console.log(data._id+"*******");
+	$("#popup").data("kendoWindow").close();
+	projectItems.read();
+	var pdblist = $("#projectId").data("kendoDropDownList");
+	console.log("projectItems"+projectItems);
+	console.log("pdblist"+pdblist);
+	pdblist.value(data._id);
+	scm.set("projectId",data._id);
 }
