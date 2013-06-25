@@ -57,18 +57,44 @@ public class InitBean {
                 GroupBean.SALES_MANAGER_VALUE, GroupBean.COO_VALUE, GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE };
 
         Map<String, String[]> groupRoles = new HashMap<String, String[]>();
-        groupRoles.put(GroupBean.PROJECT_MANAGER_VALUE, new String[] {});
-        groupRoles.put(GroupBean.PROJECT_ASSISTANT_VALUE, new String[] {RoleValidConstants.PROJECT_UPDATE, 
-        		RoleValidConstants.SALES_CONTRACT_UPDATE});
-        groupRoles.put(GroupBean.SALES_ASSISTANT_VALUE, new String[] {RoleValidConstants.PROJECT_ADD, 
-        		RoleValidConstants.PROJECT_UPDATE, RoleValidConstants.SALES_CONTRACT_ADD, 
-        		RoleValidConstants.SALES_CONTRACT_UPDATE});
-        groupRoles.put(GroupBean.PM, new String[] {});
-        groupRoles.put(GroupBean.FINANCE, new String[] {});
-        groupRoles.put(GroupBean.SALES_MANAGER_VALUE, new String[] {});
-        groupRoles.put(GroupBean.DEPOT_MANAGER_VALUE, new String[] {});
-        groupRoles.put(GroupBean.PURCHASE_VALUE, new String[] { RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, RoleValidConstants.PURCHASE_CONTRACT_PROCESS,
-                RoleValidConstants.PURCHASE_ORDER_MANAGEMENT, RoleValidConstants.PURCHASE_ORDER_PROCESS });
+        groupRoles.put(GroupBean.PROJECT_MANAGER_VALUE, new String[] {
+        	RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS,
+        	RoleValidConstants.PURCHASE_REQUEST_PROCESS,  
+        	RoleValidConstants.PURCHASE_CONTRACT_PROCESS
+        });
+        groupRoles.put(GroupBean.PROJECT_ASSISTANT_VALUE, new String[] {
+        	RoleValidConstants.PROJECT_UPDATE, 
+        	RoleValidConstants.SALES_CONTRACT_UPDATE
+        });
+        groupRoles.put(GroupBean.SALES_ASSISTANT_VALUE, new String[] {
+        	RoleValidConstants.PROJECT_ADD, 
+        	RoleValidConstants.PROJECT_UPDATE,
+        	RoleValidConstants.SALES_CONTRACT_ADD, 
+        	RoleValidConstants.SALES_CONTRACT_UPDATE});
+        
+        groupRoles.put(GroupBean.PM, new String[] {
+        	RoleValidConstants.SHIP_MANAGEMENT, 
+        	RoleValidConstants.BORROWING_MANAGEMENT,
+        	RoleValidConstants.PAY_INVOICE_ADD
+        });
+        groupRoles.put(GroupBean.FINANCE, new String[] {
+        	RoleValidConstants.PAY_INVOICE_FIN_PROCESS,
+        	RoleValidConstants.PAY_INVOICE_DONE        		
+        });
+        groupRoles.put(GroupBean.SALES_MANAGER_VALUE, new String[] {
+        	RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS,
+        	RoleValidConstants.PURCHASE_REQUEST_PROCESS,  
+            RoleValidConstants.PURCHASE_CONTRACT_PROCESS
+        });
+        groupRoles.put(GroupBean.DEPOT_MANAGER_VALUE, new String[] {
+        	RoleValidConstants.SHIP_MANAGEMENT_PROCESS, 
+        	RoleValidConstants.BORROWING_MANAGEMENT_PROCESS
+        });
+        groupRoles.put(GroupBean.PURCHASE_VALUE, new String[] {
+        	RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, 
+            RoleValidConstants.PURCHASE_ORDER_MANAGEMENT,
+            RoleValidConstants.PURCHASE_ORDER_PROCESS
+        });
 
         for (String name : groupNames) {
             Map<String, Object> newGroup = new HashMap<String, Object>();

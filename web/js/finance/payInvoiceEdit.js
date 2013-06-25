@@ -90,39 +90,40 @@ $(document).ready(function () {
 	$("#searchbt").click(function(){
 		var scId = $("#searchfor").val();
 		if(scId != ""){
-			postAjaxRequest("/service/sc/invoice/prepare", {contractCode:scId}, edit);
+			postAjaxRequest("/service/sc/invoice/prepare", {contractCode:scId}, editSucess);
 		}else{
 			alert("请选择合同编号");
 		}
 	});
-
 	if(popupParams){
-		postAjaxRequest("/service/sc/invoice/load", popupParams, edit);
+		postAjaxRequest("/service/sc/invoice/load", popupParams, editSucess);
 		disableAllInPoppup();
-	}else if(redirectParams){
-		var actionType = redirectParams.actionType;
-		if(actionType == "add"){
+	} else if(redirectParams){
+		if(redirectParams._id){
+			postAjaxRequest(baseUrl+"/sc/invoice/load", redirectParams, editSucess);			
+		} else {
 			$("#searchDiv").show();
-			$("#formadd").show();
-		}else if(actionType == "approve"){
-			$("#formapprove").show();
-			postAjaxRequest(baseUrl+"/sc/invoice/load", redirectParams, edit);
 		}
 	}
-	
 	kendo.bind($("#form-container"), currentObj);
 });
 
 function saveSuccess(){
 	location.reload();
 }
-function edit(e){
+function editSucess(e){
 	if(!e) return;
 	if(e.payInvoiceStatus == "已出票"){
 		$("#form-container .invoicedone").show();
-		$("#form-container button").attr("disabled","disabled");
+		$("#form-container-button [value=done]").hide();
+		$("#form-container-button [value=financeapprove]").hide();
+		$("#form-container-button [value=financereject]").hide();		
 	} else if(e.payInvoiceStatus == "财务已审核"){
 		$("#form-container .invoicedone").show();
+		$("#form-container-button [value=financeapprove]").hide();
+		$("#form-container-button [value=financereject]").hide();		
+	}else if(e.payInvoiceStatus == "经理已审核"){
+		$("#form-container-button [value=done]").hide();
 	}
 	currentObj = new myModel(e);
 	kendo.bind($("#form-container"), currentObj);

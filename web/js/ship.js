@@ -178,7 +178,7 @@ function callback(response) {
 function toolbar_view(){
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-		var options = { width:"1080px", height: "600px", title:"发货信息"};
+		var options = { width:"1080px", height: "500px", title:"发货信息"};
 		openRemotePageWindow(options, "html/execution/addShip.html", {_id : rowData._id});
 	}
 }

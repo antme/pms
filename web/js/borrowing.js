@@ -177,7 +177,7 @@ function callback(response) {
 function toolbar_view(){
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-		var options = { width:"1080px", height: "600px", title:"借货信息"};
+		var options = { width:"1080px", height: "400px", title:"借货信息"};
 		openRemotePageWindow(options, "html/execution/addBorrowing.html", {_id : rowData._id});
 	}
 }
