@@ -67,9 +67,15 @@ public class BorrowingController extends AbstractController {
         responseWithData(borrowingService.create(params), request, response);
     }
 
+    @RequestMapping("/submit")
+    @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT, desc = RoleValidConstants.BORROWING_MANAGEMENT_DESC)
+    public void submit(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(borrowingService.option(parserJsonParameters(request, false)), request, response);
+    }
+    
     @RequestMapping("/option")
     @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_PROCESS, desc = RoleValidConstants.BORROWING_MANAGEMENT_PROCESS_DESC)
-    public void approve(HttpServletRequest request, HttpServletResponse response) {
+    public void option(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(borrowingService.option(parserJsonParameters(request, false)), request, response);
     }
     
