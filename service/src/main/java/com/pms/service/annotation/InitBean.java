@@ -64,18 +64,22 @@ public class InitBean {
         });
         groupRoles.put(GroupBean.PROJECT_ASSISTANT_VALUE, new String[] {
         	RoleValidConstants.PROJECT_UPDATE, 
-        	RoleValidConstants.SALES_CONTRACT_UPDATE
+        	RoleValidConstants.SALES_CONTRACT_UPDATE,
+        	RoleValidConstants.PURCHASE_ALLOCATE_MANAGEMENT
         });
         groupRoles.put(GroupBean.SALES_ASSISTANT_VALUE, new String[] {
         	RoleValidConstants.PROJECT_ADD, 
         	RoleValidConstants.PROJECT_UPDATE,
         	RoleValidConstants.SALES_CONTRACT_ADD, 
-        	RoleValidConstants.SALES_CONTRACT_UPDATE});
+        	RoleValidConstants.SALES_CONTRACT_UPDATE,
+        	RoleValidConstants.PURCHASE_ALLOCATE_MANAGEMENT
+        });
         
         groupRoles.put(GroupBean.PM, new String[] {
         	RoleValidConstants.SHIP_MANAGEMENT, 
         	RoleValidConstants.BORROWING_MANAGEMENT,
-        	RoleValidConstants.PAY_INVOICE_ADD
+        	RoleValidConstants.PAY_INVOICE_ADD,
+        	RoleValidConstants.PURCHASE_BACK_MANAGEMENT
         });
         groupRoles.put(GroupBean.FINANCE, new String[] {
         	RoleValidConstants.PAY_INVOICE_FIN_PROCESS,
@@ -88,7 +92,8 @@ public class InitBean {
         });
         groupRoles.put(GroupBean.DEPOT_MANAGER_VALUE, new String[] {
         	RoleValidConstants.SHIP_MANAGEMENT_PROCESS, 
-        	RoleValidConstants.BORROWING_MANAGEMENT_PROCESS
+        	RoleValidConstants.BORROWING_MANAGEMENT_PROCESS,
+        	RoleValidConstants.PURCHASE_ALLOCATE_PROCESS
         });
         groupRoles.put(GroupBean.PURCHASE_VALUE, new String[] {
         	RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, 
