@@ -285,13 +285,9 @@ function saveSC(){
 		alert("表单验证不通过！");
 		return;
     } else {
-    	console.log("*******************************************");
-		var _id = scm.get("_id");
-		var contractDate = $("#contractDate").val();
-		scm.set("contractDate", contractDate);
+//		var contractDate = $("#contractDate").val();
+//		scm.set("contractDate", contractDate);
 		var data = eqCostListDataSource.data();
-		var pdblist = $("#projectId").data("kendoDropDownList");
-		console.log("************"+pdblist.value());
 		scm.set("eqcostList", data);
 //		scm.set("projectId",);
 		dataSource_SC.add(scm);

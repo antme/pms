@@ -13,6 +13,9 @@ var dataSource = new kendo.data.DataSource({
 			fields : {
 				contractAmount : {
 					type : "number"
+				},
+				contractDate : {
+					type : "date"
 				}
 			}
 		}
