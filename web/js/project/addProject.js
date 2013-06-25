@@ -97,7 +97,7 @@ $(document).ready(function() {
 		dataTextField : "text",
 		dataValueField : "text",
 		optionLabel : "选择项目状态...",
-		dataSource : proStatusItems
+		dataSource : proStatusItemsForAdd
 	});
 	$("#projectType").kendoDropDownList({
 		dataTextField : "text",
@@ -164,7 +164,7 @@ function saveProject(){
     	//console.log(kendo.stringify(pModel));
     	dataSource.add(pModel);
     	dataSource.sync();
-    	if (popupParams.scAddProject == 1){
+    	if (popupParams !=null && popupParams.scAddProject == 1){
     		//close the window
     		$("#popup").data("kendoWindow").close();
     		loadPage("addsc");
@@ -175,3 +175,12 @@ function saveProject(){
     }
 	
 };
+
+function cancelAddProject(){
+	if (popupParams !=null && popupParams.scAddProject == 1){
+		//close the window
+		$("#popup").data("kendoWindow").close();
+	}else{
+		loadPage("projectList");
+	}
+}
