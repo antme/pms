@@ -67,26 +67,36 @@ $(document).ready(function () {
 	});
 });
 
-function add(){
-	loadPage("payInvoiceEdit",{actionType:"add"});
+function addPI(){
+	loadPage("payInvoiceEdit",{operateType:"add"});
 }
-function edit(){
+function editManagerPI(){
 	var row = getSelectedRowDataByGrid("grid");
-	if (!row) {
+	if(!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.payInvoiceStatus === "已出票" || row.payInvoiceStatus === "财务已审核"){
-		alert("请选择‘经理已审核’的数据");		
+	} else if(row.payInvoiceStatus == "待审核"){
+		loadPage("payInvoiceEdit", {_id:row._id});		
 	} else {	
-		loadPage("payInvoiceEdit", { _id : row._id ,actionType:"approve"});	
+		alert("请选择‘待审核’的数据");
 	}
 }
-function done(){
+function editFinPI(){
+	var row = getSelectedRowDataByGrid("grid");
+	if(!row) {
+		alert("点击列表可以选中数据");
+	} else if(row.payInvoiceStatus == "经理已审核"){
+		loadPage("payInvoiceEdit", {_id:row._id});		
+	} else {	
+		alert("请选择‘经理已审核’的数据");
+	}
+}
+function donePI(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.payInvoiceStatus !== "财务已审核"){
-		alert("请选择‘财务已审核’的数据");
+	} else if(row.payInvoiceStatus == "财务已审核"){
+		loadPage("payInvoiceEdit", {_id:row._id});	
 	} else {	
-		loadPage("payInvoiceEdit", { _id : row._id ,actionType:"approve"});	
+		alert("请选择‘财务已审核’的数据");
 	}
 }

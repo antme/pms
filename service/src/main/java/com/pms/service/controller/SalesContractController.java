@@ -65,31 +65,52 @@ public class SalesContractController extends AbstractController {
     
     /**开票CRUD*/
     @RequestMapping("/invoice/prepare")
-    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_MANAGEMENT, desc = RoleValidConstants.PAY_INVOICE_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_ADD, desc = RoleValidConstants.PAY_INVOICE_ADD_DESC)
     public void prepareInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.prepareInvoiceForSC(params), request, response);
     }
     
     @RequestMapping("/invoice/add")
-    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_MANAGEMENT, desc = RoleValidConstants.PAY_INVOICE_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_ADD, desc = RoleValidConstants.PAY_INVOICE_ADD_DESC)
     public void addInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addInvoiceForSC(params), request, response);
     }
     
-    @RequestMapping("/invoice/approve")
-    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_PROCESS, desc = RoleValidConstants.PAY_INVOICE_PROCESS_DESC)
-    public void approveInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping("/invoice/managerapprove")
+    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS, desc = RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS_DESC)
+    public void managerApproveInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.approveInvoiceForSC(params), request, response);
     }
- 
-    @RequestMapping("/invoice/reject")
-    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_PROCESS, desc = RoleValidConstants.PAY_INVOICE_PROCESS_DESC)
-    public void rejectInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
+
+    @RequestMapping("/invoice/managerreject")
+    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS, desc = RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS_DESC)
+    public void managerRejectInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.rejectInvoiceForSC(params), request, response);
+    }
+    
+    @RequestMapping("/invoice/financeapprove")
+    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_FIN_PROCESS, desc = RoleValidConstants.PAY_INVOICE_FIN_PROCESS_DESC)
+    public void financeApproveInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.approveInvoiceForSC(params), request, response);
+    }
+    
+    @RequestMapping("/invoice/financereject")
+    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_FIN_PROCESS, desc = RoleValidConstants.PAY_INVOICE_FIN_PROCESS)
+    public void financeRejectInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.rejectInvoiceForSC(params), request, response);
+    }
+    
+    @RequestMapping("/invoice/done")
+    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_DONE, desc = RoleValidConstants.PAY_INVOICE_DONE_DESC)
+    public void doneInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.approveInvoiceForSC(params), request, response);
     }
     
     @RequestMapping("/invoice/load")

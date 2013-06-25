@@ -70,15 +70,18 @@ public class RoleValidConstants {
     
     public static final String FINANCE_MANAGEMENT = "finance_management";
     public static final String FINANCE_MANAGEMENT_DESC = "财务管理";
-
-    public static final String PAY_INVOICE_PROCESS_FINAL = "pay_invoice_process_final";
-    public static final String PAY_INVOICE_PROCESS_FINAL_DESC = "开票出单管理";
     
-    public static final String PAY_INVOICE_MANAGEMENT = "pay_invoice_management";
-    public static final String PAY_INVOICE_MANAGEMENT_DESC = "开票申请管理";
+    //开票权限-------------
+    public static final String PAY_INVOICE_ADD = "pay_invoice_add";
+    public static final String PAY_INVOICE_ADD_DESC = "开票申请添加";
 
-    public static final String PAY_INVOICE_PROCESS = "pay_invoice_process";
-    public static final String PAY_INVOICE_PROCESS_DESC = "开票申请审批";
-
+    public static final String PAY_INVOICE_MANAGER_PROCESS = "pay_invoice_manager_process";
+    public static final String PAY_INVOICE_MANAGER_PROCESS_DESC = "开票经理审批";
+    
+    public static final String PAY_INVOICE_FIN_PROCESS = "pay_invoice_fin_process";
+    public static final String PAY_INVOICE_FIN_PROCESS_DESC = "开票财务审批";
+    
+    public static final String PAY_INVOICE_DONE = "pay_invoice_done";
+    public static final String PAY_INVOICE_DONE_DESC = "开票出票";
     
 }
