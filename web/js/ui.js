@@ -280,6 +280,10 @@ function initMyDraftTasks(id, data){
 					if(dataItem.db == "purchaseOrder"){
 						return "采购订单";
 					}
+					
+					if(dataItem.db == "purchaseAllocate"){
+						return "掉拨申请";
+					}
 	
 				}
 			}, {
@@ -301,6 +305,10 @@ function initMyDraftTasks(id, data){
 					}
 					if(dataItem.db == "purchaseOrder"){
 						return '<a onclick="loadTreePage(' + "'purchaseorder'" +')">'+ dataItem.count + '</a>';
+					}
+					
+					if(dataItem.db == "purchaseAllocate"){
+						return '<a onclick="loadTreePage(' + "'purchaseAllotManage'" +')">'+ dataItem.count + '</a>';
 					}
 					
 				
