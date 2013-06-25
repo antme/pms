@@ -187,7 +187,7 @@ var itemListDataSource = new kendo.data.DataSource({
 
 function save(status) {
 	var validator = $("#purchasecontract-edit-item").kendoValidator().data("kendoValidator");
-	if (validator.validate()) {
+//	if (validator.validate()) {
 
 		if (!itemDataSource.at(0)) {
 			alert("没有任何设备清单数据");
@@ -198,6 +198,8 @@ function save(status) {
 			if (status) {
 				requestDataItem.status = status;
 			}
+			
+			requestDataItem.requestedTotalMoney = $("#requestedTotalMoney").val();
 
 			if (itemDataSource.at(0)) {
 				// force set haschanges = true
@@ -217,7 +219,7 @@ function save(status) {
 			// 同步数据
 			itemDataSource.sync();
 		}
-	}
+//	}
 
 }
 
