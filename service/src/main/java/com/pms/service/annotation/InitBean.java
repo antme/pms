@@ -17,7 +17,10 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pms.service.PackageRole;
+import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dao.ICommonDao;
+import com.pms.service.dbhelper.DBQuery;
+import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
@@ -50,20 +53,40 @@ public class InitBean {
     }
 
     private static void createSystemDefaultGroups(ICommonDao dao) {
-        String[] groupNames = new String[] { GroupBean.PROJECT_MANAGER_VALUE, GroupBean.PROJECT_ASSISTANT_VALUE, GroupBean.SALES_ASSISTANT_VALUE, GroupBean.PM, GroupBean.FINANCE, GroupBean.SALES_MANAGER_VALUE, GroupBean.COO_VALUE,
-                GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE, GroupBean.GROUP_ADMIN_VALUE };
+        String[] groupNames = new String[] { GroupBean.PROJECT_MANAGER_VALUE, GroupBean.PROJECT_ASSISTANT_VALUE, GroupBean.SALES_ASSISTANT_VALUE, GroupBean.PM, GroupBean.FINANCE,
+                GroupBean.SALES_MANAGER_VALUE, GroupBean.COO_VALUE, GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE };
+
+        Map<String, String[]> groupRoles = new HashMap<String, String[]>();
+        groupRoles.put(GroupBean.PROJECT_MANAGER_VALUE, new String[] {});
+        groupRoles.put(GroupBean.PROJECT_ASSISTANT_VALUE, new String[] {});
+        groupRoles.put(GroupBean.SALES_ASSISTANT_VALUE, new String[] {});
+        groupRoles.put(GroupBean.PM, new String[] {});
+        groupRoles.put(GroupBean.FINANCE, new String[] {});
+        groupRoles.put(GroupBean.SALES_MANAGER_VALUE, new String[] {});
+        groupRoles.put(GroupBean.DEPOT_MANAGER_VALUE, new String[] {});
+        groupRoles.put(GroupBean.PURCHASE_VALUE, new String[] { RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, RoleValidConstants.PURCHASE_CONTRACT_PROCESS,
+                RoleValidConstants.PURCHASE_ORDER_MANAGEMENT, RoleValidConstants.PURCHASE_ORDER_PROCESS });
 
         for (String name : groupNames) {
-            Map<String, Object> groupQuery = new HashMap<String, Object>();
-            groupQuery.put(GroupBean.GROUP_NAME, name);
+            Map<String, Object> newGroup = new HashMap<String, Object>();
+            newGroup.put(GroupBean.GROUP_NAME, name);
 
             // 查找是否角色已经初始化
             Map<String, Object> group = dao.findOne(GroupBean.GROUP_NAME, name, DBBean.USER_GROUP);
+
+            Map<String, Object> roleQuery = new HashMap<String, Object>();
+            roleQuery.put(RoleBean.ROLE_ID, new DBQuery(DBQueryOpertion.IN, groupRoles.get(name)));
+            roleQuery.put(ApiConstants.LIMIT_KEYS, ApiConstants.MONGO_ID);
+
+            List<Object> roles = dao.listLimitKeyValues(roleQuery, DBBean.ROLE_ITEM);
+
             if (group == null) {
                 // 系统角色不允许删除
-                groupQuery.put(GroupBean.IS_SYSTEM_GROUP, true);
-                dao.add(groupQuery, DBBean.USER_GROUP);
+                newGroup.put(GroupBean.IS_SYSTEM_GROUP, true);
+                newGroup.put(GroupBean.ROLES, roles);
+                dao.add(newGroup, DBBean.USER_GROUP);
             } else {
+                group.put(GroupBean.ROLES, roles);
                 group.put(GroupBean.IS_SYSTEM_GROUP, true);
                 dao.updateById(group, DBBean.USER_GROUP);
             }

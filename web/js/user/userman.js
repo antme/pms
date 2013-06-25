@@ -6,6 +6,9 @@ var groupDataSource = new kendo.data.DataSource({
 			dataType : "jsonp"
 		}
 	},
+	requestEnd: function(e) {
+		console.log("................");
+	},
 	schema : {
 		total: "total", // total is returned in the "total" field of the response
 		data: "data"
