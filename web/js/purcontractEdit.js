@@ -93,7 +93,7 @@ $(document).ready(function() {
 
 	
 
-	$("#supplierName").kendoDropDownList({
+	$("#supplier").kendoDropDownList({
 		dataTextField : "supplierName",
 		dataValueField : "_id",
 		dataSource : {
@@ -212,9 +212,11 @@ function save(status) {
 			}
 
 			if (!requestDataItem.supplier) {
-				var dl = $("#supplierName").data("kendoDropDownList");
+				var dl = $("#supplier").data("kendoDropDownList");
 				requestDataItem.supplier = dl.dataSource.at(0)._id;
 			}
+			
+			console.log(requestDataItem)
 
 			// 同步数据
 			itemDataSource.sync();
