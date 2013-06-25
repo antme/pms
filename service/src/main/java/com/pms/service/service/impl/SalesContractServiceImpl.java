@@ -408,9 +408,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public Map<String, Object> rejectInvoiceForSC(Map<String, Object> params) {
 		Map<String,Object> payInvoice = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SC_INVOICE);
 		String status = String.valueOf(payInvoice.get(InvoiceBean.payInvoiceStatus));
-		if(!InvoiceBean.statusSubmit.equals(status) && !InvoiceBean.statusManagerApprove.equals(status)){
+/*		if(!InvoiceBean.statusSubmit.equals(status) && !InvoiceBean.statusManagerApprove.equals(status)){
 			//exception status not right.	
-		}
+		}*/
 		payInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusReject);
 		return dao.updateById(payInvoice, DBBean.SC_INVOICE);
 	}	
