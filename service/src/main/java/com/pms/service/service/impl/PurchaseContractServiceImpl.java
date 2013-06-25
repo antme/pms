@@ -71,7 +71,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> listContractsForRepositorySelect() {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
-        query.put("eqcostList.logisticsType", new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseCommonBean.LOGISTICS_TYPE_VALUE_DIRECTY));
+        query.put("eqcostDeliveryType", PurchaseCommonBean.eqcostDeliveryType_REPOSITORY);
+
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.projectId", "supplier", "eqcostList.logisticsType" });
 
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
@@ -228,11 +229,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return eqResult;
     }
 
+    //非直发 直发入库
     public Map<String, Object> listContractsByProjectAndSupplier(Map<String, Object> params) {
         Map<String, Object> query = new HashMap<String, Object>();
         Object projectId = params.get("projectId");
         query.put("eqcostList.projectId", projectId);
         query.put("supplier", params.get("supplier"));
+        query.put("eqcostDeliveryType", PurchaseCommonBean.eqcostDeliveryType_REPOSITORY);
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
 
         Map<String, Object> results = this.dao.list(query, DBBean.PURCHASE_CONTRACT);
@@ -244,8 +247,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             List<Map<String, Object>> pList = (List<Map<String, Object>>) data.get("eqcostList");
 
             for (Map<String, Object> p : pList) {
-                String ltype = (String) p.get(PurchaseCommonBean.LOGISTICS_TYPE);
-                if (p.get("projectId").equals(projectId) && !PurchaseCommonBean.LOGISTICS_TYPE_VALUE_DIRECTY.equalsIgnoreCase(ltype)) {
+                if (p.get("projectId").equals(projectId)) {
                     eqclist.add(p);
                 }
             }
@@ -748,22 +750,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> query = new HashMap<String, Object>();
         query.put("eqcostList.projectId", params.get(PurchaseRequest.PROJECT_ID));
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList" });
-        List<Map<String, Object>> finalEqList = new ArrayList<Map<String, Object>>();
+        query.put("eqcostDeliveryType", PurchaseCommonBean.eqcostDeliveryType_DIRECTY);
+
 
         List<Object> contractList = this.dao.listLimitKeyValues(query, DBBean.PURCHASE_CONTRACT);
 
-        for (Object map : contractList) {
-
-            List<Map<String, Object>> eqListMap = (List<Map<String, Object>>) map;
-            for (Map<String, Object> eqItem : eqListMap) {
-                if (eqItem.get(PurchaseCommonBean.LOGISTICS_TYPE) != null && eqItem.get(PurchaseCommonBean.LOGISTICS_TYPE).toString().equalsIgnoreCase(PurchaseCommonBean.LOGISTICS_TYPE_VALUE_DIRECTY)) {
-                    finalEqList.add(eqItem);
-                }
-            }
-        }
-
         Map<String, Object> rep = new HashMap<String, Object>();
-        rep.put(ApiConstants.RESULTS_DATA, mergeLoadedEqList(finalEqList));
+        rep.put(ApiConstants.RESULTS_DATA, mergeLoadedEqList(contractList));
         return rep;
     }
 
@@ -819,7 +812,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);      
-        query.put("eqcostList.logisticsType", PurchaseCommonBean.LOGISTICS_TYPE_VALUE_DIRECTY);
+        query.put("eqcostDeliveryType", PurchaseCommonBean.eqcostDeliveryType_DIRECTY);
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.scId", "eqcostList.projectId", "eqcostList.logisticsType" });
 
         List<Object> projectIds = this.dao.listLimitKeyValues(query, DBBean.PURCHASE_CONTRACT);

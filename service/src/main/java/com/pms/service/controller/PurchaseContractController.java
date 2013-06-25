@@ -218,6 +218,7 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/repository/add")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
     public void addRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         pService.addRepositoryRequest(parserListJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
@@ -229,23 +230,27 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/repository/delete")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
     public void deleteRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         pService.deleteRepositoryRequest(parserJsonParameters(request, false));
         responseWithData(null, request, response);
     }
 
     @RequestMapping("/repository/update")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
     public void updateRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         pService.updateRepositoryRequest(parserListJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
 
     @RequestMapping("/repository/approve")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS_DESC)
     public void approveRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.approveRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/repository/reject")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS_DESC)
     public void rejectRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.rejectRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
