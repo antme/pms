@@ -73,6 +73,7 @@ var myModel = kendo.data.Model.define({
 var currentObj = new myModel();
 
 $(document).ready(function () {
+	checkRoles();
 	$("#subGrid").kendoGrid({
 		dataSource: {
 			schema: {

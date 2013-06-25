@@ -141,7 +141,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		mergeSalesContract(obj);
 		mergeEqcost(obj);
 		obj.put(PurchaseBack.pbId, params.get(ApiConstants.MONGO_ID));
-		obj.put(PurchaseBack.pbPlanDate, params.get(PurchaseBack.pbPlanDate));
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.unsaved.toString());
 		obj.put(ApiConstants.MONGO_ID, null);
 		obj.put(PurchaseBack.paCode, null);
