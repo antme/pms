@@ -77,6 +77,24 @@ $(document).ready(function () {
     });
 });
 
+function toolbar_submit() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		
+		// 草稿或打回
+		if (row.status == 0 || row.status == -1) {
+			var param = {
+					_id : row._id,
+					"status" : "1"
+				};
+			postAjaxRequest(crudServiceBaseUrl + "/submit", param,
+						callback);
+		} else {
+			alert("无法执行该操作");
+		}
+	}
+}
+
 function toolbar_option(op) {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
@@ -90,10 +108,6 @@ function toolbar_option(op) {
 		} else if (op == 2) { // 拒绝操作
 			if (row.status == 1) { // 还货申请
 				nextStatus = -1;
-			}
-		} else if (op == 3) { // 还货申请
-			if (row.status == 0 || row.status == -1) {
-				nextStatus = 1;
 			}
 		}
 		

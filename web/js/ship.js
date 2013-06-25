@@ -124,21 +124,35 @@ function toolbar_delete() {
 	}
 }
 
+function toolbar_submit() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		
+		// 草稿或打回
+		if (row.status == 0 || row.status == -1) {
+			var param = {
+					_id : row._id,
+					"status" : "1"
+				};
+			postAjaxRequest(crudServiceBaseUrl + "/submit", param,
+						callback);
+		} else {
+			alert("无法执行该操作");
+		}
+	}
+}
+
 function toolbar_option(op) {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		
 		var nextStatus = false;
 		
-		if (op == 1) { // 提交申请
-			if (row.status == 0) {
-				nextStatus = 1;
-			}
-		} else if (op == 2) { // 批准
+		if (op == 1) { // 批准
 			if (row.status == 1 || row.status == -1) {
 				nextStatus = 2;
 			}
-		} else if (op == 3) { // 拒绝
+		} else if (op == 2) { // 拒绝
 			if (row.status == 1) {
 				nextStatus = -1;
 			}
@@ -164,7 +178,7 @@ function callback(response) {
 function toolbar_view(){
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-		var options = { width:"1080px", height: "600px", title:"发货信息"};
+		var options = { width:"1080px", height: "500px", title:"发货信息"};
 		openRemotePageWindow(options, "html/execution/addShip.html", {_id : rowData._id});
 	}
 }

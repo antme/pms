@@ -37,15 +37,25 @@ public class SalesContractController extends AbstractController {
     	responseWithData(salesContractService.listSCsForSelect(params), request, response);
     }
 
+    /**
+     * 新建销售合同
+     * @param request
+     * @param response
+     */
     @RequestMapping("/add")
-    @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_MANAGEMENT, desc = RoleValidConstants.SALES_CONTRACT_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
     public void addSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addSC(params), request, response);
     }
     
+    /**
+     * 编辑修改
+     * @param request
+     * @param response
+     */
     @RequestMapping("/update")
-    @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_MANAGEMENT, desc = RoleValidConstants.SALES_CONTRACT_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_UPDATE, desc = RoleValidConstants.SALES_CONTRACT_UPDATE_DESC)
     public void updateSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addSC(params), request, response);
