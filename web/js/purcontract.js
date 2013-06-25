@@ -49,8 +49,8 @@ $(document).ready(function() {
 			field : "requestedTotalMoney",
 			title : "金额"
 		}, {
-			field : "logisticsType",
-			title : "物流类型"
+			field : "eqcostDeliveryType",
+			title : "货物递送方式"
 		}]
 
 	});

@@ -206,14 +206,13 @@ function save(status) {
 				itemDataSource.at(0).set("uid", kendo.guid());
 			}
 
-			if (requestDataItem.supplierName
-					&& requestDataItem.supplierName._id) {
-				requestDataItem.supplier = requestDataItem.supplier._id
-			}
+		
 
 			if (!requestDataItem.supplier) {
 				var dl = $("#supplier").data("kendoDropDownList");
 				requestDataItem.supplier = dl.dataSource.at(0)._id;
+			}else{
+				requestDataItem.supplier = requestDataItem.supplier._id;
 			}
 			
 			console.log(requestDataItem)
