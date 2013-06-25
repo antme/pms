@@ -106,7 +106,7 @@ $(document).ready(function () {
 			} else if(this.value == "拒绝"){
 				postAjaxRequest( baseUrl+"/purchase/allot/reject", {models:kendo.stringify(currentObj)} , saveSuccess);
 			}else if(this.value=="取消"){
-				location.reload();
+				loadPage("purchaseAllotManage");
 			}
 		}
 	});

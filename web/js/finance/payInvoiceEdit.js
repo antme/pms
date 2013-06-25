@@ -81,7 +81,7 @@ $(document).ready(function () {
 
 	$("#form-container-button button").click(function(){
 		if(this.value == "cancel") {
-			location.reload();
+			loadPage("payInvoice");
 		} else if(confirm("提交表单，确认？")){
 			postAjaxRequest("/service/sc/invoice/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
 		}
@@ -109,7 +109,7 @@ $(document).ready(function () {
 });
 
 function saveSuccess(){
-	location.reload();
+	loadPage("payInvoice");
 }
 function editSucess(e){
 	if(!e) return;
