@@ -65,14 +65,16 @@ public class InitBean {
         groupRoles.put(GroupBean.PROJECT_ASSISTANT_VALUE, new String[] {
         	RoleValidConstants.PROJECT_UPDATE, 
         	RoleValidConstants.SALES_CONTRACT_UPDATE,
-        	RoleValidConstants.PURCHASE_ALLOCATE_MANAGEMENT
+        	RoleValidConstants.PURCHASE_ALLOCATE_MANAGEMENT,
+            RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT
         });
         groupRoles.put(GroupBean.SALES_ASSISTANT_VALUE, new String[] {
         	RoleValidConstants.PROJECT_ADD, 
         	RoleValidConstants.PROJECT_UPDATE,
         	RoleValidConstants.SALES_CONTRACT_ADD, 
         	RoleValidConstants.SALES_CONTRACT_UPDATE,
-        	RoleValidConstants.PURCHASE_ALLOCATE_MANAGEMENT
+        	RoleValidConstants.PURCHASE_ALLOCATE_MANAGEMENT,
+        	RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT
         });
         
         groupRoles.put(GroupBean.PM, new String[] {
