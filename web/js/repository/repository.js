@@ -57,7 +57,7 @@ function add(){
 	loadPage("html/repository/repositoryEdit.html");
 }
 
-function edit() {
+function editRep() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
 	loadPage("html/repository/repositoryEdit.html", {

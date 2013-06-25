@@ -80,16 +80,16 @@ public class CommonDaoMongoImpl implements ICommonDao {
     
     public List<Object> listLimitKeyValues(Map<String, Object> parameters, String collection) {
 
-        if (parameters.get(ApiConstants.LIMIT_KEYS) == null) {
-            throw new ApiResponseException("should set limitKeys varable", null);
-        }
+//        if (parameters.get(ApiConstants.LIMIT_KEYS) == null) {
+//            throw new ApiResponseException("should set limitKeys varable", null);
+//        }
         String[] limitKeys = getLimitKeys(parameters);
 
         DBObject query = DBQueryUtil.buildQueryObject(parameters, true, true);
         Pagnation page = getPagnation(parameters);
         DBCursor cursor = getCursor(parameters, collection, query, page);
 
-        if (limitKeys.length == 1) {
+        if (limitKeys!=null && limitKeys.length == 1) {
             return listMongoKey(parameters, cursor, collection, limitKeys[0]);
         } else {
             return listMongoKey(parameters, cursor, collection, null);
