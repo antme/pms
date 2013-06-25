@@ -95,12 +95,15 @@ public class InitBean {
         groupRoles.put(GroupBean.DEPOT_MANAGER_VALUE, new String[] {
         	RoleValidConstants.SHIP_MANAGEMENT_PROCESS, 
         	RoleValidConstants.BORROWING_MANAGEMENT_PROCESS,
-        	RoleValidConstants.PURCHASE_ALLOCATE_PROCESS
+        	RoleValidConstants.PURCHASE_ALLOCATE_PROCESS,
+        	RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS
         });
         groupRoles.put(GroupBean.PURCHASE_VALUE, new String[] {
         	RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, 
             RoleValidConstants.PURCHASE_ORDER_MANAGEMENT,
-            RoleValidConstants.PURCHASE_ORDER_PROCESS
+            RoleValidConstants.PURCHASE_ORDER_PROCESS,
+            RoleValidConstants.REPOSITORY_MANAGEMENT
+
         });
 
         for (String name : groupNames) {
@@ -122,7 +125,7 @@ public class InitBean {
                 newGroup.put(GroupBean.ROLES, roles);
                 dao.add(newGroup, DBBean.USER_GROUP);
             } else {
-//                group.put(GroupBean.ROLES, roles);
+                group.put(GroupBean.ROLES, roles);
                 group.put(GroupBean.IS_SYSTEM_GROUP, true);
                 dao.updateById(group, DBBean.USER_GROUP);
             }
