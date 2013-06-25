@@ -445,14 +445,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	@Override
 	public Map<String, Object> listInvoiceForSC(Map<String, Object> params) {
-		DBObject exp0 = null;
+/*		DBObject exp0 = null;
 		DBObject exp1 = null;
 		Map<String,Object> query0 = new HashMap<String,Object>();
 		query0.put(InvoiceBean.payInvoiceProposerId, getCurrentUserId());
 		exp0 = DBQueryUtil.buildQueryObject(query0, true);
 		 
 		Map<String,Object> query1 = new HashMap<String,Object>();
-		if(isDepartmentManager()){//是部门经理
+		if(true){//是部门经理
 			query1.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusSubmit);
 			List<String> typeList = new ArrayList<String>();
 			if(isInDepartment(UserBean.USER_DEPARTMENT_PROJECT)){//工程部门
@@ -485,7 +485,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			query3.put("exp1", exp1);
 		}
 		DBObject searchExp = DBQueryUtil.buildQueryObject(query3, false);
-		return dao.list(null,searchExp, DBBean.SC_INVOICE);
+		return dao.list(null,searchExp, DBBean.SC_INVOICE);*/
+		return dao.list(null, DBBean.SC_INVOICE);
 	}
 	
 	@Override
