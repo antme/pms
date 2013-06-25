@@ -39,7 +39,7 @@ var scModel = kendo.data.Model.define({
 
 var scm;
 
-var dataSource = new kendo.data.DataSource({
+var dataSource_SC = new kendo.data.DataSource({
 	transport : {
 		read : {
 			url : "../service/sc/list",
@@ -92,7 +92,17 @@ var eqCostListDataSource = new kendo.data.DataSource({
         }
 	}
 });
-
+var projectItems = new kendo.data.DataSource({
+	transport : {
+		read : {
+			url : "../service/project/listforselect",
+			dataType : "jsonp"
+		}
+	},
+	schema: {
+	    data: "data"
+	}
+});
 
 $(document).ready(function() {
 	//选项卡
@@ -157,7 +167,7 @@ $(document).ready(function() {
 		dataSource : runningStatusItems,
 	});
 	
-	var projectItems = new kendo.data.DataSource({
+	/*var projectItems = new kendo.data.DataSource({
 		transport : {
 			read : {
 				url : "../service/project/listforselect",
@@ -167,7 +177,7 @@ $(document).ready(function() {
 		schema: {
 		    data: "data"
 		}
-	});
+	});*/
 	$("#projectId").kendoDropDownList({
 		dataTextField : "projectName",
 		dataValueField : "_id",
@@ -275,13 +285,17 @@ function saveSC(){
 		alert("表单验证不通过！");
 		return;
     } else {
+    	console.log("*******************************************");
 		var _id = scm.get("_id");
 		var contractDate = $("#contractDate").val();
 		scm.set("contractDate", contractDate);
 		var data = eqCostListDataSource.data();
+		var pdblist = $("#projectId").data("kendoDropDownList");
+		console.log("************"+pdblist.value());
 		scm.set("eqcostList", data);
-		dataSource.add(scm);
-		dataSource.sync();
+//		scm.set("projectId",);
+		dataSource_SC.add(scm);
+		dataSource_SC.sync();
 		loadPage("scList");
     }
 };

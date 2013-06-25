@@ -144,7 +144,7 @@ function toolbar_setupProject() {//1:正式立项；2：预立项；3：内部�
 		alert("请点击选择一条项目记录！");
 		return;
 	}
-	if (row.projectStatus == 1){
+	if (row.projectStatus == "正式立项"){
 		alert("请选择一条非正式立项记录！");
 		return;
 	}

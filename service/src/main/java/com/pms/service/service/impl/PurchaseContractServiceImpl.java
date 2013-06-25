@@ -330,8 +330,15 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_APPROVED);
+        Map<String, Object> results = dao.list(query, DBBean.PURCHASE_ORDER);
+        List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
-        return dao.list(query, DBBean.PURCHASE_ORDER);
+        for (Map<String, Object> data : list) {
+            data.put(SalesContractBean.SC_EQ_LIST, mergeLoadedEqList(data.get(SalesContractBean.SC_EQ_LIST)));
+
+        }
+
+        return results;
 
     }
 
@@ -618,7 +625,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public Map<String, Object> approvePurchaseRequest(Map<String, Object> request) {
 
-        if (!isPurchase()) {
+        if (!isPurchase() && !isAdmin()) {
             return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.MANAGER_APPROVED);
         } else {
             return processRequest(request, DBBean.PURCHASE_REQUEST, APPROVED);
