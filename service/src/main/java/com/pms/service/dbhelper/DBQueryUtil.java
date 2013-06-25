@@ -56,15 +56,18 @@ public class DBQueryUtil {
                     }else{
                          arrayValues = (List<Object>) dbQuery.getValue();
                     }
-                    for (Object aValue : arrayValues) {
-                        if (key == ApiConstants.MONGO_ID) {
-                            dbList.add(new ObjectId(aValue.toString()));
-                        } else {
-                            dbList.add(aValue);
+                    
+                    if (arrayValues != null) {
+                        for (Object aValue : arrayValues) {
+                            if (key == ApiConstants.MONGO_ID) {
+                                dbList.add(new ObjectId(aValue.toString()));
+                            } else {
+                                dbList.add(aValue);
+                            }
                         }
+                        childBuilder.in(dbList);
+                        object = childBuilder.get();
                     }
-                    childBuilder.in(dbList);
-                    object = childBuilder.get();
 
                 } else if (dbQuery.getOperation() == DBQueryOpertion.NOT_IN){
                     BasicDBList dbList = new BasicDBList();
