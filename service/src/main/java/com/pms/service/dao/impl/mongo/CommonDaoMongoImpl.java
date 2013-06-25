@@ -68,6 +68,15 @@ public class CommonDaoMongoImpl implements ICommonDao {
         return result.getError() == null ? true : false;
     }
 
+    public Map<String, Object> save(Map<String, Object> data, String collection) {
+    	String id = (String)data.get(ApiConstants.MONGO_ID);
+    	if(id == null || id.isEmpty()){
+    		return add(data, collection);
+    	} else {
+    		return updateById(data, collection);
+    	}
+    }
+    
     public Map<String, Object> list(Map<String, Object> parameters, String collection) {
         DBObject query = DBQueryUtil.buildQueryObject(parameters, true, true);
         return list(parameters, query, collection);

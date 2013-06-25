@@ -99,7 +99,7 @@ public class SalesContractController extends AbstractController {
     @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS, desc = RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS_DESC)
     public void managerRejectInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(salesContractService.rejectInvoiceForSC(params), request, response);
+        responseWithData(salesContractService.managerRejectInvoiceForSC(params), request, response);
     }
     
     @RequestMapping("/invoice/financeapprove")
@@ -113,7 +113,7 @@ public class SalesContractController extends AbstractController {
     @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_FIN_PROCESS, desc = RoleValidConstants.PAY_INVOICE_FIN_PROCESS)
     public void financeRejectInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(salesContractService.rejectInvoiceForSC(params), request, response);
+        responseWithData(salesContractService.finRejectInvoiceForSC(params), request, response);
     }
     
     @RequestMapping("/invoice/done")

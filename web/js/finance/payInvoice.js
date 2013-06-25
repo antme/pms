@@ -42,6 +42,7 @@ var listDatasource = new kendo.data.DataSource({
     pageSize: 10,
     schema: {
         model: requestModel,
+        total: "total",
         data:"data"
     }
 });
@@ -56,11 +57,18 @@ $(document).ready(function () {
 	    sortable : true,
 		filterable : filterable,
 	    columns: [
-	        {field:"payInvoiceMoney", title:"合计开票金额"},
+	        {
+	        	field:"payInvoiceMoney",
+	        	title:"合计开票金额",
+	        	width:"125px",
+	        	template : function(dataItem) {
+					return '<a  onclick="openPayInvoiceViewWindow(\'' + dataItem._id + '\');">' + dataItem.payInvoiceMoney + '</a>';
+				}
+	        },
 	        {field:"payInvoicePlanDate", title:"建议出票日期",format: "{0:yyyy/MM/dd}"},
-	        {field:"payInvoiceActualDate", title:"出票日期",format: "{0:yyyy/MM/dd hh:mm}"},
+	        {field:"payInvoiceActualDate", title:"出票日期",format: "{0:yyyy/MM/dd}"},
 	        {field:"payInvoiceReceivedMoneyStatus", title:"收款情况"},
-	        {field:"invoiceType", title:"开票类型"},
+	        {field:"invoiceType", title:"票据类型"},
 	        {field:"contractCode", title:"销售合同编号"},
 	        {field:"payInvoiceStatus", title:"状态"}
 	    ]

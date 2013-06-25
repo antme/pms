@@ -97,7 +97,9 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listGetInvoice(Map<String, Object> params);
 
-    public Map<String, Object> addGetInvoice(Map<String, Object> params);
+    public Map<String, Object> saveGetInvoice(Map<String, Object> params);
+    
+    public Map<String, Object> loadGetInvoice(Map<String, Object> params);
     
     public Map<String, Object> prepareGetInvoice(Map<String, Object> params);
     

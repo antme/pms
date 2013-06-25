@@ -146,7 +146,7 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/finance/payInvoice.html";
 	} else if(page == "payInvoiceEdit"){
 		page = "html/finance/payInvoiceEdit.html";
-	} else if (page == "gotMoneyList") {
+	} else if (page == "getMoney") {
 		page = "html/finance/gotMoneyList.html";
 	} else if (page == "group") {
 		page = "html/user/group.html";
@@ -194,6 +194,8 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/finance/payMoney.html";
 	}else if(page == "getInvoice"){
 		page = "html/finance/getInvoice.html";
+	}else if(page == "getInvoiceEdit"){
+		page = "html/finance/getInvoiceEdit.html";		
 	}else if (page == "repositoryOut") {
 		page = "html/repository/repositoryout.html";
 	} else if(page == "return"){
@@ -524,6 +526,16 @@ function openPurchaseOrderViewWindow(param){
 function openBackRequestViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"备货申请信息"};
 	openRemotePageWindow(options, "purchaseBackEdit", {_id : param});
+}
+
+function openPayInvoiceViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"开票信息"};
+	openRemotePageWindow(options, "html/finance/payInvoiceEdit.html", {_id : param});
+}
+
+function openGetInvoiceViewWindow(param){
+	var options = { width:"1080px", height: "600px", title:"收票信息"};
+	openRemotePageWindow(options, "html/finance/getInvoiceEdit.html", {_id : param});
 }
 
 function openPurchaseAllotViewWindow(param){

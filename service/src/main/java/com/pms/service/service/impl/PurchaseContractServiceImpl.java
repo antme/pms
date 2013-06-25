@@ -30,6 +30,7 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
+import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
 
@@ -801,8 +802,25 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     // 采购合同列表为付款
     public Map<String, Object> listSelectForPayment(Map<String, Object> params) {
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "purchaseContractCode", "supplierName" });
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "purchaseContractCode", "supplier" });
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
+        
+        List<Map<String, Object>> list =(List<Map<String, Object>>)results.get(ApiConstants.RESULTS_DATA); 
+        
+        Set<String> set = new HashSet<String>();
+        for(Map<String, Object> obj : list){
+        	set.add((String)obj.get("supplier"));
+        }
+        set.remove(null);set.remove("");
+        Map<String,Object> query2 = new HashMap<String,Object>();
+        query2.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList(set)));
+        Map<String,Object> suMap = dao.listToOneMapAndIdAsKey(query2, DBBean.SUPPLIER);
+        
+        for(Map<String, Object> obj : list){
+        	String id = (String)obj.get("supplier");
+        	Map<String,Object> su = (Map)suMap.get(id);
+        	obj.put("supplierName", su.get("supplierName"));
+        }
         return results;
     }
 
@@ -866,24 +884,56 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     @Override
-    public Map<String, Object> addGetInvoice(Map<String, Object> params) {
-        return dao.add(params, DBBean.GET_INVOICE);
+    public Map<String, Object> saveGetInvoice(Map<String, Object> params) {
+    	Map<String,Object> invoice = new HashMap<String,Object>();
+    	invoice.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+    	invoice.put(InvoiceBean.getInvoiceActualDate, params.get(InvoiceBean.getInvoiceActualDate));
+    	invoice.put(InvoiceBean.getInvoiceActualInvoiceNum, params.get(InvoiceBean.getInvoiceActualInvoiceNum));
+    	invoice.put(InvoiceBean.getInvoiceActualMoney, ApiUtil.getDouble(params, InvoiceBean.getInvoiceActualMoney, 0));
+    	invoice.put(InvoiceBean.getInvoiceActualSheetCount, ApiUtil.getInteger(params, InvoiceBean.getInvoiceActualMoney, 0));
+    	invoice.put(InvoiceBean.getInvoiceComment, params.get(InvoiceBean.getInvoiceComment));
+    	invoice.put(InvoiceBean.getInvoiceDepartment, params.get(InvoiceBean.getInvoiceDepartment));
+    	invoice.put(InvoiceBean.getInvoiceProposerId, getCurrentUserId());
+    	invoice.put(InvoiceBean.getInvoiceReceivedMoneyStatus, params.get(InvoiceBean.getInvoiceReceivedMoneyStatus));
+    	invoice.put(InvoiceBean.getInvoiceItemList, params.get(InvoiceBean.getInvoiceItemList));
+		
+		Map<String,Object> pc = dao.findOne(ApiConstants.MONGO_ID, params.get(InvoiceBean.purchaseContractId), new String[]{"purchaseContractCode","supplier","invoiceType"}, DBBean.PURCHASE_CONTRACT);
+		invoice.put(InvoiceBean.purchaseContractId, pc.get(ApiConstants.MONGO_ID));
+		invoice.put(InvoiceBean.purchaseContractCode, pc.get("purchaseContractCode"));
+		invoice.put(InvoiceBean.invoiceType, pc.get("invoiceType"));
+		invoice.put(InvoiceBean.getInvoiceSupplierId, pc.get("supplier"));
+        return dao.save(invoice, DBBean.GET_INVOICE);
     }
 
     @Override
     public Map<String, Object> prepareGetInvoice(Map<String, Object> params) {
-        String pcId = (String) params.get("purchaseContractId");
-        Map<String, Object> newObj = new HashMap<String, Object>();
-        newObj.put(InvoiceBean.purchaseContractId, pcId);
-        Map<String, Object> pc = dao.findOne(ApiConstants.MONGO_ID, pcId, DBBean.GET_INVOICE);
-        Map<String, Object> supplier = dao.findOne(ApiConstants.MONGO_ID, pc.get("supplier"), DBBean.GET_INVOICE);
-        pc.remove(ApiConstants.MONGO_ID);
-        supplier.remove(ApiConstants.MONGO_ID);
-        newObj.putAll(pc);
-        newObj.putAll(supplier);
-        return newObj;
+        Map<String, Object> invoice = new HashMap<String, Object>();
+        invoice.put(InvoiceBean.purchaseContractId, params.get("purchaseContractId"));
+        invoice.put(InvoiceBean.getInvoiceItemList, new ArrayList());
+        mergePcAndSupplierForInvoice(invoice);
+        return invoice;
     }
 
+    @Override
+    public Map<String, Object> loadGetInvoice(Map<String, Object> params) {
+        Map<String,Object> invoice = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.GET_INVOICE);
+        mergePcAndSupplierForInvoice(invoice);
+        return invoice;
+    }
+    private void mergePcAndSupplierForInvoice(Map<String,Object> params){
+        String[] keys = new String[]{"purchaseContractCode","requestedTotalMoney","purchaseContractType",
+        		"eqcostDeliveryType","signDate","invoiceType","supplier"};
+        Map<String, Object> pc = dao.findOne(ApiConstants.MONGO_ID,  params.get("purchaseContractId"),keys, DBBean.PURCHASE_CONTRACT);
+        if(pc != null){
+        	 Map<String, Object> supplier = dao.findOne(ApiConstants.MONGO_ID, pc.get("supplier"), DBBean.SUPPLIER);
+        	 pc.remove(ApiConstants.MONGO_ID);
+        	 params.putAll(pc);
+        	 if(supplier != null){
+        		 supplier.remove(ApiConstants.MONGO_ID);
+        		 params.putAll(supplier);
+        	 }
+        }    	
+    }
     @Override
     public Map<String, Object> updateGetInvoice(Map<String, Object> params) {
         return dao.updateById(params, DBBean.GET_INVOICE);

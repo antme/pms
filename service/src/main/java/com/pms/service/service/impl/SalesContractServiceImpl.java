@@ -405,15 +405,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 
 	@Override
-	public Map<String, Object> rejectInvoiceForSC(Map<String, Object> params) {
+	public Map<String, Object> managerRejectInvoiceForSC(Map<String, Object> params) {
 		Map<String,Object> payInvoice = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SC_INVOICE);
-		String status = String.valueOf(payInvoice.get(InvoiceBean.payInvoiceStatus));
-/*		if(!InvoiceBean.statusSubmit.equals(status) && !InvoiceBean.statusManagerApprove.equals(status)){
-			//exception status not right.	
-		}*/
-		payInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusReject);
+		payInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusManagerReject);
 		return dao.updateById(payInvoice, DBBean.SC_INVOICE);
 	}	
+
+	public Map<String, Object> finRejectInvoiceForSC(Map<String, Object> params) {
+		Map<String,Object> payInvoice = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SC_INVOICE);
+		payInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusFinanceReject);
+		return dao.updateById(payInvoice, DBBean.SC_INVOICE);
+	}
 	
 	@Override
 	public Map<String, Object> loadInvoiceForSC(Map<String, Object> params) {

@@ -5,14 +5,14 @@ var requestModel = kendo.data.Model.define({
 			editable : false,
 			nullable : true
 		},
-		getInvoiceCode:{
+		invoiceType:{
 			nullable : true
 		},
-		getInvoiceType:{
+		getInvoiceActualMoney:{
 			type: "number",
 			nullable : true
 		},
-		getInvoiceDate:{
+		getInvoiceActualDate:{
 			type:"date",
 			nullable : true
 		}
@@ -26,18 +26,8 @@ var listDatasource = new kendo.data.DataSource({
             dataType: "jsonp",
             type : "post"
         },
-        update: {
-            url: baseUrl + "/purcontract/invoice/update",
-            dataType: "jsonp",
-            type : "post"
-        },
         destroy: {
             url: baseUrl + "/purcontract/invoice/destroy",
-            dataType: "jsonp",
-            type : "post"
-        },
-        create: {
-            url: baseUrl + "/purcontract/invoice/add",
             dataType: "jsonp",
             type : "post"
         },
@@ -46,29 +36,57 @@ var listDatasource = new kendo.data.DataSource({
                 return {models: kendo.stringify(options.models)};
             }
         }
-        
     },
     batch: true,
     pageSize: 10,
     schema: {
         model: requestModel,
+        total: "total",
         data:"data"
     }
 });
-$(document).ready(function () {	
 
-    
+$(document).ready(function () {
+	checkRoles();
 	$("#grid").kendoGrid({
 	    dataSource: listDatasource,
 	    pageable: true,
-	    toolbar: [{name:"create",text:"新增"}],
+	    selectable : "row",
+	    sortable : true,
+		filterable : filterable,
 	    columns: [
-	        {field:"getInvoiceCode", title:"收票编号"},
-	        {field:"getInvoiceDate", title:"收票日期",format: "{0:yyyy/MM/dd hh:mm}"},
-	        {field:"getInvoiceType", title:"类型"},
-	        {command: [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}] }
-	    ],
-	    editable: "popup"
+	        {
+	        	field:"getInvoiceActualMoney", 
+	        	title:"收票金额",
+	        	template : function(dataItem) {
+					return '<a  onclick="openGetInvoiceViewWindow(\'' + dataItem._id + '\');">' + dataItem.getInvoiceActualMoney + '</a>';
+				}	        	
+	        },
+	        {field:"getInvoiceActualDate", title:"收票日期",format: "{0:yyyy/MM/dd}"},
+	        {field:"getInvoiceReceivedMoneyStatus", title:"付款情况"},
+	        {field:"invoiceType", title:"票据类型"},
+	        {field:"purchaseContractCode", title:"采购合同编号"}
+	    ]
 	});
+	
 });
 
+function addGI(){
+	loadPage("getInvoiceEdit",{operateType:"add"});
+}
+function editGI(){
+	var row = getSelectedRowDataByGrid("grid");
+	if(!row) {
+		alert("点击列表可以选中数据");
+	} else {
+		loadPage("getInvoiceEdit", {_id:row._id});		
+	}
+}
+function destroyGI(){
+	var row = getSelectedRowDataByGrid("grid");
+	if(!row) {
+		alert("点击列表可以选中数据");
+	} else {
+		postAjaxRequest(baseUrl+"/purcontract/invoice/destroy", {_id:row._id}, function(){listDatasource.read();});
+	}	
+}

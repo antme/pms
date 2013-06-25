@@ -264,7 +264,7 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.cancelRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
 
-    @RequestMapping("/listforselect/paymoney")
+    @RequestMapping("/listforselect")
     public void listSelectForPayment(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listSelectForPayment(parserListJsonParameters(request, false)), request, response);
     }
@@ -293,19 +293,19 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/invoice/prepare")
     @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void prepareGetInvoice(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.addGetInvoice(parserJsonParameters(request, false)), request, response);
+        responseWithData(pService.prepareGetInvoice(parserJsonParameters(request, false)), request, response);
+    }
+ 
+    @RequestMapping("/invoice/load")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    public void loadGetInvoice(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.loadGetInvoice(parserJsonParameters(request, false)), request, response);
     }
     
-    @RequestMapping("/invoice/add")
+    @RequestMapping("/invoice/save")
     @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void addGetInvoice(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.addGetInvoice(parserJsonParameters(request, false)), request, response, "save_success");
-    }
-    
-    @RequestMapping("/invoice/update")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
-    public void updateGetInvoice(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.updateGetInvoice(parserJsonParameters(request, false)), request, response);
+        responseWithData(pService.saveGetInvoice(parserJsonParameters(request, false)), request, response, "save_success");
     }
     
     @RequestMapping("/invoice/destroy")

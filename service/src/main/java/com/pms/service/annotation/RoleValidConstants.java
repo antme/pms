@@ -91,6 +91,6 @@ public class RoleValidConstants {
     public static final String PAY_INVOICE_FIN_PROCESS_DESC = "开票财务审批";
     
     public static final String PAY_INVOICE_DONE = "pay_invoice_done";
-    public static final String PAY_INVOICE_DONE_DESC = "开票出票";
+    public static final String PAY_INVOICE_DONE_DESC = "开票出单";
     
 }
