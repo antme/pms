@@ -21,6 +21,7 @@ import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.RoleBean;
+import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IUserService;
@@ -240,40 +241,53 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     }
     
     public Map<String, Object> listMyTasks() {
+        
+        // 我的草稿
         Map<String, Object> taskQuery = new HashMap<String, Object>();
-        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());   
-        
-        Map<String, Object> statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status", PurchaseRequest.STATUS_DRAFT);
+        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
+
+        Map<String, Object> statusQuery = new HashMap<String, Object>();
+        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_DRAFT, ShipBean.SHIP_STATUS_DRAFT }));
         statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
-        //or query
+
+        // or query
         taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
-        
+
         Map<String, Object> result = new HashMap<String, Object>();
         queryTasks("draft", result, taskQuery);
+        
+        
 
+        //我的待批
         taskQuery = new HashMap<String, Object>();
-        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
-        statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status", PurchaseRequest.STATUS_NEW);
-        statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
-        //or query
-        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));    
+        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
+        statusQuery = new HashMap<String, Object>();
+        statusQuery.put("status", new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_NEW, PurchaseRequest.STATUS_REPOSITORY_NEW, ShipBean.SHIP_STATUS_SUBMIT }));
+        statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
+        // or query
+        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
         queryTasks("inprogress", result, taskQuery);
 
         
+        //我的回退
         taskQuery = new HashMap<String, Object>();
         taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
         statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status", PurchaseRequest.STATUS_REJECTED);
+        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseRequest.STATUS_REJECTED, ShipBean.SHIP_STATUS_REJECT}));
+        statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.rejected.toString());
+        statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.rejected.toString());
+
         //or query
         taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));   
         queryTasks("rejected", result, taskQuery);
 
+
+        //我的已批
         taskQuery = new HashMap<String, Object>();
         taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
         statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status", PurchaseRequest.STATUS_APPROVED);
+        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseRequest.STATUS_APPROVED, ShipBean.SHIP_STATUS_APPROVE, PurchaseRequest.STATUS_IN_REPOSITORY}));
+        statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.approved.toString());
         //or query
         taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));  
         queryTasks("approved", result, taskQuery);
@@ -289,6 +303,10 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         getCount(list, query, DBBean.PURCHASE_BACK);
         getCount(list, query, DBBean.PURCHASE_ORDER);
         getCount(list, query, DBBean.PURCHASE_CONTRACT);
+        getCount(list, query, DBBean.PURCHASE_CONTRACT);
+        getCount(list, query, DBBean.PURCHASE_ALLOCATE);
+        getCount(list, query, DBBean.REPOSITORY);
+        getCount(list, query, DBBean.SHIP);
         
         result.put(key, list);
         int count = 0;

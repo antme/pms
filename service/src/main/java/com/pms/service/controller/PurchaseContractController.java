@@ -290,6 +290,12 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listGetInvoice(parserJsonParameters(request, false)), request, response);
     }
 
+    @RequestMapping("/invoice/prepare")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    public void prepareGetInvoice(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.addGetInvoice(parserJsonParameters(request, false)), request, response);
+    }
+    
     @RequestMapping("/invoice/add")
     @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void addGetInvoice(HttpServletRequest request, HttpServletResponse response) {

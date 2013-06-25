@@ -279,7 +279,7 @@ function edit(data) {
 		requestDataItem = new model(requestDataItem);
 
 	}
-
+	requestDataItem.set("signDate", kendo.toString(requestDataItem.signDate, 'd'));
 	kendo.bind($("#purchasecontract-edit"), requestDataItem);
 
 	var eqcostList = requestDataItem.eqcostList;
