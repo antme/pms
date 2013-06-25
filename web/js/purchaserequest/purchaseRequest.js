@@ -7,26 +7,26 @@ var approveUrl = "/service/purcontract/request/approve";
 var rejectUrl = "/service/purcontract/request/reject";
 var cancelUrl = "/service/purcontract/request/cancel";
 
+var gridOptions = {
+		transport : {
+			read : {
+				url : listUrl,
+				dataType : "jsonp",
+				type : "post"
+			},		
+			//必须放在transport内，mytasks参数来至于点击我的任务
+			parameterMap : myTaskQueryParam			
+		}
+}
+gridOptions =  $.extend( gridOptions, commonListOptions);
 
+//外面列表页的datasource对象
+var listDataSource = new kendo.data.DataSource(gridOptions);
 
 $(document).ready(function() {
 	checkRoles();
 
-	var gridOptions = {
-			transport : {
-				read : {
-					url : listUrl,
-					dataType : "jsonp",
-					type : "post"
-				},		
-				//必须放在transport内，mytasks参数来至于点击我的任务
-				parameterMap : myTaskQueryParam			
-			}
-	}
-	gridOptions =  $.extend( gridOptions, commonListOptions);
 
-	//外面列表页的datasource对象
-	var listDataSource = new kendo.data.DataSource(gridOptions);
 	
 	if ($("#grid").length > 0) {
 		// 初始化采购订单列表页
