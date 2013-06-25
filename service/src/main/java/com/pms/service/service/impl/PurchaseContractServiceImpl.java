@@ -866,32 +866,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> prepareGetInvoice(Map<String, Object> params) {
         String pcId = (String) params.get("purchaseContractId");
-
-        // 1. 获取采购合同信息
-        Map<String, Object> pc = dao.findOne(ApiConstants.MONGO_ID, pcId, DBBean.GET_INVOICE);
-        // 2. 获取供货商信息
-        Map<String, Object> supplier = dao.findOne(ApiConstants.MONGO_ID, pc.get("supplier"), DBBean.GET_INVOICE);
-
         Map<String, Object> newObj = new HashMap<String, Object>();
         newObj.put(InvoiceBean.purchaseContractId, pcId);
-        newObj.put(InvoiceBean.getInvoiceStatus, InvoiceBean.statusUnSubmit);
-        newObj.put(InvoiceBean.getInvoiceItemList, new ArrayList());
-        newObj.put(InvoiceBean.getInvoiceSubmitDate, DateUtil.getDateString(new Date()));
-
-        // //////////////////////////////////
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(InvoiceBean.purchaseContractId, pcId);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { InvoiceBean.getInvoiceMoney });
-        List<Object> payInvoiceList = dao.listLimitKeyValues(query, DBBean.GET_INVOICE);
-        Double totalMoney = 0.0;// 统计已开票的总金额
-        for (Object obj : payInvoiceList) {
-            totalMoney += ApiUtil.getDouble(String.valueOf(obj));
-        }
-        // 【临时字段】采购合同金额， 已收票额、 已付款额、 应付账款额、付款方式
-        newObj.put("totalGetInvoiceMoney", totalMoney);// 已收票额,统计 收票表
-        newObj.put("totalPayMoney", 0);// 已付款额 ，统计
-        newObj.put("leftPayMoney", 0);// 应付账款额
-        newObj.put("PayType", "");// 付款方式
+        Map<String, Object> pc = dao.findOne(ApiConstants.MONGO_ID, pcId, DBBean.GET_INVOICE);
+        Map<String, Object> supplier = dao.findOne(ApiConstants.MONGO_ID, pc.get("supplier"), DBBean.GET_INVOICE);
+        pc.remove(ApiConstants.MONGO_ID);
+        supplier.remove(ApiConstants.MONGO_ID);
+        newObj.putAll(pc);
+        newObj.putAll(supplier);
         return newObj;
     }
 
