@@ -102,7 +102,8 @@ public class InitBean {
         	RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, 
             RoleValidConstants.PURCHASE_ORDER_MANAGEMENT,
             RoleValidConstants.PURCHASE_ORDER_PROCESS,
-            RoleValidConstants.REPOSITORY_MANAGEMENT
+            RoleValidConstants.REPOSITORY_MANAGEMENT,
+            RoleValidConstants.PURCHASE_REQUEST_PROCESS
 
         });
 
