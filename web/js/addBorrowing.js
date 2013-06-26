@@ -319,6 +319,10 @@ function save() {
     		var data = eqDataSource.data();
     		if (data.length > 0) {
     			model.set("eqcostList", data);
+    			
+    			model.set("issueTime", kendo.toString(model.issueTime, 'd'));
+    			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
+    			
     			listDataSource.add(model);
     	        
     	    	if(listDataSource.at(0)){
