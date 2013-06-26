@@ -27,7 +27,7 @@ var itemDataSource = new kendo.data.DataSource({
 			if (operation !== "read" && options.models) {
 				return {
 					// 解析成json_p模式
-					json_p : kendo.stringify(requestDataItem),
+					models: kendo.stringify(requestDataItem),
 					mycallback : "checkStatus"
 				}
 			}

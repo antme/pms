@@ -47,7 +47,8 @@ var model = kendo.data.Model.define({
 		},
 		firstPay : {
 
-		}
+		},
+		eqcostList: {}
 	}
 });
 
@@ -167,7 +168,7 @@ var itemDataSource = new kendo.data.DataSource({
 				return {
 
 					// 解析成json_p模式
-					json_p : kendo.stringify(requestDataItem),
+					models: kendo.stringify(requestDataItem),
 					mycallback : "checkStatus"
 				};
 			}
@@ -198,21 +199,17 @@ function save(status) {
 			if (status) {
 				requestDataItem.status = status;
 			}
-			
 			requestDataItem.requestedTotalMoney = $("#requestedTotalMoney").val();
+			
 
 			if (itemDataSource.at(0)) {
 				// force set haschanges = true
 				itemDataSource.at(0).set("uid", kendo.guid());
 			}
 
-		
-
 			if (!requestDataItem.supplier) {
 				var dl = $("#supplier").data("kendoDropDownList");
 				requestDataItem.supplier = dl.dataSource.at(0)._id;
-			}else{
-				requestDataItem.supplier = requestDataItem.supplier._id;
 			}
 			
 			console.log(requestDataItem)

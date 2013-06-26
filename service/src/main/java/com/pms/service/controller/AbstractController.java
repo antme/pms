@@ -155,7 +155,8 @@ public abstract class AbstractController {
             ApiThreadLocal.set(ApiConstants.MY_TASKS, parametersMap.get(ApiConstants.MY_TASKS));
         }
         parametersMap.remove(ApiConstants.MY_TASKS);
-
+        parametersMap.remove("_defaultId");
+        parametersMap.remove("defaults");
         return parametersMap;
     }
     
