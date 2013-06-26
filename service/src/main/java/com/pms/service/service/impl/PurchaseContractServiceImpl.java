@@ -133,9 +133,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Set<Object> scIdsList = new HashSet();
 
         String db = DBBean.REPOSITORY;
-        // if(params.get("type").toString().equalsIgnoreCase("1")){
-        // db = DBBean.REPOSITORY
-        // }
+        String type = (String)params.get("type");
+        
+        if("1".equalsIgnoreCase(type)){
+            query.put("type", "in");
+        }else{
+            query.put("type", "out");
+        }
 
         List<Object> scResults = this.dao.listLimitKeyValues(query, DBBean.REPOSITORY);
 
