@@ -183,6 +183,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				PurchaseBack.pbMoney,PurchaseBack.scId,PurchaseBack.pbSubmitDate, PurchaseBack.prId, PurchaseBack.poId};
 		params.put(ApiConstants.LIMIT_KEYS, keys);
 		mergeDataRoleQuery(params);
+		mergeMyTaskQuery(params, DBBean.PURCHASE_BACK);
 		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
 		Set<String> saleIds = new HashSet<String>();
@@ -218,6 +219,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		params.put(ApiConstants.LIMIT_KEYS, keys);
 		params.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
 		mergeDataRoleQuery(params);
+		mergeMyTaskQuery(params, DBBean.PURCHASE_BACK);
 		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
 		Set<String> saleIds = new HashSet<String>();
@@ -236,6 +238,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	@Override
 	public Map<String, Object> listAllot(Map<String, Object> params) {
 	    mergeDataRoleQuery(params);
+	    mergeMyTaskQuery(params, DBBean.PURCHASE_ALLOCATE);
 		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_ALLOCATE);
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
 		Set<String> saleIds = new HashSet<String>();

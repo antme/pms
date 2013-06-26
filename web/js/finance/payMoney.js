@@ -63,22 +63,24 @@ $(document).ready(function () {
 		$("#popwindow").data("kendoWindow").open();
 	});
 	
-	var pcdatasource = new kendo.data.DataSource({
-		transport : {
-			read : {
-				dataType : "jsonp",
-				url : "/service/purcontract/listforselect/paymoney"
+	$("#searchfor").kendoDropDownList({
+		dataTextField : "contractCode",
+		dataValueField : "_id",
+		template:  '${ data.supplierName }:<strong>${ data.purchaseContractCode }</strong>',
+		dataSource : {
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "/service/purcontract/listforselect"
+				}
+			},
+			schema : {
+				total: "total",
+				data: "data"
 			}
-		},
-	    schema: {data:"data"}
+		}
 	});	
 	
-	$("#selectpc").kendoDropDownList({
-		optionLabel: "请选择合同",
-		dataTextField : "purchaseContractCode",
-		dataValueField : "_id",
-		dataSource : pcdatasource,
-	});
 	$("#payDate").kendoDateTimePicker({
 	    format: "yyyy/MM/dd hh:mm tt"
 	});
@@ -91,5 +93,5 @@ $(document).ready(function () {
 });
 
 function saveSuccess(){
-	location.reload();
+	loadPage("payMoney");
 }

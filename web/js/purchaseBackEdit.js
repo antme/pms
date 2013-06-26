@@ -118,7 +118,7 @@ $(document).ready(function () {
 			} else if(this.value == "提交"){
 				postAjaxRequest( baseUrl+"/purchase/back/submit", {models:kendo.stringify(currentObj)} , saveSuccess);
 			}else if(this.value=="取消"){
-				location.reload();
+				loadPage("purchaseBack");
 			}
 		}
 	});
@@ -142,7 +142,7 @@ $(document).ready(function () {
 });
 
 function saveSuccess(){
-	location.reload();
+	loadPage("purchaseBack");
 }
 
 function edit(e){

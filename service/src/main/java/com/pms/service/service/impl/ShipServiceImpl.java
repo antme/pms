@@ -51,12 +51,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 
 	public Map<String, Object> list(Map<String, Object> params) {
-		int limit = ApiUtil.getInteger(params, ApiConstants.PAGE_SIZE, 15);
-		int limitStart = ApiUtil.getInteger(params, ApiConstants.SKIP, 0);
-		Map<String, Object> queryMap = new HashMap<String, Object>();
-		queryMap.put(ApiConstants.LIMIT, limit);
-		queryMap.put(ApiConstants.LIMIT_START, limitStart);
-		return dao.list(queryMap, DBBean.SHIP);
+	    mergeMyTaskQuery(params, DBBean.SHIP);
+		return dao.list(params, DBBean.SHIP);
 	}
 
 	public Map<String, Object> update(Map<String, Object> params) {
@@ -101,13 +97,16 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		// 调拨 + 采购
 		for (Map<String, Object> p:purchaseEqList){
 			String id = p.get(ApiConstants.MONGO_ID).toString();
-			Double amount = (Double) p.get(EqCostListBean.EQ_LIST_AMOUNT);
-			if (alloEqList.containsKey(id)) {
-				Double aAmount = alloEqList.get(id);
-				alloEqList.put(id, aAmount+amount);
-			} else {
-				alloEqList.put(id, amount);
+			Double amount = 0.0;
+			if (p.containsKey("eqcostApplyAmount")) {
+				amount = (Double) p.get("eqcostApplyAmount");
 			}
+			
+			if (alloEqList.containsKey(id)) {
+				amount = +alloEqList.get(id);
+			}
+			
+			alloEqList.put(id, amount);
 		}
 		
 		// - 已发货

@@ -27,7 +27,9 @@ var scModel = kendo.data.Model.define({
 		contractCode : {},
 		contractPerson : {},
 		contractType : {},
-		contractDate : {},
+		contractDate : {
+			type:"date"
+		},
 		contractDownPayment : {},
 		progressPayment : {},
 		qualityMoney : {},
@@ -36,7 +38,9 @@ var scModel = kendo.data.Model.define({
 		scInvoiceInfo : {},
 		scGotMoneyInfo : {},
 		scMonthShipmentsInfo : {},
-		scYearShipmentsInfo : {}
+		scYearShipmentsInfo : {},
+		estimateGrossProfit : {},
+		estimateGrossProfitRate : {}
 	}
 });
 var scm;
@@ -274,5 +278,6 @@ function edit(data){
 		});
 	}
 	
+	scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
 	kendo.bind($("#editSalesContract"), scm);
 }

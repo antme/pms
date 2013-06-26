@@ -21,6 +21,7 @@ import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.RoleBean;
+import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IUserService;
@@ -214,81 +215,39 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         }
     }
 
-    public List<String> listUserRoleIds(String userId) {
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(ApiConstants.MONGO_ID, userId);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.GROUPS });
-        Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
-        List<String> groups = (List<String>) user.get(UserBean.GROUPS);
-        
-        Map<String, Object> limitQuery = new HashMap<String, Object>();
-        limitQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, groups));
-        limitQuery.put(ApiConstants.LIMIT_KEYS, new String[]{GroupBean.ROLES});
-        
-        List<Object> list = dao.listLimitKeyValues(limitQuery, DBBean.USER_GROUP);
-        List<String> roles = new ArrayList<String>();
 
-        for(Object role: list){
-            roles.addAll((Collection<? extends String>) role);
-        }
-        
-        if(user.get(UserBean.OTHER_ROLES)!=null){
-            roles.addAll((List<? extends String>) user.get(UserBean.OTHER_ROLES));
-        }
-
-        return roles;
-    }
     
     public Map<String, Object> listMyTasks() {
-        Map<String, Object> taskQuery = new HashMap<String, Object>();
-        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());   
-        
-        Map<String, Object> statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status", PurchaseRequest.STATUS_DRAFT);
-        statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
-        //or query
-        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
         
         Map<String, Object> result = new HashMap<String, Object>();
-        queryTasks("draft", result, taskQuery);
-
-        taskQuery = new HashMap<String, Object>();
-        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
-        statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status", PurchaseRequest.STATUS_NEW);
-        statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
-        //or query
-        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));    
-        queryTasks("inprogress", result, taskQuery);
-
         
-        taskQuery = new HashMap<String, Object>();
-        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
-        statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status", PurchaseRequest.STATUS_REJECTED);
-        //or query
-        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));   
-        queryTasks("rejected", result, taskQuery);
+        queryTasks("draft", result, getMyDraftQuery());
 
-        taskQuery = new HashMap<String, Object>();
-        taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
-        statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status", PurchaseRequest.STATUS_APPROVED);
-        //or query
-        taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));  
-        queryTasks("approved", result, taskQuery);
+        //FIXME: null as 我的待批
+        queryTasks("inprogress", result, null);
+      
+        //我的回退
+        queryTasks("rejected", result, getMyRejectedQuey());
+
+        queryTasks("approved", result, getMyApprovedQuery());
 
         return result;
     }
 
+
     private Map<String, Object> queryTasks(String key, Map<String, Object> result, Map<String, Object> query) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         
+        String[] dbs = new String[]{DBBean.PURCHASE_REQUEST, DBBean.PURCHASE_BACK, DBBean.PURCHASE_ORDER, DBBean.PURCHASE_CONTRACT, DBBean.BORROWING, DBBean.PURCHASE_ALLOCATE, DBBean.REPOSITORY, DBBean.SHIP};
+        
+        for(String db: dbs){
+            if(query == null){
+                getCount(list, getMyInprogressQuery(db), db);
+            }else{
+                getCount(list, query, db);
+            }
+        }
 
-        getCount(list, query, DBBean.PURCHASE_REQUEST);
-        getCount(list, query, DBBean.PURCHASE_BACK);
-        getCount(list, query, DBBean.PURCHASE_ORDER);
-        getCount(list, query, DBBean.PURCHASE_CONTRACT);
         
         result.put(key, list);
         int count = 0;

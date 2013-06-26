@@ -6,7 +6,10 @@ var listDataSource = new kendo.data.DataSource({
 		read : {
 			url : "/service/purcontract/list",
 			dataType : "jsonp"
-		}		
+		},
+		//必须放在transport内，mytasks参数来至于点击我的任务
+		parameterMap : myTaskQueryParam
+
 	},
 	schema : {
 		total: "total", // total is returned in the "total" field of the response
@@ -46,8 +49,8 @@ $(document).ready(function() {
 			field : "requestedTotalMoney",
 			title : "金额"
 		}, {
-			field : "logisticsType",
-			title : "物流类型"
+			field : "eqcostDeliveryType",
+			title : "货物递送方式"
 		}]
 
 	});

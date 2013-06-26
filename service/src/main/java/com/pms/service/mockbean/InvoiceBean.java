@@ -30,25 +30,27 @@ public class InvoiceBean {
 	public static final String payInvoiceActualInvoiceNum = "payInvoiceActualInvoiceNum"; //登记的发票号码
 	
 	public static final String salesContractId = "salesContractId";
-	public static final String purchaseContractId = "purchaseContractId";//票金额
+	public static final String purchaseContractId = "purchaseContractId";
+	public static final String purchaseContractCode = "purchaseContractCode";
 	
 	public static final String statusUnSubmit = "草稿";//
 	public static final String statusSubmit = "待审核";//
 	public static final String statusManagerApprove = "经理已审核";//
 	public static final String statusFinanceApprojve = "财务已审核";//
 	public static final String statusDone = "已出票";//
-	public static final String statusReject = "拒绝";//
-	
+	public static final String statusManagerReject = "经理拒绝";//
+	public static final String statusFinanceReject = "财务拒绝";//
 	
 ///////////////////////	收票///////////////
 	public static final String getInvoiceComment = "getInvoiceComment";
 	public static final String getInvoiceDepartment = "getInvoiceDepartment";
 	public static final String getInvoiceProposerId = "getInvoiceProposerId";//申请人id
 	public static final String getInvoiceReceivedMoneyStatus = "getInvoiceReceivedMoneyStatus";//收款情况
-	public static final String getInvoiceMoney = "getInvoiceMoney";//合计金额
-	public static final String getInvoiceSubmitDate = "getInvoiceSubmitDate";
-	public static final String getInvoiceStatus = "getInvoiceStatus";
 	public static final String getInvoiceItemList = "getInvoiceItemList";//	
-	
+	public static final String getInvoiceActualMoney = "getInvoiceActualMoney"; //实际金额
+	public static final String getInvoiceActualDate = "getInvoiceActualDate"; //实际开票日期
+	public static final String getInvoiceActualSheetCount = "getInvoiceActualSheetCount"; //实际开票张数
+	public static final String getInvoiceActualInvoiceNum = "getInvoiceActualInvoiceNum"; //登记的发票号码	
 	public static final String invoiceType = "invoiceType"; //票类型
+	public static final String getInvoiceSupplierId = "getInvoiceSupplierId";//供应商
 }

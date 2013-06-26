@@ -31,6 +31,10 @@ public interface ICommonDao {
     public boolean addBatch(List<Map<String, Object>> list, String collection);
 
     /**
+     * Add or Update
+     * */
+    public Map<String, Object> save(Map<String, Object> data, String collection);
+    /**
      * 
      * @param parameters
      * @param collection

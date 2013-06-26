@@ -12,34 +12,22 @@ var subModel = kendo.data.Model.define({
 var myModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
-		payInvoiceDepartment: {},
-		payInvoiceProposerId: {},
-		payInvoiceProposerName: {},
-		payInvoiceStatus:{},
-		payInvoicePlanDate: {},
-		payInvoiceReceivedMoneyStatus:{},
-		payInvoiceSubmitDate: {},
-		payInvoiceApproveDate: {},
-		payInvoiceCheckDate: {},
-		payInvoiceSignDate: {},
-		payInvoiceMoney: {},
-		payInvoiceItemList: {},
-		payInvoiceActualMoney:{},
-		payInvoiceActualDate:{},
-		payInvoiceActualInvoiceNum:{},
-		payInvoiceActualSheetCount:{},
-		invoiceType:{},
-		salesContractId:{},
-		contractCode:{},
-		projectId:{},
-		operateType:{}
+		getInvoiceDepartment: {},
+		getInvoiceProposerId: {},
+		getInvoiceReceivedMoneyStatus:{},
+		getInvoiceItemList: {},
+		getInvoiceActualMoney:{},
+		getInvoiceActualDate:{},
+		getInvoiceActualInvoiceNum:{},
+		getInvoiceActualSheetCount:{},
+		requestedTotalMoney:{type:"number"},
+		getInvoiceItemList:{}
 	}
 });
 var currentObj = new myModel();
 
 $(document).ready(function () {
 	checkRoles();
-	
 	$("#subGrid").kendoGrid({
 		dataSource: {
 			schema: {
@@ -53,7 +41,7 @@ $(document).ready(function () {
 	    columns: [
 			{ field: "itemNo", title: "编号" ,footerTemplate: "总共: #=count#"},
 			{ field: "itemMonth", title: "所属月份" },
-			{ field: "itemContent", title: "开票内容" },
+			{ field: "itemContent", title: "内容" },
 			{ field: "itemComment", title: "备注" },
 			{ field: "itemMoney", title: "金额",footerTemplate: "总共: #=sum#" }
 	  	],	 
@@ -62,14 +50,14 @@ $(document).ready(function () {
 	});
 	
 	$("#searchfor").kendoDropDownList({
-		dataTextField : "contractCode",
+		dataTextField : "purchaseContractCode",
 		dataValueField : "_id",
-		template:  '${ data.projectName }:<strong>${ data.contractCode }</strong>',
+		template:  '${ data.supplierName }:<strong>${ data.purchaseContractCode }</strong>',
 		dataSource : {
 			transport : {
 				read : {
 					dataType : "jsonp",
-					url : "/service/sc/listforselect"
+					url : "/service/purcontract/listforselect"
 				}
 			},
 			schema : {
@@ -81,26 +69,26 @@ $(document).ready(function () {
 
 	$("#form-container-button button").click(function(){
 		if(this.value == "cancel") {
-			loadPage("payInvoice");
+			location.reload();
 		} else if(confirm("提交表单，确认？")){
-			postAjaxRequest("/service/sc/invoice/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
+			postAjaxRequest("/service/purcontract/invoice/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
 		}
 	});
 	
 	$("#searchbt").click(function(){
 		var scId = $("#searchfor").val();
 		if(scId != ""){
-			postAjaxRequest("/service/sc/invoice/prepare", {contractCode:scId}, editSucess);
+			postAjaxRequest("/service/purcontract/invoice/prepare", {purchaseContractId:scId}, editSucess);
 		}else{
 			alert("请选择合同编号");
 		}
 	});
 	if(popupParams){
-		postAjaxRequest("/service/sc/invoice/load", popupParams, editSucess);
+		postAjaxRequest("/service/purcontract/invoice/load", popupParams, editSucess);
 		disableAllInPoppup();
 	} else if(redirectParams){
 		if(redirectParams._id){
-			postAjaxRequest(baseUrl+"/sc/invoice/load", redirectParams, editSucess);
+			postAjaxRequest("/service/purcontract/invoice/load", redirectParams, editSucess);
 		} else {
 			$("#searchDiv").show();
 		}
@@ -109,22 +97,10 @@ $(document).ready(function () {
 });
 
 function saveSuccess(){
-	loadPage("payInvoice");
+	location.reload();
 }
 function editSucess(e){
 	if(!e) return;
-	if(e.payInvoiceStatus == "已出票"){
-		$("#form-container .invoicedone").show();
-		$("#form-container-button [value=done]").hide();
-		$("#form-container-button [value=financeapprove]").hide();
-		$("#form-container-button [value=financereject]").hide();		
-	} else if(e.payInvoiceStatus == "财务已审核"){
-		$("#form-container .invoicedone").show();
-		$("#form-container-button [value=financeapprove]").hide();
-		$("#form-container-button [value=financereject]").hide();		
-	}else if(e.payInvoiceStatus == "经理已审核"){
-		$("#form-container-button [value=done]").hide();
-	}
 	currentObj = new myModel(e);
 	kendo.bind($("#form-container"), currentObj);
 }

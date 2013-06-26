@@ -32,7 +32,9 @@ var scModel = kendo.data.Model.define({
 		progressPayment : {},
 		qualityMoney : {},
 		contractMemo : {},
-		eqcostList : {}
+		eqcostList : {},
+		estimateGrossProfit : {},
+		estimateGrossProfitRate : {}
 	}
 
 });
@@ -285,15 +287,14 @@ function saveSC(){
 		alert("表单验证不通过！");
 		return;
     } else {
-    	console.log("*******************************************");
-		var _id = scm.get("_id");
-		var contractDate = $("#contractDate").val();
-		scm.set("contractDate", contractDate);
 		var data = eqCostListDataSource.data();
-		var pdblist = $("#projectId").data("kendoDropDownList");
-		console.log("************"+pdblist.value());
 		scm.set("eqcostList", data);
-//		scm.set("projectId",);
+
+		var profit = $("#estimateGrossProfit").val();
+		var profitRate = $("#estimateGrossProfitRate").val();
+		scm.set("estimateGrossProfit", profit);
+		scm.set("estimateGrossProfitRate", profitRate);
+		
 		dataSource_SC.add(scm);
 		dataSource_SC.sync();
 		loadPage("scList");
@@ -303,4 +304,47 @@ function saveSC(){
 function addAProject(){
 	var options = { width:"680px", height: "520px", title:"新建一个项目"};
 	openRemotePageWindow(options, "html/project/addProject.html", {scAddProject:1});
+}
+
+function moneyOnChange(){
+	var scAmount = $("#contractAmount").val();
+	if (scAmount != null && scAmount != ""){
+		var estimateEqCost0 = $("#estimateEqCost0").val();
+		var estimateEqCost1 = $("#estimateEqCost1").val();
+		var estimateSubCost = $("#estimateSubCost").val();
+		var estimatePMCost = $("#estimatePMCost").val();
+		var estimateDeepDesignCost = $("#estimateDeepDesignCost").val();
+		var estimateDebugCost = $("#estimateDebugCost").val();
+		var estimateOtherCost = $("#estimateOtherCost").val();
+
+		if (estimateEqCost0==""){
+			estimateEqCost0=0;
+		}
+		if (estimateEqCost1==""){
+			estimateEqCost1=0;
+		}
+		if (estimateSubCost==""){
+			estimateSubCost=0;
+		}
+		if (estimatePMCost==""){
+			estimatePMCost=0;
+		}
+		if (estimateDeepDesignCost==""){
+			estimateDeepDesignCost=0;
+		}
+		if (estimateDebugCost==""){
+			estimateDebugCost=0;
+		}
+		if (estimateOtherCost==""){
+			estimateOtherCost=0;
+		}
+		
+		var totalCost = estimateEqCost0*1 + estimateEqCost1*1 + estimateSubCost*1 
+			+ estimatePMCost*1 + estimateDeepDesignCost*1 + estimateDebugCost*1 + estimateOtherCost*1;
+		console.log("***********totalCost" + totalCost);
+		var profit = scAmount - totalCost;
+		var profitRate = profit/scAmount * 100;
+		$("#estimateGrossProfit").val(profit);
+		$("#estimateGrossProfitRate").val(profitRate+" %");
+	}
 }

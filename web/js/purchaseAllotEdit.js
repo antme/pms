@@ -121,7 +121,7 @@ $(document).ready(function () {
 });
 
 function saveSuccess(){
-	location.reload();
+	loadPage("purchaseAllot");
 }
 function edit(e){
 	currentObj = new myModel(e);

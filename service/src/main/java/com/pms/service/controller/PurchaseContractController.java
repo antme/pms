@@ -26,6 +26,7 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listPurchaseContracts(parserJsonParameters(request, false)), request, response);
     }
     
+    //飞直发采购数据
     @RequestMapping("/repository/contract/list")
     public void listContractsForRepositorySelect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listContractsForRepositorySelect(), request, response);
@@ -217,6 +218,7 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/repository/add")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
     public void addRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         pService.addRepositoryRequest(parserListJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
@@ -228,23 +230,27 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/repository/delete")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
     public void deleteRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         pService.deleteRepositoryRequest(parserJsonParameters(request, false));
         responseWithData(null, request, response);
     }
 
     @RequestMapping("/repository/update")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
     public void updateRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         pService.updateRepositoryRequest(parserListJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
 
     @RequestMapping("/repository/approve")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS_DESC)
     public void approveRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.approveRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/repository/reject")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS_DESC)
     public void rejectRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.rejectRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
@@ -256,7 +262,7 @@ public class PurchaseContractController extends AbstractController {
     
     @RequestMapping("/repository/list/byproject")
     public void listRepositoryByProjectId(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listRepositoryByProjectId(parserJsonParameters(request, false)), request, response);
+        responseWithData(pService.listRepositoryInByProjectId(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/repository/cancel")
@@ -264,7 +270,7 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.cancelRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
 
-    @RequestMapping("/listforselect/paymoney")
+    @RequestMapping("/listforselect")
     public void listSelectForPayment(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listSelectForPayment(parserListJsonParameters(request, false)), request, response);
     }
@@ -290,16 +296,22 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listGetInvoice(parserJsonParameters(request, false)), request, response);
     }
 
-    @RequestMapping("/invoice/add")
+    @RequestMapping("/invoice/prepare")
     @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
-    public void addGetInvoice(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.addGetInvoice(parserJsonParameters(request, false)), request, response, "save_success");
+    public void prepareGetInvoice(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.prepareGetInvoice(parserJsonParameters(request, false)), request, response);
+    }
+ 
+    @RequestMapping("/invoice/load")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    public void loadGetInvoice(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.loadGetInvoice(parserJsonParameters(request, false)), request, response);
     }
     
-    @RequestMapping("/invoice/update")
+    @RequestMapping("/invoice/save")
     @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
-    public void updateGetInvoice(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.updateGetInvoice(parserJsonParameters(request, false)), request, response);
+    public void addGetInvoice(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.saveGetInvoice(parserJsonParameters(request, false)), request, response, "save_success");
     }
     
     @RequestMapping("/invoice/destroy")

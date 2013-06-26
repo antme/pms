@@ -19,6 +19,7 @@ import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
 import com.pms.service.util.status.ResponseStatus;
@@ -149,6 +150,11 @@ public abstract class AbstractController {
             parametersMap.put(ApiConstants.DB_QUERY_ORDER_BY, orderBy);
 
         }
+        
+        if (parametersMap.get(ApiConstants.MY_TASKS) != null) {
+            ApiThreadLocal.set(ApiConstants.MY_TASKS, parametersMap.get(ApiConstants.MY_TASKS));
+        }
+        parametersMap.remove(ApiConstants.MY_TASKS);
 
         return parametersMap;
     }

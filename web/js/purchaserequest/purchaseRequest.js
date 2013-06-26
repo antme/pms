@@ -13,7 +13,9 @@ var gridOptions = {
 				url : listUrl,
 				dataType : "jsonp",
 				type : "post"
-			}
+			},		
+			//必须放在transport内，mytasks参数来至于点击我的任务
+			parameterMap : myTaskQueryParam			
 		}
 }
 gridOptions =  $.extend( gridOptions, commonListOptions);
@@ -24,6 +26,8 @@ var listDataSource = new kendo.data.DataSource(gridOptions);
 $(document).ready(function() {
 	checkRoles();
 
+
+	
 	if ($("#grid").length > 0) {
 		// 初始化采购订单列表页
 		$("#grid").kendoGrid({

@@ -68,6 +68,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		contract.put(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST, params.get(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST));
 		contract.put(SalesContractBean.SC_ESTIMATE_DEBUG_COST, params.get(SalesContractBean.SC_ESTIMATE_DEBUG_COST));
 		contract.put(SalesContractBean.SC_ESTIMATE_OTHER_COST, params.get(SalesContractBean.SC_ESTIMATE_OTHER_COST));
+		
+		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT, params.get(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT));
+		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE, params.get(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE));
+		
 //		contract.put(SalesContractBean.SC_DEBUG_COST_TYPE, params.get(SalesContractBean.SC_DEBUG_COST_TYPE));
 //		contract.put(SalesContractBean.SC_TAX_TYPE, params.get(SalesContractBean.SC_TAX_TYPE));
 		contract.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE));
@@ -405,15 +409,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 
 	@Override
-	public Map<String, Object> rejectInvoiceForSC(Map<String, Object> params) {
+	public Map<String, Object> managerRejectInvoiceForSC(Map<String, Object> params) {
 		Map<String,Object> payInvoice = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SC_INVOICE);
-		String status = String.valueOf(payInvoice.get(InvoiceBean.payInvoiceStatus));
-/*		if(!InvoiceBean.statusSubmit.equals(status) && !InvoiceBean.statusManagerApprove.equals(status)){
-			//exception status not right.	
-		}*/
-		payInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusReject);
+		payInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusManagerReject);
 		return dao.updateById(payInvoice, DBBean.SC_INVOICE);
 	}	
+
+	public Map<String, Object> finRejectInvoiceForSC(Map<String, Object> params) {
+		Map<String,Object> payInvoice = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SC_INVOICE);
+		payInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusFinanceReject);
+		return dao.updateById(payInvoice, DBBean.SC_INVOICE);
+	}
 	
 	@Override
 	public Map<String, Object> loadInvoiceForSC(Map<String, Object> params) {

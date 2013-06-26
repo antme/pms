@@ -16,6 +16,9 @@ $(document).ready(function () {
             parameterMap: function(options, operation) {
                 if (operation !== "read" && options.models) {
                     return {models: kendo.stringify(options.models)};
+                }else if(operation == "read"){
+        			//必须放在transport内，mytasks参数来至于点击我的任务
+        			return myTaskQueryParam(options, operation);		
                 }
             }
         },

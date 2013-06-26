@@ -27,11 +27,8 @@ var listDatasource = new kendo.data.DataSource({
             dataType: "jsonp",
             type : "post"
         },
-        parameterMap: function(options, operation) {
-            if (operation !== "read" && options.models) {
-                return {models: kendo.stringify(options.models)};
-            }
-        }
+		//必须放在transport内，mytasks参数来至于点击我的任务
+		parameterMap : myTaskQueryParam
     },
     batch: true,
     pageSize: 10,
