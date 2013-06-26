@@ -3,6 +3,7 @@ package com.pms.service.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -131,6 +132,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 	
 	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId, String proId){
+		int nextVersionNo = this.getEqCostNextVersionNo(cId);
 		for (Map<String, Object> item : eqcostList){
 
             Map<String, Object> realItemQuery = new HashMap<String, Object>();
@@ -153,8 +155,31 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		    
 			item.put(SalesContractBean.SC_PROJECT_ID, proId);
 			item.put(EqCostListBean.EQ_LIST_SC_ID, cId);
+			item.put(EqCostListBean.EQ_LIST_VERSION_NO, nextVersionNo);
 			dao.add(item, DBBean.EQ_COST);
 		}
+	}
+	
+	private int getEqCostNextVersionNo(String cId){
+		int curVersionNo = 0;
+		int nextVersionNo = 1;
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(EqCostListBean.EQ_LIST_SC_ID, cId);
+		query.put(ApiConstants.LIMIT_KEYS, new String[] {EqCostListBean.EQ_LIST_VERSION_NO});
+		query.put(ApiConstants.LIMIT, 1);
+		
+		Map<String, Object> order = new LinkedHashMap<String, Object>();
+        order.put(EqCostListBean.EQ_LIST_VERSION_NO, ApiConstants.DB_QUERY_ORDER_BY_DESC);
+        query.put(ApiConstants.DB_QUERY_ORDER_BY, order);
+        
+        Map<String, Object> re = dao.list(query, DBBean.EQ_COST);
+        List<Map<String, Object>> reList = (List<Map<String, Object>>) re.get(ApiConstants.RESULTS_DATA);
+        if (!reList.isEmpty()){
+        	Map<String, Object> item = (Map<String, Object>) reList.get(0);
+            curVersionNo = ApiUtil.getInteger(item, EqCostListBean.EQ_LIST_VERSION_NO, 0);
+        }
+        nextVersionNo = curVersionNo + 1;
+        return nextVersionNo;
 	}
 
 	@Override
@@ -679,4 +704,21 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         data.put(ProjectBean.PROJECT_CUSTOMER, project.get(ProjectBean.PROJECT_CUSTOMER));
         data.put(ProjectBean.PROJECT_TYPE, project.get(ProjectBean.PROJECT_TYPE));
     }
+
+	@Override
+	public Map<String, Object> listEqHistoryAndLatestEqList(
+			Map<String, Object> params) {
+		String cId = (String) params.get(ApiConstants.MONGO_ID);
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		Map<String, Object> eqcostQuery = new HashMap<String, Object>();
+		eqcostQuery.put(SalesContractBean.SC_ID, cId);
+		Map<String, Object> eqListData = dao.list(eqcostQuery, DBBean.EQ_COST);
+		List<Map<String, Object>> eqListDataList = (List<Map<String, Object>>) eqListData.get(ApiConstants.RESULTS_DATA);
+		result.put("allEqList", eqListDataList);
+		
+		//TODO merge the same eq
+		result.put("latestEqList", eqListDataList);
+		return result;
+	}
 }

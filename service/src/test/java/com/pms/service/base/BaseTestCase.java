@@ -31,7 +31,7 @@ public class BaseTestCase extends TestCase {
         userService = (UserServiceImpl) ac.getBean("userService");
         projectService = (ProjectServiceImpl) ac.getBean("projectService");
         reportService = (ReportServiceImpl) ac.getBean("reportService");
-        ConfigurationManager.setProperties(ConfigurationManager.DB_NAME, "pms_test");
+        ConfigurationManager.setProperties(ConfigurationManager.DB_NAME, "pms");
     }
 
     public void testEmpty() {
