@@ -85,10 +85,12 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		// 已批准的 调拨申请的 设备清单
 		Map<String, Double> alloEqList = purchaseService.getAllotEqCountBySalesContractId(saleId);
 		
-		params.put("scId", saleId);
-		Map<String, Object> map = pService.listEqcostListForShipByScIDAndType(params);
+		// 已到货 的 设备清单
+		Map<String, Object> scIdParam = new HashMap<String, Object>();
+		scIdParam.put("scId", saleId);
+		scIdParam.put("type", params.get(ShipBean.SHIP_TYPE));
+		Map<String, Object> map = pService.listEqcostListForShipByScIDAndType(scIdParam);
 		
-		// 已批准的 采购合同 的设备清单
 		List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
 		
 		// 已发货的设备清单
