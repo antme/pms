@@ -210,6 +210,8 @@ function save(status) {
 			if (!requestDataItem.supplier) {
 				var dl = $("#supplier").data("kendoDropDownList");
 				requestDataItem.supplier = dl.dataSource.at(0)._id;
+			}else if(requestDataItem.supplier._id){
+				requestDataItem.supplier = requestDataItem.supplier._id;
 			}
 			
 			console.log(requestDataItem)

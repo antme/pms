@@ -157,6 +157,7 @@ public abstract class AbstractController {
         parametersMap.remove(ApiConstants.MY_TASKS);
         parametersMap.remove("_defaultId");
         parametersMap.remove("defaults");
+        parametersMap.remove(ApiConstants.JSON_PARAMETERS_LABEL);
         return parametersMap;
     }
     
