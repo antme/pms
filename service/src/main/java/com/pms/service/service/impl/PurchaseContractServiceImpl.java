@@ -756,7 +756,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         List<Object> contractList = this.dao.listLimitKeyValues(query, DBBean.PURCHASE_CONTRACT);
 
         Map<String, Object> rep = new HashMap<String, Object>();
-        rep.put(ApiConstants.RESULTS_DATA, mergeLoadedEqList(contractList));
+        if(contractList !=null && !contractList.isEmpty()){
+            rep.put(ApiConstants.RESULTS_DATA, mergeLoadedEqList(contractList.get(0)));
+        }else{
+            rep.put(ApiConstants.RESULTS_DATA, new ArrayList<>());
+        }
         return rep;
     }
 

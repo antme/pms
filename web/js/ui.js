@@ -455,7 +455,11 @@ function checkRoles(){
 		if(!hasAccess){
 			node.hide();
 		}else{
-			node.show();
+			if(user.userName == "admin"){
+				node.hide();
+			}else{
+				node.show();
+			}
 		}
 		
 	});
