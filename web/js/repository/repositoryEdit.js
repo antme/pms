@@ -27,7 +27,7 @@ $(document).ready(function() {
 					data: "data"
 				}		
 			},
-			select : function(e) {
+			change : function(e) {
 				updateSupplier();
 			},
 			dataBound : function(e){		
