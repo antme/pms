@@ -1,5 +1,5 @@
 var listUrl = "/service/purcontract/repository/list?type=out";
-var approveUrl = "/service/purcontract/repository/approve?type=out";
+var approveUrl = "/service/purcontract/repository/confirm?type=out";
 var deleteUrl = "/service/purcontract/repository/delete?type=out";
 var cancelUrl = "/service/purcontract/repository/cancel?type=out";
 

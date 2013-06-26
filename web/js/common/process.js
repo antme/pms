@@ -36,7 +36,7 @@ function approveSubmit() {
 function approveStatusCheck(response) {
 	var kendoWindow = $("#approve").data("kendoWindow");
 	kendoWindow.close();
-	alert("操作成功");
+	alert("审核提交成功");
 
 	listDataSource.read();
 }

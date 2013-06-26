@@ -94,7 +94,6 @@ $(document).ready(function() {
 });
 
 function editRe() {
-	console.log(".................");
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGridWithMsg("grid");
 
