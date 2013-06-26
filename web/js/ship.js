@@ -23,7 +23,10 @@ $(document).ready(function () {
             }
         },
         batch: true,
-        pageSize: 15,
+        pageSize: 10,
+    	serverPaging: true,
+    	serverSorting: true,
+    	serverFiltering : true,
         schema: {
         	total: "total",
         	data: "data",
@@ -43,7 +46,9 @@ $(document).ready(function () {
 
     $("#grid").kendoGrid({
         dataSource: dataSource,
-        pageable: true,
+        pageable : true,
+		sortable : true,
+		filterable : filterable,
         selectable: "row",
         columns: [
             {
