@@ -40,6 +40,9 @@ var listDatasource = new kendo.data.DataSource({
     },
     batch: true,
     pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
     schema: {
         model: requestModel,
         total: "total",

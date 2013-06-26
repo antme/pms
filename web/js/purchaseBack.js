@@ -36,7 +36,6 @@ var listDatasource = new kendo.data.DataSource({
 		//必须放在transport内，mytasks参数来至于点击我的任务
 		parameterMap : myTaskQueryParam
     },
-
     batch: true,
     pageSize: 10,
 	serverPaging: true,
@@ -142,8 +141,6 @@ function pending() {
 				_id : row._id
 			},method : "post"
 		});
-	}else{
-		alert("点击列表选择已提交的数据");
 	}
 }
 
@@ -168,7 +165,5 @@ function destroy() {
 				_id : row._id
 			},method : "post"
 		});
-	}else{
-		alert("数据不能删除");
 	}
 }

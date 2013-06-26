@@ -9,7 +9,7 @@
 		<div id="searchDiv">
 			<label>选择合同:</label>
 			<input id="searchfor"  style="width:250px;" type="text" value=""/>
-			<input id="searchbt" type="button" value="确定"/>
+			<input id="searchbt" class="k-button" type="button" value="确定"/>
 		</div>
 		<br><hr>
 		<div id="form-container">
@@ -27,7 +27,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>申请部门: <select id="departmentItems" data-bind="value: payInvoiceDepartment"></select></td>
+					<td>申请部门: <select id="departmentItems" class="k-input" data-bind="value: payInvoiceDepartment"></select></td>
 					<td>要求日期: <input data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: payInvoicePlanDate"/></td>
 					<td colspan="2">收款情况：<input type="text" data-bind="value:payInvoiceReceivedMoneyStatus"/></td>
 				</tr>

@@ -32,8 +32,12 @@ var listDatasource = new kendo.data.DataSource({
     },
     batch: true,
     pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
     schema: {
         model: requestModel,
+        total: "total",
         data:"data"
     }
 });	
@@ -72,7 +76,7 @@ $(document).ready(function () {
 });
 
 
-function edit(){
+function editPA(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");

@@ -17,7 +17,7 @@ var myModel = kendo.data.Model.define({
 		getInvoiceReceivedMoneyStatus:{},
 		getInvoiceItemList: {},
 		getInvoiceActualMoney:{},
-		getInvoiceActualDate:{},
+		getInvoiceActualDate:{type:"date"},
 		getInvoiceActualInvoiceNum:{},
 		getInvoiceActualSheetCount:{},
 		requestedTotalMoney:{type:"number"},
@@ -102,6 +102,7 @@ function saveSuccess(){
 function editSucess(e){
 	if(!e) return;
 	currentObj = new myModel(e);
+	currentObj.set("getInvoiceActualDate", kendo.toString(currentObj.getInvoiceActualDate, 'd'));
 	kendo.bind($("#form-container"), currentObj);
 }
 

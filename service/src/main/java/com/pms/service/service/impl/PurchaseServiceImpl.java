@@ -121,6 +121,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
 		obj.put(PurchaseBack.paSubmitDate, DateUtil.getDateString(new Date()));
 		obj.put(PurchaseBack.paShelfCode, params.get(PurchaseBack.paShelfCode));
+		obj.put(PurchaseBack.paComment, params.get(PurchaseBack.paComment));
 		obj.put(PurchaseBack.paCode, generateCode("DBSQ", DBBean.PURCHASE_ALLOCATE));
 		obj.putAll(updateEqCountForRequest(params));
 		scs.mergeCommonFieldsFromSc(obj, params.get(PurchaseBack.scId));
@@ -137,10 +138,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	}
 
 	public Map<String, Object> prepareAllot(Map<String, Object> params) {
-		Map<String,Object> obj = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
+		Map<String,Object> obj = dao.findOne(ApiConstants.MONGO_ID, params.get(PurchaseBack.pbId), DBBean.PURCHASE_BACK);
 		mergeSalesContract(obj);
 		mergeEqcost(obj);
-		obj.put(PurchaseBack.pbId, params.get(ApiConstants.MONGO_ID));
+		obj.put(PurchaseBack.pbId, params.get(PurchaseBack.pbId));
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.unsaved.toString());
 		obj.put(ApiConstants.MONGO_ID, null);
 		obj.put(PurchaseBack.paCode, null);

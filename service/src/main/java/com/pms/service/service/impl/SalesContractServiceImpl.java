@@ -390,7 +390,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		//check creator permission
 		Map<String,Object> uInvoice = new HashMap<String,Object>();
 		uInvoice.put(ApiConstants.MONGO_ID, id);
-		
+		uInvoice.put(InvoiceBean.payInvoiceComment, params.get(InvoiceBean.payInvoiceComment));
 		if(InvoiceBean.statusSubmit.equals(oldStatus)){
 			uInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusManagerApprove);
 		} else if(InvoiceBean.statusManagerApprove.equals(oldStatus)) {
@@ -412,12 +412,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public Map<String, Object> managerRejectInvoiceForSC(Map<String, Object> params) {
 		Map<String,Object> payInvoice = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SC_INVOICE);
 		payInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusManagerReject);
+		payInvoice.put(InvoiceBean.payInvoiceComment, params.get(InvoiceBean.payInvoiceComment));
 		return dao.updateById(payInvoice, DBBean.SC_INVOICE);
 	}	
 
 	public Map<String, Object> finRejectInvoiceForSC(Map<String, Object> params) {
 		Map<String,Object> payInvoice = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SC_INVOICE);
 		payInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusFinanceReject);
+		payInvoice.put(InvoiceBean.payInvoiceComment, params.get(InvoiceBean.payInvoiceComment));
 		return dao.updateById(payInvoice, DBBean.SC_INVOICE);
 	}
 	

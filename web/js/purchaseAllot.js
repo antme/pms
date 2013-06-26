@@ -38,8 +38,12 @@ var listDatasource = new kendo.data.DataSource({
     },
     batch: true,
     pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
     schema: {
         model: requestModel,
+        total: "total",
         data:"data"
     }
 });
@@ -85,7 +89,7 @@ function generateAllot() {
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else {
-		loadPage("purchaseAllotEdit",{backId:row._id});
+		loadPage("purchaseAllotEdit",{pbId:row._id});
 	}
 }
 

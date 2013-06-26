@@ -16,7 +16,7 @@ var myModel = kendo.data.Model.define({
 		payInvoiceProposerId: {},
 		payInvoiceProposerName: {},
 		payInvoiceStatus:{},
-		payInvoicePlanDate: {},
+		payInvoicePlanDate: {type:"date"},
 		payInvoiceReceivedMoneyStatus:{},
 		payInvoiceSubmitDate: {},
 		payInvoiceApproveDate: {},
@@ -25,7 +25,7 @@ var myModel = kendo.data.Model.define({
 		payInvoiceMoney: {},
 		payInvoiceItemList: {},
 		payInvoiceActualMoney:{},
-		payInvoiceActualDate:{},
+		payInvoiceActualDate:{type:"date"},
 		payInvoiceActualInvoiceNum:{},
 		payInvoiceActualSheetCount:{},
 		invoiceType:{},
@@ -126,6 +126,8 @@ function editSucess(e){
 		$("#form-container-button [value=done]").hide();
 	}
 	currentObj = new myModel(e);
+	currentObj.set("payInvoicePlanDate", kendo.toString(currentObj.payInvoicePlanDate, 'd'));
+	currentObj.set("payInvoiceActualDate", kendo.toString(currentObj.payInvoiceActualDate, 'd'));	
 	kendo.bind($("#form-container"), currentObj);
 }
 

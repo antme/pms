@@ -65,6 +65,7 @@ var myModel = kendo.data.Model.define({
 var currentObj = new myModel();
 
 $(document).ready(function () {
+	checkRoles();
 	$("#subGrid").kendoGrid({
 		dataSource: {
 			schema: {
@@ -84,13 +85,13 @@ $(document).ready(function () {
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
 			{ field: "pbTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
-			{ field: "eqcostRealAmount", title: "销售合同总数" ,footerTemplate: "总共: #=sum#"},
+			{ field: "eqcostRealAmount", title: "合同中总数" ,footerTemplate: "总共: #=sum#"},
 			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostBrand", title: "品牌" },
 			{ field: "eqcostMemo", title: "备注" }
 	  	],	 
 	  	editable:true,
-	  	toolbar: [{text:"保存",name:"save"}]
+	  	toolbar: [{text:"计算",name:"save"}]
 	});
 
 	$("#searchfor").kendoDropDownList({
@@ -110,33 +111,31 @@ $(document).ready(function () {
 			}
 		}
 	});	
-	
-	$(".submitform").click(function(){
-		if(confirm(this.value + "表单，确认？")){
-			if(this.value == "保存"){
-				postAjaxRequest( baseUrl+"/purchase/back/save", {models:kendo.stringify(currentObj)} , saveSuccess);
-			} else if(this.value == "提交"){
-				postAjaxRequest( baseUrl+"/purchase/back/submit", {models:kendo.stringify(currentObj)} , saveSuccess);
-			}else if(this.value=="取消"){
-				loadPage("purchaseBack");
-			}
+
+	$("#form-container-button button").click(function(){
+		if(this.value == "cancel") {
+			loadPage("purchaseBack");
+		} else if(confirm("提交表单，确认？")){
+			postAjaxRequest("/service/purchase/back/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
 		}
 	});
 
 	$("#searchbt").click(function(){
 		var vv = $("#searchfor").val();
 		if(vv != ""){
-			postAjaxRequest(baseUrl+"/purchase/back/prepare", {scId:vv}, edit);
+			postAjaxRequest(baseUrl+"/purchase/back/prepare", {scId:vv}, editSuccess);
 		}else{
 			alert("请选择合同编号");
 		}
 	});	
 	
 	if(popupParams){
-		postAjaxRequest(baseUrl+"/purchase/back/load", popupParams, edit);
+		$("#searchDiv").hide();
+		postAjaxRequest(baseUrl+"/purchase/back/load", popupParams, editSuccess);
 		disableAllInPoppup();
 	}else if(redirectParams){
-		postAjaxRequest(baseUrl+"/purchase/back/load", redirectParams, edit);
+		$("#searchDiv").hide();
+		postAjaxRequest(baseUrl+"/purchase/back/load", redirectParams, editSuccess);
 	}
 	kendo.bind($("#form-container"), currentObj);
 });
@@ -145,12 +144,13 @@ function saveSuccess(){
 	loadPage("purchaseBack");
 }
 
-function edit(e){
+function editSuccess(e){
 	if(!e) return;
-	if(e.pbStatus == "已提交" || e.pbStatus == "草稿"){
-		$("#searchDiv").hide();
-		if(e.pbStatus == "已提交") $("#form-container :input").attr("disabled","disabled");
+	if(e.pbStatus =="已提交") {
+		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container-button button").attr("disabled","disabled");
 	}
 	currentObj = new myModel(e);
+	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
 	kendo.bind($("#form-container"), currentObj);			
 }

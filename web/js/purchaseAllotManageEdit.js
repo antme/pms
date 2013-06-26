@@ -72,6 +72,7 @@ var myModel = kendo.data.Model.define({
 var currentObj = new myModel();
 
 $(document).ready(function () {
+	checkRoles();
 	$("#subGrid").kendoGrid({
 		dataSource: {
 			schema: {
@@ -95,28 +96,25 @@ $(document).ready(function () {
 			{ field: "eqcostBrand", title: "品牌" },
 			{ field: "eqcostMemo", title: "备注" }
 	  	],	 
-	  	editable:true,
-	  	toolbar: [{text:"保存",name:"save"}]
+	  	editable:true/*,
+	  	toolbar: [{text:"保存",name:"save"}]*/
 	});
 
-	$(".submitform").click(function(){
-		if(confirm(this.value + "表单，确认？")){
-			if(this.value == "批准"){
-				postAjaxRequest( baseUrl+"/purchase/allot/approve", {models:kendo.stringify(currentObj)} , saveSuccess);
-			} else if(this.value == "拒绝"){
-				postAjaxRequest( baseUrl+"/purchase/allot/reject", {models:kendo.stringify(currentObj)} , saveSuccess);
-			}else if(this.value=="取消"){
-				loadPage("purchaseAllotManage");
-			}
+	$("#form-container-button button").click(function(){
+		if(this.value == "cancel") {
+			loadPage("purchaseBack");
+		} else if(confirm("提交表单，确认？")){
+			postAjaxRequest("/service/purchase/allot/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
 		}
-	});
-	$(".foredit ").attr("disabled","disabled");
+	});	
+	
+	
 	if(popupParams){
-		postAjaxRequest(baseUrl+"/purchase/allot/load", popupParams, edit);
+		postAjaxRequest("/service/purchase/allot/load", popupParams, editSucess);
 		disableAllInPoppup();
 	}else if(redirectParams){
 		if(redirectParams._id) {
-			postAjaxRequest(baseUrl+"/purchase/allot/load", {_id:redirectParams._id}, edit);
+			postAjaxRequest("/service/purchase/allot/load", redirectParams, editSucess);
 		}	
 	}
 	
@@ -125,10 +123,12 @@ $(document).ready(function () {
 function saveSuccess(){
 	loadPage("purchaseAllotManage");
 }
-function edit(e){
-	if(e.paStatus !="已提交"){
-		$(".foreditbt").hide();
+function editSucess(e){
+	if(e.paStatus =="已批准" || e.paStatus =="已拒绝") {
+		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container-button button").attr("disabled","disabled");
 	}
 	currentObj = new myModel(e);
+	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
 	kendo.bind($("#form-container"), currentObj);
 }

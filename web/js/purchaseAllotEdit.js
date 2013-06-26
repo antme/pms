@@ -54,7 +54,7 @@ var myModel = kendo.data.Model.define({
 		pbCode:{},
 		pbDepartment:{},
 		pbSubmitDate:{},
-		pbPlanDate:{},
+		pbPlanDate:{type:"date"},
 		pbType:{},
 		pbStatus:{},
 		pbComment:{},
@@ -98,32 +98,40 @@ $(document).ready(function () {
 			{ field: "eqcostMemo", title: "备注" }
 	  	],	 
 	  	editable:true,
-	  	toolbar: [{text:"保存",name:"save"}]
+	  	toolbar: [{text:"计算",name:"save"}]
 	});
-
-	$(".submitform").click(function(){
-		if(confirm(this.value + "表单，确认？")){
-			postAjaxRequest( baseUrl+"/purchase/allot/submit", {models:kendo.stringify(currentObj)} , saveSuccess);
+	
+	$("#form-container-button button").click(function(){
+		if(this.value == "cancel") {
+			loadPage("purchaseAllot");
+		} else if(confirm("提交表单，确认？")){
+			postAjaxRequest("/service/purchase/allot/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
 		}
 	});
-
-	if(redirectParams){
-		var backId = redirectParams.backId;
-		var id = redirectParams._id;
-		if(backId) {
-			postAjaxRequest(baseUrl+"/purchase/allot/prepare", {_id:backId}, edit);
-		}else if(id) {
-			postAjaxRequest(baseUrl+"/purchase/allot/load", {_id:backId}, edit);
-			$("#form-container :input").attr("disabled","disabled");
+	
+	if(popupParams){
+		postAjaxRequest("/service/purchase/allot/load", popupParams, editSuccess);
+		disableAllInPoppup();
+	}else if(redirectParams){
+		if(redirectParams.pbId) {
+			postAjaxRequest("/service/purchase/allot/prepare", redirectParams, editSuccess);
+		}else if(redirectParams._id) {
+			postAjaxRequest("/service/purchase/allot/load", redirectParams, editSuccess);
 		}
 	}
 	
 });
 
 function saveSuccess(){
-	loadPage("purchaseAllot");
+	loadPage("purchaseAllotManage");
 }
-function edit(e){
+function editSuccess(e){
+	if(!e) return;
+	if(e._id) {
+		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container-button button").attr("disabled","disabled");
+	}
 	currentObj = new myModel(e);
-	kendo.bind($("#form-container"), currentObj);
+	//currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
+	kendo.bind($("#form-container"), currentObj);	
 }
