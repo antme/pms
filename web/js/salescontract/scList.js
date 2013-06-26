@@ -105,6 +105,17 @@ function toolbar_viewSalesContract() {
 	loadPage("viewsc",{_id:rowData._id});
 };
 
+function toolbar_viewEqListHistory(){
+	var rowData = getSelectedRowDataByGrid("grid");
+	if (rowData == null){
+		alert("请点击选择一条合同记录！");
+		return;
+	}
+	
+	var options = { width:"780px", height: "480px", title:"成本设备变更历史"};
+	openRemotePageWindow(options, "html/salescontract/eqcostChangeHistory.html", {_id:rowData._id});
+}
+
 function openTraceWindow(param){
 	var options = { width:"680px", height: "400px", title:"合同金额变更历史"};
 	openRemotePageWindow(options, "html/salescontract/traceSCAmount.html", {_id : param});

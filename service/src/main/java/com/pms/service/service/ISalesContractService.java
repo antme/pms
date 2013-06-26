@@ -53,4 +53,6 @@ public interface ISalesContractService {
 	public Map<String, Object> listSCByProject(Map<String, Object> params);
 	
 	public void mergeCommonFieldsFromSc(Map<String, Object> data, Object scId);
+	
+	public Map<String, Object> listEqHistoryAndLatestEqList(Map<String, Object> params);
 }

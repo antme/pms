@@ -184,6 +184,12 @@ public class SalesContractController extends AbstractController {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.listSCByProject(params), request, response);
     }
+    
+    @RequestMapping("/eqhistory")
+    public void listEqHistoryAndLatestEqList(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.listEqHistoryAndLatestEqList(params), request, response);
+    }
 
 	public ISalesContractService getSalesContractService() {
 		return salesContractService;

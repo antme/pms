@@ -19,4 +19,6 @@ public class EqCostListBean {
 	//设备清单变更后的统计真实数量，固定放到设备清单某条记录中
 	public static final String EQ_LIST_REAL_AMOUNT = "eqcostRealAmount";//真实数量
 	
+	public static final String EQ_LIST_VERSION_NO = "versionNo";//记录成本设备变更
+	
 }
