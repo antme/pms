@@ -100,6 +100,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "supplier" });
+        query.put("eqcostDeliveryType", PurchaseCommonBean.eqcostDeliveryType_REPOSITORY);
         query.put("eqcostList.projectId", contract.get("projectId"));
 
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
@@ -133,9 +134,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Set<Object> scIdsList = new HashSet();
 
         String db = DBBean.REPOSITORY;
-        // if(params.get("type").toString().equalsIgnoreCase("1")){
-        // db = DBBean.REPOSITORY
-        // }
+        String type = (String)params.get("type");
+        
+        if("1".equalsIgnoreCase(type)){
+            query.put("type", "in");
+        }else{
+            query.put("type", "out");
+        }
 
         List<Object> scResults = this.dao.listLimitKeyValues(query, DBBean.REPOSITORY);
 
@@ -756,7 +761,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         List<Object> contractList = this.dao.listLimitKeyValues(query, DBBean.PURCHASE_CONTRACT);
 
         Map<String, Object> rep = new HashMap<String, Object>();
-        rep.put(ApiConstants.RESULTS_DATA, mergeLoadedEqList(contractList));
+        if(contractList !=null && !contractList.isEmpty()){
+            rep.put(ApiConstants.RESULTS_DATA, mergeLoadedEqList(contractList.get(0)));
+        }else{
+            rep.put(ApiConstants.RESULTS_DATA, new ArrayList<>());
+        }
         return rep;
     }
 

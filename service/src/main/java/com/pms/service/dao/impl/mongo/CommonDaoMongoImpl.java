@@ -151,6 +151,10 @@ public class CommonDaoMongoImpl implements ICommonDao {
             return null;
         }
         Map<String, Object> map = result.toMap();
+        map.remove(ApiConstants.JSON_PARAMETERS_LABEL);
+        //FIXME: HOT FIX BUGS
+        map.remove("fields");
+        map.remove("_defaultId");
         mergeDefaultValue(parameters, collection, map);
         return map;
     }
@@ -245,9 +249,12 @@ public class CommonDaoMongoImpl implements ICommonDao {
             clone.remove(ApiConstants.MONGO_ID);
             clone.remove(ApiConstants.CREATED_ON);
             
-            //Before update we record the modify trace
-            addUpdateHistoryLog(clone, id, collection);
-
+            try {
+                // Before update we record the modify trace
+                addUpdateHistoryLog(clone, id, collection);
+            } catch (Exception e) {
+                logger.error("Create history log failed ::::: " + parameters, e);
+            }
             clone.put(ApiConstants.UPDATED_ON, new Date().getTime());
             BasicDBObject doc = new BasicDBObject(clone);
             result = this.getConnection(ConfigurationManager.getDbName(), collection).update(new BasicDBObject(ApiConstants.MONGO_ID, new ObjectId(id)),

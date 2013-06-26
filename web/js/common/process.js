@@ -10,6 +10,7 @@ function process(url) {
 			height : 200,
 			actions : [ "Maximize", "Close" ]
 		};
+		$("#approve-comment").val("");
 		$("#approve").kendoWindow({
 			width : options.width,
 			height : options.height,
@@ -35,7 +36,7 @@ function approveSubmit() {
 function approveStatusCheck(response) {
 	var kendoWindow = $("#approve").data("kendoWindow");
 	kendoWindow.close();
-	alert("操作成功");
+	alert("审核提交成功");
 
 	listDataSource.read();
 }

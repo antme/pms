@@ -310,6 +310,9 @@ function initMyDraftTasks(id, data){
 
 					var param = "'" +id + "'";
 					if(dataItem.db == "purchaseRequest"){
+						if(id=="inprogress"){
+							return '<a onclick="loadTreePage(' + "'purchaseRequestApprove'," + param + ')">' + dataItem.count + '</a>';
+						}
 						return '<a onclick="loadTreePage(' + "'purchaseRequestByAssistant'," + param + ')">' + dataItem.count + '</a>';
 					}
 					
@@ -455,7 +458,11 @@ function checkRoles(){
 		if(!hasAccess){
 			node.hide();
 		}else{
-			node.show();
+			if(user.userName == "admin"){
+				node.hide();
+			}else{
+				node.show();
+			}
 		}
 		
 	});

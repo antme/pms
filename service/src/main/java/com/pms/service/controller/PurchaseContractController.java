@@ -79,7 +79,7 @@ public class PurchaseContractController extends AbstractController {
 
     @RequestMapping("/update")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, desc = RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT_DESC)
-    public void listPurchaseContract(HttpServletRequest request, HttpServletResponse response) {
+    public void updatePurchaseContract(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.updatePurchaseContract(parserJsonParameters(request, false)), request, response, "save_success");
     }
     
@@ -117,7 +117,7 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/request/add")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
     public void addPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
-        pService.updatePurchaseRequest(parserListJsonParameters(request, false));
+        pService.updatePurchaseRequest(parserJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
     
@@ -128,7 +128,7 @@ public class PurchaseContractController extends AbstractController {
     
     @RequestMapping("/request/get")
     public void getPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.getPurchaseRequest(parserListJsonParameters(request, false)), request, response);
+        responseWithData(pService.getPurchaseRequest(parserJsonParameters(request, false)), request, response);
     }
 
     @RequestMapping("/request/delete")
@@ -141,7 +141,7 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/request/update")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
     public void updatePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
-        pService.updatePurchaseRequest(parserListJsonParameters(request, false));
+        pService.updatePurchaseRequest(parserJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
     
@@ -177,13 +177,13 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/order/add")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_MANAGEMENT, desc = RoleValidConstants.PURCHASE_ORDER_MANAGEMENT_DESC)
     public void addPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
-        pService.updatePurchaseOrder(parserListJsonParameters(request, false));
+        pService.updatePurchaseOrder(parserJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
     
     @RequestMapping("/order/get")
     public void getPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.getPurchaseOrder(parserListJsonParameters(request, false)), request, response);
+        responseWithData(pService.getPurchaseOrder(parserJsonParameters(request, false)), request, response);
     }
 
     @RequestMapping("/order/delete")
@@ -196,7 +196,7 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/order/update")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_MANAGEMENT, desc = RoleValidConstants.PURCHASE_ORDER_MANAGEMENT_DESC)
     public void updatePurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
-        pService.updatePurchaseOrder(parserListJsonParameters(request, false));
+        pService.updatePurchaseOrder(parserJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
 
@@ -220,13 +220,13 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/repository/add")
     @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
     public void addRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
-        pService.addRepositoryRequest(parserListJsonParameters(request, false));
+        pService.addRepositoryRequest(parserJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
     
     @RequestMapping("/repository/get")
     public void getRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.getRepositoryRequest(parserListJsonParameters(request, false)), request, response);
+        responseWithData(pService.getRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
 
     @RequestMapping("/repository/delete")
@@ -239,13 +239,20 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/repository/update")
     @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
     public void updateRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
-        pService.updateRepositoryRequest(parserListJsonParameters(request, false));
+        pService.updateRepositoryRequest(parserJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
 
     @RequestMapping("/repository/approve")
     @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS_DESC)
     public void approveRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.approveRepositoryRequest(parserJsonParameters(request, false)), request, response);
+    }
+    
+    //直发出入库确认
+    @RequestMapping("/repository/confirm")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
+    public void confirmRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.approveRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
     
@@ -272,7 +279,7 @@ public class PurchaseContractController extends AbstractController {
 
     @RequestMapping("/listforselect")
     public void listSelectForPayment(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listSelectForPayment(parserListJsonParameters(request, false)), request, response);
+        responseWithData(pService.listSelectForPayment(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/paymoney/list")

@@ -74,7 +74,8 @@ var model = kendo.data.Model.define({
 		},
 		comment : {
 
-		}
+		},
+		eqcostList: {}
 	}
 });
 
