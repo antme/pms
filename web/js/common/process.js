@@ -10,6 +10,7 @@ function process(url) {
 			height : 200,
 			actions : [ "Maximize", "Close" ]
 		};
+		$("#approve-comment").val("");
 		$("#approve").kendoWindow({
 			width : options.width,
 			height : options.height,
