@@ -5,6 +5,9 @@ var model = kendo.data.Model.define({
 	fields : {
 		repositoryRequestCode : {
 			editable : false
+		},
+		inDate: {
+			type:"date"
 		}
 	}
 });
@@ -180,7 +183,7 @@ function edit(data) {
 	}
 	
 //	requestDataItem.inDate = "10/10/2013";
-
+	requestDataItem.set("inDate", kendo.toString(requestDataItem.inDate, 'd'));
 	kendo.bind($("#purchaserepository-edit-item"), requestDataItem);
 
 	// 渲染成本编辑列表
