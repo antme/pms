@@ -60,7 +60,7 @@ function edit(data){
 	
 	if (!$("#scEqCostListLatest").data("kendoGrid")){
 		$("#scEqCostListLatest").kendoGrid({
-			dataSource : data.allEqList,
+			dataSource : data.latestEqList,
 			columns : [ {
 				field : "eqcostNo",
 				title : "序号"
@@ -75,7 +75,7 @@ function edit(data){
 				title : "规格型号"
 
 			}, {
-				field : "eqcostAmount",
+				field : "eqcostRealAmount",
 				title : "数量"
 			}, {
 				field : "eqcostUnit",

@@ -717,8 +717,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		List<Map<String, Object>> eqListDataList = (List<Map<String, Object>>) eqListData.get(ApiConstants.RESULTS_DATA);
 		result.put("allEqList", eqListDataList);
 		
-		//TODO merge the same eq
-		result.put("latestEqList", eqListDataList);
+		Map<String, Object> distinctEQQuery = new HashMap<String, Object>();
+		distinctEQQuery.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
+		distinctEQQuery.put(SalesContractBean.SC_ID, cId);
+		Map<String, Object> distinctEqListData = dao.list(distinctEQQuery, DBBean.EQ_COST);
+		List<Map<String, Object>> distinctEqList = (List<Map<String, Object>>) distinctEqListData.get(ApiConstants.RESULTS_DATA);
+		result.put("latestEqList", distinctEqList);
 		return result;
 	}
 }
