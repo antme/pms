@@ -94,6 +94,8 @@ public interface IPurchaseContractService {
     public Map<String, Object> addPaymoney(Map<String, Object> params);
     
     public Map<String, Object> updatePaymoney(Map<String, Object> params);
+
+    public void destoryPayMoney(Map<String,Object> params);
     
     public Map<String, Object> listGetInvoice(Map<String, Object> params);
 

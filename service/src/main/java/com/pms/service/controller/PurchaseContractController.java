@@ -298,6 +298,14 @@ public class PurchaseContractController extends AbstractController {
     public void updatePaymoney(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.updatePaymoney(parserJsonParameters(request, false)), request, response);
     }
+    
+    @RequestMapping("/paymoney/destroy")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    public void destoryPayMoney(HttpServletRequest request, HttpServletResponse response) {
+    	pService.destoryPayMoney(parserJsonParameters(request,  false));
+    	responseWithData(new HashMap(), request, response);
+    }  
+    
     @RequestMapping("/invoice/list")
     public void listGetInvoice(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listGetInvoice(parserJsonParameters(request, false)), request, response);

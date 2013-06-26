@@ -1,44 +1,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<style>
-
-</style>
 <script  src="js/finance/payMoney.js"></script>
 <body>
 	<h3>付款信息页面</h3>
-	<script type="text/x-kendo-template" id="template">
-    <button class="k-button" id="showpopwindow">新增</button>
-	</script>
 	<div id="objList" class="k-content">
 		<div id="grid"></div>
-	</div>
-	<div id="popwindow" style="display:none">
-		<div id="form-container">
-		<table style="width: 80%">
-			<tr>
-				<td>采购合同：</td>
-				<td><input id="selectpc"></td>
-			</tr>
-			<tr>
-				<td>开户行：</td>
-				<td><input id="supplierCardName" data-bind="value: supplierCardName" ></td>
-			</tr>
-			<tr>
-				<td>卡号：</td>
-				<td><input id="supplierCardCode" data-bind="value: supplierCardCode" ></td>
-			</tr>
-			<tr>
-				<td>付款金额：</td>
-				<td><input data-role="numerictextbox" min="0" data-bind="value: payMoney" ></td>
-			</tr>
-			<tr>
-				<td>付款时间：</td>
-				<td><input id="payDate" data-bind="value: payDate" width="200px"/></td>
-			</tr>
-			<tr>
-				<td><button value="提交" id="submitform">提交</button></td>
-				<td></td>
-			</tr>
-		</table>
-		</div>
 	</div>
 </body>

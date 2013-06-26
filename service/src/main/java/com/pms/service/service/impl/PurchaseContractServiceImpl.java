@@ -934,6 +934,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     @Override
+    public void destoryPayMoney(Map<String, Object> params) {
+        List<String> ids = new ArrayList<String>();
+        ids.add(String.valueOf(params.get(ApiConstants.MONGO_ID)));
+        dao.deleteByIds(ids, DBBean.PAY_MONEY);
+    }
+    
+    @Override
     public Map<String, Object> listGetInvoice(Map<String, Object> params) {
         return dao.list(null, DBBean.GET_INVOICE);
     }
