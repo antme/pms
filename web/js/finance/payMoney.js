@@ -108,5 +108,6 @@ function pcDropDownEditor(container, options) {
     });
 }
 function myreflush(){
-	loadPage("payMoney");
+	//loadPage("payMoney"); 会导致列表中某项的弹出款显示不出
+	location.reload();//临时解决方案
 }

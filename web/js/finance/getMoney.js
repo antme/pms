@@ -107,5 +107,6 @@ function pcDropDownEditor(container, options) {
     });
 }
 function myreflush(){
-	loadPage("getMoney");
+	//loadPage("getMoney");
+	location.reload();
 }

@@ -856,10 +856,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         for(Map<String, Object> obj : list){
         	String id = (String)obj.get("supplier");
-        	Map<String,Object> su = (Map)suMap.get(id);
-        	obj.put("supplierName", su.get("supplierName"));
-        	obj.put(MoneyBean.supplierBankName, su.get(MoneyBean.supplierBankName));
-        	obj.put(MoneyBean.supplierBankAccount, su.get(MoneyBean.supplierBankAccount));
+        	if(suMap.containsKey(id)){
+        		Map<String,Object> su = (Map)suMap.get(id);
+        		obj.put("supplierName", su.get("supplierName"));
+        		obj.put(MoneyBean.supplierBankName, su.get(MoneyBean.supplierBankName));
+        		obj.put(MoneyBean.supplierBankAccount, su.get(MoneyBean.supplierBankAccount));
+        	}
         }
         return results;
     }
