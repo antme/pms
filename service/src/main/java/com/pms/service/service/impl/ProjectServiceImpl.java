@@ -64,6 +64,48 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			return dao.add(projectBean, DBBean.PROJECT);
 		}else{//Update
 			projectBean.put(ApiConstants.MONGO_ID, _id);
+			
+			Map<String, Object> existProjectQuery = new HashMap<String, Object>();
+			existProjectQuery.put(ApiConstants.MONGO_ID, _id);
+			Map<String, Object> existProject = dao.findOneByQuery(existProjectQuery, DBBean.PROJECT);
+
+			//项目 PM 发生改变
+			String pmOld = (String) existProject.get(ProjectBean.PROJECT_MANAGER);
+			String pmNew = (String) projectBean.get(ProjectBean.PROJECT_MANAGER);
+			if (!pmOld.equals(pmNew)){
+				//1.冗余存放 项目 PM 且存有 projectId 的相关集合，均需同步更新 项目 PM 字段
+				//符合1.中的  集合添加到下一行 relatedCollections 数组中
+				String[] relatedCollections = {DBBean.SALES_CONTRACT};//外键关联到project,又冗余存有 项目PM
+				Map<String, Object> relatedCQuery = new HashMap<String, Object>();
+				relatedCQuery.put(ProjectBean.PROJECT_ID, _id);
+				
+				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_MANAGER, pmNew);
+			}
+			//项目 customer 发生改变
+			String customerOld = (String) existProject.get(ProjectBean.PROJECT_CUSTOMER);
+			String customerNew = (String) projectBean.get(ProjectBean.PROJECT_CUSTOMER);
+			if (!customerOld.equals(customerNew)){
+				//1.冗余存放 项目 customer 且存有 projectId 的相关集合，均需同步更新 项目 customer 字段
+				//符合1.中的  集合添加到下一行 relatedCollections 数组中
+				String[] relatedCollections = {DBBean.SALES_CONTRACT};//外键关联到project,又冗余存有 项目customer
+				Map<String, Object> relatedCQuery = new HashMap<String, Object>();
+				relatedCQuery.put(ProjectBean.PROJECT_ID, _id);
+				
+				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_CUSTOMER, customerNew);
+			}
+			//项目 type 发生改变
+			String typeOld = (String) existProject.get(ProjectBean.PROJECT_TYPE);
+			String typeNew = (String) projectBean.get(ProjectBean.PROJECT_TYPE);
+			if (!typeOld.equals(typeNew)){
+				//1.冗余存放 项目 type 且存有 projectId 的相关集合，均需同步更新 项目 type 字段
+				//符合1.中的  集合添加到下一行 relatedCollections 数组中
+				String[] relatedCollections = {};//外键关联到project,又冗余存有 项目type
+				Map<String, Object> relatedCQuery = new HashMap<String, Object>();
+				relatedCQuery.put(ProjectBean.PROJECT_ID, _id);
+				
+				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_TYPE, typeNew);
+			}
+			
 			return dao.updateById(projectBean, DBBean.PROJECT);
 		}
 	}

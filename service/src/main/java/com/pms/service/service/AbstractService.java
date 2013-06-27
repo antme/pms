@@ -289,6 +289,31 @@ public abstract class AbstractService {
         return roles;
     }
     
+    
+    /**
+     * 
+     * @param params
+     *            页面传递来的参数
+     * @param myRealQueryKey
+     *            页面搜索外键的字段，比如数据存的是customerId,页面传递过来的是customerName，customerId就是myQueryKey，customerName 就是mySearchDataKey
+     * @param mySearchDataKey
+     * @param refSearchKey
+     * @param db
+     *            相关联的数据库
+     */
+    protected void mergeRefSearchQuery(Map<String, Object> params, String myRealQueryKey, String mySearchDataKey, String refSearchKey, String db) {
+        if (params.get(mySearchDataKey) != null && !ApiUtil.isEmpty(params)) {
+            DBQuery query = (DBQuery) params.get(mySearchDataKey);
+
+            Map<String, Object> refQuery = new HashMap<String, Object>();
+            refQuery.put(ApiConstants.LIMIT_KEYS, ApiConstants.MONGO_ID);
+            refQuery.put(refSearchKey, new DBQuery(query.getOperation(), query.getValue()));
+
+            params.remove(mySearchDataKey);
+            params.put(myRealQueryKey, new DBQuery(DBQueryOpertion.IN, this.dao.listLimitKeyValues(refQuery, db)));
+        }
+    }
+    
     protected void mergeDataRoleQuery(Map<String, Object> param) {
 //        Map<String, Object> pmQuery = new HashMap<String, Object>();
 //
@@ -442,6 +467,26 @@ public abstract class AbstractService {
         }
     }
     
+    /**
+     * 某个字段更新，相关联冗余存放该字段的地方都要同时更新。
+     * @param collections 冗余存放某字段，需要同时更新的 集合
+     * @param query 待更新记录的条件
+     * @param updateKey 更新字段
+     * @param updateValue 更新字段新的值
+     */
+    public void updateRelatedCollectionForTheSameField(String[] collections,Map<String, Object> query, String updateKey, String updateValue){
+    	query.put(ApiConstants.LIMIT_KEYS, new String[] {ApiConstants.MONGO_ID});
+    	for (int i=0; i<collections.length; i++){
+    		String cName = collections[i];
+    		List<Object> ids = dao.listLimitKeyValues(query, cName);
+    		for (Object id : ids){
+    			Map<String, Object> updateQuery = new HashMap<String, Object>();
+        		updateQuery.put(updateKey, updateValue);
+        		updateQuery.put(ApiConstants.MONGO_ID, id);
+        		dao.updateById(updateQuery, cName);
+    		}
+    	}
+    }
 
     public ISalesContractService getScs() {
         return scs;

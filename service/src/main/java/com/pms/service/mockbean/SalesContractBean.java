@@ -76,10 +76,8 @@ public class SalesContractBean {
 	//**********下拉列表基础数据
 	
 	//合同类型
-	public static final int SC_TYPE_WEAK_CURRENT_ENGINEERING = 1;  //弱电工程
-	public static final int SC_TYPE_PRODUCT_INTEGRATION = 2;  //产品集成（灯控/布线，楼控，其他）
-	public static final int SC_TYPE_PRODUCT_SALES = 3;  //产品销售
-	public static final int SC_TYPE_MAINTENANCE_SERVICE = 4;  //维护及服务
+	public static final String SC_TYPE_SC_WIRING = "产品销售（灯控/布线）";
+	public static final String SC_TYPE_INTEGRATION_WIRING = "产品集成（灯控/布线）";
 	
 	//归档状态
 	public static final int SC_ARCHIVE_STATUS_ARCHIVED = 1;  //已归档

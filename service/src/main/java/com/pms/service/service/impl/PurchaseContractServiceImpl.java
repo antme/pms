@@ -1,6 +1,5 @@
 package com.pms.service.service.impl;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,12 +7,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.print.attribute.standard.OrientationRequested;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mongodb.DB;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
@@ -32,9 +29,7 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
-import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
-import com.pms.service.util.DateUtil;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
 
@@ -336,11 +331,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
         for (Map<String, Object> data : list) {
-
-            Map<String, Object> relatedProjectInfo = getRelatedProjectInfo(data);
-            data.put("customerName", relatedProjectInfo.get(ProjectBean.PROJECT_CUSTOMER));
-            data.put("projectName", relatedProjectInfo.get("projectName"));
-            data.put("projectManager", relatedProjectInfo.get("projectManager"));
+            mergeProjectInfo(data);
         }
 
         return results;
@@ -463,7 +454,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> getPurchaseOrder(Map<String, Object> parameters) {
         Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
         result.put(SalesContractBean.SC_EQ_LIST, mergeLoadedEqList(result.get(SalesContractBean.SC_EQ_LIST)));
-        return mergeProjectInfo(result);
+        mergeProjectInfo(result);
+        return result;
     }
 
     public Map<String, Object> approvePurchaseContract(Map<String, Object> order) {
@@ -513,6 +505,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public Map<String, Object> listPurchaseRequests(Map<String, Object> params) {
 
+        mergeRefSearchQuery(params, "projectManager", "projectManager", UserBean.USER_NAME,  DBBean.USER);
+        mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
+        
         if (params.get("approvePage") != null) {
             params.remove("approvePage");
             params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED }));
@@ -533,20 +528,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
         for (Map<String, Object> data : list) {
-
-            Map<String, Object> relatedProjectInfo = getRelatedProjectInfo(data);
-
-            if (relatedProjectInfo != null) {
-                data.put("customerName", relatedProjectInfo.get(ProjectBean.PROJECT_CUSTOMER));
-                data.put("projectName", relatedProjectInfo.get("projectName"));
-                data.put("projectManager", relatedProjectInfo.get("projectManager"));
-            }
+           mergeProjectInfo(data);
         }
 
         return results;
     }
 
-    public Map<String, Object> getRelatedProjectInfo(Map<String, Object> params) {
+    public void mergeProjectInfo(Map<String, Object> params) {
 
         // FIXME: code refine
         PurchaseCommonBean request = (PurchaseCommonBean) new PurchaseCommonBean().toEntity(params);
@@ -568,8 +556,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> customerData = dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
 
         project.put(ProjectBean.PROJECT_CUSTOMER, customerData.get(CustomerBean.NAME));
+        
+        params.put("customerName", project.get(ProjectBean.PROJECT_CUSTOMER));
+        params.put("projectName", project.get("projectName"));
+        params.put("projectManager", project.get("projectManager"));       
+        params.put("projectCode", project.get(ProjectBean.PROJECT_CODE));
 
-        return project;
     }
 
     public Map<String, Object> listApprovedPurchaseRequestForSelect() {
@@ -668,8 +660,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
 
         result.put(SalesContractBean.SC_EQ_LIST, mergeLoadedEqList(result.get(SalesContractBean.SC_EQ_LIST)));
-        return mergeProjectInfo(result);
-
+        mergeProjectInfo(result);
+        return  result;
     }
 
     public void deletePurchaseRequest(Map<String, Object> order) {
@@ -679,16 +671,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> getBackRequestForSelect(Map<String, Object> parameters) {
         return backService.loadBack(parameters);
 
-    }
-
-    private Map<String, Object> mergeProjectInfo(Map<String, Object> result) {
-
-        Map<String, Object> relatedProjectInfo = getRelatedProjectInfo(result);
-
-        result.put("projectName", relatedProjectInfo.get(ProjectBean.PROJECT_NAME));
-        result.put("projectCode", relatedProjectInfo.get(ProjectBean.PROJECT_CODE));
-
-        return result;
     }
 
     private void updateSummaryUnderContract(String db, String scId) {
