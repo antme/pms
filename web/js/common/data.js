@@ -99,7 +99,7 @@ var menus = [
                          { text: "财务资料", id: "contract",  imageUrl: "/images/order.png" },
                          { text: "开票信息", id: "payInvoice", imageUrl: "/images/calender.png" },
                          { text: "收款信息", id: "payInvoice", imageUrl: "/images/invoice.png"},
-                         { text: "付款信息", id: "getInvoice", imageUrl: "/images/license.png"},
+                         { text: "付款信息", id: "payMoney", imageUrl: "/images/license.png"},
                          { text: "收票信息", id: "getInvoice", imageUrl: "/images/milestone.png"}
                      ]
              },

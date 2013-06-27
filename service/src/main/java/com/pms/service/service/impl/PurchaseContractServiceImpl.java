@@ -875,6 +875,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         	String id = (String)obj.get("supplier");
         	Map<String,Object> su = (Map)suMap.get(id);
         	obj.put("supplierName", su.get("supplierName"));
+        	obj.put(PayMoneyBean.supplierBankName, su.get(PayMoneyBean.supplierBankName));
+        	obj.put(PayMoneyBean.supplierBankAccount, su.get(PayMoneyBean.supplierBankAccount));
         }
         return results;
     }
@@ -905,32 +907,31 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         return map1;
     }
-
-    @Override
-    public Map<String, Object> addPaymoney(Map<String, Object> params) {
-        Map<String, Object> obj = new HashMap<String, Object>();
-        obj.put(PayMoneyBean.payMoney, ApiUtil.getDouble(params, PayMoneyBean.payMoney));
-        obj.put(PayMoneyBean.payDate, params.get(PayMoneyBean.payDate));
-        obj.put(PayMoneyBean.purchaseContractId, params.get(PayMoneyBean.purchaseContractId));
-        obj.put(PayMoneyBean.supplierCardCode, params.get(PayMoneyBean.supplierCardCode));
-        obj.put(PayMoneyBean.supplierCardName, params.get(PayMoneyBean.supplierCardName));
-        Map<String, Object> pc = dao.findOne(ApiConstants.MONGO_ID, params.get(PayMoneyBean.purchaseContractId), new String[] { "supplier", "purchaseContractCode" },
-                DBBean.PURCHASE_CONTRACT);
-        obj.put(PayMoneyBean.purchaseContractCode, pc.get("purchaseContractCode"));
-        obj.put(PayMoneyBean.supplierId, pc.get("supplier"));
-        return dao.add(obj, DBBean.PAY_MONEY);
-    }
-
-    @Override
-    public Map<String, Object> updatePaymoney(Map<String, Object> params) {
+    
+    public Map<String, Object> savePaymoney(Map<String, Object> params) {
         Map<String, Object> obj = new HashMap<String, Object>();
         obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
-        obj.put(PayMoneyBean.payMoney, params.get(PayMoneyBean.payMoney));
-        obj.put(PayMoneyBean.payDate, params.get(PayMoneyBean.payDate));
-        obj.put(PayMoneyBean.purchaseContractId, params.get(PayMoneyBean.purchaseContractId));
-        obj.put(PayMoneyBean.supplierCardCode, params.get(PayMoneyBean.supplierCardCode));
-        obj.put(PayMoneyBean.supplierCardName, params.get(PayMoneyBean.supplierCardName));
-        return dao.updateById(obj, DBBean.PAY_MONEY);
+        obj.put(PayMoneyBean.payMoneyActualMoney, ApiUtil.getDouble(params, PayMoneyBean.payMoneyActualMoney));
+        obj.put(PayMoneyBean.payMoneyActualDate, params.get(PayMoneyBean.payMoneyActualDate));
+        obj.put(PayMoneyBean.payMoneyComment, params.get(PayMoneyBean.payMoneyComment));
+        obj.put(PayMoneyBean.supplierBankAccount, params.get(PayMoneyBean.supplierBankAccount));
+        obj.put(PayMoneyBean.supplierBankName, params.get(PayMoneyBean.supplierBankName));
+        
+        String[] keys = new String[] { "supplier", "purchaseContractCode" };
+        Map<String, Object> pc = dao.findOne("purchaseContractCode", params.get(PayMoneyBean.purchaseContractCode), keys,DBBean.PURCHASE_CONTRACT);
+        obj.put(PayMoneyBean.purchaseContractCode, pc.get("purchaseContractCode"));
+        obj.put(PayMoneyBean.purchaseContractId, params.get(ApiConstants.MONGO_ID));
+        obj.put(PayMoneyBean.supplierId, pc.get("supplier"));
+        
+        //如果供应商没有初始化 银行账号，则初始化
+        Map<String,Object> supplier = dao.findOne(ApiConstants.MONGO_ID, pc.get("supplier"), DBBean.SUPPLIER);
+        String cardName = (String)supplier.get(PayMoneyBean.supplierBankName);
+        if(cardName == null || cardName.isEmpty()){
+        	supplier.put(PayMoneyBean.supplierBankName, params.get(PayMoneyBean.supplierBankName));
+        	supplier.put(PayMoneyBean.supplierBankAccount, params.get(PayMoneyBean.supplierBankAccount));
+        	dao.updateById(supplier, DBBean.SUPPLIER);
+        }
+        return dao.save(obj, DBBean.PAY_MONEY);
     }
 
     @Override

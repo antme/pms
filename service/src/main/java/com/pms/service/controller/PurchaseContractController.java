@@ -287,16 +287,10 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listPaymoney(parserJsonParameters(request, false)), request, response);
     }
 
-    @RequestMapping("/paymoney/add")
+    @RequestMapping("/paymoney/save")
     @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
     public void addPaymoney(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.addPaymoney(parserJsonParameters(request, false)), request, response, "save_success");
-    }
-    
-    @RequestMapping("/paymoney/update")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
-    public void updatePaymoney(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.updatePaymoney(parserJsonParameters(request, false)), request, response);
+        responseWithData(pService.savePaymoney(parserJsonParameters(request, false)), request, response, "save_success");
     }
     
     @RequestMapping("/paymoney/destroy")

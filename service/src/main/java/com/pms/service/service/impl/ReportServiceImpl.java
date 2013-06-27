@@ -70,15 +70,15 @@ public class ReportServiceImpl extends AbstractService implements IReportService
 			for (int i = 0; i < 14; i++) {
 				Map<String, Object> obj = new HashMap<String, Object>();
 				obj.put("projectId", projectId);
-				obj.put(PayMoneyBean.payMoney, ApiUtil.getDouble(row[begin + i]));
+				obj.put(PayMoneyBean.payMoneyActualMoney, ApiUtil.getDouble(row[begin + i]));
 				if (i == 0) {
-					obj.put(PayMoneyBean.payDate, "2010/01/01");
+					obj.put(PayMoneyBean.payMoneyActualDate, "2010/01/01");
 				} else if (i == 1) {
-					obj.put(PayMoneyBean.payDate, "2011/01/01");
+					obj.put(PayMoneyBean.payMoneyActualDate, "2011/01/01");
 				} else {
 					int mm = i - 1;
 					String dt = "2012/" + mm + "/01";
-					obj.put(PayMoneyBean.payDate, dt);
+					obj.put(PayMoneyBean.payMoneyActualDate, dt);
 				}
 				payList.add(obj);
 			}

@@ -2,28 +2,12 @@
 var requestModel = kendo.data.Model.define({
     id: "_id",
     fields: {
-   	   _id: { 
-   		   editable: false,
-   		   nullable: true
-   	   },
-       payMoneyActualMoney: {
-    	   type:"number",
-    	   validation: {
-    		   required: true
-    	   }
-   	   },
-       payMoneyActualData: {
-    	   type:"date",
-    	   validation: {
-    		   required: true
-    	   }
-   	   },
-       purchaseContractId: {
-    	   defaultValue: { _id: 1, purchaseContractCode: "test"},
-    	   validation: {
-    		   required: true
-    	   }
-   	   }
+   	   _id: {  editable: false, nullable: true},
+       payMoneyActualMoney: {type:"number",validation: {required: true } },
+       payMoneyActualData: { type:"date",validation: {required: true }},
+       purchaseContractId: {},
+       purchaseContractCode: { validation: {required: true} },
+   	   payMoneyComment:{}
     }
 });
 
@@ -35,17 +19,17 @@ var dataSource = new kendo.data.DataSource({
             type : "post"
         },
         update: {
-            url:  "/service/purcontract/payMoney/update",
+            url:  "/service/purcontract/paymoney/save",
             dataType: "jsonp",
             type : "post"
         },
         destroy: {
-            url: "/service/purcontract/payMoney/destroy",
+            url: "/service/purcontract/paymoney/destroy",
             dataType: "jsonp",
             type : "post"
         },
         create: {
-            url: "/service/purcontract/paymoney/add",
+            url: "/service/purcontract/paymoney/save",
             dataType: "jsonp",
             type : "post"
         },
@@ -56,7 +40,7 @@ var dataSource = new kendo.data.DataSource({
         }            
     },
     batch: true,
-    pageSize: 10,
+    pageSize: 2,
 	serverPaging: true,
 	serverSorting: true,
 	serverFiltering : true,
@@ -69,40 +53,53 @@ var dataSource = new kendo.data.DataSource({
 
 
 $(document).ready(function () {
-	checkRoles();
+	//checkRoles();
 	
     $("#grid").kendoGrid({
         dataSource: dataSource,
         pageable: true,
-        toolbar: [{name:"create",text:"新增"},{name:"save",text:"保存"}],
+        toolbar: [{name:"create",text:"新增"}],
         columns: [
-            { field: "payMoneyActualData",title:"日期",format: "{0:yyyy/MM/dd}"},
-            { field: "payMoneyActualMoney", title:"金额", min:0, width: "120px" },
-            { field: "purchaseContractId", title: "采购合同编号", width: "200px", editor: pcDropDownEditor, template: "#=purchaseContractId.purchaseContractCode#" },
-            { command: "destroy", title: " ", width: "90px" }],
-        editable: true
+            { field: "payMoneyActualData",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
+            { field: "payMoneyActualMoney", title:"金额", min:0},
+            { field: "purchaseContractCode", title: "采购合同编号",editor: pcDropDownEditor},
+            { field: "supplierName", title: "供应商"},
+            { field: "supplierBankName", title: "开户行"},
+            { field: "supplierBankAccount", title: "银行账号"},
+            { field: "payMoneyComment", title: "备注"},
+            { command: [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}], title: "&nbsp;", width: "170px"}
+        ],
+        editable:"inline",
+        saveChanges: function(e) {
+            alert(123);
+        }
     });
-    
-    
-    
 });
 
 function pcDropDownEditor(container, options) {
-    $('<input required data-text-field="purchaseContractCode" data-value-field="_id" data-bind="value:' + options.field + '"/>')
-        .appendTo(container).kendoDropDownList({
-            autoBind: false,
-            template:  '${ data.supplierName }:<strong>${ data.purchaseContractCode }</strong>',
-    		dataSource : {
-    			transport : {
-    				read : {
-    					dataType : "jsonp",
-    					url : "/service/purcontract/listforselect"
-    				}
-    			},
-    			schema : {
-    				total: "total",
-    				data: "data"
-    			}
-    		}
-        });
+	var input = $("<input/>");
+	input.attr("name", options.field);
+	input.appendTo(container);
+	input.kendoDropDownList({
+		dataTextField: "purchaseContractCode",
+		dataValueField : "purchaseContractCode",
+        //template:  '${ data.supplierName }:<strong>${ data.purchaseContractCode }</strong>',
+		dataSource : {
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "/service/purcontract/listforselect"
+				}
+			},
+			schema : {
+				total: "total",
+				data: "data"
+			}
+		},
+		 change: function(e) {
+			options.model.set("supplierName",this.dataItem().supplierName);
+			options.model.set("supplierBankName",this.dataItem().supplierBankName);
+			options.model.set("supplierBankAccount",this.dataItem().supplierBankAccount);
+		}
+    });
 }
