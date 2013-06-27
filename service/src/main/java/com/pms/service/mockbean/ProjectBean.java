@@ -8,7 +8,7 @@ public class ProjectBean {
 	public static final String PROJECT_PURCHASE_AMOUNT = "purchaseAmount"; //采购金额
 	
 	//项目字段
-	public static final String PROJECT_ID = "projectId";  //项目编号
+	public static final String PROJECT_ID = "projectId";  //
 	public static final String PROJECT_CODE = "projectCode";  //项目编号
 	public static final String PROJECT_ABBR = "projectAbbr";  //项目缩写
 	public static final String PROJECT_NAME = "projectName";  //项目名称

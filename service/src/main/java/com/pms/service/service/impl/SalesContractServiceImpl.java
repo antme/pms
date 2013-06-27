@@ -109,17 +109,62 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}else{//Update
 			contract.put(ApiConstants.MONGO_ID, _id);
 			
-			//更新销售合同变更次数
 			Map<String, Object> existContractQuery = new HashMap<String, Object>();
 			existContractQuery.put(ApiConstants.MONGO_ID, _id);
-			existContractQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_PROJECT_ID, 
+			existContractQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE, 
 					SalesContractBean.SC_MODIFY_TIMES, SalesContractBean.SC_AMOUNT});
 			Map<String, Object> existContract = dao.findOneByQuery(existContractQuery, DBBean.SALES_CONTRACT);
+			
+			//更新销售合同变更次数
 			float oldAmount = ApiUtil.getFloatParam(existContract, SalesContractBean.SC_AMOUNT);
 			float newAmount = ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT);
 			if (oldAmount != newAmount){
 				int newVersion = ApiUtil.getIntegerParam(existContract, SalesContractBean.SC_MODIFY_TIMES);
-				contract.put(SalesContractBean.SC_MODIFY_TIMES, newVersion++);
+				contract.put(SalesContractBean.SC_MODIFY_TIMES, ++newVersion);
+			}
+			
+			//销售合同类型是否更新
+			String scTypeOld = (String) existContract.get(SalesContractBean.SC_TYPE);
+			String scTypeNew = (String) contract.get(SalesContractBean.SC_TYPE);
+			if (!scTypeOld.equals(scTypeNew)){
+				//1.冗余存放 SC_TYPE 且存有 SC_ID 的相关集合，均需同步更新 SC_TYPE 字段
+				//符合1.中的  集合添加到下一行 relatedCollections 数组中
+				String[] relatedCollections = {};//外键关联到 SC 又冗余存了  SC_TYPE
+				Map<String, Object> relatedCQuery = new HashMap<String, Object>();
+				relatedCQuery.put(SalesContractBean.SC_ID, _id);
+				
+				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, SalesContractBean.SC_TYPE, scTypeNew);
+			}
+			
+			//销售合同关联项目是否更新
+			String scProjectIdOld = (String) existContract.get(SalesContractBean.SC_PROJECT_ID);
+			String scProjectIdNew = (String) contract.get(SalesContractBean.SC_PROJECT_ID);
+			if (!scProjectIdOld.equals(scProjectIdNew)){
+				//1.冗余存放 SC_PROJECT_ID 且存有 SC_ID 的相关集合，均需同步更新 SC_PROJECT_ID 字段
+				//符合1.中的  集合添加到下一行 relatedCollections 数组中
+				String[] relatedCollections = {};//存有 SC 外键 和 projectId
+				Map<String, Object> relatedCQuery = new HashMap<String, Object>();
+				relatedCQuery.put(SalesContractBean.SC_ID, _id);
+				
+				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_ID, scProjectIdNew);
+				
+				//销售合同 关联项目改变同时相关collection中冗余存放的 ： 项目PM,项目Customer,项目Type等也要更新
+				Map<String, Object> newProMap = dao.findOne(ApiConstants.MONGO_ID, scProjectIdNew, DBBean.PROJECT);
+				String pCustomer = (String) newProMap.get(ProjectBean.PROJECT_CUSTOMER);
+				String pPM = (String) newProMap.get(ProjectBean.PROJECT_MANAGER);
+				String pType = (String) newProMap.get(ProjectBean.PROJECT_TYPE);
+				String[] pCustomerCollections = {};//外键关联到 SC 又冗余存  项目Customer
+				String[] pPMCollections = {}; //外键关联到 SC 又冗余存  项目 PM
+				String[] pTypeCollections = {}; //外键关联到 SC 又冗余存  项目 Type
+				
+				updateRelatedCollectionForTheSameField(pCustomerCollections, relatedCQuery, ProjectBean.PROJECT_CUSTOMER, pCustomer);
+				updateRelatedCollectionForTheSameField(pPMCollections, relatedCQuery, ProjectBean.PROJECT_MANAGER, pPM);
+				updateRelatedCollectionForTheSameField(pTypeCollections, relatedCQuery, ProjectBean.PROJECT_TYPE, pType);
+
+				//更新SC 自己的冗余项目字段
+				contract.put(ProjectBean.PROJECT_CUSTOMER, pCustomer);
+				contract.put(ProjectBean.PROJECT_MANAGER, pPM);
+				contract.put(ProjectBean.PROJECT_TYPE, pType);
 			}
 			
 			//添加成本设备清单记录

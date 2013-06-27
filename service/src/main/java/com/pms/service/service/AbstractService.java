@@ -467,6 +467,26 @@ public abstract class AbstractService {
         }
     }
     
+    /**
+     * 某个字段更新，相关联冗余存放该字段的地方都要同时更新。
+     * @param collections 冗余存放某字段，需要同时更新的 集合
+     * @param query 待更新记录的条件
+     * @param updateKey 更新字段
+     * @param updateValue 更新字段新的值
+     */
+    public void updateRelatedCollectionForTheSameField(String[] collections,Map<String, Object> query, String updateKey, String updateValue){
+    	query.put(ApiConstants.LIMIT_KEYS, new String[] {ApiConstants.MONGO_ID});
+    	for (int i=0; i<collections.length; i++){
+    		String cName = collections[i];
+    		List<Object> ids = dao.listLimitKeyValues(query, cName);
+    		for (Object id : ids){
+    			Map<String, Object> updateQuery = new HashMap<String, Object>();
+        		updateQuery.put(updateKey, updateValue);
+        		updateQuery.put(ApiConstants.MONGO_ID, id);
+        		dao.updateById(updateQuery, cName);
+    		}
+    	}
+    }
 
     public ISalesContractService getScs() {
         return scs;
