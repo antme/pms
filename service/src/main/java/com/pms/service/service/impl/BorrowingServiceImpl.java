@@ -8,8 +8,11 @@ import java.util.Map;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
+import com.pms.service.dbhelper.DBQueryUtil;
+import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.BorrowingBean;
+import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.ProjectBean;
@@ -23,6 +26,7 @@ import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IReturnService;
 import com.pms.service.service.IShipService;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.status.ResponseCodeConstants;
 
 public class BorrowingServiceImpl extends AbstractService implements IBorrowingService {
 	
@@ -185,6 +189,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		// 已到货货品
 		Map<String, Object> scIdParam = new HashMap<String, Object>();
 		scIdParam.put("scId", saleId);
+		scIdParam.put("type", params.get(ShipBean.SHIP_TYPE));
 		Map<String, Object> map = pService.listEqcostListForShipByScIDAndType(scIdParam);
 		
 		List<Map<String, Object>> shipedEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
@@ -298,6 +303,42 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		returnParams.put(ReturnBean.BORROW_ID, params.get(ApiConstants.MONGO_ID));
 		returnParams.put(ReturnBean.BORROW_CODE, params.get(BorrowingBean.BORROW_CODE));
 		return returnService.create(returnParams);
+	}
+	
+	public Map<String, Object> listScByProjectForBorrowing(Map<String, Object> params) {
+		String pId = null;
+		if (params.containsKey(SalesContractBean.SC_PROJECT_ID)) {
+			pId = params.get(SalesContractBean.SC_PROJECT_ID).toString();
+		}
+		
+		if (ApiUtil.isEmpty(pId)){
+			throw new ApiResponseException(String.format("Project id is empty", params), ResponseCodeConstants.PROJECT_ID_IS_EMPTY.toString());
+		}
+		Map<String, Object> project = dao.findOne(ApiConstants.MONGO_ID, pId, DBBean.PROJECT);
+		Map<String, Object> customer = dao.findOne(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_CUSTOMER), DBBean.CUSTOMER);
+		String cName = (String) customer.get(CustomerBean.NAME);
+		
+		Map<String, Object> projectQuery = new HashMap<String, Object>();
+		projectQuery.put(SalesContractBean.SC_PROJECT_ID, pId);
+		
+		Map<String, Object> statusQuery = new HashMap<String, Object>();
+		statusQuery.put(SalesContractBean.SC_RUNNING_STATUS, SalesContractBean.SC_RUNNING_STATUS_RUNNING);
+		
+		Map<String, Object> typeQuery = new HashMap<String, Object>();
+		typeQuery.put(SalesContractBean.SC_TYPE, SalesContractBean.SC_TYPE_SC_WIRING);
+		typeQuery.put(SalesContractBean.SC_TYPE, SalesContractBean.SC_TYPE_INTEGRATION_WIRING);
+
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put("project", DBQueryUtil.buildQueryObject(projectQuery, false));
+		query.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
+		query.put("type", DBQueryUtil.buildQueryObject(typeQuery, false));
+		query.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE, SalesContractBean.SC_TYPE});
+		Map<String, Object> result = dao.list(query, DBBean.SALES_CONTRACT);
+		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+		for (Map<String, Object> sc : resultList){
+			sc.put(ProjectBean.PROJECT_CUSTOMER, cName);
+		}
+		return result;
 	}
 
 }

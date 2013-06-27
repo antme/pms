@@ -133,8 +133,12 @@ $(document).ready(function() {
         		
 	        	inSalesContract.value(null);
 	        	inProjectId = this.value();
-	        	inSalesContract.dataSource.read();
-	        	inSalesContract.readonly(false);
+	        	inSalesContract.dataSource.fetch(function(){
+	        		var data = this.data();
+	        		if (data.length > 0) {
+	        			inSalesContract.readonly(false);
+					}
+	        	});
         	}
         }
     }).data("kendoComboBox");
@@ -144,7 +148,7 @@ $(document).ready(function() {
 		dataSource: new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: crudServiceBaseUrl + "/sc/listbyproject",
+                    url: crudServiceBaseUrl + "/borrowing/sclist",
                     dataType: "jsonp",
     	            data: {
     	            	projectId: function() {
@@ -168,6 +172,7 @@ $(document).ready(function() {
         	if (dataItem) {
 	        	model.set("inProjectCustomer", dataItem.customer);
 	        	model.set("inSalesContractCode", dataItem.contractCode);
+	        	model.set("inSalesContractType", dataItem.contractType);
 	        	
 	        	var salesContractId = this.value();
 	        	
@@ -177,7 +182,8 @@ $(document).ready(function() {
 	        	            url: crudServiceBaseUrl + "/borrowing/eqlist",
 	        	            dataType: "jsonp",
 	        	            data: {
-	        	            	inSalesContractId: salesContractId
+	        	            	inSalesContractId: salesContractId,
+	        	            	type: 1
 	        	            }
 	        	        }
 	        	    },
@@ -222,8 +228,12 @@ $(document).ready(function() {
         	if (dataItem) {
 	        	outSalesContract.value(null);
 	        	outProjectId = this.value();
-	        	outSalesContract.dataSource.read();
-	        	outSalesContract.readonly(false);
+	        	outSalesContract.dataSource.fetch(function(){
+	        		var data = this.data();
+	        		if (data.length > 0) {
+	        			outSalesContract.readonly(false);
+					}
+	        	});
         	}
         }
     }).data("kendoComboBox");
@@ -233,7 +243,7 @@ $(document).ready(function() {
 		dataSource: new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: crudServiceBaseUrl + "/sc/listbyproject",
+                    url: crudServiceBaseUrl + "/borrowing/sclist",
                     dataType: "jsonp",
     	            data: {
     	            	projectId: function() {
@@ -280,6 +290,7 @@ $(document).ready(function() {
 		//添加表单绑定一个空的 Model
 		model = new borrowing();
 		kendo.bind($("#addBorrowing"), model);
+		model.set("type", 1);
 	}
 });
 
