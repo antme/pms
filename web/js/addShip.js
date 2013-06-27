@@ -74,8 +74,12 @@ $(document).ready(function() {
         dataSource: shipTypeItems,
         change: function(e) {
         	salesContract.value(null);
-        	salesContract.dataSource.read();
-        	salesContract.readonly(false);
+        	salesContract.dataSource.fetch(function(){
+        		var data = this.data();
+        		if (data.length > 0) {
+        			salesContract.readonly(false);
+				}
+        	});
         }
     }).data("kendoDropDownList");
 	
