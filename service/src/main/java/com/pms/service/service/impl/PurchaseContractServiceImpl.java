@@ -16,11 +16,12 @@ import org.apache.logging.log4j.Logger;
 import com.mongodb.DB;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
+import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.InvoiceBean;
-import com.pms.service.mockbean.PayMoneyBean;
+import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
@@ -875,8 +876,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         	String id = (String)obj.get("supplier");
         	Map<String,Object> su = (Map)suMap.get(id);
         	obj.put("supplierName", su.get("supplierName"));
-        	obj.put(PayMoneyBean.supplierBankName, su.get(PayMoneyBean.supplierBankName));
-        	obj.put(PayMoneyBean.supplierBankAccount, su.get(PayMoneyBean.supplierBankAccount));
+        	obj.put(MoneyBean.supplierBankName, su.get(MoneyBean.supplierBankName));
+        	obj.put(MoneyBean.supplierBankAccount, su.get(MoneyBean.supplierBankAccount));
         }
         return results;
     }
@@ -889,7 +890,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         Set<String> suIds = new HashSet<String>();
         for (Map<String, Object> obj : list1) {
-            suIds.add((String) obj.get(PayMoneyBean.supplierId));
+            suIds.add((String) obj.get(MoneyBean.supplierId));
         }
         suIds.remove(null);
         suIds.remove("");
@@ -898,7 +899,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             query02.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList(suIds)));
             Map<String, Object> map2 = dao.listToOneMapAndIdAsKey(query02, DBBean.SUPPLIER);
             for (Map<String, Object> obj : list1) {
-                String id = (String) obj.get(PayMoneyBean.supplierId);
+                String id = (String) obj.get(MoneyBean.supplierId);
                 if (map2.containsKey(id)) {
                     Map<String, Object> su = (Map<String, Object>) map2.get(id);
                     obj.put("supplierName", su.get("supplierName"));
@@ -911,24 +912,27 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> savePaymoney(Map<String, Object> params) {
         Map<String, Object> obj = new HashMap<String, Object>();
         obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
-        obj.put(PayMoneyBean.payMoneyActualMoney, ApiUtil.getDouble(params, PayMoneyBean.payMoneyActualMoney));
-        obj.put(PayMoneyBean.payMoneyActualDate, params.get(PayMoneyBean.payMoneyActualDate));
-        obj.put(PayMoneyBean.payMoneyComment, params.get(PayMoneyBean.payMoneyComment));
-        obj.put(PayMoneyBean.supplierBankAccount, params.get(PayMoneyBean.supplierBankAccount));
-        obj.put(PayMoneyBean.supplierBankName, params.get(PayMoneyBean.supplierBankName));
+        obj.put(MoneyBean.payMoneyActualMoney, ApiUtil.getDouble(params, MoneyBean.payMoneyActualMoney));
+        obj.put(MoneyBean.payMoneyActualDate, params.get(MoneyBean.payMoneyActualDate));
+        obj.put(MoneyBean.payMoneyComment, params.get(MoneyBean.payMoneyComment));
+        obj.put(MoneyBean.supplierBankAccount, params.get(MoneyBean.supplierBankAccount));
+        obj.put(MoneyBean.supplierBankName, params.get(MoneyBean.supplierBankName));
         
         String[] keys = new String[] { "supplier", "purchaseContractCode" };
-        Map<String, Object> pc = dao.findOne("purchaseContractCode", params.get(PayMoneyBean.purchaseContractCode), keys,DBBean.PURCHASE_CONTRACT);
-        obj.put(PayMoneyBean.purchaseContractCode, pc.get("purchaseContractCode"));
-        obj.put(PayMoneyBean.purchaseContractId, params.get(ApiConstants.MONGO_ID));
-        obj.put(PayMoneyBean.supplierId, pc.get("supplier"));
+        Map<String, Object> pc = dao.findOne("purchaseContractCode", params.get(MoneyBean.purchaseContractCode), keys,DBBean.PURCHASE_CONTRACT);
+        if(pc == null) {
+        	throw new ApiResponseException("采购合同不存在", params, "请输入正确合同编号");
+        }
+        obj.put(MoneyBean.purchaseContractCode, pc.get("purchaseContractCode"));
+        obj.put(MoneyBean.purchaseContractId, params.get(ApiConstants.MONGO_ID));
+        obj.put(MoneyBean.supplierId, pc.get("supplier"));
         
         //如果供应商没有初始化 银行账号，则初始化
         Map<String,Object> supplier = dao.findOne(ApiConstants.MONGO_ID, pc.get("supplier"), DBBean.SUPPLIER);
-        String cardName = (String)supplier.get(PayMoneyBean.supplierBankName);
+        String cardName = (String)supplier.get(MoneyBean.supplierBankName);
         if(cardName == null || cardName.isEmpty()){
-        	supplier.put(PayMoneyBean.supplierBankName, params.get(PayMoneyBean.supplierBankName));
-        	supplier.put(PayMoneyBean.supplierBankAccount, params.get(PayMoneyBean.supplierBankAccount));
+        	supplier.put(MoneyBean.supplierBankName, params.get(MoneyBean.supplierBankName));
+        	supplier.put(MoneyBean.supplierBankAccount, params.get(MoneyBean.supplierBankAccount));
         	dao.updateById(supplier, DBBean.SUPPLIER);
         }
         return dao.save(obj, DBBean.PAY_MONEY);
