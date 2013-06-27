@@ -153,7 +153,7 @@ var departmentItems =  [{ text: "销售部"}, { text: "工程部"}, { text: "产
 var allotTypeItems = [{ text: "借货调拨"}, { text: "还货调拨"}, { text: "备货调拨"}];
 
 // 发货类型
-var shipTypeItems = [{ text: "供应商直发", value: 0 }, { text: "非供应商直发", value: 1 }];
+var shipTypeItems = [{ text: "供应商直发", value: "0" }, { text: "非供应商直发", value: "1" }];
 
 // 货运要求
 var deliveryRequirementsItems = [{ text: "常规汽运或快递"}, { text: "加急空运"}];
