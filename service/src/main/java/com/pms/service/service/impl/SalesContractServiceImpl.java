@@ -244,10 +244,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		for (Map<String, Object> item : scList){
 		    Map<String, Object> project = (Map<String, Object>) projects.get(item.get(SalesContractBean.SC_PROJECT_ID));
 		    Map<String, Object> customer = (Map<String, Object>) customers.get(item.get("customer"));
-		    item.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
-		    item.put("customerName", customer.get(CustomerBean.NAME));
-		    item.put("customerBankName", customer.get(CustomerBean.customerBankName));
-		    item.put("customerBankAccount", customer.get(CustomerBean.customerBankAccount));
+		    if(project != null){
+		    	item.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
+		    }
+		    if(customer != null){
+		    	item.put("customerName", customer.get(CustomerBean.NAME));
+		    	item.put("customerBankName", customer.get(CustomerBean.customerBankName));
+		    	item.put("customerBankAccount", customer.get(CustomerBean.customerBankAccount));
+		    }
 		}
 		return scResults;
 	}
@@ -598,11 +602,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         
         //如果没有初始化 银行账号，则初始化
         Map<String,Object> customer = dao.findOne(ApiConstants.MONGO_ID, sc.get("customer"), DBBean.CUSTOMER);
-        String cardName = (String)customer.get(MoneyBean.customerBankName);
-        if(cardName == null || cardName.isEmpty()){
-        	customer.put(MoneyBean.customerBankName, params.get(MoneyBean.customerBankName));
-        	customer.put(MoneyBean.customerBankAccount, params.get(MoneyBean.customerBankAccount));
-        	dao.updateById(customer, DBBean.CUSTOMER);
+        if(customer != null){
+	        String cardName = (String)customer.get(MoneyBean.customerBankName);
+	        if(cardName == null || cardName.isEmpty()){
+	        	customer.put(MoneyBean.customerBankName, params.get(MoneyBean.customerBankName));
+	        	customer.put(MoneyBean.customerBankAccount, params.get(MoneyBean.customerBankAccount));
+	        	dao.updateById(customer, DBBean.CUSTOMER);
+	        }
         }
         return dao.save(obj, DBBean.SC_GOT_MONEY);
 	}
