@@ -28,7 +28,54 @@ public class PurchaseCommonBean extends BaseEntity {
     private String comment;
     
     private String scContractType;
+    
+    
+    private String requestedDate;
+    
+    
+    
+    //FIX ME
+    private String pbPlanDate;
+    
+    
+    private String pbType;
+    
+    private String pbDepartment;
 
+    public String getPbPlanDate() {
+        return pbPlanDate;
+    }
+
+    public void setPbPlanDate(String pbPlanDate) {
+        this.pbPlanDate = pbPlanDate;
+    }
+
+
+
+    public String getPbType() {
+        return pbType;
+    }
+
+    public void setPbType(String pbType) {
+        this.pbType = pbType;
+    }
+
+    public String getPbDepartment() {
+        return pbDepartment;
+    }
+
+    public void setPbDepartment(String pbDepartment) {
+        this.pbDepartment = pbDepartment;
+    }
+    
+
+    public String getRequestedDate() {
+        return requestedDate;
+    }
+
+    public void setRequestedDate(String requestedDate) {
+        this.requestedDate = requestedDate;
+    }
 
     public String getProjectId() {
         return projectId;

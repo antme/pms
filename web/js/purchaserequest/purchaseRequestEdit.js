@@ -178,7 +178,7 @@ function edit(data) {
 
 	requestDataItem = new model(requestDataItem);
 
-
+	requestDataItem.set("pbPlanDate", kendo.toString(requestDataItem.pbPlanDate, 'd'));
 	// 渲染成本编辑列表
 	itemDataSource.data(requestDataItem.eqcostList);
 	kendo.bind($("#purchase-request-edit-item"), requestDataItem);

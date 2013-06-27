@@ -15,7 +15,10 @@ var model = kendo.data.Model.define({
 		eqcostAvailableAmount : {
 			type : "number"
 		},
-
+		pbPlanDate:{type:"date"},
+		pbDepartment:{
+			
+		},
 		eqcostApplyAmount : {
 			validation : {
 				min : 0

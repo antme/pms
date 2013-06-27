@@ -47,10 +47,10 @@ label{
                         <td>客户名称： <strong><span data-bind="text: customer"></span></strong></td>                  
                     </tr>
                     <tr>
-                        <td>申请部门：<strong><span data-bind="text: pbDepartment.text" ></span></strong></td>
+                        <td>申请部门：<strong><span data-bind="text: pbDepartment" ></span></strong></td>
                         <td>状态：<strong><span data-bind="text: status" ></span></strong></td>
-                        <td> 到货要求日期: <span data-bind="text: pbPlanDate" class="foredit"  ></span></td>
-                        <td> 申请日期: <span data-bind="text: requestedDate" class="foredit"  ></span></td>
+                        <td> 到货要求日期: <span  data-format="yyyy/MM/dd" data-bind="text: pbPlanDate" class="foredit"  ></span></td>
+                        <td> 申请日期: <span  data-format="yyyy/MM/dd" data-bind="text: requestedDate" class="foredit"  ></span></td>
                         <td> 采购类别: <span data-bind="text: pbType" class="foredit"  ></span></td>
                     </tr>
                 </table>

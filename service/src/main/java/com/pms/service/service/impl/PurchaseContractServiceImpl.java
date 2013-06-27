@@ -30,6 +30,7 @@ import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DateUtil;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
 
@@ -619,6 +620,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         if (parameters.get(PurchaseCommonBean.SALES_COUNTRACT_ID) != null) {
             scs.mergeCommonFieldsFromSc(parameters, parameters.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
 
+        }
+        
+        
+        if(parameters.get("requestedDate") == null){
+            parameters.put("requestedDate", DateUtil.getDateString(new Date()));
         }
         Map<String, Object> result = null;
 

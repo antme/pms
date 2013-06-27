@@ -1,7 +1,18 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript" src="js/repository/repositoryEdit.js"></script>
-
-<div id="purchaserepository-edit" class="k-content">
+        <style scoped>
+            .k-edit-form-container {
+                width: 100%;
+            }
+            .k-edit-label {
+                padding-right: 1%;
+                width: 10%;
+            }
+            .k-edit-field {
+                width: 20%;
+            }
+        </style>
+<div id="purchaserepository-edit" class="k-edit-form-container">
 	<div class="k-edit-field " id="purchaserepository-div"
 		style="width: 1200px;">
 		项目： <input type="text" name="purchasecontractselect" style="width: 500px;"
@@ -12,34 +23,68 @@
 	</div>
 
 
-
-	<div id="purchaserepository-edit-item">
-        <hr>
-        <table>
-            <tr>
-            <td><label>制单人:</label> <input type="text" data-bind="value: operator" id="operator" /></td>
-            <td><label>入库方式:</label> <input type="text" data-bind="value: inType" id="inType" /></td>
-            <td><label>入库日期:</label> <input type="text" data-role="datepicker"  data-bind="value: inDate" id="inDate" /></td>
-            <td><label>申请编号:</label> <input type="text" data-bind="value: code" id="code" /></td>
-            </tr>
-            <tr>
-            <td><label>批次:</label> <input type="text" data-bind="value: batchNumber" id="operator" /></td>
-            <td><label>库房:</label> <input type="text" data-bind="value: storeHouse" id="inType" /></td>
-            <td><label>货位:</label> <input type="text"  data-bind="value: goodsAllocation" id="inDate" /></td>
-            <td><label>单据编号:</label> <input type="text" data-bind="value: orderCode" id="orderCode" /></td>
+           
             
-            </tr>
-        </table>
+        <hr>
+     
+	<div id="purchaserepository-edit-item" >
+	
+	   <div class="k-edit-label">
+                <label for="operator">制单人</label>
+            </div>
+            <div data-container-for="operator" class="k-edit-field">
+                <input id="operator" name="operator" required="required" data-bind="value:operator">
+            </div>
+            <div class="k-edit-label">
+                <label for="inType">入库方式</label>
+            </div>
+            <div data-container-for="inType" class="k-edit-field">
+                <input type="text" class="k-input k-textbox" name="inType" required="required" data-bind="value:inType">
+            </div>
+            <div class="k-edit-label">
+                <label for="inDate">入库日期</label>
+            </div>
+            <div data-container-for="inDate" class="k-edit-field">
+                <input id="inDate" name="inDate" required="required" data-bind="value:inDate" data-role="datepicker" >
+            </div>
+            <div class="k-edit-label">
+                <label for="code">申请编号</label>
+            </div>
+            <div data-container-for="code" class="k-edit-field">
+                <input type="text" class="k-input k-textbox" name="code" data-bind="value:code">
+            </div>
+            <div class="k-edit-label">
+                <label for="batchNumber">批次</label>
+            </div>
+            <div data-container-for="batchNumber" class="k-edit-field">
+                <input id="batchNumber" name="batchNumber" required="required" data-bind="value:batchNumber">
+            </div>
+            <div class="k-edit-label">
+                <label for="storeHouse">库房</label>
+            </div>
+            <div data-container-for="storeHouse" class="k-edit-field">
+                <input type="text" class="k-input k-textbox" name="storeHouse" required="required" data-bind="value:storeHouse">
+            </div>
+            <div class="k-edit-label">
+                <label for="goodsAllocation">货位</label>
+            </div>
+            <div data-container-for="goodsAllocation" class="k-edit-field">
+                <input type="text" class="k-input k-textbox" name="goodsAllocation" required="required" data-bind="value:goodsAllocation">
+            </div>
+              <div class="k-edit-label">
+                <label for="orderCode">单据编号</label>
+            </div>
+            <div data-container-for="orderCode" class="k-edit-field">
+                <input type="text" class="k-input k-textbox" name="orderCode" required="required" data-bind="value:orderCode">
+            </div>
+            <div >
+             <label class="k-edit-label">备注:</label>
+             <textarea rows="4" cols="120" class="k-textbox  foredit" style="width:300px;" data-bind="value: pbComment" ></textarea>
+            </div>
         <hr>
         <div>
             <div id="purchaserepository-edit-grid"></div>
         </div>
-        
-        <div>
-             <label>备注:</label>
-             <textarea rows="4" cols="120" class="k-textbox  foredit" style="width:300px;" data-bind="value: pbComment" ></textarea>
-        </div>
-
 
 		<div>
 			<button onclick="save();">保存</button>

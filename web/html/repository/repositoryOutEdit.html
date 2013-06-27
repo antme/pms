@@ -1,6 +1,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript" src="js/repository/repositoryEditOut.js"></script>
 
+<style>
+label{
+    margin-left: 25px;
+}
+</style>
 <div id="purchaserepository-edit" class="k-content">
 	<div class="k-edit-field " id="purchaserepository-div"
 		style="width: 1200px;">
@@ -13,7 +18,7 @@
 
 	<div id="purchaserepository-edit-item">
 
-        <div>
+        <div style="margin-top:20px;margin-bottom:10px;">
             <label>入库人:</label> <input type="text" data-bind="value: inOperator" id="inOperator" />
             <label>入库日期:</label> <input type="text" data-role="datepicker"  data-bind="value: inDate" id="inDate" />
             <label>需方名称:</label> <input type="text" data-bind="value: recustomer" id="recustomer" />           
@@ -23,7 +28,7 @@
             <div id="purchaserepository-edit-grid"></div>
         </div>
         
-        <div>
+        <div style="margin-top:5px;">
              <label>备注:</label>
              <textarea rows="4" cols="120" class="k-textbox  foredit" style="width:300px;" data-bind="value: pbComment" ></textarea>
         </div>
