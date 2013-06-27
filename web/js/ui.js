@@ -33,6 +33,7 @@ $(document).ready(function() {
 	
 	kendo.ui.progress($("#main"), true);
 	
+	
 	postAjaxRequest("/service/user/home", null, init)
 
 });
@@ -118,7 +119,7 @@ function loadTreePage(page, parameters){
 }
 
 function loadPage(page, parameters, popupDiv) {
-	
+	kendo.ui.progress($("#right"), true);
 	if($(".k-window").length>0 && $(".k-overlay").length>0){
 		$(".k-window").hide();
 		$(".k-overlay").hide();
@@ -242,6 +243,7 @@ function loadPage(page, parameters, popupDiv) {
 		$.ajax({
 			url : url,
 			success : function(data) {
+				kendo.ui.progress($("#right"), false);
 				if(popupDiv){
 					$("#"+popupDiv).html(data);
 				}else{
@@ -251,6 +253,7 @@ function loadPage(page, parameters, popupDiv) {
 			},
 			error : function(){
 				alert("连接Service失败");
+				kendo.ui.progress($("#right"), false);
 			}
 		});
 	}

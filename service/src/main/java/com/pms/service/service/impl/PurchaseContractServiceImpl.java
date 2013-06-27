@@ -512,6 +512,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public Map<String, Object> listPurchaseRequests(Map<String, Object> params) {
 
+        mergeRefSearchQuery(params, "projectManager", "projectManager", UserBean.USER_NAME,  DBBean.USER);
+        mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
+        
         if (params.get("approvePage") != null) {
             params.remove("approvePage");
             params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED }));

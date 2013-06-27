@@ -289,6 +289,31 @@ public abstract class AbstractService {
         return roles;
     }
     
+    
+    /**
+     * 
+     * @param params
+     *            页面传递来的参数
+     * @param myRealQueryKey
+     *            页面搜索外键的字段，比如数据存的是customerId,页面传递过来的是customerName，customerId就是myQueryKey，customerName 就是mySearchDataKey
+     * @param mySearchDataKey
+     * @param refSearchKey
+     * @param db
+     *            相关联的数据库
+     */
+    protected void mergeRefSearchQuery(Map<String, Object> params, String myRealQueryKey, String mySearchDataKey, String refSearchKey, String db) {
+        if (params.get(mySearchDataKey) != null && !ApiUtil.isEmpty(params)) {
+            DBQuery query = (DBQuery) params.get(mySearchDataKey);
+
+            Map<String, Object> refQuery = new HashMap<String, Object>();
+            refQuery.put(ApiConstants.LIMIT_KEYS, ApiConstants.MONGO_ID);
+            refQuery.put(refSearchKey, new DBQuery(query.getOperation(), query.getValue()));
+
+            params.remove(mySearchDataKey);
+            params.put(myRealQueryKey, new DBQuery(DBQueryOpertion.IN, this.dao.listLimitKeyValues(refQuery, db)));
+        }
+    }
+    
     protected void mergeDataRoleQuery(Map<String, Object> param) {
 //        Map<String, Object> pmQuery = new HashMap<String, Object>();
 //
