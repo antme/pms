@@ -12,6 +12,7 @@ public class EqCostListBean {
 	public static final String EQ_LIST_UNIT = "eqcostUnit";//单位
 	public static final String EQ_LIST_BRAND = "eqcostBrand";//品牌
 	public static final String EQ_LIST_BASE_PRICE = "eqcostBasePrice"; //成本价
+	public static final String EQ_LIST_SALES_BASE_PRICE = "eqcostSalesBasePrice"; //销售成本价
 	public static final String EQ_LIST_TOTAL_AMOUNT = "eqcostTotalAmount";//小计
 	public static final String EQ_LIST_MEMO = "eqcostMemo";//备注
 	public static final String EQ_LIST_DISCOUNT_RATE = "eqcostDiscountRate"; //折扣率

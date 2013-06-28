@@ -832,22 +832,27 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> importEqCostList(Map<String, Object> params) {
 		String filePath = (String) params.get("eqCostFile");
-		filePath = "E:\\poi\\eqCost.xlsx";
+		filePath = "E:\\poi\\设备成本表.xlsx";
 		ExcleUtil excleUtil = new ExcleUtil(filePath);
 		List<String[]> list = excleUtil.getAllData(0);
 		List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
-		for (int i=0; i<list.size(); i++){
+		for (int i=8; i<list.size(); i++){//硬编码从第9行开始读数据
 			Map<String, Object> eq = new HashMap<String, Object>();
-			eq.put(EqCostListBean.EQ_LIST_NO, list.get(i)[0].trim());
-			eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, list.get(i)[1].trim());
-			eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, list.get(i)[2].trim());
-			eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, list.get(i)[3].trim());
+			String amount = list.get(i)[6].trim();
+			if (amount.length() == 0){
+				break;
+			}
+			eq.put(EqCostListBean.EQ_LIST_NO, list.get(i)[1].trim());
+			eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, list.get(i)[2].trim());
+			eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, list.get(i)[3].trim());
+			eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, list.get(i)[4].trim());
 			eq.put(EqCostListBean.EQ_LIST_AMOUNT, list.get(i)[6].trim());
-			eq.put(EqCostListBean.EQ_LIST_UNIT, list.get(i)[4].trim());
-			eq.put(EqCostListBean.EQ_LIST_BRAND, list.get(i)[5].trim());
-			eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[7].trim());
-			eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, list.get(i)[8].trim());
-			eq.put(EqCostListBean.EQ_LIST_MEMO, list.get(i)[11].trim());
+			eq.put(EqCostListBean.EQ_LIST_UNIT, list.get(i)[5].trim());
+			eq.put(EqCostListBean.EQ_LIST_BRAND, "N/A");
+			eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[8].trim());
+			eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, list.get(i)[7].trim());
+			eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, list.get(i)[9].trim());
+			eq.put(EqCostListBean.EQ_LIST_MEMO, list.get(i)[12].trim());
 			
 			eqList.add(eq);
 		}
