@@ -54,7 +54,7 @@ var dataSource_SC = new kendo.data.DataSource({
 		},
 		create : {
 			url : "../service/sc/add",
-			dataType : "jsonp",
+			dataType : "jsonp",	
 			method : "post"
 		},
 
@@ -88,6 +88,7 @@ var eqCostListDataSource = new kendo.data.DataSource({
             	eqcostUnit: { type: "string" },
             	eqcostBrand: { type: "string" },
             	eqcostBasePrice: { type: "number" },
+            	eqcostSalesBasePrice: { type: "number" },
             	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" }
             }
@@ -257,6 +258,9 @@ $(document).ready(function() {
 			}, {
 				field : "eqcostBasePrice",
 				title : "成本价"
+			}, {
+				field : "eqcostSalesBasePrice",
+				title : "销售成本价"
 			}, {
 				field : "eqcostDiscountRate",
 				title : "折扣率"

@@ -233,6 +233,7 @@ var eqCostListDataSourceNew = new kendo.data.DataSource({
             	eqcostUnit: { type: "string" },
             	eqcostBrand: { type: "string" },
             	eqcostBasePrice: { type: "number" },
+            	eqcostSalesBasePrice: { type: "number" },
             	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" }
             }
@@ -393,6 +394,9 @@ $(document).ready(function() {
 				field : "eqcostBasePrice",
 				title : "成本价"
 			}, {
+				field : "eqcostSalesBasePrice",
+				title : "销售成本价"
+			}, {
 				field : "eqcostDiscountRate",
 				title : "折扣率"
 			}, {
@@ -446,6 +450,9 @@ function edit(data){
 			}, {
 				field : "eqcostBasePrice",
 				title : "成本价"
+			}, {
+				field : "eqcostSalesBasePrice",
+				title : "销售成本价"
 			}, {
 				field : "eqcostDiscountRate",
 				title : "折扣率"
