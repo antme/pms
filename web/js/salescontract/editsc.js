@@ -404,11 +404,21 @@ $(document).ready(function() {
 				title : "备注"
 			} ],
 
-			toolbar : [ {name:"create",text:"新增成本项"} ],
+//			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
 			scrollable : true
 		});
 	}//成本设备清单_new
+	
+	$("#files").kendoUpload({
+        async: {
+            saveUrl: "/service/sc/upload/eqlist",
+            autoUpload: true
+        },
+        success:function(e){
+        	eqCostListDataSourceNew.data(e.response.data);
+        }
+    });	
 	
 	if(popupParams){
 		postAjaxRequest("/service/sc/get", popupParams, edit);

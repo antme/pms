@@ -269,7 +269,7 @@ $(document).ready(function() {
 				title : "备注"
 			} ],
 
-			toolbar : [ {name:"create",text:"新增成本项"} ],
+//			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
 			scrollable : true
 		});
@@ -281,7 +281,7 @@ $(document).ready(function() {
             autoUpload: true
         },
         success:function(e){
-        	console.log(e.response);//绑定数据
+        	eqCostListDataSource.data(e.response.data);
         }
     });	
 	
