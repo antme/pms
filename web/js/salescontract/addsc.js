@@ -275,12 +275,22 @@ $(document).ready(function() {
 		});
 	}//成本设备清单
 	
+    $("#files").kendoUpload({
+        async: {
+            saveUrl: "/service/sc/upload/eqlist",
+            autoUpload: true
+        },
+        success:function(e){
+        	console.log(e.response);//绑定数据
+        }
+    });	
+	
 	//添加表单绑定一个空的 Model
 	scm = new scModel();
 	kendo.bind($("#addSalesContract"), scm);
 	
 });//end dom ready	
-		
+
 function saveSC(){
 	var validator = $("#addSalesContract").kendoValidator().data("kendoValidator");
 	var validatestatus = $("#validate-status");

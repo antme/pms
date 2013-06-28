@@ -1,5 +1,6 @@
 package com.pms.service.service.impl;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -831,9 +832,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	@Override
 	public Map<String, Object> importEqCostList(Map<String, Object> params) {
-		String filePath = (String) params.get("eqCostFile");
-		filePath = "E:\\poi\\设备成本表.xlsx";
-		ExcleUtil excleUtil = new ExcleUtil(filePath);
+		InputStream inputStream  = (InputStream)params.get("inputStream");
+		//String filePath = (String) params.get("eqCostFile");
+		//filePath = "E:\\poi\\设备成本表.xlsx";
+		ExcleUtil excleUtil = new ExcleUtil(inputStream);
 		List<String[]> list = excleUtil.getAllData(0);
 		List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
 		for (int i=8; i<list.size(); i++){//硬编码从第9行开始读数据

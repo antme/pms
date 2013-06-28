@@ -1,5 +1,8 @@
 package com.pms.service.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +13,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.pms.service.annotation.LoginRequired;
 import com.pms.service.annotation.RoleValidConstants;
@@ -199,6 +205,28 @@ public class SalesContractController extends AbstractController {
     	salesContractService.destoryGetMoney(money);
     	responseWithData(new HashMap(), request, response);
     }  
-    //....
+
+    @RequestMapping("/upload/eqlist")
+    //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
+    public void upload(HttpServletRequest request, HttpServletResponse response){
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;   
+        MultipartFile uploadFile = multipartRequest.getFile("files");        
+        Map<String,Object> result = new HashMap<String,Object>();
+        try {
+			InputStream inputStream = uploadFile.getInputStream();
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("inputStream", inputStream);
+			result = salesContractService.importEqCostList(map);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+/*        String filename = uploadFile.getOriginalFilename();
+    	long size = uploadFile.getSize();//12312312
+    	Map<String,Object> result = new HashMap<String,Object>();
+    	result.put("filename", filename);
+    	result.put("size", size);*/
+    	responseWithData(result, request, response);
+    }  
     
 }
