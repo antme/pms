@@ -55,4 +55,6 @@ public interface ISalesContractService {
 	public void mergeCommonFieldsFromSc(Map<String, Object> data, Object scId);
 	
 	public Map<String, Object> listEqHistoryAndLatestEqList(Map<String, Object> params);
+	
+	public Map<String, Object> importEqCostList(Map<String, Object> params);
 }

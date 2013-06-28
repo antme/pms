@@ -11,6 +11,7 @@ import com.pms.service.dao.impl.mongo.CommonDaoMongoImpl;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.service.IProjectService;
 import com.pms.service.service.IReportService;
+import com.pms.service.service.ISalesContractService;
 import com.pms.service.service.IUserService;
 import com.pms.service.service.impl.ProjectServiceImpl;
 import com.pms.service.service.impl.ReportServiceImpl;
@@ -23,6 +24,7 @@ public class BaseTestCase extends TestCase {
     protected static IUserService userService;
     protected static IProjectService projectService;
     protected static IReportService reportService;
+    protected static ISalesContractService scService;
     public static final String TEST_ID = "123456789012345678901234";
 
     public BaseTestCase() {
@@ -31,6 +33,7 @@ public class BaseTestCase extends TestCase {
         userService = (UserServiceImpl) ac.getBean("userService");
         projectService = (ProjectServiceImpl) ac.getBean("projectService");
         reportService = (ReportServiceImpl) ac.getBean("reportService");
+        scService = (ISalesContractService) ac.getBean("salesContractService");
         ConfigurationManager.setProperties(ConfigurationManager.DB_NAME, "pms");
     }
 

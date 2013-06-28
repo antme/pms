@@ -27,6 +27,7 @@ import com.pms.service.service.ISalesContractService;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
+import com.pms.service.util.ExcleUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
 
 public class SalesContractServiceImpl extends AbstractService implements ISalesContractService {
@@ -768,6 +769,33 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> distinctEqListData = dao.list(distinctEQQuery, DBBean.EQ_COST);
 		List<Map<String, Object>> distinctEqList = (List<Map<String, Object>>) distinctEqListData.get(ApiConstants.RESULTS_DATA);
 		result.put("latestEqList", distinctEqList);
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> importEqCostList(Map<String, Object> params) {
+		String filePath = (String) params.get("eqCostFile");
+		filePath = "E:\\poi\\eqCost.xlsx";
+		ExcleUtil excleUtil = new ExcleUtil(filePath);
+		List<String[]> list = excleUtil.getAllData(0);
+		List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
+		for (int i=0; i<list.size(); i++){
+			Map<String, Object> eq = new HashMap<String, Object>();
+			eq.put(EqCostListBean.EQ_LIST_NO, list.get(i)[0].trim());
+			eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, list.get(i)[1].trim());
+			eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, list.get(i)[2].trim());
+			eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, list.get(i)[3].trim());
+			eq.put(EqCostListBean.EQ_LIST_AMOUNT, list.get(i)[6].trim());
+			eq.put(EqCostListBean.EQ_LIST_UNIT, list.get(i)[4].trim());
+			eq.put(EqCostListBean.EQ_LIST_BRAND, list.get(i)[5].trim());
+			eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[7].trim());
+			eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, list.get(i)[8].trim());
+			eq.put(EqCostListBean.EQ_LIST_MEMO, list.get(i)[11].trim());
+			
+			eqList.add(eq);
+		}
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put(ApiConstants.RESULTS_DATA, eqList);
 		return result;
 	}
 }
