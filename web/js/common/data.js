@@ -140,8 +140,8 @@ var executeType2 = [{text : "内部流程中"}, {text : "备货中"}, {text : "�
 //项目类型
 var proCategoryItems = [{ text: "产品", value: "产品" }, { text: "工程", value: "工程" }, { text: "服务", value: "服务" }];
 //项目状态
-var proStatusItems = [{ text: "正式立项"}, { text: "预立项"}, { text: "销售立项"}];
-var proStatusItemsForAdd = [{ text: "预立项"}, { text: "销售立项"}];
+var proStatusItems = [{ text: "内部立项"}, { text: "销售预立项"}, { text: "销售正式立项"}];
+var proStatusItemsForAdd = [{ text: "销售预立项"}, { text: "内部立项"}];
 
 
 //备货申请 - 采购类别

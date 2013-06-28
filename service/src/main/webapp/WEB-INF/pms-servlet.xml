@@ -47,6 +47,14 @@
             </list>
         </property>
     </bean>
+    
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+	    <!-- 设置上传文件的最大尺寸为10MB -->  
+	    <property name="maxUploadSize">  
+	        <value>10485760</value>  
+	    </property>  
+	</bean>     
+    
 	<bean name="userController" class="com.pms.service.controller.UserController"
 		id="userController">
 		<property name="userService" ref="userService"></property>

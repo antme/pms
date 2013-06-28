@@ -233,6 +233,7 @@ var eqCostListDataSourceNew = new kendo.data.DataSource({
             	eqcostUnit: { type: "string" },
             	eqcostBrand: { type: "string" },
             	eqcostBasePrice: { type: "number" },
+            	eqcostSalesBasePrice: { type: "number" },
             	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" }
             }
@@ -393,6 +394,9 @@ $(document).ready(function() {
 				field : "eqcostBasePrice",
 				title : "成本价"
 			}, {
+				field : "eqcostSalesBasePrice",
+				title : "销售成本价"
+			}, {
 				field : "eqcostDiscountRate",
 				title : "折扣率"
 			}, {
@@ -400,11 +404,21 @@ $(document).ready(function() {
 				title : "备注"
 			} ],
 
-			toolbar : [ {name:"create",text:"新增成本项"} ],
+//			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
 			scrollable : true
 		});
 	}//成本设备清单_new
+	
+	$("#files").kendoUpload({
+        async: {
+            saveUrl: "/service/sc/upload/eqlist",
+            autoUpload: true
+        },
+        success:function(e){
+        	eqCostListDataSourceNew.data(e.response.data);
+        }
+    });	
 	
 	if(popupParams){
 		postAjaxRequest("/service/sc/get", popupParams, edit);
@@ -446,6 +460,9 @@ function edit(data){
 			}, {
 				field : "eqcostBasePrice",
 				title : "成本价"
+			}, {
+				field : "eqcostSalesBasePrice",
+				title : "销售成本价"
 			}, {
 				field : "eqcostDiscountRate",
 				title : "折扣率"

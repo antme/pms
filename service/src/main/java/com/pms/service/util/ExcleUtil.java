@@ -30,6 +30,18 @@ public class ExcleUtil {
 
 	public ExcleUtil(){}
 	
+	public ExcleUtil(InputStream is){
+		try {
+			wb = WorkbookFactory.create(is);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (InvalidFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public ExcleUtil(File file){
 		try {
 			this.file = file;

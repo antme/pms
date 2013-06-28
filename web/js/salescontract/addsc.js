@@ -54,7 +54,7 @@ var dataSource_SC = new kendo.data.DataSource({
 		},
 		create : {
 			url : "../service/sc/add",
-			dataType : "jsonp",
+			dataType : "jsonp",	
 			method : "post"
 		},
 
@@ -88,6 +88,7 @@ var eqCostListDataSource = new kendo.data.DataSource({
             	eqcostUnit: { type: "string" },
             	eqcostBrand: { type: "string" },
             	eqcostBasePrice: { type: "number" },
+            	eqcostSalesBasePrice: { type: "number" },
             	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" }
             }
@@ -258,6 +259,9 @@ $(document).ready(function() {
 				field : "eqcostBasePrice",
 				title : "成本价"
 			}, {
+				field : "eqcostSalesBasePrice",
+				title : "销售成本价"
+			}, {
 				field : "eqcostDiscountRate",
 				title : "折扣率"
 			}, {
@@ -265,18 +269,28 @@ $(document).ready(function() {
 				title : "备注"
 			} ],
 
-			toolbar : [ {name:"create",text:"新增成本项"} ],
+//			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
 			scrollable : true
 		});
 	}//成本设备清单
+	
+    $("#files").kendoUpload({
+        async: {
+            saveUrl: "/service/sc/upload/eqlist",
+            autoUpload: true
+        },
+        success:function(e){
+        	eqCostListDataSource.data(e.response.data);
+        }
+    });	
 	
 	//添加表单绑定一个空的 Model
 	scm = new scModel();
 	kendo.bind($("#addSalesContract"), scm);
 	
 });//end dom ready	
-		
+
 function saveSC(){
 	var validator = $("#addSalesContract").kendoValidator().data("kendoValidator");
 	var validatestatus = $("#validate-status");
