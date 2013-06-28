@@ -3,9 +3,11 @@ package com.pms.service.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import com.mongodb.DBObject;
@@ -19,6 +21,7 @@ import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.InvoiceBean;
+import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
@@ -231,17 +234,25 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> listSCsForSelect(Map<String, Object> params) {
 		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID});
+		query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID,"customer"});
 		
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
 		projectQuery.put(ApiConstants.LIMIT_KEYS,ProjectBean.PROJECT_NAME);
-		
+		Map<String, Object> customers = this.dao.listToOneMapAndIdAsKey(null,DBBean.CUSTOMER);
 		Map<String, Object> projects = this.dao.listToOneMapAndIdAsKey(projectQuery,DBBean.PROJECT);
 		Map<String, Object>  scResults = dao.list(query, DBBean.SALES_CONTRACT);
 		List<Map<String, Object>> scList = (List<Map<String, Object>>) scResults.get(ApiConstants.RESULTS_DATA);
 		for (Map<String, Object> item : scList){
 		    Map<String, Object> project = (Map<String, Object>) projects.get(item.get(SalesContractBean.SC_PROJECT_ID));
-		    item.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
+		    Map<String, Object> customer = (Map<String, Object>) customers.get(item.get("customer"));
+		    if(project != null){
+		    	item.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
+		    }
+		    if(customer != null){
+		    	item.put("customerName", customer.get(CustomerBean.NAME));
+		    	item.put("customerBankName", customer.get(CustomerBean.customerBankName));
+		    	item.put("customerBankAccount", customer.get(CustomerBean.customerBankAccount));
+		    }
 		}
 		return scResults;
 	}
@@ -569,26 +580,72 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 	
 	@Override
-	public Map<String, Object> addGotMoneyForSC(Map<String, Object> params) {
-		String _id = (String) params.get(ApiConstants.MONGO_ID);
-		if (_id == null || _id.length() == 0){
-			Map<String, Object> gm = new HashMap<String, Object>();
-			gm.put(SalesContractBean.SC_GOT_MONEY, params.get(SalesContractBean.SC_GOT_MONEY));
-			gm.put(SalesContractBean.SC_GOT_MONEY_DATE, params.get(SalesContractBean.SC_GOT_MONEY_DATE));
-			gm.put(SalesContractBean.SC_ID, params.get(SalesContractBean.SC_ID));
-			return dao.add(gm, DBBean.SC_GOT_MONEY);
-		}else{
-			
-		}
-		return null;
+	public Map<String, Object> saveGetMoneyForSC(Map<String, Object> params) {
+        Map<String, Object> obj = new HashMap<String, Object>();
+        obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+        obj.put(MoneyBean.getMoneyActualMoney, ApiUtil.getDouble(params, MoneyBean.getMoneyActualMoney));
+        obj.put(MoneyBean.getMoneyActualDate, params.get(MoneyBean.getMoneyActualDate));
+        obj.put(MoneyBean.getMoneyComment, params.get(MoneyBean.getMoneyComment));
+        obj.put(MoneyBean.customerBankAccount, params.get(MoneyBean.customerBankAccount));
+        obj.put(MoneyBean.customerBankName, params.get(MoneyBean.customerBankName));
+        
+        String[] keys = new String[] { "customer", "contractCode","projectId" };
+        Map<String, Object> sc = dao.findOne("contractCode", params.get(MoneyBean.salesContractCode), keys,DBBean.SALES_CONTRACT);
+        if(sc == null) {
+        	throw new ApiResponseException("销售合同不存在", params, "请输入正确合同编号");
+        }
+        
+        
+        obj.put(MoneyBean.salesContractId, sc.get(ApiConstants.MONGO_ID));
+        obj.put(MoneyBean.salesContractCode, sc.get("contractCode"));
+        obj.put(MoneyBean.projectId, sc.get("projectId"));
+        obj.put(MoneyBean.customerId, sc.get("customer"));
+        
+        //如果没有初始化 银行账号，则初始化
+        Map<String,Object> customer = dao.findOne(ApiConstants.MONGO_ID, sc.get("customer"), DBBean.CUSTOMER);
+        if(customer != null){
+	        String cardName = (String)customer.get(MoneyBean.customerBankName);
+	        if(cardName == null || cardName.isEmpty()){
+	        	customer.put(MoneyBean.customerBankName, params.get(MoneyBean.customerBankName));
+	        	customer.put(MoneyBean.customerBankAccount, params.get(MoneyBean.customerBankAccount));
+	        	dao.updateById(customer, DBBean.CUSTOMER);
+	        }
+        }
+        return dao.save(obj, DBBean.SC_GOT_MONEY);
 	}
 
 	@Override
-	public Map<String, Object> listGotMoneyForSC(Map<String, Object> params) {
-		String scId = (String) params.get(SalesContractBean.SC_ID);
-		Map<String, Object> query = new HashMap<String, Object>();
-		query.put(SalesContractBean.SC_ID, scId);
-		return dao.list(query, DBBean.SC_GOT_MONEY);
+	public void destoryGetMoney(Map<String, Object> params) {
+        List<String> ids = new ArrayList<String>();
+        ids.add(String.valueOf(params.get(ApiConstants.MONGO_ID)));
+        dao.deleteByIds(ids, DBBean.SC_GOT_MONEY);
+	}
+
+	@Override
+	public Map<String, Object> listGetMoneyForSC(Map<String, Object> params) {
+        Map<String, Object> query1 = new HashMap<String, Object>();
+        Map<String, Object> map1 = dao.list(query1, DBBean.SC_GOT_MONEY);
+        List<Map<String, Object>> list1 = (List<Map<String, Object>>) map1.get(ApiConstants.RESULTS_DATA);
+
+        Set<String> suIds = new HashSet<String>();
+        for (Map<String, Object> obj : list1) {
+            suIds.add((String) obj.get(MoneyBean.customerId));
+        }
+        suIds.remove(null);
+        suIds.remove("");
+        if (!suIds.isEmpty()) {
+            Map<String, Object> query02 = new HashMap<String, Object>();
+            query02.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList(suIds)));
+            Map<String, Object> map2 = dao.listToOneMapAndIdAsKey(query02, DBBean.CUSTOMER);
+            for (Map<String, Object> obj : list1) {
+                String id = (String) obj.get(MoneyBean.customerId);
+                if (map2.containsKey(id)) {
+                    Map<String, Object> su = (Map<String, Object>) map2.get(id);
+                    obj.put("customerName", su.get("name"));
+                }
+            }
+        }
+        return map1;
 	}
 
 	@Override

@@ -115,6 +115,9 @@ function getUrlParser(){
 
 function loadTreePage(page, parameters){
 	$("#myTask").hide();
+	if(!parameters){
+		redirectParams = undefined;
+	}
 	loadPage(page, parameters);
 }
 

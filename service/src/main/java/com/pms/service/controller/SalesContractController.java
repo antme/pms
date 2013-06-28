@@ -1,5 +1,6 @@
 package com.pms.service.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -135,26 +136,6 @@ public class SalesContractController extends AbstractController {
         responseWithData(salesContractService.listInvoiceForSC(params), request, response);
     }
     
-    @RequestMapping("/gotmoney/add")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
-    public void addGotMoneyForSC(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(salesContractService.addGotMoneyForSC(params), request, response);
-    }
-    
-    @RequestMapping("/gotmoney/update")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
-    public void updateGotMoneyForSC(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(salesContractService.addGotMoneyForSC(params), request, response);
-    }
-    
-    @RequestMapping("/gotmoney/list")
-    public void listGotMoneyForSC(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(salesContractService.listGotMoneyForSC(params), request, response);
-    }
-    
     @RequestMapping("/monthshipments/add")
     public void addMonthShipmentsForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
@@ -199,6 +180,25 @@ public class SalesContractController extends AbstractController {
 		this.salesContractService = salesContractService;
 	}
     
+	//收款-----------
+    @RequestMapping("/getmoney/list")
+    public void listGetmoney(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(salesContractService.listGetMoneyForSC(parserJsonParameters(request, false)), request, response);
+    }
+
+    @RequestMapping("/getmoney/save")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    public void saveGetmoney(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(salesContractService.saveGetMoneyForSC(parserJsonParameters(request, false)), request, response, "save_success");
+    }
     
+    @RequestMapping("/getmoney/destroy")
+    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    public void destoryGetMoney(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String,Object> money = parserJsonParameters(request,  false);
+    	salesContractService.destoryGetMoney(money);
+    	responseWithData(new HashMap(), request, response);
+    }  
+    //....
     
 }

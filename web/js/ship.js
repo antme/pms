@@ -64,6 +64,16 @@ $(document).ready(function () {
 						name = "未知";
 					}
 					return name;
+				},
+				filterable : {
+					ui: function(e){
+						e.kendoDropDownList({
+							dataTextField: "text",
+					        dataValueField: "value",
+					        optionLabel : "选择发货类型...",
+					        dataSource: shipTypeItems
+						});
+					}
 				}
             },
             { field:"applicationDepartment", title: "申请部门" },

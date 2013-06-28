@@ -30,10 +30,6 @@ public interface ISalesContractService {
 	
 	public Map<String, Object> listInvoiceForSC(Map<String, Object> params);
 	
-	public Map<String, Object> addGotMoneyForSC(Map<String, Object> params);
-	
-	public Map<String, Object> listGotMoneyForSC(Map<String, Object> params);
-	
 	public Map<String, Object> addMonthShipmentsForSC(Map<String, Object> params);
 	
 	public Map<String, Object> listMonthShipmentsForSC(Map<String, Object> params);
@@ -57,4 +53,10 @@ public interface ISalesContractService {
 	public Map<String, Object> listEqHistoryAndLatestEqList(Map<String, Object> params);
 	
 	public Map<String, Object> importEqCostList(Map<String, Object> params);
+	///
+	public Map<String, Object> saveGetMoneyForSC(Map<String, Object> params);
+	
+	public Map<String, Object> listGetMoneyForSC(Map<String, Object> params);	
+	
+	public void destoryGetMoney(Map<String,Object> params);
 }

@@ -6,7 +6,10 @@ var requestModel = kendo.data.Model.define({
        payMoneyActualMoney: {type:"number",validation: {required: true } },
        payMoneyActualData: { type:"date",validation: {required: true }},
        purchaseContractId: {},
-       purchaseContractCode: { validation: {required: true} },
+       purchaseContractCode: {},
+       supplierName: {},
+       supplierBankName: {},
+       supplierBankAccount: {},
    	   payMoneyComment:{}
     }
 });
@@ -35,7 +38,10 @@ var dataSource = new kendo.data.DataSource({
         },
         parameterMap: function(options, operation) {
             if (operation !== "read" && options.models) {
-                return {models: kendo.stringify(options.models)};
+                return {
+                	models: kendo.stringify(options.models),
+    				mycallback : "myreflush"                	
+                };
             }
         }            
     },
@@ -62,28 +68,24 @@ $(document).ready(function () {
         columns: [
             { field: "payMoneyActualData",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
             { field: "payMoneyActualMoney", title:"金额", min:0},
-            { field: "purchaseContractCode", title: "采购合同编号",editor: pcDropDownEditor},
+            { field: "purchaseContractCode", title: "采购合同编号",editor:pcDropDownEditor},
             { field: "supplierName", title: "供应商"},
             { field: "supplierBankName", title: "开户行"},
             { field: "supplierBankAccount", title: "银行账号"},
             { field: "payMoneyComment", title: "备注"},
             { command: [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}], title: "&nbsp;", width: "170px"}
         ],
-        editable:"inline",
-        saveChanges: function(e) {
-            alert(123);
-        }
+        editable:"popup"
     });
 });
 
 function pcDropDownEditor(container, options) {
-	var input = $("<input/>");
+	var input = $("<input required data-required-msg='请选择采购合同'/>");
 	input.attr("name", options.field);
 	input.appendTo(container);
-	input.kendoDropDownList({
+	input.kendoComboBox({
 		dataTextField: "purchaseContractCode",
 		dataValueField : "purchaseContractCode",
-        //template:  '${ data.supplierName }:<strong>${ data.purchaseContractCode }</strong>',
 		dataSource : {
 			transport : {
 				read : {
@@ -96,10 +98,16 @@ function pcDropDownEditor(container, options) {
 				data: "data"
 			}
 		},
-		 change: function(e) {
-			options.model.set("supplierName",this.dataItem().supplierName);
-			options.model.set("supplierBankName",this.dataItem().supplierBankName);
-			options.model.set("supplierBankAccount",this.dataItem().supplierBankAccount);
+		change: function(e) {
+			if(this.dataItem()) {
+				options.model.set("supplierName",this.dataItem().supplierName);
+				options.model.set("supplierBankName",this.dataItem().supplierBankName);
+				options.model.set("supplierBankAccount",this.dataItem().supplierBankAccount);
+			}
 		}
     });
+}
+function myreflush(){
+	//loadPage("payMoney"); 会导致列表中某项的弹出款显示不出
+	location.reload();//临时解决方案
 }

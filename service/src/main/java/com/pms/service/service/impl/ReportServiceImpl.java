@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GetInvoiceBean;
-import com.pms.service.mockbean.PayMoneyBean;
+import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.AbstractService;
@@ -70,15 +70,15 @@ public class ReportServiceImpl extends AbstractService implements IReportService
 			for (int i = 0; i < 14; i++) {
 				Map<String, Object> obj = new HashMap<String, Object>();
 				obj.put("projectId", projectId);
-				obj.put(PayMoneyBean.payMoneyActualMoney, ApiUtil.getDouble(row[begin + i]));
+				obj.put(MoneyBean.payMoneyActualMoney, ApiUtil.getDouble(row[begin + i]));
 				if (i == 0) {
-					obj.put(PayMoneyBean.payMoneyActualDate, "2010/01/01");
+					obj.put(MoneyBean.payMoneyActualDate, "2010/01/01");
 				} else if (i == 1) {
-					obj.put(PayMoneyBean.payMoneyActualDate, "2011/01/01");
+					obj.put(MoneyBean.payMoneyActualDate, "2011/01/01");
 				} else {
 					int mm = i - 1;
 					String dt = "2012/" + mm + "/01";
-					obj.put(PayMoneyBean.payMoneyActualDate, dt);
+					obj.put(MoneyBean.payMoneyActualDate, dt);
 				}
 				payList.add(obj);
 			}
