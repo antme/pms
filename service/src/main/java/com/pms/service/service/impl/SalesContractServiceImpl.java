@@ -7,14 +7,11 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
-import com.mongodb.DBObject;
-import com.mongodb.QueryBuilder;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
-import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.CustomerBean;
@@ -370,15 +367,51 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		//获取相关开票信息列表数据
 		Map<String, Object> invoiceQuery = new HashMap<String, Object>();
-		invoiceQuery.put(SalesContractBean.SC_ID, _id);
+		invoiceQuery.put(MoneyBean.salesContractId, _id);
 		Map<String, Object> invoiceList = dao.list(invoiceQuery, DBBean.SC_INVOICE);
 		List<Map<String, Object>> invoiceListData = (List<Map<String, Object>>) invoiceList.get(ApiConstants.RESULTS_DATA); 
 		
 		//获取相关收款信息列表数据
 		Map<String, Object> gotMoneyQuery = new HashMap<String, Object>();
-		gotMoneyQuery.put(SalesContractBean.SC_ID, _id);
+		gotMoneyQuery.put(MoneyBean.salesContractId, _id);
+		Map<String, Object> order = new LinkedHashMap<String, Object>();
+        order.put(MoneyBean.getMoneyActualDate, ApiConstants.DB_QUERY_ORDER_BY_ASC);
+        gotMoneyQuery.put(ApiConstants.DB_QUERY_ORDER_BY, order);
 		Map<String, Object> gotMoneyList = dao.list(gotMoneyQuery, DBBean.SC_GOT_MONEY);
 		List<Map<String, Object>> gotMoneyListData = (List<Map<String, Object>>) gotMoneyList.get(ApiConstants.RESULTS_DATA);
+		
+		Map<String, Object> gotMoneyData = new HashMap<String, Object>();
+		
+		// 月度日期数组
+		List<String> dateList = new ArrayList<String>();
+		// 对应的金额数组
+		List<Double> moneyList = new ArrayList<Double>();
+		for (Map<String, Object> data:gotMoneyListData){
+			if (data.containsKey(MoneyBean.getMoneyActualDate) && data.containsKey(MoneyBean.getMoneyActualMoney)) {
+				String date = data.get(MoneyBean.getMoneyActualDate).toString();
+				String[] datearr = date.split("-");
+				String datestr = datearr[0] + "-" + datearr[1];
+				
+				Double money = (Double) data.get(MoneyBean.getMoneyActualMoney);
+				
+				if (dateList.isEmpty()) {
+					dateList.add(datestr);
+					moneyList.add(money);
+				} else {
+					String preDateStr = dateList.get(dateList.size()-1);
+					if (datestr.equals(preDateStr)) {
+						Double preMoney = moneyList.get(moneyList.size()-1);
+						moneyList.set(moneyList.size()-1, preMoney+money);
+					} else {
+						dateList.add(datestr);
+						moneyList.add(money);
+					}
+				}
+			}
+		}
+		
+		gotMoneyData.put("date", dateList);
+		gotMoneyData.put("money", moneyList);
 		
 		//获取相关 按月发货金额
 		Map<String, Object> monthShipmentsQuery = new HashMap<String, Object>();
@@ -394,7 +427,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		sc.put(SalesContractBean.SC_EQ_LIST, eqListData);
 		sc.put(SalesContractBean.SC_INVOICE_INFO, invoiceListData);
-		sc.put(SalesContractBean.SC_GOT_MONEY_INFO, gotMoneyListData);
+		sc.put(SalesContractBean.SC_GOT_MONEY_INFO, gotMoneyData);
 		sc.put(SalesContractBean.SC_MONTH_SHIPMENTS_INFO, monthShipmentsListData);
 		sc.put(SalesContractBean.SC_YEAR_SHIPMENTS_INFO, yearShipmentsListData);
 		return sc;
