@@ -863,7 +863,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			result.put("status", 0);
-			throw new ApiResponseException("Import eqCostList error.", null, "上传文件格式出错");
+			throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
 		}
 		return result;
 	}
