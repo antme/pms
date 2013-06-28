@@ -69,6 +69,7 @@ public class ApiFilter extends AbstractController implements Filter {
             }
 
         }
+        ApiThreadLocal.removeAll();
 
     }
 
