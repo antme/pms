@@ -124,6 +124,11 @@
 		<property name="dao" ref="commonDao"></property>
 	</bean>
 
+    <bean name="arrivalNoticeService" class="com.pms.service.service.impl.ArrivalNoticeServiceImpl"
+		id="arrivalNoticeService">
+		<property name="dao" ref="commonDao"></property>
+	</bean>
+
 	<bean
         class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetClass" value="com.pms.service.annotation.InitBean" />

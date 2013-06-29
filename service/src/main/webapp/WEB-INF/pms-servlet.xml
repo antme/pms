@@ -115,4 +115,9 @@
         <property name="returnService" ref="returnService"></property>
     </bean> 
 
+    <bean name="arrivalNoticeController" class="com.pms.service.controller.ArrivalNoticeController"
+        id="arrivalNoticeController">
+        <property name="arrivalNoticeService" ref="arrivalNoticeService"></property>
+    </bean> 
+
 </beans>
