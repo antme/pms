@@ -206,6 +206,8 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/repository/repositoryout.html";
 	} else if(page == "return"){
 		page = "html/execution/return.html";
+	} else if(page == "arrivalNotice"){
+		page = "html/execution/arrivalNotice.html";
 	}
 	
 

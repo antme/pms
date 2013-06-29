@@ -99,3 +99,24 @@ function editOr() {
 		_id : row._id
 	});
 }
+
+// 生成到货通知
+function arrivalNotice() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		var param = {
+				"purchaseOrderId" : row._id,
+				"purchaseOrderCode" : row.purchaseOrderCode,
+				"salesContractId" : row.salesContractId,
+				"salesContractCode" : row.salesContractCode,
+				"shipType" : "0" // 直发
+			};
+		postAjaxRequest("/service/arrivalNotice/create", param,
+					callback);
+	}
+}
+
+function callback(response) {
+	alert("到货通知已生成");
+	loadPage("html/execution/arrivalNotice.html");
+}
