@@ -133,12 +133,8 @@ $(document).ready(function() {
         		
 	        	inSalesContract.value(null);
 	        	inProjectId = this.value();
-	        	inSalesContract.dataSource.fetch(function(){
-	        		var data = this.data();
-	        		if (data.length > 0) {
-	        			inSalesContract.readonly(false);
-					}
-	        	});
+	        	inSalesContract.dataSource.read();
+	        	inSalesContract.readonly(false);
         	}
         }
     }).data("kendoComboBox");
@@ -228,12 +224,8 @@ $(document).ready(function() {
         	if (dataItem) {
 	        	outSalesContract.value(null);
 	        	outProjectId = this.value();
-	        	outSalesContract.dataSource.fetch(function(){
-	        		var data = this.data();
-	        		if (data.length > 0) {
-	        			outSalesContract.readonly(false);
-					}
-	        	});
+	        	outSalesContract.dataSource.read();
+	        	outSalesContract.readonly(false);
         	}
         }
     }).data("kendoComboBox");
