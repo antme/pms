@@ -623,9 +623,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         
         
-        if(parameters.get("requestedDate") == null){
+        if (parameters.get("requestedDate") == null && parameters.get(PurchaseCommonBean.PROCESS_STATUS) != null && 
+                parameters.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_NEW)) {
             parameters.put("requestedDate", DateUtil.getDateString(new Date()));
         }
+        
         Map<String, Object> result = null;
 
         if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
@@ -645,11 +647,16 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     public Map<String, Object> approvePurchaseRequest(Map<String, Object> request) {
-
-        if (!isPurchase() && !isAdmin()) {
+        Map<String, Object> requestMap = this.dao.findOne(ApiConstants.MONGO_ID, request.get(ApiConstants.MONGO_ID), 
+                new String[] { PurchaseCommonBean.PROCESS_STATUS }, DBBean.PURCHASE_REQUEST);      
+        
+        if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS) == null) {
             return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.MANAGER_APPROVED);
+        }
+        if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.MANAGER_APPROVED)) {
+            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_APPROVED);
         } else {
-            return processRequest(request, DBBean.PURCHASE_REQUEST, APPROVED);
+            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.MANAGER_APPROVED);
         }
     }
 
