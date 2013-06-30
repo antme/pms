@@ -104,15 +104,17 @@ function editOr() {
 function arrivalNotice() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		var param = {
-				"purchaseOrderId" : row._id,
-				"purchaseOrderCode" : row.purchaseOrderCode,
-				"salesContractId" : row.salesContractId,
-				"salesContractCode" : row.salesContractCode,
-				"shipType" : "0" // 直发
-			};
-		postAjaxRequest("/service/arrivalNotice/create", param,
-					callback);
+		if (row.status == "审批通过") {
+			var param = {
+					"purchaseOrderId" : row._id,
+					"purchaseOrderCode" : row.purchaseOrderCode,
+					"salesContractId" : row.salesContractId,
+					"salesContractCode" : row.salesContractCode,
+					"shipType" : "0" // 直发
+				};
+			postAjaxRequest("/service/arrivalNotice/create", param,
+						callback);
+		}
 	}
 }
 
