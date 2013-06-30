@@ -180,47 +180,50 @@ function edit(data) {
 							dataSource : itemDataSource,
 							columns : [ {
 								field : "eqcostNo",
-								title : "货品编号"
-							}, {
-								field : "eqcostProductName",
-								title : "货品名"
+								title : "序号"
 							}, {
 								field : "eqcostMaterialCode",
 								title : "物料代码"
 							}, {
+								field : "eqcostProductName",
+								title : "产品名"
+							}, {
 								field : "eqcostProductType",
-								title : "货品型号"
+								title : "规格型号"
 
+							}, {
+								field : "eqcostUnit",
+								title : "单位"
 							}, {
 								field : "eqcostRealAmount",
 								title : "合同中总数"
 							}, {
 								field : "eqcostBasePrice",
-								title : "参考单价"
+								title : "成本单价"
 							}, {
 								field : "eqcostContractTotalMoney",
-								title : "合同总金额"
-							}, {
-								field : "orderEqcostName",
-								title : "实际货品名"
-							}, {
-								field : "orderEqcostModel",
-								title : "实际型号"
+								title : "合同总价"
 							}, {
 								field : "eqcostApplyAmount",
-								title : "本次申请数量",
+								title : "采购数量",
 								template : function(dataItem){
 									return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
 								}
 							},{
 								field : "eqcostProductUnitPrice",
-								title : "实际单价",
+								title : "采购单价",
 								template : function(dataItem){
 									return '<span class="edit-tip">' + dataItem.eqcostProductUnitPrice + '</span>';
 								}
 							}, {
 								field : "requestedTotalMoney",
-								title : "订单总金额"
+								title : "采购总价"
+							},{
+								field : "eqcostBrand",
+								title : "品牌"
+							}, {
+								field : "remark",
+								title : "备注"
 							}, {
 								field : "differenceAmount",
 								title : "金额差值"

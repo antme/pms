@@ -403,6 +403,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         finalKeys.add(ApiConstants.MONGO_ID);
         finalKeys.add(SalesContractBean.SC_ID);
         finalKeys.add(SalesContractBean.SC_PROJECT_ID);
+        finalKeys.add("eqcostBrand");
+        finalKeys.add("remark");
 
         List<Map<String, Object>> orgin = (List<Map<String, Object>>) eqList;
         List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();

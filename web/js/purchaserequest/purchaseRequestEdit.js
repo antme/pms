@@ -220,6 +220,9 @@ function edit(data) {
 							}, {
 								field : "requestedTotalMoney",
 								title : "成本总价"
+							},{
+								field : "eqcostBrand",
+								title : "品牌"
 							}, {
 								field : "remark",
 								title : "备注"
