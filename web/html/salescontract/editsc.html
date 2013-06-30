@@ -96,7 +96,7 @@
 						</div>
 						<div data-container-for="contractType" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="contractType" id="contractType"
-								required="required" data-bind="value: contractType">
+								required="required" validationMessage="必填" data-bind="value: contractType">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -104,7 +104,7 @@
 						</div>
 						<div data-container-for="archiveStatus" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="archiveStatus" id="archiveStatus"
-								required="required" data-bind="value: archiveStatus">
+								required="required" validationMessage="必填" data-bind="value: archiveStatus">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -112,14 +112,14 @@
 						</div>
 						<div data-container-for="runningStatus" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="runningStatus" id="runningStatus"
-								required="required" data-bind="value: runningStatus">
+								 data-bind="value: runningStatus">
 						</div>
 						
 	                   <div class="k-edit-label ">
 							<label for="contractDate">签订日期</label>
 						</div>
 						<div data-container-for="contractDate" class="k-edit-field ">
-							<input name="contractDate" validationMessage="必填" id="contractDate" data-bind="value: contractDate">
+							<input name="contractDate" required="required" validationMessage="必填" id="contractDate" data-bind="value: contractDate">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -127,7 +127,7 @@
 						</div>
 						<div data-container-for="contractDownPayment" class="k-edit-field ">
 							<input type="text" name="contractDownPayment" id="contractDownPayment"
-								required="required" data-bind="value: contractDownPayment">
+								 data-bind="value: contractDownPayment">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -135,7 +135,7 @@
 						</div>
 						<div data-container-for="progressPayment" class="k-edit-field ">
 							<input type="text" name="progressPayment" id="progressPayment"
-								required="required" data-bind="value: progressPayment">
+								 data-bind="value: progressPayment">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -143,7 +143,7 @@
 						</div>
 						<div data-container-for="qualityMoney" class="k-edit-field ">
 							<input type="text" name="qualityMoney" id="qualityMoney"
-								required="required" data-bind="value: qualityMoney">
+								 data-bind="value: qualityMoney">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -171,7 +171,7 @@
 						</div>
 						<div data-container-for="estimateEqCost0" class="k-edit-field ">
 							<input type="number" min="0" name="estimateEqCost0" id="estimateEqCost0" onchange="moneyOnChange();"
-								required="required" data-bind="value: estimateEqCost0">
+								 data-bind="value: estimateEqCost0">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -179,7 +179,7 @@
 						</div>
 						<div data-container-for="estimateEqCost1" class="k-edit-field ">
 							<input type="text" name="estimateEqCost1" id="estimateEqCost1" onchange="moneyOnChange();"
-								required="required" data-bind="value: estimateEqCost1">
+								 data-bind="value: estimateEqCost1">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -187,7 +187,7 @@
 						</div>
 						<div data-container-for="estimateSubCost" class="k-edit-field ">
 							<input type="text" name="estimateSubCost" id="estimateSubCost" onchange="moneyOnChange();"
-								required="required" data-bind="value: estimateSubCost">
+								 data-bind="value: estimateSubCost">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -195,7 +195,7 @@
 						</div>
 						<div data-container-for="estimatePMCost" class="k-edit-field ">
 							<input type="text" name="estimatePMCost" id="estimatePMCost" onchange="moneyOnChange();"
-								required="required" data-bind="value: estimatePMCost">
+								 data-bind="value: estimatePMCost">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -203,7 +203,7 @@
 						</div>
 						<div data-container-for="estimateDeepDesignCost" class="k-edit-field ">
 							<input type="text" name="estimateDeepDesignCost" id="estimateDeepDesignCost" onchange="moneyOnChange();"
-								required="required" data-bind="value: estimateDeepDesignCost">
+								 data-bind="value: estimateDeepDesignCost">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -211,7 +211,7 @@
 						</div>
 						<div data-container-for="estimateDebugCost" class="k-edit-field ">
 							<input type="text" name="estimateDebugCost" id="estimateDebugCost" onchange="moneyOnChange();"
-								required="required" data-bind="value: estimateDebugCost">
+								 data-bind="value: estimateDebugCost">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -219,7 +219,7 @@
 						</div>
 						<div data-container-for="estimateOtherCost" class="k-edit-field ">
 							<input type="text" name="estimateOtherCost" id="estimateOtherCost" onchange="moneyOnChange();"
-								required="required" data-bind="value: estimateOtherCost">
+								 data-bind="value: estimateOtherCost">
 						</div>
 						<div class="k-edit-label ">
 							<label for="estimateGrossProfit">预估毛利</label>
@@ -239,7 +239,7 @@
 						</div>
 						<div data-container-for="invoiceType" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="invoiceType" id="invoiceType"
-								required="required" data-bind="value: invoiceType">
+								required="required" validationMessage="必填" data-bind="value: invoiceType">
 						</div>
 						
 	                   <!-- <div class="k-edit-label ">

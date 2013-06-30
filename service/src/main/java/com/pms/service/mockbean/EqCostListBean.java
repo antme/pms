@@ -12,7 +12,6 @@ public class EqCostListBean {
 	public static final String EQ_LIST_UNIT = "eqcostUnit";//单位
 	public static final String EQ_LIST_BRAND = "eqcostBrand";//品牌
 	public static final String EQ_LIST_BASE_PRICE = "eqcostBasePrice"; //成本价
-	public static final String EQ_LIST_SALES_BASE_PRICE = "eqcostSalesBasePrice"; //销售成本价
 	public static final String EQ_LIST_TOTAL_AMOUNT = "eqcostTotalAmount";//小计
 	public static final String EQ_LIST_MEMO = "eqcostMemo";//备注
 	public static final String EQ_LIST_DISCOUNT_RATE = "eqcostDiscountRate"; //折扣率
@@ -21,5 +20,10 @@ public class EqCostListBean {
 	public static final String EQ_LIST_REAL_AMOUNT = "eqcostRealAmount";//真实数量
 	
 	public static final String EQ_LIST_VERSION_NO = "versionNo";//记录成本设备变更
+
+	//新加字段
+	public static final String EQ_LIST_SALES_BASE_PRICE = "eqcostSalesBasePrice"; //销售单价
+	public static final String EQ_LIST_TAX_TYPE = "eqcostTaxType";//税收类型：增值税 or 非增值税
+	public static final String EQ_LIST_CATEGORY = "eqcostCategory";//所属 分类
 	
 }

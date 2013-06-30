@@ -45,6 +45,8 @@ $(document).ready(function() {
 			dataBound : function(e) {
 				if (this.dataSource.at(0)) {
 					selectedRequestId = this.dataSource.at(0)._id;
+				}else{
+					alert("暂时没有需要发采购订单的采购申请可选");
 				}
 			},
 			// 当用户选择不同的采购申请时候赋值给requestDataItem对象
@@ -113,6 +115,10 @@ function loadRequest(data){
 	requestDataItem.status = "草稿";
 	requestDataItem.purchaseRequestId = requestDataItem._id;
 	requestDataItem.comment = "";
+	requestDataItem.approveComment = "";
+	requestDataItem.approveComment = "";
+	requestDataItem.requestedDate = "";
+	
 	// // 新增，所以设置_id为空
 	requestDataItem._id="";
 	edit();
@@ -162,7 +168,7 @@ function edit(data) {
 	// 渲染成本编辑列表
 	itemDataSource.data(requestDataItem.eqcostList);
 
-	
+	requestDataItem.set("pbPlanDate", kendo.toString(requestDataItem.pbPlanDate, 'd'));
 	kendo.bind($("#purchaseorder-edit-item"), requestDataItem);
 	$("#purchaseorder-edit-item").show();
 
@@ -189,35 +195,32 @@ function edit(data) {
 								field : "eqcostRealAmount",
 								title : "合同中总数"
 							}, {
+								field : "eqcostBasePrice",
+								title : "参考单价"
+							}, {
+								field : "eqcostContractTotalMoney",
+								title : "合同总金额"
+							}, {
+								field : "orderEqcostName",
+								title : "实际货品名"
+							}, {
+								field : "orderEqcostModel",
+								title : "实际型号"
+							}, {
 								field : "eqcostApplyAmount",
 								title : "本次申请数量",
 								template : function(dataItem){
 									return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
 								}
-							}, {
-								field : "eqcostBasePrice",
-								title : "参考单价"
-							}, {
-								field : "eqcostContractTotalMoney",
-								title : "小计金额"
-							}, {
-								field : "orderEqcostCode",
-								title : "订单货品编号"
-							}, {
-								field : "orderEqcostName",
-								title : "订单货品名"
-							}, {
-								field : "orderEqcostModel",
-								title : "订单货品型号"
-							}, {
+							},{
 								field : "eqcostProductUnitPrice",
-								title : "订单货品单价",
+								title : "实际单价",
 								template : function(dataItem){
 									return '<span class="edit-tip">' + dataItem.eqcostProductUnitPrice + '</span>';
 								}
 							}, {
 								field : "requestedTotalMoney",
-								title : "订单实际小计金额"
+								title : "订单总金额"
 							}, {
 								field : "differenceAmount",
 								title : "金额差值"
