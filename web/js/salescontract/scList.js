@@ -112,7 +112,7 @@ function toolbar_viewEqListHistory(){
 		return;
 	}
 	
-	var options = { width:"780px", height: "480px", title:"成本设备变更历史"};
+	var options = { width:"900px", height: "600px", title:"成本设备变更历史"};
 	openRemotePageWindow(options, "html/salescontract/eqcostChangeHistory.html", {_id:rowData._id});
 }
 

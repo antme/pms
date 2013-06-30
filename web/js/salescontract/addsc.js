@@ -76,7 +76,15 @@ var dataSource_SC = new kendo.data.DataSource({
 
 //成本设备清单数据源
 var eqCostListDataSource = new kendo.data.DataSource({
-//	data:[],
+	group: {
+		field: "eqcostCategory",
+		aggregates: [
+                     { field: "eqcostCategory", aggregate: "count" }
+                  ]
+	},
+	
+	aggregate: [ { field: "eqcostCategory", aggregate: "count" }],
+	
 	schema : {
 		model : {
             fields: {
@@ -90,7 +98,9 @@ var eqCostListDataSource = new kendo.data.DataSource({
             	eqcostBasePrice: { type: "number" },
             	eqcostSalesBasePrice: { type: "number" },
             	eqcostDiscountRate : {type: "number"},
-            	eqcostMemo: { type: "string" }
+            	eqcostMemo: { type: "string" },
+        		eqcostTaxType : {type: "string"},
+        		eqcostCategory : {type: "string"}
             }
         }
 	}
@@ -103,7 +113,8 @@ var projectItems = new kendo.data.DataSource({
 		}
 	},
 	schema: {
-	    data: "data"
+	    data: "data",
+	    model: { id: "_id" }
 	}
 });
 
@@ -233,10 +244,12 @@ $(document).ready(function() {
 	if (!$("#scEqCostList").data("kendoGrid")){
 		$("#scEqCostList").kendoGrid({
 			dataSource : eqCostListDataSource,
-			columns : [ {
-				field : "eqcostNo",
-				title : "序号"
-			}, {
+			columns : [ 
+//			            {
+//				field : "eqcostNo",
+//				title : "序号"
+//			}, 
+			{
 				field : "eqcostMaterialCode",
 				title : "物料代码"
 			}, {
@@ -252,18 +265,27 @@ $(document).ready(function() {
 			}, {
 				field : "eqcostUnit",
 				title : "单位"
-			}, {
-				field : "eqcostBrand",
-				title : "品牌"
-			}, {
+			}, 
+//			{
+//				field : "eqcostBrand",
+//				title : "品牌"
+//			}, 
+			{
 				field : "eqcostBasePrice",
 				title : "成本价"
 			}, {
 				field : "eqcostSalesBasePrice",
-				title : "销售成本价"
+				title : "销售单价"
 			}, {
 				field : "eqcostDiscountRate",
 				title : "折扣率"
+			}, {
+				field : "eqcostTaxType",
+				title : "税收类型"
+			}, {
+				field : "eqcostCategory",
+				title : "类别",
+				groupHeaderTemplate: "#= value # (数量: #= count#)", footerTemplate: "总数: #=count#"//, groupFooterTemplate: "数量: #=count#"
 			}, {
 				field : "eqcostMemo",
 				title : "备注"
@@ -294,15 +316,24 @@ $(document).ready(function() {
 function saveSC(){
 	var validator = $("#addSalesContract").kendoValidator().data("kendoValidator");
 	var validatestatus = $("#validate-status");
-	if(!validator.validate()) {
+	var eqCostData = eqCostListDataSource.data();
+	var projectId = scm.get("projectId");
+//	console.log("************"+projectId);
+//	console.log(projectItems.get(projectId).get("projectStatus"));
+	var projectStatus = projectItems.get(projectId).get("projectStatus")
+
+	if (eqCostListDataSource.total() == 0){
+		alert("成本设备清单为空！");
+		return;
+	}
+	if(!validator.validate() && projectStatus == "销售正式立项") {
 		validatestatus.text("表单验证不通过！")
         .removeClass("valid")
         .addClass("invalid");
 		alert("表单验证不通过！");
 		return;
     } else {
-		var data = eqCostListDataSource.data();
-		scm.set("eqcostList", data);
+		scm.set("eqcostList", eqCostData);
 
 		var profit = $("#estimateGrossProfit").val();
 		var profitRate = $("#estimateGrossProfitRate").val();

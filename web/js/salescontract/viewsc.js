@@ -45,6 +45,37 @@ var scModel = kendo.data.Model.define({
 });
 var scm;
 
+var eqCostListDataSourceView = new kendo.data.DataSource({
+	group: {
+		field: "eqcostCategory",
+		aggregates: [
+                     { field: "eqcostCategory", aggregate: "count" }
+                  ]
+	},
+	
+	aggregate: [ { field: "eqcostCategory", aggregate: "count" }],
+	
+	schema : {
+		model : {
+            fields: {
+            	eqcostNo: { type: "string" },
+            	eqcostMaterialCode: { type: "string" },
+            	eqcostProductName: { type: "string" },
+            	eqcostProductType: { type: "string" },
+            	eqcostAmount: { type: "number" },
+            	eqcostUnit: { type: "string" },
+            	eqcostBrand: { type: "string" },
+            	eqcostBasePrice: { type: "number" },
+            	eqcostSalesBasePrice: { type: "number" },
+            	eqcostDiscountRate : {type: "number"},
+            	eqcostMemo: { type: "string" },
+        		eqcostTaxType : {type: "string"},
+        		eqcostCategory : {type: "string"}
+            }
+        }
+	}
+});
+
 $(document).ready(function() {
 	//选项卡
 	if (!$("#tabstrip").data("kendoTabStrip")){
@@ -179,42 +210,57 @@ $(document).ready(function() {
 
 function edit(data){
 	scm = new scModel(data);
+	eqCostListDataSourceView.data(scm.eqcostList);
 	//成本设备清单_old
 	if (!$("#scEqCostListOld").data("kendoGrid")){
 		$("#scEqCostListOld").kendoGrid({
-			dataSource : scm.eqcostList,
-			columns : [ {
-				field : "eqcostNo",
-				title : "序号"
-			}, {
-				field : "eqcostMaterialCode",
-				title : "物料代码"
-			}, {
-				field : "eqcostProductName",
-				title : "产品名称"
-			}, {
-				field : "eqcostProductType",
-				title : "规格型号"
-
-			}, {
-				field : "eqcostAmount",
-				title : "数量"
-			}, {
-				field : "eqcostUnit",
-				title : "单位"
-			}, {
-				field : "eqcostBrand",
-				title : "品牌"
-			}, {
-				field : "eqcostBasePrice",
-				title : "成本价"
-			}, {
-				field : "eqcostDiscountRate",
-				title : "折扣率"
-			}, {
-				field : "eqcostMemo",
-				title : "备注"
-			} ],
+			dataSource : eqCostListDataSourceView,
+			columns : [ 
+					//{
+					//field : "eqcostNo",
+					//title : "序号"
+					//}, 
+					{
+					field : "eqcostMaterialCode",
+					title : "物料代码"
+					}, {
+					field : "eqcostProductName",
+					title : "产品名称"
+					}, {
+					field : "eqcostProductType",
+					title : "规格型号"
+					
+					}, {
+					field : "eqcostAmount",
+					title : "数量"
+					}, {
+					field : "eqcostUnit",
+					title : "单位"
+					}, 
+					//{
+					//field : "eqcostBrand",
+					//title : "品牌"
+					//}, 
+					{
+					field : "eqcostBasePrice",
+					title : "成本价"
+					}, {
+					field : "eqcostSalesBasePrice",
+					title : "销售单价"
+					}, {
+					field : "eqcostDiscountRate",
+					title : "折扣率"
+					}, {
+					field : "eqcostTaxType",
+					title : "税收类型"
+					}, {
+					field : "eqcostCategory",
+					title : "类别",
+					groupHeaderTemplate: "#= value # (数量: #= count#)", footerTemplate: "总数: #=count#"//, groupFooterTemplate: "数量: #=count#"
+					}, {
+					field : "eqcostMemo",
+					title : "备注"
+					} ],
 			scrollable : true
 		});
 	}//成本设备清单_old

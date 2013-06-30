@@ -118,8 +118,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			Map<String, Object> existContract = dao.findOneByQuery(existContractQuery, DBBean.SALES_CONTRACT);
 			
 			//更新销售合同变更次数
-			float oldAmount = ApiUtil.getFloatParam(existContract, SalesContractBean.SC_AMOUNT);
-			float newAmount = ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT);
+			float oldAmount = ApiUtil.getFloatParam(existContract, SalesContractBean.SC_AMOUNT)==null?0:ApiUtil.getFloatParam(existContract, SalesContractBean.SC_AMOUNT);
+			float newAmount = ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT)==null?0:ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT);
 			if (oldAmount != newAmount){
 				int newVersion = ApiUtil.getIntegerParam(existContract, SalesContractBean.SC_MODIFY_TIMES);
 				contract.put(SalesContractBean.SC_MODIFY_TIMES, ++newVersion);
@@ -183,6 +183,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		for (Map<String, Object> item : eqcostList){
 
             Map<String, Object> realItemQuery = new HashMap<String, Object>();
+            realItemQuery.put(SalesContractBean.SC_ID, cId);
             realItemQuery.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, item.get(EqCostListBean.EQ_LIST_MATERIAL_CODE));
             realItemQuery.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, item.get(EqCostListBean.EQ_LIST_PRODUCT_NAME));
             realItemQuery.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
@@ -881,13 +882,15 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, list.get(i)[2].trim());
 				eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, list.get(i)[3].trim());
 				eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, list.get(i)[4].trim());
-				eq.put(EqCostListBean.EQ_LIST_AMOUNT, list.get(i)[6].trim());
 				eq.put(EqCostListBean.EQ_LIST_UNIT, list.get(i)[5].trim());
+				eq.put(EqCostListBean.EQ_LIST_AMOUNT, list.get(i)[6].trim());
 				eq.put(EqCostListBean.EQ_LIST_BRAND, "N/A");
-				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[8].trim());
 				eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, list.get(i)[7].trim());
+				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[8].trim());
 				eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, list.get(i)[9].trim());
-				eq.put(EqCostListBean.EQ_LIST_MEMO, list.get(i)[12].trim());
+				eq.put(EqCostListBean.EQ_LIST_CATEGORY, list.get(i)[11].trim());
+				eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, list.get(i)[12].trim());
+				eq.put(EqCostListBean.EQ_LIST_MEMO, list.get(i)[14].trim());
 				
 				eqList.add(eq);
 			}

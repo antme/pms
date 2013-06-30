@@ -223,7 +223,8 @@ public class ApiUtil {
     
     public static Float getFloatParam(Map<String, Object> params, String key){
     	Float result = null;
-    	if (params.get(key) != null){
+    	Object value = params.get(key); 
+    	if (!isEmpty(value)){
     		try {
 				result = Float.parseFloat(String.valueOf(params.get(key)));
 			} catch (NumberFormatException e) {
