@@ -204,6 +204,9 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String STATUS_REPOSITORY_NEW = "入库中";
     public static final String STATUS_IN_OUT_REPOSITORY = "已入/出库";
     
+    public static final String STATUS_ORDER_LOCKED = "已锁定";
+    public static final String STATUS_ORDER_FINISHED = "采购完毕";
+    
     //物流类型
     public static final String LOGISTICS_TYPE_VALUE_DIRECTY = "直发"; 
     public static final String eqcostDeliveryType_DIRECTY = "直发现场"; 

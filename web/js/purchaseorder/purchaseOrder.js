@@ -95,9 +95,21 @@ function add(){
 function editOr() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
-	loadPage("html/purchasecontract/purchaseOrderEdit.html", {
-		_id : row._id
-	});
+	
+	if (row) {
+		if (row.status == "采购完毕") {
+			alert("申请采购完毕，不能编辑");
+		} else if (row.status == "已锁定") {
+			alert("申请已锁定，不能编辑");
+		} else {
+			
+			loadPage("html/purchasecontract/purchaseOrderEdit.html", {
+				_id : row._id
+			});
+		}
+
+	}
+
 }
 
 // 生成到货通知

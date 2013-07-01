@@ -239,7 +239,7 @@ function showOrderWindow() {
 						eqcostList[listIndex].projectId = dataItems[index].projectId;
 						eqcostList[listIndex].salesContractId = dataItems[index].salesContractId;
 						eqcostList[listIndex].salesContractCode = dataItems[index].salesContractCode;
-						eqcostList[listIndex].purchaseOrderId = dataItems[index].purchaseOrderId;
+						eqcostList[listIndex].purchaseOrderId = dataItems[index]._id;
 						eqcostList[listIndex].purchaseOrderCode = dataItems[index].purchaseOrderCode;
 						eqcostList[listIndex].purchaseRequestId = dataItems[index].purchaseRequestId;
 						eqcostList[listIndex].purchaseRequestCode = dataItems[index].purchaseRequestCode;

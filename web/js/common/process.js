@@ -46,6 +46,8 @@ function approve() {
 	if (row) {
 		if(row.status == "审批通过"){
 			alert("此申请已审批通过，不需要再次审批");
+		}else if(row.status == "已锁定"){
+			alert("数据已锁定，不需要再次审批");
 		}else{
 			process(approveUrl);
 		}
@@ -57,6 +59,8 @@ function cancel() {
 	if (row) {
 		if(row.status == "已中止"){
 			alert("此申请已中止，不需要再次中止");
+		}else if(row.status == "已锁定"){
+			alert("数据已锁定，不能中止");
 		}else{
 			process(cancelUrl);
 		}
@@ -69,6 +73,10 @@ function reject() {
 	if (row) {
 		if(row.status == "审批拒绝"){
 			alert("此申请已审批拒绝，不需要再次拒绝");
+		}else if(row.status == "已锁定"){
+			alert("数据已锁定，不能拒绝");
+		}else if(row.status == "审批通过"){
+			alert("数据已审批通过，不能拒绝");
 		}else{
 			process(rejectUrl);
 		}
