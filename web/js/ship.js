@@ -99,9 +99,13 @@ $(document).ready(function () {
 					} else if (dataItem.status == 1){
 						name = "申请中";
 					} else if (dataItem.status == 2){
-						name = "已发货";
+						name = "批准";
 					} else if (dataItem.status == -1){
 						name = "拒绝";
+					} else if (dataItem.status == -2){
+						name = "终止";
+					} else if (dataItem.status == 3){
+						name = "关闭";
 					} else {
 						name = "未知";
 					}
@@ -128,9 +132,20 @@ function toolbar_edit() {
 	}
 }
 
+function toolbar_record() {
+	var rowData = getSelectedRowDataByGridWithMsg("grid");
+	if (rowData) {
+		if (rowData.status == 2){
+		} else {
+			alert("无法执行该操作");
+		}
+	}
+}
+
 function toolbar_delete() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
+
 		if (rowData.status == 0){
 			if(confirm('确实要删除该内容吗?')) {
 				dataSource.remove(rowData);
@@ -142,15 +157,27 @@ function toolbar_delete() {
 	}
 }
 
-function toolbar_submit() {
+function toolbar_submit(op) {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		
-		// 草稿或打回
-		if (row.status == 0 || row.status == -1) {
+		var nextStatus = false;
+		
+		if (op == 1) { // 提交申请
+			// 草稿或打回
+			if (row.status == 0 || row.status == -1) {
+				nextStatus = 1;
+			}
+		} else if (op == 2) { // 终止
+			if (row.status == 2) {
+				nextStatus = -2;
+			}
+		}
+		
+		if (nextStatus) {
 			var param = {
 					_id : row._id,
-					"status" : "1"
+					"status" : nextStatus
 				};
 			postAjaxRequest(crudServiceBaseUrl + "/submit", param,
 						callback);
@@ -175,6 +202,7 @@ function toolbar_option(op) {
 				nextStatus = -1;
 			}
 		}
+		
 		if (nextStatus) {
 			var param = {
 					_id : row._id,

@@ -32,10 +32,12 @@ var eqModel = kendo.data.Model.define( {
     	eqcostMaterialCode: { editable: false },
     	eqcostProductName: { editable: false },
     	eqcostProductType: { editable: false },
-    	eqcostAmount: { type: "number", validation: { required: true, min: 1} },
     	eqcostUnit: { editable: false },
     	eqcostBrand: { editable: false },
-    	eqcostMemo: { editable: false }
+    	eqcostAmount: { type: "number", validation: { required: true, min: 1} },
+    	arrivalAmount: { type: "number", validation: { required: true, min: 0} },
+    	giveUp: {},
+    	eqcostMemo: {}
     }
 });
 
@@ -169,9 +171,15 @@ $(document).ready(function() {
 	        { field: "eqcostMaterialCode", title: "物料代码" },
 	        { field: "eqcostProductName", title: "产品名称" },
 	        { field: "eqcostProductType", title: "规格型号" },
+	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
 	        { field: "eqcostAmount", title: "数量" },
-	        { field: "eqcostBrand", title: "品牌" },
+	        { field: "arrivalAmount", title: "实际发货数" },
+	        {
+	        	field: "giveUp",
+	        	title: "放弃未发",
+	        	editor: giveUpDropDownEditor
+	        },
 	        { field: "eqcostMemo", title: "备注" },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	    editable: true
@@ -189,6 +197,16 @@ $(document).ready(function() {
 		kendo.bind($("#addShip"), model);
 	}
 });
+
+function giveUpDropDownEditor(container, options) {
+	var giveUpItems = [ "是", "否" ];
+	$('<input data-bind="value:' + options.field + '"/>')
+    .appendTo(container)
+    .kendoDropDownList({
+    	optionLabel : "请选择...",
+        dataSource: giveUpItems
+    });
+}
 
 function edit(data) {
 	model = new ship(data);
