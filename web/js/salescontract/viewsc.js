@@ -216,10 +216,10 @@ function edit(data){
 		$("#scEqCostListOld").kendoGrid({
 			dataSource : eqCostListDataSourceView,
 			columns : [ 
-					//{
-					//field : "eqcostNo",
-					//title : "序号"
-					//}, 
+					{
+					field : "eqcostNo",
+					title : "序号"
+					}, 
 					{
 					field : "eqcostMaterialCode",
 					title : "物料代码"
