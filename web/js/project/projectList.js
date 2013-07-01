@@ -89,7 +89,7 @@ $(document).ready(function() {
 			}
 		}, {
 			field : "projectType",
-			title : "项目类型",
+			title : "立项类别",
 			filterable : {
 				ui: function(e){
 					e.kendoDropDownList({

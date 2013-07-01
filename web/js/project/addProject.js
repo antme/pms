@@ -102,7 +102,7 @@ $(document).ready(function() {
 	$("#projectType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
-		optionLabel : "选择项目类型...",
+		optionLabel : "选择立项类别...",
 		dataSource : proCategoryItems
 	});
 	

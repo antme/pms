@@ -62,17 +62,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> contract = new HashMap<String, Object>();
 		contract.put(SalesContractBean.SC_PROJECT_ID, params.get(SalesContractBean.SC_PROJECT_ID));
 //		contract.put(SalesContractBean.SC_CUSTOMER, params.get(SalesContractBean.SC_CUSTOMER));
-		contract.put(SalesContractBean.SC_AMOUNT, params.get(SalesContractBean.SC_AMOUNT));
+		contract.put(SalesContractBean.SC_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT));
 		contract.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
-		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, params.get(SalesContractBean.SC_ESTIMATE_EQ_COST0));
-		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST1, params.get(SalesContractBean.SC_ESTIMATE_EQ_COST1));
-		contract.put(SalesContractBean.SC_ESTIMATE_SUB_COST, params.get(SalesContractBean.SC_ESTIMATE_SUB_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_PM_COST, params.get(SalesContractBean.SC_ESTIMATE_PM_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST, params.get(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_DEBUG_COST, params.get(SalesContractBean.SC_ESTIMATE_DEBUG_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_OTHER_COST, params.get(SalesContractBean.SC_ESTIMATE_OTHER_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_EQ_COST0));
+		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST1, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_EQ_COST1));
+		contract.put(SalesContractBean.SC_ESTIMATE_SUB_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_SUB_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_PM_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_PM_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_DEBUG_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_DEBUG_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_OTHER_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_OTHER_COST));
 		
-		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT, params.get(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT));
+		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT, ApiUtil.getFloatParam(params, SalesContractBean.SC_EXTIMATE_GROSS_PROFIT));
 		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE, params.get(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE));
 		
 //		contract.put(SalesContractBean.SC_DEBUG_COST_TYPE, params.get(SalesContractBean.SC_DEBUG_COST_TYPE));
@@ -83,11 +83,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		contract.put(SalesContractBean.SC_ARCHIVE_STATUS, params.get(SalesContractBean.SC_ARCHIVE_STATUS));
 		contract.put(SalesContractBean.SC_RUNNING_STATUS, params.get(SalesContractBean.SC_RUNNING_STATUS));
 		contract.put(SalesContractBean.SC_DATE, params.get(SalesContractBean.SC_DATE));
-		contract.put(SalesContractBean.SC_DOWN_PAYMENT, params.get(SalesContractBean.SC_DOWN_PAYMENT));
-		contract.put(SalesContractBean.SC_PROGRESS_PAYMENT, params.get(SalesContractBean.SC_PROGRESS_PAYMENT));
-		contract.put(SalesContractBean.SC_QUALITY_MONEY, params.get(SalesContractBean.SC_QUALITY_MONEY));
+		contract.put(SalesContractBean.SC_DOWN_PAYMENT, ApiUtil.getFloatParam(params, SalesContractBean.SC_DOWN_PAYMENT));
+		contract.put(SalesContractBean.SC_PROGRESS_PAYMENT, ApiUtil.getFloatParam(params, SalesContractBean.SC_PROGRESS_PAYMENT));
+		contract.put(SalesContractBean.SC_QUALITY_MONEY, ApiUtil.getFloatParam(params, SalesContractBean.SC_QUALITY_MONEY));
 		contract.put(SalesContractBean.SC_MEMO, params.get(SalesContractBean.SC_MEMO));
-		
 		
 		mergeCommonProjectInfo(contract, contract.get(SalesContractBean.SC_PROJECT_ID));
 		
@@ -190,16 +189,21 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             realItemQuery.put(ApiConstants.LIMIT_KEYS, EqCostListBean.EQ_LIST_REAL_AMOUNT);
             Map<String, Object> realItem = dao.findOneByQuery(realItemQuery, DBBean.EQ_COST);
             if (realItem == null) {
-                item.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, item.get(EqCostListBean.EQ_LIST_AMOUNT));
-                item.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, item.get(EqCostListBean.EQ_LIST_REAL_AMOUNT));
+                item.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_AMOUNT));
+                item.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_REAL_AMOUNT));
             } else {
-                int applyAmount = (int)Float.parseFloat(item.get(EqCostListBean.EQ_LIST_AMOUNT).toString());
-                int totalAmount = applyAmount + (int)Float.parseFloat(realItem.get(EqCostListBean.EQ_LIST_REAL_AMOUNT).toString());
+                float applyAmount = ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_AMOUNT);
+                float totalAmount = applyAmount + ApiUtil.getFloatParam(realItem, EqCostListBean.EQ_LIST_REAL_AMOUNT); 
+                //(int)Float.parseFloat(realItem.get(EqCostListBean.EQ_LIST_REAL_AMOUNT).toString());
 
                 realItem.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, totalAmount);
                 realItem.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, totalAmount);
                 this.dao.updateById(realItem, DBBean.EQ_COST);
             }
+            //Make sure the number value type 
+		    item.put(EqCostListBean.EQ_LIST_BASE_PRICE, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_BASE_PRICE));
+		    item.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_SALES_BASE_PRICE));
+		    item.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_DISCOUNT_RATE));
 		    
 			item.put(SalesContractBean.SC_PROJECT_ID, proId);
 			item.put(EqCostListBean.EQ_LIST_SC_ID, cId);
