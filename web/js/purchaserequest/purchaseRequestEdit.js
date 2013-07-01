@@ -110,15 +110,11 @@ function sumOrders(e) {
 
 	var eqcostBasePrice = e.model.eqcostBasePrice;
 	var eqcostApplyAmount = e.model.eqcostApplyAmount;
-	var eqcostProductUnitPrice = e.model.eqcostProductUnitPrice;
 
 	if (e.values.eqcostBasePrice) {
 		eqcostBasePrice = e.values.eqcostBasePrice
 	}
 
-	if (e.values.eqcostProductUnitPrice) {
-		eqcostProductUnitPrice = e.values.eqcostProductUnitPrice
-	}
 
 	if (e.values.eqcostApplyAmount) {
 		eqcostApplyAmount = e.values.eqcostApplyAmount
@@ -127,7 +123,7 @@ function sumOrders(e) {
 	var grid1 = $("#purchase-request-edit-grid").data("kendoGrid");
 	// will trigger dataBound event
 	e.model.set("eqcostContractTotalMoney", eqcostBasePrice * eqcostApplyAmount);
-	e.model.set("requestedTotalMoney", eqcostProductUnitPrice * eqcostApplyAmount);
+	e.model.set("requestedTotalMoney", eqcostBasePrice * eqcostApplyAmount);
 
 	grid1.refresh();
 
@@ -152,7 +148,6 @@ function loadBackRequest(data) {
 	//新增时候初始化数据
 	for (i in requestDataItem.eqcostList) {
 		requestDataItem.eqcostList[i].eqcostAvailableAmount = requestDataItem.eqcostList[i].pbTotalCount;
-		requestDataItem.eqcostList[i].eqcostProductUnitPrice = requestDataItem.eqcostList[i].eqcostBasePrice;
 		requestDataItem.eqcostList[i].eqcostApplyAmount = requestDataItem.eqcostList[i].pbTotalCount;
 	}
 	
@@ -194,43 +189,28 @@ function edit(data) {
 								field : "eqcostNo",
 								title : "序号"
 							}, {
-								field : "eqcostProductName",
-								title : "货品名"
-							}, {
 								field : "eqcostMaterialCode",
 								title : "物料代码"
 							}, {
+								field : "eqcostProductName",
+								title : "产品名称"
+							}, {
 								field : "eqcostProductType",
-								title : "货品型号"
+								title : "规格型号"
+
+							}, {
+								field : "eqcostProductType",
+								title : "单位"
 
 							}, {
 								field : "eqcostRealAmount",
-								title : "合同中申请总数"
+								title : "合同中总数"
 							}, {
 								field : "eqcostBasePrice",
-								title : "参考单价"
+								title : "成本单价"
 							}, {
 								field : "eqcostContractTotalMoney",
-								title : "合同总金额"
-							}, {
-								field : "orderEqcostName",
-								title : "实际货品名",
-								template : function(dataItem){
-									if(dataItem.orderEqcostName){
-										return '<span class="edit-tip">' + dataItem.orderEqcostName + '</span>';
-									}
-									return "";
-								}
-									
-							}, {
-								field : "orderEqcostModel",
-								title : "实际型号",
-								template : function(dataItem){
-									if(dataItem.orderEqcostModel){
-										return '<span class="edit-tip">' + dataItem.orderEqcostModel + '</span>';
-									}
-									return "";
-								}
+								title : "合同总价"
 							}, {
 								field : "eqcostApplyAmount",
 								title : "本次申请数量",
@@ -238,14 +218,14 @@ function edit(data) {
 									return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
 								}
 							}, {
-								field : "eqcostProductUnitPrice",
-								title : "实际单价",
-								template : function(dataItem){
-									return '<span class="edit-tip">' + dataItem.eqcostProductUnitPrice + '</span>';
-								}
-							}, {
 								field : "requestedTotalMoney",
-								title : "实际总金额"
+								title : "成本总价"
+							},{
+								field : "eqcostBrand",
+								title : "品牌"
+							}, {
+								field : "remark",
+								title : "备注"
 							}, {
 								field : "differenceAmount",
 								title : "金额差值"
@@ -310,9 +290,6 @@ function edit(data) {
 										item.eqcostApplyAmount = 0;
 									}
 
-									if (!item.eqcostProductUnitPrice) {
-										item.eqcostProductUnitPrice = 0;
-									}
 
 									if (!item.differenceAmount) {
 										item.differenceAmount = 0;
@@ -332,9 +309,9 @@ function edit(data) {
 
 									requestActureMoney = requestActureMoney
 											+ item.eqcostApplyAmount
-											* item.eqcostProductUnitPrice;
+											* item.eqcostBasePrice;
 									item.requestedTotalMoney = item.eqcostApplyAmount
-											* item.eqcostProductUnitPrice;
+											* item.eqcostBasePrice;
 
 									eqcostContractTotalMoney = eqcostContractTotalMoney
 											+ item.eqcostRealAmount
@@ -343,7 +320,7 @@ function edit(data) {
 											* item.eqcostBasePrice;
 
 									item.differenceAmount = item.eqcostApplyAmount
-											* item.eqcostProductUnitPrice
+											* item.eqcostBasePrice
 											- item.eqcostRealAmount
 											* item.eqcostBasePrice;
 

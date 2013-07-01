@@ -130,5 +130,6 @@ function editSucess(e){
 	}
 	currentObj = new myModel(e);
 	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
+	currentObj.set("pbDepartment", kendo.stringify(currentObj.pbDepartment));
 	kendo.bind($("#form-container"), currentObj);
 }

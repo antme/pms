@@ -18,15 +18,22 @@
 					<td>客户名称： <span data-bind="text: customer"></span></td>
 				</tr>
 				<tr>
+					<td>申请部门: <span data-bind="text: pbDepartment"></span></td>
 					<td>申请编号：<span data-bind="text: pbCode" ></span></td>
 					<td>状态：<span data-bind="text: pbStatus" ></span></td>
-					<td></td>
-					<td></td>
+					<td>到货要求日期: <input data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: pbPlanDate"/></td>
 				</tr>
 				<tr>
-					<td>申请部门: <select id="departmentItems" class="k-input" required data-bind="value: pbDepartment"></select></td>
-					<td>采购类别: <select id="pbTypeItems" class="k-input" required data-bind="value: pbType"></select></td>
-					<td colspan="2">到货要求日期: <input data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: pbPlanDate"/></td>
+					<td colspan="2">
+						<label>特殊要求:</label><br>
+						<label><input type="checkbox" value="0" data-bind="checked: pbSpecialRequireRadio"/>1、是否要满足ROHS/REACH/UL/CCC要求？</label><br>   
+						<label><input type="checkbox"  value="1" data-bind="checked: pbSpecialRequireRadio"/>2、如是进口产品，是否需要商检？</label><br>
+						<label><input type="checkbox"  value="2" data-bind="checked: pbSpecialRequireRadio"/>3、其它要求，请注明：</label><br>					
+					</td>
+					<td colspan="2">
+						<br><label>若有,请注明：</label><br>
+						<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: pbSpecialRequire" ></textarea>
+					</td>
 				</tr>
 			</table>
             <div>
@@ -36,6 +43,7 @@
             	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: pbComment" ></textarea>
             </div>
             <br>
+			<div id="purchase-request-sum-grid"></div>
             <div id="form-container-button">
             	<button access="purchase_back_management" class="k-button access" value="save">保存</button>
             	<button access="purchase_back_management" class="k-button access" value="submit">提交</button>

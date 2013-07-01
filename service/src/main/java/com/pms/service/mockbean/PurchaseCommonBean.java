@@ -32,7 +32,7 @@ public class PurchaseCommonBean extends BaseEntity {
     
     private String requestedDate;
     
-    
+
     
     //FIX ME
     private String pbPlanDate;

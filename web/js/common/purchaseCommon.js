@@ -62,6 +62,9 @@ var model = kendo.data.Model.define({
 		eqcostAvailableAmount : {
 			editable : false
 		},
+		eqcostUnit : {
+			editable : false
+		},
 		orderEqcostName : {
 
 		},

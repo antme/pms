@@ -33,6 +33,7 @@ var subModel = kendo.data.Model.define({
         eqcostLeftAmount: {
         	editable : false
         },
+        eqcostRealAmount:{type: "number"},
         pbTotalCount: {
         	type: "number",
         	 validation: {
@@ -62,36 +63,52 @@ var myModel = kendo.data.Model.define({
 		contractAmount: {}
 	}
 });
+//计算成本数据的datasouce
+var sumDataSource = new kendo.data.DataSource({});
+
 var currentObj = new myModel();
 
 $(document).ready(function () {
 	checkRoles();
+
+	$("#purchase-request-sum-grid").kendoGrid({
+		dataSource:sumDataSource,
+		columns : [ {
+			field : "requestedTotalMoney",
+			title : "申请金额"
+		}, {
+			field : "requestedNumbers",
+			title : "货品数量"
+		}, {
+			field : "numbersPercentOfContract",
+			title : "货品占合同%"
+		}, {
+			field : "moneyPercentOfContract",
+			title : "货品金额占合同%"
+		} ],
+		width : "200px"
+	});
+	
 	$("#subGrid").kendoGrid({
 		dataSource: {
 			schema: {
 				model: subModel
 			},
-			aggregate: [ 
-			    { field: "eqcostNo", aggregate: "count" },
-			    { field: "pbTotalCount", aggregate: "sum" },
-			    { field: "eqcostLeftAmount", aggregate: "sum" },
-			    { field: "eqcostRealAmount", aggregate: "sum" }
-			]			
+			change: dataBound
 		},
 	    columns: [
-			{ field: "eqcostNo", title: "序号" ,footerTemplate: "总共: #=count#"},
+			{ field: "eqcostNo", title: "序号"},
 			{ field: "eqcostMaterialCode", title: "物料代码" },
 			{ field: "eqcostProductName", title: "产品名称" },
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
-			{ field: "pbTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
-			{ field: "eqcostRealAmount", title: "合同中总数" ,footerTemplate: "总共: #=sum#"},
+			{ field: "pbTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}},
+			{ field: "eqcostRealAmount", title: "成本中总数"},
 			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostBrand", title: "品牌" },
 			{ field: "eqcostMemo", title: "备注" }
 	  	],	 
-	  	editable:true,
-	  	toolbar: [{text:"计算",name:"save"}]
+	  	editable:true
 	});
 
 	$("#searchfor").kendoDropDownList({
@@ -140,6 +157,48 @@ $(document).ready(function () {
 	kendo.bind($("#form-container"), currentObj);
 });
 
+function dataBound(e) {
+	var data = $("#subGrid").data("kendoGrid").dataSource.data();
+	var totalRequestCount=0;
+	var totalRequestMoney=0;
+	var totalCount = 0;
+	var totalMoney=0;
+	for (i = 0; i < data.length; i++) {
+		var item = data[i];
+		if (!item.pbTotalCount) {item.pbTotalCount = 0;}
+		if (!item.eqcostRealAmount) {item.eqcostRealAmount = 0;}
+		if (!item.eqcostBasePrice) {item.eqcostBasePrice = 0;}
+		// 计算总的申请数量
+		if(item.pbTotalCount > item.eqcostRealAmount){
+			alert("最大数量为" + item.eqcostRealAmount);
+			item.pbTotalCount=item.eqcostRealAmount;
+		}
+		totalCount +=item.eqcostRealAmount;
+		totalMoney+=item.eqcostRealAmount*item.eqcostBasePrice;
+		totalRequestCount +=item.pbTotalCount;
+		totalRequestMoney+=item.pbTotalCount*item.eqcostBasePrice;
+	}
+	var totalPercent = 0;
+	if (totalCount != 0) {
+		totalPercent = (totalRequestCount / totalCount) * 100;
+	}
+	var requestActureMoneyPercent = 0;
+	if (totalMoney != 0) {
+		requestActureMoneyPercent = (totalRequestMoney / totalMoney) * 100;
+	}
+	sumDataSource.data({});
+	sumDataSource
+			.add({
+				requestedNumbers : totalRequestCount,
+				requestedTotalMoney : totalRequestMoney,
+				numbersPercentOfContract : totalPercent,
+				moneyPercentOfContract : requestActureMoneyPercent
+			});
+	kendoGrid = $("#purchase-request-sum-grid").data("kendoGrid");
+	kendoGrid.setDataSource(sumDataSource);
+}
+
+
 function saveSuccess(){
 	loadPage("purchaseBack");
 }
@@ -152,5 +211,6 @@ function editSuccess(e){
 	}
 	currentObj = new myModel(e);
 	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
+	currentObj.set("pbDepartment", kendo.stringify(currentObj.pbDepartment));
 	kendo.bind($("#form-container"), currentObj);			
 }

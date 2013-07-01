@@ -1,14 +1,13 @@
 var requestDataItem;
 
-var model = kendo.data.Model.define({
+
+var contractModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
 		purchaseOrderCode : {
 			editable : false
 		},
-		logisticsArrivedTime : {
-			type : "date"
-		},
+		
 		supplierName : {
 			validation : {
 				required : true
@@ -32,16 +31,7 @@ var model = kendo.data.Model.define({
 		supplierNameContact : {
 
 		},
-		eqcostProductUnitPrice : {
-			type : "number"
-		},
-		eqcostApplyAmount : {
-			type : "number"
-		},
-		requestedTotalMoney : {
-			type : "number",
-			editable : false
-		},
+		
 		signDate:{
 			type:"date"
 		},
@@ -51,6 +41,9 @@ var model = kendo.data.Model.define({
 		eqcostList: {}
 	}
 });
+
+
+contractModel =  $.extend( model, contractModel);
 
 
 $(document).ready(function() {
@@ -175,7 +168,7 @@ var itemDataSource = new kendo.data.DataSource({
 		}
 	},
 	schema : {
-		model : model
+		model : contractModel
 	},
 	batch : true,
 	group: { field: "purchaseOrderCode" }
@@ -260,7 +253,7 @@ function showOrderWindow() {
 		
 	}
 	
-	requestDataItem = new model({});
+	requestDataItem = new contractModel({});
 	requestDataItem.eqcostList = itemListDataSource.data();
 
 	edit();
@@ -276,7 +269,7 @@ function edit(data) {
 	}
 
 	if (requestDataItem) {
-		requestDataItem = new model(requestDataItem);
+		requestDataItem = new contractModel(requestDataItem);
 
 	}
 	requestDataItem.set("signDate", kendo.toString(requestDataItem.signDate, 'd'));
@@ -309,34 +302,35 @@ function edit(data) {
 			 },
 			columns : [ {
 				field : "eqcostNo",
-				title : "货品编号"
+				title : "序号"
+			}, {
+				field : "eqcostMaterialCode",
+				title : "物料代码"
 			}, {
 				field : "eqcostProductName",
-				title : "货品名"
+				title : "名称"
 			}, {
 				field : "eqcostProductType",
-				title : "货品型号"
+				title : "型号"
+			}, {
+				field : "eqcostUnit",
+				title : "单位"
+			}, {
+				field : "eqcostApplyAmount",
+				title : "订单数量"
 			}, {
 				field : "eqcostProductUnitPrice",
 				title : "单价"
 			}, {
 				field : "requestedTotalMoney",
-				title : "小计金额"
-			}, {
-				field : "eqcostApplyAmount",
-				title : "本次采购数量"
-			}, {
-				field : "logisticsStatus",
-				title : "货品物流状态"
-			}, {
-				field : "logisticsType",
-				title : "物流类型",
-				editor : categoryDropDownEditor,
-				template : "#=logisticsType#"
-			}, {
-				field : "logisticsArrivedTime",
-				title : "货品预计到达时间"
+				title : "总价"
 			},{
+				field : "eqcostBrand",
+				title : "品牌"
+			}, {
+				field : "remark",
+				title : "备注"
+			}, {
 				field : "salesContractCode",
 				title : "销售合同编号"
 			},{
