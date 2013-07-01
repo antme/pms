@@ -325,7 +325,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}
 		
 		Map<String, Object> pmQuery = new HashMap<String, Object>();
-		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME});
+		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME,UserBean.DEPARTMENT});
 		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pmIds));
 		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
 		
@@ -347,6 +347,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
 				if (pmInfo != null){
 					sc.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+					sc.put("projectManagerDepartment", pmInfo.get(UserBean.DEPARTMENT));
 				}
 				
 				Map<String, Object> cusInfo = (Map<String, Object>) customerData.get(cusId);

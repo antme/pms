@@ -132,6 +132,6 @@ function editSuccess(e){
 		$("#form-container-button button").attr("disabled","disabled");
 	}
 	currentObj = new myModel(e);
-	//currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
+	currentObj.set("pbDepartment", kendo.stringify(currentObj.pbDepartment));
 	kendo.bind($("#form-container"), currentObj);	
 }

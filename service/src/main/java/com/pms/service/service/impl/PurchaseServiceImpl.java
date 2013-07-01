@@ -41,6 +41,9 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		request.put(PurchaseBack.scId, params.get(PurchaseBack.scId));
 		mergeSalesContract(request);
 		mergeEqcost(request);
+		request.put(PurchaseBack.pbDepartment, request.get("projectManagerDepartment"));
+		request.remove("projectManagerDepartment");
+		request.put(PurchaseBack.pbSpecialRequireRadio, new String[]{"0","1","2"});
 		return request;
 	}
 
@@ -76,6 +79,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         newObj.put(PurchaseBack.pbDepartment, params.get(PurchaseBack.pbDepartment));
         newObj.put(PurchaseBack.pbType, params.get(PurchaseBack.pbType));
         newObj.put(PurchaseBack.pbComment, params.get(PurchaseBack.pbComment));
+        newObj.put(PurchaseBack.pbSpecialRequire, params.get(PurchaseBack.pbSpecialRequire));
+        newObj.put(PurchaseBack.pbSpecialRequireRadio, params.get(PurchaseBack.pbSpecialRequireRadio));
         newObj.put(PurchaseBack.pbPlanDate, params.get(PurchaseBack.pbPlanDate));
         newObj.put(PurchaseBack.scId, params.get(PurchaseBack.scId));
         newObj.putAll(updateEqCountForRequest(params));
