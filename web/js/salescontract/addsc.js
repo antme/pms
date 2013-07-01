@@ -245,10 +245,10 @@ $(document).ready(function() {
 		$("#scEqCostList").kendoGrid({
 			dataSource : eqCostListDataSource,
 			columns : [ 
-//			            {
-//				field : "eqcostNo",
-//				title : "序号"
-//			}, 
+			            {
+				field : "eqcostNo",
+				title : "序号"
+			}, 
 			{
 				field : "eqcostMaterialCode",
 				title : "物料代码"

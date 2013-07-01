@@ -413,10 +413,10 @@ $(document).ready(function() {
 		$("#scEqCostListNew").kendoGrid({
 			dataSource : eqCostListDataSourceNew,
 			columns : [ 
-					//{
-					//field : "eqcostNo",
-					//title : "序号"
-					//}, 
+					{
+					field : "eqcostNo",
+					title : "序号"
+					}, 
 					{
 					field : "eqcostMaterialCode",
 					title : "物料代码"
@@ -492,10 +492,10 @@ function edit(data){
 		$("#scEqCostListOld").kendoGrid({
 			dataSource : eqCostListDataSourceOld,
 			columns : [ 
-					//{
-					//field : "eqcostNo",
-					//title : "序号"
-					//}, 
+					{
+					field : "eqcostNo",
+					title : "序号"
+					}, 
 					{
 					field : "eqcostMaterialCode",
 					title : "物料代码"

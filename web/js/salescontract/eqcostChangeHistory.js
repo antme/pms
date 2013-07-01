@@ -87,10 +87,10 @@ function edit(data){
 				title:"版本号",
 				groupHeaderTemplate: "版本号：#= value # (数量: #= count#)", footerTemplate: "总数: #=count#"
 			},
-			//{
-			//field : "eqcostNo",
-			//title : "序号"
-			//}, 
+			{
+			field : "eqcostNo",
+			title : "序号"
+			}, 
 			{
 				field : "eqcostMaterialCode",
 				title : "物料代码"
@@ -140,10 +140,10 @@ function edit(data){
 		$("#scEqCostListLatest").kendoGrid({
 			dataSource : eqCostListDataSourceLatest,
 			columns : [ 
-				//{
-				//field : "eqcostNo",
-				//title : "序号"
-				//}, 
+				{
+				field : "eqcostNo",
+				title : "序号"
+				}, 
 				{
 				field : "eqcostMaterialCode",
 				title : "物料代码"
