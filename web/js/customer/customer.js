@@ -42,16 +42,18 @@ var datasource = new kendo.data.DataSource({
             type : "post"
         },
         parameterMap: function(options, operation) {
-            if (operation !== "read" && options.models) {
-                return {
-                	models: kendo.stringify(options.models),
-                	mycallback : "myreflush"       
-                };
+            if(operation === "read"){
+            	return {
+            		page : options.page,
+            		pageSize : options.pageSize,
+            		skip : options.skip,
+            		take : options.take
+            	}
             }
         }
     },
     batch: true,
-    pageSize: 2,
+    pageSize: 10,
 	serverPaging: true,
 	serverSorting: true,
 	serverFiltering : true,
@@ -81,7 +83,7 @@ $(document).ready(function () {
             { field: "email", title: "联系人邮箱" },
             { field: "fax", title: "传真" },
             { field: "remark", title: "备注" },
-            { command: [{name: "edit", text: "编辑"},{name: "destroy", text: "删除"}], title: "&nbsp;", width: "160px" }
+            { command: [{name: "edit", text: "编辑"}], title: "&nbsp;", width: "160px" }
         ],
         editable: "popup"
     });

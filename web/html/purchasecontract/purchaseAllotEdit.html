@@ -15,15 +15,28 @@
 				<tr>
 					<td>备货编号：<span data-bind="text: pbCode" ></span></td>
 					<td>申请部门： <span data-bind="text: pbDepartment"></span></td>
-					<td>采购类别： <span data-bind="text: pbType"></span></td>
-					<td>到货要求日期： <span data-bind="text: pbPlanDate" data-format="yyyy/MM/dd"></span></td>
+					<td colspan="2">到货要求日期： <span data-bind="text: pbPlanDate" data-format="yyyy/MM/dd"></span></td>
 				</tr>
 				<tr>
-					<td>调出货架编号: <select id="shelfCodeItems" class="foredit" data-bind="value: paShelfCode"></select></td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td colspan="2">
+						<label>特殊要求:</label><br>
+						<label><input disabled="disabled" type="checkbox" value="0" data-bind="checked: pbSpecialRequireRadio"/>1、是否要满足ROHS/REACH/UL/CCC要求？</label><br>   
+						<label><input disabled="disabled" type="checkbox" value="1" data-bind="checked: pbSpecialRequireRadio"/>2、如是进口产品，是否需要商检？</label><br>
+						<label><input disabled="disabled" type="checkbox" value="2" data-bind="checked: pbSpecialRequireRadio"/>3、其它要求，请注明：</label><br>					
+					</td>
+					<td colspan="2">
+						<br><label>若有,请注明：</label><br>
+						<textarea disabled="disabled" rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: pbSpecialRequire" ></textarea>
+					</td>
 				</tr>
+				<tr>
+					<td colspan="4">调出货架编号: 
+						<select id="paShelfCode" name="paShelfCode"  required validationMessage="请选择" data-bind="value: paShelfCode" >
+							<option value="北京备货货架">北京备货货架</option>
+							<option value="上海备货货架">上海备货货架</option>
+						</select>
+					</td>
+				</tr>			
 			</table>
 			<br>
             <div>

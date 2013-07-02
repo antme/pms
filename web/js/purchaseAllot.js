@@ -66,7 +66,8 @@ $(document).ready(function () {
 					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.pbCode + '</a>';
 				}
 	        },
-	        { field: "pbType", title:"采购类别" ,width:"120px"},
+	        { field:"projectName",title:"项目名"},
+	        { field: "projectManager", title:"PM" },
 	        { 
 	        	field: "contractCode", 
 	        	title:"销售合同编号",
@@ -75,7 +76,6 @@ $(document).ready(function () {
 				}
 	        },
 	        { field: "customer", title:"客户名" },
-	        { field: "projectManager", title:"PM" },
 	        { field: "pbStatus", title:"申请状态" },
 	        { field: "pbSubmitDate", title:"提交时间" },
 	        { field: "pbMoney", title:"金额" }

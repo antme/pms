@@ -22,6 +22,7 @@ import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
+import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.util.ApiUtil;
@@ -43,7 +44,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		mergeEqcost(request);
 		request.put(PurchaseBack.pbDepartment, request.get("projectManagerDepartment"));
 		request.remove("projectManagerDepartment");
-		request.put(PurchaseBack.pbSpecialRequireRadio, new String[]{"0","1","2"});
+		request.put(PurchaseBack.pbSpecialRequireRadio, new String[]{});
 		return request;
 	}
 
@@ -84,12 +85,19 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         newObj.put(PurchaseBack.pbPlanDate, params.get(PurchaseBack.pbPlanDate));
         newObj.put(PurchaseBack.scId, params.get(PurchaseBack.scId));
         newObj.putAll(updateEqCountForRequest(params));
-        Map<String, Object> sc = dao.findOne(ApiConstants.MONGO_ID, params.get(PurchaseBack.scId), new String[] { SalesContractBean.SC_CODE }, DBBean.SALES_CONTRACT);
+        Map<String, Object> sc = dao.findOne(ApiConstants.MONGO_ID, params.get(PurchaseBack.scId), new String[] { SalesContractBean.SC_CODE,SalesContractBean.SC_PROJECT_ID }, DBBean.SALES_CONTRACT);
         newObj.put(PurchaseBack.scCode, sc.get(SalesContractBean.SC_CODE));
         if (params.get(PurchaseBack.pbCode) == null) {
             newObj.put(PurchaseBack.pbCode, generateCode("BHSQ", DBBean.PURCHASE_BACK));
         }
         scs.mergeCommonFieldsFromSc(newObj, params.get(PurchaseBack.scId));
+        
+        String projectId = (String)sc.get(SalesContractBean.SC_PROJECT_ID);
+        Map<String,Object> project = dao.loadById(projectId, DBBean.PROJECT);
+        String pmId = (String)project.get(ProjectBean.PROJECT_MANAGER);
+        Map<String,Object> pm = dao.loadById(pmId, DBBean.USER);
+        newObj.put(PurchaseBack.pbDepartment, pm.get(UserBean.DEPARTMENT));
+        
         Map<String, Object> res = null;
         if (params.get(ApiConstants.MONGO_ID) == null) {
             res = dao.add(newObj, DBBean.PURCHASE_BACK);
@@ -137,6 +145,9 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
 	public Map<String, Object> loadAllot(Map<String, Object> params) {
 		Map<String,Object> allot = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ALLOCATE);
+		Map<String,Object> back = dao.findOne(ApiConstants.MONGO_ID, allot.get(PurchaseBack.pbId), DBBean.PURCHASE_BACK);
+		allot.put(PurchaseBack.pbSpecialRequire, back.get(PurchaseBack.pbSpecialRequire));
+		allot.put(PurchaseBack.pbSpecialRequireRadio, back.get(PurchaseBack.pbSpecialRequireRadio));
 		mergeSalesContract(allot);
 		mergeEqcostForAllot(allot);
 		return allot;
@@ -185,7 +196,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	
 	@Override
 	public Map<String, Object> listAllBack(Map<String, Object> params) {
-		String[] keys = new String[]{PurchaseBack.pbCode,PurchaseBack.pbType,PurchaseBack.pbStatus,
+		String[] keys = new String[]{ApiConstants.CREATOR,PurchaseBack.pbCode,PurchaseBack.pbType,PurchaseBack.pbStatus,
 				PurchaseBack.pbMoney,PurchaseBack.scId,PurchaseBack.pbSubmitDate, PurchaseBack.prId, PurchaseBack.poId};
 		params.put(ApiConstants.LIMIT_KEYS, keys);
 		mergeDataRoleQuery(params);
@@ -201,7 +212,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		for(Map<String,Object> re : list){
 			re.putAll((Map)baseInfoMap.get(re.get(PurchaseBack.scId)));
 		}
-
+		
 		//查询采购申请数据
 		Map<String, Object> prQuery = new HashMap<String, Object>();
 		prQuery.put(ApiConstants.LIMIT_KEYS, PurchaseCommonBean.PURCHASE_REQUEST_CODE);		
@@ -217,6 +228,22 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		return map;
 	}
 
+	private void mergeCreatorInfo(List<Map<String,Object>> list){
+		Set<String> userIds = new HashSet<String>();
+		for(Map<String,Object> re : list){
+			userIds.add((String)re.get(ApiConstants.CREATOR));
+		}
+		userIds.remove(null);
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put(ApiConstants.LIMIT_KEYS, UserBean.USER_NAME);
+		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, userIds));
+		Map<String,Object> userMap = dao.listToOneMapAndIdAsKey(query, DBBean.USER);
+		for(Map<String,Object> re : list){
+			Map<String,Object> user = (Map<String,Object>)userMap.get((String)re.get(ApiConstants.CREATOR));
+			re.put("creatorName",user.get(UserBean.USER_NAME));
+		}		
+	}
+	
 	@Override
 	public Map<String, Object> listCheckedBack(Map<String, Object> params) {
 	    //返回PurchaseBack.prId,页面检测是否已发采购申请

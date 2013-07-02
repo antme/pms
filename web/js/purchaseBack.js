@@ -67,37 +67,16 @@ $(document).ready(function () {
 					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.pbCode + '</a>';
 				}
 	        },
-	        { 	field: "pbType", 
-	        	title:"采购类别" ,
-	        	width:"120px",
-	        	filterable : {
-					ui: function(e){
-						e.kendoDropDownList({
-							dataSource : pbTypeItems,
-							optionLabel : "...",
-							dataTextField : "text",
-							dataValueField : "text"
-						});
-					}
-				}
-	        	
-	        },
+	        { field:"projectName",title:"项目名"},
+	        { field:"projectManager", title:"PM" },
 	        { 
-	        	field:
-	        	"contractCode", 
+	        	field:"contractCode", 
 	        	title:"销售合同编号" ,
 	        	template : function(dataItem) {
 					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
-	        		
 	        },
-	        { field: "poCode", title:"采购订单编号" },
-	        { field: "prCode", title:"采购申请编号" },
-	        { 
-	        	field: "customer", 
-	        	title:"客户名" 
-	        },
-	        { field: "projectManager", title:"PM" },
+	        { field: "customer", title:"客户名"},
 	        { field: "pbStatus", title:"申请状态" },
 	        { field: "pbSubmitDate", title:"提交时间" },
 	        { field: "pbMoney", title:"金额" }

@@ -43,7 +43,8 @@ var subModel = kendo.data.Model.define({
     	   type: "number",
            validation: {
                min: 0
-           }
+           },
+           defaultValue:0
        },
        pbSubmitDate:{}
 	}
@@ -78,34 +79,30 @@ $(document).ready(function () {
 		dataSource: {
 			schema: {
 				model: subModel
-			},
-			aggregate: [ 
-			    { field: "eqcostNo", aggregate: "count" },
-			    { field: "paCount", aggregate: "sum" },
-			    { field: "pbTotalCount", aggregate: "sum" }
-			]			
+			}			
 		},
 	    columns: [
-			{ field: "eqcostNo", title: "序号" ,footerTemplate: "总共: #=count#"},
+			{ field: "eqcostNo", title: "序号"},
 			{ field: "eqcostMaterialCode", title: "物料代码" },
 			{ field: "eqcostProductName", title: "产品名称" },
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
-			{ field: "paCount", title: "调拨数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
-			{ field: "pbTotalCount", title: "备货数量", footerTemplate: "总共: #=sum#"},
+			{ field: "paCount", title: "调拨数量", attributes: { "style": "color:red"}},
+			{ field: "pbTotalCount", title: "备货数量"},
 			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostBrand", title: "品牌" },
 			{ field: "eqcostMemo", title: "备注" }
 	  	],	 
-	  	editable:true,
-	  	toolbar: [{text:"计算",name:"save"}]
+	  	editable:true
 	});
 	
 	$("#form-container-button button").click(function(){
 		if(this.value == "cancel") {
 			loadPage("purchaseAllot");
-		} else if(confirm("提交表单，确认？")){
-			postAjaxRequest("/service/purchase/allot/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
+		} else if(validateModel()){
+			if(confirm("提交表单，确认？")){
+				postAjaxRequest("/service/purchase/allot/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
+			}
 		}
 	});
 	
@@ -134,4 +131,25 @@ function editSuccess(e){
 	currentObj = new myModel(e);
 	currentObj.set("pbDepartment", kendo.stringify(currentObj.pbDepartment));
 	kendo.bind($("#form-container"), currentObj);	
+}
+
+function validateModel(){
+	if(!currentObj.scId){
+		return false;
+	}
+	var validator = $("#form-container").kendoValidator().data("kendoValidator");
+	if(!validator.validate()){
+		return false;
+	}	
+	var eqList = currentObj.eqcostList;
+	var eqTotalCount = 0;
+	for(var i=0;i<eqList.length;i++){
+		if(eqList[i].paCount) eqTotalCount+=eqList[i].paCount;
+	}
+	console.log(eqTotalCount);
+	if(eqTotalCount == 0){
+		alert("请输入申请数量");
+		return false;
+	}
+	return true;
 }

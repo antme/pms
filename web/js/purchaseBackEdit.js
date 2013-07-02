@@ -132,8 +132,10 @@ $(document).ready(function () {
 	$("#form-container-button button").click(function(){
 		if(this.value == "cancel") {
 			loadPage("purchaseBack");
-		} else if(confirm("提交表单，确认？")){
-			postAjaxRequest("/service/purchase/back/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
+		} else if(validateModel()){
+			if(confirm("提交表单，确认？")){
+				postAjaxRequest("/service/purchase/back/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
+			}
 		}
 	});
 
@@ -213,4 +215,24 @@ function editSuccess(e){
 	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
 	currentObj.set("pbDepartment", kendo.stringify(currentObj.pbDepartment));
 	kendo.bind($("#form-container"), currentObj);			
+}
+
+function validateModel(){
+	if(!currentObj.scId){
+		return false;
+	}
+	var validator = $("#form-container").kendoValidator().data("kendoValidator");
+	if(!validator.validate()){
+		return false;
+	}
+	var eqList = currentObj.eqcostList;
+	var eqTotalCount = 0;
+	for(var i=0;i<eqList.length;i++){
+		eqTotalCount+=eqList[i].pbTotalCount;
+	}
+	if(eqTotalCount== 0){
+		alert("请输入申请数量");
+		return false;
+	}
+	return true;
 }
