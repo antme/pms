@@ -13,6 +13,7 @@ public class ShipBean {
     public static final String SHIP_STATUS_DRAFT = "0"; // 草稿
     public static final String SHIP_STATUS_SUBMIT = "1"; // 申请中
     public static final String SHIP_STATUS_APPROVE = "2"; // 批准
+    public static final String SHIP_STATUS_CLOSE = "3"; // 关闭
     public static final String SHIP_STATUS_REJECT = "-1"; // 拒绝
     
     public static final String SHIP_TYPE = "type"; // 申请类型	- 直发 or 非直发
@@ -52,6 +53,8 @@ public class ShipBean {
     public static final String SHIP_EQ_ARRIVAL_AMOUNT = "arrivalAmount"; // 已到货数量
     
     public static final String SHIP_EQ_GIVE_UP = "giveUp"; // 是否放弃未到货物
+    
+    public static final String SHIP_EQ_GIVE_UP_TRUE = "是"; // 是
     
     public static final String SHIP_EQ_GIVE_UP_FAULSE = "否"; // 否
     

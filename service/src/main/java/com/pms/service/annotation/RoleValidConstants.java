@@ -93,4 +93,7 @@ public class RoleValidConstants {
     public static final String PAY_INVOICE_DONE = "pay_invoice_done";
     public static final String PAY_INVOICE_DONE_DESC = "开票出单";
     
+    public static final String SHIP_ARRIVAL_RECORD = "ship_arrival_record";
+    public static final String SHIP_ARRIVAL_RECORD_DESC = "发货实到记录";
+    
 }

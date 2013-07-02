@@ -46,7 +46,7 @@ var grid;
 var listDataSource = new kendo.data.DataSource({
     transport: {
         update: {
-            url: "../service/ship/update",
+            url: "../service/ship/record",
             dataType: "jsonp",
             type: "POST"
         },
@@ -222,7 +222,7 @@ function edit(data) {
 }
 
 function save() {
-	return;
+	
 	var validator = $("#addShip").kendoValidator().data("kendoValidator");
 	if (!validator.validate()) {
 		return;
