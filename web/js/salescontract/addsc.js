@@ -11,6 +11,7 @@ var scModel = kendo.data.Model.define({
 				required : true
 			}
 		},
+		customer:{},
 		archiveStatus : {},
 		runningStatus : {},
 		contractAmount : {},
@@ -21,6 +22,8 @@ var scModel = kendo.data.Model.define({
 		estimatePMCost : {},
 		estimateDeepDesignCost:{},
 		estimateDebugCost:{},
+		estimateTax:{},
+		totalEstimateCost:{},
 		estimateOtherCost:{},
 		//debugCostType:{},
 		//taxType:{},
@@ -29,14 +32,15 @@ var scModel = kendo.data.Model.define({
 		contractType : {},
 		contractDate : {},
 		contractDownPayment : {},
+		contractDownPaymentMemo:{},
 		progressPayment : {},
 		qualityMoney : {},
+		qualityMoneyMemo:{},
 		contractMemo : {},
 		eqcostList : {},
 		estimateGrossProfit : {},
 		estimateGrossProfitRate : {}
 	}
-
 });
 
 var scm;
@@ -77,7 +81,7 @@ var dataSource_SC = new kendo.data.DataSource({
 //成本设备清单数据源
 var eqCostListDataSource = new kendo.data.DataSource({
 	group: {
-		field: "eqcostCategory",
+		field:"eqcostCategory",
 		aggregates: [
                      { field: "eqcostCategory", aggregate: "count" }
                   ]
@@ -155,6 +159,24 @@ $(document).ready(function() {
 //		dataSource : debugCostTypeItems,
 //	});
 
+	var customerItems = new kendo.data.DataSource({
+		transport : {
+			read : {
+				url : "/service/customer/list",
+				dataType : "jsonp"
+			}
+		},
+		schema: {
+		    data: "data"
+		}
+	});
+	$("#customer").kendoDropDownList({
+		dataTextField : "name",
+		dataValueField : "_id",
+        optionLabel: "选择客户...",
+		dataSource : customerItems,
+	});
+	
 	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
 	$("#contractType").kendoDropDownList({
 		dataTextField : "text",
@@ -181,22 +203,16 @@ $(document).ready(function() {
 		dataSource : runningStatusItems,
 	});
 	
-	/*var projectItems = new kendo.data.DataSource({
-		transport : {
-			read : {
-				url : "../service/project/listforselect",
-				dataType : "jsonp"
-			}
-		},
-		schema: {
-		    data: "data"
-		}
-	});*/
 	$("#projectId").kendoDropDownList({
-		dataTextField : "projectName",
+		dataTextField : "projectCode",
 		dataValueField : "_id",
         optionLabel: "选择项目...",
 		dataSource : projectItems,
+		select:function(e){
+			var dataItem = this.dataItem(e.item.index());
+            console.log("*******dataItem"+dataItem.projectName);
+            $("#selProjectName").html(dataItem.projectName);
+		}
 	});
 	
 	//合同签订日期控件
@@ -233,12 +249,37 @@ $(document).ready(function() {
 	$("#contractDownPayment").kendoNumericTextBox({
 		min:0
 	});
-	$("#progressPayment").kendoNumericTextBox({
+	/*$("#progressPayment").kendoNumericTextBox({
 		min:0
-	});
+	});*/
 	$("#qualityMoney").kendoNumericTextBox({
 		min:0
 	});
+	$("#estimateTax").kendoNumericTextBox({
+		min:0
+	});
+	
+	//进度款
+	if (!$("#progressPayment").data("kendoGrid")){
+		$("#progressPayment").kendoGrid({
+			dataSource : scProgressPaymentDatasource,
+			columns : [ {
+				field : "progressPaymentNo",
+				title : "序号"
+			}, 
+			{
+				field : "progressPaymentAmount",
+				title : "进度款额"
+			}, {
+				field : "progressPaymentMemo",
+				title : "备注"//, width: 110
+			} ],
+
+			toolbar : [ {name:"create",text:"新增"} ],
+			editable : true,
+			scrollable : true
+		});
+	}//进度款
 	
 	//成本设备清单
 	if (!$("#scEqCostList").data("kendoGrid")){
@@ -317,6 +358,7 @@ function saveSC(){
 	var validator = $("#addSalesContract").kendoValidator().data("kendoValidator");
 	var validatestatus = $("#validate-status");
 	var eqCostData = eqCostListDataSource.data();
+	var progressPaymentData = scProgressPaymentDatasource.data();
 	var projectId = scm.get("projectId");
 //	console.log("************"+projectId);
 //	console.log(projectItems.get(projectId).get("projectStatus"));
@@ -334,6 +376,7 @@ function saveSC(){
 		return;
     } else {
 		scm.set("eqcostList", eqCostData);
+		scm.set("progressPayment", progressPaymentData);
 
 		var profit = $("#estimateGrossProfit").val();
 		var profitRate = $("#estimateGrossProfitRate").val();
@@ -353,40 +396,47 @@ function addAProject(){
 
 function moneyOnChange(){
 	var scAmount = $("#contractAmount").val();
-	if (scAmount != null && scAmount != ""){
-		var estimateEqCost0 = $("#estimateEqCost0").val();
-		var estimateEqCost1 = $("#estimateEqCost1").val();
-		var estimateSubCost = $("#estimateSubCost").val();
-		var estimatePMCost = $("#estimatePMCost").val();
-		var estimateDeepDesignCost = $("#estimateDeepDesignCost").val();
-		var estimateDebugCost = $("#estimateDebugCost").val();
-		var estimateOtherCost = $("#estimateOtherCost").val();
+	
+	var estimateEqCost0 = $("#estimateEqCost0").val();
+	var estimateEqCost1 = $("#estimateEqCost1").val();
+	var estimateSubCost = $("#estimateSubCost").val();
+	var estimatePMCost = $("#estimatePMCost").val();
+	var estimateDeepDesignCost = $("#estimateDeepDesignCost").val();
+	var estimateDebugCost = $("#estimateDebugCost").val();
+	var estimateOtherCost = $("#estimateOtherCost").val();
+	var estimateTax = $("#estimateTax").val();
 
-		if (estimateEqCost0==""){
-			estimateEqCost0=0;
-		}
-		if (estimateEqCost1==""){
-			estimateEqCost1=0;
-		}
-		if (estimateSubCost==""){
-			estimateSubCost=0;
-		}
-		if (estimatePMCost==""){
-			estimatePMCost=0;
-		}
-		if (estimateDeepDesignCost==""){
-			estimateDeepDesignCost=0;
-		}
-		if (estimateDebugCost==""){
-			estimateDebugCost=0;
-		}
-		if (estimateOtherCost==""){
-			estimateOtherCost=0;
-		}
-		
-		var totalCost = estimateEqCost0*1 + estimateEqCost1*1 + estimateSubCost*1 
-			+ estimatePMCost*1 + estimateDeepDesignCost*1 + estimateDebugCost*1 + estimateOtherCost*1;
-		console.log("***********totalCost" + totalCost);
+	if (estimateEqCost0==""){
+		estimateEqCost0=0;
+	}
+	if (estimateEqCost1==""){
+		estimateEqCost1=0;
+	}
+	if (estimateSubCost==""){
+		estimateSubCost=0;
+	}
+	if (estimatePMCost==""){
+		estimatePMCost=0;
+	}
+	if (estimateDeepDesignCost==""){
+		estimateDeepDesignCost=0;
+	}
+	if (estimateDebugCost==""){
+		estimateDebugCost=0;
+	}
+	if (estimateOtherCost==""){
+		estimateOtherCost=0;
+	}
+	if (estimateTax==""){
+		estimateTax=0;
+	}
+	
+	var totalCost = estimateEqCost0*1 + estimateEqCost1*1 + estimateSubCost*1 
+		+ estimatePMCost*1 + estimateDeepDesignCost*1 + estimateDebugCost*1
+		+ estimateOtherCost*1 + estimateTax*1;
+	console.log("***********totalCost" + totalCost);
+	$("#totalEstimateCost").val(totalCost);
+	if (scAmount != null && scAmount != ""){
 		var profit = scAmount - totalCost;
 		var profitRate = profit/scAmount * 100;
 		$("#estimateGrossProfit").val(profit);

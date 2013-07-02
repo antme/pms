@@ -34,9 +34,9 @@ var eqModel = kendo.data.Model.define( {
     	eqcostProductType: { editable: false },
     	eqcostUnit: { editable: false },
     	eqcostBrand: { editable: false },
-    	eqcostAmount: { type: "number", validation: { required: true, min: 1} },
-    	arrivalAmount: { type: "number", validation: { required: true, min: 0}, editable: false },
-    	giveUp: { editable: false },
+    	eqcostAmount: { editable: false },
+    	arrivalAmount: { type: "number", validation: { required: true, min: 0} },
+    	giveUp: {},
     	eqcostMemo: {}
     }
 });
@@ -46,7 +46,7 @@ var grid;
 var listDataSource = new kendo.data.DataSource({
     transport: {
         update: {
-            url: "../service/ship/update",
+            url: "../service/ship/record",
             dataType: "jsonp",
             type: "POST"
         },
@@ -180,8 +180,8 @@ $(document).ready(function() {
 	        	title: "放弃未发",
 	        	editor: giveUpDropDownEditor
 	        },
-	        { field: "eqcostMemo", title: "备注" },
-	        { command: "destroy", title: "&nbsp;", width: 90 }],
+	        { field: "eqcostMemo", title: "备注" }
+	    ],
 	    editable: true
 	});
 	grid = $("#equipments-grid").data("kendoGrid");
@@ -231,9 +231,6 @@ function save() {
     		var data = eqDataSource.data();
     		if (data.length > 0) {
     			model.set("eqcostList", data);
-    			
-    			model.set("issueTime", kendo.toString(model.issueTime, 'd'));
-    			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
     			
     			listDataSource.add(model);
     	        

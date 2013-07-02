@@ -20,11 +20,11 @@ var projectModel = kendo.data.Model.define({
 				required : true
 			}
 		},
-		customer : {
+		/*customer : {
 			validation : {
 				required : true
 			}
-		},
+		},*/
 		projectManager : {
 			validation : {
 				required : true
@@ -51,7 +51,7 @@ var projectModel = kendo.data.Model.define({
 			}
 		},projectStatus: {
 			 defaultValue: "销售立项"
-		}
+		},scs:{}
 	}
 
 });
@@ -91,6 +91,12 @@ var dataSource = new kendo.data.DataSource({
 	}
 });
 
+var pSCInfoDatasource = new kendo.data.DataSource({
+	schema: {
+	    model: { id: "_id" }
+	}
+});
+
 $(document).ready(function() {
 	//表单中的各种控件
 	$("#projectStatus").kendoDropDownList({
@@ -114,7 +120,7 @@ $(document).ready(function() {
 		dataSource : proManagerItems,
 	});
 	
-	var customerItems = new kendo.data.DataSource({
+	/*var customerItems = new kendo.data.DataSource({
 		transport : {
 			read : {
 				url : "/service/customer/list",
@@ -130,16 +136,15 @@ $(document).ready(function() {
 		dataValueField : "_id",
         optionLabel: "选择客户...",
 		dataSource : customerItems,
-	});
+	});*/
 	if(popupParams){
 		if (popupParams.scAddProject == 1){
 			pModel = new projectModel();
 			kendo.bind($("#addProject"), pModel);
 		}else{
-			postAjaxRequest("/service/project/get", popupParams, edit);
+			postAjaxRequest("/service/project/get", popupParams, popView);
 			disableAllInPoppup();
 		}
-		
 	}else if (redirectParams) {//Edit
 		postAjaxRequest("/service/project/get", redirectParams, edit);
 	} else {//Add
@@ -149,6 +154,42 @@ $(document).ready(function() {
 	}
 	
 });//end dom ready
+
+function popView(data){
+	pModel = new projectModel(data);
+	kendo.bind($("#addProject"), pModel);
+	
+	/*$("#scs").kendoTooltip({
+        filter: "tr",
+        content: kendo.template($("#scsTemplate").html()),
+        width: 400,
+        height: 200,
+        position: "top"
+    });
+
+    $("#scs").find("tr").click(false);*/
+	
+	$("#scs").show();
+	//关联合同
+	pSCInfoDatasource.data(pModel.scs);
+	if (!$("#scs").data("kendoGrid")){
+		$("#scs").kendoGrid({
+			dataSource : pSCInfoDatasource,
+			columns : [ {
+				field : "contractCode",
+				title : "合同编号",
+				template : function(dataItem) {
+					return '<a  onclick="viewSC(\'' + dataItem._id + '\');">' + dataItem.contractCode + '</a>';
+				},
+				width:150
+			}/*, 
+			{
+				field : "contractPerson",
+				title : "签订人"
+			}*/]
+		});
+	}//关联合同
+}
 
 function edit(data){
 	pModel = new projectModel(data);
@@ -186,12 +227,18 @@ function saveProjectInAddSC(data){
 }
 
 function saveProjectInAddSCCallBack(data){
-	console.log(data._id+"*******");
 	$("#popup").data("kendoWindow").close();
 	projectItems.read();
 	var pdblist = $("#projectId").data("kendoDropDownList");
-	console.log("projectItems"+projectItems);
-	console.log("pdblist"+pdblist);
 	pdblist.value(data._id);
 	scm.set("projectId",data._id);
+	$("#selProjectName").html(data.projectName);
+}
+
+function viewSC(id){
+	$("#scInfo").show();
+	var data = pSCInfoDatasource.get(id);
+	$("#scInfo_scCode").html(data.contractCode);
+	$("#scInfo_scPerson").html(data.contractPerson);
+	//待完善
 }

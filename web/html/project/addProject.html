@@ -4,6 +4,9 @@
 .pro-dropdownlist{
 	width:250px;
 }
+.p_scs {
+    display:none;
+}
 </style>
 
 <script  src="js/project/addProject.js"></script>
@@ -43,13 +46,13 @@
 						required="required" validationMessage="必填" data-bind="value: projectAbbr">
 				</div>
 				
-				<div class="k-edit-label ">
+				<!-- <div class="k-edit-label ">
 					<label for="customer">客户名称</label>
 				</div>
 				<div data-container-for="customer" class="k-edit-field ">
 					<input type="text" class="pro-dropdownlist" name="customer" id="customer"
 						required="required" validationMessage="必填" data-bind="value: customer">
-				</div>
+				</div> -->
 				
 				<div class="k-edit-label ">
 					<label for="projectManager">项目经理</label>
@@ -60,7 +63,7 @@
 				</div>
 				
 				<div class="k-edit-label ">
-					<label for="projectStatus">项目状态</label>
+					<label for="projectStatus">立项类别</label>
 				</div>
 				<div data-container-for="projectStatus" class="k-edit-field ">
 					<input type="text" class="pro-dropdownlist" name="projectStatus" id="projectStatus"
@@ -68,7 +71,7 @@
 				</div>
 				
 				<div class="k-edit-label ">
-					<label for="projectType">立项类别</label>
+					<label for="projectType">项目类型</label>
 				</div>
 				<div data-container-for="projectType" class="k-edit-field ">
 					<input type="text" class="pro-dropdownlist" name="projectType" id="projectType"
@@ -92,6 +95,11 @@
 	        
 			</div>
         </div>
-		
+		<div id="scs" class="p_scs">
+		</div>
+		<div id="scInfo" class="p_scs">
+			<label>合同编号：</label><span id="scInfo_scCode"></span>
+			<label>签订人：</label><span id="scInfo_scPerson"></span>
+		</div>
 	</div>
 </body>
