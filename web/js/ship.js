@@ -136,6 +136,7 @@ function toolbar_record() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
 		if (rowData.status == 2){
+			loadPage("shipRecord",{_id:rowData._id});
 		} else {
 			alert("无法执行该操作");
 		}
