@@ -82,7 +82,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_MANAGER, pmNew);
 			}
 			//项目 customer 发生改变
-			String customerOld = (String) existProject.get(ProjectBean.PROJECT_CUSTOMER);
+			/*String customerOld = (String) existProject.get(ProjectBean.PROJECT_CUSTOMER);
 			String customerNew = (String) projectBean.get(ProjectBean.PROJECT_CUSTOMER);
 			if (!customerOld.equals(customerNew)){
 				//1.冗余存放 项目 customer 且存有 projectId 的相关集合，均需同步更新 项目 customer 字段
@@ -92,7 +92,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 				relatedCQuery.put(ProjectBean.PROJECT_ID, _id);
 				
 				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_CUSTOMER, customerNew);
-			}
+			}*/
 			//项目 type 发生改变
 			String typeOld = (String) existProject.get(ProjectBean.PROJECT_TYPE);
 			String typeNew = (String) projectBean.get(ProjectBean.PROJECT_TYPE);
@@ -156,7 +156,13 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
 	@Override
 	public Map<String, Object> getProjectById(String id) {
-		return dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
+		Map<String, Object> p = dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
+		Map<String, Object> scQuery = new HashMap<String, Object>();
+		scQuery.put(ProjectBean.PROJECT_ID, p.get(ApiConstants.MONGO_ID));
+		scQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE, SalesContractBean.SC_PERSON, SalesContractBean.SC_DATE});
+		Map<String, Object> scList = dao.list(scQuery, DBBean.SALES_CONTRACT);
+		p.put("scs", scList.get(ApiConstants.RESULTS_DATA));
+		return p;
 	}
 
 	@Override

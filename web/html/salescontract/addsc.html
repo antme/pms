@@ -11,6 +11,7 @@ width:900px;
 }
 </style>
 
+<script  src="js/salescontract/scCommon.js"></script>
 <script  src="js/salescontract/addsc.js"></script>
 
 <body>
@@ -56,13 +57,22 @@ width:900px;
 								required="required" validationMessage="必填" data-bind="value: contractPerson">
 						</div>
 						
+						<div class="k-edit-label ">
+							<label for="customer">客户名称</label>
+						</div>
+						<div data-container-for="customer" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="customer" id="customer"
+								required="required" validationMessage="必填" data-bind="value: customer">
+						</div>
+						
 	                   <div class="k-edit-label ">
 							<label for="projectId">关联项目</label>
 						</div>
 						<div data-container-for="projectId" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="projectId" id="projectId"
-								required="required" validationMessage="必填" data-bind="value: projectId">
+								required="required" validationMessage="必填" data-bind="value: projectId"><span id="selProjectName"></span>
 							<button class="k-button"  onclick="addAProject();">新建项目</button>
+							
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -105,13 +115,24 @@ width:900px;
 								required="required" validationMessage="必填" data-bind="value: contractDownPayment">
 						</div>
 						
+						<div class="k-edit-label ">
+							<label for="contractDownPaymentMemo">首付备注</label>
+						</div>
+						<div data-container-for="contractDownPaymentMemo" class="k-edit-field ">
+							<textarea id="contractDownPaymentMemo" rows="4" cols="120" class="k-textbox" data-bind="value: contractDownPaymentMemo"></textarea>
+						</div>
+						
 	                   <div class="k-edit-label ">
 							<label for="progressPayment">进度款</label>
 						</div>
 						<div data-container-for="progressPayment" class="k-edit-field ">
+							<div id="progressPayment"></div>
+						</div>
+						
+						<!-- <div data-container-for="progressPayment" class="k-edit-field ">
 							<input type="text" name="progressPayment" id="progressPayment"
 								required="required" validationMessage="必填" data-bind="value: progressPayment">
-						</div>
+						</div> -->
 						
 	                   <div class="k-edit-label ">
 							<label for="qualityMoney">质保金</label>
@@ -119,6 +140,12 @@ width:900px;
 						<div data-container-for="qualityMoney" class="k-edit-field ">
 							<input type="text" name="qualityMoney" id="qualityMoney"
 								required="required" validationMessage="必填" data-bind="value: qualityMoney">
+						</div>
+						<div class="k-edit-label ">
+							<label for="qualityMoneyMemo">质保金备注</label>
+						</div>
+						<div data-container-for="qualityMoneyMemo" class="k-edit-field ">
+							<textarea id="qualityMoneyMemo" rows="4" cols="120" class="k-textbox" data-bind="value: qualityMoneyMemo"></textarea>
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -195,6 +222,21 @@ width:900px;
 						<div data-container-for="estimateOtherCost" class="k-edit-field ">
 							<input type="text" name="estimateOtherCost" id="estimateOtherCost" onchange="moneyOnChange();"
 								 data-bind="value: estimateOtherCost">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="estimateTax">预估税收</label>
+						</div>
+						<div data-container-for="estimateTax" class="k-edit-field ">
+							<input type="text" name="estimateTax" id="estimateTax" onchange="moneyOnChange();"
+							data-bind="value: estimateTax">
+						</div>
+						
+	                   <div class="k-edit-label ">
+							<label for="totalEstimateCost">成本总计</label>
+						</div>
+						<div data-container-for="totalEstimateCost" class="k-edit-field ">
+							<input type="text" readonly name="totalEstimateCost" id="totalEstimateCost" data-bind="value: totalEstimateCost">
 						</div>
 						
 	                   <div class="k-edit-label ">
