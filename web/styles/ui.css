@@ -1,7 +1,11 @@
 body {
-	background-color: #f6f6f6;
+	/* background-color: #f6f6f6; */
 }
 
+
+.list-title{
+	margin-top: -20px;
+}
 .k-grid-toolbar {
 	height: 25px;
 }
