@@ -16,5 +16,6 @@ public class GroupBean {
     public static final String SALES_ASSISTANT_VALUE = "销售助理";
     public static final String PROJECT_ASSISTANT_VALUE = "工程助理";
     public static final String PROJECT_MANAGER_VALUE = "工程经理";
+    public static final String DEPARTMENT_MANAGER_VALUE = "部门经理";
 
 }

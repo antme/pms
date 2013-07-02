@@ -17,7 +17,6 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pms.service.PackageRole;
-import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dao.ICommonDao;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
@@ -99,12 +98,16 @@ public class InitBean {
         	RoleValidConstants.PURCHASE_ALLOCATE_PROCESS,
         	RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS
         });
+        groupRoles.put(GroupBean.DEPARTMENT_MANAGER_VALUE, new String[] {
+        	RoleValidConstants.SHIP_MANAGEMENT_PROCESS
+        });
         groupRoles.put(GroupBean.PURCHASE_VALUE, new String[] {
         	RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, 
             RoleValidConstants.PURCHASE_ORDER_MANAGEMENT,
             RoleValidConstants.PURCHASE_ORDER_PROCESS,
             RoleValidConstants.REPOSITORY_MANAGEMENT,
-            RoleValidConstants.PURCHASE_REQUEST_PROCESS
+            RoleValidConstants.PURCHASE_REQUEST_PROCESS,
+            RoleValidConstants.SHIP_ARRIVAL_RECORD
 
         });
 
