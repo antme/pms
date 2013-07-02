@@ -111,7 +111,11 @@ $(document).ready(function() {
 	});
 		
 
-	if (redirectParams) {
+	if(popupParams){
+		$("#purchasecontract-edit-item").show();
+		postAjaxRequest("/service/purcontract/get", popupParams, edit);
+		disableAllInPoppup();
+	}else if (redirectParams) {
 		$("#purchasecontract-edit-item").show();
 		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
 	} else{

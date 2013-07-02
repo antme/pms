@@ -32,7 +32,10 @@ $(document).ready(function() {
 		height: "400px",
 		columns : [ {
 			field : "purchaseContractCode",
-			title : "采购合同编号"
+			title : "采购合同编号",
+			template : function(dataItem) {
+				return '<a  onclick="openPurchaseContractViewWindow(\'' + dataItem._id + '\');">' + dataItem.purchaseContractCode + '</a>';
+			}
 		},  {
 			field : "approvedDate",
 			title : "批准时间"
