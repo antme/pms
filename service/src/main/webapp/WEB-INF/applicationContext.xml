@@ -56,11 +56,6 @@
 		<property name="dao" ref="commonDao"></property>
 	</bean>
 
-
-	<bean name="groupService" class="com.pms.service.service.impl.GroupServiceImpl"
-		id="groupService">
-		<property name="dao" ref="commonDao"></property>
-	</bean>
 	
 	<bean name="customerService" class="com.pms.service.service.impl.CustomerServiceImpl"
 		id="customerService">
@@ -84,6 +79,7 @@
         <property name="dao" ref="commonDao"></property>
         <property name="backService" ref="purchaseService"></property>
         <property name="scs" ref="salesContractService"></property>
+        <property name="supplierService" ref="supplierService"></property>
     </bean>
     
     <bean name="allocateService" class="com.pms.service.service.impl.AllocateServiceImpl"

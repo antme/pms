@@ -42,5 +42,38 @@ public class SupplierServiceImpl extends AbstractService implements ISupplierSer
         }
         return supplier;
     }
+    
+    
+    public void mergeSupplierInfo(Map<String, Object> data, String refKey, String[] mergeKeys) {
+
+        Map<String, Object> suppliers = this.dao.listToOneMapAndIdAsKey(null, DBBean.SUPPLIER);
+
+        if (data.get(ApiConstants.RESULTS_DATA) != null) {
+
+            List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(ApiConstants.RESULTS_DATA);
+            for (Map<String, Object> dataToMerge : list) {
+                Object supplier = suppliers.get(dataToMerge.get(refKey));
+                for (String mergeKey : mergeKeys) {
+                    if (supplier != null) {
+                        Map<String, Object> s = (Map<String, Object>) supplier;
+                        dataToMerge.put(mergeKey, s.get(mergeKey));
+                    } else {
+                        dataToMerge.put(mergeKey, "");
+                    }
+                }
+            }
+
+        } else {
+            Object supplier = suppliers.get(data.get(refKey));
+            for (String mergeKey : mergeKeys) {
+                if (supplier != null) {
+                    Map<String, Object> s = (Map<String, Object>) supplier;
+                    data.put(mergeKey, mergeKey);
+                } else {
+                    data.put(mergeKey, "");
+                }
+            }
+        }
+    }
 
 }

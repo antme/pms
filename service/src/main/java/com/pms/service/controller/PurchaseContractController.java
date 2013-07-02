@@ -26,10 +26,10 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listPurchaseContracts(parserJsonParameters(request, false)), request, response);
     }
     
-    //飞直发采购数据
+    //非直发采购数据
     @RequestMapping("/repository/contract/list")
-    public void listContractsForRepositorySelect(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listContractsForRepositorySelect(), request, response);
+    public void listProjectsFromApproveContractsForRepositorySelect(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listProjectsFromApproveContractsForRepositorySelect(), request, response);
     }
     
     @RequestMapping("/project/contract/list")
@@ -38,8 +38,8 @@ public class PurchaseContractController extends AbstractController {
     }
     
     @RequestMapping("/project/contract/suppliers/list")
-    public void listContractsSuppliersByProjectId(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listContractsSuppliersByProjectId(parserJsonParameters(request, false)), request, response);
+    public void listSuppliersFromContractsByProjectId(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.listSuppliersFromContractsByProjectId(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/get/byproject_supplier")
@@ -102,12 +102,6 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listBackRequestForSelect(), request, response);
     }
     
-    @RequestMapping("/back/get")
-    public void getBackRequestForSelect(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.getBackRequestForSelect(parserJsonParameters(request, false)), request, response);
-    }
-    
-
     
     @RequestMapping("/request/list")
     public void listPurchaseRequestByAssistant(HttpServletRequest request, HttpServletResponse response) {

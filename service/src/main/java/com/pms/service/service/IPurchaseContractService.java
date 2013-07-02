@@ -9,11 +9,11 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters);
     
-    public Map<String, Object> listContractsForRepositorySelect();
+    public Map<String, Object> listProjectsFromApproveContractsForRepositorySelect();
     
     public Map<String, Object> listContractsByProjectId(Map<String, Object> contract);
     
-    public Map<String, Object> listContractsSuppliersByProjectId(Map<String, Object> contract);
+    public Map<String, Object> listSuppliersFromContractsByProjectId(Map<String, Object> contract);
     
     public Map<String, Object> listContractsByProjectAndSupplier(Map<String, Object> params);
     
@@ -66,8 +66,6 @@ public interface IPurchaseContractService {
     public Map<String, Object> getPurchaseRequest(Map<String, Object> parameters);
     
     public void deletePurchaseRequest(Map<String, Object> order);
-
-    public Map<String, Object> getBackRequestForSelect(Map<String, Object> parserJsonParameters);
 
     public Map<String, Object> listRepositoryRequests(Map<String, Object> parameters);
     

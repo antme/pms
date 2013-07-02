@@ -3,7 +3,7 @@ var selectBackUrl = "/service/purcontract/back/select/list";
 editUrl = "/service/purcontract/request/get";
 saveUrl =  "/service/purcontract/request/update";
 addUrl =  "/service/purcontract/request/add";
-var getSelectUrl = "/service/purcontract/back/get";
+var getSelectUrl = "/service/purchase/back/load";
 
 //申明选择备货申请的id
 var selectBackId = undefined;

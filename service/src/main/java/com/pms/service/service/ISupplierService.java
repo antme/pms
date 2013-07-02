@@ -13,5 +13,8 @@ public interface ISupplierService {
 	public Map<String, Object> create(Map<String, Object> params);
 	
     public Map<String,Object> importSupplier(Map<String,Object> params);
+    
+    
+    public void mergeSupplierInfo(Map<String, Object> data, String refKey, String[] mergeKeys);
 
 }
