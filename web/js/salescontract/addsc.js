@@ -380,8 +380,10 @@ function saveSC(){
 
 		var profit = $("#estimateGrossProfit").val();
 		var profitRate = $("#estimateGrossProfitRate").val();
+		var totalEstimate = $("#totalEstimateCost").val();
 		scm.set("estimateGrossProfit", profit);
 		scm.set("estimateGrossProfitRate", profitRate);
+		scm.set("totalEstimateCost", totalEstimate);
 		
 		dataSource_SC.add(scm);
 		dataSource_SC.sync();

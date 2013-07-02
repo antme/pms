@@ -17,6 +17,7 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.ICustomerService;
 import com.pms.service.service.IProjectService;
 import com.pms.service.service.IUserService;
+import com.pms.service.util.ApiUtil;
 import com.pms.service.util.ExcleUtil;
 
 public class ProjectServiceImpl extends AbstractService implements IProjectService {
@@ -156,13 +157,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
 	@Override
 	public Map<String, Object> getProjectById(String id) {
-		Map<String, Object> p = dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
-		Map<String, Object> scQuery = new HashMap<String, Object>();
-		scQuery.put(ProjectBean.PROJECT_ID, p.get(ApiConstants.MONGO_ID));
-		scQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE, SalesContractBean.SC_PERSON, SalesContractBean.SC_DATE});
-		Map<String, Object> scList = dao.list(scQuery, DBBean.SALES_CONTRACT);
-		p.put("scs", scList.get(ApiConstants.RESULTS_DATA));
-		return p;
+		return dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
 	}
 
 	@Override
@@ -319,6 +314,39 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
 	public void setCustomerService(ICustomerService customerService) {
 		this.customerService = customerService;
+	}
+
+	@Override
+	public Map<String, Object> getProjectByIdAndMergeSCInfo(
+			Map<String, Object> params) {
+		String id = (String) params.get(ApiConstants.MONGO_ID);
+		Map<String, Object> p = dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
+		Map<String, Object> scQuery = new HashMap<String, Object>();
+		scQuery.put(ProjectBean.PROJECT_ID, p.get(ApiConstants.MONGO_ID));
+		scQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE, SalesContractBean.SC_PERSON, SalesContractBean.SC_DATE,
+				SalesContractBean.SC_CUSTOMER, SalesContractBean.SC_TYPE, SalesContractBean.SC_RUNNING_STATUS, SalesContractBean.SC_AMOUNT});
+		Map<String, Object> scList = dao.list(scQuery, DBBean.SALES_CONTRACT);
+		List<Map<String, Object>> scListData = (List<Map<String, Object>>) scList.get(ApiConstants.RESULTS_DATA);
+		List<String> cIds = new ArrayList<String>();
+		for (Map<String, Object> sc : scListData){
+			String cid = (String) sc.get(SalesContractBean.SC_CUSTOMER);
+			if (!ApiUtil.isEmpty(cid)){
+				cIds.add(cid);
+			}
+		}
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, cIds));
+		query.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
+		Map<String, Object> cMap = dao.listToOneMapAndIdAsKey(query, DBBean.CUSTOMER);
+		for(Map<String, Object> sc : scListData){
+			String cid = (String) sc.get(SalesContractBean.SC_CUSTOMER);
+			if (!ApiUtil.isEmpty(cid)){
+				Map<String, Object> cData = (Map<String, Object>) cMap.get(cid);
+				sc.put(SalesContractBean.SC_CUSTOMER, cData.get(CustomerBean.NAME));
+			}
+		}
+		p.put("scs", scList.get(ApiConstants.RESULTS_DATA));
+		return p;
 	}
 
 }

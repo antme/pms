@@ -18,6 +18,8 @@ public interface IProjectService {
 	
 	public Map<String, Object> getProjectById(String id);
 	
+	public Map<String, Object> getProjectByIdAndMergeSCInfo(Map<String, Object> params);
+	
 	public Map<String, Object> setupProject(Map<String, Object> params);
 	
 	public String getCustomerIdByProId(String pId);
