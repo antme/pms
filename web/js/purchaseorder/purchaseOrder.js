@@ -75,10 +75,10 @@ $(document).ready(function() {
 				title : "金额"
 			}, {
 				field : "numbersPercentOfContract",
-				title : "合同下已申请采购货品%"
+				title : "货品占合同%"
 			}, {
 				field : "moneyPercentOfContract",
-				title : "合同下已申请采购金额%"
+				title : "金额占合同%"
 			} ]
 
 		});
