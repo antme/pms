@@ -49,4 +49,10 @@ public class ShipBean {
     
     public static final String SHIP_EQ_LIST = "eqcostList"; // 设备清单
     
+    public static final String SHIP_EQ_ARRIVAL_AMOUNT = "arrivalAmount"; // 已到货数量
+    
+    public static final String SHIP_EQ_GIVE_UP = "giveUp"; // 是否放弃未到货物
+    
+    public static final String SHIP_EQ_GIVE_UP_FAULSE = "否"; // 否
+    
 }

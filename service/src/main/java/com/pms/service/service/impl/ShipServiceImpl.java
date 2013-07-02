@@ -136,6 +136,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 			Map<String, Object> eqMap = (Map<String, Object>) eqInfoMap.get(mapEntry.getKey().toString());
 			if (eqMap != null) {
 				eqMap.put(EqCostListBean.EQ_LIST_AMOUNT, mapEntry.getValue());
+				eqMap.put(ShipBean.SHIP_EQ_ARRIVAL_AMOUNT, 0);
+				eqMap.put(ShipBean.SHIP_EQ_GIVE_UP, ShipBean.SHIP_EQ_GIVE_UP_FAULSE);
 				result.add(eqMap);
 			}
 		}
