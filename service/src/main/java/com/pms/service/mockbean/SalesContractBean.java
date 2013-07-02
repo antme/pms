@@ -11,11 +11,15 @@ public class SalesContractBean {
 	public static final String SC_TYPE = "contractType"; //合同类型*********
 	public static final String SC_DATE = "contractDate"; //合同签订日期
 	public static final String SC_DOWN_PAYMENT = "contractDownPayment"; //首付
+	public static final String SC_DOWN_PAYMENT_MEMO = "contractDownPaymentMemo"; //首付 备注
 	public static final String SC_PROGRESS_PAYMENT = "progressPayment"; //进度款
 	public static final String SC_QUALITY_MONEY = "qualityMoney"; //质保金
+	public static final String SC_QUALITY_MONEY_MEMO = "qualityMoneyMemo"; //质保金 备注
 	public static final String SC_ARCHIVE_STATUS = "archiveStatus"; // 归档状态*********
 	public static final String SC_RUNNING_STATUS = "runningStatus"; //执行状态*********
 	public static final String SC_MEMO = "contractMemo"; //备注
+	
+	public static final String SC_CUSTOMER = "customer"; //外键 客户
 	
 	//商务信息字段
 	public static final String SC_AMOUNT = "contractAmount"; //合同金额
@@ -33,6 +37,7 @@ public class SalesContractBean {
 	public static final String SC_TAX_TYPE = "taxType"; //税收类型*********
 	public static final String SC_ESTIMATE_OTHER_COST = "estimateOtherCost"; //预估其他成本
 	public static final String SC_TOTAL_ESTIMATE_COST = "totalEstimateCost"; //==项目总预估成本
+	
 	
 	//设备成本清单字段
 	public static final String SC_EQ_LIST = "eqcostList";

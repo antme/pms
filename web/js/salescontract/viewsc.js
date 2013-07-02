@@ -11,6 +11,7 @@ var scModel = kendo.data.Model.define({
 				required : true
 			}
 		},
+		customer:{},
 		archiveStatus : {},
 		runningStatus : {},
 		contractAmount : {},
@@ -21,6 +22,8 @@ var scModel = kendo.data.Model.define({
 		estimatePMCost : {},
 		estimateDeepDesignCost:{},
 		estimateDebugCost:{},
+		estimateTax:{},
+		totalEstimateCost:{},
 		estimateOtherCost:{},
 		//debugCostType:{},
 		//taxType:{},
@@ -31,8 +34,10 @@ var scModel = kendo.data.Model.define({
 			type:"date"
 		},
 		contractDownPayment : {},
+		contractDownPaymentMemo:{},
 		progressPayment : {},
 		qualityMoney : {},
+		qualityMoneyMemo:{},
 		contractMemo : {},
 		eqcostList : {},
 		scInvoiceInfo : {},
@@ -116,6 +121,23 @@ $(document).ready(function() {
 //		dataSource : debugCostTypeItems,
 //	});
 
+	var customerItems = new kendo.data.DataSource({
+		transport : {
+			read : {
+				url : "/service/customer/list",
+				dataType : "jsonp"
+			}
+		},
+		schema: {
+		    data: "data"
+		}
+	});
+	$("#customer").kendoDropDownList({
+		dataTextField : "name",
+		dataValueField : "_id",
+        optionLabel: "选择客户...",
+		dataSource : customerItems,
+	});
 	//合同类型
 	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
 	$("#contractType").kendoDropDownList({
@@ -155,7 +177,7 @@ $(document).ready(function() {
 		}
 	});
 	$("#projectId").kendoDropDownList({
-		dataTextField : "projectName",
+		dataTextField : "projectCode",
 		dataValueField : "_id",
         optionLabel: "选择项目...",
 		dataSource : projectItems,
@@ -191,10 +213,13 @@ $(document).ready(function() {
 	$("#contractDownPayment").kendoNumericTextBox({
 		min:0
 	});
-	$("#progressPayment").kendoNumericTextBox({
+	/*$("#progressPayment").kendoNumericTextBox({
+		min:0
+	});*/
+	$("#qualityMoney").kendoNumericTextBox({
 		min:0
 	});
-	$("#qualityMoney").kendoNumericTextBox({
+	$("#estimateTax").kendoNumericTextBox({
 		min:0
 	});
 	
@@ -210,6 +235,27 @@ $(document).ready(function() {
 
 function edit(data){
 	scm = new scModel(data);
+	//进度款
+	if (!$("#progressPayment").data("kendoGrid")){
+		$("#progressPayment").kendoGrid({
+			dataSource : scm.progressPayment,
+			columns : [ {
+				field : "progressPaymentNo",
+				title : "序号"
+			}, 
+			{
+				field : "progressPaymentAmount",
+				title : "进度款额"
+			}, {
+				field : "progressPaymentMemo",
+				title : "备注"//, width: 110
+			} ],
+
+			toolbar : [ {name:"create",text:"新增"} ],
+			editable : true,
+			scrollable : true
+		});
+	}//进度款
 	eqCostListDataSourceView.data(scm.eqcostList);
 	//成本设备清单_old
 	if (!$("#scEqCostListOld").data("kendoGrid")){
