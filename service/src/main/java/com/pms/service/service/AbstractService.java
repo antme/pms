@@ -497,7 +497,7 @@ public abstract class AbstractService {
     }
 
     public String generateCode(String prefix, String db) {
-        return prefix + "-" + this.dao.count(null, db) + 1;
+        return prefix + "-2013-" + (this.dao.count(null, db) + 1);
     }
 
     public ICommonDao getDao() {

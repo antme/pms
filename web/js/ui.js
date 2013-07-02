@@ -580,7 +580,10 @@ function openSCViewWindow(param){
 	openRemotePageWindow(options, "html/salescontract/editsc.html", {_id : param});
 }
 
-
+function openPurchaseContractViewWindow(param){
+	var options = { width:"1080px", height: "800px", title:"采购合同信息"};
+	openRemotePageWindow(options, "html/purchasecontract/purchasecontractedit.html", {_id : param});
+}
 
 function myTaskQueryParam(options, operation){
 		if(redirectParams){
