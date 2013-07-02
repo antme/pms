@@ -142,7 +142,7 @@ $(document).ready(function() {
 			pModel = new projectModel();
 			kendo.bind($("#addProject"), pModel);
 		}else{
-			postAjaxRequest("/service/project/get", popupParams, popView);
+			postAjaxRequest("/service/project/getandmergescinfo", popupParams, popView);
 			disableAllInPoppup();
 		}
 	}else if (redirectParams) {//Edit
@@ -240,5 +240,9 @@ function viewSC(id){
 	var data = pSCInfoDatasource.get(id);
 	$("#scInfo_scCode").html(data.contractCode);
 	$("#scInfo_scPerson").html(data.contractPerson);
-	//待完善
+	$("#scInfo_scDate").html(kendo.toString(data.contractDate, 'd'));
+	$("#scInfo_scCustomer").html(data.customer);
+	$("#scInfo_scType").html(data.contractType);
+	$("#scInfo_scRunningStatus").html(data.runningStatus);
+	$("#scInfo_scAmount").html(data.contractAmount);
 }

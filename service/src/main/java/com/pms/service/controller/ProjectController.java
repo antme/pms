@@ -95,6 +95,13 @@ public class ProjectController extends AbstractController {
         responseWithData(projectService.getProjectById(id), request, response);
     }
     
+    @RequestMapping("/getandmergescinfo")
+    public void getProjectByIdAndMergeSCInfo(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        String id = (String) params.get(ApiConstants.MONGO_ID);
+        responseWithData(projectService.getProjectByIdAndMergeSCInfo(params), request, response);
+    }
+    
     /**
      * 正式立项
      * @param request

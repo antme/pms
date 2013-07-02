@@ -45,7 +45,8 @@ var scModel = kendo.data.Model.define({
 		scMonthShipmentsInfo : {},
 		scYearShipmentsInfo : {},
 		estimateGrossProfit : {},
-		estimateGrossProfitRate : {}
+		estimateGrossProfitRate : {},
+		scModifyTimes:{}
 	}
 });
 var scm;
@@ -372,4 +373,9 @@ function edit(data){
 	
 	scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
 	kendo.bind($("#editSalesContract"), scm);
+}
+
+function openTraceWindow(){
+	var options = { width:"680px", height: "400px", title:"合同金额变更历史"};
+	openRemotePageWindow(options, "html/salescontract/traceSCAmount.html", {_id : scm._id});
 }

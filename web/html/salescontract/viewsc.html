@@ -29,15 +29,15 @@
                    <li>
                                                             成本设备清单
                    </li>
-                   <li>
+                   <!-- <li>
                                                             执行信息
-                   </li>
+                   </li> -->
                    <li>
                                                             财务数据
                    </li>
-                   <li>
+                   <!-- <li>
                                                             工程数据
-                   </li>
+                   </li> -->
                </ul>
                
                <div><!-- 第一个Tab -->
@@ -164,6 +164,13 @@
 							<input type="number" min="0" name="contractAmount" id="contractAmount"
 								readonly validationMessage="必填" data-bind="value: contractAmount">
 						</div>
+	                   <div class="k-edit-label ">
+							<label for="scModifyTimes">增补次数</label>
+						</div>
+						<div data-container-for="scModifyTimes" class="k-edit-field ">
+							<input name="scModifyTimes" id=scModifyTimes
+								readonly data-bind="value: scModifyTimes" width=20px><a class="k-button" onclick="openTraceWindow()">变更历史</a>
+						</div>
 						
 	                   <div class="k-edit-label ">
 							<label for="estimateEqCost0">预估设备成本（增）</label>
@@ -281,11 +288,11 @@
                    </div>
                </div>
                
-               <div><!-- 第 4 个Tab -->
-                   <div><!-- 执行信息 -->
+               <!-- <div>第 4 个Tab
+                   <div>执行信息
                        
                    </div>
-               </div>
+               </div> -->
                
                <div><!-- 第 5 个Tab -->
                    <div><!-- 财务数据 -->
@@ -301,8 +308,8 @@
                    </div>
                </div>
                
-               <div><!-- 第 6 个Tab -->
-                   <div><!-- 工程数据 -->
+               <!-- <div>第 6 个Tab
+                   <div>工程数据
                        <br/>
                    		<h3>按月发货金额列表</h3>
                        <div id="monthShipmentsGrid"></div>
@@ -313,7 +320,7 @@
                        <div id="yearShipmentsGrid"></div>
                        <br/>
                    </div>
-               </div>
+               </div> -->
                
            </div>
          </div>
