@@ -54,6 +54,9 @@ public class RoleValidConstants {
     public static final String SHIP_MANAGEMENT_PROCESS = "ship_management_process";
     public static final String SHIP_MANAGEMENT_PROCESS_DESC = "发货审批";
     
+    public static final String SHIP_CONFIRM = "ship_confirm";
+    public static final String SHIP_CONFIRM_DESC = "发货确认";
+    
     public static final String BORROWING_MANAGEMENT = "borrowing_management";
     public static final String BORROWING_MANAGEMENT_DESC = "借货还货管理";
         

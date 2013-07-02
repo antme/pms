@@ -143,6 +143,17 @@ function toolbar_record() {
 	}
 }
 
+function toolbar_confirm() {
+	var rowData = getSelectedRowDataByGridWithMsg("grid");
+	if (rowData) {
+		if (rowData.status == 2 && rowData.type == 1){
+			loadPage("shipRecord",{_id:rowData._id});
+		} else {
+			alert("无法执行该操作");
+		}
+	}
+}
+
 function toolbar_delete() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
