@@ -543,13 +543,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         request.put(PurchaseRequest.PROCESS_STATUS, status);
         request.put(PurchaseRequest.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 
-        Map<String, Object> result = dao.updateById(request, db);
+        return dao.updateById(request, db);
 
-        if (cc.get(PurchaseRequest.SALES_CONTRACT_CODE) != null) {
-            updateSummaryUnderContract(db, cc.get(PurchaseRequest.SALES_CONTRACT_CODE).toString());
-        }
-
-        return result;
     }
 
     public Map<String, Object> rejectPurchaseContract(Map<String, Object> order) {
@@ -714,7 +709,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         if (parameters.get(PurchaseCommonBean.SALES_COUNTRACT_ID) != null) {
             scs.mergeCommonFieldsFromSc(parameters, parameters.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
-
         }
         if (parameters.get("requestedDate") == null && parameters.get(PurchaseCommonBean.PROCESS_STATUS) != null
                 && parameters.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_NEW)) {
@@ -732,42 +726,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return result;
     }
 
-
-    private void updateSummaryUnderContract(String db, String scId) {
-
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseRequest.SALES_CONTRACT_CODE, scId);
-        query.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_APPROVED, PurchaseRequest.STATUS_NEW }));
-        // TODO: query requried keys
-        // query.put(ApiConstants.LIMIT_KEYS, new String[]{});
-
-        Map<String, Object> results = this.dao.list(query, db);
-
-        if (results != null) {
-            List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
-
-            float totalPercent = 0;
-            float totalMoneyPercent = 0;
-
-            for (Map<String, Object> result : list) {
-                result.put("requestTotalOfCountract", list.size());
-                if (result.get("numbersPercentOfContract") != null) {
-                    totalPercent = totalPercent + Float.parseFloat(result.get("numbersPercentOfContract").toString());
-                }
-
-                if (result.get("moneyPercentOfContract") != null) {
-                    totalMoneyPercent = totalMoneyPercent + Float.parseFloat(result.get("moneyPercentOfContract").toString());
-                }
-            }
-
-            for (Map<String, Object> result : list) {
-                result.put("allRequestedNumbersOfCountract", totalPercent);
-                result.put("totalRequestedMoneyOfContract", totalMoneyPercent);
-                this.dao.updateById(result, db);
-            }
-
-        }
-    }
 
     @Override
     public Map<String, Object> listRepositoryRequests(Map<String, Object> params) {
