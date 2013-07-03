@@ -555,26 +555,28 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         Map<String, Object> project = dao.findOne(ApiConstants.MONGO_ID, request.getProjectId(), DBBean.PROJECT);
 
-        Map<String, Object> pmQuery = new HashMap<String, Object>();
-        pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.USER_NAME });
-        pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER));
+        if (project != null) {
+            Map<String, Object> pmQuery = new HashMap<String, Object>();
+            pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.USER_NAME });
+            pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER));
 
-        Map<String, Object> pmData = dao.findOneByQuery(pmQuery, DBBean.USER);
-        project.put(ProjectBean.PROJECT_MANAGER, pmData.get(UserBean.USER_NAME));
+            Map<String, Object> pmData = dao.findOneByQuery(pmQuery, DBBean.USER);
+            project.put(ProjectBean.PROJECT_MANAGER, pmData.get(UserBean.USER_NAME));
 
-        String cId = (String) project.get(ProjectBean.PROJECT_CUSTOMER);
+            String cId = (String) project.get(ProjectBean.PROJECT_CUSTOMER);
 
-        Map<String, Object> customerQuery = new HashMap<String, Object>();
-        customerQuery.put(ApiConstants.LIMIT_KEYS, new String[] { CustomerBean.NAME });
-        customerQuery.put(ApiConstants.MONGO_ID, cId);
-        Map<String, Object> customerData = dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
+            Map<String, Object> customerQuery = new HashMap<String, Object>();
+            customerQuery.put(ApiConstants.LIMIT_KEYS, new String[] { CustomerBean.NAME });
+            customerQuery.put(ApiConstants.MONGO_ID, cId);
+            Map<String, Object> customerData = dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
 
-        project.put(ProjectBean.PROJECT_CUSTOMER, customerData.get(CustomerBean.NAME));
-        
-        params.put("customerName", project.get(ProjectBean.PROJECT_CUSTOMER));
-        params.put("projectName", project.get("projectName"));
-        params.put("projectManager", project.get("projectManager"));       
-        params.put("projectCode", project.get(ProjectBean.PROJECT_CODE));
+            project.put(ProjectBean.PROJECT_CUSTOMER, customerData.get(CustomerBean.NAME));
+
+            params.put("customerName", project.get(ProjectBean.PROJECT_CUSTOMER));
+            params.put("projectName", project.get("projectName"));
+            params.put("projectManager", project.get("projectManager"));
+            params.put("projectCode", project.get(ProjectBean.PROJECT_CODE));
+        }
 
     }
 
