@@ -116,16 +116,16 @@ function editOr() {
 function arrivalNotice() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if (row.status == "审批通过") {
+		if (row.status == "采购完毕") {
 			var param = {
-					"purchaseOrderId" : row._id,
-					"purchaseOrderCode" : row.purchaseOrderCode,
-					"salesContractId" : row.salesContractId,
-					"salesContractCode" : row.salesContractCode,
-					"shipType" : "0" // 直发
+					"foreignKey" : row._id,
+					"foreignCode" : row.purchaseOrderCode,
+					"shipType" : "0" // 供应商直发
 				};
 			postAjaxRequest("/service/arrivalNotice/create", param,
 						callback);
+		} else {
+			alert("未采购完毕，不能生成到货通知");
 		}
 	}
 }

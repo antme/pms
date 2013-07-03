@@ -967,4 +967,40 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		return dao.updateById(query, DBBean.SALES_CONTRACT);
 	}
+	
+	
+
+    public List<Map<String, Object>> mergeLoadedEqList(Object eqList) {
+        List<Map<String, Object>> orgin = (List<Map<String, Object>>) eqList;
+
+        List<Map<String, Object>> mapLists = new ArrayList<Map<String, Object>>();
+        Set<String> ids = new HashSet<String>();
+
+        for (Map<String, Object> old : orgin) {
+            if(old.get(ApiConstants.MONGO_ID)!=null){
+                ids.add(old.get(ApiConstants.MONGO_ID).toString());
+            }
+        }
+
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<String>(ids)));
+
+        List<Object> scEqList = this.dao.listLimitKeyValues(query, DBBean.EQ_COST);
+
+        for (Object obj : scEqList) {
+            Map<String, Object> scEq = (Map<String, Object>) obj;
+
+            for (Map<String, Object> savedEq : orgin) {
+
+                if (savedEq.get(ApiConstants.MONGO_ID).toString().equalsIgnoreCase(scEq.get(ApiConstants.MONGO_ID).toString())) {
+                    scEq.putAll(savedEq);
+                    break;
+                }
+            }
+
+            mapLists.add(scEq);
+        }
+
+        return mapLists;
+    }
 }

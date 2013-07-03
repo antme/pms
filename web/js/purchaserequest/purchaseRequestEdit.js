@@ -96,6 +96,18 @@ $(document).ready(function() {
 			}
 		});
 	}
+	
+	$("#eqcostDeliveryType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : eqcostDeliveryType
+	});
+	$("#pbType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : pbTypeItems
+	});
+	
 });
 
 function checkStatus(data) {
@@ -147,8 +159,7 @@ function loadBackRequest(data) {
 
 	//新增时候初始化数据
 	for (i in requestDataItem.eqcostList) {
-		requestDataItem.eqcostList[i].eqcostAvailableAmount = requestDataItem.eqcostList[i].pbTotalCount;
-		requestDataItem.eqcostList[i].eqcostApplyAmount = requestDataItem.eqcostList[i].pbTotalCount;
+		requestDataItem.eqcostList[i].eqcostApplyAmount = requestDataItem.eqcostList[i].pbLeftCount;
 	}
 	
 	requestDataItem.backRequestId = requestDataItem._id;
@@ -173,6 +184,7 @@ function edit(data) {
 
 	requestDataItem = new model(requestDataItem);
 
+	
 	requestDataItem.set("pbPlanDate", kendo.toString(requestDataItem.pbPlanDate, 'd'));
 	// 渲染成本编辑列表
 	itemDataSource.data(requestDataItem.eqcostList);
@@ -211,6 +223,12 @@ function edit(data) {
 							}, {
 								field : "eqcostContractTotalMoney",
 								title : "合同总价"
+							}, {
+								field : "pbTotalCount",
+								title : "备货数"
+							}, {
+								field : "pbLeftCount",
+								title : "备货中剩余数量"
 							}, {
 								field : "eqcostApplyAmount",
 								title : "本次申请数量",

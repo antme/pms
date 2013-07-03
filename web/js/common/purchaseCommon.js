@@ -65,9 +65,19 @@ var model = kendo.data.Model.define({
 		eqcostUnit : {
 			editable : false
 		},
+		pbTotalCount :{
+			editable : false
+		},
+		pbLeftCount : {
+			editable : false
+		},
 		orderEqcostName : {
 
 		},
+		eqcostDeliveryType: {
+			defaultValue : "直发入库"
+		},
+		
 		orderEqcostModel : {
 
 		},
@@ -101,7 +111,14 @@ function save(status) {
 		itemDataSource.at(0).set("uid", kendo.guid());
 	}
 	
-
+	if(requestDataItem.pbDepartment && requestDataItem.pbDepartment instanceof Object){
+		requestDataItem.pbDepartment = requestDataItem.pbDepartment.join(",");
+	}
+	
+	if(requestDataItem.eqcostDeliveryType && requestDataItem.eqcostDeliveryType.text){
+		requestDataItem.eqcostDeliveryType = requestDataItem.eqcostDeliveryType.text;
+	}
+	
 	console.log(requestDataItem);
 	// 同步数据
 	itemDataSource.sync();

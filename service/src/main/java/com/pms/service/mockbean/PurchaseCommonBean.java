@@ -41,6 +41,19 @@ public class PurchaseCommonBean extends BaseEntity {
     private String pbType;
     
     private String pbDepartment;
+    
+    private String eqcostDeliveryType;
+    
+    
+    
+
+    public String getEqcostDeliveryType() {
+        return eqcostDeliveryType;
+    }
+
+    public void setEqcostDeliveryType(String eqcostDeliveryType) {
+        this.eqcostDeliveryType = eqcostDeliveryType;
+    }
 
     public String getPbPlanDate() {
         return pbPlanDate;
@@ -223,5 +236,10 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String PROJECT_ID = "projectId";
     
     public static final String SALES_COUNTRACT_ID = "salesContractId";
+    
+    
+    public static final String BACK_REQUEST_ID = "backRequestId";
+    
+    public static final String EQCOST_APPLY_AMOUNT = "eqcostApplyAmount";
 
 }
