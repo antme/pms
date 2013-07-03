@@ -59,4 +59,8 @@ public interface ISalesContractService {
 	public Map<String, Object> listGetMoneyForSC(Map<String, Object> params);	
 	
 	public void destoryGetMoney(Map<String,Object> params);
+	
+	public Map<String, Object> setSCRunningStatus(Map<String, Object> params);
+	
+	public Map<String, Object> setSCArchiveStatusStatus(Map<String, Object> params);
 }

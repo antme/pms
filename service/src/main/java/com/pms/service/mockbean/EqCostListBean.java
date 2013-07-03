@@ -25,5 +25,6 @@ public class EqCostListBean {
 	public static final String EQ_LIST_SALES_BASE_PRICE = "eqcostSalesBasePrice"; //销售单价
 	public static final String EQ_LIST_TAX_TYPE = "eqcostTaxType";//税收类型：增值税 or 非增值税
 	public static final String EQ_LIST_CATEGORY = "eqcostCategory";//所属 分类
+	public static final String EQ_LIST_LAST_BASE_PRICE = "eqcostLastBasePrice";//最终成本单价
 	
 }

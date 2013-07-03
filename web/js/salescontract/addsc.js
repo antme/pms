@@ -104,7 +104,9 @@ var eqCostListDataSource = new kendo.data.DataSource({
             	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" },
         		eqcostTaxType : {type: "string"},
-        		eqcostCategory : {type: "string"}
+        		eqcostCategory : {type: "string"},
+        		eqcostLastBasePrice: { type: "number" },
+        		eqcostTotalAmount : {type: "number"}
             }
         }
 	}
@@ -313,13 +315,19 @@ $(document).ready(function() {
 //			}, 
 			{
 				field : "eqcostBasePrice",
-				title : "成本价"
+				title : "标准成本价"
 			}, {
 				field : "eqcostSalesBasePrice",
 				title : "销售单价"
 			}, {
 				field : "eqcostDiscountRate",
 				title : "折扣率"
+			}, {
+				field : "eqcostLastBasePrice",
+				title : "最终成本价"
+			}, {
+				field : "eqcostTotalAmount",
+				title : "小计"
 			}, {
 				field : "eqcostTaxType",
 				title : "税收类型"

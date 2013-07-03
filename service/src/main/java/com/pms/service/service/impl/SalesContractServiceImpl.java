@@ -43,7 +43,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public Map<String, Object> listSC(Map<String, Object> params) {
 
 		String[] limitKeys = {SalesContractBean.SC_CODE, SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER,
-				SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_RUNNING_STATUS};
+				SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_RUNNING_STATUS, 
+				SalesContractBean.SC_ARCHIVE_STATUS};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 
 		mergeDataRoleQuery(params);
@@ -63,15 +64,15 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		contract.put(SalesContractBean.SC_PROJECT_ID, params.get(SalesContractBean.SC_PROJECT_ID));
 		contract.put(SalesContractBean.SC_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT));
 		contract.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
-		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_EQ_COST0));
-		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST1, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_EQ_COST1));
-		contract.put(SalesContractBean.SC_ESTIMATE_SUB_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_SUB_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_PM_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_PM_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_DEBUG_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_DEBUG_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_OTHER_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_OTHER_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_EQ_COST0));
+		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST1, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_EQ_COST1));
+		contract.put(SalesContractBean.SC_ESTIMATE_SUB_COST, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_SUB_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_PM_COST, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_PM_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_DEBUG_COST, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_DEBUG_COST));
+		contract.put(SalesContractBean.SC_ESTIMATE_OTHER_COST, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_OTHER_COST));
 		
-		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT, ApiUtil.getFloatParam(params, SalesContractBean.SC_EXTIMATE_GROSS_PROFIT));
+		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT, ApiUtil.getDouble(params, SalesContractBean.SC_EXTIMATE_GROSS_PROFIT));
 		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE, params.get(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE));
 		
 		contract.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE));
@@ -81,11 +82,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		contract.put(SalesContractBean.SC_ARCHIVE_STATUS, params.get(SalesContractBean.SC_ARCHIVE_STATUS));
 		contract.put(SalesContractBean.SC_RUNNING_STATUS, params.get(SalesContractBean.SC_RUNNING_STATUS));
 		contract.put(SalesContractBean.SC_DATE, params.get(SalesContractBean.SC_DATE));
-		contract.put(SalesContractBean.SC_ESTIMATE_TAX, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_TAX));
-		contract.put(SalesContractBean.SC_TOTAL_ESTIMATE_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_TOTAL_ESTIMATE_COST));
-		contract.put(SalesContractBean.SC_DOWN_PAYMENT, ApiUtil.getFloatParam(params, SalesContractBean.SC_DOWN_PAYMENT));
+		contract.put(SalesContractBean.SC_ESTIMATE_TAX, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_TAX));
+		contract.put(SalesContractBean.SC_TOTAL_ESTIMATE_COST, ApiUtil.getDouble(params, SalesContractBean.SC_TOTAL_ESTIMATE_COST));
+		contract.put(SalesContractBean.SC_DOWN_PAYMENT, ApiUtil.getDouble(params, SalesContractBean.SC_DOWN_PAYMENT));
 		contract.put(SalesContractBean.SC_PROGRESS_PAYMENT,params.get(SalesContractBean.SC_PROGRESS_PAYMENT));
-		contract.put(SalesContractBean.SC_QUALITY_MONEY, ApiUtil.getFloatParam(params, SalesContractBean.SC_QUALITY_MONEY));
+		contract.put(SalesContractBean.SC_QUALITY_MONEY, ApiUtil.getDouble(params, SalesContractBean.SC_QUALITY_MONEY));
 		contract.put(SalesContractBean.SC_DOWN_PAYMENT_MEMO, params.get(SalesContractBean.SC_DOWN_PAYMENT_MEMO));
 		contract.put(SalesContractBean.SC_QUALITY_MONEY_MEMO, params.get(SalesContractBean.SC_QUALITY_MONEY_MEMO));
 		contract.put(SalesContractBean.SC_MEMO, params.get(SalesContractBean.SC_MEMO));
@@ -233,9 +234,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
                 this.dao.updateById(realItem, DBBean.EQ_COST);
             }
             //Make sure the number value type 
-		    item.put(EqCostListBean.EQ_LIST_BASE_PRICE, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_BASE_PRICE));
-		    item.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_SALES_BASE_PRICE));
-		    item.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_DISCOUNT_RATE));
+		    item.put(EqCostListBean.EQ_LIST_BASE_PRICE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_BASE_PRICE));
+		    item.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_SALES_BASE_PRICE));
+		    item.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_DISCOUNT_RATE));
+		    item.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_LAST_BASE_PRICE));
+		    item.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_TOTAL_AMOUNT));
 		    
 			item.put(SalesContractBean.SC_PROJECT_ID, proId);
 			item.put(EqCostListBean.EQ_LIST_SC_ID, cId);
@@ -928,8 +931,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, list.get(i)[7].trim());
 				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[8].trim());
 				eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, list.get(i)[9].trim());
+				eq.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, list.get(i)[10].trim());
 				eq.put(EqCostListBean.EQ_LIST_CATEGORY, list.get(i)[11].trim());
 				eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, list.get(i)[12].trim());
+				eq.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, list.get(i)[13].trim());
 				eq.put(EqCostListBean.EQ_LIST_MEMO, list.get(i)[14].trim());
 				
 				eqList.add(eq);
@@ -942,5 +947,24 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
 		}
 		return result;
+	}
+
+	@Override
+	public Map<String, Object> setSCRunningStatus(Map<String, Object> params) {
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		query.put(SalesContractBean.SC_RUNNING_STATUS, params.get(SalesContractBean.SC_RUNNING_STATUS));
+		
+		return dao.updateById(query, DBBean.SALES_CONTRACT);
+	}
+
+	@Override
+	public Map<String, Object> setSCArchiveStatusStatus(
+			Map<String, Object> params) {
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		query.put(SalesContractBean.SC_ARCHIVE_STATUS, params.get(SalesContractBean.SC_ARCHIVE_STATUS));
+		
+		return dao.updateById(query, DBBean.SALES_CONTRACT);
 	}
 }
