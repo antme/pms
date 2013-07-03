@@ -259,6 +259,7 @@ function showOrderWindow() {
 
 	edit();
 }
+var mergedDataSource = new kendo.data.DataSource();
 
 function edit(data) {
 
@@ -394,6 +395,116 @@ function edit(data) {
 
 		});
 	}
+	
+	
+
+	var data = itemDataSource.data();
+	for(i=0; i<data.length; i++){
+		var mdata = mergedDataSource.data();
+		var find = false;
+		for(j=0; j<mdata.length; j++){	
+//			console.log(mdata[j].eqcostNo + "==" +  data[i].eqcostNo);
+			if(mdata[j].purchaseOrderCode == data[i].purchaseOrderCode){				
+				if(!mdata[j].items){
+					mdata[j].items = new Array();
+				}
+				mdata[j].items.push(data[i]);
+				find =true;
+				break;
+			}
+		}
+		
+		if(!find){
+			mergedDataSource.add(data[i]);
+		}
+	}
+	
+	if (!$("#merged-grid").data("kendoGrid")) {
+		$("#merged-grid").kendoGrid({
+			dataSource : mergedDataSource,
+			columns : [ {
+				field : "eqcostNo",
+				title : "序号"
+			}, {
+				field : "eqcostMaterialCode",
+				title : "物料代码"
+			}, {
+				field : "eqcostProductName",
+				title : "名称"
+			}, {
+				field : "eqcostProductType",
+				title : "型号"
+			}, {
+				field : "eqcostUnit",
+				title : "单位"
+			}, {
+				field : "eqcostProductUnitPrice",
+				title : "单价"
+			},{
+				field : "eqcostBrand",
+				title : "品牌"
+			}],
+			dataBound: function() {
+                 this.expandRow(this.tbody.find("tr.k-master-row").first());
+            },
+            detailInit: detailInit
+
+			
+		});
+	}
+	
+	
+	
+}
+
+function detailInit(e) {
+	
+	var data = new Array();
+	var mdata = mergedDataSource.data();
+	for(i=0; i<mdata.length; i++){
+		if(mdata[i].purchaseOrderCode == e.data.purchaseOrderCode){
+			if(mdata[i].items){
+				data = mdata[i].items;
+				data.push(mdata[i]);
+			}else{
+				data.push(mdata[i]);
+			}
+			break;
+		}
+		
+	}
+	console.log(data);
+
+    $("<div/>").appendTo(e.detailCell).kendoGrid({
+    	dataSource: {
+    		data: data
+    	},
+        scrollable: false,
+        sortable: true,
+        pageable: true,
+        columns : [ {
+			field : "eqcostNo",
+			title : "序号"
+		}, {
+			field : "eqcostMaterialCode",
+			title : "物料代码"
+		}, {
+			field : "eqcostProductName",
+			title : "名称"
+		}, {
+			field : "eqcostProductType",
+			title : "型号"
+		}, {
+			field : "eqcostUnit",
+			title : "单位"
+		}, {
+			field : "eqcostProductUnitPrice",
+			title : "单价"
+		},{
+			field : "eqcostBrand",
+			title : "品牌"
+		}]
+    });
 }
 
 

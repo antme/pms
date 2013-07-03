@@ -131,10 +131,11 @@ var runningStatusItems = [{ text: "执行中", value: "执行中" }, { text: "�
 
 //采购合同相关数据
 //合同类型
-var purchaseContractType = [{text : "代理产品"}, {text : "非代理产品"}, {text : "同方采购"}];
+var purchaseContractType = [{text : "施工分包"}, {text : "代理产品"}, {text : "非代理产品"}, {text : "同方代采"}, {text : "同方采购"}];
+
 
 //货物递送方式
-var eqcostDeliveryType = [{text : "直发现场"}, {text : "直发入库"}];
+var eqcostDeliveryType = [{text : "直发现场"}, {text : "入公司库"}];
 var executeType1 = [{text : "内部流程中"}, {text : "备货中"}, {text : "备货待发"}, {text : "发货完毕"}, {text : "结束"}];
 var executeType2 = [{text : "内部流程中"}, {text : "备货中"}, {text : "备货待发"}, {text : "入库完毕"}, {text : "结束"}];
 
