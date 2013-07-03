@@ -35,7 +35,15 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	
     private IArrivalNoticeService arrivalNoticeService;
     
-    /**
+    public IArrivalNoticeService getArrivalNoticeService() {
+		return arrivalNoticeService;
+	}
+
+	public void setArrivalNoticeService(IArrivalNoticeService arrivalNoticeService) {
+		this.arrivalNoticeService = arrivalNoticeService;
+	}
+
+	/**
      * @param scId
      */
 	public Map<String, Object> prepareBack(Map<String, Object> params) {
@@ -176,7 +184,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		Map<String,Object> res = dao.updateById(obj, DBBean.PURCHASE_ALLOCATE);
 		
 		// 批准调拨申请时生成到货通知
-		createArrivalNotice(res);
+		createArrivalNotice(params);
           
 	    Map<String, Object> resqeury = this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[]{EqCostListBean.EQ_LIST_SC_ID}, DBBean.PURCHASE_ALLOCATE);     
 	    updateEqLeftCountInEqDB(resqeury); 
