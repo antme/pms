@@ -17,10 +17,7 @@ var contractModel = kendo.data.Model.define({
 			defaultValue : "代理产品"
 		},
 		
-		eqcostDeliveryType: {
-			defaultValue : "直发现场"
-		},
-		
+	
 		contractProperty: {
 			defaultValue: "闭口合同"
 		},

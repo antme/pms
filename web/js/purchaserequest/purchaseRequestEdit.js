@@ -96,6 +96,18 @@ $(document).ready(function() {
 			}
 		});
 	}
+	
+	$("#eqcostDeliveryType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : eqcostDeliveryType
+	});
+	$("#pbType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : pbTypeItems
+	});
+	
 });
 
 function checkStatus(data) {

@@ -74,6 +74,10 @@ var model = kendo.data.Model.define({
 		orderEqcostName : {
 
 		},
+		eqcostDeliveryType: {
+			defaultValue : "直发入库"
+		},
+		
 		orderEqcostModel : {
 
 		},

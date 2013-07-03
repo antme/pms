@@ -641,8 +641,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> getPurchaseRequest(Map<String, Object> parameters) {
         Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
         List<Map<String, Object>> eqList = (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST);
-
-        result.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(eqList));
+        eqList = scs.mergeLoadedEqList(eqList);
+        result.put(SalesContractBean.SC_EQ_LIST, eqList);
         mergeProjectInfo(result);
         Map<String, Object> backQuery = new HashMap<String, Object>();
         backQuery.put(ApiConstants.MONGO_ID, result.get(PurchaseCommonBean.BACK_REQUEST_ID));
