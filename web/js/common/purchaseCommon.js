@@ -65,6 +65,12 @@ var model = kendo.data.Model.define({
 		eqcostUnit : {
 			editable : false
 		},
+		pbTotalCount :{
+			editable : false
+		},
+		pbLeftCount : {
+			editable : false
+		},
 		orderEqcostName : {
 
 		},

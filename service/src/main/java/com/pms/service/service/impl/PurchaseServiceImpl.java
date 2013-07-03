@@ -626,12 +626,17 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	}
 	
 	
-    public void mergeRestEqCount(Map<String, Object> back) {
+    public Map<String, Object> mergeRestEqCount(Map<String, Object> back) {
+        if (back.get(SalesContractBean.SC_EQ_LIST) == null) {
+            back = dao.findOne(ApiConstants.MONGO_ID, back.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
+        }
         List<Map<String, Object>> eqBackMapList = (List<Map<String, Object>>) back.get(SalesContractBean.SC_EQ_LIST);
         Map<String, Integer> restCountMap = countRestEqByBackId(back.get(ApiConstants.MONGO_ID).toString());
         for (Map<String, Object> eqMap : eqBackMapList) {
             eqMap.put(PurchaseBack.pbLeftCount, restCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
         }
+        
+        return back;
     }
 
     public Map<String, Integer> countEqByKey(Map<String, Object> query, String db, String queryKey, Map<String, Integer> count) {

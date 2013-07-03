@@ -147,7 +147,6 @@ function loadBackRequest(data) {
 
 	//新增时候初始化数据
 	for (i in requestDataItem.eqcostList) {
-		requestDataItem.eqcostList[i].eqcostAvailableAmount = requestDataItem.eqcostList[i].pbLeftCount;
 		requestDataItem.eqcostList[i].eqcostApplyAmount = requestDataItem.eqcostList[i].pbLeftCount;
 	}
 	
@@ -213,7 +212,10 @@ function edit(data) {
 								field : "eqcostContractTotalMoney",
 								title : "合同总价"
 							}, {
-								field : "eqcostAvailableAmount",
+								field : "pbTotalCount",
+								title : "备货数"
+							}, {
+								field : "pbLeftCount",
 								title : "备货中剩余数量"
 							}, {
 								field : "eqcostApplyAmount",
