@@ -626,12 +626,17 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	}
 	
 	
-    public void mergeRestEqCount(Map<String, Object> back) {
+    public Map<String, Object> mergeRestEqCount(Map<String, Object> back) {
+        if (back.get(SalesContractBean.SC_EQ_LIST) == null) {
+            back = dao.findOne(ApiConstants.MONGO_ID, back.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
+        }
         List<Map<String, Object>> eqBackMapList = (List<Map<String, Object>>) back.get(SalesContractBean.SC_EQ_LIST);
         Map<String, Integer> restCountMap = countRestEqByBackId(back.get(ApiConstants.MONGO_ID).toString());
         for (Map<String, Object> eqMap : eqBackMapList) {
-            eqMap.put(PurchaseBack.pbTotalCount, restCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+            eqMap.put(PurchaseBack.pbLeftCount, restCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
         }
+        
+        return back;
     }
 
     public Map<String, Integer> countEqByKey(Map<String, Object> query, String db, String queryKey, Map<String, Integer> count) {
@@ -665,9 +670,11 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         
         Map<String, Object> backQuery = new HashMap<String, Object>();
         backQuery.put(ApiConstants.MONGO_ID, backId);
+        //备货申请下总数集合
         Map<String, Integer> backEqCountMap = countEqByKey(backQuery, DBBean.PURCHASE_BACK, PurchaseBack.pbTotalCount, null);
 
         // 获取已发的采购申请的数据总和
+        //FIXME: 采购合同审批后记录已采购合同为准
         Map<String, Object> purchaseRequestQuery = new HashMap<String, Object>();
         purchaseRequestQuery.put(PurchaseCommonBean.BACK_REQUEST_ID, backId);
         purchaseRequestQuery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseCommonBean.STATUS_CANCELLED));

@@ -555,26 +555,28 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         Map<String, Object> project = dao.findOne(ApiConstants.MONGO_ID, request.getProjectId(), DBBean.PROJECT);
 
-        Map<String, Object> pmQuery = new HashMap<String, Object>();
-        pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.USER_NAME });
-        pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER));
+        if (project != null) {
+            Map<String, Object> pmQuery = new HashMap<String, Object>();
+            pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.USER_NAME });
+            pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER));
 
-        Map<String, Object> pmData = dao.findOneByQuery(pmQuery, DBBean.USER);
-        project.put(ProjectBean.PROJECT_MANAGER, pmData.get(UserBean.USER_NAME));
+            Map<String, Object> pmData = dao.findOneByQuery(pmQuery, DBBean.USER);
+            project.put(ProjectBean.PROJECT_MANAGER, pmData.get(UserBean.USER_NAME));
 
-        String cId = (String) project.get(ProjectBean.PROJECT_CUSTOMER);
+            String cId = (String) project.get(ProjectBean.PROJECT_CUSTOMER);
 
-        Map<String, Object> customerQuery = new HashMap<String, Object>();
-        customerQuery.put(ApiConstants.LIMIT_KEYS, new String[] { CustomerBean.NAME });
-        customerQuery.put(ApiConstants.MONGO_ID, cId);
-        Map<String, Object> customerData = dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
+            Map<String, Object> customerQuery = new HashMap<String, Object>();
+            customerQuery.put(ApiConstants.LIMIT_KEYS, new String[] { CustomerBean.NAME });
+            customerQuery.put(ApiConstants.MONGO_ID, cId);
+            Map<String, Object> customerData = dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
 
-        project.put(ProjectBean.PROJECT_CUSTOMER, customerData.get(CustomerBean.NAME));
-        
-        params.put("customerName", project.get(ProjectBean.PROJECT_CUSTOMER));
-        params.put("projectName", project.get("projectName"));
-        params.put("projectManager", project.get("projectManager"));       
-        params.put("projectCode", project.get(ProjectBean.PROJECT_CODE));
+            project.put(ProjectBean.PROJECT_CUSTOMER, customerData.get(CustomerBean.NAME));
+
+            params.put("customerName", project.get(ProjectBean.PROJECT_CUSTOMER));
+            params.put("projectName", project.get("projectName"));
+            params.put("projectManager", project.get("projectManager"));
+            params.put("projectCode", project.get(ProjectBean.PROJECT_CODE));
+        }
 
     }
 
@@ -640,9 +642,26 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public Map<String, Object> getPurchaseRequest(Map<String, Object> parameters) {
         Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
-        result.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(result.get(SalesContractBean.SC_EQ_LIST)));
+        List<Map<String, Object>> eqList = (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST);
+        eqList = scs.mergeLoadedEqList(eqList);
+        result.put(SalesContractBean.SC_EQ_LIST, eqList);
         mergeProjectInfo(result);
-        return  result;
+        Map<String, Object> backQuery = new HashMap<String, Object>();
+        backQuery.put(ApiConstants.MONGO_ID, result.get(PurchaseCommonBean.BACK_REQUEST_ID));
+        Map<String, Object> back = backService.mergeRestEqCount(backQuery);
+
+        List<Map<String, Object>> backEqList = (List<Map<String, Object>>) back.get(SalesContractBean.SC_EQ_LIST);
+
+        for (Map<String, Object> pr : eqList) {
+            for (Map<String, Object> be : backEqList) {
+                if (be.get(ApiConstants.MONGO_ID).equals(pr.get(ApiConstants.MONGO_ID))) {
+                    pr.put(PurchaseBack.pbLeftCount, be.get(PurchaseBack.pbLeftCount));
+                    pr.put(PurchaseBack.pbTotalCount, be.get(PurchaseBack.pbTotalCount));
+                }
+            }
+        }
+
+        return result;
     }
 
     public void deletePurchaseRequest(Map<String, Object> order) {

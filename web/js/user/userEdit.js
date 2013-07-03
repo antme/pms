@@ -50,26 +50,13 @@ $(document).ready(function() {
 	
 	});
 	
-	$("#department").kendoMultiSelect({
+	$("#department").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "text",
 		dataSource : departmentItems
 	
 	});
-	
-	$("#purchaseContractProcessType").kendoMultiSelect({
-		dataTextField : "text",
-		dataValueField : "value",
-		placeholder : "审批类型...",
-		dataSource : purchaseContractType
-	});
-	
-	$("#salesContractProcessType").kendoMultiSelect({
-		dataTextField : "text",
-		dataValueField : "value",
-		placeholder : "审批类型...",
-		dataSource : contractTypeItems
-	});
+
 	
 	// 如果是编辑
 	if (redirectParams || popupParams) {
@@ -98,7 +85,7 @@ function save(){
 	// get the value of the multiselect.
 //	editUser.salesContractProcessType = $("#salesContractProcessType").data("kendoMultiSelect").value();
 	editUser.groups = $("#groups").data("kendoMultiSelect").value();
-	editUser.department = $("#department").data("kendoMultiSelect").value();
+	editUser.department = $("#department").data("kendoDropDownList").value();
 
 	
 	postAjaxRequest("/service/user/update", {models:kendo.stringify(editUser)} , saveSuccess);	
