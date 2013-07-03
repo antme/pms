@@ -59,4 +59,8 @@ public interface ISalesContractService {
 	public Map<String, Object> listGetMoneyForSC(Map<String, Object> params);	
 	
 	public void destoryGetMoney(Map<String,Object> params);
+	
+	
+    public List<Map<String, Object>> mergeLoadedEqList(Object eqList);
+
 }
