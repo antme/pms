@@ -23,4 +23,6 @@ public class ResponseCodeConstants {
     public static final String PROJECT_ID_IS_EMPTY = "project_id_is_empty";
     
     public static final String  ARRIVAL_NOTICE_ALREADY_EXIST = "arrival_notice_already_exist";
+    
+    public static final String  EQCOST_APPLY_ERROR =  "eqcost_apply_error";
 }
