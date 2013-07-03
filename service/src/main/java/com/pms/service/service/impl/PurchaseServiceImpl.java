@@ -12,7 +12,6 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mongodb.DBObject;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
@@ -24,6 +23,7 @@ import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
+import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
@@ -32,6 +32,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
     private static final Logger logger = LogManager.getLogger(PurchaseServiceImpl.class);
 	
+    private IArrivalNoticeService arrivalNoticeService;
     
     /**
      * @param scId
@@ -179,6 +180,9 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    return res;
 	}
 	
+	private void createArrivalNotice(Map<String, Object> params) {
+		arrivalNoticeService.create(params);
+	}
 	
 	@Override
 	public Map<String, Object> rejectAllot(Map<String, Object> params) {
