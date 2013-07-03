@@ -264,7 +264,9 @@ var eqCostListDataSourceNew = new kendo.data.DataSource({
             	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" },
         		eqcostTaxType : {type: "string"},
-        		eqcostCategory : {type: "string"}
+        		eqcostCategory : {type: "string"},
+        		eqcostLastBasePrice: { type: "number" },
+        		eqcostTotalAmount : {type: "number"}
             }
         }
 	}
@@ -295,7 +297,9 @@ var eqCostListDataSourceOld = new kendo.data.DataSource({
             	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" },
         		eqcostTaxType : {type: "string"},
-        		eqcostCategory : {type: "string"}
+        		eqcostCategory : {type: "string"},
+        		eqcostLastBasePrice: { type: "number" },
+        		eqcostTotalAmount : {type: "number"}
             }
         }
 	}
@@ -473,6 +477,12 @@ $(document).ready(function() {
 					field : "eqcostDiscountRate",
 					title : "折扣率"
 					}, {
+						field : "eqcostLastBasePrice",
+						title : "最终成本价"
+					}, {
+						field : "eqcostTotalAmount",
+						title : "小计"
+					}, {
 					field : "eqcostTaxType",
 					title : "税收类型"
 					}, {
@@ -573,6 +583,12 @@ function edit(data){
 					}, {
 					field : "eqcostDiscountRate",
 					title : "折扣率"
+					}, {
+						field : "eqcostLastBasePrice",
+						title : "最终成本价"
+					}, {
+						field : "eqcostTotalAmount",
+						title : "小计"
 					}, {
 					field : "eqcostTaxType",
 					title : "税收类型"

@@ -76,7 +76,9 @@ var eqCostListDataSourceView = new kendo.data.DataSource({
             	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" },
         		eqcostTaxType : {type: "string"},
-        		eqcostCategory : {type: "string"}
+        		eqcostCategory : {type: "string"},
+        		eqcostLastBasePrice: { type: "number" },
+        		eqcostTotalAmount : {type: "number"}
             }
         }
 	}
@@ -242,7 +244,8 @@ function edit(data){
 			dataSource : scm.progressPayment,
 			columns : [ {
 				field : "progressPaymentNo",
-				title : "序号"
+				title : "序号",
+				width : "50px"
 			}, 
 			{
 				field : "progressPaymentAmount",
@@ -297,6 +300,12 @@ function edit(data){
 					}, {
 					field : "eqcostDiscountRate",
 					title : "折扣率"
+					}, {
+						field : "eqcostLastBasePrice",
+						title : "最终成本价"
+					}, {
+						field : "eqcostTotalAmount",
+						title : "小计"
 					}, {
 					field : "eqcostTaxType",
 					title : "税收类型"

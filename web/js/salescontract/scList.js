@@ -38,6 +38,25 @@ $(document).ready(function() {
 			//pageSizes:true
 		},
 		editable : "popup",
+		change : function(e) {
+		    var selectedRows = this.select();
+		    var len = selectedRows.length;
+		    var guidangButton = $("#guidangButton").data("kendoDropDownList");
+		    var runningStatusButton = $("#runningStatusButton").data("kendoDropDownList");
+		    if (len == 1){
+		    	guidangButton.enable(true);
+		    	runningStatusButton.enable(true);
+		    }else{
+		    	guidangButton.enable(false);
+		    	runningStatusButton.enable(false);
+		    }
+		},
+		dataBound: function(e) {
+			var guidangButton = $("#guidangButton").data("kendoDropDownList");
+		    var runningStatusButton = $("#runningStatusButton").data("kendoDropDownList");
+		    guidangButton.enable(false);
+	    	runningStatusButton.enable(false);
+		  },
 		selectable: "row",
 		height: "400px",
 	    sortable : true,
@@ -75,7 +94,61 @@ $(document).ready(function() {
 			format: "{0:yyyy/MM/dd}"
 		}]
 	});
+	
+	$("#guidangButton").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择归档状态...",
+		dataSource : archiveStatusItems,
+		enable:false,
+		select:function(e){
+			var dataItem = this.dataItem(e.item.index());
+			var rowData = getSelectedRowDataByGrid("grid");
+			var rowStatus = rowData.archiveStatus;
+			var selStatus = dataItem.value;
+			if(rowStatus == selStatus){
+				alert("选定记录当前状态已为"+selStatus);
+				return;
+			}else if (confirm("确认修改归档状态？")){
+				var param = {_id : rowData._id,archiveStatus:selStatus};
+				postAjaxRequest("../service/sc/setarchivestatus", param, setXxCallBack);
+			}
+		}
+	});
+	
+	$("#runningStatusButton").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择执行状态...",
+		dataSource : runningStatusItems,
+		enable:false,
+		select:function(e){
+			var dataItem = this.dataItem(e.item.index());
+			var rowData = getSelectedRowDataByGrid("grid");
+			var rowStatus = rowData.runningStatus;
+			var selStatus = dataItem.value;
+			if(rowStatus == selStatus){
+				alert("选定记录当前状态已为"+selStatus);
+				return;
+			}else if (confirm("确认修改执行状态？")){
+				var param = {_id : rowData._id,runningStatus:selStatus};
+				postAjaxRequest("../service/sc/setrunningstatus", param, setXxCallBack);
+			}
+			
+		}
+	});
 });//end dom ready	
+
+
+function setXxCallBack(data){
+	if (data._id != null && data._id != ""){
+		alert("操作成功！");
+		dataSource.read();
+	}else{
+		alert("服务器出错，请重新操作！");
+	}
+	
+}
 
 function toolbar_deleteSalesContract() {
 	var rowData = getSelectedRowDataByGrid("grid");

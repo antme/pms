@@ -128,7 +128,7 @@ public class ApiUtil {
             value = params.get(key);
         }
         Double in = null;
-        if (value != null) {
+        if (!ApiUtil.isEmpty(value)) {
             try {
             	in = Double.valueOf(String.valueOf(value));
             } catch (Exception e) {

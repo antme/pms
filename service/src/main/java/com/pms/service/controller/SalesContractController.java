@@ -80,6 +80,18 @@ public class SalesContractController extends AbstractController {
         responseWithData(salesContractService.getRelatedProjectInfo(params), request, response);
     }
     
+    @RequestMapping("/setarchivestatus")//列表头 快捷修改归档状态
+    public void setArchiveStatus(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.setSCArchiveStatusStatus(params), request, response);
+    }
+    
+    @RequestMapping("/setrunningstatus")//列表头 快捷修改执行状态
+    public void setRunningStatus(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.setSCRunningStatus(params), request, response);
+    }
+    
     /**开票CRUD*/
     @RequestMapping("/invoice/prepare")
     @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_ADD, desc = RoleValidConstants.PAY_INVOICE_ADD_DESC)

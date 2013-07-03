@@ -1,12 +1,26 @@
 var eqCostListDataSourceHistory = new kendo.data.DataSource({
-	group: {
+	group: [{
+		field: "versionNo",
+		aggregates: [
+		             	{ field: "versionNo", aggregate: "count" }
+	    ]
+		},{
+			field: "eqcostCategory",
+			aggregates: [
+	                     { field: "eqcostCategory", aggregate: "count" }
+	        ]
+		}
+	], 
+	/*{
 		field: "versionNo",
 		aggregates: [
                      { field: "versionNo", aggregate: "count" }
                   ]
-	},
+	},*/
 	
-	aggregate: [ { field: "versionNo", aggregate: "count" }],
+	/*aggregate: [ { field: "versionNo", aggregate: "count" },
+	             { field: "eqcostCategory", aggregate: "count" }
+	],*/
 	
 	schema : {
 		model : {
@@ -23,7 +37,9 @@ var eqCostListDataSourceHistory = new kendo.data.DataSource({
             	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" },
         		eqcostTaxType : {type: "string"},
-        		eqcostCategory : {type: "string"}
+        		eqcostCategory : {type: "string"},
+        		eqcostLastBasePrice: { type: "number" },
+        		eqcostTotalAmount : {type: "number"}
             }
         }
 	}
@@ -54,7 +70,9 @@ var eqCostListDataSourceLatest = new kendo.data.DataSource({
             	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" },
         		eqcostTaxType : {type: "string"},
-        		eqcostCategory : {type: "string"}
+        		eqcostCategory : {type: "string"},
+        		eqcostLastBasePrice: { type: "number" },
+        		eqcostTotalAmount : {type: "number"}
             }
         }
 	}
@@ -85,7 +103,7 @@ function edit(data){
 			columns : [ {
 				field:"versionNo",
 				title:"版本号",
-				groupHeaderTemplate: "版本号：#= value # (数量: #= count#)", footerTemplate: "总数: #=count#"
+				groupHeaderTemplate: "版本号：#= value # (数量: #= count#)"
 			},
 			{
 			field : "eqcostNo",
@@ -122,11 +140,18 @@ function edit(data){
 				field : "eqcostDiscountRate",
 				title : "折扣率"
 			}, {
+				field : "eqcostLastBasePrice",
+				title : "最终成本价"
+			}, {
+				field : "eqcostTotalAmount",
+				title : "小计"
+			}, {
 				field : "eqcostTaxType",
 				title : "税收类型"
 			}, {
 				field : "eqcostCategory",
-				title : "类别"
+				title : "类别",
+				groupHeaderTemplate: "类别：#= value # (数量: #= count#)"
 			}, {
 				field : "eqcostMemo",
 				title : "备注"
@@ -174,6 +199,12 @@ function edit(data){
 				}, {
 				field : "eqcostDiscountRate",
 				title : "折扣率"
+				}, {
+					field : "eqcostLastBasePrice",
+					title : "最终成本价"
+				}, {
+					field : "eqcostTotalAmount",
+					title : "小计"
 				}, {
 				field : "eqcostTaxType",
 				title : "税收类型"
