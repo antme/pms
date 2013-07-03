@@ -41,6 +41,19 @@ public class PurchaseCommonBean extends BaseEntity {
     private String pbType;
     
     private String pbDepartment;
+    
+    private String eqcostDeliveryType;
+    
+    
+    
+
+    public String getEqcostDeliveryType() {
+        return eqcostDeliveryType;
+    }
+
+    public void setEqcostDeliveryType(String eqcostDeliveryType) {
+        this.eqcostDeliveryType = eqcostDeliveryType;
+    }
 
     public String getPbPlanDate() {
         return pbPlanDate;

@@ -55,10 +55,10 @@ $(document).ready(function () {
             	field: "foreignCode",
             	title:"相关编号",
 				template : function(dataItem) {
-					if (dataItem.foreignCode) {
-						return '<a  onclick="openPurchaseOrderViewWindow(\'' + dataItem.foreignKey + '\');">' + dataItem.foreignCode + '</a>';
+					if (dataItem.shipType == 1) {
+						return '<a onclick="openPurchaseAllotViewWindow(\'' + dataItem.foreignKey + '\');">' + dataItem.foreignCode + '</a>';
 					} else {
-						return '';
+						return '<a onclick="openPurchaseOrderViewWindow(\'' + dataItem.foreignKey + '\');">' + dataItem.foreignCode + '</a>';
 					}
 				}
             }

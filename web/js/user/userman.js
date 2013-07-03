@@ -48,18 +48,7 @@ $(document).ready(function() {
 			title : "Email"
 		}, {
 			field : "department",
-			title : "部门",
-			template : function(dataItem) {
-				  var departNames = "";
-
-				  if(dataItem.department){
-					  for(i=0; i<dataItem.department.length; i++){						  
-						  departNames = departNames + dataItem.department[i] + " ";							  
-					  }
-				 }
-			      return "<strong>" + departNames + "</strong>";
-					
-		   }
+			title : "部门"
 		}, {
 			field : "groups",
 			title : "角色",

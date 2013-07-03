@@ -124,6 +124,8 @@ function arrivalNotice() {
 				};
 			postAjaxRequest("/service/arrivalNotice/create", param,
 						callback);
+		} else {
+			alert("未采购完毕，不能生成到货通知");
 		}
 	}
 }
