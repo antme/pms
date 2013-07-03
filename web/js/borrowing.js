@@ -33,6 +33,7 @@ $(document).ready(function () {
         	model: {
                 id: "_id",
                 fields: {
+                	borrowCode: {},
                 	applicant: {},
                 	applicationDate: {},
                 	inProjectName: {},
@@ -52,6 +53,7 @@ $(document).ready(function () {
 		filterable : filterable,
         selectable: "row",
         columns: [
+            { field:"borrowCode", title: "编号" },
             { field:"applicant", title: "申请人" },
             { field: "applicationDate", title:"申请日期" },
             {
