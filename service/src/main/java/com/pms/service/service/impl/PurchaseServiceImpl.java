@@ -622,7 +622,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         List<Map<String, Object>> eqBackMapList = (List<Map<String, Object>>) back.get(SalesContractBean.SC_EQ_LIST);
         Map<String, Integer> restCountMap = countRestEqByBackId(back.get(ApiConstants.MONGO_ID).toString());
         for (Map<String, Object> eqMap : eqBackMapList) {
-            eqMap.put(PurchaseBack.pbTotalCount, restCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+            eqMap.put(PurchaseBack.pbLeftCount, restCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
         }
     }
 
@@ -657,6 +657,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         
         Map<String, Object> backQuery = new HashMap<String, Object>();
         backQuery.put(ApiConstants.MONGO_ID, backId);
+        //备货申请下总数集合
         Map<String, Integer> backEqCountMap = countEqByKey(backQuery, DBBean.PURCHASE_BACK, PurchaseBack.pbTotalCount, null);
 
         // 获取已发的采购申请的数据总和
