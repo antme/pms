@@ -64,7 +64,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	public Map<String, Object> loadBack(Map<String, Object> params) {
 		Map<String,Object> request = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
 		mergeSalesContract(request);
-		mergeEqcost(request);
+		request.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(request.get(SalesContractBean.SC_EQ_LIST)));
+		mergeRestEqCount(request);
 		return request;
 	}
 
@@ -166,7 +167,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	public Map<String, Object> prepareAllot(Map<String, Object> params) {
 		Map<String,Object> obj = dao.findOne(ApiConstants.MONGO_ID, params.get(PurchaseBack.pbId), DBBean.PURCHASE_BACK);
 		mergeSalesContract(obj);
-		mergeEqcost(obj);
+		obj.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(obj.get(SalesContractBean.SC_EQ_LIST)));
+	    mergeRestEqCount(obj);
 		obj.put(PurchaseBack.pbId, params.get(PurchaseBack.pbId));
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.unsaved.toString());
 		obj.put(ApiConstants.MONGO_ID, null);
@@ -622,5 +624,77 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	public String geValidatorFileName() {
 		return "purchase";
 	}
+	
+	
+    public void mergeRestEqCount(Map<String, Object> back) {
+        List<Map<String, Object>> eqBackMapList = (List<Map<String, Object>>) back.get(SalesContractBean.SC_EQ_LIST);
+        Map<String, Integer> restCountMap = countRestEqByBackId(back.get(ApiConstants.MONGO_ID).toString());
+        for (Map<String, Object> eqMap : eqBackMapList) {
+            eqMap.put(PurchaseBack.pbTotalCount, restCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+        }
+    }
+
+    public Map<String, Integer> countEqByKey(Map<String, Object> query, String db, String queryKey, Map<String, Integer> count) {
+        query.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
+        List<Object> list = this.dao.listLimitKeyValues(query, db);
+        Map<String, Integer> eqCountMap = new HashMap<String, Integer>();
+
+        if(count != null){
+            eqCountMap = count;
+        }
+        if (list != null) {
+            for (Object obj : list) {
+                if (obj != null) {
+                    List<Map<String, Object>> eqlistMap = (List<Map<String, Object>>) obj;
+                    for (Map<String, Object> eqMap : eqlistMap) {
+                        if (eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID).toString()) != null) {
+                            eqCountMap.put(eqMap.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eqMap.get(queryKey), 0) + ApiUtil.getInteger(eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID).toString()), 0));
+                        } else {
+                            eqCountMap.put(eqMap.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eqMap.get(queryKey), 0));
+                        }
+                    }
+                }
+            }
+        }
+        return eqCountMap;
+    }
+    
+    
+    //根据备货申请id查询此备货下面可用的采购申请数量和调拨数量
+    public Map<String, Integer> countRestEqByBackId(String backId) {
+        
+        Map<String, Object> backQuery = new HashMap<String, Object>();
+        backQuery.put(ApiConstants.MONGO_ID, backId);
+        Map<String, Integer> backEqCountMap = countEqByKey(backQuery, DBBean.PURCHASE_BACK, PurchaseBack.pbTotalCount, null);
+
+        // 获取已发的采购申请的数据总和
+        Map<String, Object> purchaseRequestQuery = new HashMap<String, Object>();
+        purchaseRequestQuery.put(PurchaseCommonBean.BACK_REQUEST_ID, backId);
+        purchaseRequestQuery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseCommonBean.STATUS_CANCELLED));
+        Map<String, Integer> requestEqCountMap = countEqByKey(purchaseRequestQuery, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.EQCOST_APPLY_AMOUNT, null);
+
+        // 获取已调拨+调拨中的数据总和
+        Map<String, Object> allocateQuery = new HashMap<String, Object>();
+        allocateQuery.put(PurchaseBack.pbId, backId);
+        Map<String, Integer> allocatEqCountMap = countEqByKey(allocateQuery, DBBean.PURCHASE_ALLOCATE, PurchaseBack.paCount, null);
+
+        // 计算剩余数量
+        Map<String, Integer> restEqCount = new HashMap<String, Integer>();
+
+        for (String id : backEqCountMap.keySet()) {
+            int prCount = 0;
+            int paCount = 0;
+            if (requestEqCountMap.get(id) != null) {
+                prCount = requestEqCountMap.get(id);
+            }
+            if (allocatEqCountMap.get(id) != null) {
+                paCount = allocatEqCountMap.get(id);
+            }
+
+            restEqCount.put(id, backEqCountMap.get(id) - prCount - paCount);
+        }
+
+        return restEqCount;
+    }
 	
 }

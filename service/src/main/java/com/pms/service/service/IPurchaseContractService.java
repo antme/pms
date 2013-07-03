@@ -31,8 +31,6 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> order);
 
-
-
     public Map<String, Object> approvePurchaseOrder(Map<String, Object> order);
     
     public Map<String, Object> rejectPurchaseOrder(Map<String, Object> order);
@@ -106,6 +104,6 @@ public interface IPurchaseContractService {
     public void destroyGetInvoice(Map<String, Object> params);
 
     public Map<String, Object> listProjectsFromRepositoryIn(Map<String, Object> parserJsonParameters);
-
+   
 
 }
