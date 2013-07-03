@@ -90,7 +90,7 @@ $(document).ready(function () {
 			{ field: "paCount", title: "调拨数量", attributes: { "style": "color:red"}},
 			{ field: "pbTotalCount", title: "备货数量"},
 			{ field: "eqcostBasePrice", title: "预估单价" },
-			{ field: "eqcostBrand", title: "品牌" },
+			{ field: "eqcostCategory", title: "类别" },
 			{ field: "eqcostMemo", title: "备注" }
 	  	],	 
 	  	editable:true

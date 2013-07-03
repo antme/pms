@@ -71,7 +71,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
     public Map<String, Object> submitBack(Map<String, Object> params) {
         Map<String, Object> newObj = new HashMap<String, Object>();
         newObj.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
-        newObj.put(PurchaseBack.pbSubmitDate, DateUtil.getDateString(new Date()));        
+        newObj.put(PurchaseBack.pbSubmitDate, DateUtil.getDateString(new Date()));
         return saveOrUpdate(params, newObj);
     }
 
@@ -318,11 +318,31 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		Map<String,Object> eqMap = scs.listMergedEqListBySC(params);
 		List<Map<String,Object>> list1 = (List<Map<String,Object>>)eqMap.get(ApiConstants.RESULTS_DATA);
 		
-		//2. 获取备货清单
+		//2. 获取当前备货清单
 		List<Map<String,Object>> list2 = (List<Map<String,Object>>)params.get(PurchaseBack.eqcostList);
 		if(list2 == null) list2 = new ArrayList<Map<String,Object>>();//预防for异常
 		Map<String,Map<String,Object>> map1 = new HashMap<String,Map<String,Object>>();
 		Map<String,Map<String,Object>> map2 = new HashMap<String,Map<String,Object>>();
+		Map<String,Double> map3 = new HashMap<String,Double>();
+		
+		//2.1 获取已提交的所有备货清单
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put(ApiConstants.LIMIT_KEYS, PurchaseBack.eqcostList);
+		query.put(PurchaseBack.scId, params.get(PurchaseBack.scId));
+		query.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
+		List<Object> list3 = dao.listLimitKeyValues(query, DBBean.PURCHASE_BACK);
+		for(Object obj :list3){
+			if(obj == null) continue;
+			List<Map<String,Object>> listTemp = (List<Map<String,Object>>)obj;
+			for(Map<String,Object> map : listTemp){
+				String id = (String)map.get(ApiConstants.MONGO_ID);
+				Double count = ApiUtil.getDouble(map, PurchaseBack.pbTotalCount, 0);
+				if(map3.containsKey(id)){
+					count += map3.get(id);
+				}
+				map3.put(id, count);
+			}
+		}
 		
 		for(Map<String,Object> obj : list1){
 			map1.put(String.valueOf(obj.get(ApiConstants.MONGO_ID)), obj);
@@ -337,6 +357,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				if(map1.get(id) != null){
 					map2.get(id).putAll(map1.get(id));//加载货物信息
 				}
+				double eqRealCount = ApiUtil.getDouble(map2.get(id),EqCostListBean.EQ_LIST_REAL_AMOUNT, 0);
+				double pbUserCount = map3.containsKey(id) ? map3.get(id) : 0;
+				double eqcostLeftAmount = eqRealCount - pbUserCount;
+				map2.get(id).put(PurchaseBack.eqcostLeftAmount, eqcostLeftAmount);
 			}
 			params.put(PurchaseBack.eqcostList, list2);
 		} else {
@@ -347,6 +371,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				}else{
 					map1.get(id).put(PurchaseBack.pbTotalCount, 0);
 				}
+				double eqRealCount = ApiUtil.getDouble(map1.get(id),EqCostListBean.EQ_LIST_REAL_AMOUNT, 0);
+				double pbUserCount = map3.containsKey(id) ? map3.get(id) : 0;
+				double eqcostLeftAmount = eqRealCount - pbUserCount;
+				map1.get(id).put(PurchaseBack.eqcostLeftAmount, eqcostLeftAmount);
 			}
 			params.put(PurchaseBack.eqcostList, list1);
 		}

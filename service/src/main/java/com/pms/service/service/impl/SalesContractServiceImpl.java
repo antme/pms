@@ -305,7 +305,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	
 	public Map<String,Object> getBaseInfoByIds(List<String> ids){
 		String[] keys = new String[]{SalesContractBean.SC_CODE,SalesContractBean.SC_AMOUNT, SalesContractBean.SC_PROJECT_ID,
-				SalesContractBean.SC_CUSTOMER_ID,SalesContractBean.SC_BACK_REQUEST_COUNT,SalesContractBean.SC_INVOICE_TYPE};
+				SalesContractBean.SC_CUSTOMER_ID,SalesContractBean.SC_CUSTOMER,SalesContractBean.SC_BACK_REQUEST_COUNT,SalesContractBean.SC_INVOICE_TYPE};
 		Map<String,Object> query = new HashMap<String,Object>();
 		query.put(ApiConstants.LIMIT_KEYS, keys);
 		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));

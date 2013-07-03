@@ -14,8 +14,10 @@ public class PurchaseBack {
 	public static final String pbSpecialRequire = "pbSpecialRequire";
 	public static final String pbTotalCount = "pbTotalCount";//备货申请总数
 	public static final String pbLeftCount = "pbLeftCount";//备货申请剩余数
+	public static final String pbUsedCount = "pbUsedCount";//备货申请剩余数
 	public static final String pbSpecialRequireRadio = "pbSpecialRequireRadio";//特殊需求选项
 	public static final String eqcostList = "eqcostList";//设备成本清单字段
+	public static final String eqcostLeftAmount = "eqcostLeftAmount";//备货申请剩余数
 	
 	public static final String scId = "scId";//销售合同id
 	public static final String scCode = "scCode";//销售合同id
