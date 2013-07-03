@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.ProjectBean;
@@ -173,6 +174,9 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(PurchaseBack.paApproveDate, DateUtil.getDateString(new Date()));
 		
 		Map<String,Object> res = dao.updateById(obj, DBBean.PURCHASE_ALLOCATE);
+		
+		// 批准调拨申请时生成到货通知
+		createArrivalNotice(res);
           
 	    Map<String, Object> resqeury = this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[]{EqCostListBean.EQ_LIST_SC_ID}, DBBean.PURCHASE_ALLOCATE);     
 	    updateEqLeftCountInEqDB(resqeury); 
@@ -181,7 +185,11 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	}
 	
 	private void createArrivalNotice(Map<String, Object> params) {
-		arrivalNoticeService.create(params);
+		Map<String,Object> noticeParams = new HashMap<String,Object>();
+		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, ArrivalNoticeBean.SHIP_TYPE_1);
+		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, params.get(ApiConstants.MONGO_ID));
+		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, params.get(PurchaseBack.paCode));
+		arrivalNoticeService.create(noticeParams);
 	}
 	
 	@Override

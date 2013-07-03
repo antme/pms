@@ -14,6 +14,7 @@ import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.status.ResponseCodeConstants;
 
 public class ArrivalNoticeServiceImpl extends AbstractService implements IArrivalNoticeService {
 
@@ -38,16 +39,16 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 	}
 
 	public Map<String, Object> create(Map<String, Object> params) {
-		if (!params.containsKey(PurchaseCommonBean.SALES_COUNTRACT_ID)) {
-			throw new ApiResponseException("销售合同id不能为空", "销售合同id不能为空");
-		}
-		if (params.containsKey(PurchaseCommonBean.PURCHASE_ORDER_ID)) {
-			String purchaseOrderId = params.get(PurchaseCommonBean.PURCHASE_ORDER_ID).toString();
-			Map<String, Object> purchaseOrder = new HashMap<String, Object>();
-			if (dao.exist(PurchaseCommonBean.PURCHASE_ORDER_ID, purchaseOrderId, DBBean.ARRIVAL_NOTICE)) {
-				throw new ApiResponseException("采购订单已存在到货通知", "采购订单已存在到货通知");
+		
+		String type = params.get(ArrivalNoticeBean.SHIP_TYPE).toString();
+		String foreignKey = params.get(ArrivalNoticeBean.FOREIGN_KEY).toString();
+		
+		if (type.equals(ArrivalNoticeBean.SHIP_TYPE_0)) {
+			if (dao.exist(ArrivalNoticeBean.FOREIGN_KEY, foreignKey, DBBean.ARRIVAL_NOTICE)) {
+				throw new ApiResponseException("对应到货通知已存在", ResponseCodeConstants.ARRIVAL_NOTICE_ALREADY_EXIST);
 			}
 		}
+		
 		params.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		return dao.add(params, DBBean.ARRIVAL_NOTICE);
 	}
