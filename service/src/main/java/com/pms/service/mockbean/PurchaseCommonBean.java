@@ -226,7 +226,7 @@ public class PurchaseCommonBean extends BaseEntity {
     //物流类型
     public static final String LOGISTICS_TYPE_VALUE_DIRECTY = "直发"; 
     public static final String eqcostDeliveryType_DIRECTY = "直发现场"; 
-    public static final String eqcostDeliveryType_REPOSITORY = "直发入库"; 
+    public static final String eqcostDeliveryType_REPOSITORY = "入公司库"; 
     
     public static final String LOGISTICS_TYPE = "logisticsType";
     

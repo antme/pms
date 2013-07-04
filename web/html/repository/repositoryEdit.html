@@ -12,7 +12,7 @@
                 width: 20%;
             }
         </style>
-<div id="purchaserepository-edit" class="k-edit-form-container">
+<div id="purchaserepository-edit" class="k-edit-form-container" style="padding-top:20px;">
 	<div class="k-edit-field " id="purchaserepository-div"
 		style="width: 1200px;">
 		项目： <input type="text" name="purchasecontractselect" style="width: 500px;"
@@ -22,14 +22,22 @@
 		<button onclick="selectContracts();">确定</button>
 	</div>
 
-
-           
-            
         <hr>
      
 	<div id="purchaserepository-edit-item" >
-	
-	   <div class="k-edit-label">
+	       <div class="k-edit-label">
+                <label for="batchNumber">批次</label>
+            </div>
+            <div data-container-for="batchNumber" class="k-edit-field">
+                <input id="batchNumber"  class="k-input k-textbox" name="batchNumber" required="required" data-bind="value:batchNumber">
+            </div>
+            <div class="k-edit-label">
+                <label for="orderCode">单据编号</label>
+            </div>
+            <div data-container-for="orderCode" class="k-edit-field">
+                <input type="text" class="k-input k-textbox" name="orderCode" required="required" data-bind="value:orderCode">
+            </div>
+	       <div class="k-edit-label">
                 <label for="operator">制单人</label>
             </div>
             <div data-container-for="operator" class="k-edit-field">
@@ -47,18 +55,7 @@
             <div data-container-for="inDate" class="k-edit-field">
                 <input id="inDate" name="inDate" required="required" data-bind="value:inDate" data-role="datepicker" >
             </div>
-            <div class="k-edit-label">
-                <label for="code">申请编号</label>
-            </div>
-            <div data-container-for="code" class="k-edit-field">
-                <input type="text" class="k-input k-textbox" name="code" data-bind="value:code">
-            </div>
-            <div class="k-edit-label">
-                <label for="batchNumber">批次</label>
-            </div>
-            <div data-container-for="batchNumber" class="k-edit-field">
-                <input id="batchNumber" name="batchNumber" required="required" data-bind="value:batchNumber">
-            </div>
+           
             <div class="k-edit-label">
                 <label for="storeHouse">库房</label>
             </div>
@@ -71,12 +68,7 @@
             <div data-container-for="goodsAllocation" class="k-edit-field">
                 <input type="text" class="k-input k-textbox" name="goodsAllocation" required="required" data-bind="value:goodsAllocation">
             </div>
-              <div class="k-edit-label">
-                <label for="orderCode">单据编号</label>
-            </div>
-            <div data-container-for="orderCode" class="k-edit-field">
-                <input type="text" class="k-input k-textbox" name="orderCode" required="required" data-bind="value:orderCode">
-            </div>
+
             <div >
              <label class="k-edit-label">备注:</label>
              <textarea rows="4" cols="120" class="k-textbox  foredit" style="width:300px;" data-bind="value: pbComment" ></textarea>
