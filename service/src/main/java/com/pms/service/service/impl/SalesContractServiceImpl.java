@@ -99,6 +99,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> addedContract = null;
 		if (_id == null){//Add
 			contract.put(SalesContractBean.SC_MODIFY_TIMES, 0);
+			contract.put(SalesContractBean.SC_LAST_TOTAL_AMOUNT, ApiUtil.getDouble(params, SalesContractBean.SC_AMOUNT));
 			addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
 			
 			//更新关联项目customer(新的需求，添加 SC时 选择客户)
@@ -120,16 +121,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			Map<String, Object> existContractQuery = new HashMap<String, Object>();
 			existContractQuery.put(ApiConstants.MONGO_ID, _id);
 			existContractQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE, 
-					SalesContractBean.SC_MODIFY_TIMES, SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER});
+					SalesContractBean.SC_MODIFY_TIMES, SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER,
+					SalesContractBean.SC_MODIFY_HISTORY, SalesContractBean.SC_LAST_TOTAL_AMOUNT});
 			Map<String, Object> existContract = dao.findOneByQuery(existContractQuery, DBBean.SALES_CONTRACT);
 			
-			//更新销售合同变更次数
-			float oldAmount = ApiUtil.getFloatParam(existContract, SalesContractBean.SC_AMOUNT)==null?0:ApiUtil.getFloatParam(existContract, SalesContractBean.SC_AMOUNT);
+			//更新销售合同变更次数 comment by danny in 20130704. New logic is update the modify times when add new eqcostList
+			/*float oldAmount = ApiUtil.getFloatParam(existContract, SalesContractBean.SC_AMOUNT)==null?0:ApiUtil.getFloatParam(existContract, SalesContractBean.SC_AMOUNT);
 			float newAmount = ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT)==null?0:ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT);
 			if (oldAmount != newAmount){
 				int newVersion = ApiUtil.getIntegerParam(existContract, SalesContractBean.SC_MODIFY_TIMES);
 				contract.put(SalesContractBean.SC_MODIFY_TIMES, ++newVersion);
-			}
+			}*/
 			
 			//销售合同类型是否更新
 			String scTypeOld = (String) existContract.get(SalesContractBean.SC_TYPE);
@@ -144,6 +146,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, SalesContractBean.SC_TYPE, scTypeNew);
 			}
 			
+			//客户改变
 			String customerOld = (String) existContract.get(SalesContractBean.SC_CUSTOMER);
 			String customerNew = (String) contract.get(SalesContractBean.SC_CUSTOMER);
 			if (!customerOld.equals(customerNew)){
@@ -203,11 +206,46 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			
 			//添加成本设备清单记录
 			if (!eqcostList.isEmpty()){
+				updateTheModifyHistoryAndModifyTimesAndscLastAmount(params, eqcostList, contract, existContract);
 				addEqCostListForContract(eqcostList, _id, (String) existContract.get(SalesContractBean.SC_PROJECT_ID));
 			}
 			
 			return dao.updateById(contract, DBBean.SALES_CONTRACT);
 		}
+	}
+	
+	private void updateTheModifyHistoryAndModifyTimesAndscLastAmount(Map<String, Object> params, List<Map<String, Object>> eqcostList, 
+			Map<String, Object> contract, Map<String, Object> existContract){
+		String now = DateUtil.getDateString(new Date()); //yyyy-MM-dd HH:mm:ss
+		List<Map<String, Object>> newEqcostList = new ArrayList<Map<String, Object>>();
+		double addAmount = getEqCostAmountByEqList(eqcostList);
+		Map<String, Object> modifyMap = new HashMap<String, Object>();
+		modifyMap.put(SalesContractBean.SC_MODIFY_MONEY, addAmount);
+		modifyMap.put(SalesContractBean.SC_MODIFY_TIME, now);
+		modifyMap.put(SalesContractBean.SC_MODIFY_PERSON, ApiThreadLocal.getCurrentUserId());
+		modifyMap.put(SalesContractBean.SC_MODIFY_REASON, params.get(SalesContractBean.SC_MODIFY_REASON));
+		modifyMap.put(SalesContractBean.SC_MODIFY_MEMO, params.get(SalesContractBean.SC_MODIFY_MEMO));
+		newEqcostList.add(modifyMap);
+		List<Map<String, Object>> scModifyHistory = (List<Map<String, Object>>) existContract.get(SalesContractBean.SC_MODIFY_HISTORY);
+		if (!ApiUtil.isEmpty(scModifyHistory)){
+			newEqcostList.addAll(scModifyHistory);
+		}
+		contract.put(SalesContractBean.SC_MODIFY_HISTORY, newEqcostList);
+		
+		int mt = ApiUtil.getIntegerParam(existContract, SalesContractBean.SC_MODIFY_TIMES);
+		contract.put(SalesContractBean.SC_MODIFY_TIMES, ++mt);
+		
+		double lastTotalAmount = ApiUtil.getDouble(existContract, SalesContractBean.SC_LAST_TOTAL_AMOUNT) == null ? 0 : ApiUtil.getDouble(existContract, SalesContractBean.SC_LAST_TOTAL_AMOUNT);
+		contract.put(SalesContractBean.SC_LAST_TOTAL_AMOUNT, lastTotalAmount + addAmount);
+	}
+	
+	private double getEqCostAmountByEqList(List<Map<String, Object>> eqcostList){
+		double amount = 0;
+		for(Map<String, Object> eq : eqcostList){
+			double cost = ApiUtil.getDouble(eq, SalesContractBean.SC_EQ_LIST_TOTAL_AMOUNT);
+			amount = amount + cost;
+		}
+		return amount;
 	}
 	
 	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId, String proId){
@@ -405,6 +443,32 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public Map<String, Object> getSC(Map<String, Object> params) {
 		String _id = (String) params.get(ApiConstants.MONGO_ID);
 		Map<String, Object> sc = dao.findOne(ApiConstants.MONGO_ID, _id, DBBean.SALES_CONTRACT);
+		
+		//Tab 页头显示增补历史，操作人信息merge
+		List<Map<String, Object>> scHistoryList = (List<Map<String, Object>>)sc.get(SalesContractBean.SC_MODIFY_HISTORY);
+		if (ApiUtil.isEmpty(scHistoryList)){
+			scHistoryList = new ArrayList<Map<String, Object>>();
+		}
+		List<String> uIds = new ArrayList<String>(); 
+		for(Map<String, Object> h : scHistoryList){
+			String uid = (String) h.get(SalesContractBean.SC_MODIFY_PERSON);
+			if (!ApiUtil.isEmpty(uid)){
+				uIds.add(uid);
+			}
+		}
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, uIds));
+		query.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME});
+		Map<String, Object> userData = dao.listToOneMapAndIdAsKey(query, DBBean.USER);
+		for(Map<String, Object> h : scHistoryList){
+			String uid = (String) h.get(SalesContractBean.SC_MODIFY_PERSON);
+			Map<String, Object> userMap = (Map<String, Object>) userData.get(uid);
+			if (ApiUtil.isEmpty(userMap)){
+				h.put(SalesContractBean.SC_MODIFY_PERSON, "N/A");
+			}else{
+				h.put(SalesContractBean.SC_MODIFY_PERSON, userMap.get(UserBean.USER_NAME));
+			}
+		}
 		
 		//获取相关的 设备清单列表数据
 		Map<String, Object> eqCostQuery = new HashMap<String, Object>();

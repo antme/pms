@@ -10,7 +10,6 @@ public interface ISalesContractService {
 	
 	public Map<String, Object> listSCsForSelect(Map<String, Object> params);
 
-	
 	//返回的是合并后真实的设备清单列表，EqCostListBean.EQ_LIST_REAL_AMOUNT 不为空的数据
 	public Map<String, Object> listMergedEqListBySC(Map<String, Object> params);
 	
