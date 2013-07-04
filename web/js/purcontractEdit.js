@@ -182,7 +182,7 @@ var itemListDataSource = new kendo.data.DataSource({
 
 function save(status) {
 	var validator = $("#purchasecontract-edit-item").kendoValidator().data("kendoValidator");
-//	if (validator.validate()) {
+	if (validator.validate()) {
 
 		if (!itemDataSource.at(0)) {
 			alert("没有任何设备清单数据");
@@ -212,7 +212,7 @@ function save(status) {
 			// 同步数据
 			itemDataSource.sync();
 		}
-//	}
+	}
 
 }
 
@@ -387,10 +387,9 @@ function edit(data) {
 				if (refresh) {
 					var grid1 = $("#purchasecontract-edit-grid").data("kendoGrid");
 					grid1.refresh();
-				}else{
-					initMergedGrid();
 				}
-				
+				initMergedGrid();
+
 				$("#requestedTotalMoney").val(requestActureMoney);
 				
 			}
@@ -406,7 +405,8 @@ var mergedDataSource = new kendo.data.DataSource({
 });
 
 function initMergedGrid(){
-	var data = itemDataSource.data();
+	var itemData = itemDataSource.data();
+	var data = eval(kendo.stringify(itemData));
 	while(mergedDataSource.at(0)){
 		mergedDataSource.remove(mergedDataSource.at(0));
 	}
