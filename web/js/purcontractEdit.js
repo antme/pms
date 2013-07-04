@@ -259,7 +259,7 @@ function showOrderWindow() {
 
 	edit();
 }
-var mergedDataSource = new kendo.data.DataSource();
+
 
 function edit(data) {
 
@@ -391,20 +391,33 @@ function edit(data) {
 				}
 				
 				$("#requestedTotalMoney").val(requestActureMoney);
+				
+				initMergedGrid();
 			}
 
 		});
 	}
 	
-	
+}
+
+
+var mergedDataSource = new kendo.data.DataSource({
+
+});
+
+function initMergedGrid(){
 
 	var data = itemDataSource.data();
 	for(i=0; i<data.length; i++){
 		var mdata = mergedDataSource.data();
 		var find = false;
 		for(j=0; j<mdata.length; j++){	
-//			console.log(mdata[j].eqcostNo + "==" +  data[i].eqcostNo);
-			if(mdata[j].purchaseOrderCode == data[i].purchaseOrderCode){				
+			if(mdata[j].eqcostNo == data[i].eqcostNo && mdata[j].eqcostProductName == data[i].eqcostProductName
+					&& mdata[j].eqcostMaterialCode == data[i].eqcostMaterialCode
+					&& mdata[j].eqcostProductType == data[i].eqcostProductType
+					&& mdata[j].eqcostUnit == data[i].eqcostUnit && mdata[j].eqcostProductUnitPrice == data[i].eqcostProductUnitPrice
+					&& mdata[j].eqcostBrand == data[i].eqcostBrand)
+			{				
 				if(!mdata[j].items){
 					mdata[j].items = new Array();
 				}
@@ -418,6 +431,7 @@ function edit(data) {
 			mergedDataSource.add(data[i]);
 		}
 	}
+	
 	
 	if (!$("#merged-grid").data("kendoGrid")) {
 		$("#merged-grid").kendoGrid({
@@ -448,12 +462,9 @@ function edit(data) {
                  this.expandRow(this.tbody.find("tr.k-master-row").first());
             },
             detailInit: detailInit
-
 			
 		});
 	}
-	
-	
 	
 }
 
@@ -476,33 +487,30 @@ function detailInit(e) {
 	console.log(data);
 
     $("<div/>").appendTo(e.detailCell).kendoGrid({
-    	dataSource: {
-    		data: data
-    	},
+		dataSource : {
+			data : data,
+			aggregate : [ {
+				field : "eqcostApplyAmount",
+				aggregate : "sum"
+			}, {
+				field : "requestedTotalMoney",
+				aggregate : "sum"
+			} ]
+		},
         scrollable: false,
         sortable: true,
         pageable: true,
         columns : [ {
-			field : "eqcostNo",
-			title : "序号"
+			field : "eqcostApplyAmount",
+			title : "订单数量",
+			footerTemplate: "总数: #=sum#" 
 		}, {
-			field : "eqcostMaterialCode",
-			title : "物料代码"
+			field : "requestedTotalMoney",
+			title : "总价",
+			footerTemplate: "总价: #=sum#" 
 		}, {
-			field : "eqcostProductName",
-			title : "名称"
-		}, {
-			field : "eqcostProductType",
-			title : "型号"
-		}, {
-			field : "eqcostUnit",
-			title : "单位"
-		}, {
-			field : "eqcostProductUnitPrice",
-			title : "单价"
-		},{
-			field : "eqcostBrand",
-			title : "品牌"
+			field : "remark",
+			title : "备注"
 		}]
     });
 }
