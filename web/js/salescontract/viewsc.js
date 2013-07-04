@@ -225,7 +225,54 @@ $(document).ready(function() {
 	$("#estimateTax").kendoNumericTextBox({
 		min:0
 	});
-	
+
+	// 财务数据
+	var data = [
+        { text: "按月统计", value: "1" },
+        { text: "按年统计", value: "2" }
+    ];
+
+    $("#date").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        dataSource: data,
+        index: 0,
+        change: function(e) {
+            var value = $("#date").val();
+            var chart = $('#container').highcharts();
+            if (value == 1) {
+            	chart.xAxis[0].setCategories(scm.scGotMoneyInfo.monthDateList);
+        		chart.series[0].update({
+        			name: '月度金额',
+        			data: scm.scGotMoneyInfo.monthMoneyList
+                });
+    		} else {
+    			chart.xAxis[0].setCategories(scm.scGotMoneyInfo.yearDateList);
+        		chart.series[0].update({
+        			name: '年度金额',
+        			data: scm.scGotMoneyInfo.yearMoneyList
+                });
+    		}
+        }
+    });
+    
+    // 图表
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '收款信息'
+        },
+        yAxis: {
+            title: {
+                text: '金额'
+            }
+        },
+        xAxis: {},
+        series: [{}]
+    });
+    
 	if(popupParams){
 		postAjaxRequest("/service/sc/get", popupParams, edit);
 		disableAllInPoppup();
@@ -321,36 +368,36 @@ function edit(data){
 		});
 	}//成本设备清单_old
 
-	if (!$("#invoiceList").data("kendoGrid")){
-		$("#invoiceList").kendoGrid({
-			dataSource : scm.scInvoiceInfo,
-			columns : [ {
-				field : "scInvoiceMoney",
-				title : "开票金额"
-			}, {
-				field : "invoiceType",
-				title : "开票类型"
-			}, {
-				field : "scInvoiceDate",
-				title : "开票日期"
-			}],
-			scrollable : true
-		});
-	}
-	
-	if (!$("#gotMoneyList").data("kendoGrid")){
-		$("#gotMoneyList").kendoGrid({
-			dataSource : scm.scGotMoneyInfo,
-			columns : [ {
-				field : "scGotMoney",
-				title : "收款金额"
-			}, {
-				field : "scGotMoneyDate",
-				title : "收款日期"
-			}],
-			scrollable : true
-		});
-	}
+//	if (!$("#invoiceList").data("kendoGrid")){
+//		$("#invoiceList").kendoGrid({
+//			dataSource : scm.scInvoiceInfo,
+//			columns : [ {
+//				field : "scInvoiceMoney",
+//				title : "开票金额"
+//			}, {
+//				field : "invoiceType",
+//				title : "开票类型"
+//			}, {
+//				field : "scInvoiceDate",
+//				title : "开票日期"
+//			}],
+//			scrollable : true
+//		});
+//	}
+//	
+//	if (!$("#gotMoneyList").data("kendoGrid")){
+//		$("#gotMoneyList").kendoGrid({
+//			dataSource : scm.scGotMoneyInfo,
+//			columns : [ {
+//				field : "scGotMoney",
+//				title : "收款金额"
+//			}, {
+//				field : "scGotMoneyDate",
+//				title : "收款日期"
+//			}],
+//			scrollable : true
+//		});
+//	}
 	
 	if (!$("#monthShipmentsGrid").data("kendoGrid")){
 		$("#monthShipmentsGrid").kendoGrid({
@@ -380,8 +427,46 @@ function edit(data){
 		});
 	}
 	
+	var chart = $('#container').highcharts();
+	
+	chart.xAxis[0].setCategories(scm.scGotMoneyInfo.monthDateList);
+	chart.series[0].update({
+		name: '月度金额',
+		data: scm.scGotMoneyInfo.monthMoneyList
+    });
+	
 	scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
 	kendo.bind($("#editSalesContract"), scm);
+	
+	//Render the title show info
+	var showSCAmount = scm.get("contractAmount");
+	var showSCLastAmount = scm.get("scLastTotalAmount");
+	$("#titleShowContractAmount").html(showSCAmount);
+	$("#titleShowLastContractAmount").html(showSCLastAmount);
+	
+	if (!$("#titleShowSCModifyHistory").data("kendoGrid")){
+		$("#titleShowSCModifyHistory").kendoGrid({
+			dataSource : scm.scModifyHistory,
+			columns : [ {
+				field : "addNewEqCostMoney",
+				title : "增补额"
+			}, {
+				field : "addNewEqCostTime",
+				title : "增补时间"
+			}, {
+				field : "addNewEqCostPerson",
+				title : "增补操作人"
+			}, {
+				field : "addNewEqCostReason",
+				title : "增补原因"
+			}, {
+				field : "addNewEqCostMemo",
+				title : "增补备注"
+			}],
+			scrollable : true
+		});
+	}
+	
 }
 
 function openTraceWindow(){

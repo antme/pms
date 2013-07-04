@@ -46,9 +46,9 @@ public class InitBean {
         initRoleItems(dao);
         setLoginPathValidation();
 
-        createAdminGroup(dao);
-        createSystemDefaultGroups(dao);
-        createAdminUser(dao);
+//        createAdminGroup(dao);
+//        createSystemDefaultGroups(dao);
+//        createAdminUser(dao);
     }
 
     private static void createSystemDefaultGroups(ICommonDao dao) {

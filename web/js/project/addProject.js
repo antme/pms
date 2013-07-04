@@ -101,7 +101,7 @@ $(document).ready(function() {
 	//表单中的各种控件
 	$("#projectStatus").kendoDropDownList({
 		dataTextField : "text",
-		dataValueField : "text",
+		dataValueField : "value",
 		optionLabel : "选择项目状态...",
 		dataSource : proStatusItemsForAdd
 	});
@@ -201,7 +201,7 @@ function saveProject(){
 	if (!validator.validate()) {
 		return;
     } else {
-    	if (popupParams !=null && popupParams.scAddProject == 1){//创建销售合同是 创建项目
+    	if (popupParams !=null && popupParams.scAddProject == 1){//创建销售合同时 创建项目
     		saveProjectInAddSC(pModel.toJSON());
 		}else{
 	    	dataSource.add(pModel);
@@ -233,6 +233,7 @@ function saveProjectInAddSCCallBack(data){
 	pdblist.value(data._id);
 	scm.set("projectId",data._id);
 	$("#selProjectName").html(data.projectName);
+	showTabs(data.projectStatus);
 }
 
 function viewSC(id){

@@ -117,4 +117,12 @@ public class SalesContractBean {
 	
 	
 	public static final String SC_BACK_REQUEST_COUNT = "backRequestCount";//合同下申请单数量
+	public static final String SC_LAST_TOTAL_AMOUNT = "scLastTotalAmount";//合同 最终总金额
+	public static final String SC_MODIFY_HISTORY = "scModifyHistory";//合同  增补历史 (成本设备的勘误或增补修改)
+
+	public static final String SC_MODIFY_MONEY = "addNewEqCostMoney";//合同  增补额
+	public static final String SC_MODIFY_TIME = "addNewEqCostTime";//合同  增补时间
+	public static final String SC_MODIFY_PERSON = "addNewEqCostPerson";//合同  增补操作人
+	public static final String SC_MODIFY_REASON = "addNewEqCostReason";//合同  增补原因 (成本设备的勘误或增补修改)
+	public static final String SC_MODIFY_MEMO = "addNewEqCostMemo";//合同  增补备注
 }

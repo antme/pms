@@ -16,6 +16,17 @@
 		<div>
 			<button class="k-button"  onclick='loadPage("scList");'>返回</button>
 		</div>
+		
+		<div>
+			<div>
+				<br/>
+				<h3>合同增补历史：</h3>
+				<label>合同金额：</label><span id="titleShowContractAmount" style="margin-right:15px"></span>
+				<label>最终合同金额：</label><span id="titleShowLastContractAmount" style="margin-right:15px"></span>
+				<div id="titleShowSCModifyHistory"></div>
+				<br/>
+			</div>
+		</div>
 	
 		<div>
            <div id="tabstrip">
@@ -296,15 +307,8 @@
                
                <div><!-- 第 5 个Tab -->
                    <div><!-- 财务数据 -->
-                   	<br/>
-                   		<h3>开票信息列表</h3>
-                       <div id="invoiceList"></div>
-                       <br/>
-                       <hr/>
-                       <br/>
-                       <h3>收款信息列表</h3>
-                       <div id="gotMoneyList"></div>
-                       <br/>
+                   	<input id="date" value="1" />
+                   	<div id="container" style="height: 400px; margin: 0 auto"></div>
                    </div>
                </div>
                

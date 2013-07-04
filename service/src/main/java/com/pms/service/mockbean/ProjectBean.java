@@ -26,7 +26,7 @@ public class ProjectBean {
 	public static final String PROJECT_TYPE_SERVICE = "服务";  //服务
 	
 	//项目状态数据
-	public static final String PROJECT_STATUS_OFFICIAL = "正式立项";  //正式立项
-	public static final String PROJECT_STATUS_PRE = "预立项";       //预立项
+	public static final String PROJECT_STATUS_OFFICIAL = "销售正式立项";  //销售正式立项
+	public static final String PROJECT_STATUS_PRE = "销售预立项";       //销售预立项
 	public static final String PROJECT_STATUS_INNER = "内部立项";     //内部立项
 }
