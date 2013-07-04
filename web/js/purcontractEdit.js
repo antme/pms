@@ -208,7 +208,6 @@ function save(status) {
 				requestDataItem.supplier = requestDataItem.supplier._id;
 			}
 			
-			console.log(requestDataItem)
 
 			// 同步数据
 			itemDataSource.sync();
@@ -388,11 +387,12 @@ function edit(data) {
 				if (refresh) {
 					var grid1 = $("#purchasecontract-edit-grid").data("kendoGrid");
 					grid1.refresh();
+				}else{
+					initMergedGrid();
 				}
 				
 				$("#requestedTotalMoney").val(requestActureMoney);
 				
-				initMergedGrid();
 			}
 
 		});
@@ -406,10 +406,15 @@ var mergedDataSource = new kendo.data.DataSource({
 });
 
 function initMergedGrid(){
-
 	var data = itemDataSource.data();
+	while(mergedDataSource.at(0)){
+		mergedDataSource.remove(mergedDataSource.at(0));
+	}
+	var mdata = mergedDataSource.data();
+
+
 	for(i=0; i<data.length; i++){
-		var mdata = mergedDataSource.data();
+		
 		var find = false;
 		for(j=0; j<mdata.length; j++){	
 			if(mdata[j].eqcostNo == data[i].eqcostNo && mdata[j].eqcostProductName == data[i].eqcostProductName
@@ -472,8 +477,14 @@ function detailInit(e) {
 	
 	var data = new Array();
 	var mdata = mergedDataSource.data();
+
 	for(i=0; i<mdata.length; i++){
-		if(mdata[i].purchaseOrderCode == e.data.purchaseOrderCode){
+		if(mdata[i].eqcostNo == e.data.eqcostNo && mdata[i].eqcostProductName == e.data.eqcostProductName
+				&& mdata[i].eqcostMaterialCode == e.data.eqcostMaterialCode
+				&& mdata[i].eqcostProductType == e.data.eqcostProductType
+				&& mdata[i].eqcostUnit == e.data.eqcostUnit && mdata[i].eqcostProductUnitPrice == e.data.eqcostProductUnitPrice
+				&& mdata[i].eqcostBrand == e.data.eqcostBrand)
+		{
 			if(mdata[i].items){
 				data = mdata[i].items;
 				data.push(mdata[i]);
@@ -484,7 +495,6 @@ function detailInit(e) {
 		}
 		
 	}
-	console.log(data);
 
     $("<div/>").appendTo(e.detailCell).kendoGrid({
 		dataSource : {
