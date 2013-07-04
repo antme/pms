@@ -52,7 +52,6 @@ $(document).ready(function() {
 		}
 	});
 	
-	$("#signDate").kendoDatePicker();
 	
 	$("#purchaseContractType").kendoDropDownList({
 		dataTextField : "text",
