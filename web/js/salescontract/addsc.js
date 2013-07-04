@@ -457,9 +457,17 @@ function moneyOnChange(){
 
 function showTabs(projectStatus){
 //	console.log("showTabs*************projectStatus"+projectStatus);
+	var tabStrip = $("#tabstrip").kendoTabStrip().data("kendoTabStrip");
+	var tab0 = tabStrip.tabGroup.children("li").eq(0);
+	var tab1 = tabStrip.tabGroup.children("li").eq(1);
 	if (projectStatus == "销售正式立项"){
 		$("#tabDiv").show();
+		tabStrip.enable(tab0, true);
+		tabStrip.enable(tab1, true);
 	}else{//虚拟合同，只显示 设备清单Tab
 		$("#tabDiv").show();
+		tabStrip.select(2);
+		tabStrip.enable(tab0, false);
+		tabStrip.enable(tab1, false);
 	}
 }
