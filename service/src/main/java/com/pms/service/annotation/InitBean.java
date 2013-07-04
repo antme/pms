@@ -46,9 +46,9 @@ public class InitBean {
         initRoleItems(dao);
         setLoginPathValidation();
 
-        createAdminGroup(dao);
-        createSystemDefaultGroups(dao);
-        createAdminUser(dao);
+//        createAdminGroup(dao);
+//        createSystemDefaultGroups(dao);
+//        createAdminUser(dao);
     }
 
     private static void createSystemDefaultGroups(ICommonDao dao) {
@@ -59,7 +59,8 @@ public class InitBean {
         groupRoles.put(GroupBean.PROJECT_MANAGER_VALUE, new String[] {
         	RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS,
         	RoleValidConstants.PURCHASE_REQUEST_PROCESS,  
-        	RoleValidConstants.PURCHASE_CONTRACT_PROCESS
+        	RoleValidConstants.PURCHASE_CONTRACT_PROCESS,
+            RoleValidConstants.PURCHASE_BACK_PROCESS
         });
         groupRoles.put(GroupBean.PROJECT_ASSISTANT_VALUE, new String[] {
         	RoleValidConstants.PROJECT_UPDATE, 
@@ -90,7 +91,8 @@ public class InitBean {
         groupRoles.put(GroupBean.SALES_MANAGER_VALUE, new String[] {
         	RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS,
         	RoleValidConstants.PURCHASE_REQUEST_PROCESS,  
-            RoleValidConstants.PURCHASE_CONTRACT_PROCESS
+            RoleValidConstants.PURCHASE_CONTRACT_PROCESS,
+            RoleValidConstants.PURCHASE_BACK_PROCESS
         });
         groupRoles.put(GroupBean.DEPOT_MANAGER_VALUE, new String[] {
         	RoleValidConstants.SHIP_CONFIRM,
@@ -99,7 +101,8 @@ public class InitBean {
         	RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS
         });
         groupRoles.put(GroupBean.DEPARTMENT_MANAGER_VALUE, new String[] {
-        	RoleValidConstants.SHIP_MANAGEMENT_PROCESS
+        	RoleValidConstants.SHIP_MANAGEMENT_PROCESS,
+            RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT
         });
         groupRoles.put(GroupBean.PURCHASE_VALUE, new String[] {
         	RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, 

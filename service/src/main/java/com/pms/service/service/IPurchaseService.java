@@ -13,6 +13,10 @@ public interface IPurchaseService {
 	public Map<String,Object> saveBack(Map<String,Object> params);
 	/**提交备货申请*/
 	public Map<String,Object> submitBack(Map<String,Object> params);
+	/**初审通过备货申请*/
+	public Map<String, Object> approveBack(Map<String, Object> params);
+	/**初审退回备货申请*/
+	public Map<String, Object> rejectBack(Map<String, Object> params);
 	/**中止备货申请*/
 	public Map<String,Object> pendingBack(Map<String,Object> params);
 	/**删除*/

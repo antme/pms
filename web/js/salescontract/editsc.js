@@ -45,7 +45,9 @@ var scModel = kendo.data.Model.define({
 		scMonthShipmentsInfo : {},
 		scYearShipmentsInfo : {},
 		estimateGrossProfit : {},
-		estimateGrossProfitRate : {}
+		estimateGrossProfitRate : {},
+		addNewEqCostReason : {},
+		addNewEqCostMemo : {}
 	}
 });
 var scm;
@@ -389,6 +391,14 @@ $(document).ready(function() {
 		dataSource : runningStatusItems,
 	});
 	
+	var addNewEqCostReasonItems = [{ text: "勘误", value: "勘误" }, { text: "增补", value: "增补" }];
+	$("#addNewEqCostReason").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择增补原因...",
+		dataSource : addNewEqCostReasonItems,
+	});
+	
 	
 	$("#projectId").kendoDropDownList({
 		dataTextField : "projectCode",
@@ -692,9 +702,27 @@ function saveSC(){
 		alert("表单验证不通过！");
 		return;
     } else {
+    	//如果添加新的成本设备，严重增补原因、增补备注必填
+    	var newEqTotal = eqCostListDataSourceNew.total();
+		var reason = $("#addNewEqCostReason").data("kendoDropDownList").value();
+		scm.set("addNewEqCostReason", reason);
+    	if (newEqTotal>0){
+    		if (reason == null || reason == ""){
+    			alert("请选择增补原因！");
+    			return;
+    		}
+    		var newEqMemo = $("#addNewEqCostMemo").val().trim();
+    		if (newEqMemo == null || newEqMemo == ""){
+    			alert("请填写增补备注！");
+    			return;
+    		}
+    	}//End 
+    	
 		var _id = scm.get("_id");
 		var data = eqCostListDataSourceNew.data();
 		scm.set("eqcostList", data);
+		
+		var newEqTotal = eqCostListDataSourceNew.total();
 		
 		var profit = $("#estimateGrossProfit").val();
 		var profitRate = $("#estimateGrossProfitRate").val();
@@ -836,7 +864,7 @@ function moneyOnChange(){
 	var totalCost = estimateEqCost0*1 + estimateEqCost1*1 + estimateSubCost*1 
 		+ estimatePMCost*1 + estimateDeepDesignCost*1 + estimateDebugCost*1
 		+ estimateOtherCost*1 + estimateTax*1;
-	console.log("***********totalCost" + totalCost);
+//	console.log("***********totalCost" + totalCost);
 	$("#totalEstimateCost").val(totalCost);
 	if (scAmount != null && scAmount != ""){
 		var profit = scAmount - totalCost;

@@ -56,7 +56,6 @@ $(document).ready(function () {
 	    pageable: true,
 	    selectable : "row",
 	    sortable : true,
-		filterable : filterable,
 		height: "400px",
 	    columns: [
 	        { 
@@ -85,7 +84,7 @@ $(document).ready(function () {
 	
 });
 
-function add(){
+function addPB(){
 	loadPage("purchaseBackEdit");
 }
 function editPB(){
@@ -98,7 +97,7 @@ function editPB(){
 
 }
 
-function pending() {
+function pendingPB() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
@@ -123,7 +122,7 @@ function pending() {
 	}
 }
 
-function destroy() {
+function destroyPB() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");

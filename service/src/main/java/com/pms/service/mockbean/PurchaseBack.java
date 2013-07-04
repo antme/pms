@@ -6,6 +6,7 @@ public class PurchaseBack {
 	public static final String pbType = "pbType";
 	public static final String pbStatus = "pbStatus";
 	public static final String pbSubmitDate = "pbSubmitDate";
+	public static final String pbOperateDate = "pbOperateDate";//审核时间
 	public static final String pbPlanDate = "pbPlanDate";
 	public static final String pbDepartment = "pbDepartment";
 	public static final String pbMoney = "pbMoney";

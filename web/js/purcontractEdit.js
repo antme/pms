@@ -52,7 +52,6 @@ $(document).ready(function() {
 		}
 	});
 	
-	$("#signDate").kendoDatePicker();
 	
 	$("#purchaseContractType").kendoDropDownList({
 		dataTextField : "text",
@@ -107,7 +106,11 @@ $(document).ready(function() {
 		dataSource : executeType1
 	});
 		
-
+	$("#signDate").kendoDatePicker({
+	    format: "yyyy/MM/dd",
+	    parseFormats: ["yyyy/MM/dd"]
+	});
+	
 	if(popupParams){
 		$("#purchasecontract-edit-item").show();
 		postAjaxRequest("/service/purcontract/get", popupParams, edit);
@@ -271,9 +274,16 @@ function edit(data) {
 
 	if (requestDataItem) {
 		requestDataItem = new contractModel(requestDataItem);
-
 	}
-	requestDataItem.set("signDate", kendo.toString(requestDataItem.signDate, 'd'));
+	
+	if(kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd") && 
+			kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd") !="null"){
+		requestDataItem.set("signDate", kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd"));
+	}else if(kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd") && 
+			kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd") !="null"){
+		requestDataItem.set("signDate", kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd"));
+	}
+	
 	kendo.bind($("#purchasecontract-edit"), requestDataItem);
 
 	var eqcostList = requestDataItem.eqcostList;

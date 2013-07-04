@@ -340,8 +340,22 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
         for (Map<String, Object> data : list) {
-            data.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(data.get(SalesContractBean.SC_EQ_LIST)));
             mergeOrderRestEqCount(data);
+        }
+        
+        List<Map<String, Object>> removedList = new ArrayList<Map<String, Object>>();
+        for (Map<String, Object> data : list) {
+            if(data.get("isEqEmpty")!=null){
+                removedList.add(data);
+            }
+        }
+        
+        for (Map<String, Object> orderMap : removedList) {
+            list.remove(orderMap);
+        }
+        
+        for (Map<String, Object> data : list) {
+            data.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(data.get(SalesContractBean.SC_EQ_LIST)));
         }
 
         return results;
@@ -365,6 +379,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         for (Map<String, Object> eqMap : removedList) {
             eqOrderMapList.remove(eqMap);
+        }
+        
+        if(eqOrderMapList.isEmpty()){
+            order.put("isEqEmpty", eqOrderMapList.isEmpty());
         }
 
         return order;

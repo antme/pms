@@ -212,8 +212,9 @@ $(document).ready(function() {
 		dataSource : projectItems,
 		select:function(e){
 			var dataItem = this.dataItem(e.item.index());
-            console.log("*******dataItem"+dataItem.projectName);
+//            console.log("*******dataItem"+dataItem.projectName+"****projectType"+dataItem.projectType);
             $("#selProjectName").html(dataItem.projectName);
+            showTabs(dataItem.projectStatus);
 		}
 	});
 	
@@ -444,12 +445,21 @@ function moneyOnChange(){
 	var totalCost = estimateEqCost0*1 + estimateEqCost1*1 + estimateSubCost*1 
 		+ estimatePMCost*1 + estimateDeepDesignCost*1 + estimateDebugCost*1
 		+ estimateOtherCost*1 + estimateTax*1;
-	console.log("***********totalCost" + totalCost);
+//	console.log("***********totalCost" + totalCost);
 	$("#totalEstimateCost").val(totalCost);
 	if (scAmount != null && scAmount != ""){
 		var profit = scAmount - totalCost;
 		var profitRate = profit/scAmount * 100;
 		$("#estimateGrossProfit").val(profit);
 		$("#estimateGrossProfitRate").val(profitRate+" %");
+	}
+}
+
+function showTabs(projectStatus){
+//	console.log("showTabs*************projectStatus"+projectStatus);
+	if (projectStatus == "销售正式立项"){
+		$("#tabDiv").show();
+	}else{//虚拟合同，只显示 设备清单Tab
+		$("#tabDiv").show();
 	}
 }

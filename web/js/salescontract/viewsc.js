@@ -437,6 +437,36 @@ function edit(data){
 	
 	scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
 	kendo.bind($("#editSalesContract"), scm);
+	
+	//Render the title show info
+	var showSCAmount = scm.get("contractAmount");
+	var showSCLastAmount = scm.get("scLastTotalAmount");
+	$("#titleShowContractAmount").html(showSCAmount);
+	$("#titleShowLastContractAmount").html(showSCLastAmount);
+	
+	if (!$("#titleShowSCModifyHistory").data("kendoGrid")){
+		$("#titleShowSCModifyHistory").kendoGrid({
+			dataSource : scm.scModifyHistory,
+			columns : [ {
+				field : "addNewEqCostMoney",
+				title : "增补额"
+			}, {
+				field : "addNewEqCostTime",
+				title : "增补时间"
+			}, {
+				field : "addNewEqCostPerson",
+				title : "增补操作人"
+			}, {
+				field : "addNewEqCostReason",
+				title : "增补原因"
+			}, {
+				field : "addNewEqCostMemo",
+				title : "增补备注"
+			}],
+			scrollable : true
+		});
+	}
+	
 }
 
 function openTraceWindow(){

@@ -32,6 +32,9 @@ var subModel = kendo.data.Model.define({
         eqcostLeftAmount: {
         	editable : false
         },
+        eqcostCategory: {
+       		editable : false
+        },
         pbTotalCount: {
         	editable : false
         },
@@ -44,6 +47,12 @@ var subModel = kendo.data.Model.define({
        	 	validation: {
                 min: 0
             }
+       },
+       pbComment:{
+    	   editable : false
+       },
+       paComment:{
+    	   editable : false
        }
 	}
 });	
@@ -77,27 +86,22 @@ $(document).ready(function () {
 		dataSource: {
 			schema: {
 				model: subModel
-			},
-			aggregate: [ 
-			    { field: "eqcostNo", aggregate: "count" },
-			    { field: "paCount", aggregate: "sum" },
-			    { field: "pbTotalCount", aggregate: "sum" }
-			]			
+			}			
 		},
 	    columns: [
-			{ field: "eqcostNo", title: "序号" ,footerTemplate: "总共: #=count#"},
+			{ field: "eqcostNo", title: "序号"},
 			{ field: "eqcostMaterialCode", title: "物料代码" },
 			{ field: "eqcostProductName", title: "产品名称" },
 			{ field: "eqcostProductType", title: "规格型号" },
-			{ field: "eqcostUnit", title: "单位" },
-			{ field: "paCount", title: "调拨数量", attributes: { "style": "color:red"}, footerTemplate: "总共: #=sum#"},
-			{ field: "pbTotalCount", title: "备货数量",footerTemplate: "总共: #=sum#"},
+			{ field: "paCount", title: "本次申请数量", attributes: { "style": "color:red"}},
+			{ field: "pbLeftCount", title: "可申请数量"},
+			{ field: "pbTotalCount", title: "备货数量"},
 			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostCategory", title: "类别" },
-			{ field: "eqcostMemo", title: "备注" }
+			{ field: "eqcostMemo", title: "备注1" },
+			{ field: "pbComment", title: "备注2" }
 	  	],	 
-	  	editable:true/*,
-	  	toolbar: [{text:"保存",name:"save"}]*/
+	  	editable:true
 	});
 
 	$("#form-container-button button").click(function(){
@@ -130,6 +134,5 @@ function editSucess(e){
 	}
 	currentObj = new myModel(e);
 	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
-	currentObj.set("pbDepartment", kendo.stringify(currentObj.pbDepartment));
 	kendo.bind($("#form-container"), currentObj);
 }
