@@ -509,6 +509,12 @@ function detailInit(e) {
 			title : "总价",
 			footerTemplate: "总价: #=sum#" 
 		}, {
+			field : "salesContractCode",
+			title : "销售合同编号"
+		},{
+			field : "purchaseOrderCode",
+			title : "订单编号"
+		}, {
 			field : "remark",
 			title : "备注"
 		}]
