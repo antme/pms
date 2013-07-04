@@ -218,6 +218,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             realItemQuery.put(SalesContractBean.SC_ID, cId);
             realItemQuery.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, item.get(EqCostListBean.EQ_LIST_MATERIAL_CODE));
             realItemQuery.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, item.get(EqCostListBean.EQ_LIST_PRODUCT_NAME));
+            realItemQuery.put(EqCostListBean.EQ_LIST_NO, item.get(EqCostListBean.EQ_LIST_NO));
+            realItemQuery.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, item.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE));
+            realItemQuery.put(EqCostListBean.EQ_LIST_UNIT, item.get(EqCostListBean.EQ_LIST_UNIT));
+            realItemQuery.put(EqCostListBean.EQ_LIST_BRAND, item.get(EqCostListBean.EQ_LIST_BRAND));
+
             realItemQuery.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
             realItemQuery.put(ApiConstants.LIMIT_KEYS, EqCostListBean.EQ_LIST_REAL_AMOUNT);
             Map<String, Object> realItem = dao.findOneByQuery(realItemQuery, DBBean.EQ_COST);
