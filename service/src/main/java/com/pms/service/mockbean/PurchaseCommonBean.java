@@ -207,6 +207,7 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String SALES_CONTRACT_CODE = "salesContractCode";
 
     public static final String STATUS_DRAFT = "草稿";
+    public static final String STATUS_SUBMITED = "已提交";
     public static final String STATUS_NEW = "审批中";
     public static final String STATUS_APPROVED = "审批通过";
     public static final String STATUS_REJECTED = "审批拒绝";
@@ -216,6 +217,8 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String STATUS_OUT_REPOSITORY = "已出库";
     public static final String STATUS_REPOSITORY_NEW = "入库中";
     public static final String STATUS_IN_OUT_REPOSITORY = "已入/出库";
+    public static final String STATUS_ORDERING = "采购中";
+    public static final String STATUS_CANCELL_NEED_APPROVED = "中止申请中";
     
     public static final String STATUS_ORDER_LOCKED = "已锁定";
     public static final String STATUS_ORDER_FINISHED = "采购完毕";
@@ -223,7 +226,7 @@ public class PurchaseCommonBean extends BaseEntity {
     //物流类型
     public static final String LOGISTICS_TYPE_VALUE_DIRECTY = "直发"; 
     public static final String eqcostDeliveryType_DIRECTY = "直发现场"; 
-    public static final String eqcostDeliveryType_REPOSITORY = "直发入库"; 
+    public static final String eqcostDeliveryType_REPOSITORY = "入公司库"; 
     
     public static final String LOGISTICS_TYPE = "logisticsType";
     

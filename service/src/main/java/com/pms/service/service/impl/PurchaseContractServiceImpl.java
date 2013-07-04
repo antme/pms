@@ -335,16 +335,60 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> listApprovedPurchaseOrderForSelect() {
 
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_NEW);
+        query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_SUBMITED);
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_ORDER);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
+        for (Map<String, Object> data : list) {
+            mergeOrderRestEqCount(data);
+        }
+        
+        List<Map<String, Object>> removedList = new ArrayList<Map<String, Object>>();
+        for (Map<String, Object> data : list) {
+            if(data.get("isEqEmpty")!=null){
+                removedList.add(data);
+            }
+        }
+        
+        for (Map<String, Object> orderMap : removedList) {
+            list.remove(orderMap);
+        }
+        
         for (Map<String, Object> data : list) {
             data.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(data.get(SalesContractBean.SC_EQ_LIST)));
         }
 
         return results;
     }
+    
+    
+    public Map<String, Object> mergeOrderRestEqCount(Map<String, Object> order) {
+        if (order.get(SalesContractBean.SC_EQ_LIST) == null) {
+            order = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
+        }
+        List<Map<String, Object>> eqOrderMapList = (List<Map<String, Object>>) order.get(SalesContractBean.SC_EQ_LIST);
+
+        List<Map<String, Object>> removedList = new ArrayList<Map<String, Object>>();
+        for (Map<String, Object> eqMap : eqOrderMapList) {
+            if (this.dao.exist("eqcostList._id", new DBQuery(DBQueryOpertion.IN, eqMap.get(ApiConstants.MONGO_ID)), DBBean.PURCHASE_CONTRACT)) {
+                removedList.add(eqMap);
+            }else if(ApiUtil.getInteger(eqMap.get("eqcostApplyAmount"), 0) <= 0){
+                removedList.add(eqMap);
+            }
+        }
+
+        for (Map<String, Object> eqMap : removedList) {
+            eqOrderMapList.remove(eqMap);
+        }
+        
+        if(eqOrderMapList.isEmpty()){
+            order.put("isEqEmpty", eqOrderMapList.isEmpty());
+        }
+
+        return order;
+    }
+    
+    
 
     @Override
     public void deletePurchaseOrder(Map<String, Object> contract) {
@@ -380,6 +424,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         if (prequest != null) {
             prequest.put(PurchaseCommonBean.PURCHASE_ORDER_ID, order.get(ApiConstants.MONGO_ID));
             prequest.put(PurchaseCommonBean.PURCHASE_ORDER_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
+            prequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDERING);
             this.dao.updateById(prequest, DBBean.PURCHASE_REQUEST);
         }
 
@@ -471,10 +516,19 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 ordeUpdate.put(ApiConstants.MONGO_ID, orderId);
                 ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
                 this.dao.updateById(ordeUpdate, DBBean.PURCHASE_ORDER);
+
+                Map<String, Object> order = this.dao.findOne(ApiConstants.MONGO_ID, orderId, new String[] { PurchaseCommonBean.PURCHASE_REQUEST_ID }, DBBean.PURCHASE_ORDER);
+                if (order != null && order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID) != null) {
+                    Map<String, Object> purRequest = new HashMap<String, Object>();
+                    purRequest.put(ApiConstants.MONGO_ID, order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID));
+                    purRequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
+                    this.dao.updateById(ordeUpdate, DBBean.PURCHASE_REQUEST);
+                }
+
             } else {
                 Map<String, Object> ordeUpdate = new HashMap<String, Object>();
                 ordeUpdate.put(ApiConstants.MONGO_ID, orderId);
-                ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_LOCKED);
+                ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDERING);
                 this.dao.updateById(ordeUpdate, DBBean.PURCHASE_ORDER);
             }
             
@@ -597,9 +651,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             request.setPurchaseRequestCode(generateCode("CGSQ", DBBean.PURCHASE_ORDER));
             pcrequest = request.toMap();
             adding = true;
+        }else{
+            pcrequest.putAll(parameters);
         }
         String keys[] = new String[] { "eqcostApplyAmount", "orderEqcostCode", "orderEqcostName", "orderEqcostModel", "eqcostProductUnitPrice" };
         pcrequest.put(SalesContractBean.SC_EQ_LIST, mergeSavedEqList(keys, parameters.get(SalesContractBean.SC_EQ_LIST)));
+        
         Map<String, Object> prequest = updatePurchase(pcrequest, DBBean.PURCHASE_REQUEST);
 
         if (adding) {
@@ -622,18 +679,22 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> requestMap = this.dao.findOne(ApiConstants.MONGO_ID, request.get(ApiConstants.MONGO_ID), 
                 new String[] { PurchaseCommonBean.PROCESS_STATUS }, DBBean.PURCHASE_REQUEST);      
         
-        if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS) == null) {
-            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.MANAGER_APPROVED);
-        }
-        if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.MANAGER_APPROVED)) {
-            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_APPROVED);
+//        if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS) == null) {
+//            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.MANAGER_APPROVED);
+//        }
+//        if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.MANAGER_APPROVED)) {
+//            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_APPROVED);
+//        } else
+            
+       if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_CANCELL_NEED_APPROVED)) {
+            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELLED);
         } else {
-            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.MANAGER_APPROVED);
+            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.STATUS_APPROVED);
         }
     }
 
     public Map<String, Object> cancelPurchaseRequest(Map<String, Object> request) {
-        return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELLED);
+        return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELL_NEED_APPROVED);
     }
 
     public Map<String, Object> rejectPurchaseRequest(Map<String, Object> request) {

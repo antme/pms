@@ -52,7 +52,6 @@ $(document).ready(function() {
 		}
 	});
 	
-	$("#signDate").kendoDatePicker();
 	
 	$("#purchaseContractType").kendoDropDownList({
 		dataTextField : "text",
@@ -107,7 +106,11 @@ $(document).ready(function() {
 		dataSource : executeType1
 	});
 		
-
+	$("#signDate").kendoDatePicker({
+	    format: "yyyy/MM/dd",
+	    parseFormats: ["yyyy/MM/dd"]
+	});
+	
 	if(popupParams){
 		$("#purchasecontract-edit-item").show();
 		postAjaxRequest("/service/purcontract/get", popupParams, edit);
@@ -182,7 +185,7 @@ var itemListDataSource = new kendo.data.DataSource({
 
 function save(status) {
 	var validator = $("#purchasecontract-edit-item").kendoValidator().data("kendoValidator");
-//	if (validator.validate()) {
+	if (validator.validate()) {
 
 		if (!itemDataSource.at(0)) {
 			alert("没有任何设备清单数据");
@@ -208,12 +211,11 @@ function save(status) {
 				requestDataItem.supplier = requestDataItem.supplier._id;
 			}
 			
-			console.log(requestDataItem)
 
 			// 同步数据
 			itemDataSource.sync();
 		}
-//	}
+	}
 
 }
 
@@ -260,6 +262,7 @@ function showOrderWindow() {
 	edit();
 }
 
+
 function edit(data) {
 
 	if(data){
@@ -271,9 +274,16 @@ function edit(data) {
 
 	if (requestDataItem) {
 		requestDataItem = new contractModel(requestDataItem);
-
 	}
-	requestDataItem.set("signDate", kendo.toString(requestDataItem.signDate, 'd'));
+	
+	if(kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd") && 
+			kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd") !="null"){
+		requestDataItem.set("signDate", kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd"));
+	}else if(kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd") && 
+			kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd") !="null"){
+		requestDataItem.set("signDate", kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd"));
+	}
+	
 	kendo.bind($("#purchasecontract-edit"), requestDataItem);
 
 	var eqcostList = requestDataItem.eqcostList;
@@ -388,12 +398,147 @@ function edit(data) {
 					var grid1 = $("#purchasecontract-edit-grid").data("kendoGrid");
 					grid1.refresh();
 				}
-				
+				initMergedGrid();
+
 				$("#requestedTotalMoney").val(requestActureMoney);
+				
 			}
 
 		});
 	}
+	
+}
+
+
+var mergedDataSource = new kendo.data.DataSource({
+
+});
+
+function initMergedGrid(){
+	var itemData = itemDataSource.data();
+	var data = eval(kendo.stringify(itemData));
+	while(mergedDataSource.at(0)){
+		mergedDataSource.remove(mergedDataSource.at(0));
+	}
+	var mdata = mergedDataSource.data();
+
+
+	for(i=0; i<data.length; i++){
+		
+		var find = false;
+		for(j=0; j<mdata.length; j++){	
+			if(mdata[j].eqcostNo == data[i].eqcostNo && mdata[j].eqcostProductName == data[i].eqcostProductName
+					&& mdata[j].eqcostMaterialCode == data[i].eqcostMaterialCode
+					&& mdata[j].eqcostProductType == data[i].eqcostProductType
+					&& mdata[j].eqcostUnit == data[i].eqcostUnit && mdata[j].eqcostProductUnitPrice == data[i].eqcostProductUnitPrice
+					&& mdata[j].eqcostBrand == data[i].eqcostBrand)
+			{				
+				if(!mdata[j].items){
+					mdata[j].items = new Array();
+				}
+				mdata[j].items.push(data[i]);
+				find =true;
+				break;
+			}
+		}
+		
+		if(!find){
+			mergedDataSource.add(data[i]);
+		}
+	}
+	
+	
+	if (!$("#merged-grid").data("kendoGrid")) {
+		$("#merged-grid").kendoGrid({
+			dataSource : mergedDataSource,
+			columns : [ {
+				field : "eqcostNo",
+				title : "序号"
+			}, {
+				field : "eqcostMaterialCode",
+				title : "物料代码"
+			}, {
+				field : "eqcostProductName",
+				title : "名称"
+			}, {
+				field : "eqcostProductType",
+				title : "型号"
+			}, {
+				field : "eqcostUnit",
+				title : "单位"
+			}, {
+				field : "eqcostProductUnitPrice",
+				title : "单价"
+			},{
+				field : "eqcostBrand",
+				title : "品牌"
+			}],
+			dataBound: function() {
+                 this.expandRow(this.tbody.find("tr.k-master-row").first());
+            },
+            detailInit: detailInit
+			
+		});
+	}
+	
+}
+
+function detailInit(e) {
+	
+	var data = new Array();
+	var mdata = mergedDataSource.data();
+
+	for(i=0; i<mdata.length; i++){
+		if(mdata[i].eqcostNo == e.data.eqcostNo && mdata[i].eqcostProductName == e.data.eqcostProductName
+				&& mdata[i].eqcostMaterialCode == e.data.eqcostMaterialCode
+				&& mdata[i].eqcostProductType == e.data.eqcostProductType
+				&& mdata[i].eqcostUnit == e.data.eqcostUnit && mdata[i].eqcostProductUnitPrice == e.data.eqcostProductUnitPrice
+				&& mdata[i].eqcostBrand == e.data.eqcostBrand)
+		{
+			if(mdata[i].items){
+				data = mdata[i].items;
+				data.push(mdata[i]);
+			}else{
+				data.push(mdata[i]);
+			}
+			break;
+		}
+		
+	}
+
+    $("<div/>").appendTo(e.detailCell).kendoGrid({
+		dataSource : {
+			data : data,
+			aggregate : [ {
+				field : "eqcostApplyAmount",
+				aggregate : "sum"
+			}, {
+				field : "requestedTotalMoney",
+				aggregate : "sum"
+			} ]
+		},
+        scrollable: false,
+        sortable: true,
+        pageable: true,
+        columns : [ {
+			field : "eqcostApplyAmount",
+			title : "订单数量",
+			footerTemplate: "总数: #=sum#" 
+		}, {
+			field : "requestedTotalMoney",
+			title : "总价",
+			footerTemplate: "总价: #=sum#" 
+		}, {
+			field : "salesContractCode",
+			title : "销售合同编号"
+		},{
+			field : "purchaseOrderCode",
+			title : "订单编号"
+		}, {
+			field : "remark",
+			title : "备注"
+		}]
+    });
 }
 
 

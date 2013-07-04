@@ -256,6 +256,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             realItemQuery.put(SalesContractBean.SC_ID, cId);
             realItemQuery.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, item.get(EqCostListBean.EQ_LIST_MATERIAL_CODE));
             realItemQuery.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, item.get(EqCostListBean.EQ_LIST_PRODUCT_NAME));
+            realItemQuery.put(EqCostListBean.EQ_LIST_NO, item.get(EqCostListBean.EQ_LIST_NO));
+            realItemQuery.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, item.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE));
+            realItemQuery.put(EqCostListBean.EQ_LIST_UNIT, item.get(EqCostListBean.EQ_LIST_UNIT));
+            realItemQuery.put(EqCostListBean.EQ_LIST_BRAND, item.get(EqCostListBean.EQ_LIST_BRAND));
+
             realItemQuery.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
             realItemQuery.put(ApiConstants.LIMIT_KEYS, EqCostListBean.EQ_LIST_REAL_AMOUNT);
             Map<String, Object> realItem = dao.findOneByQuery(realItemQuery, DBBean.EQ_COST);
@@ -346,7 +351,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	
 	public Map<String,Object> getBaseInfoByIds(List<String> ids){
 		String[] keys = new String[]{SalesContractBean.SC_CODE,SalesContractBean.SC_AMOUNT, SalesContractBean.SC_PROJECT_ID,
-				SalesContractBean.SC_CUSTOMER_ID,SalesContractBean.SC_BACK_REQUEST_COUNT,SalesContractBean.SC_INVOICE_TYPE};
+				SalesContractBean.SC_CUSTOMER_ID,SalesContractBean.SC_CUSTOMER,SalesContractBean.SC_BACK_REQUEST_COUNT,SalesContractBean.SC_INVOICE_TYPE};
 		Map<String,Object> query = new HashMap<String,Object>();
 		query.put(ApiConstants.LIMIT_KEYS, keys);
 		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
@@ -494,35 +499,57 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> gotMoneyData = new HashMap<String, Object>();
 		
 		// 月度日期数组
-		List<String> dateList = new ArrayList<String>();
+		List<String> monthDateList = new ArrayList<String>();
 		// 对应的金额数组
-		List<Double> moneyList = new ArrayList<Double>();
+		List<Double> monthMoneyList = new ArrayList<Double>();
+		// 年度日期数组
+		List<String> yearDateList = new ArrayList<String>();
+		// 对应的金额数组
+		List<Double> yearMoneyList = new ArrayList<Double>();
 		for (Map<String, Object> data:gotMoneyListData){
 			if (data.containsKey(MoneyBean.getMoneyActualDate) && data.containsKey(MoneyBean.getMoneyActualMoney)) {
 				String date = data.get(MoneyBean.getMoneyActualDate).toString();
 				String[] datearr = date.split("-");
-				String datestr = datearr[0] + "-" + datearr[1];
+				String monthstr = datearr[0] + "-" + datearr[1];
+				String yearstr = datearr[0];
 				
 				Double money = (Double) data.get(MoneyBean.getMoneyActualMoney);
 				
-				if (dateList.isEmpty()) {
-					dateList.add(datestr);
-					moneyList.add(money);
+				// month
+				if (monthDateList.isEmpty()) {
+					monthDateList.add(monthstr);
+					monthMoneyList.add(money);
 				} else {
-					String preDateStr = dateList.get(dateList.size()-1);
-					if (datestr.equals(preDateStr)) {
-						Double preMoney = moneyList.get(moneyList.size()-1);
-						moneyList.set(moneyList.size()-1, preMoney+money);
+					String preDateStr = monthDateList.get(monthDateList.size()-1);
+					if (monthstr.equals(preDateStr)) {
+						Double preMoney = monthMoneyList.get(monthMoneyList.size()-1);
+						monthMoneyList.set(monthMoneyList.size()-1, preMoney+money);
 					} else {
-						dateList.add(datestr);
-						moneyList.add(money);
+						monthDateList.add(monthstr);
+						monthMoneyList.add(money);
+					}
+				}
+				// year
+				if (yearDateList.isEmpty()) {
+					yearDateList.add(yearstr);
+					yearMoneyList.add(money);
+				} else {
+					String preDateStr = yearDateList.get(yearDateList.size()-1);
+					if (yearstr.equals(preDateStr)) {
+						Double preMoney = yearMoneyList.get(yearMoneyList.size()-1);
+						yearMoneyList.set(yearMoneyList.size()-1, preMoney+money);
+					} else {
+						yearDateList.add(yearstr);
+						yearMoneyList.add(money);
 					}
 				}
 			}
 		}
 		
-		gotMoneyData.put("date", dateList);
-		gotMoneyData.put("money", moneyList);
+		gotMoneyData.put("monthDateList", monthDateList);
+		gotMoneyData.put("monthMoneyList", monthMoneyList);
+		gotMoneyData.put("yearDateList", yearDateList);
+		gotMoneyData.put("yearMoneyList", yearMoneyList);
 		
 		//获取相关 按月发货金额
 		Map<String, Object> monthShipmentsQuery = new HashMap<String, Object>();

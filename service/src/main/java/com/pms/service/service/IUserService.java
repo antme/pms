@@ -8,6 +8,10 @@ public interface IUserService {
     
     public Map<String, Object> loadUserInfo(Map<String, Object> map); 
     
+    public Map<String, Object> loadUserInfo(String userId); 
+    
+    public Map<String, Object> loadCurrentUserInfo(); 
+    
     public Map<String, Object> importUser(Map<String, Object> map);
     
     public void deleteUser(Map<String, Object> user);

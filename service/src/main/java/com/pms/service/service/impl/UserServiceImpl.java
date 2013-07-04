@@ -75,6 +75,14 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         return dao.findOne(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID), DBBean.USER);
     }
     
+    public Map<String, Object> loadUserInfo(String userId){
+        return dao.findOne(ApiConstants.MONGO_ID, userId, DBBean.USER);
+    }
+    
+    public Map<String, Object> loadCurrentUserInfo(){
+        return loadUserInfo(ApiThreadLocal.getCurrentUserId());
+    }
+    
     public Map<String, Object> importUser(Map<String, Object> map){
         Map<String, Object> user = dao.findOne(UserBean.USER_NAME, map.get(UserBean.USER_NAME), DBBean.USER);
         if (user == null) {
