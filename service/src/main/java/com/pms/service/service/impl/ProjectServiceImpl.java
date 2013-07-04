@@ -126,31 +126,55 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	@Override
 	public Map<String, Object> listProjectsForSelect(Map<String, Object> params) {
 		// TODO Add logic to filter the projects which in progresss
-		String[] limitKeys = {ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_STATUS};
+		String[] limitKeys = {ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER, 
+				ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_CUSTOMER};
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		Map<String, Object> result = dao.list(query, DBBean.PROJECT);
 		
 		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
-		List<String> pmIds = new ArrayList<String>();
+		List<String> pmIds = new ArrayList<String>(); 
+		List<String> cIds = new ArrayList<String>();
 		for(Map<String, Object> p : resultList){
-			pmIds.add((String)p.get(ProjectBean.PROJECT_MANAGER));
-			pmIds.add((String)p.get(ProjectBean.PROJECT_CUSTOMER));
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
+			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			if (!ApiUtil.isEmpty(pmid)){
+				pmIds.add(pmid);
+			}
+			if (!ApiUtil.isEmpty(cid)){
+				cIds.add(cid);
+			}
 		}
 		Map<String, Object> pmQuery = new HashMap<String, Object>();
 		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pmIds));
 		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME, UserBean.DEPARTMENT});
-		Map<String, Object> pms = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
+		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
+		
+		Map<String, Object> cusQuery = new HashMap<String, Object>();
+		cusQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, cIds));
+		cusQuery.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
+		Map<String, Object> cusData = dao.listToOneMapAndIdAsKey(cusQuery, DBBean.USER);
 		
 		for (Map<String, Object> p : resultList){
 			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
-			Map<String, Object> pmInfo = (Map<String, Object>) pms.get(pmid);
-			p.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
-			p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
+			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmid);
+			if(ApiUtil.isEmpty(pmInfo)){
+				p.put(ProjectBean.PROJECT_MANAGER, "N/A");
+				p.put(UserBean.DEPARTMENT, "N/A");
+			}else{
+				p.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+				p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
+			}
+			
 			
 			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
-			Map<String, Object> customerInfo = (Map<String, Object>) pms.get(customerId);
-			p.put(ProjectBean.PROJECT_CUSTOMER, pmInfo.get(UserBean.USER_NAME));
+			Map<String, Object> customerInfo = (Map<String, Object>) cusData.get(customerId);
+			if(ApiUtil.isEmpty(pmInfo)){
+				p.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
+			}else{
+				p.put(ProjectBean.PROJECT_CUSTOMER, pmInfo.get(UserBean.USER_NAME));
+			}
+			
 		}
 		
 		return result;
