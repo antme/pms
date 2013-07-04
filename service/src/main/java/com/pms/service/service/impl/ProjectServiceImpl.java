@@ -135,16 +135,22 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		List<String> pmIds = new ArrayList<String>();
 		for(Map<String, Object> p : resultList){
 			pmIds.add((String)p.get(ProjectBean.PROJECT_MANAGER));
+			pmIds.add((String)p.get(ProjectBean.PROJECT_CUSTOMER));
 		}
 		Map<String, Object> pmQuery = new HashMap<String, Object>();
 		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pmIds));
-		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME});
+		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME, UserBean.DEPARTMENT});
 		Map<String, Object> pms = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
 		
 		for (Map<String, Object> p : resultList){
 			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
 			Map<String, Object> pmInfo = (Map<String, Object>) pms.get(pmid);
 			p.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+			p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
+			
+			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			Map<String, Object> customerInfo = (Map<String, Object>) pms.get(customerId);
+			p.put(ProjectBean.PROJECT_CUSTOMER, pmInfo.get(UserBean.USER_NAME));
 		}
 		
 		return result;

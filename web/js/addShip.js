@@ -3,10 +3,8 @@ var model, eqDataSource, crudServiceBaseUrl = "../service";
 var ship = kendo.data.Model.define( {
     id: "_id",
     fields: {
-    	type: {},
     	shipCode: {},
     	applicationDepartment: {},
-    	warehouse: {},
     	salesContractId: {},
     	contractCode: {},
     	contractType: {},
@@ -69,36 +67,42 @@ var listDataSource = new kendo.data.DataSource({
 
 $(document).ready(function() {
 	
-	var dropdownlist = $("#type").kendoDropDownList({
-        dataTextField: "text",
-        dataValueField: "value",
-        optionLabel : "选择发货类型...",
-        dataSource: shipTypeItems,
+	var project = $("#project").kendoComboBox({
+        placeholder: "Select project",
+        dataTextField: "projectName",
+        dataValueField: "_id",
+        filter: "contains",
+        suggest: true,
+        dataSource: new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "../service/project/listforselect",
+                    dataType: "jsonp",
+    	            data: {
+    	            	pageSize: 0
+    	            }
+                }
+            },
+            schema: {
+            	total: "total",
+            	data: "data"
+            }
+        }),
         change: function(e) {
-        	salesContract.value(null);
-        	salesContract.dataSource.fetch(function(){
-        		var data = this.data();
-        		if (data.length > 0) {
-        			salesContract.readonly(false);
-				}
-        	});
+        	var dataItem = this.dataItem();
+        	if (dataItem) {
+        		model.set("projectName", dataItem.projectName);
+        		model.set("customer", dataItem.customer);
+        		model.set("applicationDepartment", dataItem.customer);
+        		
+        		salesContract.value(null);
+	        	inProjectId = this.value();
+	        	salesContract.dataSource.read();
+	        	salesContract.readonly(false);
+        	}
         }
-    }).data("kendoDropDownList");
-	
-	$("#applicationDepartment").kendoDropDownList({
-        dataTextField: "text",
-        dataValueField: "text",
-        optionLabel : "选择申请部门...",
-        dataSource: departmentItems
-    });
-	
-	$("#deliveryRequirements").kendoDropDownList({
-        dataTextField: "text",
-        dataValueField: "text",
-        optionLabel : "选择货运要求...",
-        dataSource: deliveryRequirementsItems
-    });
-	
+    }).data("kendoComboBox");
+
 	var salesContract = $("#salesContract").kendoComboBox({
 		autoBind: false,
         placeholder: "销售合同编号",
@@ -109,11 +113,11 @@ $(document).ready(function() {
         dataSource: new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: crudServiceBaseUrl + "/purcontract/repository/select_sc_forship",
+                    url: crudServiceBaseUrl + "/sc/listbyproject",
                     dataType: "jsonp",
     	            data: {
-    	            	type: function() {
-                            return dropdownlist.value();
+    	            	projectId: function() {
+                            return project.value();
                         }
     	            }
                 }
@@ -126,13 +130,8 @@ $(document).ready(function() {
         change: function(e) {
         	var dataItem = this.dataItem();
         	if (dataItem) {
-        		model.set("projectId", dataItem.projectId);
-            	model.set("projectName", dataItem.projectName);
-        		model.set("customer", dataItem.customerName);
             	model.set("contractCode", dataItem.contractCode);
             	model.set("contractType", dataItem.contractType);
-            	
-            	var salesContractId = this.value();
             	
             	eqDataSource = new kendo.data.DataSource({
             	    transport: {
@@ -140,9 +139,8 @@ $(document).ready(function() {
             	            url: crudServiceBaseUrl + "/ship/eqlist",
             	            dataType: "jsonp",
             	            data: {
-            	            	salesContractId: salesContractId,
-            	            	type: function() {
-                                    return dropdownlist.value();
+            	            	salesContractId: function() {
+                                    return salesContract.value();
                                 }
             	            }
             	        }
@@ -163,6 +161,13 @@ $(document).ready(function() {
         }
     }).data("kendoComboBox");
 	salesContract.readonly();
+	
+	$("#deliveryRequirements").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "text",
+        optionLabel : "选择货运要求...",
+        dataSource: deliveryRequirementsItems
+    });
 	
 	$("#equipments-grid").kendoGrid({
 	    toolbar: [ { name: "cancel", text: "撤销编辑" } ],
