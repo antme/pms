@@ -21,9 +21,6 @@ var subModel = kendo.data.Model.define({
         eqcostUnit: {
         	editable : false
         },
-        eqcostBrand: {
-        	editable : false
-        },
         eqcostBasePrice: {
         	editable : false
         },
@@ -46,7 +43,15 @@ var subModel = kendo.data.Model.define({
            },
            defaultValue:0
        },
-       pbSubmitDate:{}
+       eqcostCategory: {
+       		editable : false
+       },       
+       pbComment:{
+    	   editable : false
+       },
+       paComment:{
+    	   editable : false
+       }
 	}
 });
 var myModel = kendo.data.Model.define({
@@ -79,7 +84,8 @@ $(document).ready(function () {
 		dataSource: {
 			schema: {
 				model: subModel
-			}			
+			},
+			change: dataBound
 		},
 	    columns: [
 			{ field: "eqcostNo", title: "序号"},
@@ -87,11 +93,13 @@ $(document).ready(function () {
 			{ field: "eqcostProductName", title: "产品名称" },
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
-			{ field: "paCount", title: "调拨数量", attributes: { "style": "color:red"}},
+			{ field: "paCount", title: "本次申请数量", attributes: { "style": "color:red"}},
+			{ field: "pbLeftCount", title: "可申请数量"},
 			{ field: "pbTotalCount", title: "备货数量"},
 			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostCategory", title: "类别" },
-			{ field: "eqcostMemo", title: "备注" }
+			{ field: "eqcostMemo", title: "备注1" },
+			{ field: "pbComment", title: "备注2" }
 	  	],	 
 	  	editable:true
 	});
@@ -119,6 +127,26 @@ $(document).ready(function () {
 	
 });
 
+function dataBound(e) {
+	var data = $("#subGrid").data("kendoGrid").dataSource.data();
+	var totalRequestCount=0;
+	var totalRequestMoney=0;
+	var totalCount = 0;
+	var totalMoney=0;
+	for (i = 0; i < data.length; i++) {
+		var item = data[i];
+		if (!item.paCount) {item.paCount = 0;}
+		if (!item.pbLeftCount) {item.pbLeftCount = 0;}
+		if (!item.pbTotalCount) {item.pbTotalCount = 0;}
+		if (!item.eqcostBasePrice) {item.eqcostBasePrice = 0;}
+		// 检测总的申请数量
+		if(item.paCount > item.pbLeftCount){
+			alert("最大数量为" + item.pbLeftCount);
+			item.paCount=item.pbLeftCount;
+		}
+	}
+}
+
 function saveSuccess(){
 	loadPage("purchaseAllotManage");
 }
@@ -129,7 +157,6 @@ function editSuccess(e){
 		$("#form-container-button button").attr("disabled","disabled");
 	}
 	currentObj = new myModel(e);
-	currentObj.set("pbDepartment", kendo.stringify(currentObj.pbDepartment));
 	kendo.bind($("#form-container"), currentObj);	
 }
 

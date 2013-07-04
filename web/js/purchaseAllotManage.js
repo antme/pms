@@ -49,7 +49,8 @@ $(document).ready(function () {
 	    dataSource: listDatasource,
 	    pageable: true,
 	    selectable : "row",
-	    height: "400px",
+	    //height: "400px",
+	    sortable : true,
 	    columns: [
 	        { 
 	        	field: "paCode", 
@@ -58,6 +59,7 @@ $(document).ready(function () {
 					return '<a  onclick="openPurchaseAllotViewWindow(\'' + dataItem._id + '\');">' + dataItem.paCode + '</a>';
 				}
 	        },
+	        { field: "pbCode", title:"备货编号" },
 	        { 
 	        	field: "contractCode", 
 	        	title:"销售合同编号",

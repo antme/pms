@@ -46,10 +46,15 @@ public class PurchaseController extends AbstractController {
     public void submitBack(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.submitBack(parserJsonParameters(request,  false)), request, response);
     }
+
+    @RequestMapping("/back/approve")
+    public void approvetBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.approveBack(parserJsonParameters(request,  false)), request, response);
+    }
     
     @RequestMapping("/back/reject")
     public void rejectBack(HttpServletRequest request, HttpServletResponse response) {
-    	//responseWithData(purchaseService.rejectAllot(parserJsonParameters(request,  false)), request, response);
+    	responseWithData(purchaseService.rejectBack(parserJsonParameters(request,  false)), request, response);
     }
  
     @RequestMapping("/back/pending")

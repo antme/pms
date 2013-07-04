@@ -15,13 +15,7 @@ var subModel = kendo.data.Model.define({
         eqcostProductType: {
         	editable : false
         },
-        eqcostRealAmount: {
-        	editable : false
-        },
         eqcostUnit: {
-        	editable : false
-        },
-        eqcostBrand: {
         	editable : false
         },
         eqcostBasePrice: {
@@ -33,7 +27,15 @@ var subModel = kendo.data.Model.define({
         eqcostLeftAmount: {
         	editable : false
         },
-        eqcostRealAmount:{type: "number"},
+        eqcostRealAmount: {
+        	editable : false
+        },
+        eqcostLeftAmount: {
+        	editable : false
+        },
+        eqcostCategory: {
+        	editable : false
+        },
         pbTotalCount: {
         	type: "number",
         	 validation: {
@@ -107,9 +109,11 @@ $(document).ready(function () {
 			{ field: "eqcostRealAmount", title: "成本中总数"},
 			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostCategory", title: "类别" },
-			{ field: "eqcostMemo", title: "备注" }
-	  	],	 
-	  	editable:true
+			{ field: "eqcostMemo", title: "备注1" },
+			{ field: "pbComment", title: "备注2" }
+	  	],
+	  	editable:true,
+	  	
 	});
 
 	$("#searchfor").kendoDropDownList({
@@ -212,11 +216,15 @@ function editSuccess(e){
 	if(!e) return;
 	if(e.pbStatus =="已提交") {
 		$("#form-container :input").attr("disabled","disabled");
-		$("#form-container-button button").attr("disabled","disabled");
+		$("#form-container-button button").hide();
+	}else if(e.pbStatus =="已批准") {
+		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container-button button").hide();
+	}else if(e.pbStatus =="已拒绝") {
+		$("#form-container :input").attr("disabled","disabled");
 	}
 	currentObj = new myModel(e);
 	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
-	currentObj.set("pbDepartment", kendo.stringify(currentObj.pbDepartment));
 	kendo.bind($("#form-container"), currentObj);			
 }
 
