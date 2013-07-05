@@ -120,7 +120,7 @@ function arrivalNotice() {
 			var param = {
 					"foreignKey" : row._id,
 					"foreignCode" : row.purchaseOrderCode,
-					"shipType" : "0" // 供应商直发
+					"shipType" : "直发现场" // 供应商直发
 				};
 			postAjaxRequest("/service/arrivalNotice/create", param,
 						callback);

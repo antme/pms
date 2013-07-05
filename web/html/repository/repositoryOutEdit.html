@@ -1,37 +1,84 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script type="text/javascript" src="js/repository/repositoryEditOut.js"></script>
+<script type="text/javascript" src="js/repository/repositoryEdit.js"></script>
 
 <style>
-label{
-    margin-left: 25px;
+label {
+	margin-left: 25px;
+}
+
+.k-edit-form-container {
+	width: 100%;
+}
+
+.k-edit-label {
+	padding-right: 1%;
+	width: 10%;
+}
+
+.k-edit-field {
+	width: 20%;
 }
 </style>
 <div id="purchaserepository-edit" class="k-content">
+	<h3>直发入库申请单</h3>
 	<div class="k-edit-field " id="purchaserepository-div"
 		style="width: 1200px;">
-		<input type="text" name="purchasecontractselect" style="width: 500px;"
-			id="purchasecontractselect" required="required">
-		  <button onclick="selectContracts();">确定</button>
+		项目： <input type="text" name="purchasecontractselect"
+			style="width: 500px;" id="purchasecontractselect" required="required">
+		供应商： <input type="text" id="supplierName" required="required" />
+
+		<button class="k-button" onclick="selectContracts();" id="select">确定</button>
 	</div>
 
+	<hr>
 
 
 	<div id="purchaserepository-edit-item">
 
-        <div style="margin-top:20px;margin-bottom:10px;">
-            <label>入库人:</label> <input type="text" data-bind="value: inOperator" id="inOperator" />
-            <label>入库日期:</label> <input type="text" data-role="datepicker"  data-bind="value: inDate" id="inDate" />
-            <label>需方名称:</label> <input type="text" data-bind="value: recustomer" id="recustomer" />           
-            <label>单据编号:</label> <input type="text" data-bind="value: code" id="code" />
-        </div>
-        <div>
-            <div id="purchaserepository-edit-grid"></div>
-        </div>
-        
-        <div style="margin-top:5px;">
-             <label>备注:</label>
-             <textarea rows="4" cols="120" class="k-textbox  foredit" style="width:300px;" data-bind="value: pbComment" ></textarea>
-        </div>
+		<div style="margin-top: 20px; margin-bottom: 10px;">
+			<div class="k-edit-label">
+				<label>入库人:</label>
+			</div>
+			<div class="k-edit-field">
+				<input type="text" data-bind="value: inOperator" id="inOperator" />
+			</div>
+			<div class="k-edit-label">
+				<label>入库日期:</label>
+			</div>
+			<div class="k-edit-field">
+				<input type="text" data-role="datepicker" data-bind="value: inDate"
+					id="inDate" />
+			</div>
+			<div class="k-edit-label">
+				<label>需方名称:</label>
+			</div>
+			<div class="k-edit-field">
+				<input type="text" data-bind="value: recustomer" id="recustomer" />
+			</div>
+			<div class="k-edit-label">
+				<label>单据编号:</label>
+			</div>
+			<div class="k-edit-field">
+				<input type="text" data-bind="value: code" id="code" />
+			</div>
+
+			<div class="k-edit-label">
+				<label for="inType">入库方式</label>
+			</div>
+			<div class="k-edit-field">
+				<input type="text" class="k-input k-textbox" name="inType" required
+					data-bind="value:inType" />
+			</div>
+		</div>
+		<div>
+			<div id="purchaserepository-edit-grid"></div>
+		</div>
+
+		<div style="margin-top: 5px;">
+			<label>备注:</label>
+			<textarea rows="4" cols="120" class="k-textbox  foredit"
+				style="width: 300px;" data-bind="value: pbComment"></textarea>
+		</div>
 
 
 		<div>

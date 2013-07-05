@@ -25,4 +25,8 @@ public class ResponseCodeConstants {
     public static final String  ARRIVAL_NOTICE_ALREADY_EXIST = "arrival_notice_already_exist";
     
     public static final String  EQCOST_APPLY_ERROR =  "eqcost_apply_error";
+    
+    public static final String  PURCHASE_ORDER_UNFINISHED = "purchase_order_unfinished";
+    
+    public static final String  JUST_DIRECT = "just_direct";
 }

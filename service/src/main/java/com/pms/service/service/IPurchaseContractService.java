@@ -9,7 +9,7 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters);
     
-    public Map<String, Object> listProjectsFromApproveContractsForRepositorySelect();
+    public Map<String, Object> listProjectsFromApproveContractsForRepositorySelect(Map<String, Object> parameters);
             
     public Map<String, Object> listContractsByProjectAndSupplier(Map<String, Object> params);
     
@@ -99,7 +99,7 @@ public interface IPurchaseContractService {
     
     public void destroyGetInvoice(Map<String, Object> params);
 
-    public Map<String, Object> listProjectsFromRepositoryIn(Map<String, Object> parserJsonParameters);
+    public Map<String, Object> listProjectsForRepositoryDirect(Map<String, Object> parserJsonParameters);
    
 
 }

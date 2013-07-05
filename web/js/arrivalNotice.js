@@ -37,25 +37,14 @@ $(document).ready(function () {
         selectable: "multiple",
         columns: [
             {
-            	field: "shipType", title:"发货类型",
-            	template:function(dataItem) {
-					var name = "未知";
-					if (dataItem.shipType == 0){
-						name = "供应商直发";
-					} else if (dataItem.shipType == 1){
-						name = "调拨非直发";
-					} else if (dataItem.shipType == 2){
-						name = "采购非直发";
-					}
-					return name;
-				}
+            	field: "shipType", title:"到货类型"
             },
             { field: "arrivalDate", title:"到货日期" },
             {
             	field: "foreignCode",
             	title:"相关编号",
 				template : function(dataItem) {
-					if (dataItem.shipType == 1) {
+					if (dataItem.shipType == "调拨到货") {
 						return '<a onclick="openPurchaseAllotViewWindow(\'' + dataItem.foreignKey + '\');">' + dataItem.foreignCode + '</a>';
 					} else {
 						return '<a onclick="openPurchaseOrderViewWindow(\'' + dataItem.foreignKey + '\');">' + dataItem.foreignCode + '</a>';
