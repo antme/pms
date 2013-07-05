@@ -215,7 +215,7 @@ public abstract class AbstractService {
     
     protected boolean isInDepartment(String depart) {
     	Map<String,Object> query = new HashMap<String,Object>();
-    	query.put(UserBean.DEPARTMENT, new DBQuery(DBQueryOpertion.IN, depart));
+    	query.put(UserBean.DEPARTMENT, depart);
     	query.put(ApiConstants.MONGO_ID, ApiThreadLocal.getCurrentUserId());
         return dao.exist(query, DBBean.USER);
     }

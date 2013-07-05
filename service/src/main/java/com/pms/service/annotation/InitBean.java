@@ -98,11 +98,13 @@ public class InitBean {
         	RoleValidConstants.SHIP_CONFIRM,
         	RoleValidConstants.BORROWING_MANAGEMENT_PROCESS,
         	RoleValidConstants.PURCHASE_ALLOCATE_PROCESS,
-        	RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS
+        	RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS,
+        	RoleValidConstants.PURCHASE_ALLOCATE_DONE
         });
         groupRoles.put(GroupBean.DEPARTMENT_MANAGER_VALUE, new String[] {
         	RoleValidConstants.SHIP_MANAGEMENT_PROCESS,
-            RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT
+            RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT,
+            RoleValidConstants.PURCHASE_BACK_PROCESS
         });
         groupRoles.put(GroupBean.PURCHASE_VALUE, new String[] {
         	RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, 

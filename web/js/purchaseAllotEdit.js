@@ -175,7 +175,7 @@ function validateModel(){
 	}
 	console.log(eqTotalCount);
 	if(eqTotalCount == 0){
-		alert("请输入申请数量");
+		alert("请审核设备清单");
 		return false;
 	}
 	return true;

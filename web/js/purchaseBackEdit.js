@@ -215,12 +215,10 @@ function editSuccess(e){
 	if(!e) return;
 	if(e.pbStatus =="已提交") {
 		$("#form-container :input").attr("disabled","disabled");
-		$("#form-container-button button").hide();
 	}else if(e.pbStatus =="已批准") {
 		$("#form-container :input").attr("disabled","disabled");
-		$("#form-container-button button").hide();
 	}else if(e.pbStatus =="已拒绝") {
-		$("#form-container :input").attr("disabled","disabled");
+		//nothing
 	}
 	currentObj = new myModel(e);
 	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
@@ -241,7 +239,7 @@ function validateModel(){
 		eqTotalCount+=eqList[i].pbTotalCount;
 	}
 	if(eqTotalCount== 0){
-		alert("请选择设备清单");
+		alert("请审核设备清单");
 		return false;
 	}
 	return true;

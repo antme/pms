@@ -18,18 +18,6 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>调拨编号：<span data-bind="text: paCode" ></span></td>
-					<td>调出货架编号: <span data-bind="text: paShelfCode"></span></td>
-					<td>调拨状态：<span data-bind="text: paStatus" ></span></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>提交时间：<span data-bind="text: paSubmitDate" ></span></td>
-					<td>批准时间：<span data-bind="text: paApproveDate" ></span></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
 					<td colspan="2">
 						<label>特殊要求:</label><br>
 						<label><input disabled="disabled" type="checkbox" value="0" data-bind="checked: pbSpecialRequireRadio"/>1、是否要满足ROHS/REACH/UL/CCC要求？</label><br>   
@@ -41,6 +29,18 @@
 						<textarea disabled="disabled" rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: pbSpecialRequire" ></textarea>
 					</td>
 				</tr>
+				<tr>
+					<td>调拨编号：<span data-bind="text: paCode" ></span></td>
+					<td>调出货架编号: <span data-bind="text: paShelfCode"></span></td>
+					<td>调拨状态：<span data-bind="text: paStatus" ></span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>提交时间：<span data-bind="text: paSubmitDate" ></span></td>
+					<td>批准时间：<span data-bind="text: paApproveDate" ></span></td>
+					<td></td>
+					<td></td>
+				</tr>
 			</table>
             <div>
 				<h4>成本设备清单</h4>
@@ -51,12 +51,13 @@
             	<label>备注:</label>
             	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: paComment" ></textarea>
             </div>
-            <br>
-            <div id="form-container-button">
-            	<button access="purchase_allocate_process" class="k-button access" value="approve">批准</button>
-            	<button access="purchase_allocate_process" class="k-button access" value="reject">拒绝</button>
-            	<button class="k-button" value="cancel">取消</button>
-            </div>
 		</div>
+        <br>
+        <div id="form-container-button">
+        	<button access="purchase_allocate_process" class="k-button access" value="approve">批准</button>
+        	<button access="purchase_allocate_process" class="k-button access" value="reject">拒绝</button>
+        	<button access="purchase_allocate_done" class="k-button access" value="done">完成</button>
+        	<button class="k-button" value="cancel">取消</button>
+        </div>
 </div>		
 </body>

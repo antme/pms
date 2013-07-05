@@ -32,6 +32,7 @@ public class PurchaseBack {
 	
 //调拨申请字段	
 	public static final String paCode = "paCode";
+	public static final String paNumber = "paNumber";
 	public static final String paSubmitterId = "paSubmitterId";
 	public static final String paApproverId = "paApproverId";
 	public static final String paCheckerId = "paCheckerId";

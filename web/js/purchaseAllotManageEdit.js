@@ -106,7 +106,7 @@ $(document).ready(function () {
 
 	$("#form-container-button button").click(function(){
 		if(this.value == "cancel") {
-			loadPage("purchaseBack");
+			loadPage("purchaseAllotManage");
 		} else if(confirm("提交表单，确认？")){
 			postAjaxRequest("/service/purchase/allot/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
 		}
@@ -128,9 +128,11 @@ function saveSuccess(){
 	loadPage("purchaseAllotManage");
 }
 function editSucess(e){
-	if(e.paStatus =="已批准" || e.paStatus =="已拒绝") {
-		$("#form-container :input").attr("disabled","disabled");
-		$("#form-container-button button").attr("disabled","disabled");
+	$("#form-container :input").attr("disabled","disabled");
+	if(e.paStatus == "已终审") {
+		$("#form-container-button button[value!='cancel'][value!='done']").hide();
+	}else{
+		$("#form-container-button button[value='done']").hide();
 	}
 	currentObj = new myModel(e);
 	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));

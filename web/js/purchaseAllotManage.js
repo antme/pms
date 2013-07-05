@@ -78,12 +78,19 @@ $(document).ready(function () {
 });
 
 
-function editPA(){
+function processPA(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else {	
+	} else if(row.paStatus == "已提交" || row.paStatus == "已批准"){	
+		loadPage("purchaseAllotManageEdit", { _id : row._id });
+	}
+}
+function donePA(){
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else if(row.paStatus == "已终审"){	
 		loadPage("purchaseAllotManageEdit", { _id : row._id });	
 	}
-
 }
