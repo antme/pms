@@ -64,7 +64,13 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 				params.put(ArrivalNoticeBean.PROJECT_ID, order.get(PurchaseCommonBean.PROJECT_ID));
 				params.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
 				params.put(ArrivalNoticeBean.SHIP_TYPE, order.get("eqcostDeliveryType"));
-				params.put(ArrivalNoticeBean.EQ_LIST, order.get(SalesContractBean.SC_EQ_LIST));
+				// 入库
+				if (type == null) {
+					params.put(ArrivalNoticeBean.EQ_LIST, params.get(SalesContractBean.SC_EQ_LIST));
+				} else {
+					params.put(ArrivalNoticeBean.EQ_LIST, order.get(SalesContractBean.SC_EQ_LIST));
+				}
+				
 			}
 		}
 		
