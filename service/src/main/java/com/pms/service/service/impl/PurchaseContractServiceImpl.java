@@ -71,15 +71,22 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
         query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.projectId", "supplier", "eqcostList.logisticsType" });
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.projectId", "supplier" });
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
-        
-        List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
-        List<String> projectIds = new ArrayList<String>();
-        for (Map<String, Object> data : list) {
-            List<Map<String, Object>> pList = (List<Map<String, Object>>) data.get("eqcostList");
-            for (Map<String, Object> p : pList) {
-                projectIds.add(p.get("projectId").toString());
+
+        List<Map<String, Object>> contractList = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
+        Set<String> projectIds = new HashSet<String>();
+        Map<String, Set<String>> projectSupplierMap = new HashMap<String, Set<String>>();
+
+        for (Map<String, Object> contract : contractList) {
+            List<Map<String, Object>> eqCostList = (List<Map<String, Object>>) contract.get("eqcostList");
+            for (Map<String, Object> p : eqCostList) {
+                String projectId = p.get("projectId").toString();
+                projectIds.add(projectId);
+                if (projectSupplierMap.get(projectId) == null) {
+                    projectSupplierMap.put(projectId, new HashSet<String>());
+                }
+                projectSupplierMap.get(projectId).add(contract.get("supplier").toString());
             }
         }
 
@@ -88,34 +95,29 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         projectQuery.put(ApiConstants.LIMIT_KEYS, ProjectBean.PROJECT_NAME);
 
         Map<String, Object> projects = this.dao.list(projectQuery, DBBean.PROJECT);
+
+        List<Map<String, Object>> projectList = (List<Map<String, Object>>) projects.get(ApiConstants.RESULTS_DATA);
+
+        for (Map<String, Object> project : projectList) {
+            String id = project.get(ApiConstants.MONGO_ID).toString();
+            Set<String> suppliers = projectSupplierMap.get(id);
+            List<Map<String, Object>> suppliersMap = new ArrayList<Map<String, Object>>();
+            for (String supplierId : suppliers) {
+                Map<String, Object> supp = new HashMap<String, Object>();
+                supp.put(ApiConstants.MONGO_ID, supplierId);
+                suppliersMap.add(supp);
+            }
+
+            Map<String, Object> supplierMap = new HashMap<String, Object>();
+            supplierMap.put(ApiConstants.RESULTS_DATA, suppliersMap);
+            supplierService.mergeSupplierInfo(supplierMap, ApiConstants.MONGO_ID, new String[] { "supplierName" });
+
+            project.put("suppliers", supplierMap.get(ApiConstants.RESULTS_DATA));
+        }
+
         return projects;
     }
 
-    public Map<String, Object> listSuppliersFromContractsByProjectId(Map<String, Object> contract) {
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "supplier" });
-        query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
-        query.put("eqcostList.projectId", contract.get("projectId"));
-
-        Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
-
-        List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
-
-        List<Object> supplierIds = new ArrayList<Object>();
-        for (Map<String, Object> data : list) {
-            supplierIds.add(data.get("supplier"));
-        }
-
-        Map<String, Object> supplierQuery = new HashMap<String, Object>();
-        supplierQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, supplierIds));
-        supplierQuery.put(ApiConstants.LIMIT_KEYS, "supplierName");
-
-        Map<String, Object> suppliers = this.dao.list(supplierQuery, DBBean.SUPPLIER);
-
-        return suppliers;
-
-    }
 
     public Map<String, Object> listSalesContractsForShipSelect(Map<String, Object> params) {
 

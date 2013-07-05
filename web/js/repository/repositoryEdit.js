@@ -13,23 +13,24 @@ var model = kendo.data.Model.define({
 });
 
 
+var projectDataSource = new kendo.data.DataSource({
+	transport : {
+		read : {
+			dataType : "jsonp",
+			url : "/service/purcontract/repository/contract/list",
+		}
+	},
+	schema : {
+		total: "total", 
+		data: "data"
+	}
+});
 $(document).ready(function() {
 	$("#purchasecontractselect").kendoDropDownList({
 			dataTextField : "projectName",
 			dataValueField : "_id",
 			placeholder : "选择项目...",
-			dataSource : {
-				transport : {
-					read : {
-						dataType : "jsonp",
-						url : "/service/purcontract/repository/contract/list",
-					}
-				},
-				schema : {
-					total: "total", 
-					data: "data"
-				}		
-			},
+			dataSource : projectDataSource,
 			change : function(e) {
 				updateSupplier();
 			},
@@ -58,27 +59,20 @@ $(document).ready(function() {
 
 
 function updateSupplier(){
+	var supplier = undefined;
+	var data = projectDataSource.data();
+	for(i=0; i<data.length; i++){
+		if(data[i]._id == $("#purchasecontractselect").data("kendoDropDownList").value()){
+			supplier = data[i].suppliers;
+			break;
+		}
+	}
 	$("#supplierName").kendoDropDownList({
 		dataTextField : "supplierName",
 		dataValueField : "_id",
 		dataSource :{
-			transport : {
-				read : {
-					dataType : "jsonp",
-					url : "/service/purcontract/project/contract/suppliers/list",
-				},
+			data : supplier
 			
-				parameterMap : function(options, operation) {
-					return {
-						// 解析成json_p模式
-						json_p : '{"projectId" : ' + $("#purchasecontractselect").data("kendoDropDownList").value() + '}'
-					}
-				}
-			},
-			schema : {
-				total: "total",
-				data: "data"
-			}
 		}
 	});
 }
@@ -198,19 +192,32 @@ function edit(data) {
 			dataSource : itemDataSource,
 			columns : [ {
 				field : "eqcostNo",
-				title : "货品编号",
+				title : "序号",
 				width : 80
+			},{
+				field : "eqcostProductType",
+				title : "规格型号"
+
 			}, {
 				field : "eqcostProductName",
 				title : "货品名",
 				width : 80
+			},{
+				field : "eqcostBrand",
+				title : "品牌"
 			}, {
 				field : "eqcostProductType",
-				title : "货品类别",
-				width : 80
+				title : "单位"
+
+			},{
+				field : "eqcostProductUnitPrice",
+				title : "采购单价"
 			}, {
 				field : "eqcostApplyAmount",
-				title : "本次入库数量"
+				title : "入库数量"
+			}, {
+				field : "requestedTotalMoney",
+				title : "金额"
 			}],
 			scrollable : true,
 			editable : true,
