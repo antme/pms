@@ -80,8 +80,10 @@
         </div>
 
 		<div>
-			<button onclick="save();">保存</button>
-			<button onclick="save('入库中');">入库申请</button>
+			<button access="repository_management" class="access"  onclick="save();">保存</button>
+			<button access="repository_management" class="access" onclick="save('入库中');">入库申请</button>
+			<button access="repository_management_process" class="access"  onclick="confirmRepository();">确认</button>
+			<button onclick="cancel();">取消</button>
 		</div>
 	</div>
 

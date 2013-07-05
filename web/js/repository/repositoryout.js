@@ -29,7 +29,7 @@ $(document).ready(function() {
 			selectable : "row",
 			width : "1000px",
 			columns : [ {
-				field : "code",
+				field : "repositoryCode",
 				title : "申请编号"
 			}, {
 				field : "recustomer",
@@ -68,7 +68,8 @@ function editRepo() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
 	loadPage("html/repository/repositoryOutEdit.html", {
-		_id : row._id
+		_id : row._id,
+		type : "out"
 	});
 }
 
@@ -79,7 +80,6 @@ function confirmRepository(){
 		if(row.status == "已入库"){
 			alert("此申请已入库，不需要再次入库");
 		}else{
-
 			var options = {
 				width : 500,
 				height : 300,

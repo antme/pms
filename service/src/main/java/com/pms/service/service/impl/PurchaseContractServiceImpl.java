@@ -70,8 +70,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> listProjectsFromApproveContractsForRepositorySelect(Map<String, Object> parameters) {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
-        if (parameters.get("eqcostDeliveryType") != null) {
-            query.put("eqcostDeliveryType", parameters.get("eqcostDeliveryType"));
+        if (parameters.get("type") != null && parameters.get("type") .toString().equalsIgnoreCase("out")) {
+            query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
         } else {
             query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
         }
@@ -236,7 +236,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Object projectId = params.get("projectId");
         query.put("eqcostList.projectId", projectId);
         query.put("supplier", params.get("supplier"));
-        query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
+        
+        if (params.get("type") != null && params.get("type") .toString().equalsIgnoreCase("out")) {
+            query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
+        }else{
+            query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
+        }
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
 
         Map<String, Object> results = this.dao.list(query, DBBean.PURCHASE_CONTRACT);
@@ -257,7 +262,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> requery = new HashMap<String, Object>();
         requery.put(SalesContractBean.SC_PROJECT_ID, projectId);
         requery.put("supplierId", params.get("supplier"));
-        requery.put("type", "in");
+        requery.put("type", params.get("type"));
         Map<String, Integer> eqCountMap = backService.countEqByKey(requery, DBBean.REPOSITORY, "eqcostApplyAmount", null);
 
         Map<String, Object> lresult = new HashMap<String, Object>();
@@ -798,31 +803,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return results;
     }
 
-    public Map<String, Object> listRepositoryInByProjectId(Map<String, Object> params) {
-
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put("eqcostList.projectId", params.get(PurchaseRequest.PROJECT_ID));
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList" });
-        query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
-
-
-        List<Object> contractList = this.dao.listLimitKeyValues(query, DBBean.PURCHASE_CONTRACT);
-
-        Map<String, Object> rep = new HashMap<String, Object>();
-        if(contractList !=null && !contractList.isEmpty()){
-            rep.put(ApiConstants.RESULTS_DATA, scs.mergeLoadedEqList(contractList.get(0)));
-        }else{
-            rep.put(ApiConstants.RESULTS_DATA, new ArrayList<>());
-        }
-        return rep;
-    }
-
-    @Override
-    public Map<String, Object> addRepositoryRequest(Map<String, Object> parserListJsonParameters) {
-        return updatePurchase(parserListJsonParameters, DBBean.REPOSITORY);
-
-    }
-
     @Override
     public Map<String, Object> getRepositoryRequest(Map<String, Object> parameters) {
         Map<String, Object>  result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.REPOSITORY);
@@ -847,6 +827,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             total += ApiUtil.getDouble(eq, "eqcostApplyAmount", 0);
             
         }
+        if(parameters.get(ApiConstants.MONGO_ID) == null){
+            parameters.put("repositoryCode", generateCode("RKSQ", DBBean.REPOSITORY));
+        }
+        
         parameters.put("totalIn", (int)total);
         parameters.put(SalesContractBean.SC_EQ_LIST, mergeSavedEqList);
         

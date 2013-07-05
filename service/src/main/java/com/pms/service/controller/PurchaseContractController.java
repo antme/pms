@@ -204,7 +204,7 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/repository/add")
     @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
     public void addRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
-        pService.addRepositoryRequest(parserJsonParameters(request, false));
+        pService.updateRepositoryRequest(parserJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
     
@@ -250,12 +250,7 @@ public class PurchaseContractController extends AbstractController {
     public void listProjectsForRepositoryDirect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listProjectsForRepositoryDirect(parserJsonParameters(request, false)), request, response);
     }
-    
-    @RequestMapping("/repository/list/byproject")
-    public void listRepositoryByProjectId(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listRepositoryInByProjectId(parserJsonParameters(request, false)), request, response);
-    }
-    
+
     @RequestMapping("/repository/cancel")
     public void cancelRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.cancelRepositoryRequest(parserJsonParameters(request, false)), request, response);
