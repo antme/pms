@@ -93,7 +93,7 @@ $(document).ready(function() {
         	if (dataItem) {
         		model.set("projectName", dataItem.projectName);
         		model.set("customer", dataItem.customer);
-        		model.set("applicationDepartment", dataItem.customer);
+        		model.set("applicationDepartment", dataItem.department);
         		
         		salesContract.value(null);
 	        	inProjectId = this.value();

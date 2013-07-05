@@ -12,12 +12,8 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
-import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
@@ -230,9 +226,11 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	
 	private void createArrivalNotice(Map<String, Object> params) {
 		Map<String,Object> noticeParams = new HashMap<String,Object>();
-		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, ArrivalNoticeBean.SHIP_TYPE_1);
+		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, ArrivalNoticeBean.SHIP_TYPE_0);
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, params.get(ApiConstants.MONGO_ID));
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, params.get(PurchaseBack.paCode));
+		noticeParams.put(ArrivalNoticeBean.PROJECT_ID, params.get(PurchaseCommonBean.PROJECT_ID));
+		noticeParams.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, params.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
 		arrivalNoticeService.create(noticeParams);
 	}
 	
