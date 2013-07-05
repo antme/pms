@@ -10,11 +10,7 @@ public interface IPurchaseContractService {
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters);
     
     public Map<String, Object> listProjectsFromApproveContractsForRepositorySelect();
-    
-    public Map<String, Object> listContractsByProjectId(Map<String, Object> contract);
-    
-    public Map<String, Object> listSuppliersFromContractsByProjectId(Map<String, Object> contract);
-    
+            
     public Map<String, Object> listContractsByProjectAndSupplier(Map<String, Object> params);
     
     public Map<String, Object> listSalesContractsForShipSelect(Map<String, Object> params);  
