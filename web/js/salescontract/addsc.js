@@ -419,9 +419,9 @@ function saveSC(){
 		scm.set("estimateGrossProfit", profit);
 		scm.set("estimateGrossProfitRate", profitRate);
 		scm.set("totalEstimateCost", totalEstimate);
-		console.log(scm);
-//		dataSource_SC.add(scm);
-//		dataSource_SC.sync();
+//		console.log(scm);
+		dataSource_SC.add(scm);
+		dataSource_SC.sync();
 		loadPage("scList");
     }
 };
