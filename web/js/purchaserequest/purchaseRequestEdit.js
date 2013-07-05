@@ -216,7 +216,7 @@ function edit(data) {
 
 							}, {
 								field : "eqcostRealAmount",
-								title : "合同中总数"
+								title : "成本中总数"
 							}, {
 								field : "eqcostBasePrice",
 								title : "成本单价"
@@ -239,9 +239,6 @@ function edit(data) {
 								field : "requestedTotalMoney",
 								title : "成本总价"
 							},{
-								field : "eqcostBrand",
-								title : "品牌"
-							}, {
 								field : "remark",
 								title : "备注"
 							}, {

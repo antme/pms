@@ -69,8 +69,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		Map<String,Object> request = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
 		mergeSalesContract(request);
 		mergeEqcost(request);
-		/*request.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(request.get(SalesContractBean.SC_EQ_LIST)));
-		mergeRestEqCount(request);*/
+		//request.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(request.get(SalesContractBean.SC_EQ_LIST)));
+		mergeRestEqCount(request);
 		return request;
 	}
 
@@ -314,7 +314,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		return map;
 	}
 
-	private void mergeCreatorInfo(List<Map<String,Object>> list){
+	private void mergeCreatorInfo(Map<String,Object> params){
+		List<Map<String,Object>> list = (List<Map<String,Object>>)params.get(ApiConstants.RESULTS_DATA);
 		Set<String> userIds = new HashSet<String>();
 		for(Map<String,Object> re : list){
 			userIds.add((String)re.get(ApiConstants.CREATOR));
@@ -353,8 +354,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		queryKeys.put(ApiConstants.LIMIT, params.get(ApiConstants.LIMIT));
 		queryKeys.put(ApiConstants.LIMIT_START, params.get(ApiConstants.LIMIT_START));
 		
-/*		Map<String,Object> query = new HashMap<String,Object>();
-		if(getCurrentUserId() != null){
+		Map<String,Object> query = new HashMap<String,Object>();
+		if(getCurrentUserId() != null){//self
 			query.put(ApiConstants.CREATOR, getCurrentUserId());
 		}
 		if(isDepotManager()){//库管 初审 结束
@@ -363,14 +364,14 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			sl.add(PurchaseStatus.finalApprove.toString());
 			query.put(PurchaseBack.paStatus, new DBQuery(DBQueryOpertion.IN, sl));
 		}
-		if(isCoo()){//终审
+		if(isCoo()){//coo 终审
 			query.put(PurchaseBack.paStatus, PurchaseStatus.approved.toString());
 		}
-		if(isAdmin()){
+		if(isAdmin()){//admin
 			query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.NOT_NULL));
 		}
-		DBObject exp = DBQueryUtil.buildQueryObject(query, false);*/
-		Map<String,Object> map = dao.list(queryKeys, DBBean.PURCHASE_ALLOCATE);
+		DBObject exp = DBQueryUtil.buildQueryObject(query, false);
+		Map<String,Object> map = dao.list(queryKeys, exp, DBBean.PURCHASE_ALLOCATE);
 		mergeSalesContract(map);
 		return map;		
 	}
@@ -378,9 +379,13 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
 	@Override
 	public void destoryBack(Map<String, Object> params) {
-		List<String> ids = new ArrayList<String>();
-		ids.add(String.valueOf(params.get(ApiConstants.MONGO_ID)));
-		dao.deleteByIds(ids, DBBean.PURCHASE_BACK);
+		Map<String,Object> back = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
+		String dbStatus = (String)back.get(PurchaseBack.pbStatus);
+		if(PurchaseStatus.saved.toString().equals(dbStatus) || PurchaseStatus.rejected.toString().equals(dbStatus)){
+			List<String> ids = new ArrayList<String>();
+			ids.add(String.valueOf(params.get(ApiConstants.MONGO_ID)));
+			dao.deleteByIds(ids, DBBean.PURCHASE_BACK);
+		}
 	}
 
 	/**整合项目合同信息
