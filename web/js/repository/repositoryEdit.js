@@ -212,12 +212,21 @@ function edit(data) {
 			},{
 				field : "eqcostProductUnitPrice",
 				title : "采购单价"
+			},{
+				field : "leftCount",
+				title : "可入库数量"
 			}, {
 				field : "eqcostApplyAmount",
 				title : "入库数量"
 			}, {
 				field : "requestedTotalMoney",
 				title : "金额"
+			}, {
+				field : "salesContractCode",
+				title : "销售合同编号"
+			},{
+				field : "purchaseOrderCode",
+				title : "订单编号"
 			}],
 			scrollable : true,
 			editable : true,

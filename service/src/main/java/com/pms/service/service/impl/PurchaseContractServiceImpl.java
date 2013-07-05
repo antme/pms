@@ -226,7 +226,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return eqResult;
     }
 
-    //非直发 直发入库
+    //非直发入库
     public Map<String, Object> listContractsByProjectAndSupplier(Map<String, Object> params) {
         Map<String, Object> query = new HashMap<String, Object>();
         Object projectId = params.get("projectId");
@@ -250,21 +250,35 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             }
         }
 
+        Map<String, Object> requery = new HashMap<String, Object>();
+        requery.put(SalesContractBean.SC_PROJECT_ID, projectId);
+        requery.put("supplierId", params.get("supplier"));
+        requery.put("type", "in");
+        Map<String, Integer> eqCountMap = backService.countEqByKey(requery, DBBean.REPOSITORY, "eqcostApplyAmount", null);
+
         Map<String, Object> lresult = new HashMap<String, Object>();
         lresult.put("data", scs.mergeLoadedEqList(eqclist));
+
+        List<Map<String, Object>> eqBackMapList = (List<Map<String, Object>>) lresult.get("data");
+        for (Map<String, Object> eqMap : eqBackMapList) {
+            int prCount = 0;
+            if (eqMap.get("eqcostApplyAmount") != null) {
+                prCount = ApiUtil.getInteger(eqMap.get("eqcostApplyAmount"), 0);
+            }
+
+            if (eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID)) != null) {
+                eqMap.put("leftCount", prCount - eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+                eqMap.put("eqcostApplyAmount", prCount - eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+            } else {
+                eqMap.put("leftCount", prCount);
+                eqMap.put("eqcostApplyAmount", prCount);
+            }
+        }
+
         return lresult;
 
     }
 
-    public Map<String, Object> listContractsByProjectId(Map<String, Object> contract) {
-
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
-        query.put("eqcostList.projectId", contract.get("projectId"));
-
-        return this.dao.list(query, DBBean.PURCHASE_CONTRACT);
-
-    }
 
     public List<Map<String, Object>> listApprovedPurchaseContractCosts(String salesContractId) {
 
@@ -840,6 +854,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> approveRepositoryRequest(Map<String, Object> params) {
         
         if (params.get("type") != null && params.get("type").toString().equalsIgnoreCase("in")) {
+            //入库仓库
             return processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_IN_REPOSITORY);
         } else {
             //直发入库
