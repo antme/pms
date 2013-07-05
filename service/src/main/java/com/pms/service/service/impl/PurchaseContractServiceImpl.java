@@ -67,10 +67,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     //非直发入库中选择项目信息，入库到同方自己的仓库的项目
-    public Map<String, Object> listProjectsFromApproveContractsForRepositorySelect() {
+    public Map<String, Object> listProjectsFromApproveContractsForRepositorySelect(Map<String, Object> parameters) {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
-        query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
+        if (parameters.get("eqcostDeliveryType") != null) {
+            query.put("eqcostDeliveryType", parameters.get("eqcostDeliveryType"));
+        } else {
+            query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
+        }
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.projectId", "supplier" });
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
 
@@ -862,7 +866,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
     }
 
-    public Map<String, Object> listProjectsFromRepositoryIn(Map<String, Object> params) {
+    public Map<String, Object> listProjectsForRepositoryDirect(Map<String, Object> params) {
         
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);      

@@ -371,8 +371,6 @@ function saveSC(){
 	var eqCostData = eqCostListDataSource.data();
 	var progressPaymentData = scProgressPaymentDatasource.data();
 	var projectId = scm.get("projectId");
-//	console.log("************"+projectId);
-//	console.log(projectItems.get(projectId).get("projectStatus"));
 	var projectStatus = projectItems.get(projectId).get("projectStatus");
 	var scType = scm.get("contractType");
 	if (scType == null || scType == ""){
@@ -391,7 +389,6 @@ function saveSC(){
 			var itemCate = item.eqcostCategory;
 			var itemTaxType = item.eqcostTaxType;
 			
-//			console.log(i+"********"+itemCate+"***"+itemTaxType);
 			console.log(map.get(itemCate));
 			var savedCateTaxType = map.get(itemCate);
 			if(savedCateTaxType == null){
@@ -419,7 +416,6 @@ function saveSC(){
 		scm.set("estimateGrossProfit", profit);
 		scm.set("estimateGrossProfitRate", profitRate);
 		scm.set("totalEstimateCost", totalEstimate);
-//		console.log(scm);
 		dataSource_SC.add(scm);
 		dataSource_SC.sync();
 		loadPage("scList");
@@ -496,17 +492,19 @@ function moneyOnChange(){
 }
 
 function showTabs(projectStatus){
-//	console.log("showTabs*************projectStatus"+projectStatus);
-	var tabStrip = $("#tabstrip").kendoTabStrip().data("kendoTabStrip");
-	console.log("***tabs"+tabs);
-//	var tabStrip = tabs.data("kendoTabStrip");
+	var tabStrip = $("#tabstrip").data("kendoTabStrip");
+	if(!tabStrip){
+		$("#tabstrip").kendoTabStrip();
+		
+		tabStrip = $("#tabstrip").data("kendoTabStrip");
+	}
 	var tab0 = tabStrip.tabGroup.children("li").eq(0);
 	var tab1 = tabStrip.tabGroup.children("li").eq(1);
 	if (projectStatus == "销售正式立项"){
 		$("#tabDiv").show();
 		tabStrip.enable(tab0, true);
 		tabStrip.enable(tab1, true);
-	}else{//虚拟合同，只显示 设备清单Tab
+	}else{//虚拟合同，只显示 设备清单Tab	
 		$("#tabDiv").show();
 		tabStrip.select(2);
 		tabStrip.enable(tab0, false);

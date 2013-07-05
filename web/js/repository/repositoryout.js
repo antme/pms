@@ -59,7 +59,9 @@ $(document).ready(function() {
 
 
 function add(){
-	loadPage("html/repository/repositoryOutEdit.html");
+	loadPage("html/repository/repositoryOutEdit.html", {
+		type : "out"
+	});
 }
 
 function editRepo() {
@@ -77,7 +79,21 @@ function confirmRepository(){
 		if(row.status == "已入库"){
 			alert("此申请已入库，不需要再次入库");
 		}else{
-			process(approveUrl);
+
+			var options = {
+				width : 500,
+				height : 300,
+				actions : [ "Maximize", "Close" ]
+			};
+			$("#confirm").kendoWindow({
+				width : options.width,
+				height : options.height,
+				title : options.title
+			});
+
+			kendoWindow = $("#confirm").data("kendoWindow");
+			kendoWindow.open();
+			kendoWindow.center();	
 		}
 	}
 }

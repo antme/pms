@@ -11,24 +11,31 @@ var model = kendo.data.Model.define({
 		}
 	}
 });
-
+var projectDataSource = new kendo.data.DataSource({
+	transport : {
+		read : {
+			dataType : "jsonp",
+			url : "/service/purcontract/repository/contract/list",
+			type : "post"
+		},
+	},
+	schema : {
+		total: "total", 
+		data: "data"
+	}
+});
 
 $(document).ready(function() {
 	$("#purchasecontractselect").kendoDropDownList({
 			dataTextField : "projectName",
 			dataValueField : "_id",
 			placeholder : "选择项目...",
-			dataSource : {
-				transport : {
-					read : {
-						dataType : "jsonp",
-						url : "/service/purcontract/repository/in/project/list",
-					}
-				},
-				schema : {
-					total: "total", 
-					data: "data"
-				}		
+			dataSource : projectDataSource,
+			change : function(e) {
+				updateSupplier();
+			},
+			dataBound : function(e){		
+				updateSupplier();
 			}
 		});
 	
