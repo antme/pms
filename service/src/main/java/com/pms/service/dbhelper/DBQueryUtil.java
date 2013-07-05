@@ -22,6 +22,7 @@ public class DBQueryUtil {
 
     private static Logger logger = LogManager.getLogger(DBQueryUtil.class);
     
+    @SuppressWarnings("unchecked")
     public static DBObject buildQueryObject(Map<String, Object> parameters, boolean and, boolean mergeClientNameQuery) {
 
         QueryBuilder builder = new QueryBuilder();
@@ -51,6 +52,11 @@ public class DBQueryUtil {
                     }else if(dbQuery.getValue() instanceof String[]){
                         String[] s = (String[]) (dbQuery.getValue());
                         for(String v: s){
+                            arrayValues.add(v);
+                        }
+                    }else if(dbQuery.getValue() instanceof Set){
+                        Set<String> set = (Set<String>) dbQuery.getValue();
+                        for(String v: set){
                             arrayValues.add(v);
                         }
                     }else{
