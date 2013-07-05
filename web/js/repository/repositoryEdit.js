@@ -1,5 +1,9 @@
 var requestDataItem;
 
+var listProjectUrl = "/service/purcontract/repository/contract/list";
+var updateUrl = "/service/purcontract/repository/update?type=in";
+var createUrl = "/service/purcontract/repository/add?type=in";
+var listEqUrl = "/service/purcontract/get/byproject_supplier";
 var model = kendo.data.Model.define({
 	id : "_id",
 	fields : {
@@ -17,8 +21,10 @@ var projectDataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
 			dataType : "jsonp",
-			url : "/service/purcontract/repository/contract/list",
-		}
+			url : listProjectUrl,
+			type : "post"
+		},
+		parameterMap : redirectParams
 	},
 	schema : {
 		total: "total", 
@@ -42,7 +48,7 @@ $(document).ready(function() {
 	$("#operator").kendoDropDownList({
 		dataTextField : "userName",
 		dataValueField : "_id",
-        optionLabel: "选择入库人...",
+		optionLabel: "选择入库人...",
 		dataSource : proManagerItems,
 	});
 	
@@ -51,7 +57,7 @@ $(document).ready(function() {
 	    parseFormats: ["yyyy/MM/dd"]
 	});
 	
-	if (redirectParams) {
+	if (redirectParams && redirectParams._id) {
 		postAjaxRequest("/service/purcontract/repository/get", redirectParams, edit);
 	} 
 	
@@ -81,19 +87,18 @@ function updateSupplier(){
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
 		update : {
-			url : "/service/purcontract/repository/update?type=in",
+			url : updateUrl,
 			dataType : "jsonp",
 			type : "post"
 		},
 		create : {
-			url : "/service/purcontract/repository/add?type=in",
+			url : createUrl,
 			dataType : "jsonp",
 			type : "post"
 		},
 		parameterMap : function(options, operation) {
 			if (operation !== "read" && options.models) {
 				return {
-
 					// 解析成json_p模式
 					json_p : kendo.stringify(requestDataItem),
 					mycallback : "checkStatus"
@@ -151,7 +156,7 @@ function selectContracts() {
 	
 	var param = {"projectId": projectId, "supplier" : supplierId};
 	
-	postAjaxRequest("/service/purcontract/get/byproject_supplier", param, loadContracts);
+	postAjaxRequest(listEqUrl, param, loadContracts);
 }
 
 function loadContracts(data){
