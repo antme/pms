@@ -124,10 +124,12 @@ var projectItems = new kendo.data.DataSource({
 	}
 });
 
+var tabs;
 $(document).ready(function() {
 	//选项卡
-	if (!$("#tabstrip").data("kendoTabStrip")){
-		$("#tabstrip").kendoTabStrip({
+	
+	if (!tabs){
+		tabs = $("#tabstrip").kendoTabStrip({
 	        animation:  {
 	            open: {
 	                effects: "fadeIn"
@@ -371,12 +373,36 @@ function saveSC(){
 	var projectId = scm.get("projectId");
 //	console.log("************"+projectId);
 //	console.log(projectItems.get(projectId).get("projectStatus"));
-	var projectStatus = projectItems.get(projectId).get("projectStatus")
-
-	if (eqCostListDataSource.total() == 0){
-		alert("成本设备清单为空！");
+	var projectStatus = projectItems.get(projectId).get("projectStatus");
+	var scType = scm.get("contractType");
+	if (scType == null || scType == ""){
+		alert("请选择合同类型！");
 		return;
+	}else if (scType != "弱电工程"){//弱点工程 类型 无设备清单数据
+		var eqTotal = eqCostListDataSource.total();
+		if (eqTotal == 0){
+			alert("成本设备清单为空！");
+			return;
+		}
+		console.log(eqCostListDataSource.data());
+		var map = new Map();
+		for(i=0; i<eqTotal; i++){
+			var item = eqCostListDataSource.at(i);
+			var itemCate = item.eqcostCategory;
+			var itemTaxType = item.eqcostTaxType;
+			
+//			console.log(i+"********"+itemCate+"***"+itemTaxType);
+			console.log(map.get(itemCate));
+			var savedCateTaxType = map.get(itemCate);
+			if(savedCateTaxType == null){
+				map.put(itemCate, itemTaxType);
+			}else if(savedCateTaxType != itemTaxType){
+				alert(itemCate + "类别中税收类型不统一！");
+				return;
+			}
+		}
 	}
+	
 	if(!validator.validate() && projectStatus == "销售正式立项") {
 		validatestatus.text("表单验证不通过！")
         .removeClass("valid")
@@ -393,12 +419,26 @@ function saveSC(){
 		scm.set("estimateGrossProfit", profit);
 		scm.set("estimateGrossProfitRate", profitRate);
 		scm.set("totalEstimateCost", totalEstimate);
-		
-		dataSource_SC.add(scm);
-		dataSource_SC.sync();
+		console.log(scm);
+//		dataSource_SC.add(scm);
+//		dataSource_SC.sync();
 		loadPage("scList");
     }
 };
+
+function Map(){
+	this.container = new Object();
+}
+
+
+Map.prototype.put = function(key, value){
+	this.container[key] = value;
+}
+
+
+Map.prototype.get = function(key){
+	return this.container[key];
+}
 
 function addAProject(){
 	var options = { width:"680px", height: "520px", title:"新建一个项目"};
@@ -458,6 +498,8 @@ function moneyOnChange(){
 function showTabs(projectStatus){
 //	console.log("showTabs*************projectStatus"+projectStatus);
 	var tabStrip = $("#tabstrip").kendoTabStrip().data("kendoTabStrip");
+	console.log("***tabs"+tabs);
+//	var tabStrip = tabs.data("kendoTabStrip");
 	var tab0 = tabStrip.tabGroup.children("li").eq(0);
 	var tab1 = tabStrip.tabGroup.children("li").eq(1);
 	if (projectStatus == "销售正式立项"){
