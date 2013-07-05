@@ -34,7 +34,7 @@ $(document).ready(function() {
 			width : "1000px",
 			height: "400px",
 			columns : [ {
-				field : "code",
+				field : "repositoryCode",
 				title : "申请编号"
 			} , {
 				field : "orderCode",
@@ -64,12 +64,30 @@ function add(){
 	loadPage("html/repository/repositoryEdit.html");
 }
 
+
+function cancelRepo() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "已中止"){
+			alert("此申请已中止，不需要再次中止");
+		}else if(row.status == "已入库"){
+			alert("数据已入库，不能中止");
+		}else{
+			process(cancelUrl);
+		}
+	}
+}
+
 function editRepo() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
-	loadPage("html/repository/repositoryEdit.html", {
-		_id : row._id
-	});
+	if(row.status == "已入库"){
+		alert("已入库，不能再编辑!");
+	}else{
+		loadPage("html/repository/repositoryEdit.html", {
+			_id : row._id
+		});
+	}
 }
 
 function confirmRepository(){
@@ -79,7 +97,9 @@ function confirmRepository(){
 		if(row.status == "已入库"){
 			alert("此申请已入库，不需要再次入库");
 		}else{
-			process(approveUrl);
+			loadPage("html/repository/repositoryEdit.html", {
+				_id : row._id
+			});
 		}
 	}
 }
