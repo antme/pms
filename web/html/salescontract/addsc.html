@@ -36,7 +36,14 @@ width:900px;
 				<input type="text" class="pro-dropdownlist" name="projectId" id="projectId"
 					required="required" validationMessage="必填" data-bind="value: projectId">
 				<button class="k-button"  onclick="addAProject();">新建项目</button><span id="selProjectName"></span>
-				
+			</div>
+			
+			<div class="k-edit-label ">
+				<label for="contractType">合同类型</label>
+			</div>
+			<div data-container-for="contractType" class="k-edit-field ">
+				<input type="text" class="pro-dropdownlist" name="contractType" id="contractType"
+					required="required" validationMessage="必填" data-bind="value: contractType">
 			</div>
 		</div>
 	
@@ -91,13 +98,13 @@ width:900px;
 							
 						</div> -->
 						
-	                   <div class="k-edit-label ">
+	                   <!-- <div class="k-edit-label ">
 							<label for="contractType">合同类型</label>
 						</div>
 						<div data-container-for="contractType" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="contractType" id="contractType"
 								required="required" validationMessage="必填" data-bind="value: contractType">
-						</div>
+						</div> -->
 						
 	                   <div class="k-edit-label ">
 							<label for="archiveStatus">归档状态</label>
