@@ -591,7 +591,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
      */
     public Map<String, Object> listBackRequestForSelect() {
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
+        query.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
         query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode, PurchaseBack.scCode });
         return dao.list(query, DBBean.PURCHASE_BACK);
     }
@@ -640,7 +640,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER));
 
             Map<String, Object> pmData = dao.findOneByQuery(pmQuery, DBBean.USER);
-            project.put(ProjectBean.PROJECT_MANAGER, pmData.get(UserBean.USER_NAME));
+            if(pmData!=null){
+                project.put(ProjectBean.PROJECT_MANAGER, pmData.get(UserBean.USER_NAME));
+            }
 
             String cId = (String) project.get(ProjectBean.PROJECT_CUSTOMER);
 
