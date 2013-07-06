@@ -121,6 +121,11 @@ function loadRequest(data){
 	
 	// // 新增，所以设置_id为空
 	requestDataItem._id="";
+	var eqcostList = requestDataItem.eqcostList;
+	for (listIndex in eqcostList) {
+		eqcostList[listIndex].eqcostProductUnitPrice = eqcostList[listIndex].eqcostBasePrice;
+	}
+	
 	edit();
 }
 

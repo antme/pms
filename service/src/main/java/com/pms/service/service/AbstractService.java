@@ -155,23 +155,11 @@ public abstract class AbstractService {
     //部门助理
     protected boolean isProjectAssistant() {
 
-        return inGroup(GroupBean.PROJECT_ASSISTANT_VALUE);
+        return inGroup(GroupBean.DEPARTMENT_ASSISTANT_VALUE);
 
     }
     
-    
-    protected boolean isSalesAssistant() {
 
-        return inGroup(GroupBean.SALES_ASSISTANT_VALUE);
-
-    }
-
-    //部门经理
-    protected boolean isSalesManager() {
-
-        return inGroup(GroupBean.SALES_MANAGER_VALUE) || inGroup(GroupBean.PROJECT_MANAGER_VALUE);
-
-    }
 
     protected boolean isAdmin() {
 

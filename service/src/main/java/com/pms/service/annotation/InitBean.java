@@ -43,39 +43,27 @@ public class InitBean {
      * @throws ClassNotFoundException
      */
     public static void initUserRoleDB(ICommonDao dao) throws SecurityException, ClassNotFoundException {
-        initRoleItems(dao);
-        setLoginPathValidation();
-
-        createAdminGroup(dao);
-        createSystemDefaultGroups(dao);
-        createAdminUser(dao);
+//        initRoleItems(dao);
+//        setLoginPathValidation();
+//
+//        createAdminGroup(dao);
+//        createSystemDefaultGroups(dao);
+//        createAdminUser(dao);
     }
 
     private static void createSystemDefaultGroups(ICommonDao dao) {
-        String[] groupNames = new String[] { GroupBean.PROJECT_MANAGER_VALUE, GroupBean.PROJECT_ASSISTANT_VALUE, GroupBean.SALES_ASSISTANT_VALUE, GroupBean.PM, GroupBean.FINANCE,
-                GroupBean.SALES_MANAGER_VALUE, GroupBean.COO_VALUE, GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE };
+        String[] groupNames = new String[] { GroupBean.DEPARTMENT_ASSISTANT_VALUE, GroupBean.PM, GroupBean.FINANCE,
+                GroupBean.COO_VALUE, GroupBean.DEPOT_MANAGER_VALUE, GroupBean.PURCHASE_VALUE };
 
         Map<String, String[]> groupRoles = new HashMap<String, String[]>();
-        groupRoles.put(GroupBean.PROJECT_MANAGER_VALUE, new String[] {
-        	RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS,
-        	RoleValidConstants.PURCHASE_REQUEST_PROCESS,  
-        	RoleValidConstants.PURCHASE_CONTRACT_PROCESS,
-            RoleValidConstants.PURCHASE_BACK_PROCESS
-        });
-        groupRoles.put(GroupBean.PROJECT_ASSISTANT_VALUE, new String[] {
+  
+        groupRoles.put(GroupBean.DEPARTMENT_ASSISTANT_VALUE, new String[] {
         	RoleValidConstants.PROJECT_UPDATE, 
         	RoleValidConstants.SALES_CONTRACT_UPDATE,
         	RoleValidConstants.PURCHASE_ALLOCATE_MANAGEMENT,
             RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT
         });
-        groupRoles.put(GroupBean.SALES_ASSISTANT_VALUE, new String[] {
-        	RoleValidConstants.PROJECT_ADD, 
-        	RoleValidConstants.PROJECT_UPDATE,
-        	RoleValidConstants.SALES_CONTRACT_ADD, 
-        	RoleValidConstants.SALES_CONTRACT_UPDATE,
-        	RoleValidConstants.PURCHASE_ALLOCATE_MANAGEMENT,
-        	RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT
-        });
+  
         
         groupRoles.put(GroupBean.PM, new String[] {
         	RoleValidConstants.SHIP_MANAGEMENT, 
@@ -88,12 +76,7 @@ public class InitBean {
         	RoleValidConstants.PAY_INVOICE_DONE,
         	RoleValidConstants.FINANCE_MANAGEMENT
         });
-        groupRoles.put(GroupBean.SALES_MANAGER_VALUE, new String[] {
-        	RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS,
-        	RoleValidConstants.PURCHASE_REQUEST_PROCESS,  
-            RoleValidConstants.PURCHASE_CONTRACT_PROCESS,
-            RoleValidConstants.PURCHASE_BACK_PROCESS
-        });
+
         groupRoles.put(GroupBean.DEPOT_MANAGER_VALUE, new String[] {
         	RoleValidConstants.SHIP_CONFIRM,
         	RoleValidConstants.BORROWING_MANAGEMENT_PROCESS,

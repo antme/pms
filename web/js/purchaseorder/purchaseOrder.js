@@ -1,7 +1,7 @@
 listUrl = "/service/purcontract/order/list";
 var approveUrl = "/service/purcontract/order/approve";
 var rejectUrl = "/service/purcontract/order/reject";
-
+var cancelUrl = "/service/purcontract/order/cancel";
 
 var gridOptions = {
 		transport : {
@@ -101,6 +101,8 @@ function editOr() {
 			alert("申请采购完毕，不能编辑");
 		} else if (row.status == "已锁定") {
 			alert("申请已锁定，不能编辑");
+		}else if (row.status == "已中止") {
+			alert("申请已中止，不能编辑");
 		} else {
 			
 			loadPage("html/purchasecontract/purchaseOrderEdit.html", {
@@ -110,6 +112,28 @@ function editOr() {
 
 	}
 
+}
+
+function cancelOrder() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "草稿" || row.status == "已提交"){
+			process(cancelUrl);
+		}else {
+			alert("不能中止");
+		}
+	}
+}
+
+function approveOrder(){
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "中止申请中"){
+			process(approveUrl);
+		}else {
+			alert("不需要审批");
+		}
+	}
 }
 
 // 生成到货通知

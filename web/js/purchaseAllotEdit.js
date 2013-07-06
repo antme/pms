@@ -141,7 +141,6 @@ function dataBound(e) {
 		if (!item.eqcostBasePrice) {item.eqcostBasePrice = 0;}
 		// 检测总的申请数量
 		if(item.paCount > item.pbLeftCount){
-			alert("最大数量为" + item.pbLeftCount);
 			item.paCount=item.pbLeftCount;
 		}
 	}

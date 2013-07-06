@@ -57,6 +57,33 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public String geValidatorFileName() {
         return null;
     }
+    
+    public Map<String, Object> getPurchaseBack(Map<String, Object> parameters){
+        Map<String, Object> results = backService.loadBack(parameters);
+        backService.mergeRestEqCount(results);
+        removeEmptyEqList(results, "pbLeftCount");
+        
+        return results;
+    }
+    
+    public void removeEmptyEqList(Map<String, Object> result, String key) {
+        if (result.get("eqcostList") != null) {
+            List<Map<String, Object>> eqCostList = (List<Map<String, Object>>) result.get("eqcostList");
+
+            List<Map<String, Object>> removedList = new ArrayList<Map<String, Object>>();
+            for (Map<String, Object> data : eqCostList) {
+                if (ApiUtil.getInteger(data.get(key), 0) <= 0) {
+                    removedList.add(data);
+                }
+            }
+
+            for (Map<String, Object> orderMap : removedList) {
+                eqCostList.remove(orderMap);
+            }
+
+        }
+
+    }
 
     @Override
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters) {    
@@ -576,12 +603,25 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return processRequest(order, DBBean.PURCHASE_CONTRACT, PurchaseRequest.STATUS_REJECTED);
     }
 
-    public Map<String, Object> approvePurchaseOrder(Map<String, Object> order) {
-        return processRequest(order, DBBean.PURCHASE_ORDER, APPROVED);
+    public void approvePurchaseOrder(Map<String, Object> order) {
+        // 此批准只批准中止申请
+        processRequest(order, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_CANCELLED);
+
+        Map<String, Object> request = this.dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), new String[] { "purchaseRequestId" }, DBBean.PURCHASE_ORDER);
+        if (request.get("purchaseRequestId") != null) {
+            request.put(ApiConstants.MONGO_ID, request.get("purchaseRequestId"));
+            cancelPurchaseRequest(request);
+            approvePurchaseRequest(request);
+        }
+
     }
 
     public Map<String, Object> rejectPurchaseOrder(Map<String, Object> order) {
         return processRequest(order, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_REJECTED);
+    }
+    
+    public Map<String, Object> cancelPurchaseOrder(Map<String, Object> request){
+        return processRequest(request, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_CANCELL_NEED_APPROVED);
     }
 
     /**
@@ -591,7 +631,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
      */
     public Map<String, Object> listBackRequestForSelect() {
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
+//        query.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
         query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode, PurchaseBack.scCode });
         return dao.list(query, DBBean.PURCHASE_BACK);
     }
@@ -608,14 +648,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         mergeMyTaskQuery(params, DBBean.PURCHASE_REQUEST);
 
-        if (isSalesManager()) {
-            params.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_NEW);
-        }
 
-        if (isPurchase()) {
-            params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.MANAGER_APPROVED, PurchaseRequest.STATUS_APPROVED,
-                    PurchaseRequest.STATUS_REJECTED }));
-        }
         mergeDataRoleQuery(params);
         Map<String, Object> results = dao.list(params, DBBean.PURCHASE_REQUEST);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
@@ -723,6 +756,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> cancelPurchaseRequest(Map<String, Object> request) {
         return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELL_NEED_APPROVED);
     }
+    
 
     public Map<String, Object> rejectPurchaseRequest(Map<String, Object> request) {
         return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_REJECTED);
@@ -749,6 +783,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             }
         }
 
+        removeEmptyEqList(result, PurchaseBack.pbTotalCount);
         return result;
     }
 

@@ -7,6 +7,8 @@ public interface IPurchaseContractService {
 
     public Map<String, Object> getPurchaseContract(Map<String, Object> parameters);
     
+    public Map<String, Object> getPurchaseBack(Map<String, Object> parameters);
+    
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters);
     
     public Map<String, Object> listProjectsFromApproveContractsForRepositorySelect(Map<String, Object> parameters);
@@ -27,9 +29,11 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> order);
 
-    public Map<String, Object> approvePurchaseOrder(Map<String, Object> order);
+    public void approvePurchaseOrder(Map<String, Object> order);
     
     public Map<String, Object> rejectPurchaseOrder(Map<String, Object> order);
+    
+    public Map<String, Object> cancelPurchaseOrder(Map<String, Object> request);
     
     public Map<String, Object> approvePurchaseContract(Map<String, Object> order);
     

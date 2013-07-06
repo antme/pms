@@ -49,6 +49,11 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listEqcostListForShipByScIDAndType(parserJsonParameters(request, false)), request, response);
     }
     
+    @RequestMapping("/back/load")
+    public void getPurchaseBack(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.getPurchaseBack(parserJsonParameters(request, false)), request, response);
+    }
+    
     @RequestMapping("/get")
     public void getPurchaseContract(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.getPurchaseContract(parserJsonParameters(request, false)), request, response, "save_success");
@@ -187,7 +192,14 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/order/approve")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_PROCESS, desc = RoleValidConstants.PURCHASE_ORDER_PROCESS_DESC)
     public void approvePurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.approvePurchaseOrder(parserJsonParameters(request, false)), request, response);
+        pService.approvePurchaseOrder(parserJsonParameters(request, false));
+        responseWithData(null, request, response);
+    }
+    
+    @RequestMapping("/order/cancel")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_MANAGEMENT, desc = RoleValidConstants.PURCHASE_ORDER_MANAGEMENT_DESC)
+    public void cancelPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.cancelPurchaseOrder(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/order/reject")

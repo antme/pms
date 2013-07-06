@@ -3,7 +3,7 @@ var selectBackUrl = "/service/purcontract/back/select/list";
 editUrl = "/service/purcontract/request/get";
 saveUrl =  "/service/purcontract/request/update";
 addUrl =  "/service/purcontract/request/add";
-var getSelectUrl = "/service/purchase/back/load";
+var getSelectUrl = "/service/purcontract/back/load";
 
 //申明选择备货申请的id
 var selectBackId = undefined;
@@ -153,26 +153,32 @@ function selectBackRequest() {
 
 function loadBackRequest(data) {
 	
-	$("#purchase-request-edit-item").show();
 	// 把完整的采购申请赋值给requestDataItem
 	requestDataItem = data;
 
-	//新增时候初始化数据
-	for (i in requestDataItem.eqcostList) {
-		requestDataItem.eqcostList[i].eqcostApplyAmount = requestDataItem.eqcostList[i].pbLeftCount;
+	if(requestDataItem.eqcostList　&& requestDataItem.eqcostList.length==0){
+		alert("次备货申请已无可备货货品");
+	}else{
+		
+		$("#purchase-request-edit-item").show();
+	
+		// 新增时候初始化数据
+		for (i in requestDataItem.eqcostList) {
+			requestDataItem.eqcostList[i].eqcostApplyAmount = requestDataItem.eqcostList[i].pbLeftCount;
+		}
+		
+		requestDataItem.backRequestId = requestDataItem._id;
+		requestDataItem.backRequestCode = requestDataItem.pbCode;
+		requestDataItem.salesContractId = requestDataItem.scId;
+		requestDataItem.salesContractCode = requestDataItem.scCode;
+		requestDataItem.comment = "";
+		
+		// // 新增，所以设置_id为空
+		requestDataItem._id = "";	
+		requestDataItem.status="草稿";
+		console.log(requestDataItem);
+		edit();
 	}
-	
-	requestDataItem.backRequestId = requestDataItem._id;
-	requestDataItem.backRequestCode = requestDataItem.pbCode;
-	requestDataItem.salesContractId = requestDataItem.scId;
-	requestDataItem.salesContractCode = requestDataItem.scCode;
-	requestDataItem.comment = "";
-	
-	// // 新增，所以设置_id为空
-	requestDataItem._id = "";	
-	requestDataItem.status="草稿";
-	console.log(requestDataItem);
-	edit();
 }
 
 function edit(data) {
@@ -216,7 +222,7 @@ function edit(data) {
 
 							}, {
 								field : "eqcostRealAmount",
-								title : "合同中总数"
+								title : "成本中总数"
 							}, {
 								field : "eqcostBasePrice",
 								title : "成本单价"
@@ -239,9 +245,6 @@ function edit(data) {
 								field : "requestedTotalMoney",
 								title : "成本总价"
 							},{
-								field : "eqcostBrand",
-								title : "品牌"
-							}, {
 								field : "remark",
 								title : "备注"
 							}, {

@@ -103,7 +103,9 @@ function editRe() {
 			alert("此采购申请已发采购订单，不允许编辑!");
 		}else if(row.status == "已中止"){
 			alert("此采购申请已中止，不允许编辑!");
-		} else {
+		} else if(row.status == "审批通过"){
+			alert("此采购申请已审批通过，不允许编辑!");
+		}else {
 			loadPage("html/purchasecontract/purchaseRequestEdit.html", {
 				_id : row._id
 			});
@@ -114,7 +116,7 @@ function editRe() {
 function cancelRe() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "已提交" || row.status == "草稿" || row.status == "审批拒绝"){
+		if(row.status == "已提交" || row.status == "草稿" || row.status == "审批拒绝" || row.status == "审批中"){
 			process(cancelUrl);
 		}else {
 			alert("不能中止此数据");
