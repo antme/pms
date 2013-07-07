@@ -158,14 +158,9 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listPurchaseOrders(parserJsonParameters(request, false)), request, response);
     }
     
-    @RequestMapping("/order/select_directly")
+    @RequestMapping("/order/select")
     public void listOrdersForSelect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listApprovedPurchaseOrderForSelect(), request, response);
-    }
-    
-    @RequestMapping("/order/select_repository")
-    public void listReOrdersForSelect(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listApprovedPurchaseOrderForRepositorySelect(), request, response);
     }
 
     @RequestMapping("/order/add")

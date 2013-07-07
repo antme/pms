@@ -79,6 +79,9 @@ $(document).ready(function() {
 			}, {
 				field : "moneyPercentOfContract",
 				title : "金额占合同%"
+			},{
+				field : "eqcostDeliveryType",
+				title : "货物递送方式"
 			} ]
 
 		});

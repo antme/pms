@@ -368,7 +368,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> listApprovedPurchaseOrderForSelect() {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
-        return listOrdersForSelect(query);
+        Map<String, Object> directOrders =  listOrdersForSelect(query);
+        Map<String, Object> repOrders =  listApprovedPurchaseOrderForRepositorySelect();
+        Map<String, Object> resutls = new HashMap<String ,Object>();
+        resutls.put("directly", directOrders.get(ApiConstants.RESULTS_DATA));
+        resutls.put("repository", repOrders.get(ApiConstants.RESULTS_DATA));
+        return resutls;
     }
 
     private Map<String, Object> listOrdersForSelect(Map<String, Object> query) {

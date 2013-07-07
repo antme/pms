@@ -70,19 +70,42 @@ var contractModel = kendo.data.Model.define({
 });
 
 
-var orderUrl = "/service/purcontract/order/select_directly";
 var orderDataSource = new kendo.data.DataSource({
-	transport : {
-		read : {
-			dataType : "jsonp",
-			url : orderUrl,
-		}
-	},
-	schema : {
-		total : "total", 
-		data : "data"
-	}
+	
 });
+
+function updateOrder(data) {
+	console.log(data);
+	var value = $("#eqcostDeliveryType").data("kendoDropDownList").value();
+	if (value == "入公司库") {
+		$("#executeStatus").kendoDropDownList({
+			dataTextField : "text",
+			dataValueField : "text",
+			dataSource : executeType2
+		});
+
+		orderDataSource.data(data.repository);
+		
+		var purchasecontractin = $("#purchasecontractin").data("kendoMultiSelect");
+		purchasecontractin.value([]);
+		
+	} else {
+		$("#executeStatus").kendoDropDownList({
+			dataTextField : "text",
+			dataValueField : "text",
+			dataSource : executeType1
+		});
+		
+		
+		orderDataSource.data(data.directly);
+		
+		var purchasecontractin = $("#purchasecontractin").data("kendoMultiSelect");
+		purchasecontractin.value([]);
+		
+	}
+}
+
+
 $(document).ready(function() {
 	$("#tabstrip").kendoTabStrip({
 		animation : {
@@ -90,72 +113,8 @@ $(document).ready(function() {
 				effects : "fadeIn"
 			}
 		}
-	});
-	
-	
-	$("#purchaseContractType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : purchaseContractType
-	});
-	
-	$("#eqcostDeliveryType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : eqcostDeliveryType,
-		select : function(e){
-			console.log(e);
-			if(e.item[0].innerText == "入公司库"){
-				$("#executeStatus").kendoDropDownList({
-					dataTextField : "text",
-					dataValueField : "text",
-					dataSource : executeType2
-				});
-				
-				orderUrl = "/service/purcontract/order/select_repository";
-				orderDataSource.data([]);
-				orderDataSource = new kendo.data.DataSource({
-					transport : {
-						read : {
-							dataType : "jsonp",
-							url : orderUrl,
-						}
-					},
-					schema : {
-						total : "total", 
-						data : "data"
-					}
-				});
-				orderDataSource.read();
-				
-			}else{
-				$("#executeStatus").kendoDropDownList({
-					dataTextField : "text",
-					dataValueField : "text",
-					dataSource : executeType1
-				});
-				orderDataSource.data([]);
-				orderUrl = "/service/purcontract/order/select_directly";
-				orderDataSource = new kendo.data.DataSource({
-					transport : {
-						read : {
-							dataType : "jsonp",
-							url : orderUrl,
-						}
-					},
-					schema : {
-						total : "total", 
-						data : "data"
-					}
-				});
-				orderDataSource.read();
-			}
-		
-		}
-	});
-	
+	});	
 
-	
 
 	$("#supplier").kendoDropDownList({
 		dataTextField : "supplierName",
@@ -173,6 +132,50 @@ $(document).ready(function() {
 			}
 		}
 	});
+
+	if(popupParams){
+		$("#purchasecontract-edit-item").show();
+		postAjaxRequest("/service/purcontract/get", popupParams, edit);
+		disableAllInPoppup();
+	}else if (redirectParams) {
+		$("#purchasecontract-edit-item").show();
+		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
+	} else{
+
+		
+		postAjaxRequest("/service/purcontract/order/select", null, addOrder);
+
+		$("#purchasecontract-edit-header").show();
+		$("#purchasecontract-edit-item").hide();
+	}
+	
+});
+
+function addOrder(data){
+	$("#purchaseContractType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : purchaseContractType
+	});
+	
+	$("#purchasecontractin").kendoMultiSelect({
+		dataTextField : "purchaseOrderCode",
+		dataValueField : "_id",
+		placeholder : "选择采购订单...",
+		dataSource : orderDataSource
+	});
+	
+	$("#eqcostDeliveryType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : eqcostDeliveryType,
+		change : function(e) {
+			updateOrder(data);
+		},
+		dataBound : function(e){		
+			updateOrder(data);
+		}
+	});
 	
 	$("#executeStatus").kendoDropDownList({
 		dataTextField : "text",
@@ -184,32 +187,7 @@ $(document).ready(function() {
 	    format: "yyyy/MM/dd",
 	    parseFormats: ["yyyy/MM/dd"]
 	});
-	
-	if(popupParams){
-		$("#purchasecontract-edit-item").show();
-		postAjaxRequest("/service/purcontract/get", popupParams, edit);
-		disableAllInPoppup();
-	}else if (redirectParams) {
-		$("#purchasecontract-edit-item").show();
-		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
-	} else{
-
-		if (!$("#purchasecontractin").data("kendoMultiSelect")) {
-			$("#purchasecontractin").kendoMultiSelect({
-				dataTextField : "purchaseOrderCode",
-				dataValueField : "_id",
-				placeholder : "选择采购订单...",
-				dataSource : orderDataSource
-			});
-		}
-
-		$("#purchasecontract-edit-header").show();
-		$("#purchasecontract-edit-item").hide();
-	}
-	
-});
-
-
+}
 
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
@@ -326,8 +304,7 @@ function showOrderWindow() {
 		requestDataItem = new contractModel({});
 		requestDataItem.eqcostList = itemListDataSource.data();
 		
-		requestDataItem.eqcostDeliveryType = $("#eqcostDeliveryType").data("kendoDropDownList");
-		requestDataItem = eqdtype.value();
+		requestDataItem.eqcostDeliveryType = $("#eqcostDeliveryType").data("kendoDropDownList").value();
 		edit();
 	}
 }
