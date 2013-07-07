@@ -140,9 +140,9 @@ function dataBound(e) {
 		if (!item.pbTotalCount) {item.pbTotalCount = 0;}
 		if (!item.eqcostBasePrice) {item.eqcostBasePrice = 0;}
 		// 检测总的申请数量
-		if(item.paCount > item.pbLeftCount){
-			item.paCount=item.pbLeftCount;
-		}
+//		if(item.paCount > item.pbLeftCount){
+//			item.paCount=item.pbLeftCount;
+//		}
 	}
 }
 

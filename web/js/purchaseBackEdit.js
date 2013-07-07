@@ -98,6 +98,13 @@ $(document).ready(function () {
 			},
 			change: dataBound
 		},
+		save : function(e){
+			if(e.values.pbTotalCount && e.values.pbTotalCount > e.model.eqcostLeftAmount){
+				alert("最多可以申请" + e.model.eqcostLeftAmount);
+				flag = false;
+				e.preventDefault();
+			}
+		},
 	    columns: [
 			{ field: "eqcostNo", title: "序号"},
 			{ field: "eqcostMaterialCode", title: "物料代码" },

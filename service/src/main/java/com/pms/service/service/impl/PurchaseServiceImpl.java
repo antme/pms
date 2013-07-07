@@ -450,44 +450,30 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		params.put(PurchaseBack.pbSpecialRequireRadio, back.get(PurchaseBack.pbSpecialRequireRadio));		
 		
 		mergeBackRestEqCount(back);//整合备货剩余数量
-		List<Map<String,Object>> list1 = (List<Map<String,Object>>)back.get(PurchaseBack.eqcostList);
 		
-		//2. 调拨清单
-		List<Map<String,Object>> list2 = (List<Map<String,Object>>)params.get(PurchaseBack.eqcostList);
 
-		//3. 合同成本清单信息
-		Map<String,Object> eqMap = scs.listMergedEqListBySC(params);
-		List<Map<String,Object>> list3 = (List<Map<String,Object>>)eqMap.get(ApiConstants.RESULTS_DATA);
-		
-		Map<String,Map<String,Object>> map1 = new HashMap<String,Map<String,Object>>();
-		Map<String,Map<String,Object>> map2 = new HashMap<String,Map<String,Object>>();
-		Map<String,Map<String,Object>> map3 = new HashMap<String,Map<String,Object>>();
-		
-		if(list1 != null){
-			for(Map<String,Object> obj : list1){
-				map1.put(String.valueOf(obj.get(ApiConstants.MONGO_ID)), obj);
-			}
-		}
-		if(list2 != null){
-			for(Map<String,Object> obj : list2){
-				map2.put(String.valueOf(obj.get(ApiConstants.MONGO_ID)), obj);
-			}
-		}
-		if(list3 != null){
-			for(Map<String,Object> obj : list3){
-				map3.put(String.valueOf(obj.get(ApiConstants.MONGO_ID)), obj);
-			}
-		}		
-		for(String id : map1.keySet()){
-			map1.get(id).putAll(map3.get(id));
-			if(map2.get(id) != null){
-				map1.get(id).putAll(map2.get(id));
-			}else{
-				map1.get(id).put(PurchaseBack.paCount, 0);
-			}
-			
-		}
-		params.put(PurchaseBack.eqcostList, list1);
+        List<Map<String,Object>> eqList = scs.mergeEqListBasicInfo(back.get(PurchaseBack.eqcostList));	
+        
+        List<Map<String, Object>> allotEqList = new ArrayList<Map<String, Object>>();
+        //1. 获取当前备货清单
+        if(params.get(SalesContractBean.SC_EQ_LIST)!=null){
+            //已存在的
+            allotEqList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
+        }else{
+            //备货申请->调拨申请
+            allotEqList = (List<Map<String, Object>>) back.get(SalesContractBean.SC_EQ_LIST);
+        }
+
+        for (Map<String, Object> backEq : eqList) {
+            for (Map<String, Object> allotEq : allotEqList) {
+                //合并数据
+                if (allotEq.get(ApiConstants.MONGO_ID).equals(backEq.get(ApiConstants.MONGO_ID))) {
+                    backEq.putAll(allotEq);
+                    break;
+                }
+            }
+        }        
+		params.put(PurchaseBack.eqcostList, eqList);
 	}	
 
 	/**

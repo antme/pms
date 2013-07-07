@@ -568,7 +568,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                                 Map<String, Object> arriveMap = new HashMap<String, Object>();
                                 arriveMap.put(ArrivalNoticeBean.FOREIGN_KEY, order.get(ApiConstants.MONGO_ID));
                                 arriveMap.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
-                                arriveMap.put(ArrivalNoticeBean.FOREIGN_CODE, ArrivalNoticeBean.SHIP_TYPE_2);
+                                arriveMap.put(ArrivalNoticeBean.SHIP_TYPE, ArrivalNoticeBean.SHIP_TYPE_2);
                                 
                                 arriveService.create(arriveMap);
                             }

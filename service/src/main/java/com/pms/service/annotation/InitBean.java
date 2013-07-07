@@ -43,12 +43,12 @@ public class InitBean {
      * @throws ClassNotFoundException
      */
     public static void initUserRoleDB(ICommonDao dao) throws SecurityException, ClassNotFoundException {
-//        initRoleItems(dao);
-//        setLoginPathValidation();
-//
-//        createAdminGroup(dao);
-//        createSystemDefaultGroups(dao);
-//        createAdminUser(dao);
+        initRoleItems(dao);
+        setLoginPathValidation();
+
+        createAdminGroup(dao);
+        createSystemDefaultGroups(dao);
+        createAdminUser(dao);
     }
 
     private static void createSystemDefaultGroups(ICommonDao dao) {
@@ -86,7 +86,6 @@ public class InitBean {
         });
         groupRoles.put(GroupBean.DEPARTMENT_MANAGER_VALUE, new String[] {
         	RoleValidConstants.SHIP_MANAGEMENT_PROCESS,
-            RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT,
             RoleValidConstants.PURCHASE_BACK_PROCESS
         });
         groupRoles.put(GroupBean.PURCHASE_VALUE, new String[] {
@@ -97,7 +96,12 @@ public class InitBean {
             RoleValidConstants.PURCHASE_REQUEST_PROCESS,
             RoleValidConstants.SHIP_ARRIVAL_RECORD
 
-        });
+        });        
+        groupRoles.put(GroupBean.COO_VALUE, new String[] {
+                RoleValidConstants.PURCHASE_CONTRACT_PROCESS, 
+                RoleValidConstants.PURCHASE_ORDER_PROCESS,
+                RoleValidConstants.PURCHASE_ALLOCATE_PROCESS
+            });
 
         for (String name : groupNames) {
             Map<String, Object> newGroup = new HashMap<String, Object>();

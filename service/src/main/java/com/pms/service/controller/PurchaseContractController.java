@@ -242,7 +242,7 @@ public class PurchaseContractController extends AbstractController {
     
     //直发出入库确认
     @RequestMapping("/repository/confirm")
-    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS_DESC)
     public void confirmRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.approveRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }

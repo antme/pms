@@ -157,13 +157,8 @@ function save(status) {
 }
 
 function confirmRepository(){
-	if(itemDataSource.at(0)){
-		// force set haschanges = true
-		itemDataSource.at(0).set("uid", kendo.guid());
-	}
-	requestDataItem.status = "已入库";
-	// 同步数据
-	itemDataSource.sync();
+
+	postAjaxRequest("/service/purcontract/repository/approve", {models:kendo.stringify(requestDataItem)}, checkStatus);
 }
 
 function cancel(){

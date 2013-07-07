@@ -92,5 +92,7 @@ function donePA(){
 		alert("点击列表可以选中数据");
 	} else if(row.paStatus == "已终审"){	
 		loadPage("purchaseAllotManageEdit", { _id : row._id });	
+	}else{
+		alert("COO还没批准");
 	}
 }
