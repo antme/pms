@@ -635,7 +635,7 @@ function intSelectInput(){
 	}
 }
 
-function setData(obj, key, value) {
+function setDate(obj, key, value) {
 
 	if (kendo.parseDate(kendo.toString(value, 'd'), "yyyy-MM-dd")
 			&& kendo.parseDate(kendo.toString(value, 'd'), "yyyy-MM-dd") != "null") {

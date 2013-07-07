@@ -83,6 +83,30 @@ function editCon() {
 }
 
 
+function approveCon() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "审批中"){
+			process(approveUrl);
+		}else{
+			alert("此数据状态不需要审批");
+		}
+	}
+}
+
+function rejectCon() {
+	
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "审批中"){
+			process(rejectUrl);
+		}else{
+			alert("此数据状态不能拒绝");
+		}
+	}
+	
+}
+
 
 
 

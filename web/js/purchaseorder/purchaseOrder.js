@@ -100,17 +100,13 @@ function editOr() {
 	var row = getSelectedRowDataByGrid("grid");
 	
 	if (row) {
-		if (row.status == "采购完毕") {
-			alert("申请采购完毕，不能编辑");
-		} else if (row.status == "已锁定") {
-			alert("申请已锁定，不能编辑");
-		}else if (row.status == "已中止") {
-			alert("申请已中止，不能编辑");
-		} else {
-			
+		if (row.status == "已提交" || row.status == "草稿" || row.status == "中止申请中") {
 			loadPage("html/purchasecontract/purchaseOrderEdit.html", {
 				_id : row._id
 			});
+		} else {
+			alert("不能编辑");
+	
 		}
 
 	}
@@ -134,7 +130,7 @@ function approveOrder(){
 		if(row.status == "中止申请中"){
 			process(approveUrl);
 		}else {
-			alert("不需要审批");
+			alert("不需要审批,只有中止申请中的订单才可以审批");
 		}
 	}
 }

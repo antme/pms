@@ -131,6 +131,24 @@ $(document).ready(function() {
 			}
 		}
 	});
+	
+
+	$("#purchaseContractType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : purchaseContractType
+	});
+	
+	$("#executeStatus").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : executeType1
+	});
+		
+	$("#signDate").kendoDatePicker({
+	    format: "yyyy/MM/dd",
+	    parseFormats: ["yyyy/MM/dd"]
+	});
 
 	if(popupParams){
 		$("#purchasecontract-edit-item").show();
@@ -141,7 +159,6 @@ $(document).ready(function() {
 		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
 	} else{
 
-		
 		postAjaxRequest("/service/purcontract/order/select", null, addOrder);
 
 		$("#purchasecontract-edit-header").show();
@@ -151,11 +168,7 @@ $(document).ready(function() {
 });
 
 function addOrder(data){
-	$("#purchaseContractType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : purchaseContractType
-	});
+
 	
 	$("#purchasecontractin").kendoMultiSelect({
 		dataTextField : "purchaseOrderCode",
@@ -176,16 +189,7 @@ function addOrder(data){
 		}
 	});
 	
-	$("#executeStatus").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : executeType1
-	});
-		
-	$("#signDate").kendoDatePicker({
-	    format: "yyyy/MM/dd",
-	    parseFormats: ["yyyy/MM/dd"]
-	});
+
 }
 
 var itemDataSource = new kendo.data.DataSource({
@@ -249,6 +253,10 @@ function save(status) {
 				requestDataItem.supplier = dl.dataSource.at(0)._id;
 			}else if(requestDataItem.supplier._id){
 				requestDataItem.supplier = requestDataItem.supplier._id;
+			}
+			
+			if(requestDataItem.executeStatus && requestDataItem.executeStatus.text){
+				requestDataItem.executeStatus = requestDataItem.executeStatus.text;
 			}
 			
 
@@ -322,13 +330,12 @@ function edit(data) {
 		requestDataItem = new contractModel(requestDataItem);
 	}
 	
-	if(kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd") && 
-			kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd") !="null"){
-		requestDataItem.set("signDate", kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd"));
-	}else if(kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd") && 
-			kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd") !="null"){
-		requestDataItem.set("signDate", kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd"));
+	if(requestDataItem.executeStatus && requestDataItem.executeStatus.text){
+		requestDataItem.executeStatus = requestDataItem.executeStatus.text;
 	}
+	
+
+	setDate(requestDataItem, "signDate", requestDataItem.signDate);
 	
 	kendo.bind($("#purchasecontract-edit"), requestDataItem);
 

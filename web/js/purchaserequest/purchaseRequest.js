@@ -102,7 +102,7 @@ function editRe() {
 
 	if (row) {
 		if (row.purchaseOrderId) {
-			alert("此采购申请已发采购订单，不允许编辑!");
+			alert("不允许编辑!");
 		}else if(row.status == "已中止"){
 			alert("此采购申请已中止，不允许编辑!");
 		} else if(row.status == "审批通过"){
@@ -125,6 +125,18 @@ function cancelRe() {
 		}
 	}
 }
+
+function approveRe() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "审批中" ||　row.status == "中止申请中"){
+			process(approveUrl);
+		}else{
+			alert("此状态不需要审批");
+		}
+	}
+}
+
 
 function add(){
 	loadPage("html/purchasecontract/purchaseRequestEdit.html");

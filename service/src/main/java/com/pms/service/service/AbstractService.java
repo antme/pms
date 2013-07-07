@@ -478,7 +478,12 @@ public abstract class AbstractService {
     }
 
 
-    public Map<String, Integer> countEqByKey(Map<String, Object> query, String db, String queryKey, Map<String, Integer> count) {
+    public Map<String, Integer> countEqByKey(Map<String, Object> query, String db, String queryKey, Map<String, Integer> count) {        
+        return countEqByKey(query, db, queryKey, count, null);
+    }
+    
+    
+    public Map<String, Integer> countEqByKey(Map<String, Object> query, String db, String queryKey, Map<String, Integer> count, Map<String, Object> compare) {
         query.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
         List<Object> list = this.dao.listLimitKeyValues(query, db);
         Map<String, Integer> eqCountMap = new HashMap<String, Integer>();
@@ -491,11 +496,31 @@ public abstract class AbstractService {
                 if (obj != null) {
                     List<Map<String, Object>> eqlistMap = (List<Map<String, Object>>) obj;
                     for (Map<String, Object> eqMap : eqlistMap) {
-                        if (eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID).toString()) != null) {
-                            eqCountMap.put(eqMap.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eqMap.get(queryKey), 0) + ApiUtil.getInteger(eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID).toString()), 0));
-                        } else {
-                            eqCountMap.put(eqMap.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eqMap.get(queryKey), 0));
+                        
+                        boolean needCount = true;
+                        if(compare !=null && !compare.isEmpty()){
+                           
+                            for(String key: compare.keySet()){
+                                
+                                if(eqMap.get(key) == null){
+                                    needCount = false;
+                                }else if(!eqMap.get(key).equals(compare.get(key))){
+                                    needCount = false;
+                                }
+                            }
+                                
+                        }else{
+                            needCount = true;
                         }
+                        
+                        if (needCount) {
+                            if (eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID).toString()) != null) {
+                                eqCountMap.put(eqMap.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eqMap.get(queryKey), 0) + ApiUtil.getInteger(eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID).toString()), 0));
+                            } else {
+                                eqCountMap.put(eqMap.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eqMap.get(queryKey), 0));
+                            }
+                        }
+                        
                     }
                 }
             }
