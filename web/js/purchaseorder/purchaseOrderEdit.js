@@ -147,16 +147,27 @@ function sumOrders(e) {
 		eqcostProductUnitPrice = e.values.eqcostProductUnitPrice
 	}
 
+
+    var flag = true;
 	if (e.values.eqcostApplyAmount) {
-		eqcostApplyAmount = e.values.eqcostApplyAmount
+		
+		if(e.values.eqcostApplyAmount > e.model.orderRequestCount){
+			alert("最多可以申请" + e.model.orderRequestCount);
+			flag = false;
+			e.preventDefault();
+		}
+
 	}
 
-	var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
-	// will trigger dataBound event
-	e.model.set("eqcostContractTotalMoney", eqcostBasePrice * eqcostApplyAmount);
-	e.model.set("requestedTotalMoney", eqcostProductUnitPrice * eqcostApplyAmount);
+	if(flag){
 
-	grid1.refresh();
+		var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
+		// will trigger dataBound event
+		e.model.set("eqcostContractTotalMoney", eqcostBasePrice * eqcostApplyAmount);
+		e.model.set("requestedTotalMoney", eqcostProductUnitPrice * eqcostApplyAmount);
+	
+		grid1.refresh();
+	}
 
 }
 

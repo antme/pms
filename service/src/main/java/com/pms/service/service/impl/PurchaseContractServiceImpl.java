@@ -528,8 +528,24 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public Map<String, Object> getPurchaseOrder(Map<String, Object> parameters) {
         Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
-        result.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(result.get(SalesContractBean.SC_EQ_LIST)));
+        List<Map<String, Object>> mergeLoadedEqList = scs.mergeLoadedEqList(result.get(SalesContractBean.SC_EQ_LIST));
+        result.put(SalesContractBean.SC_EQ_LIST, mergeLoadedEqList);
         mergeProjectInfo(result);
+        
+        Map<String, Object> purchaseRequest =  this.dao.findOne(ApiConstants.MONGO_ID, result.get(PurchaseCommonBean.PURCHASE_REQUEST_ID), new String[]{SalesContractBean.SC_EQ_LIST}, DBBean.PURCHASE_REQUEST);
+
+        List<Map<String, Object>> prEqList = (List<Map<String, Object>>) purchaseRequest.get(SalesContractBean.SC_EQ_LIST);
+
+        for (Map<String, Object> orderEq : mergeLoadedEqList) {
+            for (Map<String, Object> prEq : prEqList) {
+                if (prEq.get(ApiConstants.MONGO_ID).equals(orderEq.get(ApiConstants.MONGO_ID))) {
+                    orderEq.put("orderRequestCount", prEq.get(PurchaseCommonBean.EQCOST_APPLY_AMOUNT));
+                    break;
+                }
+            }
+        }
+        
+        
         return result;
     }
 
@@ -801,6 +817,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 if (be.get(ApiConstants.MONGO_ID).equals(pr.get(ApiConstants.MONGO_ID))) {
                     pr.put(PurchaseBack.pbLeftCount, be.get(PurchaseBack.pbLeftCount));
                     pr.put(PurchaseBack.pbTotalCount, be.get(PurchaseBack.pbTotalCount));
+                    break;
                 }
             }
         }
