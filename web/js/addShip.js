@@ -76,7 +76,7 @@ $(document).ready(function() {
         dataSource: new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: "../service/project/listforselect",
+                    url: "../service/arrivalNotice/project/list",
                     dataType: "jsonp",
     	            data: {
     	            	pageSize: 0

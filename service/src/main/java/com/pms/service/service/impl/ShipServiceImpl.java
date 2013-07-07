@@ -14,6 +14,7 @@ import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.service.AbstractService;
+import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.IShipService;
@@ -23,6 +24,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	
 	private IPurchaseContractService pService;
 	
+	private IArrivalNoticeService arrivalService;
+		
 	private IPurchaseService purchaseService;
 
 	public IPurchaseContractService getpService() {
@@ -40,8 +43,19 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	public void setpService(IPurchaseContractService pService) {
 		this.pService = pService;
 	}
+	
+	
 
-	@Override
+	public IArrivalNoticeService getArrivalService() {
+        return arrivalService;
+    }
+
+    public void setArrivalService(IArrivalNoticeService arrivalService) {
+        this.arrivalService = arrivalService;
+    }
+    
+
+    @Override
 	public String geValidatorFileName() {
 		return "ship";
 	}
@@ -86,10 +100,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		Map<String, Double> alloEqList = purchaseService.getAllotEqCountBySalesContractId(saleId);
 		
 		// 已到货 的 设备清单
-		Map<String, Object> scIdParam = new HashMap<String, Object>();
-		scIdParam.put("scId", saleId);
-		scIdParam.put("type", params.get(ShipBean.SHIP_TYPE));
-		Map<String, Object> map = pService.listEqcostListForShipByScIDAndType(scIdParam);
+		Map<String, Object> map = arrivalService.listByScID(saleId);
 		
 		List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
 		

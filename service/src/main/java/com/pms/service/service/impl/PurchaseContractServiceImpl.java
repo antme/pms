@@ -15,6 +15,7 @@ import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.InvoiceBean;
@@ -26,6 +27,7 @@ import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
+import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISupplierService;
@@ -42,7 +44,15 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     private ISupplierService supplierService;
     
-    
+    private IArrivalNoticeService arriveService;    
+
+    public IArrivalNoticeService getArriveService() {
+        return arriveService;
+    }
+
+    public void setArriveService(IArrivalNoticeService arriveService) {
+        this.arriveService = arriveService;
+    }
 
     public ISupplierService getSupplierService() {
         return supplierService;
@@ -182,60 +192,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         return scList;
 
-    }
-
-    public Map<String, Object> listEqcostListForShipByScIDAndType(Map<String, Object> params) {
-
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put("eqcostList.scId", params.get(SalesContractBean.SC_ID));
-        //0 直发
-        //1 非直发        
-        String type = (String)params.get("type");                                  
-        if("0".equalsIgnoreCase(type) ){
-            query.put("type", "out");
-        }else{
-            query.put("type", "in");
-        }
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList" });
-        List<Object> scResults = this.dao.listLimitKeyValues(query, DBBean.REPOSITORY);
-        
-    
-
-        Map<String, Object> scQuery = new HashMap<String, Object>();
-        scQuery.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_PROJECT_ID });
-        scQuery.put(ApiConstants.MONGO_ID, params.get(SalesContractBean.SC_ID));
-        Map<String, Object> map = this.dao.findOneByQuery(scQuery, DBBean.SALES_CONTRACT);
-
-        Map<String, Object> customers = this.dao.listToOneMapAndIdAsKey(null, DBBean.CUSTOMER);
-
-        List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
-        for (Object eq : scResults) {
-            List<Map<String, Object>> eqMaps = (List<Map<String, Object>>) eq;
-
-            for (Map<String, Object> eqmap : eqMaps) {
-                if (eqmap.get(SalesContractBean.SC_ID).toString().equalsIgnoreCase(params.get(SalesContractBean.SC_ID).toString())) {
-                        eqList.add(eqmap);                    
-                }
-            }
-        }
-        
-
-        Map<String, Object> proQuery = new HashMap<String, Object>();
-        proQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_NAME });
-        proQuery.put(ApiConstants.MONGO_ID, map.get(SalesContractBean.SC_PROJECT_ID));
-        Map<String, Object> project = this.dao.findOneByQuery(proQuery, DBBean.PROJECT);
-
-        Map<String, Object> eqResult = new HashMap<String, Object>();
-        eqResult.put(SalesContractBean.SC_CUSTOMER_ID, project.get(ProjectBean.PROJECT_CUSTOMER));
-        Map<String, Object> customer = (Map<String, Object>) customers.get(project.get(ProjectBean.PROJECT_CUSTOMER));
-        eqResult.put("customerName", customer.get(CustomerBean.NAME));
-        eqResult.put(SalesContractBean.SC_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
-        eqResult.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
-        eqResult.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(eqList));
-
-        logger.info(eqResult);
-
-        return eqResult;
     }
 
     //非直发入库
@@ -602,12 +558,19 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                             ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
                             this.dao.updateById(ordeUpdate, DBBean.PURCHASE_ORDER);
 
-                            Map<String, Object> order = this.dao.findOne(ApiConstants.MONGO_ID, orderId, new String[] { PurchaseCommonBean.PURCHASE_REQUEST_ID }, DBBean.PURCHASE_ORDER);
+                            Map<String, Object> order = this.dao.findOne(ApiConstants.MONGO_ID, orderId, new String[] { PurchaseCommonBean.PURCHASE_REQUEST_ID, PurchaseCommonBean.PURCHASE_ORDER_CODE }, DBBean.PURCHASE_ORDER);
                             if (order != null && order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID) != null) {
                                 Map<String, Object> purRequest = new HashMap<String, Object>();
                                 purRequest.put(ApiConstants.MONGO_ID, order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID));
                                 purRequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
                                 this.dao.updateById(ordeUpdate, DBBean.PURCHASE_REQUEST);
+
+                                Map<String, Object> arriveMap = new HashMap<String, Object>();
+                                arriveMap.put(ArrivalNoticeBean.FOREIGN_KEY, order.get(ApiConstants.MONGO_ID));
+                                arriveMap.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
+                                arriveMap.put(ArrivalNoticeBean.FOREIGN_CODE, ArrivalNoticeBean.SHIP_TYPE_2);
+                                
+                                arriveService.create(arriveMap);
                             }
 
                         } else {
@@ -919,7 +882,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         if (params.get("type") != null && params.get("type").toString().equalsIgnoreCase("in")) {
             //入库仓库
-            return processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_IN_REPOSITORY);
+            Map<String, Object> result = processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_IN_REPOSITORY);
+            
+            
+            return result;
         } else {
             //直发入库
             return processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_IN_OUT_REPOSITORY);

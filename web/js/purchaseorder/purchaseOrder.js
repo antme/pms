@@ -140,13 +140,18 @@ function arrivalNotice() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if (row.status == "采购完毕") {
-			var param = {
-					"foreignKey" : row._id,
-					"foreignCode" : row.purchaseOrderCode,
-					"shipType" : "直发现场" // 供应商直发
-				};
-			postAjaxRequest("/service/arrivalNotice/create", param,
-						callback);
+			
+			if(row.eqcostDeliveryType=="入公司库"){
+				alert("只能针对直发发到货通知，非直发入库时会自动发到货通知");
+			}else{
+				var param = {
+						"foreignKey" : row._id,
+						"foreignCode" : row.purchaseOrderCode,
+						"shipType" : "直发现场" // 供应商直发
+					};
+				postAjaxRequest("/service/arrivalNotice/create", param,
+							callback);
+			}
 		} else {
 			alert("未采购完毕，不能生成到货通知");
 		}

@@ -42,12 +42,7 @@ public class PurchaseContractController extends AbstractController {
     public void listSalesContractsForShipSelect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listSalesContractsForShipSelect(parserJsonParameters(request, false)), request, response);
     }
-    
-    
-    @RequestMapping("/repository/eqcostList/forship/select_by_scid")
-    public void listEqcostListForShipByScID(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listEqcostListForShipByScIDAndType(parserJsonParameters(request, false)), request, response);
-    }
+
     
     @RequestMapping("/back/load")
     public void getPurchaseBack(HttpServletRequest request, HttpServletResponse response) {

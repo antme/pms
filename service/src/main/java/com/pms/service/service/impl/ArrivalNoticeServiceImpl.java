@@ -2,14 +2,17 @@ package com.pms.service.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.pms.service.dbhelper.DBQuery;
+import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
-import com.pms.service.mockbean.EqCostListBean;
+import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.AbstractService;
@@ -57,13 +60,15 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 					}
 				}
 				String eqcostDeliveryType = (String) order.get("eqcostDeliveryType");
-				if (ArrivalNoticeBean.SHIP_TYPE_1.equals(type) && !PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY.equals(eqcostDeliveryType)) {
-					throw new ApiResponseException("只能对直发现场的采购操作", ResponseCodeConstants.JUST_DIRECT);
-				}
+				
 				params.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
 				params.put(ArrivalNoticeBean.PROJECT_ID, order.get(PurchaseCommonBean.PROJECT_ID));
 				params.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
-				params.put(ArrivalNoticeBean.SHIP_TYPE, order.get("eqcostDeliveryType"));
+				if(!ApiUtil.isEmpty(type)){
+				    params.put(ArrivalNoticeBean.SHIP_TYPE, type); 
+				}else{
+				    params.put(ArrivalNoticeBean.SHIP_TYPE, eqcostDeliveryType);
+				}
 				// 入库
 				if (type == null) {
 					params.put(ArrivalNoticeBean.EQ_LIST, params.get(SalesContractBean.SC_EQ_LIST));
@@ -77,5 +82,49 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		params.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		return dao.add(params, DBBean.ARRIVAL_NOTICE);
 	}
+	
+	 public Map<String, Object> listProjectsForSelect(Map<String, Object> params){
+	     Map<String, Object> query = new HashMap<String, Object>();
+	     query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.PROJECT_ID);
+	     List<Object> projectIds = this.dao.listLimitKeyValues(query, DBBean.ARRIVAL_NOTICE);
+	     
+	     Map<String, Object> projectQuery = new HashMap<String, Object>();
+	     projectQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, projectIds));
+	     projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CODE});
+	     
+	     return this.dao.list(projectQuery, DBBean.PROJECT);
+	     
+	     
+	 }
+	 
+    public Map<String, Object> listByScID(Object scId) {
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, scId);
+        query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
+        return listEqlist(query);
+    }
+    
+    public Map<String, Object> listByScIdForBorrowing(Object scId){
+
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, scId);    
+        query.put(ArrivalNoticeBean.SHIP_TYPE, new DBQuery(DBQueryOpertion.NOT_IN, ArrivalNoticeBean.SHIP_TYPE_1));
+        query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
+        return listEqlist(query);
+    
+    }
+
+    private Map<String, Object> listEqlist(Map<String, Object> query) {
+        List<Object> obj = this.dao.listLimitKeyValues(query, DBBean.ARRIVAL_NOTICE);
+
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        if (obj.size() == 1) {
+            result.put(ArrivalNoticeBean.EQ_LIST, obj.get(0));
+        }else{
+            result.put(ArrivalNoticeBean.EQ_LIST, new ArrayList<Map<String, Object>>());
+        }
+        return result;
+    }
 
 }
