@@ -44,12 +44,8 @@ public interface IPurchaseService {
 	
 	/**根据合同id获取调拨清单列表*/
 	public Map<String,Double> getAllotEqCountBySalesContractId(String saleId);
-	/**根据合同id获取备货清单列表*/
-	public Map<String,Double> getBackEqCountBySalesContractId(String saleId);
-	
-	//选择销售合同，如果已经有备货申请则过滤掉
-    public Map<String, Object> listSCsForSelect(Map<String, Object> params);
-    
+
+
     public Map<String, Object> mergeRestEqCount(Map<String, Object> back);
         
     //根据备货申请id查询此备货下面可用的采购申请数量和调拨数量

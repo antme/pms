@@ -134,7 +134,6 @@ function sumOrders(e) {
 			flag = false;
 			e.preventDefault();
 		}
-
 	}
 
 	if(flag){

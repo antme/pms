@@ -31,6 +31,7 @@ function approveSubmit() {
 			"approveComment" : $("#approve-comment").val()
 		};
 		postAjaxRequest(processUrl, param, approveStatusCheck);
+		$("#approve-comment").val("");
 	}
 }
 function approveStatusCheck(response) {

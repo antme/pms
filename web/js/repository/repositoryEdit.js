@@ -124,6 +124,11 @@ var itemDataSource = new kendo.data.DataSource({
 
 
 function save(status) {
+	
+	
+	if(!requestDataItem.status && redirectParams && redirectParams.type == "out"){
+		requestDataItem.status = "已提交";
+	}	
 	if(!requestDataItem.status){
 		requestDataItem.status = "草稿";
 	}

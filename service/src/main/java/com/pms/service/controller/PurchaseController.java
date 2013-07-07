@@ -120,12 +120,7 @@ public class PurchaseController extends AbstractController {
     public void rejectAllot(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.rejectAllot(parserJsonParameters(request,  false)), request, response);
     }
-    
-    @RequestMapping("/sc/listforselect")
-    public void listSCsForSelect(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> params = this.parserJsonParameters(request, true);
-        responseWithData(purchaseService.listSCsForSelect(params), request, response);
-    }
+
     
 	public IPurchaseService getPurchaseService() {
 		return purchaseService;
