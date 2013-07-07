@@ -377,7 +377,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     private Map<String, Object> listOrdersForSelect(Map<String, Object> query) {
-        query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_SUBMITED);
+        query.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseCommonBean.STATUS_SUBMITED, PurchaseCommonBean.STATUS_ORDERING}));
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_ORDER);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
@@ -423,7 +423,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Integer> orderEqCountMap = countEqByKey(orderQuery, DBBean.PURCHASE_ORDER, "eqcostApplyAmount", null);
         
         Map<String, Object> eqQuery = new HashMap<String, Object>();
-        eqQuery.put("eqcostList._id", new DBQuery(DBQueryOpertion.IN, order.get(ApiConstants.MONGO_ID)));
+        eqQuery.put("eqcostList.purchaseOrderId", new DBQuery(DBQueryOpertion.IN, order.get(ApiConstants.MONGO_ID)));
         //只统计此订单下的同样的设备清单
         Map<String, Object> compareMap = new HashMap<String, Object>();
         compareMap.put("purchaseOrderId", order.get(ApiConstants.MONGO_ID));
