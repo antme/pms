@@ -38,7 +38,7 @@ public class PurchaseCommonBean extends BaseEntity {
     private String pbPlanDate;
     
     
-    private String pbType;
+    private String purchaseType;
     
     private String pbDepartment;
     
@@ -65,12 +65,12 @@ public class PurchaseCommonBean extends BaseEntity {
 
 
 
-    public String getPbType() {
-        return pbType;
+    public String getPurchaseType() {
+        return purchaseType;
     }
 
-    public void setPbType(String pbType) {
-        this.pbType = pbType;
+    public void setPurchaseType(String pbType) {
+        this.purchaseType = pbType;
     }
 
     public String getPbDepartment() {
