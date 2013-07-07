@@ -209,7 +209,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		for (Map<String, Object> p:purchaseEqList){
 			if (p != null) {
 				String id = p.get(ApiConstants.MONGO_ID).toString();
-				Double amount = (Double) p.get(EqCostListBean.EQ_LIST_AMOUNT);
+				Double amount = (Double.valueOf((String)p.get(EqCostListBean.EQ_LIST_AMOUNT)));
 				alloEqList.put(id, amount);
 			}
 		}
