@@ -100,6 +100,8 @@ function processPB(){
 		alert("点击列表可以选中数据");
 	} else if(row.pbStatus == "已提交"){	
 		loadPage("purchaseBackEdit", { _id : row._id });	
+	}else{
+		alert("此状态不允许审核");
 	}
 }
 function pendingPB() {//TODO:什么状态可以中止

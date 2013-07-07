@@ -156,7 +156,8 @@ function loadBackRequest(data) {
 	requestDataItem = data;
 
 	if(requestDataItem.eqcostList　&& requestDataItem.eqcostList.length==0){
-		alert("次备货申请已无可备货货品");
+		alert("此备货申请已无可备货货品");
+		back();
 	}else{
 		
 		$("#purchase-request-edit-item").show();

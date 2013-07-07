@@ -260,11 +260,11 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		queryKeys.put(ApiConstants.LIMIT, params.get(ApiConstants.LIMIT));
 		queryKeys.put(ApiConstants.LIMIT_START, params.get(ApiConstants.LIMIT_START));
 		Map<String,Object> query = new HashMap<String,Object>();
-		if(getCurrentUserId() != null){
-			Map<String,Object> querySelf = new HashMap<String,Object>();
-			querySelf.put(ApiConstants.CREATOR, getCurrentUserId());
-			query.put("self", DBQueryUtil.buildQueryObject(querySelf, true));
-		}
+//		if(getCurrentUserId() != null){
+//			Map<String,Object> querySelf = new HashMap<String,Object>();
+//			querySelf.put(ApiConstants.CREATOR, getCurrentUserId());
+//			query.put("self", DBQueryUtil.buildQueryObject(querySelf, true));
+//		}
 //		if(isSalesManager()){//部门经理
 //			Map<String,Object> queryManager = new HashMap<String,Object>();
 //			if(isInDepartment(UserBean.USER_DEPARTMENT_SALES)){//销售经理
@@ -281,7 +281,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 //		}
 		DBObject exp = DBQueryUtil.buildQueryObject(query, false);
 		
-		Map<String,Object> map = dao.list(queryKeys, exp, DBBean.PURCHASE_BACK);
+		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		mergeSalesContract(map);
 		return map;
 	}
@@ -371,7 +371,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.NOT_NULL));
 		}
 		DBObject exp = DBQueryUtil.buildQueryObject(query, false);
-		Map<String,Object> map = dao.list(queryKeys, exp, DBBean.PURCHASE_ALLOCATE);
+		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_ALLOCATE);
 		mergeSalesContract(map);
 		return map;		
 	}

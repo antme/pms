@@ -108,9 +108,6 @@ $(document).ready(function() {
 			}
 		}
 
-//		var rwindow = $("#group-role").data("kendoWindow");
-//		rwindow.close();
-
 		dataSource.sync();
 
 	});

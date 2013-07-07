@@ -75,7 +75,6 @@ var orderDataSource = new kendo.data.DataSource({
 });
 
 function updateOrder(data) {
-	console.log(data);
 	var value = $("#eqcostDeliveryType").data("kendoDropDownList").value();
 	if (value == "入公司库") {
 		$("#executeStatus").kendoDropDownList({
@@ -444,8 +443,9 @@ function edit(data) {
 				if (refresh) {
 					var grid1 = $("#purchasecontract-edit-grid").data("kendoGrid");
 					grid1.refresh();
+				}else{
+					initMergedGrid();
 				}
-				initMergedGrid();
 
 				$("#requestedTotalMoney").val(requestActureMoney);
 				
@@ -462,17 +462,19 @@ var mergedDataSource = new kendo.data.DataSource({
 });
 
 function initMergedGrid(){
+	mergedDataSource.data([]);
 	var itemData = itemDataSource.data();
 	var data = eval(kendo.stringify(itemData));
 	while(mergedDataSource.at(0)){
 		mergedDataSource.remove(mergedDataSource.at(0));
 	}
-	var mdata = mergedDataSource.data();
+	
 
 
 	for(i=0; i<data.length; i++){
 		
 		var find = false;
+		var mdata = mergedDataSource.data();
 		for(j=0; j<mdata.length; j++){	
 			if(mdata[j].eqcostNo == data[i].eqcostNo && mdata[j].eqcostProductName == data[i].eqcostProductName
 					&& mdata[j].eqcostMaterialCode == data[i].eqcostMaterialCode
@@ -493,7 +495,8 @@ function initMergedGrid(){
 			mergedDataSource.add(data[i]);
 		}
 	}
-	
+	console.log(mergedDataSource.data());
+
 	
 	if (!$("#merged-grid").data("kendoGrid")) {
 		$("#merged-grid").kendoGrid({
@@ -534,7 +537,6 @@ function detailInit(e) {
 	
 	var data = new Array();
 	var mdata = mergedDataSource.data();
-
 	for(i=0; i<mdata.length; i++){
 		if(mdata[i].eqcostNo == e.data.eqcostNo && mdata[i].eqcostProductName == e.data.eqcostProductName
 				&& mdata[i].eqcostMaterialCode == e.data.eqcostMaterialCode
