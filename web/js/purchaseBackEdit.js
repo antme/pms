@@ -105,7 +105,7 @@ $(document).ready(function () {
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
 			{ field: "pbTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}},
-			{ field: "eqcostLeftAmount", title: "可申请数量"},
+			{ field: "eqcostLeftAmount", title: "合同下剩下备货数量"},
 			{ field: "eqcostRealAmount", title: "成本中总数"},
 			{ field: "eqcostBasePrice", title: "预估单价" },
 			{ field: "eqcostCategory", title: "类别" },
@@ -172,14 +172,15 @@ function dataBound(e) {
 	var totalMoney=0;
 	for (i = 0; i < data.length; i++) {
 		var item = data[i];
+		console.log(item);
 		if (!item.pbTotalCount) {item.pbTotalCount = 0;}
 		if (!item.eqcostLeftAmount) {item.eqcostLeftAmount = 0;}
 		if (!item.eqcostRealAmount) {item.eqcostRealAmount = 0;}
 		if (!item.eqcostBasePrice) {item.eqcostBasePrice = 0;}
 		// 检测总的申请数量
-		if(item.pbTotalCount > item.eqcostLeftAmount){
-			item.pbTotalCount=item.eqcostLeftAmount;
-		}
+//		if(item.pbTotalCount > item.eqcostLeftAmount){
+//			item.pbTotalCount=item.eqcostLeftAmount;
+//		}
 		//统计%
 		totalCount +=item.eqcostRealAmount;
 		totalMoney+=item.eqcostRealAmount*item.eqcostBasePrice;

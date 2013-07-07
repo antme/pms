@@ -69,7 +69,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> getPurchaseBack(Map<String, Object> parameters){
         Map<String, Object> results = backService.loadBack(parameters);
-        backService.mergeRestEqCount(results);
+        backService.mergeBackRestEqCount(results);
         removeEmptyEqList(results, "pbLeftCount");
         
         return results;
@@ -230,7 +230,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Integer> eqCountMap = countEqByKey(requery, DBBean.REPOSITORY, "eqcostApplyAmount", null);
 
         Map<String, Object> lresult = new HashMap<String, Object>();
-        lresult.put("data", scs.mergeLoadedEqList(eqclist));
+        lresult.put("data", scs.mergeEqListBasicInfo(eqclist));
 
         List<Map<String, Object>> eqBackMapList = (List<Map<String, Object>>) lresult.get("data");
         for (Map<String, Object> eqMap : eqBackMapList) {
@@ -277,13 +277,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             }
         }
         
-        return scs.mergeLoadedEqList(eqclist);
+        return scs.mergeEqListBasicInfo(eqclist);
 
     }
 
     public Map<String, Object> getPurchaseContract(Map<String, Object> parameters) {
         Map<String, Object>  result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
-        result.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(result.get(SalesContractBean.SC_EQ_LIST)));
+        result.put(SalesContractBean.SC_EQ_LIST, scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST)));
         return result;
     }
 
@@ -353,7 +353,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         
         for (Map<String, Object> data : list) {
-            data.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(data.get(SalesContractBean.SC_EQ_LIST)));
+            data.put(SalesContractBean.SC_EQ_LIST, scs.mergeEqListBasicInfo(data.get(SalesContractBean.SC_EQ_LIST)));
         }
 
         return results;
@@ -484,7 +484,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public Map<String, Object> getPurchaseOrder(Map<String, Object> parameters) {
         Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
-        List<Map<String, Object>> mergeLoadedEqList = scs.mergeLoadedEqList(result.get(SalesContractBean.SC_EQ_LIST));
+        List<Map<String, Object>> mergeLoadedEqList = scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST));
         result.put(SalesContractBean.SC_EQ_LIST, mergeLoadedEqList);
         mergeProjectInfo(result);
         
@@ -766,12 +766,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> getPurchaseRequest(Map<String, Object> parameters) {
         Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
         List<Map<String, Object>> eqList = (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST);
-        eqList = scs.mergeLoadedEqList(eqList);
+        eqList = scs.mergeEqListBasicInfo(eqList);
         result.put(SalesContractBean.SC_EQ_LIST, eqList);
         mergeProjectInfo(result);
         Map<String, Object> backQuery = new HashMap<String, Object>();
         backQuery.put(ApiConstants.MONGO_ID, result.get(PurchaseCommonBean.BACK_REQUEST_ID));
-        Map<String, Object> back = backService.mergeRestEqCount(backQuery);
+        Map<String, Object> back = backService.mergeBackRestEqCount(backQuery);
 
         List<Map<String, Object>> backEqList = (List<Map<String, Object>>) back.get(SalesContractBean.SC_EQ_LIST);
 
@@ -845,7 +845,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> getRepositoryRequest(Map<String, Object> parameters) {
         Map<String, Object>  result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.REPOSITORY);
-        result.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(result.get(SalesContractBean.SC_EQ_LIST)));
+        result.put(SalesContractBean.SC_EQ_LIST, scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST)));
         return result;
     }
 

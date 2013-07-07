@@ -315,7 +315,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> listSCsForSelect(Map<String, Object> params) {
 		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID,"customer"});
+		query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID, "customer"});
+		query.put(SalesContractBean.SC_CODE, new DBQuery(DBQueryOpertion.NOT_NULL));
+		query.put(SalesContractBean.SC_CODE, new DBQuery(DBQueryOpertion.NOT_EQUALS, ""));
 		
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
 		projectQuery.put(ApiConstants.LIMIT_KEYS,ProjectBean.PROJECT_NAME);
@@ -1055,13 +1057,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	
 	
 
-    public List<Map<String, Object>> mergeLoadedEqList(Object eqList) {
-        List<Map<String, Object>> orgin = (List<Map<String, Object>>) eqList;
+    public List<Map<String, Object>> mergeEqListBasicInfo(Object eqList) {
+        List<Map<String, Object>> needMergeList = (List<Map<String, Object>>) eqList;
+        
+        if(needMergeList == null){
+            needMergeList = new ArrayList<Map<String, Object>>();
+        }
 
         List<Map<String, Object>> mapLists = new ArrayList<Map<String, Object>>();
         Set<String> ids = new HashSet<String>();
 
-        for (Map<String, Object> old : orgin) {
+        for (Map<String, Object> old : needMergeList) {
             if(old.get(ApiConstants.MONGO_ID)!=null){
                 ids.add(old.get(ApiConstants.MONGO_ID).toString());
             }
@@ -1075,7 +1081,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         for (Object obj : scEqList) {
             Map<String, Object> scEq = (Map<String, Object>) obj;
 
-            for (Map<String, Object> savedEq : orgin) {
+            for (Map<String, Object> savedEq : needMergeList) {
 
                 if (savedEq.get(ApiConstants.MONGO_ID).toString().equalsIgnoreCase(scEq.get(ApiConstants.MONGO_ID).toString())) {
                     scEq.putAll(savedEq);

@@ -63,6 +63,6 @@ public interface ISalesContractService {
 	
 	public Map<String, Object> setSCArchiveStatusStatus(Map<String, Object> params);
 	
-    public List<Map<String, Object>> mergeLoadedEqList(Object eqList);
+    public List<Map<String, Object>> mergeEqListBasicInfo(Object eqList);
 
 }
