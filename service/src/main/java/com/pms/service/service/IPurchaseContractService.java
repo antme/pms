@@ -50,6 +50,9 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listApprovedPurchaseOrderForSelect();
     
+    public Map<String, Object> listApprovedPurchaseOrderForRepositorySelect();
+
+    
     public Map<String, Object> listPurchaseRequests(Map<String, Object> parameters);
     
     public Map<String, Object> updatePurchaseRequest(Map<String, Object> request);
@@ -100,6 +103,7 @@ public interface IPurchaseContractService {
     public void destroyGetInvoice(Map<String, Object> params);
 
     public Map<String, Object> listProjectsForRepositoryDirect(Map<String, Object> parserJsonParameters);
+
    
 
 }

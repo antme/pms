@@ -43,12 +43,12 @@ public class InitBean {
      * @throws ClassNotFoundException
      */
     public static void initUserRoleDB(ICommonDao dao) throws SecurityException, ClassNotFoundException {
-//        initRoleItems(dao);
-//        setLoginPathValidation();
-//
-//        createAdminGroup(dao);
-//        createSystemDefaultGroups(dao);
-//        createAdminUser(dao);
+        initRoleItems(dao);
+        setLoginPathValidation();
+
+        createAdminGroup(dao);
+        createSystemDefaultGroups(dao);
+        createAdminUser(dao);
     }
 
     private static void createSystemDefaultGroups(ICommonDao dao) {

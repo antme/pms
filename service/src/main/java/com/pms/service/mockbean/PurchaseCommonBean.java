@@ -228,6 +228,8 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String EQCOST_DELIVERY_TYPE_DIRECTY = "直发现场"; 
     public static final String EQCOST_DELIVERY_TYPE_REPOSITORY = "入公司库"; 
     
+    public static final String EQCOST_DELIVERY_TYPE =  "eqcostDeliveryType";
+    
     public static final String LOGISTICS_TYPE = "logisticsType";
     
     public static final String PURCHASE_REQUEST_CODE = "purchaseRequestCode";

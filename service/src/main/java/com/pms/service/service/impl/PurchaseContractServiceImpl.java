@@ -29,7 +29,6 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISupplierService;
-import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
 
@@ -65,25 +64,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         return results;
     }
-    
-    public void removeEmptyEqList(Map<String, Object> result, String key) {
-        if (result.get("eqcostList") != null) {
-            List<Map<String, Object>> eqCostList = (List<Map<String, Object>>) result.get("eqcostList");
 
-            List<Map<String, Object>> removedList = new ArrayList<Map<String, Object>>();
-            for (Map<String, Object> data : eqCostList) {
-                if (ApiUtil.getInteger(data.get(key), 0) <= 0) {
-                    removedList.add(data);
-                }
-            }
-
-            for (Map<String, Object> orderMap : removedList) {
-                eqCostList.remove(orderMap);
-            }
-
-        }
-
-    }
 
     @Override
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters) {    
@@ -290,7 +271,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         requery.put(SalesContractBean.SC_PROJECT_ID, projectId);
         requery.put("supplierId", params.get("supplier"));
         requery.put("type", params.get("type"));
-        Map<String, Integer> eqCountMap = backService.countEqByKey(requery, DBBean.REPOSITORY, "eqcostApplyAmount", null);
+        Map<String, Integer> eqCountMap = countEqByKey(requery, DBBean.REPOSITORY, "eqcostApplyAmount", null);
 
         Map<String, Object> lresult = new HashMap<String, Object>();
         lresult.put("data", scs.mergeLoadedEqList(eqclist));
@@ -385,8 +366,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     public Map<String, Object> listApprovedPurchaseOrderForSelect() {
-
         Map<String, Object> query = new HashMap<String, Object>();
+        query.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
+        return listOrdersForSelect(query);
+    }
+
+    private Map<String, Object> listOrdersForSelect(Map<String, Object> query) {
         query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_SUBMITED);
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_ORDER);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
@@ -413,6 +398,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return results;
     }
     
+    public Map<String, Object> listApprovedPurchaseOrderForRepositorySelect(){
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
+        return listOrdersForSelect(query);
+    }
+    
     
     public Map<String, Object> mergeOrderRestEqCount(Map<String, Object> order) {
         if (order.get(SalesContractBean.SC_EQ_LIST) == null) {
@@ -420,6 +411,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         List<Map<String, Object>> eqOrderMapList = (List<Map<String, Object>>) order.get(SalesContractBean.SC_EQ_LIST);
 
+        //过滤掉申请小于等于0的订单
         List<Map<String, Object>> removedList = new ArrayList<Map<String, Object>>();
         for (Map<String, Object> eqMap : eqOrderMapList) {
             if (this.dao.exist("eqcostList._id", new DBQuery(DBQueryOpertion.IN, eqMap.get(ApiConstants.MONGO_ID)), DBBean.PURCHASE_CONTRACT)) {
@@ -539,7 +531,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(SalesContractBean.SC_EQ_LIST + "." + PURCHASE_ORDER_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<String>(orderIds)));
         query.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseCommonBean.STATUS_NEW, PurchaseCommonBean.STATUS_APPROVED }));
-        Map<String, Integer> eqCountMap = backService.countEqByKey(query, DBBean.PURCHASE_CONTRACT, "eqcostApplyAmount", null);
+        Map<String, Integer> eqCountMap = countEqByKey(query, DBBean.PURCHASE_CONTRACT, "eqcostApplyAmount", null);
         
         for (String orderId : orderIds) {
             int count =0;

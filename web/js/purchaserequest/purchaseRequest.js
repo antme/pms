@@ -85,7 +85,10 @@ $(document).ready(function() {
 			}, {
 				field : "moneyPercentOfContract",
 				title : "金额占合同%"
-			} ]
+			},{
+				field : "eqcostDeliveryType",
+				title : "货物递送方式"
+			}]
 
 		});
 
@@ -97,7 +100,6 @@ function editRe() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGridWithMsg("grid");
 
-	console.log(row);
 	if (row) {
 		if (row.purchaseOrderId) {
 			alert("此采购申请已发采购订单，不允许编辑!");

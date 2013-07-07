@@ -589,7 +589,6 @@ function myTaskQueryParam(options, operation){
 		if(redirectParams){
 			options.mytasks = redirectParams;
 		}
-		console.log(options);
 		return options;		
 }
 
@@ -633,5 +632,16 @@ function intSelectInput(){
 			html += "<option value='"+invoiceTypeItems[i].text+"'>"+invoiceTypeItems[i].text+"</option>";
 		}
 		document.getElementById("invoiceTypeItems").innerHTML=html;
+	}
+}
+
+function setData(obj, key, value) {
+
+	if (kendo.parseDate(kendo.toString(value, 'd'), "yyyy-MM-dd")
+			&& kendo.parseDate(kendo.toString(value, 'd'), "yyyy-MM-dd") != "null") {
+		obj.set(key, kendo.parseDate(kendo.toString(value, 'd'), "yyyy-MM-dd"));
+	} else if (kendo.parseDate(kendo.toString(value, 'd'), "yyyy/MM/dd")
+			&& kendo.parseDate(kendo.toString(value, 'd'), "yyyy/MM/dd") != "null") {
+		obj.set(key, kendo.parseDate(kendo.toString(value, 'd'), "yyyy/MM/dd"));
 	}
 }

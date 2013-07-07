@@ -124,7 +124,7 @@ $(document).ready(function () {
 			transport : {
 				read : {
 					dataType : "jsonp",
-					url : baseUrl+"/purchase/sc/listforselect",
+					url : baseUrl+"/sc/listforselect",
 				}
 			},
 			schema : {

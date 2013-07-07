@@ -335,7 +335,6 @@ function edit(data) {
 
 								if (refresh) {
 									var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
-									console.log("========= refresh");
 									grid1.refresh();
 								}
 

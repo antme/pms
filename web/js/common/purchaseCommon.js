@@ -91,7 +91,10 @@ var model = kendo.data.Model.define({
 		comment : {
 
 		},
-		eqcostList: {}
+		eqcostList: {},
+		purchaseType : {
+			
+		}
 	}
 });
 
@@ -121,5 +124,5 @@ function save(status) {
 	
 	console.log(requestDataItem);
 	// 同步数据
-//	itemDataSource.sync();
+	itemDataSource.sync();
 }

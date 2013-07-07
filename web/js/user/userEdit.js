@@ -92,7 +92,6 @@ function save(){
 }
 
 function saveSuccess(data){
-	console.log(data);
 	loadPage("userman");
 }
 

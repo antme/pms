@@ -4,7 +4,7 @@ var requestDataItem;
 var contractModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
-		purchaseOrderCode : {
+		salesContractCode : {
 			editable : false
 		},
 		
@@ -35,14 +35,54 @@ var contractModel = kendo.data.Model.define({
 		firstPay : {
 
 		},
-		eqcostList: {}
+		eqcostApplyAmount : {
+			editable : false
+		},
+		eqcostProductUnitPrice : {
+			editable : false
+		},
+		eqcostBrand : {
+			editable : false
+		},
+		purchaseOrderCode : {
+			editable : false
+		},
+		eqcostList: {},
+		eqcostNo : {
+			editable : false
+		},
+		eqcostMaterialCode : {
+			editable : false
+		},
+		eqcostProductType : {
+			editable : false
+		},
+		eqcostAvailableAmount : {
+			editable : false
+		},
+		eqcostUnit : {
+			editable : false
+		},
+		eqcostProductName : {
+			editable : false
+		}
 	}
 });
 
 
-contractModel =  $.extend( model, contractModel);
-
-
+var orderUrl = "/service/purcontract/order/select_directly";
+var orderDataSource = new kendo.data.DataSource({
+	transport : {
+		read : {
+			dataType : "jsonp",
+			url : orderUrl,
+		}
+	},
+	schema : {
+		total : "total", 
+		data : "data"
+	}
+});
 $(document).ready(function() {
 	$("#tabstrip").kendoTabStrip({
 		animation : {
@@ -64,19 +104,53 @@ $(document).ready(function() {
 		dataValueField : "text",
 		dataSource : eqcostDeliveryType,
 		select : function(e){
-			if(e.item[0].innerText == "直发入库"){
+			console.log(e);
+			if(e.item[0].innerText == "入公司库"){
 				$("#executeStatus").kendoDropDownList({
 					dataTextField : "text",
 					dataValueField : "text",
 					dataSource : executeType2
 				});
+				
+				orderUrl = "/service/purcontract/order/select_repository";
+				orderDataSource.data([]);
+				orderDataSource = new kendo.data.DataSource({
+					transport : {
+						read : {
+							dataType : "jsonp",
+							url : orderUrl,
+						}
+					},
+					schema : {
+						total : "total", 
+						data : "data"
+					}
+				});
+				orderDataSource.read();
+				
 			}else{
 				$("#executeStatus").kendoDropDownList({
 					dataTextField : "text",
 					dataValueField : "text",
 					dataSource : executeType1
 				});
+				orderDataSource.data([]);
+				orderUrl = "/service/purcontract/order/select_directly";
+				orderDataSource = new kendo.data.DataSource({
+					transport : {
+						read : {
+							dataType : "jsonp",
+							url : orderUrl,
+						}
+					},
+					schema : {
+						total : "total", 
+						data : "data"
+					}
+				});
+				orderDataSource.read();
 			}
+		
 		}
 	});
 	
@@ -125,18 +199,7 @@ $(document).ready(function() {
 				dataTextField : "purchaseOrderCode",
 				dataValueField : "_id",
 				placeholder : "选择采购订单...",
-				dataSource : {
-					transport : {
-						read : {
-							dataType : "jsonp",
-							url : "/service/purcontract/order/select/list",
-						}
-					},
-					schema : {
-						total: "total", // total is returned in the "total" field of the response
-						data: "data"
-					}
-				}
+				dataSource : orderDataSource
 			});
 		}
 
@@ -227,39 +290,46 @@ function checkStatus() {
 function showOrderWindow() {
 	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
 	var kendoGrid = $("#purchasecontractin").data("kendoMultiSelect");
-	itemListDataSource.data([]);
 	var dataItems = kendoGrid.dataSource.data();
-	var selectedValues = kendoGrid.value();
-	for(id in selectedValues){	
-		for(index in dataItems){			
-			if(dataItems[index]._id == selectedValues[id]){
-				var eqcostList = dataItems[index].eqcostList;
-				for(listIndex in eqcostList){
-					if(eqcostList[listIndex].uid){
-						if(!eqcostList[listIndex].logisticsType ){
-							eqcostList[listIndex].logisticsType="";
+	
+	if(dataItems.length==0){
+		alert("没有相关订单");
+	}else{
+		itemListDataSource.data([]);
+		var selectedValues = kendoGrid.value();
+		for(id in selectedValues){	
+			for(index in dataItems){			
+				if(dataItems[index]._id == selectedValues[id]){
+					var eqcostList = dataItems[index].eqcostList;
+					for(listIndex in eqcostList){
+						if(eqcostList[listIndex].uid){
+							if(!eqcostList[listIndex].logisticsType ){
+								eqcostList[listIndex].logisticsType="";
+							}
+							eqcostList[listIndex].projectId = dataItems[index].projectId;
+							eqcostList[listIndex].salesContractId = dataItems[index].salesContractId;
+							eqcostList[listIndex].salesContractCode = dataItems[index].salesContractCode;
+							eqcostList[listIndex].purchaseOrderId = dataItems[index]._id;
+							eqcostList[listIndex].purchaseOrderCode = dataItems[index].purchaseOrderCode;
+							eqcostList[listIndex].purchaseRequestId = dataItems[index].purchaseRequestId;
+							eqcostList[listIndex].purchaseRequestCode = dataItems[index].purchaseRequestCode;
+							
+							itemListDataSource.add(eqcostList[listIndex]);
 						}
-						eqcostList[listIndex].projectId = dataItems[index].projectId;
-						eqcostList[listIndex].salesContractId = dataItems[index].salesContractId;
-						eqcostList[listIndex].salesContractCode = dataItems[index].salesContractCode;
-						eqcostList[listIndex].purchaseOrderId = dataItems[index]._id;
-						eqcostList[listIndex].purchaseOrderCode = dataItems[index].purchaseOrderCode;
-						eqcostList[listIndex].purchaseRequestId = dataItems[index].purchaseRequestId;
-						eqcostList[listIndex].purchaseRequestCode = dataItems[index].purchaseRequestCode;
-						
-						itemListDataSource.add(eqcostList[listIndex]);
 					}
+					break;
 				}
-				break;
 			}
+			
 		}
 		
+		requestDataItem = new contractModel({});
+		requestDataItem.eqcostList = itemListDataSource.data();
+		
+		requestDataItem.eqcostDeliveryType = $("#eqcostDeliveryType").data("kendoDropDownList");
+		requestDataItem = eqdtype.value();
+		edit();
 	}
-	
-	requestDataItem = new contractModel({});
-	requestDataItem.eqcostList = itemListDataSource.data();
-
-	edit();
 }
 
 

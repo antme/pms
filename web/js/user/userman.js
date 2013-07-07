@@ -7,7 +7,6 @@ var groupDataSource = new kendo.data.DataSource({
 		}
 	},
 	requestEnd: function(e) {
-		console.log("................");
 	},
 	schema : {
 		total: "total", // total is returned in the "total" field of the response

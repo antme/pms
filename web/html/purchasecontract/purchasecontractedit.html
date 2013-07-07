@@ -3,11 +3,15 @@
 <script type="text/javascript" src="js/purcontractEdit.js"></script>
 
 	<div id="purchasecontract-edit" class="k-content">
-	<div class="k-edit-field " id="purchasecontractselect">
-		<div>
-		  <input type="text" name="purchasecontractin" id="purchasecontractin" required="required">
-		  <button onclick="showOrderWindow();">确定</button>
-		</div>
+	<div class="k-edit-field " id="purchasecontractselect"
+		style="width: 1200px;">
+
+		货物递送方式：<input type="text" name="eqcostDeliveryType"
+			id="eqcostDeliveryType" required="required" style="width: 200px;"/>
+		<input type="text" name="purchasecontractin" 
+			id="purchasecontractin" style="width: 500px;"/>
+		<button onclick="showOrderWindow();">确定</button>
+
 	</div>
 
 
@@ -85,8 +89,7 @@
                             </div>
                             <div data-container-for="eqcostDeliveryType" class="k-edit-field ">
                                  <input type="text" 
-                                    name="eqcostDeliveryType" id="eqcostDeliveryType"
-                                    required="required" data-bind="value: eqcostDeliveryType">
+                                    name="eqcostDeliveryType" disabled required="required" data-bind="value: eqcostDeliveryType">
                             </div>
                             
                             <div class="k-edit-label ">

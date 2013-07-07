@@ -34,6 +34,7 @@ import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.RoleBean;
+import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
@@ -476,6 +477,61 @@ public abstract class AbstractService {
     	}
     }
 
+
+    public Map<String, Integer> countEqByKey(Map<String, Object> query, String db, String queryKey, Map<String, Integer> count) {
+        query.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
+        List<Object> list = this.dao.listLimitKeyValues(query, db);
+        Map<String, Integer> eqCountMap = new HashMap<String, Integer>();
+
+        if(count != null){
+            eqCountMap = count;
+        }
+        if (list != null) {
+            for (Object obj : list) {
+                if (obj != null) {
+                    List<Map<String, Object>> eqlistMap = (List<Map<String, Object>>) obj;
+                    for (Map<String, Object> eqMap : eqlistMap) {
+                        if (eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID).toString()) != null) {
+                            eqCountMap.put(eqMap.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eqMap.get(queryKey), 0) + ApiUtil.getInteger(eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID).toString()), 0));
+                        } else {
+                            eqCountMap.put(eqMap.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eqMap.get(queryKey), 0));
+                        }
+                    }
+                }
+            }
+        }
+        return eqCountMap;
+    }
+    
+    
+    
+    
+    
+    public void removeEmptyEqList(Map<String, Object> result, String key) {
+        if (result.get("eqcostList") != null) {
+            List<Map<String, Object>> eqCostList = (List<Map<String, Object>>) result.get("eqcostList");
+
+            List<Map<String, Object>> removedList = new ArrayList<Map<String, Object>>();
+            for (Map<String, Object> data : eqCostList) {
+                if (ApiUtil.getInteger(data.get(key), 0) <= 0) {
+                    removedList.add(data);
+                }
+            }
+
+            for (Map<String, Object> orderMap : removedList) {
+                eqCostList.remove(orderMap);
+            }
+
+        }
+
+    }
+    
+    public String generateCode(String prefix, String db) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        return prefix + "-2013-" + (this.dao.count(map, db) + 1);
+    }
+
+
     public ISalesContractService getScs() {
         return scs;
     }
@@ -484,9 +540,6 @@ public abstract class AbstractService {
         this.scs = scs;
     }
 
-    public String generateCode(String prefix, String db) {
-        return prefix + "-2013-" + (this.dao.count(null, db) + 1);
-    }
 
     public ICommonDao getDao() {
         return dao;

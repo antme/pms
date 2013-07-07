@@ -47,8 +47,17 @@ var sumDataSource = new kendo.data.DataSource({
 
 
 $(document).ready(function() {
-
-	console.log(popupParams);
+	
+	$("#eqcostDeliveryType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : eqcostDeliveryType
+	});
+	$("#purchaseType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : pbTypeItems
+	});
 	
 	// 如果是编辑
 	if (redirectParams || popupParams) {
@@ -96,17 +105,7 @@ $(document).ready(function() {
 			}
 		});
 	}
-	
-	$("#eqcostDeliveryType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : eqcostDeliveryType
-	});
-	$("#pbType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : pbTypeItems
-	});
+
 	
 });
 
@@ -191,7 +190,8 @@ function edit(data) {
 	requestDataItem = new model(requestDataItem);
 
 	
-	requestDataItem.set("pbPlanDate", kendo.toString(requestDataItem.pbPlanDate, 'd'));
+	setData(requestDataItem, "pbPlanDate", requestDataItem.pbPlanDate);
+	setData(requestDataItem, "requestedDate", requestDataItem.requestedDate);
 	// 渲染成本编辑列表
 	itemDataSource.data(requestDataItem.eqcostList);
 	kendo.bind($("#purchase-request-edit-item"), requestDataItem);
@@ -392,4 +392,50 @@ function edit(data) {
 						});
 	}
 
+}
+
+
+
+
+//保存操作
+function saveRequest(status) {
+	if(!requestDataItem.status){
+		requestDataItem.status = "草稿";
+	}
+	
+	if(status){
+		requestDataItem.status = status;
+	}
+	
+	if(itemDataSource.at(0)){		
+		//force set haschanges = true
+		itemDataSource.at(0).set("uid", kendo.guid());
+	}
+	
+	if(requestDataItem.pbDepartment && requestDataItem.pbDepartment instanceof Object){
+		requestDataItem.pbDepartment = requestDataItem.pbDepartment.join(",");
+	}
+	
+	if(requestDataItem.eqcostDeliveryType && requestDataItem.eqcostDeliveryType.text){
+		requestDataItem.eqcostDeliveryType = requestDataItem.eqcostDeliveryType.text;
+	}
+	
+	if(requestDataItem.purchaseType && requestDataItem.purchaseType.text){
+		requestDataItem.purchaseType = requestDataItem.purchaseType.text;
+	}
+	
+	if(!requestDataItem.purchaseType){
+		var purchaseType= $("#purchaseType").data("kendoDropDownList");
+		requestDataItem.purchaseType = purchaseType.value();
+	}
+	
+	
+	if(!requestDataItem.eqcostDeliveryType){
+		var eqcostDeliveryType = $("#eqcostDeliveryType").data("kendoDropDownList");
+		requestDataItem.eqcostDeliveryType = eqcostDeliveryType.value();
+	}
+	
+	console.log(requestDataItem);
+	// 同步数据
+	itemDataSource.sync();
 }

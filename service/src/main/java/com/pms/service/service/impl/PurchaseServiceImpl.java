@@ -276,9 +276,9 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 //			queryManager.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
 //			query.put("manager", DBQueryUtil.buildQueryObject(queryManager, true));
 //		}
-		if(isAdmin()){
-			query.put("admin", true);
-		}
+//		if(isAdmin()){
+//			query.put("admin", true);
+//		}
 		DBObject exp = DBQueryUtil.buildQueryObject(query, false);
 		
 		Map<String,Object> map = dao.list(queryKeys, exp, DBBean.PURCHASE_BACK);
@@ -850,30 +850,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         return back;
     }
 
-    public Map<String, Integer> countEqByKey(Map<String, Object> query, String db, String queryKey, Map<String, Integer> count) {
-        query.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
-        List<Object> list = this.dao.listLimitKeyValues(query, db);
-        Map<String, Integer> eqCountMap = new HashMap<String, Integer>();
-
-        if(count != null){
-            eqCountMap = count;
-        }
-        if (list != null) {
-            for (Object obj : list) {
-                if (obj != null) {
-                    List<Map<String, Object>> eqlistMap = (List<Map<String, Object>>) obj;
-                    for (Map<String, Object> eqMap : eqlistMap) {
-                        if (eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID).toString()) != null) {
-                            eqCountMap.put(eqMap.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eqMap.get(queryKey), 0) + ApiUtil.getInteger(eqCountMap.get(eqMap.get(ApiConstants.MONGO_ID).toString()), 0));
-                        } else {
-                            eqCountMap.put(eqMap.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eqMap.get(queryKey), 0));
-                        }
-                    }
-                }
-            }
-        }
-        return eqCountMap;
-    }
     
     /**查询某合同下面剩余的成本设备数量: 成本数量 - 备货总和**/
     public Map<String, Integer> countRestEqByScId(String scId) {
