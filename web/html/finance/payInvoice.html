@@ -4,10 +4,8 @@
 	<h3>开票申请列表页面</h3>
 	<div id="objList" class="k-content">
 		<div class="k-toolbar k-grid-toolbar">
+			<button class="k-button" onclick="viewPI()">查看</button>
 			<button access="pay_invoice_add" class="k-button access" onclick="addPI()">新增</button>
-			<button access="pay_invoice_manager_process" class="k-button access"  onclick="editManagerPI()">经理审核</button>
-			<button access="pay_invoice_fin_process" class="k-button access"  onclick="editFinPI()">财务审核</button>
-			<button access="pay_invoice_done" class="k-button access"  onclick="donePI()">开票</button>
 		</div>		
 		<div id="grid"></div>
 	</div>

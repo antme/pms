@@ -31,11 +31,6 @@ var listDatasource = new kendo.data.DataSource({
             url: baseUrl + "/sc/invoice/list",
             dataType: "jsonp",
             type : "post"
-        },
-        parameterMap: function(options, operation) {
-            if (operation !== "read" && options.models) {
-                return {models: kendo.stringify(options.models)};
-            }
         }
     },
     batch: true,
@@ -58,28 +53,33 @@ $(document).ready(function () {
 	    pageable: true,
 	    selectable : "row",
 	    sortable : true,
-		filterable : filterable,
 	    columns: [
-	        {
-	        	field:"payInvoiceMoney",
-	        	title:"合计开票金额",
-	        	width:"125px",
-	        	template : function(dataItem) {
-					return '<a  onclick="openPayInvoiceViewWindow(\'' + dataItem._id + '\');">' + dataItem.payInvoiceMoney + '</a>';
-				}
-	        },
-	        {field:"payInvoicePlanDate", title:"建议出票日期",format: "{0:yyyy/MM/dd}"},
-	        {field:"payInvoiceActualDate", title:"出票日期",format: "{0:yyyy/MM/dd}"},
-	        {field:"payInvoiceReceivedMoneyStatus", title:"收款情况"},
-	        {field:"invoiceType", title:"票据类型"},
+	        {hidden: true, field: "contractId" },
 	        {field:"contractCode", title:"销售合同编号"},
-	        {field:"payInvoiceStatus", title:"状态"}
+	        {field:"invoiceType", title:"发票类型"},
+	        {field:"contractAmount", title:"合同总额"},
+	        {field:"totalPayInvoiceActualMoney", title:"已开票总额" },
+	        {field:"countDone", title:"已开票数"},
+	        {field:"totalPayInvoiceMoney", title:"开票申请总额" },
+	        {field:"count", title:"开票申请数"}
 	    ]
 	});
 });
-
+function viewPI(){
+	var row = getSelectedRowDataByGrid("grid");
+	if(!row) {
+		alert("点击列表可以选中数据");
+	}else{
+		loadPage("payInvoiceView", {salesContractId:row._id});		
+	}	
+}
 function addPI(){
-	loadPage("payInvoiceEdit",{operateType:"add"});
+	var row = getSelectedRowDataByGrid("grid");
+	if(!row) {
+		alert("点击列表可以选中数据");
+	}else{
+		loadPage("payInvoiceEdit",{salesContractId: row._id});
+	}	
 }
 function editManagerPI(){
 	var row = getSelectedRowDataByGrid("grid");

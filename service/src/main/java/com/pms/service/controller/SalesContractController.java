@@ -93,6 +93,13 @@ public class SalesContractController extends AbstractController {
     }
     
     /**开票CRUD*/
+    @RequestMapping("/invoice/view")
+    //@RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_ADD, desc = RoleValidConstants.PAY_INVOICE_ADD_DESC)
+    public void viewInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.viewInvoiceForSC(params), request, response);
+    }
+    
     @RequestMapping("/invoice/prepare")
     @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_ADD, desc = RoleValidConstants.PAY_INVOICE_ADD_DESC)
     public void prepareInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
@@ -118,7 +125,7 @@ public class SalesContractController extends AbstractController {
     @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS, desc = RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS_DESC)
     public void managerRejectInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(salesContractService.managerRejectInvoiceForSC(params), request, response);
+        responseWithData(salesContractService.rejectInvoiceForSC(params), request, response);
     }
     
     @RequestMapping("/invoice/financeapprove")
@@ -129,10 +136,10 @@ public class SalesContractController extends AbstractController {
     }
     
     @RequestMapping("/invoice/financereject")
-    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_FIN_PROCESS, desc = RoleValidConstants.PAY_INVOICE_FIN_PROCESS)
+    @RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_FIN_PROCESS, desc = RoleValidConstants.PAY_INVOICE_FIN_PROCESS_DESC)
     public void financeRejectInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(salesContractService.finRejectInvoiceForSC(params), request, response);
+        responseWithData(salesContractService.rejectInvoiceForSC(params), request, response);
     }
     
     @RequestMapping("/invoice/done")

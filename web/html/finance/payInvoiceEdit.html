@@ -6,12 +6,6 @@
 <body>
 <div>
 		<h2>开票申请单</h2>
-		<div id="searchDiv">
-			<label>选择合同:</label>
-			<input id="searchfor"  style="width:250px;" type="text" value=""/>
-			<input id="searchbt" class="k-button" type="button" value="确定"/>
-		</div>
-		<br><hr>
 		<div id="form-container">
 			<table class="table_form">
 				<tr>
@@ -27,17 +21,21 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>申请部门: <select id="departmentItems" class="k-input" data-bind="value: payInvoiceDepartment"></select></td>
-					<td>要求日期: <input data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: payInvoicePlanDate"/></td>
-					<td colspan="2">收款情况：<input type="text" data-bind="value:payInvoiceReceivedMoneyStatus"/></td>
+					<td colspan="2">收款情况： 
+						<select name="payInvoiceReceivedMoneyStatus" required validationMessage="请选择"  data-bind="value: payInvoiceReceivedMoneyStatus">
+							<option value="款已收待开票">款已收待开票</option>
+							<option value="款未收先开票">款未收先开票</option>
+						</select>
+					</td>
+					<td colspan="2">要求日期: <input name="payInvoicePlanDate" required validationMessage="请选择日期"  data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: payInvoicePlanDate"/></td>
 				</tr>
 				<tr class="invoicedone">
-					<td>实际金额：<input data-role="numerictextbox" min="0" data-bind="value:payInvoiceActualMoney"/></td>
-					<td>实际日期：<input data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value:payInvoiceActualDate"/></td>
-					<td colspan="2">实际张数：<input data-role="numerictextbox" min="0" data-bind="value:payInvoiceActualSheetCount"/></td>
+					<td>实际金额：<input required validationMessage="请输入"  data-role="numerictextbox" min="0" data-bind="value:payInvoiceActualMoney"/></td>
+					<td>实际日期：<input required validationMessage="请选择"  data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value:payInvoiceActualDate"/></td>
+					<td colspan="2">实际张数：<input required validationMessage="请输入张数"  data-role="numerictextbox" min="0" data-bind="value:payInvoiceActualSheetCount"/></td>
 				</tr>
 				<tr class="invoicedone">
-					<td colspan="4">发票编号：<input type="text" data-bind="value:payInvoiceActualInvoiceNum"/></td>
+					<td colspan="4">发票编号：<input required validationMessage="请输入发票号"  type="text" data-bind="value:payInvoiceActualInvoiceNum"/></td>
 				</tr>			
 			</table>
             <div>
@@ -46,16 +44,15 @@
             	<br><label>备注:</label>
             	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: payInvoiceComment" ></textarea>
             </div>
-            <br>
-            <div id="form-container-button">
-            	<button access="pay_invoice_add" class="k-button access" value="add">提交</button>
-            	<button access="pay_invoice_manager_process" class="k-button access" value="managerapprove">经理批准</button>
-            	<button access="pay_invoice_manager_process" class="k-button access" value="managerreject">经理拒绝</button>
-            	<button access="pay_invoice_fin_process" class="k-button access" value="financeapprove">财务批准</button>
-            	<button access="pay_invoice_fin_process" class="k-button access" value="financereject">财务拒绝</button>
-            	<button access="pay_invoice_done" class="k-button access" value="done">开票</button>
-            	<button class="k-button" value="cancel">取消</button>
-            </div>
 		</div>
+        <div id="form-container-button">
+        	<button access="pay_invoice_add" class="k-button access" value="add">提交</button>
+        	<button access="pay_invoice_manager_process" class="k-button access" value="managerapprove">批准</button>
+        	<button access="pay_invoice_manager_process" class="k-button access" value="managerreject">拒绝</button>
+        	<button access="pay_invoice_fin_process" class="k-button access" value="financeapprove">批准</button>
+        	<button access="pay_invoice_fin_process" class="k-button access" value="financereject">拒绝</button>
+        	<button access="pay_invoice_done" class="k-button access" value="done">开票</button>
+        	<button class="k-button" value="cancel">取消</button>
+        </div>
 </div>		
 </body>

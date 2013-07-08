@@ -28,6 +28,7 @@ var myModel = kendo.data.Model.define({
 		payInvoiceActualDate:{type:"date"},
 		payInvoiceActualInvoiceNum:{},
 		payInvoiceActualSheetCount:{},
+		payInvoiceComment:{defaultValue:""},
 		invoiceType:{},
 		salesContractId:{},
 		contractCode:{},
@@ -48,7 +49,7 @@ $(document).ready(function () {
 			aggregate: [ 
 			    { field: "itemNo", aggregate: "count" },
 			    { field: "itemMoney", aggregate: "sum"}
-			]			
+			]
 		},
 	    columns: [
 			{ field: "itemNo", title: "编号" ,footerTemplate: "总共: #=count#"},
@@ -60,49 +61,25 @@ $(document).ready(function () {
 	  	editable:true,
 	  	toolbar: [{text:"新增",name:"create"},{text:"计算",name:"save"}]
 	});
-	
-	$("#searchfor").kendoDropDownList({
-		dataTextField : "contractCode",
-		dataValueField : "_id",
-		template:  '${ data.projectName }:<strong>${ data.contractCode }</strong>',
-		dataSource : {
-			transport : {
-				read : {
-					dataType : "jsonp",
-					url : "/service/sc/listforselect"
-				}
-			},
-			schema : {
-				total: "total",
-				data: "data"
-			}
-		}
-	});	
 
 	$("#form-container-button button").click(function(){
 		if(this.value == "cancel") {
 			loadPage("payInvoice");
-		} else if(confirm("提交表单，确认？")){
-			postAjaxRequest("/service/sc/invoice/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
+		} else if(validateModel()){
+			if(confirm("提交表单，确认？")){
+				postAjaxRequest("/service/sc/invoice/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
+			}
 		}
 	});
-	
-	$("#searchbt").click(function(){
-		var scId = $("#searchfor").val();
-		if(scId != ""){
-			postAjaxRequest("/service/sc/invoice/prepare", {contractCode:scId}, editSucess);
-		}else{
-			alert("请选择合同编号");
-		}
-	});
+	console.log(redirectParams);
 	if(popupParams){
 		postAjaxRequest("/service/sc/invoice/load", popupParams, editSucess);
 		disableAllInPoppup();
 	} else if(redirectParams){
 		if(redirectParams._id){
 			postAjaxRequest(baseUrl+"/sc/invoice/load", redirectParams, editSucess);
-		} else {
-			$("#searchDiv").show();
+		} else if(redirectParams.salesContractId){
+			postAjaxRequest(baseUrl+"/sc/invoice/prepare", redirectParams, editSucess);
 		}
 	}
 	kendo.bind($("#form-container"), currentObj);
@@ -112,22 +89,39 @@ function saveSuccess(){
 	loadPage("payInvoice");
 }
 function editSucess(e){
-	if(!e) return;
-	if(e.payInvoiceStatus == "已出票"){
-		$("#form-container .invoicedone").show();
-		$("#form-container-button [value=done]").hide();
-		$("#form-container-button [value=financeapprove]").hide();
-		$("#form-container-button [value=financereject]").hide();		
-	} else if(e.payInvoiceStatus == "财务已审核"){
-		$("#form-container .invoicedone").show();
-		$("#form-container-button [value=financeapprove]").hide();
-		$("#form-container-button [value=financereject]").hide();		
-	}else if(e.payInvoiceStatus == "经理已审核"){
-		$("#form-container-button [value=done]").hide();
-	}
+	if(e.payInvoiceStatus == '草稿'){//只 提交 可见
+		$(".invoicedone").remove();
+		$("#form-container-button button[value!='add'][value!='cancel']").hide();
+	}else if(e.payInvoiceStatus == '待部门经理审核'){//只 经理批准 拒绝可见
+		$(".invoicedone").remove();
+		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container-button button[value!='managerapprove'][value!='managerreject'][value!='cancel']").hide();
+	}else if(e.payInvoiceStatus == '待财务经理审核'){//只 财务批准 拒绝可见
+		$(".invoicedone").remove();
+		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container-button button[value!='financeapprove'][value!='financereject'][value!='cancel']").hide();
+	}else if(e.payInvoiceStatus == '开票中'){//只开票可见
+		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container-button button[value!='done'][value!='cancel']").hide();
+		$(".invoicedone").show();
+		$(".invoicedone input").attr("disabled",false);
+	}else if(e.payInvoiceStatus == '开票完毕'){//都不可见
+		$(".invoicedone").show();
+		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container-button button[value!='cancel']").hide();
+	}else if(e.payInvoiceStatus == '拒绝'){//只提交可见
+		$(".invoicedone").remove();
+		$("#form-container-button button[value!='add'][value!='cancel']").hide();
+	}		
 	currentObj = new myModel(e);
 	currentObj.set("payInvoicePlanDate", kendo.toString(currentObj.payInvoicePlanDate, 'd'));
 	currentObj.set("payInvoiceActualDate", kendo.toString(currentObj.payInvoiceActualDate, 'd'));	
 	kendo.bind($("#form-container"), currentObj);
 }
-
+function validateModel(){
+	var validator = $("#form-container").kendoValidator().data("kendoValidator");
+	if(!validator.validate()){
+		return false;
+	}
+	return true;
+}

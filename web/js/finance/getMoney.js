@@ -4,7 +4,7 @@ var requestModel = kendo.data.Model.define({
     fields: {
    	   _id: {  editable: false, nullable: true},
        getMoneyActualMoney: {type:"number",validation: {required: true } },
-       getMoneyActualData: { type:"date",validation: {required: true }},
+       getMoneyActualDate: { type:"date",validation: {required: true }},
    	   getMoneyComment:{},
        salesContractId: {},
        salesContractCode: {},
@@ -65,7 +65,7 @@ $(document).ready(function () {
         pageable: true,
         toolbar: [{name:"create",text:"新增"}],
         columns: [
-            { field: "getMoneyActualData",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
+            { field: "getMoneyActualDate",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
             { field: "getMoneyActualMoney", title:"金额", min:0},
             { field: "salesContractCode", title: "销售合同编号",editor: pcDropDownEditor},
             { field: "customerName", title: "客户"},
