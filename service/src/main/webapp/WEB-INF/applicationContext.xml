@@ -128,6 +128,7 @@
     <bean name="arrivalNoticeService" class="com.pms.service.service.impl.ArrivalNoticeServiceImpl"
 		id="arrivalNoticeService">
 		<property name="dao" ref="commonDao"></property>
+		<property name="scs" ref="salesContractService"></property>
 	</bean>
 
 	<bean

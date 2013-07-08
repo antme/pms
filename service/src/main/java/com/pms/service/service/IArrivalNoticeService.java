@@ -17,5 +17,7 @@ public interface IArrivalNoticeService {
     public Map<String, Object> listByScID(Object scId);
     
     public Map<String, Object> listByScIdForBorrowing(Object scId);
+    
+    public Map<String, Object> listCanShipEq(Map<String, Object> params);
 }
 

@@ -1,6 +1,9 @@
 package com.pms.service.mockbean;
 
 public class ArrivalNoticeBean {
+	
+	public static final String NOTICE_ID = "noticeId";
+	
     public static final String ARRIVAL_DATE = "arrivalDate";
     
     public static final String FOREIGN_KEY = "foreignKey"; // 采购订单id or 调拨申请id
@@ -22,4 +25,10 @@ public class ArrivalNoticeBean {
     public static final String SALES_COUNTRACT_ID = "salesContractId";
     
     public static final String EQ_LIST = "eqcostList";
+    
+    public static final String NOTICE_STATUS = "noticeStatus";
+    
+    public static final String NOTICE_STATUS_NORMAL = "正常";
+    
+    public static final String NOTICE_STATUS_CLOSE = "关闭";
 }

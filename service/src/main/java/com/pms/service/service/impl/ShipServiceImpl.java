@@ -9,6 +9,7 @@ import java.util.Map;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.SalesContractBean;
@@ -90,6 +91,12 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		
 		params.put(ShipBean.SHIP_STATUS, status);
 		return dao.add(params, DBBean.SHIP);
+	}
+	
+	public Map<String, Object> listCanShipEq(Map<String, Object> params) {
+		params.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
+		dao.list(params, DBBean.ARRIVAL_NOTICE);
+		return null;
 	}
 	
 	public Map<String, Object> eqlist(Map<String, Object> params) {
@@ -213,6 +220,27 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		}
 		
 		return dao.updateById(params, DBBean.SHIP);
+	}
+	
+	// 更新到货通知中已被申请发货的设备数量
+	private void updateArrivalNotice(List<Map<String, Object>> eqlist) {
+		Map<String, Object> noticeKeyEqList = new HashMap<String, Object>();
+		for (Map<String, Object> eq:eqlist) {
+			List<Map<String, Object>> list;
+			if (noticeKeyEqList.containsKey(eq.get(ArrivalNoticeBean.NOTICE_ID))) {
+				list = (List<Map<String, Object>>) noticeKeyEqList.get(eq.get(ArrivalNoticeBean.NOTICE_ID));
+			} else {
+				list = new ArrayList<Map<String, Object>>();
+			}
+			list.add(eq);
+			noticeKeyEqList.put((String) eq.get(ArrivalNoticeBean.NOTICE_ID), list);
+		}
+		
+		for (Map.Entry mapEntry : noticeKeyEqList.entrySet()) {
+			Map<String, Object> notice = dao.findOne(ApiConstants.MONGO_ID, mapEntry.getKey(), DBBean.ARRIVAL_NOTICE);
+//			notice.put(ArrivalNoticeBean.EQ_LIST, value);
+			arrivalService.update(notice);
+		}
 	}
 
 }

@@ -11,16 +11,29 @@ import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
+import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
+import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
+import com.pms.service.service.ISalesContractService;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
 
 public class ArrivalNoticeServiceImpl extends AbstractService implements IArrivalNoticeService {
+	
+	protected ISalesContractService scs;
+
+	public ISalesContractService getScs() {
+		return scs;
+	}
+
+	public void setScs(ISalesContractService scs) {
+		this.scs = scs;
+	}
 
 	@Override
 	public String geValidatorFileName() {
@@ -83,19 +96,64 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		return dao.add(params, DBBean.ARRIVAL_NOTICE);
 	}
 	
-	 public Map<String, Object> listProjectsForSelect(Map<String, Object> params){
-	     Map<String, Object> query = new HashMap<String, Object>();
-	     query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.PROJECT_ID);
-	     List<Object> projectIds = this.dao.listLimitKeyValues(query, DBBean.ARRIVAL_NOTICE);
-	     
-	     Map<String, Object> projectQuery = new HashMap<String, Object>();
-	     projectQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, projectIds));
-	     projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CODE});
-	     
-	     return this.dao.list(projectQuery, DBBean.PROJECT);
-	     
-	     
-	 }
+	public Map<String, Object> listProjectsForSelect(Map<String, Object> params){
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.PROJECT_ID);
+		List<Object> projectIds = this.dao.listLimitKeyValues(query, DBBean.ARRIVAL_NOTICE);
+		
+		Map<String, Object> projectQuery = new HashMap<String, Object>();
+		projectQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, projectIds));
+		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER, 
+				ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_CUSTOMER});
+     
+		Map<String, Object> result = dao.list(projectQuery, DBBean.PROJECT);
+		
+		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
+		List<String> pmIds = new ArrayList<String>(); 
+		List<String> cIds = new ArrayList<String>();
+		for(Map<String, Object> p : resultList){
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
+			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			if (!ApiUtil.isEmpty(pmid)){
+				pmIds.add(pmid);
+			}
+			if (!ApiUtil.isEmpty(cid)){
+				cIds.add(cid);
+			}
+		}
+		Map<String, Object> pmQuery = new HashMap<String, Object>();
+		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pmIds));
+		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME, UserBean.DEPARTMENT});
+		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
+		
+		Map<String, Object> cusQuery = new HashMap<String, Object>();
+		cusQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, cIds));
+		cusQuery.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
+		Map<String, Object> cusData = dao.listToOneMapAndIdAsKey(cusQuery, DBBean.USER);
+		
+		for (Map<String, Object> p : resultList){
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
+			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmid);
+			if(ApiUtil.isEmpty(pmInfo)){
+				p.put(ProjectBean.PROJECT_MANAGER, "N/A");
+				p.put(UserBean.DEPARTMENT, "N/A");
+			}else{
+				p.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+				p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
+			}
+			
+			
+			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			Map<String, Object> customerInfo = (Map<String, Object>) cusData.get(customerId);
+			if(ApiUtil.isEmpty(pmInfo)){
+				p.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
+			}else{
+				p.put(ProjectBean.PROJECT_CUSTOMER, pmInfo.get(UserBean.USER_NAME));
+			}
+		}
+		
+		return result;
+	}
 	 
     public Map<String, Object> listByScID(Object scId) {
         Map<String, Object> query = new HashMap<String, Object>();
@@ -125,6 +183,31 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
             result.put(ArrivalNoticeBean.EQ_LIST, new ArrayList<Map<String, Object>>());
         }
         return result;
+    }
+    
+    // 根据销售合同取到货设备清单
+    public Map<String, Object> listCanShipEq(Map<String, Object> params) {
+    	params.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
+    	Map<String, Object> noticeResult = dao.list(params, DBBean.ARRIVAL_NOTICE);
+    	List<Map<String, Object>> noticeList = (List<Map<String, Object>>) noticeResult.get(ApiConstants.RESULTS_DATA);
+    	
+    	List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> notice:noticeList){
+			List<Map<String, Object>> list = (List<Map<String, Object>>) notice.get(ArrivalNoticeBean.EQ_LIST);
+			for (Map<String, Object> eq:list){
+				eq.put(ArrivalNoticeBean.NOTICE_ID, notice.get(ApiConstants.MONGO_ID));
+			}
+			eqList.addAll(list);
+		}
+		
+		Map<String, Object> res = new HashMap<String, Object>();
+		if (ApiUtil.isEmpty(eqList)) {
+			res.put(ApiConstants.RESULTS_DATA, eqList);
+		} else {
+			res.put(ApiConstants.RESULTS_DATA, scs.mergeEqListBasicInfo(eqList));
+		}
+		
+		return res;
     }
 
 }

@@ -44,6 +44,11 @@ public class ArrivalNoticeController extends AbstractController {
         responseWithData(arrivalNoticeService.create(params), request, response);
     }
     
+    @RequestMapping("/canshipeq/list")
+    public void eqlist(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(arrivalNoticeService.listCanShipEq(params), request, response);
+    }
     
     @RequestMapping("/project/list")
     public void listProjectsForSelect(HttpServletRequest request, HttpServletResponse response) {
