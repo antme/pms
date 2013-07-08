@@ -140,9 +140,9 @@ function dataBound(e) {
 		if (!item.pbTotalCount) {item.pbTotalCount = 0;}
 		if (!item.eqcostBasePrice) {item.eqcostBasePrice = 0;}
 		// 检测总的申请数量
-//		if(item.paCount > item.pbLeftCount){
-//			item.paCount=item.pbLeftCount;
-//		}
+		if(item.paCount > item.pbLeftCount){
+			item.paCount=item.pbLeftCount;
+		}
 	}
 }
 
@@ -152,10 +152,11 @@ function saveSuccess(){
 function editSuccess(e){
 	if(!e) return;
 	if(e._id) {
-		$("#form-container :input").attr("disabled","disabled");
-		$("#form-container-button button").attr("disabled","disabled");
+		$("#form-container [name!='tempComment']").attr("disabled",true);
+		$("#form-container-button button").attr("disabled",true);
 	}
 	currentObj = new myModel(e);
+	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
 	kendo.bind($("#form-container"), currentObj);	
 }
 

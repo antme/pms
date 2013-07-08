@@ -222,9 +222,9 @@ function saveSuccess(){
 function editSuccess(e){
 	if(!e) return;
 	if(e.pbStatus =="已提交") {
-		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container [name!='tempComment']").attr("disabled",true); 
 	}else if(e.pbStatus =="已批准") {
-		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container [name!='tempComment']").attr("disabled",true); 
 	}else if(e.pbStatus =="已拒绝") {
 		//nothing
 	}

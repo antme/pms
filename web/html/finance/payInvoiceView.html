@@ -44,7 +44,9 @@
 			</table>
 			<div>
 				<h4>开票列表</h4>
-				<button class="k-button" onclick="detailPI()">查看</button>
+				<div class="k-toolbar k-grid-toolbar">
+					<button class="k-button" onclick="detailPI()">查看</button>
+				</div>
 				<div id="invoiceGrid" data-bind="source: invoiceList"></div>
 			</div>
 			<br>

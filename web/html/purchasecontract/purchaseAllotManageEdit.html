@@ -44,14 +44,13 @@
             <div>
 				<h4>成本设备清单</h4>
 				<div id="subGrid" data-bind="source: eqcostList"></div>
-            </div>
-            <br><br>
-            <div>
-            	<label>备注:</label>
-            	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: paComment" ></textarea>
+				<div data-bind="text: paComment" class="commentdiv"></div>
+				<div class="tempCommentdiv">
+					<label>备注:</label><br>
+					<textarea name="tempComment" rows="4" cols="120" class="k-textbox" style="width:505px;" data-bind="value: tempComment" ></textarea>
+				</div>
             </div>
 		</div>
-        <br>
         <div id="form-container-button">
         	<button access="purchase_allocate_process" class="k-button access" value="approve">批准</button>
         	<button access="purchase_allocate_process" class="k-button access" value="reject">拒绝</button>

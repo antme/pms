@@ -130,7 +130,7 @@ function saveSuccess(){
 	loadPage("purchaseAllotManage");
 }
 function editSucess(e){
-	$("#form-container :input").attr("disabled","disabled");
+	$("#form-container [name!='tempComment']").attr("disabled",true);
 	if(e.paStatus == "已结束"){
 		$("#paNumberTd").show();
 	}else if(e.paStatus == "已终审") {

@@ -526,6 +526,7 @@ function disableAllInPoppup(){
 	$("#popup button").hide();
 	$("#popup textarea").attr("disabled",true); 
 	$("#popup input").attr("disabled",true);
+	if($("#form-container .tempCommentdiv"))$("#form-container .tempCommentdiv").hide();
 }
 
 

@@ -28,6 +28,7 @@ import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseService;
+import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
@@ -73,12 +74,25 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		return request;
 	}
 
+	private String recordComment(String action,String newComment,String oldComment){
+		StringBuilder str = new StringBuilder();
+		String name = ApiThreadLocal.getCurrentUserName();
+		if(oldComment != null) str.append(oldComment).append("\n");
+		str.append(DateUtil.getDateString(new Date())).append(" ").append(name).append("").append(action);
+		if(newComment != null) str.append("： ").append(newComment);
+		return str.toString();
+	}
+	
     /**
      * @param back object info
      */
 	public Map<String, Object> saveBack(Map<String, Object> params) {
 		Map<String,Object> newObj = new HashMap<String,Object>();
 	    newObj.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
+	    String oldComment = (String)dao.querySingleKeyById(PurchaseBack.pbComment, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("保存",comment,oldComment);
+	    newObj.put(PurchaseBack.pbComment, comment);
 		return saveOrUpdate(params, newObj);
 	}
 
@@ -86,7 +100,11 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
     public Map<String, Object> submitBack(Map<String, Object> params) {
         Map<String, Object> newObj = new HashMap<String, Object>();
         newObj.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
-        newObj.put(PurchaseBack.pbSubmitDate, DateUtil.getDateString(new Date()));        
+        newObj.put(PurchaseBack.pbSubmitDate, DateUtil.getDateString(new Date()));
+        String oldComment = (String)dao.querySingleKeyById(PurchaseBack.pbComment, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);        
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("提交",comment,oldComment);
+	    newObj.put(PurchaseBack.pbComment, comment);
         return saveOrUpdate(params, newObj);
     }
 
@@ -96,6 +114,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         newObj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
         newObj.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
         newObj.put(PurchaseBack.pbOperateDate, DateUtil.getDateString(new Date()));
+	    String oldComment = (String)dao.querySingleKeyById(PurchaseBack.pbComment, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("批准",comment,oldComment);
+	    newObj.put(PurchaseBack.pbComment, comment);
         return dao.updateById(newObj, DBBean.PURCHASE_BACK);
     }
 	
@@ -105,6 +127,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         newObj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
         newObj.put(PurchaseBack.pbStatus, PurchaseStatus.rejected.toString());
         newObj.put(PurchaseBack.pbOperateDate, DateUtil.getDateString(new Date()));
+	    String oldComment = (String)dao.querySingleKeyById(PurchaseBack.pbComment, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("拒绝",comment,oldComment);
+	    newObj.put(PurchaseBack.pbComment, comment);
         return dao.updateById(newObj, DBBean.PURCHASE_BACK);
     }
 	
@@ -112,7 +138,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         newObj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
         newObj.put(PurchaseBack.pbDepartment, params.get(PurchaseBack.pbDepartment));
         newObj.put(PurchaseBack.pbType, params.get(PurchaseBack.pbType));
-        newObj.put(PurchaseBack.pbComment, params.get(PurchaseBack.pbComment));
         newObj.put(PurchaseBack.pbSpecialRequire, params.get(PurchaseBack.pbSpecialRequire));
         newObj.put(PurchaseBack.pbSpecialRequireRadio, params.get(PurchaseBack.pbSpecialRequireRadio));
         newObj.put(PurchaseBack.pbPlanDate, params.get(PurchaseBack.pbPlanDate));
@@ -136,6 +161,13 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		Map<String,Object> obj = new HashMap<String,Object>();
 		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
 		obj.put(PurchaseBack.pbStatus, PurchaseStatus.interruption.toString());
+		
+	    String oldComment = (String)dao.querySingleKeyById(PurchaseBack.pbComment, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("中止",comment,oldComment);
+	    obj.put(PurchaseBack.pbComment, comment);
+		
+		
 		//TODO: 中止了备货，调拨和采购怎么办？
 		Map<String,Object> res = dao.updateById(obj, DBBean.PURCHASE_BACK);
 	      
@@ -155,8 +187,12 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
 		obj.put(PurchaseBack.paSubmitDate, DateUtil.getDateString(new Date()));
 		obj.put(PurchaseBack.paShelfCode, params.get(PurchaseBack.paShelfCode));
-		obj.put(PurchaseBack.paComment, params.get(PurchaseBack.paComment));
 		obj.put(PurchaseBack.paCode, generateCode("DBSQ", DBBean.PURCHASE_ALLOCATE));
+		
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("提交",comment,null);
+	    obj.put(PurchaseBack.paComment, comment);
+		
 		obj.putAll(checkEqCountForAllot(params));
 		
 		scs.mergeCommonFieldsFromSc(obj, params.get(PurchaseBack.scId));
@@ -183,29 +219,32 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	
 	public Map<String, Object> approveAllot(Map<String, Object> params) {
 		Map<String,Object> allot = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ALLOCATE);
-		
-		String comment = (String)params.get(PurchaseBack.paComment);
 		String dbStatus = String.valueOf(allot.get(PurchaseBack.paStatus));
-		
+
+	    String oldComment = (String)dao.querySingleKeyById(PurchaseBack.paComment, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ALLOCATE);
+	    String comment = (String)params.get("tempComment");
+	    
 		String status = null;
 		if(isDepotManager()){//库管
 			if(PurchaseStatus.submited.toString().equals(dbStatus)){
 				status = PurchaseStatus.approved.toString();
+				comment = recordComment("批准",comment,oldComment);
 			} else if(PurchaseStatus.finalApprove.toString().equals(dbStatus)){
 				status = PurchaseStatus.done.toString();
+				comment = recordComment("终审",comment,oldComment);
 				allot.put(PurchaseBack.paNumber, params.get(PurchaseBack.paNumber));
 			}
 		}else if(isCoo()){//coo
 			if(PurchaseStatus.approved.toString().equals(dbStatus)){
 				status = PurchaseStatus.finalApprove.toString();
+				comment = recordComment("结束",comment,oldComment);
 			}
 		}
 		if(status == null){
 			throw new ApiResponseException(String.format("No role to for user,[%s]",params ), "role_required");
 		}
-		
+	    allot.put(PurchaseBack.paComment, comment);
 		allot.put(PurchaseBack.paStatus, status);
-		allot.put(PurchaseBack.paComment, comment);
 		allot.put(PurchaseBack.paApproveDate, DateUtil.getDateString(new Date()));
 		allot = dao.updateById(allot, DBBean.PURCHASE_ALLOCATE);
 		
@@ -235,7 +274,12 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		Map<String,Object> obj = new HashMap<String,Object>();
 		obj.put(ApiConstants.MONGO_ID, allot.get(ApiConstants.MONGO_ID));
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.rejected.toString());
-		
+
+	    String oldComment = (String)dao.querySingleKeyById(PurchaseBack.paComment, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ALLOCATE);
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("拒绝",comment,oldComment);
+	    allot.put(PurchaseBack.paComment, comment);
+	    
         Map<String, Object> res = dao.updateById(obj, DBBean.PURCHASE_ALLOCATE);
 /*        Map<String, Object> resqeury = this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { EqCostListBean.EQ_LIST_SC_ID },
                 DBBean.PURCHASE_ALLOCATE);
