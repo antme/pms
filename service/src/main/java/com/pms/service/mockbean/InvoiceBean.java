@@ -32,14 +32,14 @@ public class InvoiceBean {
 	public static final String salesContractId = "salesContractId";
 	public static final String purchaseContractId = "purchaseContractId";
 	public static final String purchaseContractCode = "purchaseContractCode";
-	
+	//unsubmit -- submit -- manager approve -- finance manager approve -- doing -- done
 	public static final String statusUnSubmit = "草稿";//
-	public static final String statusSubmit = "待审核";//
-	public static final String statusManagerApprove = "经理已审核";//
-	public static final String statusFinanceApprojve = "财务已审核";//
-	public static final String statusDone = "已出票";//
-	public static final String statusManagerReject = "经理拒绝";//
-	public static final String statusFinanceReject = "财务拒绝";//
+	public static final String statusSubmit = "待部门经理审核";//
+	public static final String statusManagerApprove = "待财务经理审核";//
+	public static final String statusFinanceManagerApprojve = "开票中";//
+	public static final String statusDone = "开票完毕";//
+	public static final String statusReject = "拒绝";//
+	
 	
 ///////////////////////	收票///////////////
 	public static final String getInvoiceComment = "getInvoiceComment";
