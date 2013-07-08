@@ -37,152 +37,170 @@
 				<div>
 					<div class="k-edit-form-container">
 						<!-- 采购合同基本信息 -->
-						<div>
-							<div class="k-edit-label ">
-								<label for="purchaseContractCode">采购合同编号</label>
-							</div>
-							<div data-container-for="purchaseContractCode"
-								class="k-edit-field ">
-								<input type="text" class="k-input k-textbox"
-									name="purchaseContractCode" required data-required-msg="Input 采购合同编号"
-									data-bind="value: purchaseContractCode">
-							</div>
+					<div>
+						<div class="k-edit-label ">
+							<label for="contractExecuteCate">虚拟采购合同类型</label>
+						</div>
+						<div data-container-for="contractExecuteCate"
+							class="k-edit-field ">
+							<input type="radio" name="contractExecuteCate" value="正常采购 "
+								data-bind="checked: contractExecuteCate" />正常采购 <input type="radio"
+								name="contractExecuteCate" value="北京代采" data-bind="checked: contractExecuteCate" />北京代采
+							<input type="radio" name="contractExecuteCate" value="北京库存"
+								data-bind="checked: contractExecuteCate" />北京库存 <input type="radio"
+								name="contractExecuteCate" value="北京生产"
+								data-bind="checked: contractExecuteCate" />北京生产
+						</div>
+						<div class="k-edit-label ">
+							<label for="purchaseContractCode">采购合同编号</label>
+						</div>
+						<div data-container-for="purchaseContractCode"
+							class="k-edit-field ">
+							<input type="text" class="k-input k-textbox"
+								name="purchaseContractCode" required
+								data-required-msg="Input 采购合同编号"
+								data-bind="value: purchaseContractCode">
+						</div>
 
-							<div class="k-edit-label ">
-								<label for="purchaseContractType">采购合同类别</label>
-							</div>
-							<div data-container-for="purchaseContractType"
-								class="k-edit-field ">
-						          <input type="text" 
-                                    name="purchaseContractType" id="purchaseContractType"
-                                    required="required" data-bind="value: purchaseContractType">
-							</div>
+						<div class="k-edit-label ">
+							<label for="purchaseContractType">采购合同类别</label>
+						</div>
+						<div data-container-for="purchaseContractType"
+							class="k-edit-field ">
+							<input type="text" name="purchaseContractType"
+								id="purchaseContractType" required="required"
+								data-bind="value: purchaseContractType">
+						</div>
 
-							<div class="k-edit-label ">
-								<label for="signBy">签订人</label>
-							</div>
-							<div data-container-for="signBy" class="k-edit-field ">
-								<input type="text" class="pro-dropdownlist" name="signBy"
-									id="signBy" required="required" data-bind="value: signBy">
-							</div>
+						<div class="k-edit-label ">
+							<label for="signBy">签订人</label>
+						</div>
+						<div data-container-for="signBy" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="signBy"
+								id="signBy" required="required" data-bind="value: signBy">
+						</div>
 
-							<div class="k-edit-label ">
-								<label for="supplierName">供应商名称</label>
-							</div>
-							<div data-container-for="supplier" class="k-edit-field ">
-								<input type="text" name="supplier"
-									id="supplier" required="required"
-									data-bind="value: supplier">
-							</div>
+						<div class="k-edit-label ">
+							<label for="supplierName">供应商名称</label>
+						</div>
+						<div data-container-for="supplier" class="k-edit-field ">
+							<input type="text" name="supplier" id="supplier"
+								required="required" data-bind="value: supplier">
+						</div>
 
-							<div class="k-edit-label ">
-								<label for="supplierNameContact">供应商联系人</label>
-							</div>
-							<div data-container-for="supplierNameContact"
-								class="k-edit-field ">
-								<input type="text" 
-									name="supplierNameContact" id="supplierNameContact"
-									required="required" data-bind="value: supplierNameContact">
-							</div>
-							<div class="k-edit-label ">
-                                <label for="eqcostDeliveryType">货物递送方式</label>
-                            </div>
-                            <div data-container-for="eqcostDeliveryType" class="k-edit-field ">
-                                 <input type="text" 
-                                    name="eqcostDeliveryType" disabled required="required" data-bind="value: eqcostDeliveryType">
-                            </div>
-                            
-                            <div class="k-edit-label ">
-                                <label for="executeStatus">执行状态</label>
-                            </div>
-                            <div data-container-for="executeStatus" class="k-edit-field ">
-                                 <input type="text" 
-                                    name="executeStatus" id="executeStatus"
-                                    required="required" data-bind="value: executeStatus">
-                            </div>
-                            
-                            <div class="k-edit-label ">
-                                <label for="contractProperty">采购合同性质</label>
-                            </div>
-                            <div data-container-for="contractProperty" class="k-edit-field ">
-                                <select name="contractProperty" data-bind="value: contractProperty" id="contractProperty" required data-required-msg="Select Contract Type">
-                                    <option>闭口合同</option>
-                                    <option>开口合同</option>
-                                </select>
-                            </div>
-                            
-							<div class="k-edit-label ">
-								<label for="signDate">合同签订日期</label>
-							</div>
-							<div class="k-edit-field ">
-								<input  id="signDate" name="signDate" data-bind="value:signDate" data-role="datepicker" required/>
-								
-							</div>
+						<div class="k-edit-label ">
+							<label for="supplierNameContact">供应商联系人</label>
+						</div>
+						<div data-container-for="supplierNameContact"
+							class="k-edit-field ">
+							<input type="text" name="supplierNameContact"
+								id="supplierNameContact" required="required"
+								data-bind="value: supplierNameContact">
+						</div>
+						<div class="k-edit-label ">
+							<label for="eqcostDeliveryType">货物递送方式</label>
+						</div>
+						<div data-container-for="eqcostDeliveryType" class="k-edit-field ">
+							<input type="text" name="eqcostDeliveryType" disabled
+								required="required" data-bind="value: eqcostDeliveryType">
+						</div>
 
-							<div class="k-edit-label ">
-								<label for="firstPay">首付</label>
-							</div>
-							<div data-container-for="firstPay" class="k-edit-field ">
-								<input type="number" class="k-input k-textbox" name="firstPay"
-									id="firstPay" required="required" data-bind="value: firstPay">
-							</div>
+						<div class="k-edit-label ">
+							<label for="executeStatus">执行状态</label>
+						</div>
+						<div data-container-for="executeStatus" class="k-edit-field ">
+							<input type="text" name="executeStatus" id="executeStatus"
+								required="required" data-bind="value: executeStatus">
+						</div>
 
-							<div class="k-edit-label ">
-								<label for="moneyProgress">进度款</label>
-							</div>
-							<div data-container-for="moneyProgress" class="k-edit-field ">
-								<input type="number" class="k-input k-textbox"
-									name="moneyProgress" id="moneyProgress" required="required"
-									data-bind="value: moneyProgress">
-							</div>
+						<div class="k-edit-label ">
+							<label for="contractProperty">采购合同性质</label>
+						</div>
+						<div data-container-for="contractProperty" class="k-edit-field ">
+							<select name="contractProperty"
+								data-bind="value: contractProperty" id="contractProperty"
+								required data-required-msg="Select Contract Type">
+								<option>闭口合同</option>
+								<option>开口合同</option>
+							</select>
+						</div>
 
-							<div class="k-edit-label ">
-								<label for="deposit">质保金</label>
-							</div>
-							<div data-container-for="projectAddress" class="k-edit-field ">
-								<input type="number" class="k-input k-textbox" name="deposit"
-									id="deposit" required="required" data-bind="value: deposit">
-							</div>
+						<div class="k-edit-label ">
+							<label for="signDate">合同签订日期</label>
+						</div>
+						<div class="k-edit-field ">
+							<input id="signDate" name="signDate" data-bind="value:signDate"
+								data-role="datepicker" required />
 
-							<div class="k-edit-label ">
-								<label for="requestedTotalMoney">合同金额</label>
-							</div>
-							<div data-container-for="requestedTotalMoney" class="k-edit-field ">
-								<input type="number" class="k-input k-textbox"
-									name="requestedTotalMoney" id="requestedTotalMoney" required="required" 
-									data-bind="value: requestedTotalMoney">
-							</div>
+						</div>
 
-							<div class="k-edit-label ">
-								<label for="invoiceType">收票类型</label>
-							</div>
-							<div data-container-for="projectAddress" class="k-edit-field ">
-						        <select name="invoiceType" data-bind="value: invoiceType" id="invoiceType" required data-required-msg="Select Contract Type">
-	                                <option>增值税专用</option>
-	                                <option>建筑业发票</option>
-	                                <option>服务业发票</option>
-                                </select>
-							</div>
+						<div class="k-edit-label ">
+							<label for="firstPay">首付</label>
+						</div>
+						<div data-container-for="firstPay" class="k-edit-field ">
+							<input type="number" class="k-input k-textbox" name="firstPay"
+								id="firstPay" required="required" data-bind="value: firstPay">
+						</div>
+
+						<div class="k-edit-label ">
+							<label for="moneyProgress">进度款</label>
+						</div>
+						<div data-container-for="moneyProgress" class="k-edit-field ">
+							<input type="number" class="k-input k-textbox"
+								name="moneyProgress" id="moneyProgress" required="required"
+								data-bind="value: moneyProgress">
+						</div>
+
+						<div class="k-edit-label ">
+							<label for="deposit">质保金</label>
+						</div>
+						<div data-container-for="projectAddress" class="k-edit-field ">
+							<input type="number" class="k-input k-textbox" name="deposit"
+								id="deposit" required="required" data-bind="value: deposit">
+						</div>
+
+						<div class="k-edit-label ">
+							<label for="requestedTotalMoney">合同金额</label>
+						</div>
+						<div data-container-for="requestedTotalMoney"
+							class="k-edit-field ">
+							<input type="number" class="k-input k-textbox"
+								name="requestedTotalMoney" id="requestedTotalMoney"
+								required="required" data-bind="value: requestedTotalMoney">
+						</div>
+
+						<div class="k-edit-label ">
+							<label for="invoiceType">收票类型</label>
+						</div>
+						<div data-container-for="projectAddress" class="k-edit-field ">
+							<select name="invoiceType" data-bind="value: invoiceType"
+								id="invoiceType" required
+								data-required-msg="Select Contract Type">
+								<option>增值税专用</option>
+								<option>建筑业发票</option>
+								<option>服务业发票</option>
+							</select>
+						</div>
 
 
-							<div class="k-edit-label ">
-								<label for="description">采购合同描述</label>
-							</div>
-							<div data-container-for="description" class="k-edit-field ">
-								<textarea id="description" rows="4" cols="220" class="k-textbox"
-									data-bind="value: description"></textarea>
-							</div>
+						<div class="k-edit-label ">
+							<label for="description">采购合同描述</label>
+						</div>
+						<div data-container-for="description" class="k-edit-field ">
+							<textarea id="description" rows="4" cols="220" class="k-textbox"
+								data-bind="value: description"></textarea>
+						</div>
 
 						<div class="k-edit-label ">
 							<label for="comment">备注</label>
 						</div>
-						<div  data-container-for="comment"  class="k-edit-field ">
+						<div data-container-for="comment" class="k-edit-field ">
 							<textarea rows="4" cols="220" class="k-textbox"
 								data-bind="value: comment"></textarea>
 						</div>
 
 					</div>
-					</div>
+				</div>
 				</div>
 
 				<div>

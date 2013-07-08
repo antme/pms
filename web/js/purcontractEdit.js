@@ -65,6 +65,9 @@ var contractModel = kendo.data.Model.define({
 		},
 		eqcostProductName : {
 			editable : false
+		},
+		contractExecuteCate : {
+			
 		}
 	}
 });

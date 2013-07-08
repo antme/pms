@@ -86,7 +86,9 @@ function removeTreeItems(items) {
 	for (i in newItems) {
 		var id = newItems[i].id;
 		var accRoles = "";
-		eval("accRoles = accessRoles."+id);	
+		var target = "accessRoles."+id;
+//		console.log(target);
+//		eval("accRoles = target");
 		if(accRoles){
 			var hasAccess = false;
 			for (j in userRoles) {
