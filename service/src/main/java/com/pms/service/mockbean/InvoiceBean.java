@@ -29,7 +29,7 @@ public class InvoiceBean {
 	public static final String payInvoiceActualSheetCount = "payInvoiceActualSheetCount"; //实际开票张数
 	public static final String payInvoiceActualInvoiceNum = "payInvoiceActualInvoiceNum"; //登记的发票号码
 	
-	public static final String salesContractId = "salesContractId";
+	public static final String scId = "scId";
 	public static final String purchaseContractId = "purchaseContractId";
 	public static final String purchaseContractCode = "purchaseContractCode";
 	//unsubmit -- submit -- manager approve -- finance manager approve -- doing -- done

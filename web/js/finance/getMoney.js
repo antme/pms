@@ -6,8 +6,8 @@ var requestModel = kendo.data.Model.define({
        getMoneyActualMoney: {type:"number",validation: {required: true } },
        getMoneyActualDate: { type:"date",validation: {required: true }},
    	   getMoneyComment:{},
-       salesContractId: {},
-       salesContractCode: {},
+       scId: {},
+       contractCode: {},
        customerBankName:{},
        customerBankAccount:{}
     }
@@ -67,7 +67,7 @@ $(document).ready(function () {
         columns: [
             { field: "getMoneyActualDate",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
             { field: "getMoneyActualMoney", title:"金额", min:0},
-            { field: "salesContractCode", title: "销售合同编号",editor: pcDropDownEditor},
+            { field: "contractCode", title: "销售合同编号",editor: pcDropDownEditor},
             { field: "customerName", title: "客户"},
             { field: "customerBankName", title: "客户开户行"},
             { field: "customerBankAccount", title: "客户银行账号"},

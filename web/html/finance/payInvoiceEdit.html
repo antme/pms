@@ -11,38 +11,50 @@
 				<tr>
 					<td>项目名： <span data-bind="text: projectName"></span></td>	
 					<td>项目编号： <span data-bind="text: projectCode"></span></td>
+					<td>项目经理：<span data-bind="text: projectManager"></span></td>
+					<td>部门： <span data-bind="text: projectManagerDepartment"></span></td>
+					<td></td>
+				</tr>
+				<tr>
 					<td>合同编号： <span data-bind="text: contractCode"></span></td>
-					<td>客户名称： <span data-bind="text: customer"></span></td>
+					<td>发票类型： <span data-bind="text: invoiceType" ></span></td>
+					<td>合同金额：<span data-bind="text: contractAmount" ></span></td>
+					<td>已开票总额：<span data-bind="text: totalInvoiceMoney" ></span></td>
+					<td>已收款金额：<span data-bind="text: totalGetMoney" ></span></td>
+				</tr>
+				<tr>
+					<td>客户名：<span data-bind="text: customer"></span></td>
+					<td>开户行：<span data-bind="text: customerBankName" ></span></td>
+					<td colspan="3">银行账号：<span data-bind="text: customerBankAccount" ></span></td>
 				</tr>
 				<tr>
 					<td>申请日期： <span data-bind="text: payInvoiceSubmitDate"></span></td>
 					<td>状态： <span data-bind="text: payInvoiceStatus"></span></td>
-					<td>票种类别: <span data-bind="text: invoiceType"></span></td>
-					<td></td>
-				</tr>
-				<tr>
 					<td colspan="2">收款情况： 
 						<select name="payInvoiceReceivedMoneyStatus" required validationMessage="请选择"  data-bind="value: payInvoiceReceivedMoneyStatus">
 							<option value="款已收待开票">款已收待开票</option>
 							<option value="款未收先开票">款未收先开票</option>
 						</select>
 					</td>
-					<td colspan="2">要求日期: <input name="payInvoicePlanDate" required validationMessage="请选择日期"  data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: payInvoicePlanDate"/></td>
+					<td>要求日期: <input name="payInvoicePlanDate" required validationMessage="请选择日期"  data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: payInvoicePlanDate"/></td>
 				</tr>
 				<tr class="invoicedone">
 					<td>实际金额：<input required validationMessage="请输入"  data-role="numerictextbox" min="0" data-bind="value:payInvoiceActualMoney"/></td>
 					<td>实际日期：<input required validationMessage="请选择"  data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value:payInvoiceActualDate"/></td>
-					<td colspan="2">实际张数：<input required validationMessage="请输入张数"  data-role="numerictextbox" min="0" data-bind="value:payInvoiceActualSheetCount"/></td>
+					<td colspan="3">实际张数：<input required validationMessage="请输入张数"  data-role="numerictextbox" min="0" data-bind="value:payInvoiceActualSheetCount"/></td>
 				</tr>
 				<tr class="invoicedone">
-					<td colspan="4">发票编号：<input required validationMessage="请输入发票号"  type="text" data-bind="value:payInvoiceActualInvoiceNum"/></td>
+					<td colspan="5">发票编号：<input required validationMessage="请输入发票号"  type="text" data-bind="value:payInvoiceActualInvoiceNum"/></td>
 				</tr>			
 			</table>
             <div>
 				<h4>详情</h4>
 				<div id="subGrid" data-bind="source: payInvoiceItemList"></div>
-            	<br><label>备注:</label>
-            	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: payInvoiceComment" ></textarea>
+				<div data-bind="text: payInvoiceComment" class="commentdiv"></div>
+				<div class="tempCommentdiv">
+					<label>备注:</label><br>
+					<textarea name="tempComment" rows="4" cols="120" class="k-textbox" style="width:505px;" data-bind="value: tempComment" ></textarea>
+				</div>
             </div>
 		</div>
         <div id="form-container-button">
