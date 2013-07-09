@@ -227,13 +227,14 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		Map<String, Object> noticeKeyEqList = new HashMap<String, Object>();
 		for (Map<String, Object> eq:eqlist) {
 			List<Map<String, Object>> list;
-			if (noticeKeyEqList.containsKey(eq.get(ArrivalNoticeBean.NOTICE_ID))) {
-				list = (List<Map<String, Object>>) noticeKeyEqList.get(eq.get(ArrivalNoticeBean.NOTICE_ID));
+			String noticeId = (String) eq.get(ArrivalNoticeBean.NOTICE_ID);
+			if (noticeKeyEqList.containsKey(noticeId)) {
+				list = (List<Map<String, Object>>) noticeKeyEqList.get(noticeId);
 			} else {
 				list = new ArrayList<Map<String, Object>>();
 			}
 			list.add(eq);
-			noticeKeyEqList.put((String) eq.get(ArrivalNoticeBean.NOTICE_ID), list);
+			noticeKeyEqList.put(noticeId, list);
 		}
 		
 		for (Map.Entry mapEntry : noticeKeyEqList.entrySet()) {

@@ -16,9 +16,11 @@ import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
+import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
+import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.ISalesContractService;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
@@ -26,6 +28,8 @@ import com.pms.service.util.status.ResponseCodeConstants;
 public class ArrivalNoticeServiceImpl extends AbstractService implements IArrivalNoticeService {
 	
 	protected ISalesContractService scs;
+	
+	private IPurchaseContractService pService;
 
 	public ISalesContractService getScs() {
 		return scs;
@@ -33,6 +37,14 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 
 	public void setScs(ISalesContractService scs) {
 		this.scs = scs;
+	}
+
+	public IPurchaseContractService getpService() {
+		return pService;
+	}
+
+	public void setpService(IPurchaseContractService pService) {
+		this.pService = pService;
 	}
 
 	@Override
@@ -208,6 +220,34 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		}
 		
 		return res;
+    }
+    
+    public Map<String, Object> getPurchaseOrder(Map<String, Object> parameters) {
+    	Map<String, Object> result = pService.getPurchaseOrder(parameters);
+        List<Map<String, Object>> mergeLoadedEqList = (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST);
+        
+        Map<String, Object> noticeParams = new HashMap<String, Object>();
+		
+        noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, parameters.get(ApiConstants.MONGO_ID));
+		Map<String, Object> notices = dao.list(parameters, DBBean.ARRIVAL_NOTICE);
+		List<Map<String, Object>> noticeList = (List<Map<String, Object>>) notices.get(ApiConstants.RESULTS_DATA);
+        
+		// 计算已到货的设备数量
+		Map<String, Object> arrivalEqCount = new HashMap<String, Object>();
+		
+		for (Map<String, Object> notice : noticeList) {
+			List<Map<String, Object>> noticeEqList = (List<Map<String, Object>>) notice.get(ArrivalNoticeBean.EQ_LIST);
+			for (Map<String, Object> eq : noticeEqList) {
+				Double amount = 0.0;
+				if (arrivalEqCount.containsKey(eq.get(ApiConstants.MONGO_ID))) {
+					amount = (Double) eq.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT);
+				} else {
+
+				}
+			}
+		}
+        
+        return result;
     }
 
 }

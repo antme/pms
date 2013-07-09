@@ -31,4 +31,6 @@ public class ArrivalNoticeBean {
     public static final String NOTICE_STATUS_NORMAL = "正常";
     
     public static final String NOTICE_STATUS_CLOSE = "关闭";
+    
+    public static final String EQCOST_ARRIVAL_AMOUNT = "eqcostArrivalAmount"; // 到货数量
 }
