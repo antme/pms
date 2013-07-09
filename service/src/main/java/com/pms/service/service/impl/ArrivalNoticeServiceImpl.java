@@ -167,7 +167,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		return result;
 	}
 	 
-    public Map<String, Object> listByScID(Object scId) {
+    public Map<String, Object> listEqListByScIDForShip(Object scId) {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, scId);
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);

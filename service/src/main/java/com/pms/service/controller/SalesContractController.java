@@ -93,6 +93,13 @@ public class SalesContractController extends AbstractController {
     }
     
     /**开票CRUD*/
+    @RequestMapping("/invoice/viewsc")
+    //@RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_ADD, desc = RoleValidConstants.PAY_INVOICE_ADD_DESC)
+    public void viewSCForInvoice(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(salesContractService.viewSC(params), request, response);
+    }
+    
     @RequestMapping("/invoice/view")
     //@RoleValidate(roleID=RoleValidConstants.PAY_INVOICE_ADD, desc = RoleValidConstants.PAY_INVOICE_ADD_DESC)
     public void viewInvoiceForSC(HttpServletRequest request, HttpServletResponse response) {

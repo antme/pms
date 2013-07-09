@@ -23,6 +23,7 @@ import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
+import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
@@ -72,15 +73,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		/*request.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(request.get(SalesContractBean.SC_EQ_LIST)));
 		mergeRestEqCount(request);*/
 		return request;
-	}
-
-	private String recordComment(String action,String newComment,String oldComment){
-		StringBuilder str = new StringBuilder();
-		String name = ApiThreadLocal.getCurrentUserName();
-		if(oldComment != null) str.append(oldComment).append("\n");
-		str.append(DateUtil.getDateString(new Date())).append(" ").append(name).append("").append(action);
-		if(newComment != null) str.append("： ").append(newComment);
-		return str.toString();
 	}
 	
     /**
@@ -392,7 +384,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    //mergeDataRoleQuery(params);
 	    //mergeMyTaskQuery(params, DBBean.PURCHASE_ALLOCATE);
 		
-		Map<String,Object> queryKeys = new HashMap<String,Object>();
+/*		Map<String,Object> queryKeys = new HashMap<String,Object>();
 		queryKeys.put(ApiConstants.LIMIT, params.get(ApiConstants.LIMIT));
 		queryKeys.put(ApiConstants.LIMIT_START, params.get(ApiConstants.LIMIT_START));
 		
@@ -412,7 +404,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		if(isAdmin()){//admin
 			query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.NOT_NULL));
 		}
-		DBObject exp = DBQueryUtil.buildQueryObject(query, false);
+		DBObject exp = DBQueryUtil.buildQueryObject(query, false);*/
 		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_ALLOCATE);
 		mergeSalesContract(map);
 		return map;		
@@ -736,7 +728,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         // 获取已发的采购申请的数据总和
         Map<String, Object> purchaseRequestQuery = new HashMap<String, Object>();
         purchaseRequestQuery.put(PurchaseCommonBean.BACK_REQUEST_ID, backId);//TODO: 
-//        purchaseRequestQuery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseCommonBean.STATUS_CANCELLED));
+        purchaseRequestQuery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseCommonBean.STATUS_CANCELLED));
         Map<String, Integer> requestEqCountMap = countEqByKey(purchaseRequestQuery, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.EQCOST_APPLY_AMOUNT, null);
 
         // 获取调拨中的数据总和

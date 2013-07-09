@@ -14,7 +14,7 @@ public interface IArrivalNoticeService {
 
     public Map<String, Object> listProjectsForSelect(Map<String, Object> params);
     
-    public Map<String, Object> listByScID(Object scId);
+    public Map<String, Object> listEqListByScIDForShip(Object scId);
     
     public Map<String, Object> listByScIdForBorrowing(Object scId);
     

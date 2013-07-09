@@ -748,12 +748,37 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 //        } else
             
        if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_CANCELL_NEED_APPROVED)) {
-            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELLED);
+           Map<String,Object> result = processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELLED); 
+           reduceBackEqCount((String)request.get(ApiConstants.MONGO_ID));
+           return result;
         } else {
             return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.STATUS_APPROVED);
         }
     }
 
+    private void reduceBackEqCount(String id){
+    	if(ApiUtil.isEmpty(id)) return;
+    	Map<String, Object> request = dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PURCHASE_REQUEST);
+    	List<Map<String,Object>> list1 = (List<Map<String,Object>>) request.get(SalesContractBean.SC_EQ_LIST);
+    	
+    	String backId = (String)request.get(PurchaseCommonBean.BACK_REQUEST_ID);
+    	Map<String, Object> back = dao.findOne(ApiConstants.MONGO_ID, backId, DBBean.PURCHASE_BACK);
+    	List<Map<String,Object>> list2 = (List<Map<String,Object>>) back.get(SalesContractBean.SC_EQ_LIST);
+    	
+    	Map<String,Double> map1 = new HashMap<String,Double>();
+    	for(Map<String,Object> eq : list1){
+    		map1.put((String)eq.get(ApiConstants.MONGO_ID), ApiUtil.getDouble(eq, PurchaseCommonBean.EQCOST_APPLY_AMOUNT, 0));
+    	}
+    	
+    	for(Map<String,Object> eq : list2){
+    		String eqId = (String)eq.get(ApiConstants.MONGO_ID);
+    		double backCount = ApiUtil.getDouble(eq, PurchaseBack.pbTotalCount, 0);
+    		double reCount = map1.containsKey(eqId)? map1.get(eqId) : 0;
+    		eq.put(PurchaseBack.pbTotalCount, backCount - reCount);
+    	}
+    	dao.updateById(back, DBBean.PURCHASE_BACK);
+    }
+    
     public Map<String, Object> cancelPurchaseRequest(Map<String, Object> request) {
         return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELL_NEED_APPROVED);
     }
@@ -897,7 +922,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);      
         query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.scId", "eqcostList.projectId", "eqcostList.logisticsType" });
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.scId", "eqcostList.projectId"});
 
         List<Object> projectIds = this.dao.listLimitKeyValues(query, DBBean.PURCHASE_CONTRACT);
         

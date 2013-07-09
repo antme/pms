@@ -137,6 +137,8 @@ public class DBQueryUtil {
                     QueryBuilder temp = new QueryBuilder();
                     temp.put(key).regex(regex);
                     object = temp.get();
+                }else if (dbQuery.getOperation() == DBQueryOpertion.EQUAILS) {
+                      object = new BasicDBObject(key, dbQuery.getValue());
                 }
             } else if (value instanceof DBObject) {
                 object = (DBObject) value;
