@@ -27,6 +27,8 @@ public interface ISalesContractService {
 	
 	public Map<String, Object> listInvoiceForSC(Map<String, Object> params);
 	
+	public Map<String, Object> viewSC(Map<String, Object> params);
+	
 	public Map<String, Object> viewInvoiceForSC(Map<String, Object> params);
 	
 	public Map<String, Object> addMonthShipmentsForSC(Map<String, Object> params);

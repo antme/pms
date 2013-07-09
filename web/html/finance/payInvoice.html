@@ -1,12 +1,70 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script  src="js/finance/payInvoice.js"></script>
 <body>
+<script type="text/x-kendo-template" id="template">
+	<div class="tabstrip">
+		<ul>
+			<li class="k-state-active">
+				详单列表
+			</li>
+			<li>
+				备注
+			</li>
+		</ul>
+		<div>
+			<div class="orders"></div>
+		</div>
+		<div>
+			<div class='employee-details'>
+				<br>#= payInvoiceComment #<br><br>
+			</div>
+		</div>
+	</div>
+
+</script>
 	<h3>开票申请列表页面</h3>
 	<div id="objList" class="k-content">
-		<div class="k-toolbar k-grid-toolbar">
-			<button class="k-button" onclick="viewPI()">查看</button>
-			<button access="pay_invoice_add" class="k-button access" onclick="addPI()">新增</button>
-		</div>		
-		<div id="grid"></div>
+		<div id="searchDiv">
+			<label>选择合同:</label>
+			<input id="searchfor"  style="width:250px;" type="text" value=""/>
+		</div><br><hr>
+		<div id="scbaseinfo" style="display:none">
+			<h4>基础信息 </h4>
+			<table class="table_form">
+				<tr>
+					<td>项目名： <span data-bind="text: projectName"></span></td>	
+					<td>项目编号： <span data-bind="text: projectCode"></span></td>
+					<td>项目经理：<span data-bind="text: projectManager"></span></td>
+					<td>部门： <span data-bind="text: projectManagerDepartment"></span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>合同编号： <span data-bind="text: contractCode"></span></td>
+					<td>发票类型： <span data-bind="text: invoiceType" ></span></td>
+					<td>合同金额：<span data-bind="text: contractAmount" ></span></td>
+					<td>已开票总额：<span data-bind="text: totalInvoiceMoney" ></span></td>
+					<td>已收款金额：<span data-bind="text: totalGetMoney" ></span></td>
+				</tr>
+				<tr>
+					<td>客户名：<span data-bind="text: customer"></span></td>
+					<td>开户行：<span data-bind="text: customerBankName" ></span></td>
+					<td colspan="3">银行账号：<span data-bind="text: customerBankAccount" ></span></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<h4>开票列表</h4>
+			<div class="k-toolbar k-grid-toolbar">
+				<button access="pay_invoice_add" class="k-button access" onclick="addPI()">新增</button>
+				<button access="pay_invoice_manager_process" class="k-button access"  onclick="editManagerPI()">审核</button>
+				<button access="pay_invoice_fin_process" class="k-button access"  onclick="editFinPI()">审核</button>
+				<button access="pay_invoice_done" class="k-button access" onclick="donePI()">开票</button>
+			</div>
+			<div id="invoiceGrid"></div>
+		</div>
+		<div>
+			<h4>收款列表</h4>
+			<div id="moneyGrid"></div>
+		</div>
 	</div>
 </body>

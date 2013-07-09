@@ -492,13 +492,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		//获取相关开票信息列表数据
 		Map<String, Object> invoiceQuery = new HashMap<String, Object>();
-		invoiceQuery.put(MoneyBean.salesContractId, _id);
+		invoiceQuery.put(MoneyBean.scId, _id);
 		Map<String, Object> invoiceList = dao.list(invoiceQuery, DBBean.SC_INVOICE);
 		List<Map<String, Object>> invoiceListData = (List<Map<String, Object>>) invoiceList.get(ApiConstants.RESULTS_DATA); 
 		
 		//获取相关收款信息列表数据
 		Map<String, Object> gotMoneyQuery = new HashMap<String, Object>();
-		gotMoneyQuery.put(MoneyBean.salesContractId, _id);
+		gotMoneyQuery.put(MoneyBean.scId, _id);
 		Map<String, Object> order = new LinkedHashMap<String, Object>();
         order.put(MoneyBean.getMoneyActualDate, ApiConstants.DB_QUERY_ORDER_BY_ASC);
         gotMoneyQuery.put(ApiConstants.DB_QUERY_ORDER_BY, order);
@@ -583,10 +583,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> addInvoiceForSC(Map<String, Object> params) {
 		Map<String, Object> invoice = new HashMap<String, Object>();
-		invoice.put(InvoiceBean.salesContractId, params.get(InvoiceBean.salesContractId));
+		invoice.put(InvoiceBean.scId, params.get(InvoiceBean.scId));
 		invoice.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
-		invoice.put(InvoiceBean.payInvoiceComment, params.get(InvoiceBean.payInvoiceComment));
-		invoice.put(InvoiceBean.payInvoiceDepartment, params.get(InvoiceBean.payInvoiceDepartment));
+		
 		invoice.put(InvoiceBean.payInvoicePlanDate, params.get(InvoiceBean.payInvoicePlanDate));
 		invoice.put(InvoiceBean.payInvoiceReceivedMoneyStatus, params.get(InvoiceBean.payInvoiceReceivedMoneyStatus));
 		invoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusSubmit);
@@ -594,8 +593,15 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		invoice.put("projectId", params.get("projectId"));
 		invoice.put("contractCode", params.get("contractCode"));
 		
+		//invoice.put(InvoiceBean.payInvoiceDepartment, params.get(InvoiceBean.payInvoiceDepartment));
+		//invoice.put(InvoiceBean.payInvoiceComment, params.get(InvoiceBean.payInvoiceComment));
+	    String oldComment = (String)dao.querySingleKeyById(InvoiceBean.payInvoiceComment, params.get(ApiConstants.MONGO_ID), DBBean.SC_INVOICE);
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("提交",comment,oldComment);
+	    invoice.put(InvoiceBean.payInvoiceComment, comment);
+		
 		//add salesCotract's contractType into invoice, so department manager can approve their invoice request
-		Map<String,Object> sc = dao.findOne(ApiConstants.MONGO_ID, params.get(InvoiceBean.salesContractId), DBBean.SALES_CONTRACT);
+		Map<String,Object> sc = dao.findOne(ApiConstants.MONGO_ID, params.get(InvoiceBean.scId), DBBean.SALES_CONTRACT);
 		invoice.put(SalesContractBean.SC_TYPE, sc.get(SalesContractBean.SC_TYPE));
 		
 		List<Map<String,Object>> items = (List<Map<String,Object>>) params.get(InvoiceBean.payInvoiceItemList);
@@ -605,7 +611,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}
 		invoice.put(InvoiceBean.payInvoiceItemList, items);
 		invoice.put(InvoiceBean.payInvoiceMoney, total);
-		invoice.put(InvoiceBean.payInvoiceProposerId, ApiThreadLocal.getCurrentUserId());
 		invoice.put(InvoiceBean.payInvoiceActualMoney, 0);
 		dao.add(invoice, DBBean.SC_INVOICE);
 		//添加任务
@@ -614,35 +619,16 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	@SuppressWarnings("unchecked")
 	public Map<String,Object> prepareInvoiceForSC(Map<String, Object> params){
-		String scId = (String)params.get("salesContractId");
-		List<String> ids = new ArrayList<String>();
-		ids.add(scId);
-		Map<String,Object> map = getBaseInfoByIds(ids);
-		Map<String,Object> info = (Map<String,Object>)map.get(scId);
-		Map<String,Object> newObj = new HashMap<String,Object>();
-		newObj.put(InvoiceBean.salesContractId, scId);
-		newObj.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusUnSubmit);
-		newObj.put(InvoiceBean.payInvoiceItemList, new ArrayList());
-		newObj.put(InvoiceBean.payInvoiceSubmitDate, DateUtil.getDateString(new Date()));
-		newObj.put(InvoiceBean.payInvoiceComment, "");
-		newObj.putAll(info);
+		Map<String,Object> result = viewSC(params);
 		
-		////////////////////////////////////
-		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(InvoiceBean.salesContractId, scId);
-		query.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusDone);
-		query.put(ApiConstants.LIMIT_KEYS, new String[]{InvoiceBean.payInvoiceMoney});
-		List<Object> payInvoiceList = dao.listLimitKeyValues(query, DBBean.SC_INVOICE);
-		Double totalPayInvoiceMoney = 0.0;//统计已开票的总金额
-		for(Object obj : payInvoiceList){
-			totalPayInvoiceMoney += ApiUtil.getDouble(String.valueOf(obj));
-		}
-		//【临时字段】合同金额， 已开票额、 已收款额、 应收账款额、付款方式
-		newObj.put("totalPayInvoiceMoney", totalPayInvoiceMoney);
-		newObj.put("totalGotMoney", 0);
-		newObj.put("leftGotMoney", 0);
-		newObj.put("scPayType", "现金");
-		return newObj;
+		result.remove(ApiConstants.MONGO_ID);//_id is SalesContract's id
+		result.put(InvoiceBean.scId, params.get(InvoiceBean.scId));
+		result.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusUnSubmit);
+		result.put(InvoiceBean.payInvoiceItemList, new ArrayList());
+		result.put(InvoiceBean.payInvoiceSubmitDate, DateUtil.getDateString(new Date()));
+		result.put(InvoiceBean.payInvoiceComment, "");
+
+		return result;
 	}
 	
 	@Override
@@ -652,131 +638,120 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		String oldStatus = String.valueOf(payInvoice.get(InvoiceBean.payInvoiceStatus));
 		String creatorId = String.valueOf(payInvoice.get(ApiConstants.CREATOR));
 		
+	    String oldComment = (String)payInvoice.get(InvoiceBean.payInvoiceComment);
+	    String comment = (String)params.get("tempComment");
+	    
 		//check creator permission
 		Map<String,Object> uInvoice = new HashMap<String,Object>();
 		uInvoice.put(ApiConstants.MONGO_ID, id);
 		uInvoice.put(InvoiceBean.payInvoiceComment, params.get(InvoiceBean.payInvoiceComment));
 		if(InvoiceBean.statusSubmit.equals(oldStatus)){
 			uInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusManagerApprove);
+			comment = recordComment("批准",comment,oldComment);
 		} else if(InvoiceBean.statusManagerApprove.equals(oldStatus)) {
 			uInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusFinanceManagerApprojve);
 			uInvoice.put(InvoiceBean.payInvoiceManagerId, ApiThreadLocal.getCurrentUserId());
+			comment = recordComment("批准",comment,oldComment);
 		} else if(InvoiceBean.statusFinanceManagerApprojve.equals(oldStatus)){
 			if(payInvoice.containsKey(InvoiceBean.payInvoiceActualMoney) 
 					&& payInvoice.containsKey(InvoiceBean.payInvoiceActualDate)
 					&& payInvoice.containsKey(InvoiceBean.payInvoiceActualInvoiceNum)
 				    && payInvoice.containsKey(InvoiceBean.payInvoiceActualSheetCount)){
 				uInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusDone);
+				comment = recordComment("开票结束",comment,oldComment);
 			}else{
 				uInvoice.put(InvoiceBean.payInvoiceActualMoney, params.get(InvoiceBean.payInvoiceActualMoney));
 				uInvoice.put(InvoiceBean.payInvoiceActualDate, params.get(InvoiceBean.payInvoiceActualDate));
 				uInvoice.put(InvoiceBean.payInvoiceActualInvoiceNum, params.get(InvoiceBean.payInvoiceActualInvoiceNum));
 				uInvoice.put(InvoiceBean.payInvoiceActualSheetCount, params.get(InvoiceBean.payInvoiceActualSheetCount));
+				comment = recordComment("开票",comment,oldComment);
 			}
 		} else {
 			throw new ApiResponseException("No Permission","No Permission");
 		}
+		uInvoice.put(InvoiceBean.payInvoiceComment, comment);
 		return dao.updateById(uInvoice, DBBean.SC_INVOICE);
 	}
 
 	public Map<String, Object> rejectInvoiceForSC(Map<String, Object> params) {
 		Map<String,Object> payInvoice = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SC_INVOICE);
 		payInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusReject);
-		payInvoice.put(InvoiceBean.payInvoiceComment, params.get(InvoiceBean.payInvoiceComment));
+		
+	    String oldComment = (String)payInvoice.get(InvoiceBean.payInvoiceComment);
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("拒绝",comment,oldComment);
+	    payInvoice.put(InvoiceBean.payInvoiceComment, comment);
+	    
 		return dao.updateById(payInvoice, DBBean.SC_INVOICE);
 	}
 	
 	@Override
 	public Map<String, Object> loadInvoiceForSC(Map<String, Object> params) {
-		Map<String,Object> newObj = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SC_INVOICE);
-		String scId = (String)newObj.get(InvoiceBean.salesContractId);
-		List<String> ids = new ArrayList<String>();
-		ids.add(scId);
-		Map<String,Object> map = getBaseInfoByIds(ids);
-		Map<String,Object> info = (Map<String,Object>)map.get(scId);
-		newObj.putAll(info);
-		
-		////////////////////////////////////
+		Map<String,Object> obj = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SC_INVOICE);
+		String scId = (String)obj.get(InvoiceBean.scId);
+
 		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(InvoiceBean.salesContractId, scId);
-		query.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusDone);
-		query.put(ApiConstants.LIMIT_KEYS, new String[]{InvoiceBean.payInvoiceMoney});
-		List<Object> payInvoiceList = dao.listLimitKeyValues(query, DBBean.SC_INVOICE);
-		Double totalPayInvoiceMoney = 0.0;//统计已开票的总金额
-		for(Object obj : payInvoiceList){
-			totalPayInvoiceMoney += ApiUtil.getDouble(String.valueOf(obj));
-		}
-		//【临时字段】合同金额， 已开票额、 已收款额、 应收账款额、付款方式
-		newObj.put("totalPayInvoiceMoney", totalPayInvoiceMoney);
-		newObj.put("totalGotMoney", 0);
-		newObj.put("leftGotMoney", 0);
-		newObj.put("scPayType", "现金");
-		return newObj;
+		query.put(InvoiceBean.scId, scId);
+		Map<String,Object> result = viewSC(query);
+		result.remove(ApiConstants.MONGO_ID);
+		obj.putAll(result);
+		return obj;
 	}
 
 	@Override
 	public Map<String, Object> listInvoiceForSC(Map<String, Object> params) {
 		Map<String,Object> query = new HashMap<String,Object>();//
+		if(params.get(InvoiceBean.scId) != null){
+			query.put(InvoiceBean.scId, params.get(InvoiceBean.scId));
+		}
 		query.put(ApiConstants.LIMIT, params.get(ApiConstants.LIMIT));
 		query.put(ApiConstants.LIMIT_START, params.get(ApiConstants.LIMIT_START));
-		Map<String,Object> scMap = dao.list(query, DBBean.SALES_CONTRACT);
-		List<Map<String,Object>> scList = (List<Map<String,Object>>)scMap.get(ApiConstants.RESULTS_DATA);
-		List<String> idList = new ArrayList<String>();
-		for(Map<String,Object> sc : scList){
-			String id = (String)sc.get(ApiConstants.MONGO_ID);
-			if(!idList.contains(id)) idList.add(id);
+		Map<String,Object> result = dao.list(query, DBBean.SC_INVOICE);
+		mergeCreatorInfo(result);
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> viewSC(Map<String, Object> params) {
+		String scId  = (String)params.get(SalesContractBean.SC_ID);
+		Map<String,Object> sc = dao.findOne(ApiConstants.MONGO_ID, scId, DBBean.SALES_CONTRACT);
+		Map<String,Object> customer = dao.findOne(ApiConstants.MONGO_ID, sc.get(SalesContractBean.SC_CUSTOMER), DBBean.CUSTOMER);
+		mergeProjectInfoForSC(sc);
+		sc.put(CustomerBean.customerBankAccount, customer.get(CustomerBean.customerBankAccount));
+		sc.put(CustomerBean.customerBankName, customer.get(CustomerBean.customerBankName));
+		//统计已开票金额 
+		double total1 = 0;
+		Map<String,Object> query1 = new HashMap<String,Object>();
+		query1.put(ApiConstants.LIMIT_KEYS, InvoiceBean.payInvoiceActualMoney);
+		query1.put(InvoiceBean.scId, scId);
+		query1.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusDone);
+		List<Object> invoiceList = dao.listLimitKeyValues(query1, DBBean.SC_INVOICE);
+		for(Object obj : invoiceList){
+				total1 += ApiUtil.getDouble(String.valueOf(obj));
 		}
 		
-		Map<String,Object> qqy = new HashMap<String,Object>();
-		qqy.put(InvoiceBean.salesContractId, new DBQuery(DBQueryOpertion.IN, idList));
-		qqy.put(InvoiceBean.payInvoiceStatus, new DBQuery(DBQueryOpertion.NOT_EQUALS, InvoiceBean.statusUnSubmit));
-		DBObject exp = DBQueryUtil.buildQueryObject(qqy, false);
-		
-        String[] groupKeys = new String[]{"salesContractId"};
-        String reduce = "function(doc,out){" +
-        		"var a1 = doc.payInvoiceMoney; var a2 = doc.payInvoiceActualMoney;" +
-        		"if(!a1){a1=0.0;} if(!a2){a2=0.0;} " +
-        		"out.count++;" + 
-        		"if(doc.payInvoiceStatus == '已出票') out.countDone++;" +
-        		"out.totalPayInvoiceMoney+=a1;" +
-        		"out.totalPayInvoiceActualMoney+=a2;" +
-        		"}";
-        //String finalize =  "function(out){if(!out.totalPayInvoiceActualMoney)out.totalPayInvoiceActualMoney =0.0}";
-        String finalize = null;
-        Map<String, Object> initialParameters =new HashMap<String, Object>();
-        initialParameters.put("count", 0);
-        initialParameters.put("countDone", 0);
-        initialParameters.put("totalPayInvoiceMoney",0);
-        initialParameters.put("totalPayInvoiceActualMoney", 0);
-        List<Map<String, Object>> group = dao.groupQuery(groupKeys, exp, initialParameters, reduce, finalize, DBBean.SC_INVOICE);
-       	Map<String,Object> groupMap = new HashMap<String,Object>();
-        for(Map<String,Object> obj : group){
-        	groupMap.put((String)obj.get(InvoiceBean.salesContractId),obj);
-        }
-
-
-		for(Map<String,Object> sc : scList){
-			String scId = (String)sc.get(ApiConstants.MONGO_ID);
-			if(groupMap.containsKey(scId)){
-				sc.putAll((Map<String,Object>)groupMap.get(scId));
-			}else{
-				sc.put("count", 0);
-				sc.put("countDone", 0);
-				sc.put("totalPayInvoiceMoney", 0);
-				sc.put("totalPayInvoiceActualMoney", 0);
-			}
-		}
-		return scMap;
+		//统计已收款总额
+		double total2 = 0;
+		Map<String,Object> query2 = new HashMap<String,Object>();
+		query2.put(ApiConstants.LIMIT_KEYS, MoneyBean.getMoneyActualMoney);
+		query2.put(InvoiceBean.scId, scId);
+		List<Object> moneyList = dao.listLimitKeyValues(query2, DBBean.SC_GOT_MONEY);
+		for(Object obj : moneyList){
+			total2 += ApiUtil.getDouble(String.valueOf(obj));
+		}	
+		sc.put("totalInvoiceMoney", total1);
+		sc.put("totalGetMoney", total2);
+		return sc;
 	}
 	
 	public Map<String, Object> viewInvoiceForSC(Map<String, Object> params){
-		String scId = (String)params.get(InvoiceBean.salesContractId);
+		String scId = (String)params.get(InvoiceBean.scId);
 		Map<String,Object> sc = dao.findOne(ApiConstants.MONGO_ID, scId, DBBean.SALES_CONTRACT);
 		sc.put(SalesContractBean.SC_ID, sc.get(ApiConstants.MONGO_ID));
 		mergeProjectInfoForSC(sc);
 		//
 		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(InvoiceBean.salesContractId, scId);
+		query.put(InvoiceBean.scId, scId);
 		Map<String,Object> invoiceMap = dao.list(query, DBBean.SC_INVOICE);
 		mergeCreatorInfo(invoiceMap);
 		sc.put("invoiceList", invoiceMap.get(ApiConstants.RESULTS_DATA));
@@ -846,10 +821,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         }
         
         
-        obj.put(MoneyBean.salesContractId, sc.get(ApiConstants.MONGO_ID));
+        obj.put(MoneyBean.scId, sc.get(ApiConstants.MONGO_ID));
         obj.put(MoneyBean.salesContractCode, sc.get("contractCode"));
         obj.put(MoneyBean.projectId, sc.get("projectId"));
-        obj.put(MoneyBean.customerId, sc.get("customer"));
+        obj.put(MoneyBean.customer, sc.get("customer"));
         
         //如果没有初始化 银行账号，则初始化
         Map<String,Object> customer = dao.findOne(ApiConstants.MONGO_ID, sc.get("customer"), DBBean.CUSTOMER);
@@ -873,13 +848,18 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	@Override
 	public Map<String, Object> listGetMoneyForSC(Map<String, Object> params) {
-        Map<String, Object> query1 = new HashMap<String, Object>();
-        Map<String, Object> map1 = dao.list(query1, DBBean.SC_GOT_MONEY);
-        List<Map<String, Object>> list1 = (List<Map<String, Object>>) map1.get(ApiConstants.RESULTS_DATA);
+		Map<String,Object> query = new HashMap<String,Object>();//
+		if(params.get(MoneyBean.scId) != null){
+			query.put(InvoiceBean.scId, params.get(InvoiceBean.scId));
+		}
+		query.put(ApiConstants.LIMIT, params.get(ApiConstants.LIMIT));
+		query.put(ApiConstants.LIMIT_START, params.get(ApiConstants.LIMIT_START));
+        Map<String, Object> map = dao.list(query, DBBean.SC_GOT_MONEY);
+        List<Map<String, Object>> list = (List<Map<String, Object>>) map.get(ApiConstants.RESULTS_DATA);
 
         Set<String> suIds = new HashSet<String>();
-        for (Map<String, Object> obj : list1) {
-            suIds.add((String) obj.get(MoneyBean.customerId));
+        for (Map<String, Object> obj : list) {
+            suIds.add((String) obj.get(MoneyBean.customer));
         }
         suIds.remove(null);
         suIds.remove("");
@@ -887,15 +867,16 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             Map<String, Object> query02 = new HashMap<String, Object>();
             query02.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList(suIds)));
             Map<String, Object> map2 = dao.listToOneMapAndIdAsKey(query02, DBBean.CUSTOMER);
-            for (Map<String, Object> obj : list1) {
-                String id = (String) obj.get(MoneyBean.customerId);
+            for (Map<String, Object> obj : list) {
+                String id = (String) obj.get(MoneyBean.customer);
                 if (map2.containsKey(id)) {
                     Map<String, Object> su = (Map<String, Object>) map2.get(id);
                     obj.put("customerName", su.get("name"));
                 }
             }
         }
-        return map1;
+        mergeCreatorInfo(map);
+        return map;
 	}
 
 	@Override

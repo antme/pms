@@ -1,4 +1,4 @@
-var requestModel = kendo.data.Model.define({
+var invoiceModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
 		payInvoiceDepartment: {nullable: true},
@@ -14,100 +14,232 @@ var requestModel = kendo.data.Model.define({
 		payInvoiceMoney: {},
 		payInvoiceItemList: {nullable: true},
 		payInvoiceActualMoney:{},
-		payInvoiceActualDate:{},
+		payInvoiceActualDate:{type:"date"},
 		payInvoiceActualInvoiceNum:{},
 		payInvoiceActualSheetCount:{},
 		invoiceType:{},
-		salesContractId:{},
+		scId:{},
 		contractCode:{},
 		projectId:{},
 		operateType:{}
 	}
 });
-
-var listDatasource = new kendo.data.DataSource({
-    transport: {
-        read:  {
-            url: baseUrl + "/sc/invoice/list",
-            dataType: "jsonp",
-            type : "post"
-        }
-    },
-    batch: true,
-    pageSize: 10,
-	serverPaging: true,
-	serverSorting: true,
-	serverFiltering : true,
-    schema: {
-        model: requestModel,
-        total: "total",
-        data:"data"
+var subModel = kendo.data.Model.define({
+	id : "itemNo",
+	fields : {
+		itemNo: {nullable: true},
+		itemMonth: {nullable: true},
+		itemContent: {nullable:true},
+		itemComment: {},
+		itemMoney: {type: "number",validation: {min: 0}}
+	}
+});
+var moneyModel = kendo.data.Model.define({
+    id: "_id",
+    fields: {
+   	   _id: {  editable: false, nullable: true},
+       getMoneyActualMoney: {type:"number",validation: {required: true } },
+       getMoneyActualDate: { type:"date",validation: {required: true }},
+   	   getMoneyComment:{},
+       scId: {},
+       salesContractCode: {},
+       customerBankName:{},
+       customerBankAccount:{}
     }
 });
-	
+
+
 $(document).ready(function () {	
 	checkRoles();
-	
-	$("#grid").kendoGrid({
-	    dataSource: listDatasource,
-	    pageable: true,
-	    selectable : "row",
-	    sortable : true,
-	    columns: [
-	        {hidden: true, field: "contractId" },
-	        {field:"contractCode", title:"销售合同编号"},
-	        {field:"invoiceType", title:"发票类型"},
-	        {field:"contractAmount", title:"合同总额"},
-	        {field:"totalPayInvoiceActualMoney", title:"已开票总额" },
-	        {field:"countDone", title:"已开票数"},
-	        {field:"totalPayInvoiceMoney", title:"开票申请总额" },
-	        {field:"count", title:"开票申请数"}
-	    ]
+
+	$("#searchfor").kendoDropDownList({
+		dataTextField : "contractCode",
+		dataValueField : "_id",
+		//template:  '${ data.projectName }:<strong>${ data.contractCode }</strong>',
+		autoBind: false,
+        optionLabel: "全部",
+		dataSource : {
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "/service/sc/listforselect"
+				}
+			},
+			schema : {
+				total: "total",
+				data: "data"
+			}
+		},
+        change: function() {
+            var value = this.value();
+            if (value) {
+            	postAjaxRequest("/service/sc/invoice/viewsc", {scId:value} , changeSuccess);
+            	$("#scbaseinfo").show();
+            	$("#invoiceGrid").data("kendoGrid").dataSource.filter({ field: "scId", operator: "eq", value: value });
+            	$("#moneyGrid").data("kendoGrid").dataSource.filter({ field: "scId", operator: "eq", value: value });
+            } else {
+            	$("#scbaseinfo").hide();
+            	$("#invoiceGrid").data("kendoGrid").dataSource.filter({});
+            	$("#moneyGrid").data("kendoGrid").dataSource.filter({});
+            }
+        }
+
 	});
+	
+	$("#invoiceGrid").kendoGrid({
+		dataSource: {
+		    transport: {
+		        read:  {
+		            url: baseUrl + "/sc/invoice/list",
+		            dataType: "jsonp",
+		            type : "post"
+		        }
+		    },
+		    batch: true,
+		    pageSize: 5,
+			serverPaging: true,
+			serverSorting: true,
+			serverFiltering : true,
+		    schema: {
+		        model: invoiceModel,
+		        total: "total",
+		        data:"data"
+		    }
+		},
+	    pageable: true,
+	    sortable : true,
+		selectable : "row",
+        detailTemplate: kendo.template($("#template").html()),
+        detailInit: detailInit,
+	    columns: [
+			{ field: "_id", hidden: true},
+			{ field: "contractCode", title: "合同编号" },
+			{ field: "creatorName", title: "申请人" },
+			{ field: "payInvoiceStatus", title: "状态", width: "100px"},
+			{ field: "payInvoicePlanDate", title: "要求日期",format: "{0:yyyy/MM/dd}"},
+			{ field: "payInvoiceMoney", title: "金额" },
+			{ field: "payInvoiceReceivedMoneyStatus", title: "收款情况"},
+			{ field: "payInvoiceActualMoney", title: "实际金额" },
+			{ field: "payInvoiceActualDate", title: "实际开票日期",format: "{0:yyyy/MM/dd}" },
+			{ field: "payInvoiceActualInvoiceNum", title: "发票号" },
+			{ field: "payInvoiceActualSheetCount", title: "开票张数"},
+			{ hidden: true, field: "payInvoiceItemList" },
+	  	]
+	});
+	
+    $("#moneyGrid").kendoGrid({
+        dataSource: {
+            transport: {
+                read:  {
+                    url: "/service/sc/getmoney/list",
+                    dataType: "jsonp",
+                    type : "post"
+                },
+                update: {
+                    url:  "/service/sc/getmoney/save",
+                    dataType: "jsonp",
+                    type : "post"
+                },
+                destroy: {
+                    url: "/service/sc/getmoney/destroy",
+                    dataType: "jsonp",
+                    type : "post"
+                },
+                create: {
+                    url: "/service/sc/getmoney/save",
+                    dataType: "jsonp",
+                    type : "post"
+                }
+            },
+            batch: true,
+            pageSize: 5,
+        	serverPaging: true,
+        	serverSorting: true,
+        	serverFiltering : true,
+            schema: {
+                model: moneyModel,
+                total: "total",
+                data:"data"
+            }
+        },
+        pageable: true,
+        //toolbar: [{name:"create",text:"新增"}],
+        columns: [
+            { field: "contractCode", title: "合同编号" },
+            { field: "creatorName", title: "申请人" },
+            { field: "getMoneyActualDate",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
+            { field: "getMoneyActualMoney", title:"金额", min:0},
+            { field: "customerName", title: "客户"},
+            { field: "customerBankName", title: "客户开户行"},
+            { field: "customerBankAccount", title: "客户银行账号"},
+            { field: "getMoneyComment", title: "备注"}//,
+            //{ command: [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}], title: "&nbsp;", width: "170px"}
+        ],
+        editable:"popup"
+    });
+	
+	
 });
-function viewPI(){
-	var row = getSelectedRowDataByGrid("grid");
-	if(!row) {
-		alert("点击列表可以选中数据");
-	}else{
-		loadPage("payInvoiceView", {salesContractId:row._id});		
-	}	
-}
+
 function addPI(){
-	var row = getSelectedRowDataByGrid("grid");
-	if(!row) {
-		alert("点击列表可以选中数据");
+	if($("#searchfor").val() == "") {
+		alert("请选择合同");
 	}else{
-		loadPage("payInvoiceEdit",{salesContractId: row._id});
+		loadPage("payInvoiceEdit",{scId: $("#searchfor").val()});
 	}	
 }
 function editManagerPI(){
-	var row = getSelectedRowDataByGrid("grid");
+	var row = getSelectedRowDataByGrid("invoiceGrid");
 	if(!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.payInvoiceStatus == "待审核"){
+	} else if(row.payInvoiceStatus == "待部门经理审核"){
 		loadPage("payInvoiceEdit", {_id:row._id});		
 	} else {	
-		alert("请选择‘待审核’的数据");
+		alert("请选择‘待部门经理审核’的数据");
 	}
 }
 function editFinPI(){
-	var row = getSelectedRowDataByGrid("grid");
+	var row = getSelectedRowDataByGrid("invoiceGrid");
 	if(!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.payInvoiceStatus == "经理已审核"){
+	} else if(row.payInvoiceStatus == "待财务经理审核"){
 		loadPage("payInvoiceEdit", {_id:row._id});		
 	} else {	
-		alert("请选择‘经理已审核’的数据");
+		alert("请选择‘待财务经理审核’的数据");
 	}
 }
 function donePI(){
-	var row = getSelectedRowDataByGrid("grid");
+	var row = getSelectedRowDataByGrid("invoiceGrid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.payInvoiceStatus == "财务已审核"){
+	} else if(row.payInvoiceStatus == "开票中"){
 		loadPage("payInvoiceEdit", {_id:row._id});	
 	} else {	
-		alert("请选择‘财务已审核’的数据");
+		alert("请选择‘开票中’的数据");
 	}
+}
+function detailInit(e) {
+    var detailRow = e.detailRow;
+    console.log(e);
+    detailRow.find(".tabstrip").kendoTabStrip({
+        animation: {
+            open: { effects: "fadeIn" }
+        }
+    });
+
+    detailRow.find(".orders").kendoGrid({
+    	dataSource: e.data.payInvoiceItemList,
+        scrollable: false,
+        sortable: true,
+        columns: [
+            { field: "itemNo", title:"编号", width: "56px" },
+            { field: "itemMonth", title:"月份", width: "110px" },
+            { field: "itemContent", title:"内容" },
+            { field: "itemComment", title:"备注" },
+            { field: "itemMoney", title: "金额", width: "190px" }
+        ]
+    });
+}
+function changeSuccess(e){
+	kendo.bind($("#scbaseinfo"), e);	
 }
