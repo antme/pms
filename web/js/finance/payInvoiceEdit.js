@@ -78,7 +78,7 @@ $(document).ready(function () {
 	} else if(redirectParams){
 		if(redirectParams._id){
 			postAjaxRequest(baseUrl+"/sc/invoice/load", redirectParams, editSucess);
-		} else if(redirectParams.salesContractId){
+		} else if(redirectParams.scId){
 			postAjaxRequest(baseUrl+"/sc/invoice/prepare", redirectParams, editSucess);
 		}
 	}
@@ -94,20 +94,20 @@ function editSucess(e){
 		$("#form-container-button button[value!='add'][value!='cancel']").hide();
 	}else if(e.payInvoiceStatus == '待部门经理审核'){//只 经理批准 拒绝可见
 		$(".invoicedone").remove();
-		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container [name!='tempComment']").attr("disabled",true);
 		$("#form-container-button button[value!='managerapprove'][value!='managerreject'][value!='cancel']").hide();
 	}else if(e.payInvoiceStatus == '待财务经理审核'){//只 财务批准 拒绝可见
 		$(".invoicedone").remove();
-		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container [name!='tempComment']").attr("disabled",true);
 		$("#form-container-button button[value!='financeapprove'][value!='financereject'][value!='cancel']").hide();
 	}else if(e.payInvoiceStatus == '开票中'){//只开票可见
-		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container [name!='tempComment']").attr("disabled",true);
 		$("#form-container-button button[value!='done'][value!='cancel']").hide();
 		$(".invoicedone").show();
 		$(".invoicedone input").attr("disabled",false);
 	}else if(e.payInvoiceStatus == '开票完毕'){//都不可见
 		$(".invoicedone").show();
-		$("#form-container :input").attr("disabled","disabled");
+		$("#form-container [name!='tempComment']").attr("disabled",true);
 		$("#form-container-button button[value!='cancel']").hide();
 	}else if(e.payInvoiceStatus == '拒绝'){//只提交可见
 		$(".invoicedone").remove();

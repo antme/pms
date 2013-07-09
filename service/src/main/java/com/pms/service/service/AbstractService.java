@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +41,7 @@ import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DateUtil;
 import com.pms.service.validators.ValidatorUtil;
 
 public abstract class AbstractService {
@@ -556,6 +558,14 @@ public abstract class AbstractService {
         return prefix + "-2013-" + (this.dao.count(map, db) + 1);
     }
 
+	public String recordComment(String action,String newComment,String oldComment){
+		StringBuilder str = new StringBuilder();
+		String name = ApiThreadLocal.getCurrentUserName();
+		if(oldComment != null) str.append(oldComment).append("\n");
+		str.append(DateUtil.getDateString(new Date())).append(" ").append(name).append("").append(action);
+		if(newComment != null) str.append("： ").append(newComment);
+		return str.toString();
+	}
 
     public ISalesContractService getScs() {
         return scs;
