@@ -23,11 +23,11 @@ public interface ISalesContractService {
 	
 	public Map<String, Object> approveInvoiceForSC(Map<String, Object> params);
 	
-	public Map<String, Object> managerRejectInvoiceForSC(Map<String, Object> params);
-	
-	public Map<String, Object> finRejectInvoiceForSC(Map<String, Object> params);
+	public Map<String, Object> rejectInvoiceForSC(Map<String, Object> params);
 	
 	public Map<String, Object> listInvoiceForSC(Map<String, Object> params);
+	
+	public Map<String, Object> viewInvoiceForSC(Map<String, Object> params);
 	
 	public Map<String, Object> addMonthShipmentsForSC(Map<String, Object> params);
 	
@@ -63,6 +63,6 @@ public interface ISalesContractService {
 	
 	public Map<String, Object> setSCArchiveStatusStatus(Map<String, Object> params);
 	
-    public List<Map<String, Object>> mergeLoadedEqList(Object eqList);
+    public List<Map<String, Object>> mergeEqListBasicInfo(Object eqList);
 
 }

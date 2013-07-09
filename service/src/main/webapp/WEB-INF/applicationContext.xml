@@ -80,6 +80,7 @@
         <property name="backService" ref="purchaseService"></property>
         <property name="scs" ref="salesContractService"></property>
         <property name="supplierService" ref="supplierService"></property>
+        <property name="arriveService" ref="arrivalNoticeService"></property>
     </bean>
     
     <bean name="allocateService" class="com.pms.service.service.impl.AllocateServiceImpl"
@@ -99,6 +100,8 @@
 		<property name="pService" ref="purchaseContractService"></property>
 		<property name="purchaseService" ref="purchaseService"></property>
         <property name="scs" ref="salesContractService"></property>
+        <property name="arrivalService" ref="arrivalNoticeService"></property>
+        
 	</bean>
 
     <bean name="borrowingService" class="com.pms.service.service.impl.BorrowingServiceImpl"
@@ -108,6 +111,8 @@
 		<property name="shipService" ref="shipService"></property>
 		<property name="scs" ref="salesContractService"></property>
 		<property name="returnService" ref="returnService"></property>
+		<property name="arrivalService" ref="arrivalNoticeService"></property>
+		
 	</bean>
 
     <bean name="historyService" class="com.pms.service.service.impl.ModifyHistoryLogServiceImpl"
@@ -123,6 +128,7 @@
     <bean name="arrivalNoticeService" class="com.pms.service.service.impl.ArrivalNoticeServiceImpl"
 		id="arrivalNoticeService">
 		<property name="dao" ref="commonDao"></property>
+		<property name="scs" ref="salesContractService"></property>
 	</bean>
 
 	<bean

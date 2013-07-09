@@ -48,11 +48,13 @@ public class PurchaseController extends AbstractController {
     }
 
     @RequestMapping("/back/approve")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_BACK_PROCESS, desc = RoleValidConstants.PURCHASE_BACK_PROCESS_DESC)
     public void approvetBack(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.approveBack(parserJsonParameters(request,  false)), request, response);
     }
     
     @RequestMapping("/back/reject")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_BACK_PROCESS, desc = RoleValidConstants.PURCHASE_BACK_PROCESS_DESC)
     public void rejectBack(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.rejectBack(parserJsonParameters(request,  false)), request, response);
     }
@@ -72,7 +74,7 @@ public class PurchaseController extends AbstractController {
     
     @RequestMapping("/back/list")
     public void listAllBack(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(purchaseService.listAllBack(parserJsonParameters(request,  false)), request, response);
+    	responseWithData(purchaseService.listBack(parserJsonParameters(request,  false)), request, response);
     }
     
     @RequestMapping("/back/listchecked")
@@ -106,18 +108,19 @@ public class PurchaseController extends AbstractController {
     public void approveAllotForBack(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.approveAllot(parserJsonParameters(request,  false)), request, response);
     }
+    
+    @RequestMapping("/allot/done")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ALLOCATE_DONE, desc = RoleValidConstants.PURCHASE_ALLOCATE_DONE_DESC)
+    public void doneAllotForBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.approveAllot(parserJsonParameters(request,  false)), request, response);
+    }   
  
     @RequestMapping("/allot/reject")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_ALLOCATE_PROCESS, desc = RoleValidConstants.PURCHASE_ALLOCATE_PROCESS_DESC)
     public void rejectAllot(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.rejectAllot(parserJsonParameters(request,  false)), request, response);
     }
-    
-    @RequestMapping("/sc/listforselect")
-    public void listSCsForSelect(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> params = this.parserJsonParameters(request, true);
-        responseWithData(purchaseService.listSCsForSelect(params), request, response);
-    }
+
     
 	public IPurchaseService getPurchaseService() {
 		return purchaseService;

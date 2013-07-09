@@ -7,6 +7,8 @@ public interface IPurchaseContractService {
 
     public Map<String, Object> getPurchaseContract(Map<String, Object> parameters);
     
+    public Map<String, Object> getPurchaseBack(Map<String, Object> parameters);
+    
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters);
     
     public Map<String, Object> listProjectsFromApproveContractsForRepositorySelect(Map<String, Object> parameters);
@@ -14,9 +16,7 @@ public interface IPurchaseContractService {
     public Map<String, Object> listContractsByProjectAndSupplier(Map<String, Object> params);
     
     public Map<String, Object> listSalesContractsForShipSelect(Map<String, Object> params);  
-    
-    public Map<String, Object> listEqcostListForShipByScIDAndType(Map<String, Object> params);  
-    
+        
     public void deletePurchaseContract(Map<String, Object> contract);
     
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract);
@@ -27,9 +27,11 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> order);
 
-    public Map<String, Object> approvePurchaseOrder(Map<String, Object> order);
+    public void approvePurchaseOrder(Map<String, Object> order);
     
     public Map<String, Object> rejectPurchaseOrder(Map<String, Object> order);
+    
+    public Map<String, Object> cancelPurchaseOrder(Map<String, Object> request);
     
     public Map<String, Object> approvePurchaseContract(Map<String, Object> order);
     
@@ -45,6 +47,9 @@ public interface IPurchaseContractService {
     public List<Map<String,Object>> listApprovedPurchaseContractCosts(String salesContractId);
     
     public Map<String, Object> listApprovedPurchaseOrderForSelect();
+    
+    public Map<String, Object> listApprovedPurchaseOrderForRepositorySelect();
+
     
     public Map<String, Object> listPurchaseRequests(Map<String, Object> parameters);
     
@@ -63,10 +68,6 @@ public interface IPurchaseContractService {
 
     public Map<String, Object> listRepositoryRequests(Map<String, Object> parameters);
     
-    public Map<String, Object> listRepositoryInByProjectId(Map<String, Object> params);
-
-    public Map<String, Object> addRepositoryRequest(Map<String, Object> parserListJsonParameters);
-
     public Map<String, Object> getRepositoryRequest(Map<String, Object> parserListJsonParameters);
 
     public void deleteRepositoryRequest(Map<String, Object> parserJsonParameters);
@@ -100,6 +101,7 @@ public interface IPurchaseContractService {
     public void destroyGetInvoice(Map<String, Object> params);
 
     public Map<String, Object> listProjectsForRepositoryDirect(Map<String, Object> parserJsonParameters);
+
    
 
 }

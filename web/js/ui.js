@@ -86,7 +86,9 @@ function removeTreeItems(items) {
 	for (i in newItems) {
 		var id = newItems[i].id;
 		var accRoles = "";
-		eval("accRoles = accessRoles."+id);	
+		var target = "accessRoles."+id;
+//		console.log(target);
+//		eval("accRoles = target");
 		if(accRoles){
 			var hasAccess = false;
 			for (j in userRoles) {
@@ -210,7 +212,9 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/execution/return.html";
 	} else if(page == "arrivalNotice"){
 		page = "html/execution/arrivalNotice.html";
-	}
+	} else if(page == "payInvoiceView"){
+		page = "html/finance/payInvoiceView.html";
+	}	
 	
 
 	if (page == "mytask") {
@@ -522,6 +526,7 @@ function disableAllInPoppup(){
 	$("#popup button").hide();
 	$("#popup textarea").attr("disabled",true); 
 	$("#popup input").attr("disabled",true);
+	if($("#form-container .tempCommentdiv"))$("#form-container .tempCommentdiv").hide();
 }
 
 
@@ -589,7 +594,6 @@ function myTaskQueryParam(options, operation){
 		if(redirectParams){
 			options.mytasks = redirectParams;
 		}
-		console.log(options);
 		return options;		
 }
 
@@ -633,5 +637,16 @@ function intSelectInput(){
 			html += "<option value='"+invoiceTypeItems[i].text+"'>"+invoiceTypeItems[i].text+"</option>";
 		}
 		document.getElementById("invoiceTypeItems").innerHTML=html;
+	}
+}
+
+function setDate(obj, key, value) {
+
+	if (kendo.parseDate(kendo.toString(value, 'd'), "yyyy-MM-dd")
+			&& kendo.parseDate(kendo.toString(value, 'd'), "yyyy-MM-dd") != "null") {
+		obj.set(key, kendo.parseDate(kendo.toString(value, 'd'), "yyyy-MM-dd"));
+	} else if (kendo.parseDate(kendo.toString(value, 'd'), "yyyy/MM/dd")
+			&& kendo.parseDate(kendo.toString(value, 'd'), "yyyy/MM/dd") != "null") {
+		obj.set(key, kendo.parseDate(kendo.toString(value, 'd'), "yyyy/MM/dd"));
 	}
 }

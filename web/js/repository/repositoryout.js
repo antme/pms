@@ -3,6 +3,14 @@ var approveUrl = "/service/purcontract/repository/confirm?type=out";
 var deleteUrl = "/service/purcontract/repository/delete?type=out";
 var cancelUrl = "/service/purcontract/repository/cancel?type=out";
 
+var confirmModel = kendo.data.Model.define({
+	
+	fields : {
+		outDate:{type:"date"}
+	}
+});
+
+var confirmEntity = new confirmModel();
 // 外面列表页的datasource对象
 var listDataSource = new kendo.data.DataSource({
 	transport : {
@@ -29,7 +37,7 @@ $(document).ready(function() {
 			selectable : "row",
 			width : "1000px",
 			columns : [ {
-				field : "code",
+				field : "repositoryCode",
 				title : "申请编号"
 			}, {
 				field : "recustomer",
@@ -54,6 +62,10 @@ $(document).ready(function() {
 		});
 
 	}
+	
+	
+	kendo.bind($("#confirm-form"), confirmEntity);
+	
 
 });
 
@@ -68,35 +80,55 @@ function editRepo() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
 	loadPage("html/repository/repositoryOutEdit.html", {
-		_id : row._id
+		_id : row._id,
+		type : "out"
 	});
 }
 
 function confirmRepository(){
+	
 	
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if(row.status == "已入库"){
 			alert("此申请已入库，不需要再次入库");
 		}else{
-
+			confirmEntity = new confirmModel(row);
+			console.log(confirmEntity);
+			kendo.bind($("#confirm-form"), confirmEntity);
+			setDate(confirmEntity, "outDate", confirmEntity.outDate);
 			var options = {
 				width : 500,
 				height : 300,
 				actions : [ "Maximize", "Close" ]
 			};
-			$("#confirm").kendoWindow({
+			$("#confirm-form").kendoWindow({
 				width : options.width,
 				height : options.height,
 				title : options.title
 			});
 
-			kendoWindow = $("#confirm").data("kendoWindow");
+			var kendoWindow = $("#confirm-form").data("kendoWindow");
 			kendoWindow.open();
 			kendoWindow.center();	
 		}
 	}
 }
+
+
+function submitConfirm(){
+	 console.log(confirmEntity);	 
+	 postAjaxRequest(approveUrl, {models:kendo.stringify(confirmEntity)}, approveStatusCheck);
+	
+}
+
+function approveStatusCheck(){
+	var kendoWindow = $("#confirm-form").data("kendoWindow");
+	kendoWindow.close();
+	listDataSource.read();
+}
+
+
 
 
 

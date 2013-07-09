@@ -56,7 +56,6 @@ $(document).ready(function () {
 	    pageable: true,
 	    selectable : "row",
 	    sortable : true,
-		height: "400px",
 	    columns: [
 	        { 
 	        	field: "pbCode", 
@@ -91,34 +90,27 @@ function editPB(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else {	
+	} else if(row.pbStatus == "草稿" || row.pbStatus == "已拒绝"){	
 		loadPage("purchaseBackEdit", { _id : row._id });	
 	}
-
 }
-
-function pendingPB() {
+function processPB(){
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else if(row.pbStatus == "已提交"){	
+		loadPage("purchaseBackEdit", { _id : row._id });	
+	}else{
+		alert("此状态不允许审核");
+	}
+}
+function pendingPB() {//TODO:什么状态可以中止
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else if(row.pbStatus == "已提交"){
-		$.ajax({
-			url : baseUrl+"/purchase/back/pending",
-			success : function(responsetxt) {
-				var res;
-				eval("res=" + responsetxt);
-				if (res.status == "0") {
-					alert(res.msg);
-				} else {
-					alert("中止成功");
-					listDatasource.read();
-				}
-			}, error : function() {
-				alert("连接Service失败");
-			}, data : {
-				_id : row._id
-			},method : "post"
-		});
+		if(confirm("中止表单，确认？"))
+		postAjaxRequest("service/purchase/back/pending", {_id:row._id}, function(){listDatasource.read();});
 	}
 }
 
@@ -126,22 +118,8 @@ function destroyPB() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.pbStatus == "草稿") {
-		$.ajax({
-			url : baseUrl+"/purchase/back/destroy",
-			success : function(responsetxt) {
-				var res;
-				eval("res=" + responsetxt);
-				if (res.status == "0") {
-					alert(res.msg);
-				} else {
-					listDatasource.read();
-				}
-			}, error : function() {
-				alert("连接Service失败");
-			}, data : {
-				_id : row._id
-			},method : "post"
-		});
+	} else if(row.pbStatus == "草稿" || row.pbStatus == "已拒绝" || row.pbStatus == "已中止"){	
+		if(confirm("删除表单，确认？"))
+		postAjaxRequest("service/purchase/back/destroy", {_id:row._id}, function(){listDatasource.read();});
 	}
 }

@@ -3,7 +3,7 @@ var selectBackUrl = "/service/purcontract/back/select/list";
 editUrl = "/service/purcontract/request/get";
 saveUrl =  "/service/purcontract/request/update";
 addUrl =  "/service/purcontract/request/add";
-var getSelectUrl = "/service/purchase/back/load";
+var getSelectUrl = "/service/purcontract/back/load";
 
 //申明选择备货申请的id
 var selectBackId = undefined;
@@ -47,8 +47,17 @@ var sumDataSource = new kendo.data.DataSource({
 
 
 $(document).ready(function() {
-
-	console.log(popupParams);
+	
+	$("#eqcostDeliveryType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : eqcostDeliveryType
+	});
+	$("#purchaseType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : pbTypeItems
+	});
 	
 	// 如果是编辑
 	if (redirectParams || popupParams) {
@@ -96,17 +105,7 @@ $(document).ready(function() {
 			}
 		});
 	}
-	
-	$("#eqcostDeliveryType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : eqcostDeliveryType
-	});
-	$("#pbType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : pbTypeItems
-	});
+
 	
 });
 
@@ -127,17 +126,24 @@ function sumOrders(e) {
 		eqcostBasePrice = e.values.eqcostBasePrice
 	}
 
-
+    var flag = true;
 	if (e.values.eqcostApplyAmount) {
-		eqcostApplyAmount = e.values.eqcostApplyAmount
+		
+		if(e.values.eqcostApplyAmount > e.model.pbLeftCount){
+			alert("最多可以申请" + e.model.pbLeftCount);
+			flag = false;
+			e.preventDefault();
+		}
 	}
 
-	var grid1 = $("#purchase-request-edit-grid").data("kendoGrid");
-	// will trigger dataBound event
-	e.model.set("eqcostContractTotalMoney", eqcostBasePrice * eqcostApplyAmount);
-	e.model.set("requestedTotalMoney", eqcostBasePrice * eqcostApplyAmount);
-
-	grid1.refresh();
+	if(flag){
+		var grid1 = $("#purchase-request-edit-grid").data("kendoGrid");
+		// will trigger dataBound event
+		e.model.set("eqcostContractTotalMoney", eqcostBasePrice * eqcostApplyAmount);
+		e.model.set("requestedTotalMoney", eqcostBasePrice * eqcostApplyAmount);
+	
+		grid1.refresh();
+	}
 
 }
 
@@ -153,26 +159,32 @@ function selectBackRequest() {
 
 function loadBackRequest(data) {
 	
-	$("#purchase-request-edit-item").show();
 	// 把完整的采购申请赋值给requestDataItem
 	requestDataItem = data;
 
-	//新增时候初始化数据
-	for (i in requestDataItem.eqcostList) {
-		requestDataItem.eqcostList[i].eqcostApplyAmount = requestDataItem.eqcostList[i].pbLeftCount;
+	if(requestDataItem.eqcostList　&& requestDataItem.eqcostList.length==0){
+		alert("此备货申请已无可备货货品");
+	}else{
+		
+		$("#purchase-request-edit-item").show();
+	
+		// 新增时候初始化数据
+		for (i in requestDataItem.eqcostList) {
+			requestDataItem.eqcostList[i].eqcostApplyAmount = requestDataItem.eqcostList[i].pbLeftCount;
+		}
+		
+		requestDataItem.backRequestId = requestDataItem._id;
+		requestDataItem.backRequestCode = requestDataItem.pbCode;
+		requestDataItem.salesContractId = requestDataItem.scId;
+		requestDataItem.salesContractCode = requestDataItem.scCode;
+		requestDataItem.comment = "";
+		
+		// // 新增，所以设置_id为空
+		requestDataItem._id = "";	
+		requestDataItem.status="草稿";
+		console.log(requestDataItem);
+		edit();
 	}
-	
-	requestDataItem.backRequestId = requestDataItem._id;
-	requestDataItem.backRequestCode = requestDataItem.pbCode;
-	requestDataItem.salesContractId = requestDataItem.scId;
-	requestDataItem.salesContractCode = requestDataItem.scCode;
-	requestDataItem.comment = "";
-	
-	// // 新增，所以设置_id为空
-	requestDataItem._id = "";	
-	requestDataItem.status="草稿";
-	console.log(requestDataItem);
-	edit();
 }
 
 function edit(data) {
@@ -185,7 +197,8 @@ function edit(data) {
 	requestDataItem = new model(requestDataItem);
 
 	
-	requestDataItem.set("pbPlanDate", kendo.toString(requestDataItem.pbPlanDate, 'd'));
+	setDate(requestDataItem, "pbPlanDate", requestDataItem.pbPlanDate);
+	setDate(requestDataItem, "requestedDate", requestDataItem.requestedDate);
 	// 渲染成本编辑列表
 	itemDataSource.data(requestDataItem.eqcostList);
 	kendo.bind($("#purchase-request-edit-item"), requestDataItem);
@@ -216,7 +229,7 @@ function edit(data) {
 
 							}, {
 								field : "eqcostRealAmount",
-								title : "合同中总数"
+								title : "成本中总数"
 							}, {
 								field : "eqcostBasePrice",
 								title : "成本单价"
@@ -239,9 +252,6 @@ function edit(data) {
 								field : "requestedTotalMoney",
 								title : "成本总价"
 							},{
-								field : "eqcostBrand",
-								title : "品牌"
-							}, {
 								field : "remark",
 								title : "备注"
 							}, {
@@ -389,4 +399,50 @@ function edit(data) {
 						});
 	}
 
+}
+
+
+
+
+//保存操作
+function saveRequest(status) {
+	if(!requestDataItem.status){
+		requestDataItem.status = "草稿";
+	}
+	
+	if(status){
+		requestDataItem.status = status;
+	}
+	
+	if(itemDataSource.at(0)){		
+		//force set haschanges = true
+		itemDataSource.at(0).set("uid", kendo.guid());
+	}
+	
+	if(requestDataItem.pbDepartment && requestDataItem.pbDepartment instanceof Object){
+		requestDataItem.pbDepartment = requestDataItem.pbDepartment.join(",");
+	}
+	
+	if(requestDataItem.eqcostDeliveryType && requestDataItem.eqcostDeliveryType.text){
+		requestDataItem.eqcostDeliveryType = requestDataItem.eqcostDeliveryType.text;
+	}
+	
+	if(requestDataItem.purchaseType && requestDataItem.purchaseType.text){
+		requestDataItem.purchaseType = requestDataItem.purchaseType.text;
+	}
+	
+	if(!requestDataItem.purchaseType){
+		var purchaseType= $("#purchaseType").data("kendoDropDownList");
+		requestDataItem.purchaseType = purchaseType.value();
+	}
+	
+	
+	if(!requestDataItem.eqcostDeliveryType){
+		var eqcostDeliveryType = $("#eqcostDeliveryType").data("kendoDropDownList");
+		requestDataItem.eqcostDeliveryType = eqcostDeliveryType.value();
+	}
+	
+	console.log(requestDataItem);
+	// 同步数据
+	itemDataSource.sync();
 }

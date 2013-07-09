@@ -13,7 +13,7 @@ public class MoneyBean {
 	
 	//收款
 	public static final String getMoneyActualMoney = "getMoneyActualMoney";
-	public static final String getMoneyActualDate = "getMoneyActualData";
+	public static final String getMoneyActualDate = "getMoneyActualDate";
 	public static final String getMoneyComment = "getMoneyComment";
 	public static final String salesContractId = "salesContractId";
 	public static final String projectId = "projectId";

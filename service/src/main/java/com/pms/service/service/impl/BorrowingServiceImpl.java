@@ -21,6 +21,7 @@ import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
+import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IBorrowingService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IReturnService;
@@ -36,6 +37,9 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	
 	private IReturnService returnService;
 
+	private IArrivalNoticeService arrivalService;
+
+	   
 	public IShipService getShipService() {
 		return shipService;
 	}
@@ -61,8 +65,16 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		this.returnService = returnService;
 	}
 
+	
+	public IArrivalNoticeService getArrivalService() {
+        return arrivalService;
+    }
 
-	@Override
+    public void setArrivalService(IArrivalNoticeService arrivalService) {
+        this.arrivalService = arrivalService;
+    }
+
+    @Override
 	public String geValidatorFileName() {
 		return "borrowing";
 	}
@@ -187,10 +199,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		List<Map<String, Object>> purchaseEqList = pService.listApprovedPurchaseContractCosts(saleId);
 		
 		// 已到货货品
-		Map<String, Object> scIdParam = new HashMap<String, Object>();
-		scIdParam.put("scId", saleId);
-		scIdParam.put("type", params.get(ShipBean.SHIP_TYPE));
-		Map<String, Object> map = pService.listEqcostListForShipByScIDAndType(scIdParam);
+		Map<String, Object> map = arrivalService.listByScIdForBorrowing(saleId);
 		
 		List<Map<String, Object>> shipedEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
 		
@@ -200,7 +209,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		for (Map<String, Object> p:purchaseEqList){
 			if (p != null) {
 				String id = p.get(ApiConstants.MONGO_ID).toString();
-				Double amount = (Double) p.get(EqCostListBean.EQ_LIST_AMOUNT);
+				Double amount = (Double.valueOf((String)p.get(EqCostListBean.EQ_LIST_AMOUNT)));
 				alloEqList.put(id, amount);
 			}
 		}

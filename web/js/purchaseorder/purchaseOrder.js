@@ -1,7 +1,7 @@
 listUrl = "/service/purcontract/order/list";
 var approveUrl = "/service/purcontract/order/approve";
 var rejectUrl = "/service/purcontract/order/reject";
-
+var cancelUrl = "/service/purcontract/order/cancel";
 
 var gridOptions = {
 		transport : {
@@ -79,6 +79,9 @@ $(document).ready(function() {
 			}, {
 				field : "moneyPercentOfContract",
 				title : "金额占合同%"
+			},{
+				field : "eqcostDeliveryType",
+				title : "货物递送方式"
 			} ]
 
 		});
@@ -97,19 +100,39 @@ function editOr() {
 	var row = getSelectedRowDataByGrid("grid");
 	
 	if (row) {
-		if (row.status == "采购完毕") {
-			alert("申请采购完毕，不能编辑");
-		} else if (row.status == "已锁定") {
-			alert("申请已锁定，不能编辑");
-		} else {
-			
+		if (row.status == "已提交" || row.status == "草稿" || row.status == "中止申请中") {
 			loadPage("html/purchasecontract/purchaseOrderEdit.html", {
 				_id : row._id
 			});
+		} else {
+			alert("不能编辑");
+	
 		}
 
 	}
 
+}
+
+function cancelOrder() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "草稿" || row.status == "已提交"){
+			process(cancelUrl);
+		}else {
+			alert("不能中止");
+		}
+	}
+}
+
+function approveOrder(){
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "中止申请中"){
+			process(approveUrl);
+		}else {
+			alert("不需要审批,只有中止申请中的订单才可以审批");
+		}
+	}
 }
 
 // 生成到货通知
@@ -117,13 +140,18 @@ function arrivalNotice() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if (row.status == "采购完毕") {
-			var param = {
-					"foreignKey" : row._id,
-					"foreignCode" : row.purchaseOrderCode,
-					"shipType" : "直发现场" // 供应商直发
-				};
-			postAjaxRequest("/service/arrivalNotice/create", param,
-						callback);
+			
+			if(row.eqcostDeliveryType=="入公司库"){
+				alert("只能针对直发发到货通知，非直发入库时会自动发到货通知");
+			}else{
+				var param = {
+						"foreignKey" : row._id,
+						"foreignCode" : row.purchaseOrderCode,
+						"shipType" : "直发现场" // 供应商直发
+					};
+				postAjaxRequest("/service/arrivalNotice/create", param,
+							callback);
+			}
 		} else {
 			alert("未采购完毕，不能生成到货通知");
 		}

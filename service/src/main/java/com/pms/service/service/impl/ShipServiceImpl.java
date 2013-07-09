@@ -9,11 +9,13 @@ import java.util.Map;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.service.AbstractService;
+import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.IShipService;
@@ -23,6 +25,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	
 	private IPurchaseContractService pService;
 	
+	private IArrivalNoticeService arrivalService;
+		
 	private IPurchaseService purchaseService;
 
 	public IPurchaseContractService getpService() {
@@ -40,8 +44,19 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	public void setpService(IPurchaseContractService pService) {
 		this.pService = pService;
 	}
+	
+	
 
-	@Override
+	public IArrivalNoticeService getArrivalService() {
+        return arrivalService;
+    }
+
+    public void setArrivalService(IArrivalNoticeService arrivalService) {
+        this.arrivalService = arrivalService;
+    }
+    
+
+    @Override
 	public String geValidatorFileName() {
 		return "ship";
 	}
@@ -78,6 +93,12 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		return dao.add(params, DBBean.SHIP);
 	}
 	
+	public Map<String, Object> listCanShipEq(Map<String, Object> params) {
+		params.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
+		dao.list(params, DBBean.ARRIVAL_NOTICE);
+		return null;
+	}
+	
 	public Map<String, Object> eqlist(Map<String, Object> params) {
 		
 		String saleId = (String) params.get(ShipBean.SHIP_SALES_CONTRACT_ID);
@@ -86,10 +107,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		Map<String, Double> alloEqList = purchaseService.getAllotEqCountBySalesContractId(saleId);
 		
 		// 已到货 的 设备清单
-		Map<String, Object> scIdParam = new HashMap<String, Object>();
-		scIdParam.put("scId", saleId);
-		scIdParam.put("type", params.get(ShipBean.SHIP_TYPE));
-		Map<String, Object> map = pService.listEqcostListForShipByScIDAndType(scIdParam);
+		Map<String, Object> map = arrivalService.listByScID(saleId);
 		
 		List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
 		
@@ -202,6 +220,27 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		}
 		
 		return dao.updateById(params, DBBean.SHIP);
+	}
+	
+	// 更新到货通知中已被申请发货的设备数量
+	private void updateArrivalNotice(List<Map<String, Object>> eqlist) {
+		Map<String, Object> noticeKeyEqList = new HashMap<String, Object>();
+		for (Map<String, Object> eq:eqlist) {
+			List<Map<String, Object>> list;
+			if (noticeKeyEqList.containsKey(eq.get(ArrivalNoticeBean.NOTICE_ID))) {
+				list = (List<Map<String, Object>>) noticeKeyEqList.get(eq.get(ArrivalNoticeBean.NOTICE_ID));
+			} else {
+				list = new ArrayList<Map<String, Object>>();
+			}
+			list.add(eq);
+			noticeKeyEqList.put((String) eq.get(ArrivalNoticeBean.NOTICE_ID), list);
+		}
+		
+		for (Map.Entry mapEntry : noticeKeyEqList.entrySet()) {
+			Map<String, Object> notice = dao.findOne(ApiConstants.MONGO_ID, mapEntry.getKey(), DBBean.ARRIVAL_NOTICE);
+//			notice.put(ArrivalNoticeBean.EQ_LIST, value);
+			arrivalService.update(notice);
+		}
 	}
 
 }

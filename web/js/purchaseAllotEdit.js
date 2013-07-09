@@ -141,7 +141,6 @@ function dataBound(e) {
 		if (!item.eqcostBasePrice) {item.eqcostBasePrice = 0;}
 		// 检测总的申请数量
 		if(item.paCount > item.pbLeftCount){
-			alert("最大数量为" + item.pbLeftCount);
 			item.paCount=item.pbLeftCount;
 		}
 	}
@@ -153,10 +152,11 @@ function saveSuccess(){
 function editSuccess(e){
 	if(!e) return;
 	if(e._id) {
-		$("#form-container :input").attr("disabled","disabled");
-		$("#form-container-button button").attr("disabled","disabled");
+		$("#form-container [name!='tempComment']").attr("disabled",true);
+		$("#form-container-button button").attr("disabled",true);
 	}
 	currentObj = new myModel(e);
+	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
 	kendo.bind($("#form-container"), currentObj);	
 }
 
@@ -175,7 +175,7 @@ function validateModel(){
 	}
 	console.log(eqTotalCount);
 	if(eqTotalCount == 0){
-		alert("请输入申请数量");
+		alert("请审核设备清单");
 		return false;
 	}
 	return true;

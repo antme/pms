@@ -42,11 +42,11 @@ public class PurchaseContractController extends AbstractController {
     public void listSalesContractsForShipSelect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listSalesContractsForShipSelect(parserJsonParameters(request, false)), request, response);
     }
+
     
-    
-    @RequestMapping("/repository/eqcostList/forship/select_by_scid")
-    public void listEqcostListForShipByScID(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listEqcostListForShipByScIDAndType(parserJsonParameters(request, false)), request, response);
+    @RequestMapping("/back/load")
+    public void getPurchaseBack(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.getPurchaseBack(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/get")
@@ -153,7 +153,7 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listPurchaseOrders(parserJsonParameters(request, false)), request, response);
     }
     
-    @RequestMapping("/order/select/list")
+    @RequestMapping("/order/select")
     public void listOrdersForSelect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listApprovedPurchaseOrderForSelect(), request, response);
     }
@@ -187,7 +187,14 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/order/approve")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_PROCESS, desc = RoleValidConstants.PURCHASE_ORDER_PROCESS_DESC)
     public void approvePurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.approvePurchaseOrder(parserJsonParameters(request, false)), request, response);
+        pService.approvePurchaseOrder(parserJsonParameters(request, false));
+        responseWithData(null, request, response);
+    }
+    
+    @RequestMapping("/order/cancel")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_MANAGEMENT, desc = RoleValidConstants.PURCHASE_ORDER_MANAGEMENT_DESC)
+    public void cancelPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.cancelPurchaseOrder(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/order/reject")
@@ -204,7 +211,7 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/repository/add")
     @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
     public void addRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
-        pService.addRepositoryRequest(parserJsonParameters(request, false));
+        pService.updateRepositoryRequest(parserJsonParameters(request, false));
         responseWithData(null, request, response, "save_success");
     }
     
@@ -235,7 +242,7 @@ public class PurchaseContractController extends AbstractController {
     
     //直发出入库确认
     @RequestMapping("/repository/confirm")
-    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS_DESC)
     public void confirmRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.approveRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
@@ -250,12 +257,7 @@ public class PurchaseContractController extends AbstractController {
     public void listProjectsForRepositoryDirect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listProjectsForRepositoryDirect(parserJsonParameters(request, false)), request, response);
     }
-    
-    @RequestMapping("/repository/list/byproject")
-    public void listRepositoryByProjectId(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listRepositoryInByProjectId(parserJsonParameters(request, false)), request, response);
-    }
-    
+
     @RequestMapping("/repository/cancel")
     public void cancelRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.cancelRepositoryRequest(parserJsonParameters(request, false)), request, response);

@@ -4,6 +4,15 @@ var listProjectUrl = "/service/purcontract/repository/contract/list";
 var updateUrl = "/service/purcontract/repository/update?type=in";
 var createUrl = "/service/purcontract/repository/add?type=in";
 var listEqUrl = "/service/purcontract/get/byproject_supplier";
+var loadUrl = "/service/purcontract/repository/get";
+
+if(redirectParams && redirectParams.type == "out"){
+	listProjectUrl = "/service/purcontract/repository/contract/list?type=out";
+	updateUrl = "/service/purcontract/repository/update?type=out";
+	createUrl = "/service/purcontract/repository/add?type=out";
+	listEqUrl = "/service/purcontract/get/byproject_supplier?type=out";
+}
+
 var model = kendo.data.Model.define({
 	id : "_id",
 	fields : {
@@ -23,8 +32,7 @@ var projectDataSource = new kendo.data.DataSource({
 			dataType : "jsonp",
 			url : listProjectUrl,
 			type : "post"
-		},
-		parameterMap : redirectParams
+		}
 	},
 	schema : {
 		total: "total", 
@@ -32,6 +40,7 @@ var projectDataSource = new kendo.data.DataSource({
 	}
 });
 $(document).ready(function() {
+	checkRoles();
 	$("#purchasecontractselect").kendoDropDownList({
 			dataTextField : "projectName",
 			dataValueField : "_id",
@@ -58,7 +67,7 @@ $(document).ready(function() {
 	});
 	
 	if (redirectParams && redirectParams._id) {
-		postAjaxRequest("/service/purcontract/repository/get", redirectParams, edit);
+		postAjaxRequest(loadUrl, redirectParams, edit);
 	} 
 	
 });
@@ -115,6 +124,11 @@ var itemDataSource = new kendo.data.DataSource({
 
 
 function save(status) {
+	
+	
+	if(!requestDataItem.status && redirectParams && redirectParams.type == "out"){
+		requestDataItem.status = "已提交";
+	}	
 	if(!requestDataItem.status){
 		requestDataItem.status = "草稿";
 	}
@@ -142,8 +156,21 @@ function save(status) {
 	
 }
 
-function checkStatus() {
+function confirmRepository(){
+
+	postAjaxRequest("/service/purcontract/repository/approve", {models:kendo.stringify(requestDataItem)}, checkStatus);
+}
+
+function cancel(){
 	loadPage("repository", null);
+}
+
+function checkStatus() {
+	if(redirectParams && redirectParams.type == "out"){
+		loadPage("repositoryOut", null);
+	}else{
+		loadPage("repository", null);
+	}
 }
 // 计算成
 var projectId = undefined;

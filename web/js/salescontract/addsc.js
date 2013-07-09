@@ -187,6 +187,10 @@ $(document).ready(function() {
 		dataValueField : "value",
         optionLabel: "选择合同类型...",
 		dataSource : contractTypeItems,
+		select:function(e){
+			var dataItem = this.dataItem(e.item.index());
+            scTypeShowTabs(dataItem.value);
+		}
 	});
 	
 	//已归档，未归档
@@ -394,7 +398,7 @@ function saveSC(){
 			if(savedCateTaxType == null){
 				map.put(itemCate, itemTaxType);
 			}else if(savedCateTaxType != itemTaxType){
-				alert(itemCate + "类别中税收类型不统一！");
+				alert("成本设备清单：" + itemCate + "类别中税收类型不统一！");
 				return;
 			}
 		}
@@ -500,14 +504,41 @@ function showTabs(projectStatus){
 	}
 	var tab0 = tabStrip.tabGroup.children("li").eq(0);
 	var tab1 = tabStrip.tabGroup.children("li").eq(1);
+	var tab2 = tabStrip.tabGroup.children("li").eq(2);
+	var scType = $("#contractType").val();console.log("*************c type" + scType);
 	if (projectStatus == "销售正式立项"){
 		$("#tabDiv").show();
 		tabStrip.enable(tab0, true);
 		tabStrip.enable(tab1, true);
 	}else{//虚拟合同，只显示 设备清单Tab	
 		$("#tabDiv").show();
-		tabStrip.select(2);
 		tabStrip.enable(tab0, false);
 		tabStrip.enable(tab1, false);
+		if(scType != "弱电工程"){
+			tabStrip.select(2);
+//			tabStrip.deactivateTab(tab2);
+		}else{
+			tabStrip.deactivateTab(tab0);
+			tabStrip.deactivateTab(tab1);
+			tabStrip.deactivateTab(tab2);
+		}
+	}
+}
+
+function scTypeShowTabs(scType){
+	var tabStrip = $("#tabstrip").data("kendoTabStrip");
+	if(!tabStrip){
+		$("#tabstrip").kendoTabStrip();
+		
+		tabStrip = $("#tabstrip").data("kendoTabStrip");
+	}
+	var tab2 = tabStrip.tabGroup.children("li").eq(2);
+//	console.log("***"+scType);
+	if (scType == "弱电工程"){
+		tabStrip.enable(tab2, false);
+		tabStrip.deactivateTab(tab2);
+	}else{
+		tabStrip.enable(tab2, true);
+		tabStrip.select(2);
 	}
 }

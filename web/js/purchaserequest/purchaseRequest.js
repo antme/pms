@@ -85,7 +85,10 @@ $(document).ready(function() {
 			}, {
 				field : "moneyPercentOfContract",
 				title : "金额占合同%"
-			} ]
+			},{
+				field : "eqcostDeliveryType",
+				title : "货物递送方式"
+			}]
 
 		});
 
@@ -97,13 +100,14 @@ function editRe() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGridWithMsg("grid");
 
-	console.log(row);
 	if (row) {
 		if (row.purchaseOrderId) {
-			alert("此采购申请已发采购订单，不允许编辑!");
+			alert("不允许编辑!");
 		}else if(row.status == "已中止"){
 			alert("此采购申请已中止，不允许编辑!");
-		} else {
+		} else if(row.status == "审批通过"){
+			alert("此采购申请已审批通过，不允许编辑!");
+		}else {
 			loadPage("html/purchasecontract/purchaseRequestEdit.html", {
 				_id : row._id
 			});
@@ -114,13 +118,25 @@ function editRe() {
 function cancelRe() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "已提交" || row.status == "草稿" || row.status == "审批拒绝"){
+		if(row.status == "已提交" || row.status == "草稿" || row.status == "审批拒绝" || row.status == "审批中"){
 			process(cancelUrl);
 		}else {
 			alert("不能中止此数据");
 		}
 	}
 }
+
+function approveRe() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "审批中" ||　row.status == "中止申请中"){
+			process(approveUrl);
+		}else{
+			alert("此状态不需要审批");
+		}
+	}
+}
+
 
 function add(){
 	loadPage("html/purchasecontract/purchaseRequestEdit.html");

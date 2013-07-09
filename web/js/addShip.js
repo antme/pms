@@ -76,7 +76,7 @@ $(document).ready(function() {
         dataSource: new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: "../service/project/listforselect",
+                    url: "../service/arrivalNotice/project/list",
                     dataType: "jsonp",
     	            data: {
     	            	pageSize: 0
@@ -136,7 +136,7 @@ $(document).ready(function() {
             	eqDataSource = new kendo.data.DataSource({
             	    transport: {
             	        read: {
-            	            url: crudServiceBaseUrl + "/ship/eqlist",
+            	            url: crudServiceBaseUrl + "/arrivalNotice/canshipeq/list",
             	            dataType: "jsonp",
             	            data: {
             	            	salesContractId: function() {

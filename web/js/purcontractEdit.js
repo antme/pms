@@ -4,7 +4,7 @@ var requestDataItem;
 var contractModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
-		purchaseOrderCode : {
+		salesContractCode : {
 			editable : false
 		},
 		
@@ -35,12 +35,77 @@ var contractModel = kendo.data.Model.define({
 		firstPay : {
 
 		},
-		eqcostList: {}
+		eqcostApplyAmount : {
+			editable : false
+		},
+		eqcostProductUnitPrice : {
+			editable : false
+		},
+		eqcostBrand : {
+			editable : false
+		},
+		purchaseOrderCode : {
+			editable : false
+		},
+		eqcostList: {},
+		eqcostNo : {
+			editable : false
+		},
+		eqcostMaterialCode : {
+			editable : false
+		},
+		eqcostProductType : {
+			editable : false
+		},
+		eqcostAvailableAmount : {
+			editable : false
+		},
+		eqcostUnit : {
+			editable : false
+		},
+		eqcostProductName : {
+			editable : false
+		},
+		contractExecuteCate : {
+			
+		}
 	}
 });
 
 
-contractModel =  $.extend( model, contractModel);
+var orderDataSource = new kendo.data.DataSource({
+	
+});
+
+function updateOrder(data) {
+	var value = $("#eqcostDeliveryType").data("kendoDropDownList").value();
+	if (value == "入公司库") {
+		$("#executeStatus").kendoDropDownList({
+			dataTextField : "text",
+			dataValueField : "text",
+			dataSource : executeType2
+		});
+
+		orderDataSource.data(data.repository);
+		
+		var purchasecontractin = $("#purchasecontractin").data("kendoMultiSelect");
+		purchasecontractin.value([]);
+		
+	} else {
+		$("#executeStatus").kendoDropDownList({
+			dataTextField : "text",
+			dataValueField : "text",
+			dataSource : executeType1
+		});
+		
+		
+		orderDataSource.data(data.directly);
+		
+		var purchasecontractin = $("#purchasecontractin").data("kendoMultiSelect");
+		purchasecontractin.value([]);
+		
+	}
+}
 
 
 $(document).ready(function() {
@@ -50,38 +115,8 @@ $(document).ready(function() {
 				effects : "fadeIn"
 			}
 		}
-	});
-	
-	
-	$("#purchaseContractType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : purchaseContractType
-	});
-	
-	$("#eqcostDeliveryType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : eqcostDeliveryType,
-		select : function(e){
-			if(e.item[0].innerText == "直发入库"){
-				$("#executeStatus").kendoDropDownList({
-					dataTextField : "text",
-					dataValueField : "text",
-					dataSource : executeType2
-				});
-			}else{
-				$("#executeStatus").kendoDropDownList({
-					dataTextField : "text",
-					dataValueField : "text",
-					dataSource : executeType1
-				});
-			}
-		}
-	});
-	
+	});	
 
-	
 
 	$("#supplier").kendoDropDownList({
 		dataTextField : "supplierName",
@@ -100,6 +135,13 @@ $(document).ready(function() {
 		}
 	});
 	
+
+	$("#purchaseContractType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : purchaseContractType
+	});
+	
 	$("#executeStatus").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "text",
@@ -110,7 +152,7 @@ $(document).ready(function() {
 	    format: "yyyy/MM/dd",
 	    parseFormats: ["yyyy/MM/dd"]
 	});
-	
+
 	if(popupParams){
 		$("#purchasecontract-edit-item").show();
 		postAjaxRequest("/service/purcontract/get", popupParams, edit);
@@ -120,25 +162,7 @@ $(document).ready(function() {
 		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
 	} else{
 
-		if (!$("#purchasecontractin").data("kendoMultiSelect")) {
-			$("#purchasecontractin").kendoMultiSelect({
-				dataTextField : "purchaseOrderCode",
-				dataValueField : "_id",
-				placeholder : "选择采购订单...",
-				dataSource : {
-					transport : {
-						read : {
-							dataType : "jsonp",
-							url : "/service/purcontract/order/select/list",
-						}
-					},
-					schema : {
-						total: "total", // total is returned in the "total" field of the response
-						data: "data"
-					}
-				}
-			});
-		}
+		postAjaxRequest("/service/purcontract/order/select", null, addOrder);
 
 		$("#purchasecontract-edit-header").show();
 		$("#purchasecontract-edit-item").hide();
@@ -146,7 +170,30 @@ $(document).ready(function() {
 	
 });
 
+function addOrder(data){
 
+	
+	$("#purchasecontractin").kendoMultiSelect({
+		dataTextField : "purchaseOrderCode",
+		dataValueField : "_id",
+		placeholder : "选择采购订单...",
+		dataSource : orderDataSource
+	});
+	
+	$("#eqcostDeliveryType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : eqcostDeliveryType,
+		change : function(e) {
+			updateOrder(data);
+		},
+		dataBound : function(e){		
+			updateOrder(data);
+		}
+	});
+	
+
+}
 
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
@@ -211,6 +258,10 @@ function save(status) {
 				requestDataItem.supplier = requestDataItem.supplier._id;
 			}
 			
+			if(requestDataItem.executeStatus && requestDataItem.executeStatus.text){
+				requestDataItem.executeStatus = requestDataItem.executeStatus.text;
+			}
+			
 
 			// 同步数据
 			itemDataSource.sync();
@@ -227,39 +278,45 @@ function checkStatus() {
 function showOrderWindow() {
 	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
 	var kendoGrid = $("#purchasecontractin").data("kendoMultiSelect");
-	itemListDataSource.data([]);
 	var dataItems = kendoGrid.dataSource.data();
-	var selectedValues = kendoGrid.value();
-	for(id in selectedValues){	
-		for(index in dataItems){			
-			if(dataItems[index]._id == selectedValues[id]){
-				var eqcostList = dataItems[index].eqcostList;
-				for(listIndex in eqcostList){
-					if(eqcostList[listIndex].uid){
-						if(!eqcostList[listIndex].logisticsType ){
-							eqcostList[listIndex].logisticsType="";
+	
+	if(dataItems.length==0){
+		alert("没有相关订单");
+	}else{
+		itemListDataSource.data([]);
+		var selectedValues = kendoGrid.value();
+		for(id in selectedValues){	
+			for(index in dataItems){			
+				if(dataItems[index]._id == selectedValues[id]){
+					var eqcostList = dataItems[index].eqcostList;
+					for(listIndex in eqcostList){
+						if(eqcostList[listIndex].uid){
+							if(!eqcostList[listIndex].logisticsType ){
+								eqcostList[listIndex].logisticsType="";
+							}
+							eqcostList[listIndex].projectId = dataItems[index].projectId;
+							eqcostList[listIndex].salesContractId = dataItems[index].salesContractId;
+							eqcostList[listIndex].salesContractCode = dataItems[index].salesContractCode;
+							eqcostList[listIndex].purchaseOrderId = dataItems[index]._id;
+							eqcostList[listIndex].purchaseOrderCode = dataItems[index].purchaseOrderCode;
+							eqcostList[listIndex].purchaseRequestId = dataItems[index].purchaseRequestId;
+							eqcostList[listIndex].purchaseRequestCode = dataItems[index].purchaseRequestCode;
+							
+							itemListDataSource.add(eqcostList[listIndex]);
 						}
-						eqcostList[listIndex].projectId = dataItems[index].projectId;
-						eqcostList[listIndex].salesContractId = dataItems[index].salesContractId;
-						eqcostList[listIndex].salesContractCode = dataItems[index].salesContractCode;
-						eqcostList[listIndex].purchaseOrderId = dataItems[index]._id;
-						eqcostList[listIndex].purchaseOrderCode = dataItems[index].purchaseOrderCode;
-						eqcostList[listIndex].purchaseRequestId = dataItems[index].purchaseRequestId;
-						eqcostList[listIndex].purchaseRequestCode = dataItems[index].purchaseRequestCode;
-						
-						itemListDataSource.add(eqcostList[listIndex]);
 					}
+					break;
 				}
-				break;
 			}
+			
 		}
 		
+		requestDataItem = new contractModel({});
+		requestDataItem.eqcostList = itemListDataSource.data();
+		
+		requestDataItem.eqcostDeliveryType = $("#eqcostDeliveryType").data("kendoDropDownList").value();
+		edit();
 	}
-	
-	requestDataItem = new contractModel({});
-	requestDataItem.eqcostList = itemListDataSource.data();
-
-	edit();
 }
 
 
@@ -276,13 +333,12 @@ function edit(data) {
 		requestDataItem = new contractModel(requestDataItem);
 	}
 	
-	if(kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd") && 
-			kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd") !="null"){
-		requestDataItem.set("signDate", kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy-MM-dd"));
-	}else if(kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd") && 
-			kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd") !="null"){
-		requestDataItem.set("signDate", kendo.parseDate(kendo.toString(requestDataItem.signDate, 'd'), "yyyy/MM/dd"));
+	if(requestDataItem.executeStatus && requestDataItem.executeStatus.text){
+		requestDataItem.executeStatus = requestDataItem.executeStatus.text;
 	}
+	
+
+	setDate(requestDataItem, "signDate", requestDataItem.signDate);
 	
 	kendo.bind($("#purchasecontract-edit"), requestDataItem);
 
@@ -397,8 +453,9 @@ function edit(data) {
 				if (refresh) {
 					var grid1 = $("#purchasecontract-edit-grid").data("kendoGrid");
 					grid1.refresh();
+				}else{
+					initMergedGrid();
 				}
-				initMergedGrid();
 
 				$("#requestedTotalMoney").val(requestActureMoney);
 				
@@ -415,17 +472,19 @@ var mergedDataSource = new kendo.data.DataSource({
 });
 
 function initMergedGrid(){
+	mergedDataSource.data([]);
 	var itemData = itemDataSource.data();
 	var data = eval(kendo.stringify(itemData));
 	while(mergedDataSource.at(0)){
 		mergedDataSource.remove(mergedDataSource.at(0));
 	}
-	var mdata = mergedDataSource.data();
+	
 
 
 	for(i=0; i<data.length; i++){
 		
 		var find = false;
+		var mdata = mergedDataSource.data();
 		for(j=0; j<mdata.length; j++){	
 			if(mdata[j].eqcostNo == data[i].eqcostNo && mdata[j].eqcostProductName == data[i].eqcostProductName
 					&& mdata[j].eqcostMaterialCode == data[i].eqcostMaterialCode
@@ -446,7 +505,8 @@ function initMergedGrid(){
 			mergedDataSource.add(data[i]);
 		}
 	}
-	
+	console.log(mergedDataSource.data());
+
 	
 	if (!$("#merged-grid").data("kendoGrid")) {
 		$("#merged-grid").kendoGrid({
@@ -487,7 +547,6 @@ function detailInit(e) {
 	
 	var data = new Array();
 	var mdata = mergedDataSource.data();
-
 	for(i=0; i<mdata.length; i++){
 		if(mdata[i].eqcostNo == e.data.eqcostNo && mdata[i].eqcostProductName == e.data.eqcostProductName
 				&& mdata[i].eqcostMaterialCode == e.data.eqcostMaterialCode

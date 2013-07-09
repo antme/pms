@@ -37,20 +37,23 @@
 				</tr>
 			</table>
             <div>
-				<h4>成本设备清单</h4>
+				<h4>设备清单</h4>
 				<div id="subGrid" data-bind="source: eqcostList"></div>
-            	<br><label>备注:</label>
-            	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: pbComment" ></textarea>
-            </div>
-            <br>
-			<div id="purchase-request-sum-grid"></div>
-            <div id="form-container-button">
-            	<button access="purchase_back_management" class="k-button access" value="save">保存</button>
-            	<button access="purchase_back_management" class="k-button access" value="submit">提交</button>
-            	<button access="purchase_back_process" class="k-button access" value="approve">批准</button>
-            	<button access="purchase_back_process" class="k-button access" value="reject">拒绝</button>            	
-            	<button class="k-button" value="cancel">取消</button>
-            </div>
+            	<br>
+				<div id="purchase-request-sum-grid"></div>
+				<div data-bind="text: pbComment" class="commentdiv"></div>
+				<div class="tempCommentdiv">
+					<label>备注:</label><br>
+					<textarea name="tempComment" rows="4" cols="120" class="k-textbox" style="width:505px;" data-bind="value: tempComment" ></textarea>
+				</div>
+			</div>
 		</div>
+        <div id="form-container-button">
+        	<button access="purchase_back_management" class="k-button access" value="save">保存</button>
+        	<button access="purchase_back_management" class="k-button access" value="submit">提交</button>
+        	<button access="purchase_back_process" class="k-button access" value="approve">批准</button>
+        	<button access="purchase_back_process" class="k-button access" value="reject">拒绝</button>            	
+        	<button class="k-button" value="cancel">取消</button>
+        </div>		
 	</div>		
 </body>

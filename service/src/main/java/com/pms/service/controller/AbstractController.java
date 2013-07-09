@@ -209,6 +209,9 @@ public abstract class AbstractController {
      */
     private void responseMsg(Map<String, Object> data, ResponseStatus status, HttpServletRequest request, HttpServletResponse response, String msgKey) {
 
+        if(data == null){
+            data = new HashMap<String, Object>();
+        }
         response.setContentType("text/plain;charset=UTF-8");
         response.addHeader("Accept-Encoding", "gzip, deflate");
 
