@@ -150,6 +150,9 @@ $(document).ready(function() {
             	        model: eqModel,
             	        total: "total",
                     	data: "data"
+            	    },
+            	    group: {
+            	    	field:"eqcostNo"
             	    }
             	});
             	
@@ -187,7 +190,8 @@ $(document).ready(function() {
 	        },
 	        { field: "eqcostMemo", title: "备注" },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
-	    editable: true
+	    editable: true,
+	    groupable : true
 	});
 	grid = $("#equipments-grid").data("kendoGrid");
     
@@ -220,6 +224,9 @@ function edit(data) {
 	    batch: true,
 	    schema: {
 	        model: eqModel
+	    },
+	    group: {
+	    	field:"eqcostNo"
 	    }
 	});
 	

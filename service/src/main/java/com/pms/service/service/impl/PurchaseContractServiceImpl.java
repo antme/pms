@@ -897,7 +897,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);      
         query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.scId", "eqcostList.projectId", "eqcostList.logisticsType" });
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.scId", "eqcostList.projectId"});
 
         List<Object> projectIds = this.dao.listLimitKeyValues(query, DBBean.PURCHASE_CONTRACT);
         

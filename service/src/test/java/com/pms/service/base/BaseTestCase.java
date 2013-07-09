@@ -1,5 +1,8 @@
 package com.pms.service.base;
 
+import java.io.File;
+import java.io.IOException;
+
 import junit.framework.TestCase;
 
 import org.springframework.context.ApplicationContext;
@@ -8,7 +11,6 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dao.ICommonDao;
 import com.pms.service.dao.impl.mongo.CommonDaoMongoImpl;
-import com.pms.service.mockbean.DBBean;
 import com.pms.service.service.IProjectService;
 import com.pms.service.service.IReportService;
 import com.pms.service.service.ISalesContractService;
@@ -16,6 +18,8 @@ import com.pms.service.service.IUserService;
 import com.pms.service.service.impl.ProjectServiceImpl;
 import com.pms.service.service.impl.ReportServiceImpl;
 import com.pms.service.service.impl.UserServiceImpl;
+import com.pms.service.util.EmailUtil;
+import com.pms.service.util.ExcleUtil;
 
 public class BaseTestCase extends TestCase {
 
@@ -34,11 +38,27 @@ public class BaseTestCase extends TestCase {
         projectService = (ProjectServiceImpl) ac.getBean("projectService");
         reportService = (ReportServiceImpl) ac.getBean("reportService");
         scService = (ISalesContractService) ac.getBean("salesContractService");
-        ConfigurationManager.setProperties(ConfigurationManager.DB_NAME, "pms");
+        ConfigurationManager.setProperties(ConfigurationManager.DB_NAME, "pms_dev");
     }
 
-    public void testEmpty() {
+    public void testEmpty() throws IOException {
+
+        File f = new File("F:\\test.xls");
+
+        ExcleUtil eu = new ExcleUtil();
+        eu.createFile(f);
+        eu = new ExcleUtil(f);
+
+        try {
+            eu.addRow(0, new String[] { "a", "b", "c" });
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         assertTrue(true);
+
+        EmailUtil.sendMail("test", "251148471@qq.com", "dylan", "test", "F:\\test.xls");
     }
     
     public void testImportPurchaseContract(){

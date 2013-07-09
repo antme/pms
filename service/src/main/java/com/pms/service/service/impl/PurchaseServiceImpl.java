@@ -736,7 +736,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         // 获取已发的采购申请的数据总和
         Map<String, Object> purchaseRequestQuery = new HashMap<String, Object>();
         purchaseRequestQuery.put(PurchaseCommonBean.BACK_REQUEST_ID, backId);//TODO: 
-//        purchaseRequestQuery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseCommonBean.STATUS_CANCELLED));
+        purchaseRequestQuery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseCommonBean.STATUS_CANCELLED));
         Map<String, Integer> requestEqCountMap = countEqByKey(purchaseRequestQuery, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.EQCOST_APPLY_AMOUNT, null);
 
         // 获取调拨中的数据总和
