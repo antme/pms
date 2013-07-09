@@ -58,4 +58,6 @@ public class ShipBean {
     
     public static final String SHIP_EQ_GIVE_UP_FAULSE = "否"; // 否
     
+    public static final String SHIP_LEFT_AMOUNT = "leftAmount"; // 可发货数量
+    
 }

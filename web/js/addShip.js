@@ -136,7 +136,7 @@ $(document).ready(function() {
             	eqDataSource = new kendo.data.DataSource({
             	    transport: {
             	        read: {
-            	            url: crudServiceBaseUrl + "/arrivalNotice/canshipeq/list",
+            	            url: crudServiceBaseUrl + "/ship/eqlist",
             	            dataType: "jsonp",
             	            data: {
             	            	salesContractId: function() {
@@ -151,9 +151,10 @@ $(document).ready(function() {
             	        total: "total",
                     	data: "data"
             	    },
-            	    group: {
-            	    	field:"eqcostNo"
-            	    }
+            	    group: [
+            	        {field: "eqcostDeliveryType"},
+            	    	{field:"purchaseContractType"}
+            	    ]
             	});
             	
             	grid.setDataSource(eqDataSource);
@@ -183,6 +184,18 @@ $(document).ready(function() {
 	        { field: "eqcostUnit", title: "单位" },
 	        { field: "eqcostAmount", title: "数量" },
 	        { field: "arrivalAmount", title: "实际发货数" },
+	        {
+				field : "purchaseContractType",
+				title : "采购合同类别",
+				groupHeaderTemplate: "#= value # ",
+				hidden : true
+			},
+			 {
+				field : "eqcostDeliveryType",
+				title : "物流类别",
+				groupHeaderTemplate: "#= value # ",
+				hidden : true
+			},
 	        {
 	        	field: "giveUp",
 	        	title: "放弃未发",

@@ -262,7 +262,15 @@ function edit(data) {
 			}],
 			scrollable : true,
 			editable : true,
-			width : "800px"
+			width : "800px",
+			save: function(e){
+				if (e.values.eqcostApplyAmount) {					
+					if(e.values.eqcostApplyAmount > e.model.leftCount){
+						alert("最多可以入库" + e.model.pbLeftCount);
+						e.preventDefault();
+					}
+				}
+			}
 
 		});
 	}

@@ -102,85 +102,31 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	public Map<String, Object> eqlist(Map<String, Object> params) {
 		
 		String saleId = (String) params.get(ShipBean.SHIP_SALES_CONTRACT_ID);
-		
-		// 已批准的 调拨申请的 设备清单
-		Map<String, Double> alloEqList = purchaseService.getAllotEqCountBySalesContractId(saleId);
-		
-		// 已到货 的 设备清单
+		// 已到货 的 设备清单，来自于调拨申请,入库和直发到货通知
 		Map<String, Object> map = arrivalService.listEqListByScIDForShip(saleId);
-		
 		List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
+		scs.mergeEqListBasicInfo(purchaseEqList);
+
 		
-		// 已发货的设备清单
-		List<Map<String, Object>> shipedEqList = shipedList(saleId);
-		
-		// 调拨 + 采购
-		for (Map<String, Object> p:purchaseEqList){
-			String id = p.get(ApiConstants.MONGO_ID).toString();
-			Double amount = 0.0;
-			if (p.containsKey("eqcostApplyAmount")) {
-				amount = (Double) p.get("eqcostApplyAmount");
-			}
-			
-			if (alloEqList.containsKey(id)) {
-				amount = +alloEqList.get(id);
-			}
-			
-			alloEqList.put(id, amount);
-		}
-		
-		// - 已发货
-		for (Map<String, Object> s:shipedEqList){
-			String id = s.get(ApiConstants.MONGO_ID).toString();
-			if (alloEqList.containsKey(id)) {
-				Double amount = (Double) s.get(EqCostListBean.EQ_LIST_AMOUNT);
-				Double aAmount = alloEqList.get(id);
-				alloEqList.put(id, aAmount-amount);
-			}
-		}
-		
-		// 取设备信息
-		List<String> eqId = new ArrayList<String>();
-		for (String id : alloEqList.keySet()) {
-			eqId.add(id);
-		}
-		Map<String, Object> queryContract = new HashMap<String, Object>();
-		queryContract.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, eqId));
-		Map<String, Object> eqInfoMap = dao.listToOneMapByKey(queryContract, DBBean.EQ_COST, ApiConstants.MONGO_ID);
-		
-		// 封装结果数据
-		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-		for (Map.Entry mapEntry : alloEqList.entrySet()) {
-			Map<String, Object> eqMap = (Map<String, Object>) eqInfoMap.get(mapEntry.getKey().toString());
-			if (eqMap != null) {
-				eqMap.put(EqCostListBean.EQ_LIST_AMOUNT, mapEntry.getValue());
-				eqMap.put(ShipBean.SHIP_EQ_ARRIVAL_AMOUNT, 0);
-				eqMap.put(ShipBean.SHIP_EQ_GIVE_UP, ShipBean.SHIP_EQ_GIVE_UP_FAULSE);
-				result.add(eqMap);
-			}
-		}
-		
+		//已发货的数量统计
+        Map<String, Object> parameters = new HashMap<String, Object>();
+//        parameters.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
+        parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, saleId);
+        Map<String, Integer> shipedCountMap = countEqByKey(parameters, DBBean.SHIP, "eqcostAmount", null);
+        
+        for (Map<String, Object> eqMap : purchaseEqList) {
+            int count = ApiUtil.getInteger(eqMap.get("eqcostAmount"), 0);
+            if (shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)) != null) {
+                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, count - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+                eqMap.put("eqcostAmount", count - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+            } else {
+                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, count);
+            }
+        }
+
 		Map<String, Object> res = new HashMap<String, Object>();
-		res.put(ApiConstants.RESULTS_DATA, result);
+		res.put(ApiConstants.RESULTS_DATA, purchaseEqList);
 		return res;
-	}
-	
-	// 已批准的发货设备清单 - 入参 销售合同id
-	public List<Map<String,Object>> shipedList(String saleId) {
-		
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		
-		parameters.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
-		parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, saleId);
-		
-		Map<String, Object> result = dao.list(parameters, DBBean.SHIP);
-		List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
-		
-		List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
-		for (Map<String, Object> p:list){
-			eqList.addAll((List<Map<String, Object>>) p.get(ShipBean.SHIP_EQ_LIST));
-		}
-		return eqList;
 	}
 	
 	public Map<String, Object> option(Map<String, Object> params) {

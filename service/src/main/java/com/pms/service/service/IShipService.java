@@ -17,8 +17,6 @@ public interface IShipService {
 
 	public Map<String, Object> eqlist(Map<String, Object> params);
 	
-	public List<Map<String,Object>> shipedList(String saleId);
-
 	public Map<String, Object> option(Map<String, Object> params);
 	
 	public Map<String, Object> record(Map<String, Object> params);
