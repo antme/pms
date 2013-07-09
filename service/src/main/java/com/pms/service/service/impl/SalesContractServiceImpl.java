@@ -815,14 +815,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         obj.put(MoneyBean.customerBankName, params.get(MoneyBean.customerBankName));
         
         String[] keys = new String[] { "customer", "contractCode","projectId" };
-        Map<String, Object> sc = dao.findOne("contractCode", params.get(MoneyBean.salesContractCode), keys,DBBean.SALES_CONTRACT);
+        Map<String, Object> sc = dao.findOne(SalesContractBean.SC_CODE, params.get("contractCode"), keys,DBBean.SALES_CONTRACT);
         if(sc == null) {
         	throw new ApiResponseException("销售合同不存在", params, "请输入正确合同编号");
         }
         
         
         obj.put(MoneyBean.scId, sc.get(ApiConstants.MONGO_ID));
-        obj.put(MoneyBean.salesContractCode, sc.get("contractCode"));
+        obj.put(MoneyBean.contractCode, sc.get("contractCode"));
         obj.put(MoneyBean.projectId, sc.get("projectId"));
         obj.put(MoneyBean.customer, sc.get("customer"));
         

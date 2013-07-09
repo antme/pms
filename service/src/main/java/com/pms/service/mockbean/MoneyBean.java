@@ -17,7 +17,7 @@ public class MoneyBean {
 	public static final String getMoneyComment = "getMoneyComment";
 	public static final String scId = "scId";//??????????????
 	public static final String projectId = "projectId";
-	public static final String salesContractCode = "contractCode";//??????????????
+	public static final String contractCode = "contractCode";//??????????????
 	public static final String customer= "customer";//??????????????
 	public static final String customerBankAccount = "customerBankAccount";
 	public static final String customerBankName = "customerBankName";
