@@ -61,7 +61,7 @@ $(document).ready(function () {
 					} else if (dataItem.type == 1){
 						name = "非供应商直发";
 					} else {
-						name = "未知";
+						name = dataItem.type;
 					}
 					return name;
 				},

@@ -236,6 +236,10 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String PURCHASE_REQUEST_ID = "purchaseRequestId";
     public static final String PURCHASE_ORDER_CODE = "purchaseOrderCode";
     public static final String PURCHASE_ORDER_ID = "purchaseOrderId";
+    public static final String PURCHASE_CONTRACT_ID = "purchaseContractId";
+    public static final String PURCHASE_CONTRACT_CODE = "purchaseContractCode";
+    public static final String PURCHASE_CONTRACT_TYPE = "purchaseContractType";
+    
     
     
     public static final String PROJECT_ID = "projectId";

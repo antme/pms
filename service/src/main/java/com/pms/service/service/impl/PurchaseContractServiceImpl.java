@@ -25,6 +25,7 @@ import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
+import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
@@ -33,6 +34,7 @@ import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISupplierService;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
+import com.pms.service.util.status.ResponseCodeConstants;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
 
@@ -205,6 +207,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
         }else{
             query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
+            params.put("type", "in");
         }
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
 
@@ -438,18 +441,22 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         
         String keys[] = new String[] { "eqcostApplyAmount", "orderEqcostCode", "orderEqcostName", "orderEqcostModel", "eqcostProductUnitPrice" };
-        parameters.put(SalesContractBean.SC_EQ_LIST, mergeSavedEqList(keys, eqList));
+        List<Map<String, Object>> mergeSavedEqList = mergeSavedEqList(keys, eqList);
+
+        
+        parameters.put(SalesContractBean.SC_EQ_LIST, mergeSavedEqList);
+
 
         Map<String, Object> order = updatePurchase(parameters, DBBean.PURCHASE_ORDER);
 
         //发采购订单后 采购申请状态为采购中
         Map<String, Object> prequest = this.dao.findOne(ApiConstants.MONGO_ID, order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID),
-                new String[] { PurchaseCommonBean.PURCHASE_ORDER_ID }, DBBean.PURCHASE_REQUEST);
+                new String[] { PurchaseCommonBean.PURCHASE_ORDER_ID, SalesContractBean.SC_EQ_LIST }, DBBean.PURCHASE_REQUEST);
 
         if (prequest != null) {
             prequest.put(PurchaseCommonBean.PURCHASE_ORDER_ID, order.get(ApiConstants.MONGO_ID));
             prequest.put(PurchaseCommonBean.PURCHASE_ORDER_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
-            prequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDERING);
+            prequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDERING);                   
             this.dao.updateById(prequest, DBBean.PURCHASE_REQUEST);
         }
 
@@ -507,83 +514,94 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public Map<String, Object> approvePurchaseContract(Map<String, Object> order) {
         Map<String, Object> result = processRequest(order, DBBean.PURCHASE_CONTRACT, APPROVED);
-
-
-
         updateOrderFinalStatus(result);
         return result;
     }
 
-    private void updateOrderFinalStatus(Map<String, Object> result) {
-        List<Map<String, Object>> eqListMap = (List<Map<String, Object>>) dao.findOne(ApiConstants.MONGO_ID, result.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST }, DBBean.PURCHASE_CONTRACT).get(SalesContractBean.SC_EQ_LIST);
+    private void updateOrderFinalStatus(Map<String, Object> param) {
+        
+        Map<String, Object> contract = dao.findOne(ApiConstants.MONGO_ID, param.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST, PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, 
+            PurchaseCommonBean.PURCHASE_CONTRACT_CODE, PurchaseCommonBean.EQCOST_DELIVERY_TYPE },
+                DBBean.PURCHASE_CONTRACT);
+        List<Map<String, Object>> eqListMap = (List<Map<String, Object>>)contract.get(SalesContractBean.SC_EQ_LIST);
 
         Set<String> orderIds = new HashSet<String>();
         // 批准后更新订单状态
         for (Map<String, Object> eqMap : eqListMap) {
-
             String orderId = eqMap.get(PURCHASE_ORDER_ID).toString();
             orderIds.add(orderId);
-
+            
+            eqMap.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
+            eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
+            eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));   
+            eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));  
         }
-               
+        
+        this.dao.updateById(contract, DBBean.PURCHASE_CONTRACT);
+
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(SalesContractBean.SC_EQ_LIST + "." + PURCHASE_ORDER_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<String>(orderIds)));
-        query.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] {  PurchaseCommonBean.STATUS_APPROVED }));
+        query.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseCommonBean.STATUS_APPROVED }));
         Map<String, Integer> eqCountMap = countEqByKey(query, DBBean.PURCHASE_CONTRACT, "eqcostApplyAmount", null);
-        
+
         for (String orderId : orderIds) {
-            int count =0;
+            int count = 0;
             Map<String, Object> orderQuery = new HashMap<String, Object>();
             orderQuery.put(ApiConstants.MONGO_ID, orderId);
-            orderQuery.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
-            //最外层就一个数组, 数组下面才是设备清单
-            List<Object> orderEqList = this.dao.listLimitKeyValues(orderQuery, DBBean.PURCHASE_ORDER);
+            orderQuery.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_EQ_LIST, PurchaseCommonBean.EQCOST_DELIVERY_TYPE});
+            // 最外层就一个数组, 数组下面才是设备清单
+            Map<String, Object> orderMap = this.dao.findOneByQuery(orderQuery, DBBean.PURCHASE_ORDER);
 
-            if (orderEqList != null) {
-                for (Object obj : orderEqList) {
-                    if (obj != null) {
-                        List<Map<String, Object>> orderEqlistMap = (List<Map<String, Object>>) obj;
-                        for (Map<String, Object> eqOrderMap : orderEqlistMap) {
-                            int orderCount = ApiUtil.getInteger(eqOrderMap.get("eqcostApplyAmount"), 0);
-                            int countractCount = ApiUtil.getInteger(eqCountMap.get(eqOrderMap.get(ApiConstants.MONGO_ID)), 0);
-                          
-                            if(countractCount >= orderCount){
-                                count ++;
-                            }
-                        }
-                        
-                        if (count == orderEqlistMap.size()) {
-                            Map<String, Object> ordeUpdate = new HashMap<String, Object>();
-                            ordeUpdate.put(ApiConstants.MONGO_ID, orderId);
-                            ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
-                            this.dao.updateById(ordeUpdate, DBBean.PURCHASE_ORDER);
+            if (orderMap != null) {
+                List<Map<String, Object>> orderEqlistMap = (List<Map<String, Object>>) orderMap.get(SalesContractBean.SC_EQ_LIST);
 
-                            Map<String, Object> order = this.dao.findOne(ApiConstants.MONGO_ID, orderId, new String[] { PurchaseCommonBean.PURCHASE_REQUEST_ID, PurchaseCommonBean.PURCHASE_ORDER_CODE }, DBBean.PURCHASE_ORDER);
-                            if (order != null && order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID) != null) {
-                                Map<String, Object> purRequest = new HashMap<String, Object>();
-                                purRequest.put(ApiConstants.MONGO_ID, order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID));
-                                purRequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
-                                this.dao.updateById(ordeUpdate, DBBean.PURCHASE_REQUEST);
+                for (Map<String, Object> eqOrderMap : orderEqlistMap) {
+                    int orderCount = ApiUtil.getInteger(eqOrderMap.get("eqcostApplyAmount"), 0);
+                    int countractCount = ApiUtil.getInteger(eqCountMap.get(eqOrderMap.get(ApiConstants.MONGO_ID)), 0);
 
-                                Map<String, Object> arriveMap = new HashMap<String, Object>();
-                                arriveMap.put(ArrivalNoticeBean.FOREIGN_KEY, order.get(ApiConstants.MONGO_ID));
-                                arriveMap.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
-                                arriveMap.put(ArrivalNoticeBean.SHIP_TYPE, ArrivalNoticeBean.SHIP_TYPE_2);
-                                
-                                arriveService.create(arriveMap);
-                            }
+                    if (countractCount >= orderCount) {
+                        count++;
+                    }
 
-                        } else {
-                            Map<String, Object> ordeUpdate = new HashMap<String, Object>();
-                            ordeUpdate.put(ApiConstants.MONGO_ID, orderId);
-                            ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDERING);
-                            this.dao.updateById(ordeUpdate, DBBean.PURCHASE_ORDER);
-                        }
-                        
-                        
+                    if(eqCountMap.get(eqOrderMap.get(ApiConstants.MONGO_ID))!=null){
+                      //合并货物递送方式和订单等等信息到设备清单
+                        eqOrderMap.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, orderMap.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
+                        eqOrderMap.put(PurchaseCommonBean.PURCHASE_ORDER_ID, orderMap.get(ApiConstants.MONGO_ID));
+                        eqOrderMap.put(PurchaseCommonBean.PURCHASE_ORDER_CODE, orderMap.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
+                        eqOrderMap.put(PurchaseCommonBean.PURCHASE_REQUEST_ID, orderMap.get(PurchaseCommonBean.PURCHASE_REQUEST_ID));
+                        eqOrderMap.put(PurchaseCommonBean.PURCHASE_REQUEST_CODE, orderMap.get(PurchaseCommonBean.PURCHASE_REQUEST_CODE));
+                        eqOrderMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
+                        eqOrderMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));   
+                        eqOrderMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));  
                     }
                 }
-            }            
+                
+                orderMap.put(SalesContractBean.SC_EQ_LIST, orderEqlistMap);
+                updatePurchase(orderMap, DBBean.PURCHASE_ORDER);
+
+                if (count == orderEqlistMap.size()) {
+                    Map<String, Object> ordeUpdate = new HashMap<String, Object>();
+                    ordeUpdate.put(ApiConstants.MONGO_ID, orderId);
+                    ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
+                    this.dao.updateById(ordeUpdate, DBBean.PURCHASE_ORDER);
+
+                    Map<String, Object> order = this.dao.findOne(ApiConstants.MONGO_ID, orderId, new String[] { PurchaseCommonBean.PURCHASE_REQUEST_ID, PurchaseCommonBean.PURCHASE_ORDER_CODE }, DBBean.PURCHASE_ORDER);
+                    if (order != null && order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID) != null) {
+                        Map<String, Object> purRequest = new HashMap<String, Object>();
+                        purRequest.put(ApiConstants.MONGO_ID, order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID));
+                        purRequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
+                        this.dao.updateById(ordeUpdate, DBBean.PURCHASE_REQUEST);
+
+                    }
+
+                } else {
+                    Map<String, Object> ordeUpdate = new HashMap<String, Object>();
+                    ordeUpdate.put(ApiConstants.MONGO_ID, orderId);
+                    ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDERING);
+                    this.dao.updateById(ordeUpdate, DBBean.PURCHASE_ORDER);
+                }
+
+            }
 
         }
     }
@@ -883,14 +901,15 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> updateRepositoryRequest(Map<String, Object> parameters) {
    
         String keys[] = new String[] { "eqcostApplyAmount", "orderEqcostCode", "orderEqcostName", "orderEqcostModel", "eqcostProductUnitPrice", "purchaseOrderCode",
-                "salesContractCode", PURCHASE_ORDER_ID, "logisticsType", "logisticsArrivedTime", "logisticsStatus" };
+                "salesContractCode", PURCHASE_ORDER_ID,  "purchaseRequestId", "purchaseRequestCode", 
+                "eqcostDeliveryType", "logisticsArrivedTime", "logisticsStatus", "purchaseContractType", "purchaseContractCode", "purchaseContractId" };
         List<Map<String, Object>> mergeSavedEqList = mergeSavedEqList(keys, parameters.get("eqcostList"));
         
         double total = 0;
         for(Map<String, Object> eq: mergeSavedEqList){
-            total += ApiUtil.getDouble(eq, "eqcostApplyAmount", 0);
-            
+            total += ApiUtil.getDouble(eq, "eqcostApplyAmount", 0);           
         }
+        
         if(parameters.get(ApiConstants.MONGO_ID) == null){
             parameters.put("repositoryCode", generateCode("RKSQ", DBBean.REPOSITORY));
         }
@@ -908,6 +927,49 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         if (params.get("type") != null && params.get("type").toString().equalsIgnoreCase("in")) {
             //入库仓库
             Map<String, Object> result = processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_IN_REPOSITORY);
+            
+            
+            Map<String, Object> repo = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST },
+                    DBBean.REPOSITORY);
+            List<Map<String, Object>> eqListMap = (List<Map<String, Object>>)repo.get(SalesContractBean.SC_EQ_LIST);
+
+            Map<String,  List<Map<String, Object>>> eqOrderListMap = new HashMap<String, List<Map<String, Object>>>();
+            
+            Set<String> orderIds = new HashSet<String>();
+            // 批准后更新订单状态
+            for (Map<String, Object> eqMap : eqListMap) {
+                String orderId = eqMap.get(PURCHASE_ORDER_ID).toString();
+                orderIds.add(orderId);
+
+                if (eqOrderListMap.get(orderId) == null) {
+                    eqOrderListMap.put(orderId, new ArrayList<Map<String, Object>>());
+                }
+
+                List<Map<String, Object>> list = eqOrderListMap.get(orderId);
+                list.add(eqMap);
+                eqOrderListMap.put(orderId, list);
+            }
+            
+            for (String orderId : orderIds) {
+                Map<String, Object> arriveMap = new HashMap<String, Object>();
+
+                String foreignKey = orderId;
+                String type = ArrivalNoticeBean.SHIP_TYPE_2;
+
+                Map<String, Object> order = dao.findOne(ApiConstants.MONGO_ID, foreignKey, DBBean.PURCHASE_ORDER);
+
+                arriveMap.put(ShipBean.SHIP_TYPE, type);
+                arriveMap.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
+                arriveMap.put(ArrivalNoticeBean.FOREIGN_KEY, foreignKey);
+                arriveMap.put(ArrivalNoticeBean.PROJECT_ID, order.get(PurchaseCommonBean.PROJECT_ID));
+                arriveMap.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
+
+                arriveMap.put(ArrivalNoticeBean.EQ_LIST, eqOrderListMap.get(orderId));
+
+                arriveMap.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+                dao.add(arriveMap, DBBean.ARRIVAL_NOTICE);
+
+            }
             
             
             return result;
