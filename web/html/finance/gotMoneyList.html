@@ -1,8 +1,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script  src="js/finance/getMoney.js"></script>
 <body>
+<script type="text/x-kendo-template" id="template1">
+	<div class="commentdiv">#= getMoneyComment #</div>
+</script>
 	<h3>收款信息页面</h3>
 	<div id="objList" class="k-content">
-		<div id="grid"></div>
+		<div class="k-toolbar k-grid-toolbar">
+			<button access="get_money_management" class="k-button access" onclick="addGM()">新增</button>
+			<button access="get_money_management" class="k-button access"  onclick="editGM()">修改</button>
+			<button access="get_money_management" class="k-button access"  onclick="destroyGM()">删除</button>
+			<button access="get_money_management" class="k-button access"  onclick="saveGM()">保存</button>
+		</div>
+		<div id="getMoneyGrid"></div>
 	</div>
 </body>

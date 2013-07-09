@@ -41,7 +41,14 @@ var dataSource = new kendo.data.DataSource({
                 	models: kendo.stringify(options.models),
     				mycallback : "myreflush"
                 };
-            }
+            }else if(operation === "read"){
+            	return {
+            		page : options.page,
+            		pageSize : options.pageSize,
+            		skip : options.skip,
+            		take : options.take
+            	}
+             }
         }
     },
     batch: true,
@@ -58,12 +65,13 @@ var dataSource = new kendo.data.DataSource({
 
 
 $(document).ready(function () {
-	//checkRoles();
+	checkRoles();
 	
-    $("#grid").kendoGrid({
+    $("#getMoneyGrid").kendoGrid({
         dataSource: dataSource,
-        pageable: true,
-        toolbar: [{name:"create",text:"新增"}],
+	    pageable: true,
+	    sortable : true,
+        detailTemplate: kendo.template($("#template1").html()),
         columns: [
             { field: "getMoneyActualDate",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
             { field: "getMoneyActualMoney", title:"金额", min:0},
@@ -71,13 +79,36 @@ $(document).ready(function () {
             { field: "customerName", title: "客户"},
             { field: "customerBankName", title: "客户开户行"},
             { field: "customerBankAccount", title: "客户银行账号"},
-            { field: "getMoneyComment", title: "备注"},
-            { command: [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}], title: "&nbsp;", width: "170px"}
+            { field: "tempComment", title: "备注"}
         ],
-        editable:"popup"
+        selectable: "row",
+        editable:"inline"
     });
 });
-
+function addGM() {
+	$("#getMoneyGrid").data("kendoGrid").addRow();
+}
+function saveGM() {
+	$("#getMoneyGrid").data("kendoGrid").saveRow();
+}
+function editGM() {
+	var row = getSelectedRowDataByGrid("getMoneyGrid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	}else{
+		var grid = $("#getMoneyGrid").data("kendoGrid");
+		grid.editRow(grid.select());
+	}
+}
+function destroyGM() {
+	var row = getSelectedRowDataByGrid("getMoneyGrid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	}else{
+		var grid = $("#getMoneyGrid").data("kendoGrid");
+		grid.removeRow(grid.select());
+	}
+}
 function pcDropDownEditor(container, options) {
 	var input = $("<input required data-required-msg='请选择采购合同'/>");
 	input.attr("name", options.field);
@@ -106,7 +137,8 @@ function pcDropDownEditor(container, options) {
 		}
     });
 }
+
 function myreflush(){
-	//loadPage("getMoney");
-	location.reload();
+	loadPage("getMoney");
+	//location.reload();
 }

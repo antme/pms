@@ -1,13 +1,64 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script  src="js/finance/getInvoice.js"></script>
 <body>
-	<h3>收票列表页面</h3>
+<script type="text/x-kendo-template" id="template">
+	<div class="tabstrip">
+		<ul>
+			<li class="k-state-active">
+				详单列表
+			</li>
+			<li>
+				备注
+			</li>
+		</ul>
+		<div>
+			<div class="orders"></div>
+		</div>
+		<div>
+			<div class='employee-details'>
+				<br>#= getInvoiceComment #<br><br>
+			</div>
+		</div>
+	</div>
+</script>
+<script type="text/x-kendo-template" id="template2">
+	<div class="commentdiv">#= payMoneyComment #</div>
+</script>
+	<h3>收票页面</h3>
 	<div id="objList" class="k-content">
-		<div class="k-toolbar k-grid-toolbar">
-			<button access="finance_management" class="k-button access" onclick="addGI()">新增</button>
-			<button access="finance_management" class="k-button access"  onclick="editGI()">修改</button>
-			<button access="finance_management" class="k-button access"  onclick="destroyGI()">删除</button>
-		</div>		
-		<div id="grid"></div>
+		<div id="searchDiv">
+			<label>选择采购合同:</label>
+			<input id="searchfor"  style="width:250px;" type="text" value=""/>
+		</div><br><hr>
+		<div id="baseinfo" style="display:none">
+			<h4>基础信息 </h4>
+			<table class="table_form">
+				<tr>
+					<td>采购合同编号： <span data-bind="text: purchaseContractCode"></span></td>
+					<td>合同类别： <span data-bind="text: purchaseContractType"></span></td>
+					<td>执行状态： <span data-bind="text: eqcostDeliveryType"></span></td>
+					<td>签订日期： <span data-bind="text: signDate"></span></td>
+					<td>收票类型： <span data-bind="text: invoiceType"></span></td>
+				</tr>
+				<tr>	
+					<td>供应商： <span data-bind="text: supplierName"></span></td>
+					<td>联系人： <span data-bind="text: supplierContact"></span></td>
+					<td>开户行：<span data-bind="text: supplierBankName" ></span></td>
+					<td colspan="2">银行账号：<span data-bind="text: supplierBankAccount" ></span></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<h4>收票列表</h4>
+			<div class="k-toolbar k-grid-toolbar">
+				<button access="get_invoice_management" class="k-button access" onclick="addGI();">新建</button>
+				<button access="get_invoice_management" class="k-button access" onclick="editGI();">修改</button>
+			</div>
+			<div id="invoiceGrid"></div>
+		</div>
+		<div>
+			<h4>付款列表</h4>
+			<div id="moneyGrid"></div>
+		</div>
 	</div>
 </body>

@@ -274,13 +274,13 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/paymoney/save")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PAY_MONEY_MANAGEMENT, desc = RoleValidConstants.PAY_MONEY_MANAGEMENT_DESC)
     public void addPaymoney(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.savePaymoney(parserJsonParameters(request, false)), request, response, "save_success");
     }
     
     @RequestMapping("/paymoney/destroy")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PAY_MONEY_MANAGEMENT, desc = RoleValidConstants.PAY_MONEY_MANAGEMENT_DESC)
     public void destoryPayMoney(HttpServletRequest request, HttpServletResponse response) {
     	pService.destoryPayMoney(parserJsonParameters(request,  false));
     	responseWithData(new HashMap(), request, response);
@@ -291,26 +291,32 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.listGetInvoice(parserJsonParameters(request, false)), request, response);
     }
 
+    @RequestMapping("/invoice/viewpc")
+    //@RoleValidate(roleID=RoleValidConstants.GET_INVOICE_MANAGEMENT, desc = RoleValidConstants.GET_INVOICE_MANAGEMENT_DESC)
+    public void viewPCForInvoice(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.viewPCForInvoice(parserJsonParameters(request, false)), request, response);
+    }
+    
     @RequestMapping("/invoice/prepare")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.GET_INVOICE_MANAGEMENT, desc = RoleValidConstants.GET_INVOICE_MANAGEMENT_DESC)
     public void prepareGetInvoice(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.prepareGetInvoice(parserJsonParameters(request, false)), request, response);
     }
  
     @RequestMapping("/invoice/load")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    //@RoleValidate(roleID=RoleValidConstants.GET_INVOICE_MANAGEMENT, desc = RoleValidConstants.GET_INVOICE_MANAGEMENT_DESC)
     public void loadGetInvoice(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.loadGetInvoice(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/invoice/save")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.GET_INVOICE_MANAGEMENT, desc = RoleValidConstants.GET_INVOICE_MANAGEMENT_DESC)
     public void addGetInvoice(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.saveGetInvoice(parserJsonParameters(request, false)), request, response, "save_success");
     }
     
     @RequestMapping("/invoice/destroy")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.GET_INVOICE_MANAGEMENT, desc = RoleValidConstants.GET_INVOICE_MANAGEMENT_DESC)
     public void destoryBack(HttpServletRequest request, HttpServletResponse response) {
     	pService.destroyGetInvoice(parserJsonParameters(request,  false));
     	responseWithData(new HashMap(), request, response);

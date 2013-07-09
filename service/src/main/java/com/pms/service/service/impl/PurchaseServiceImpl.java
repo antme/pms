@@ -347,23 +347,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		  
 		return map;
 	}
-
-	private void mergeCreatorInfo(Map<String,Object> params){
-		List<Map<String,Object>> list = (List<Map<String,Object>>)params.get(ApiConstants.RESULTS_DATA);
-		Set<String> userIds = new HashSet<String>();
-		for(Map<String,Object> re : list){
-			userIds.add((String)re.get(ApiConstants.CREATOR));
-		}
-		userIds.remove(null);
-		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(ApiConstants.LIMIT_KEYS, UserBean.USER_NAME);
-		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, userIds));
-		Map<String,Object> userMap = dao.listToOneMapAndIdAsKey(query, DBBean.USER);
-		for(Map<String,Object> re : list){
-			Map<String,Object> user = (Map<String,Object>)userMap.get((String)re.get(ApiConstants.CREATOR));
-			re.put("creatorName",user.get(UserBean.USER_NAME));
-		}		
-	}
 	
 	@Override
 	public Map<String, Object> listCheckedBack(Map<String, Object> params) {

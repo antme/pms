@@ -1047,30 +1047,40 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> listPaymoney(Map<String, Object> params) {
-        Map<String, Object> query1 = new HashMap<String, Object>();
-        Map<String, Object> map1 = dao.list(query1, DBBean.PAY_MONEY);
-        List<Map<String, Object>> list1 = (List<Map<String, Object>>) map1.get(ApiConstants.RESULTS_DATA);
+		Map<String,Object> query = new HashMap<String,Object>();//
+		if(params.get(InvoiceBean.purchaseContractId) != null){
+			query.put(InvoiceBean.purchaseContractId, params.get(InvoiceBean.purchaseContractId));
+		}
+		query.put(ApiConstants.LIMIT, params.get(ApiConstants.LIMIT));
+		query.put(ApiConstants.LIMIT_START, params.get(ApiConstants.LIMIT_START));
+    	
+        Map<String, Object> result = dao.list(query, DBBean.PAY_MONEY);
+        mergeSupplierInfo(result);
+        mergeCreatorInfo(result);
+        return result;
+    }
+    
+    private void mergeSupplierInfo(Map<String,Object> params){
+        List<Map<String, Object>> list = (List<Map<String, Object>>) params.get(ApiConstants.RESULTS_DATA);
 
         Set<String> suIds = new HashSet<String>();
-        for (Map<String, Object> obj : list1) {
+        for (Map<String, Object> obj : list) {
             suIds.add((String) obj.get(MoneyBean.supplierId));
         }
         suIds.remove(null);
         suIds.remove("");
-        if (!suIds.isEmpty()) {
-            Map<String, Object> query02 = new HashMap<String, Object>();
-            query02.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList(suIds)));
-            Map<String, Object> map2 = dao.listToOneMapAndIdAsKey(query02, DBBean.SUPPLIER);
-            for (Map<String, Object> obj : list1) {
-                String id = (String) obj.get(MoneyBean.supplierId);
-                if (map2.containsKey(id)) {
-                    Map<String, Object> su = (Map<String, Object>) map2.get(id);
-                    obj.put("supplierName", su.get("supplierName"));
-                }
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList(suIds)));
+        Map<String, Object> map = dao.listToOneMapAndIdAsKey(query, DBBean.SUPPLIER);
+        for (Map<String, Object> obj : list) {
+            String id = (String) obj.get(MoneyBean.supplierId);
+            if (map.get(id) != null) {
+                Map<String, Object> su = (Map<String, Object>) map.get(id);
+                obj.put("supplierName", su.get("supplierName"));
             }
         }
-        return map1;
     }
+    
     
     public Map<String, Object> savePaymoney(Map<String, Object> params) {
         Map<String, Object> obj = new HashMap<String, Object>();
@@ -1087,7 +1097,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         	throw new ApiResponseException("采购合同不存在", params, "请输入正确合同编号");
         }
         obj.put(MoneyBean.purchaseContractCode, pc.get("purchaseContractCode"));
-        obj.put(MoneyBean.purchaseContractId, params.get(ApiConstants.MONGO_ID));
+        obj.put(MoneyBean.purchaseContractId, pc.get(ApiConstants.MONGO_ID));
         obj.put(MoneyBean.supplierId, pc.get("supplier"));
         
         //如果供应商没有初始化 银行账号，则初始化
@@ -1098,6 +1108,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         	supplier.put(MoneyBean.supplierBankAccount, params.get(MoneyBean.supplierBankAccount));
         	dao.updateById(supplier, DBBean.SUPPLIER);
         }
+        
+	    String oldComment = (String)dao.querySingleKeyById(MoneyBean.payMoneyComment, params.get(ApiConstants.MONGO_ID), DBBean.PAY_MONEY);
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("提交",comment,oldComment);	
+	    obj.put(MoneyBean.payMoneyComment, comment);
         return dao.save(obj, DBBean.PAY_MONEY);
     }
 
@@ -1110,7 +1125,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     @Override
     public Map<String, Object> listGetInvoice(Map<String, Object> params) {
-        return dao.list(null, DBBean.GET_INVOICE);
+        Map<String,Object> result = dao.list(params, DBBean.GET_INVOICE);
+        mergeCreatorInfo(result);
+        return result;
     }
 
     @Override
@@ -1120,10 +1137,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     	invoice.put(InvoiceBean.getInvoiceActualDate, params.get(InvoiceBean.getInvoiceActualDate));
     	invoice.put(InvoiceBean.getInvoiceActualInvoiceNum, params.get(InvoiceBean.getInvoiceActualInvoiceNum));
     	invoice.put(InvoiceBean.getInvoiceActualMoney, ApiUtil.getDouble(params, InvoiceBean.getInvoiceActualMoney, 0));
-    	invoice.put(InvoiceBean.getInvoiceActualSheetCount, ApiUtil.getInteger(params, InvoiceBean.getInvoiceActualMoney, 0));
-    	invoice.put(InvoiceBean.getInvoiceComment, params.get(InvoiceBean.getInvoiceComment));
-    	invoice.put(InvoiceBean.getInvoiceDepartment, params.get(InvoiceBean.getInvoiceDepartment));
-    	invoice.put(InvoiceBean.getInvoiceProposerId, getCurrentUserId());
+    	invoice.put(InvoiceBean.getInvoiceActualSheetCount, ApiUtil.getInteger(params, InvoiceBean.getInvoiceActualSheetCount, 0));
+    	
     	invoice.put(InvoiceBean.getInvoiceReceivedMoneyStatus, params.get(InvoiceBean.getInvoiceReceivedMoneyStatus));
     	invoice.put(InvoiceBean.getInvoiceItemList, params.get(InvoiceBean.getInvoiceItemList));
 		
@@ -1132,16 +1147,33 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 		invoice.put(InvoiceBean.purchaseContractCode, pc.get("purchaseContractCode"));
 		invoice.put(InvoiceBean.invoiceType, pc.get("invoiceType"));
 		invoice.put(InvoiceBean.getInvoiceSupplierId, pc.get("supplier"));
+		
+	    String oldComment = (String)dao.querySingleKeyById(InvoiceBean.getInvoiceComment, params.get(ApiConstants.MONGO_ID), DBBean.GET_INVOICE);
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("提交",comment,oldComment);	
+	    invoice.put(InvoiceBean.getInvoiceComment, comment);
         return dao.save(invoice, DBBean.GET_INVOICE);
     }
 
     @Override
+	public Map<String, Object> viewPCForInvoice(Map<String, Object> params) {
+    	String pcId = (String)params.get(InvoiceBean.purchaseContractId);
+    	String[] keys = new String[]{"purchaseContractCode","requestedTotalMoney","purchaseContractType",
+        		"eqcostDeliveryType","signDate","invoiceType","supplier"};
+		Map<String,Object> pc = dao.findOne(ApiConstants.MONGO_ID, pcId, keys, DBBean.PURCHASE_CONTRACT);
+        Map<String,Object> suppier = dao.findOne(ApiConstants.MONGO_ID, pc.get("supplier"), DBBean.SUPPLIER);
+        suppier.remove(ApiConstants.MONGO_ID);
+        pc.putAll(suppier);
+		return pc;
+	}
+
+	@Override
     public Map<String, Object> prepareGetInvoice(Map<String, Object> params) {
-        Map<String, Object> invoice = new HashMap<String, Object>();
-        invoice.put(InvoiceBean.purchaseContractId, params.get("purchaseContractId"));
-        invoice.put(InvoiceBean.getInvoiceItemList, new ArrayList());
-        mergePcAndSupplierForInvoice(invoice);
-        return invoice;
+		Map<String,Object> result = viewPCForInvoice(params);
+		result.remove(ApiConstants.MONGO_ID);
+		result.put(InvoiceBean.purchaseContractId, params.get(InvoiceBean.purchaseContractId));
+		result.put(InvoiceBean.getInvoiceItemList, new ArrayList());
+        return result;
     }
 
     @Override

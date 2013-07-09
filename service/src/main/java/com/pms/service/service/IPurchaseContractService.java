@@ -94,6 +94,8 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> loadGetInvoice(Map<String, Object> params);
     
+    public Map<String, Object>viewPCForInvoice(Map<String, Object> params);
+    
     public Map<String, Object> prepareGetInvoice(Map<String, Object> params);
     
     public Map<String, Object> updateGetInvoice(Map<String, Object> params);

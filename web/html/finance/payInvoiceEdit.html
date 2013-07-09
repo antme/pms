@@ -4,8 +4,8 @@
 #searchDiv,#formadd,#formapprove,.invoicedone {display:none;}
 </style>
 <body>
-<div>
-		<h2>开票申请单</h2>
+<h2>开票申请单</h2>
+<div id="objList" class="k-content">
 		<div id="form-container">
 			<table class="table_form">
 				<tr>
@@ -47,6 +47,7 @@
 					<td colspan="5">发票编号：<input required validationMessage="请输入发票号"  type="text" data-bind="value:payInvoiceActualInvoiceNum"/></td>
 				</tr>			
 			</table>
+			<hr>
             <div>
 				<h4>详情</h4>
 				<div id="subGrid" data-bind="source: payInvoiceItemList"></div>

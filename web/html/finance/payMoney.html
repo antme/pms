@@ -1,8 +1,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script  src="js/finance/payMoney.js"></script>
 <body>
+<script type="text/x-kendo-template" id="template2">
+	<div class="commentdiv">#= payMoneyComment #</div>
+</script>
 	<h3>付款信息页面</h3>
 	<div id="objList" class="k-content">
-		<div id="grid"></div>
+		<div class="k-toolbar k-grid-toolbar">
+			<button access="pay_money_management" class="k-button access" onclick="addPM()">新增</button>
+			<button access="pay_money_management" class="k-button access"  onclick="editPM()">修改</button>
+			<button access="pay_money_management" class="k-button access"  onclick="destroyPM()">删除</button>
+			<button access="pay_money_management" class="k-button access"  onclick="savePM()">保存</button>
+		</div>
+		<div id="moneyGrid"></div>
 	</div>
 </body>

@@ -12,13 +12,11 @@ var subModel = kendo.data.Model.define({
 var myModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
-		getInvoiceDepartment: {},
-		getInvoiceProposerId: {},
 		getInvoiceReceivedMoneyStatus:{},
 		getInvoiceItemList: {},
-		getInvoiceActualMoney:{},
+		getInvoiceActualMoney:{type:"number"},
 		getInvoiceActualDate:{type:"date"},
-		getInvoiceActualInvoiceNum:{},
+		getInvoiceActualInvoiceNum:{type:"number"},
 		getInvoiceActualSheetCount:{},
 		requestedTotalMoney:{type:"number"},
 		getInvoiceItemList:{}
@@ -48,49 +46,25 @@ $(document).ready(function () {
 	  	editable:true,
 	  	toolbar: [{text:"新增",name:"create"},{text:"计算",name:"save"}]
 	});
-	
-	$("#searchfor").kendoDropDownList({
-		dataTextField : "purchaseContractCode",
-		dataValueField : "_id",
-		template:  '${ data.supplierName }:<strong>${ data.purchaseContractCode }</strong>',
-		dataSource : {
-			transport : {
-				read : {
-					dataType : "jsonp",
-					url : "/service/purcontract/listforselect"
-				}
-			},
-			schema : {
-				total: "total",
-				data: "data"
-			}
-		}
-	});	
 
 	$("#form-container-button button").click(function(){
 		if(this.value == "cancel") {
 			location.reload();
-		} else if(confirm("提交表单，确认？")){
-			postAjaxRequest("/service/purcontract/invoice/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
+		}else if(validateModel()){
+			if(confirm("提交表单，确认？")){
+				postAjaxRequest("/service/purcontract/invoice/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
+			}	
 		}
 	});
-	
-	$("#searchbt").click(function(){
-		var scId = $("#searchfor").val();
-		if(scId != ""){
-			postAjaxRequest("/service/purcontract/invoice/prepare", {purchaseContractId:scId}, editSucess);
-		}else{
-			alert("请选择合同编号");
-		}
-	});
+
 	if(popupParams){
 		postAjaxRequest("/service/purcontract/invoice/load", popupParams, editSucess);
 		disableAllInPoppup();
 	} else if(redirectParams){
 		if(redirectParams._id){
 			postAjaxRequest("/service/purcontract/invoice/load", redirectParams, editSucess);
-		} else {
-			$("#searchDiv").show();
+		} else if(redirectParams.purchaseContractId){
+			postAjaxRequest("/service/purcontract/invoice/prepare", redirectParams, editSucess);
 		}
 	}
 	kendo.bind($("#form-container"), currentObj);
@@ -106,3 +80,10 @@ function editSucess(e){
 	kendo.bind($("#form-container"), currentObj);
 }
 
+function validateModel(){
+	var validator = $("#form-container").kendoValidator().data("kendoValidator");
+	if(!validator.validate()){
+		return false;
+	}
+	return true;
+}

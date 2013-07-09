@@ -6,7 +6,7 @@ var requestModel = kendo.data.Model.define({
        payMoneyActualMoney: {type:"number",validation: {required: true } },
        payMoneyActualData: { type:"date",validation: {required: true }},
        purchaseContractId: {},
-       purchaseContractCode: {},
+       purchaseContractCode: {validation: {required: true }},
        supplierName: {},
        supplierBankName: {},
        supplierBankAccount: {},
@@ -40,13 +40,20 @@ var dataSource = new kendo.data.DataSource({
             if (operation !== "read" && options.models) {
                 return {
                 	models: kendo.stringify(options.models),
-    				mycallback : "myreflush"                	
+    				mycallback : "myreflush"    	
                 };
-            }
-        }            
+            } else if(operation === "read"){
+            	return {
+            		page : options.page,
+            		pageSize : options.pageSize,
+            		skip : options.skip,
+            		take : options.take
+            	}
+             }
+        }
     },
     batch: true,
-    pageSize: 2,
+    pageSize: 10,
 	serverPaging: true,
 	serverSorting: true,
 	serverFiltering : true,
@@ -59,12 +66,13 @@ var dataSource = new kendo.data.DataSource({
 
 
 $(document).ready(function () {
-	//checkRoles();
+	checkRoles();
 	
-    $("#grid").kendoGrid({
+    $("#moneyGrid").kendoGrid({
         dataSource: dataSource,
-        pageable: true,
-        toolbar: [{name:"create",text:"新增"}],
+	    pageable: true,
+	    sortable : true,
+	    detailTemplate: kendo.template($("#template2").html()),
         columns: [
             { field: "payMoneyActualData",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
             { field: "payMoneyActualMoney", title:"金额", min:0},
@@ -72,13 +80,37 @@ $(document).ready(function () {
             { field: "supplierName", title: "供应商"},
             { field: "supplierBankName", title: "开户行"},
             { field: "supplierBankAccount", title: "银行账号"},
-            { field: "payMoneyComment", title: "备注"},
-            { command: [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}], title: "&nbsp;", width: "170px"}
+            { field: "tempComment", title: "备注"}
         ],
-        editable:"popup"
+        selectable: "row",
+        editable:"inline"
     });
 });
 
+function addPM() {
+	$("#moneyGrid").data("kendoGrid").addRow();
+}
+function savePM() {
+	$("#moneyGrid").data("kendoGrid").saveRow();
+}
+function editPM() {
+	var row = getSelectedRowDataByGrid("moneyGrid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	}else{
+		var grid = $("#moneyGrid").data("kendoGrid");
+		grid.editRow(grid.select());
+	}
+}
+function destroyPM() {
+	var row = getSelectedRowDataByGrid("moneyGrid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	}else{
+		var grid = $("#moneyGrid").data("kendoGrid");
+		grid.removeRow(grid.select());
+	}
+}
 function pcDropDownEditor(container, options) {
 	var input = $("<input required data-required-msg='请选择采购合同'/>");
 	input.attr("name", options.field);
@@ -108,6 +140,6 @@ function pcDropDownEditor(container, options) {
     });
 }
 function myreflush(){
-	//loadPage("payMoney"); 会导致列表中某项的弹出款显示不出
-	location.reload();//临时解决方案
+	loadPage("payMoney"); 会导致列表中某项的弹出款显示不出
+	//location.reload();//临时解决方案
 }
