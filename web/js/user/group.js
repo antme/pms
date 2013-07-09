@@ -1,65 +1,69 @@
 var groupId;
-var dataSource;
-$(document).ready(function() {
-	dataSource = new kendo.data.DataSource({
-		transport : {
-			read : {
-				url : "../service/user/group/list",
-				dataType : "jsonp"
-			},
-			update : {
-				url : "../service/user/group/update",
-				dataType : "jsonp",
-				type : "post"
-			},
-			create : {
-				url : "../service/user/group/add",
-				dataType : "jsonp",
-				type : "post"
-			},
 
-			destroy : {
-				url : "../service/user/group/delete",
-				dataType : "jsonp",
-				type : "post"
-			},
+var dataSource = new kendo.data.DataSource({
+	transport : {
+		read : {
+			url : "../service/user/group/list",
+			dataType : "jsonp"
+		},
+		update : {
+			url : "../service/user/group/update",
+			dataType : "jsonp",
+			type : "post"
+		},
+		create : {
+			url : "../service/user/group/add",
+			dataType : "jsonp",
+			type : "post"
+		},
 
-			parameterMap : function(options, operation) {
-				if (operation !== "read" && options.models) {
-					return {
-						models : kendo.stringify(options.models)
+		destroy : {
+			url : "../service/user/group/delete",
+			dataType : "jsonp",
+			type : "post"
+		}
+	},
+
+	parameterMap : function(options, operation) {
+		if (operation !== "read" && options.models) {
+			return {
+				models : kendo.stringify(options.models)
+			}
+		}
+	},
+
+	schema : {
+		model : {
+			id : "_id",
+			fields : {
+				description : {
+					validation : {
+						required : true
+					}
+				},
+				groupName : {
+					validation : {
+						required : true
 					}
 				}
 			}
 		},
-		pageSize : 20,
-		batch : true,
-		schema : {
-			model : {
-				id : "_id",
-				fields : {
-					description : {
-						validation : {
-							required : true
-						}
-					},
-					groupName : {
-						validation : {
-							required : true
-						}
-					}
-				}
-			},
 		total: "total", // total is returned in the "total" field of the response
 		data: "data"
-		}
-	});
+	},
+	pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
+	batch : true
+});
+$(document).ready(function() {
 
 	$("#group-grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
 		editable : "popup",
-		selectable : "multiple",
+//		selectable : "multiple",
 		height: "500px",
 		toolbar : [ {
 			name : "create",

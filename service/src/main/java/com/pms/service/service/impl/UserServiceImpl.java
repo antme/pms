@@ -120,8 +120,8 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         return user;
     }
 
-    public Map<String, Object> listRoleItems() {
-        return this.dao.list(null, DBBean.ROLE_ITEM);
+    public Map<String, Object> listRoleItems(Map<String, Object> parameters) {
+        return this.dao.list(parameters, DBBean.ROLE_ITEM);
     }
     
     public Map<String, Object> listNotUserRoleItems(Map<String, Object> roles) {
@@ -146,12 +146,12 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         }
     }
 
-    public Map<String, Object> listGroups() {
-        return this.dao.list(null, DBBean.USER_GROUP);
+    public Map<String, Object> listGroups(Map<String, Object> parameters) {
+        return this.dao.list(parameters, DBBean.USER_GROUP);
     }
 
-    public Map<String, Object> listUsers() {        
-        return this.dao.list(null, DBBean.USER);
+    public Map<String, Object> listUsers(Map<String, Object> parameters) {        
+        return this.dao.list(parameters, DBBean.USER);
 
     }
 
