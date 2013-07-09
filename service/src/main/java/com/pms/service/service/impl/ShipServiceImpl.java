@@ -226,20 +226,39 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	private void updateArrivalNotice(List<Map<String, Object>> eqlist) {
 		Map<String, Object> noticeKeyEqList = new HashMap<String, Object>();
 		for (Map<String, Object> eq:eqlist) {
-			List<Map<String, Object>> list;
+			Map<String, Object> eqList = new HashMap<String, Object>();
 			String noticeId = (String) eq.get(ArrivalNoticeBean.NOTICE_ID);
 			if (noticeKeyEqList.containsKey(noticeId)) {
-				list = (List<Map<String, Object>>) noticeKeyEqList.get(noticeId);
-			} else {
-				list = new ArrayList<Map<String, Object>>();
+				eqList = (Map<String, Object>) noticeKeyEqList.get(noticeId);
 			}
-			list.add(eq);
-			noticeKeyEqList.put(noticeId, list);
+			eqList.put((String) eq.get(ApiConstants.MONGO_ID), eq);
+			noticeKeyEqList.put(noticeId, eqList);
 		}
 		
 		for (Map.Entry mapEntry : noticeKeyEqList.entrySet()) {
 			Map<String, Object> notice = dao.findOne(ApiConstants.MONGO_ID, mapEntry.getKey(), DBBean.ARRIVAL_NOTICE);
-//			notice.put(ArrivalNoticeBean.EQ_LIST, value);
+			List<Map<String, Object>> noticeEqList = (List<Map<String, Object>>) notice.get(ArrivalNoticeBean.EQ_LIST);
+			Map<String, Object> eqIdKey = (Map<String, Object>) mapEntry.getValue();
+			// 是否关闭到货通知 - 全部发货时关闭
+			boolean close = true;
+			for (Map<String, Object> eq:noticeEqList) {
+				if (eqIdKey.containsKey(eq.get(ApiConstants.MONGO_ID))) {
+					Map<String, Object> shipEqInfo = (Map<String, Object>) eqIdKey.get(eq.get(ApiConstants.MONGO_ID));
+					// 发货数量
+					Double shipAmount = (Double) shipEqInfo.get(ShipBean.EQCOST_SHIP_AMOUNT);
+					Double arrivalAmount = (Double) eq.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT);
+					eq.put(ShipBean.EQCOST_SHIP_AMOUNT, shipAmount);
+					if (shipAmount != arrivalAmount) {
+						close = false;
+					}
+				} else {
+					close = false;
+				}
+			}
+			if (close) {
+				notice.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_CLOSE);
+			}
+			notice.put(ArrivalNoticeBean.EQ_LIST, noticeEqList);
 			arrivalService.update(notice);
 		}
 	}
