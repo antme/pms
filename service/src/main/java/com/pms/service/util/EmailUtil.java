@@ -129,4 +129,16 @@ public class EmailUtil {
 
     }
 
+    public static void sendEqListEmails(String subject, List<Object> emails, String content, Object object) {
+
+        List<String> userEmails = new ArrayList<String>();
+        for(Object obj : emails){
+            userEmails.add(obj.toString());
+        }
+        List<Map<String, Object>> eqList = (List<Map<String, Object>>)object;
+        
+        sendEqListEmails(subject, userEmails, content, eqList);
+        
+    }
+
 }

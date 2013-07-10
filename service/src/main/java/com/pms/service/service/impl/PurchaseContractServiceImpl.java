@@ -36,6 +36,7 @@ import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISupplierService;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
+import com.pms.service.util.EmailUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
@@ -518,7 +519,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> result = processRequest(order, DBBean.PURCHASE_CONTRACT, APPROVED);
 
         Map<String, Object> contract = dao.findOne(ApiConstants.MONGO_ID, result.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST,
-                PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, PurchaseCommonBean.PURCHASE_CONTRACT_CODE, PurchaseCommonBean.EQCOST_DELIVERY_TYPE }, DBBean.PURCHASE_CONTRACT);
+                PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, PurchaseCommonBean.CONTRACT_EXECUTE_CATE, PurchaseCommonBean.PURCHASE_CONTRACT_CODE,
+                PurchaseCommonBean.EQCOST_DELIVERY_TYPE }, DBBean.PURCHASE_CONTRACT);
 
         updateOrderFinalStatus(contract);
 
@@ -528,7 +530,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.EMAIL);
 
         List<Object> emails = this.dao.listLimitKeyValues(userQuery, DBBean.USER);
-
+        
+        if (contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE) != null) {
+            if (contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
+                EmailUtil.sendEqListEmails("test", emails, "test", contract.get(SalesContractBean.SC_EQ_LIST));
+            }
+        }
         return result;
     }
 
