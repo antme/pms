@@ -34,11 +34,8 @@ $(document).ready(function () {
         pageable : true,
 		sortable : true,
 		filterable : filterable,
-        selectable: "multiple",
         columns: [
-            {
-            	field: "shipType", title:"到货类型"
-            },
+            { field: "shipType", title:"到货类型" },
             { field: "arrivalDate", title:"到货日期" },
             {
             	field: "foreignCode",
@@ -50,7 +47,8 @@ $(document).ready(function () {
 						return '<a onclick="openPurchaseOrderViewWindow(\'' + dataItem.foreignKey + '\');">' + dataItem.foreignCode + '</a>';
 					}
 				}
-            }
+            },
+            { field: "noticeStatus", title:"状态" }
         ],
         editable: "popup"
     });

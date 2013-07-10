@@ -112,8 +112,11 @@ $(document).ready(function() {
         dataSource: new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: "../service/project/listforselect",
+                    url: "../service/borrowing/list/project",
                     dataType: "jsonp",
+    	            data: {
+    	            	type: "in"
+    	            },
     	            data: {
     	            	pageSize: 0
     	            }
@@ -127,6 +130,7 @@ $(document).ready(function() {
         change: function(e) {
         	var dataItem = this.dataItem();
         	if (dataItem) {
+        		model.set("inProjectCustomer", dataItem.customer);
         		model.set("inProjectCode", dataItem.projectCode);
         		model.set("inProjectManager", dataItem.projectManager);
         		model.set("inProjectName", dataItem.projectName);
@@ -166,7 +170,6 @@ $(document).ready(function() {
         change: function(e) {
         	var dataItem = this.dataItem();
         	if (dataItem) {
-	        	model.set("inProjectCustomer", dataItem.customer);
 	        	model.set("inSalesContractCode", dataItem.contractCode);
 	        	model.set("inSalesContractType", dataItem.contractType);
 	        	
@@ -207,7 +210,7 @@ $(document).ready(function() {
         dataSource: new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: "../service/project/listforselect",
+                    url: "../service/borrowing/list/project",
                     dataType: "jsonp",
     	            data: {
     	            	pageSize: 0

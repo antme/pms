@@ -3,8 +3,10 @@ package com.pms.service.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
@@ -16,6 +18,7 @@ import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.ReturnBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
@@ -26,6 +29,7 @@ import com.pms.service.service.IBorrowingService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IReturnService;
 import com.pms.service.service.IShipService;
+import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
 
@@ -323,30 +327,60 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		if (ApiUtil.isEmpty(pId)){
 			throw new ApiResponseException(String.format("Project id is empty", params), ResponseCodeConstants.PROJECT_ID_IS_EMPTY.toString());
 		}
-		Map<String, Object> project = dao.findOne(ApiConstants.MONGO_ID, pId, DBBean.PROJECT);
-		Map<String, Object> customer = dao.findOne(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_CUSTOMER), DBBean.CUSTOMER);
-		String cName = (String) customer.get(CustomerBean.NAME);
 		
-		Map<String, Object> projectQuery = new HashMap<String, Object>();
-		projectQuery.put(SalesContractBean.SC_PROJECT_ID, pId);
-		
-		Map<String, Object> statusQuery = new HashMap<String, Object>();
-		statusQuery.put(SalesContractBean.SC_RUNNING_STATUS, SalesContractBean.SC_RUNNING_STATUS_RUNNING);
-		
-		Map<String, Object> typeQuery = new HashMap<String, Object>();
-		typeQuery.put(SalesContractBean.SC_TYPE, SalesContractBean.SC_TYPE_SC_WIRING);
-		typeQuery.put(SalesContractBean.SC_TYPE, SalesContractBean.SC_TYPE_INTEGRATION_WIRING);
-
 		Map<String, Object> query = new HashMap<String, Object>();
-		query.put("project", DBQueryUtil.buildQueryObject(projectQuery, false));
-		query.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
-		query.put("type", DBQueryUtil.buildQueryObject(typeQuery, false));
-		query.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE, SalesContractBean.SC_TYPE});
-		Map<String, Object> result = dao.list(query, DBBean.SALES_CONTRACT);
-		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
-		for (Map<String, Object> sc : resultList){
-			sc.put(ProjectBean.PROJECT_CUSTOMER, cName);
+		query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
+        query.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI);
+        query.put("eqcostList.projectId", pId);
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.scId" });
+        Map<String, Object> purConEq = dao.list(query, DBBean.PURCHASE_CONTRACT);
+        List<Map<String, Object>> purConList = (List<Map<String, Object>>) purConEq.get(ApiConstants.RESULTS_DATA);
+        
+        Set<Object> scIdsList = new HashSet();
+        
+        for (Map<String, Object> map : purConList) {
+        	List<Map<String, Object>> eqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
+        	for (Map<String, Object> eq : eqList) {
+        		scIdsList.add(eq.get(SalesContractBean.SC_ID));
+			}
 		}
+		
+        Map<String, Object> scQuery = new HashMap<String, Object>();
+        scQuery.put(SalesContractBean.SC_PROJECT_ID, pId);
+        scQuery.put(SalesContractBean.SC_RUNNING_STATUS, SalesContractBean.SC_RUNNING_STATUS_RUNNING);
+        scQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(scIdsList)));
+        scQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE, SalesContractBean.SC_TYPE});
+		Map<String, Object> result = dao.list(scQuery, DBBean.SALES_CONTRACT);
+		
+		return result;
+	}
+	
+	public Map<String, Object> listProjectForBorrowing(Map<String, Object> params) {
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
+        query.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI);
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.projectId" });
+        Map<String, Object> purConEq = dao.list(query, DBBean.PURCHASE_CONTRACT);
+        List<Map<String, Object>> projectResults = (List<Map<String, Object>>) purConEq.get(ApiConstants.RESULTS_DATA);
+        
+        Set<Object> projectIdsList = new HashSet();
+        
+        for (Map<String, Object> map : projectResults) {
+        	List<Map<String, Object>> eqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
+        	for (Map<String, Object> eq : eqList) {
+        		projectIdsList.add(eq.get(ProjectBean.PROJECT_ID));
+			}
+		}
+        
+        String[] limitKeys = { ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_CUSTOMER };
+		Map<String, Object> pQuery = new HashMap<String, Object>();
+		pQuery.put(ApiConstants.LIMIT_KEYS, limitKeys);
+		// 选择调入项目
+		if ("in".equals(params.get("type"))) {
+			pQuery.put(ProjectBean.PROJECT_MANAGER, ApiThreadLocal.getCurrentUserId());
+		}
+		pQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(projectIdsList)));
+		Map<String, Object> result = dao.list(pQuery, DBBean.PROJECT);
 		return result;
 	}
 
