@@ -106,7 +106,7 @@ $(document).ready(function () {
         detailInit: detailInit,
 	    columns: [
 			{ field: "_id", hidden: true},
-			{ field: "purchaseContractCode", title: "合同编号" },
+			{ field: "purchaseContractCode", title: "采购合同编号" },
 			{ field: "creatorName", title: "申请人" },
 			{ field: "getInvoiceActualMoney", title: "金额",footerTemplate: "总额: #=sum#" },
 			{ field: "getInvoiceActualDate", title: "日期",format: "{0:yyyy/MM/dd}" },

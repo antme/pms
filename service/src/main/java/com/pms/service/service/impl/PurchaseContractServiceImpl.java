@@ -1121,7 +1121,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
 	    String oldComment = (String)dao.querySingleKeyById(MoneyBean.payMoneyComment, params.get(ApiConstants.MONGO_ID), DBBean.PAY_MONEY);
 	    String comment = (String)params.get("tempComment");
-	    comment = recordComment("提交",comment,oldComment);	
+	    comment = recordComment("提交",comment,oldComment);
+	    obj.put("tempComment", params.get("tempComment"));
 	    obj.put(MoneyBean.payMoneyComment, comment);
         return dao.save(obj, DBBean.PAY_MONEY);
     }

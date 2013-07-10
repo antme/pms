@@ -96,7 +96,10 @@ $(document).ready(function () {
 			{ field: "paCount", title: "本次申请数量", attributes: { "style": "color:red"}},
 			{ field: "pbLeftCount", title: "可申请数量"},
 			{ field: "pbTotalCount", title: "备货数量"},
-			{ field: "eqcostBasePrice", title: "预估单价" },
+			{ field: "eqcostBasePrice", title: "标准成本价" },
+			{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
+			{ field: "eqcostDiscountRate",title : "折扣率"},
+			{ field: "eqcostLastBasePrice",title : "最终成本价"},
 			{ field: "eqcostCategory", title: "类别" },
 			{ field: "eqcostMemo", title: "备注1" },
 			{ field: "pbComment", title: "备注2" }
