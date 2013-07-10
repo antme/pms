@@ -781,36 +781,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		return sc;
 	}
 	
-	private void mergeCreatorInfo(Map<String,Object> params){
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		if(params.containsKey(ApiConstants.RESULTS_DATA)){
-			list = (List<Map<String,Object>>)params.get(ApiConstants.RESULTS_DATA);
-		}else {
-			list.add(params);
-		}
-		List<String> uIds = new ArrayList<String>();
-		for(Map<String,Object> obj : list){
-			String id = (String)obj.get(ApiConstants.CREATOR);
-			if(!uIds.contains(id))uIds.add(id);
-		}
-		Map<String,Object> uQuery = new HashMap<String,Object>();
-		uQuery.put(ApiConstants.LIMIT_KEYS, new String[]{UserBean.USER_NAME});
-		uQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, uIds));
-		Map<String,Object> users = dao.listToOneMapAndIdAsKey(uQuery, DBBean.USER);
-		for(Map<String,Object> obj : list){
-			String id = (String)obj.get(ApiConstants.CREATOR);
-			Map<String,Object> user = (Map<String,Object>)users.get(id);
-			obj.put("creatorName", user.get(UserBean.USER_NAME));
-		}
-	}
-	
 	@Override
 	public Map<String, Object> saveGetMoneyForSC(Map<String, Object> params) {
         Map<String, Object> obj = new HashMap<String, Object>();
         obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
         obj.put(MoneyBean.getMoneyActualMoney, ApiUtil.getDouble(params, MoneyBean.getMoneyActualMoney));
         obj.put(MoneyBean.getMoneyActualDate, params.get(MoneyBean.getMoneyActualDate));
-        obj.put(MoneyBean.getMoneyComment, params.get(MoneyBean.getMoneyComment));
         obj.put(MoneyBean.customerBankAccount, params.get(MoneyBean.customerBankAccount));
         obj.put(MoneyBean.customerBankName, params.get(MoneyBean.customerBankName));
         
@@ -836,6 +812,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	        	dao.updateById(customer, DBBean.CUSTOMER);
 	        }
         }
+	    String oldComment = (String)dao.querySingleKeyById(MoneyBean.getMoneyComment, params.get(ApiConstants.MONGO_ID), DBBean.SC_GOT_MONEY);
+	    String comment = (String)params.get("tempComment");
+	    comment = recordComment("提交",comment,oldComment);
+	    obj.put(MoneyBean.getMoneyComment, comment);//
+	    obj.put("tempComment", params.get("tempComment"));
         return dao.save(obj, DBBean.SC_GOT_MONEY);
 	}
 

@@ -236,6 +236,10 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String PURCHASE_REQUEST_ID = "purchaseRequestId";
     public static final String PURCHASE_ORDER_CODE = "purchaseOrderCode";
     public static final String PURCHASE_ORDER_ID = "purchaseOrderId";
+    public static final String PURCHASE_CONTRACT_ID = "purchaseContractId";
+    public static final String PURCHASE_CONTRACT_CODE = "purchaseContractCode";
+    public static final String PURCHASE_CONTRACT_TYPE = "purchaseContractType";
+    
     
     
     public static final String PROJECT_ID = "projectId";
@@ -246,5 +250,10 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String BACK_REQUEST_ID = "backRequestId";
     
     public static final String EQCOST_APPLY_AMOUNT = "eqcostApplyAmount";
+    
+    // 虚拟采购合同类型
+    public static final String CONTRACT_EXECUTE_CATE = "contractExecuteCate";
+    
+    public static final String CONTRACT_EXECUTE_CATE_BEIJINGDAICAI = "北京代采";
 
 }

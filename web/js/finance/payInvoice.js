@@ -104,7 +104,11 @@ $(document).ready(function () {
 		        model: invoiceModel,
 		        total: "total",
 		        data:"data"
-		    }
+		    },
+			aggregate: [ 
+			    { field: "payInvoiceMoney", aggregate: "sum"},
+			    { field: "payInvoiceActualMoney", aggregate: "sum"}
+			]
 		},
 	    pageable: true,
 	    sortable : true,
@@ -113,13 +117,13 @@ $(document).ready(function () {
         detailInit: detailInit,
 	    columns: [
 			{ field: "_id", hidden: true},
-			{ field: "contractCode", title: "合同编号" },
+			{ field: "contractCode", title: "销售合同编号" },
 			{ field: "creatorName", title: "申请人" },
 			{ field: "payInvoiceStatus", title: "状态", width: "100px"},
 			{ field: "payInvoicePlanDate", title: "要求日期",format: "{0:yyyy/MM/dd}"},
-			{ field: "payInvoiceMoney", title: "金额" },
+			{ field: "payInvoiceMoney", title: "金额" ,footerTemplate: "总额: #=sum#"},
 			{ field: "payInvoiceReceivedMoneyStatus", title: "收款情况"},
-			{ field: "payInvoiceActualMoney", title: "实际金额" },
+			{ field: "payInvoiceActualMoney", title: "实际金额" ,footerTemplate: "总额: #=sum#"},
 			{ field: "payInvoiceActualDate", title: "实际开票日期",format: "{0:yyyy/MM/dd}" },
 			{ field: "payInvoiceActualInvoiceNum", title: "发票号" },
 			{ field: "payInvoiceActualSheetCount", title: "开票张数"},
@@ -160,20 +164,21 @@ $(document).ready(function () {
                 model: moneyModel,
                 total: "total",
                 data:"data"
-            }
+            },
+			aggregate: [ 
+			    { field: "getMoneyActualMoney", aggregate: "sum"}
+			]
         },
         pageable: true,
-        //toolbar: [{name:"create",text:"新增"}],
+        detailTemplate: kendo.template($("#template1").html()),
         columns: [
-            { field: "contractCode", title: "合同编号" },
+            { field: "contractCode", title: "销售合同编号" },
             { field: "creatorName", title: "申请人" },
             { field: "getMoneyActualDate",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
-            { field: "getMoneyActualMoney", title:"金额", min:0},
+            { field: "getMoneyActualMoney", title:"金额", min:0 ,footerTemplate: "总额: #=sum#"},
             { field: "customerName", title: "客户"},
             { field: "customerBankName", title: "客户开户行"},
-            { field: "customerBankAccount", title: "客户银行账号"},
-            { field: "getMoneyComment", title: "备注"}//,
-            //{ command: [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}], title: "&nbsp;", width: "170px"}
+            { field: "customerBankAccount", title: "客户银行账号"}
         ],
         editable:"popup"
     });

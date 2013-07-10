@@ -219,13 +219,13 @@ public class SalesContractController extends AbstractController {
     }
 
     @RequestMapping("/getmoney/save")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.GET_MONEY_MANAGEMENT, desc = RoleValidConstants.GET_MONEY_MANAGEMENT_DESC)
     public void saveGetmoney(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(salesContractService.saveGetMoneyForSC(parserJsonParameters(request, false)), request, response, "save_success");
     }
     
     @RequestMapping("/getmoney/destroy")
-    @RoleValidate(roleID=RoleValidConstants.FINANCE_MANAGEMENT, desc = RoleValidConstants.FINANCE_MANAGEMENT_DESC)
+    @RoleValidate(roleID=RoleValidConstants.GET_MONEY_MANAGEMENT, desc = RoleValidConstants.GET_MONEY_MANAGEMENT_DESC)
     public void destoryGetMoney(HttpServletRequest request, HttpServletResponse response) {
     	Map<String,Object> money = parserJsonParameters(request,  false);
     	salesContractService.destoryGetMoney(money);

@@ -18,7 +18,7 @@ public class SupplierServiceImpl extends AbstractService implements ISupplierSer
 	}
 
 	public Map<String, Object> list(Map<String, Object> params) {
-		return dao.list(null, DBBean.SUPPLIER);
+		return dao.list(params, DBBean.SUPPLIER);
 	}
 
 	public Map<String, Object> update(Map<String, Object> params) {

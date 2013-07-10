@@ -1,66 +1,75 @@
 var groupId;
-var dataSource;
-$(document).ready(function() {
-	dataSource = new kendo.data.DataSource({
-		transport : {
-			read : {
-				url : "../service/user/group/list",
-				dataType : "jsonp"
-			},
-			update : {
-				url : "../service/user/group/update",
-				dataType : "jsonp",
-				type : "post"
-			},
-			create : {
-				url : "../service/user/group/add",
-				dataType : "jsonp",
-				type : "post"
-			},
 
-			destroy : {
-				url : "../service/user/group/delete",
-				dataType : "jsonp",
-				type : "post"
-			},
+var dataSource = new kendo.data.DataSource({
+	transport : {
+		read : {
+			url : "../service/user/group/list",
+			dataType : "jsonp"
+		},
+		update : {
+			url : "../service/user/group/update",
+			dataType : "jsonp",
+			type : "post"
+		},
+		create : {
+			url : "../service/user/group/add",
+			dataType : "jsonp",
+			type : "post"
+		},
 
-			parameterMap : function(options, operation) {
-				if (operation !== "read" && options.models) {
-					return {
-						models : kendo.stringify(options.models)
+		destroy : {
+			url : "../service/user/group/delete",
+			dataType : "jsonp",
+			type : "post"
+		},
+        parameterMap: function(options, operation) {
+            if (operation !== "read" && options.models) {
+                return {
+                	models: kendo.stringify(options.models),
+    				mycallback : "myreflush"    	
+                };
+            } else if(operation === "read"){
+            	return {
+            		page : options.page,
+            		pageSize : options.pageSize,
+            		skip : options.skip,
+            		take : options.take
+            	}
+             }
+        }
+	},
+	schema : {
+		model : {
+			id : "_id",
+			fields : {
+				description : {
+					validation : {
+						required : true
+					}
+				},
+				groupName : {
+					validation : {
+						required : true
 					}
 				}
 			}
 		},
-		pageSize : 20,
-		batch : true,
-		schema : {
-			model : {
-				id : "_id",
-				fields : {
-					description : {
-						validation : {
-							required : true
-						}
-					},
-					groupName : {
-						validation : {
-							required : true
-						}
-					}
-				}
-			},
 		total: "total", // total is returned in the "total" field of the response
 		data: "data"
-		}
-	});
+	},
+	pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
+	batch : true
+});
+$(document).ready(function() {
 
 	$("#group-grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
+		resizable: true,
 		editable : "popup",
-		selectable : "multiple",
-		height: "500px",
 		toolbar : [ {
 			name : "create",
 			text : "创建角色"
@@ -83,11 +92,7 @@ $(document).ready(function() {
 			editHidden : true
 
 		}, {
-			command : [ "edit", {
-				name : "destroy",
-				title : "删除",
-				text : "删除"
-			} ],
+			command : [{name : "edit",text : "编辑"}, {name : "destroy",text : "删除"} ],
 			title : "&nbsp;",
 			width : "160px"
 		} ]
@@ -168,4 +173,7 @@ function openGroupRoleWindow(id) {
 		activate : onActivate
 	};
 	openWindow(options);
+}
+function myreflush(){
+	loadPage("group");
 }

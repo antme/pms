@@ -90,4 +90,10 @@ public class BorrowingController extends AbstractController {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
     	responseWithData(borrowingService.listScByProjectForBorrowing(params), request, response);
     }
+    
+    @RequestMapping("/list/project")
+    public void listProjectForBorrowing(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(borrowingService.listProjectForBorrowing(params), request, response);
+    }
 }

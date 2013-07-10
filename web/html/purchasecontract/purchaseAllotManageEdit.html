@@ -1,8 +1,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script  src="js/purchaseAllotManageEdit.js"></script>
 <body>
-<div>
-		<h2>备货调拨审核</h2>
+<h2>备货调拨审核</h2>
+<div id="objList" class="k-content">
 		<div id="form-container">
 			<table class="table_form">
 				<tr>
@@ -41,6 +41,7 @@
 					<td colspan="2"><label id="paNumberTd" style="display:none;">调拨单号：<input type="text" required validationMessage="请输入" data-bind="value: paNumber"/></label></td>
 				</tr>
 			</table>
+			<hr>
             <div>
 				<h4>成本设备清单</h4>
 				<div id="subGrid" data-bind="source: eqcostList"></div>

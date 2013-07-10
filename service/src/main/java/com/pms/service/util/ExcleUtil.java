@@ -11,6 +11,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -184,22 +188,48 @@ public class ExcleUtil {
 
 	}
 
-	public void addRow(int sheetIndex, String[] row) throws Exception {
-		int rownum = this.getRowNum(sheetIndex) + 1;
-		Sheet sheet = wb.getSheetAt(sheetIndex);
-		Row addedRow = sheet.createRow(rownum);
-		Cell cell = null;
+    public void addRow(int sheetIndex, String[] row) throws Exception {
+        Sheet sheet = null;
 
-		int colnum = this.getColumnNum(sheetIndex);
-		int count = colnum < row.length ? colnum : row.length;
-		for (int i = 0; i < count; i++) {
-			cell = addedRow.createCell(i);
-			cell.setCellValue(row[i]);
-		}
-		
-		fos = new FileOutputStream(this.path);
-		wb.write(this.fos);
-		fos.close();
+        try {
+            sheet = wb.getSheetAt(sheetIndex);
+        } catch (Exception e) {
+        }
+        if (sheet == null) {
+            sheet = (HSSFSheet) wb.createSheet();
+        }
+
+        int rownum = this.getRowNum(sheetIndex);
+        Row addedRow = sheet.createRow(rownum);
+        Cell cell = null;
+
+        int colnum = this.getColumnNum(sheetIndex);
+        int count = colnum < row.length ? colnum : row.length;
+        for (int i = 0; i < row.length; i++) {
+            cell = addedRow.createCell(i);
+            cell.setCellValue(row[i]);
+        }
+
+        fos = new FileOutputStream(this.file);
+        wb.write(this.fos);
+        fos.close();
+    }
+	
+	
+	public void createFile(File f){
+	    HSSFWorkbook wb = new HSSFWorkbook();
+	    try {
+	        
+	        if(f.exists()){
+	            f.delete();
+	        }
+	        FileOutputStream fileOut = new FileOutputStream(f);
+            wb.write(fileOut);
+            fileOut.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 	
 	public void updateAppInfo(int sheetIndex, String header, String apkName, String updateValue){}

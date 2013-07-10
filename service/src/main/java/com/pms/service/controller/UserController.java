@@ -60,7 +60,8 @@ public class UserController extends AbstractController {
     
     @RequestMapping("/list")
     public void listUsers(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(userService.listUsers(), request, response);
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+        responseWithData(userService.listUsers(params), request, response);
     }
        
     @RequestMapping("/update")
@@ -85,7 +86,8 @@ public class UserController extends AbstractController {
     
     @RequestMapping("/role/list")
     public void listRoleItems(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(userService.listRoleItems(), request, response);
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+        responseWithData(userService.listRoleItems(params), request, response);
     }
     
     @RequestMapping("/role/not/list")
@@ -102,7 +104,8 @@ public class UserController extends AbstractController {
     @RequestMapping("/group/list")
     @LoginRequired()
     public void listGroupItems(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(userService.listGroups(), request, response);
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+        responseWithData(userService.listGroups(params), request, response);
     }
 
     

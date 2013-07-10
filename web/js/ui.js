@@ -590,6 +590,11 @@ function openPurchaseContractViewWindow(param){
 	openRemotePageWindow(options, "html/purchasecontract/purchasecontractedit.html", {_id : param});
 }
 
+function openShipViewWindow(param){
+	var options = { width:"1080px", height: "500px", title:"发货信息"};
+	openRemotePageWindow(options, "html/execution/addShip.html", {_id : param});	
+}
+
 function myTaskQueryParam(options, operation){
 		if(redirectParams){
 			options.mytasks = redirectParams;

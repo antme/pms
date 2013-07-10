@@ -223,13 +223,13 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				comment = recordComment("批准",comment,oldComment);
 			} else if(PurchaseStatus.finalApprove.toString().equals(dbStatus)){
 				status = PurchaseStatus.done.toString();
-				comment = recordComment("终审",comment,oldComment);
+				comment = recordComment("结束",comment,oldComment);
 				allot.put(PurchaseBack.paNumber, params.get(PurchaseBack.paNumber));
 			}
 		}else if(isCoo()){//coo
 			if(PurchaseStatus.approved.toString().equals(dbStatus)){
 				status = PurchaseStatus.finalApprove.toString();
-				comment = recordComment("结束",comment,oldComment);
+				comment = recordComment("终审",comment,oldComment);
 			}
 		}
 		if(status == null){
@@ -346,23 +346,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         }*/
 		  
 		return map;
-	}
-
-	private void mergeCreatorInfo(Map<String,Object> params){
-		List<Map<String,Object>> list = (List<Map<String,Object>>)params.get(ApiConstants.RESULTS_DATA);
-		Set<String> userIds = new HashSet<String>();
-		for(Map<String,Object> re : list){
-			userIds.add((String)re.get(ApiConstants.CREATOR));
-		}
-		userIds.remove(null);
-		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(ApiConstants.LIMIT_KEYS, UserBean.USER_NAME);
-		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, userIds));
-		Map<String,Object> userMap = dao.listToOneMapAndIdAsKey(query, DBBean.USER);
-		for(Map<String,Object> re : list){
-			Map<String,Object> user = (Map<String,Object>)userMap.get((String)re.get(ApiConstants.CREATOR));
-			re.put("creatorName",user.get(UserBean.USER_NAME));
-		}		
 	}
 	
 	@Override
@@ -728,7 +711,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         // 获取已发的采购申请的数据总和
         Map<String, Object> purchaseRequestQuery = new HashMap<String, Object>();
         purchaseRequestQuery.put(PurchaseCommonBean.BACK_REQUEST_ID, backId);//TODO: 
-//        purchaseRequestQuery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseCommonBean.STATUS_CANCELLED));
+        purchaseRequestQuery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseCommonBean.STATUS_CANCELLED));
         Map<String, Integer> requestEqCountMap = countEqByKey(purchaseRequestQuery, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.EQCOST_APPLY_AMOUNT, null);
 
         // 获取调拨中的数据总和

@@ -71,7 +71,10 @@ public class InitBean {
         	RoleValidConstants.SHIP_MANAGEMENT, 
         	RoleValidConstants.BORROWING_MANAGEMENT,
         	RoleValidConstants.PAY_INVOICE_ADD,
-        	RoleValidConstants.PURCHASE_BACK_MANAGEMENT
+        	RoleValidConstants.PURCHASE_BACK_MANAGEMENT,
+        	RoleValidConstants.PAY_MONEY_MANAGEMENT,
+        	RoleValidConstants.GET_MONEY_MANAGEMENT,
+        	RoleValidConstants.GET_INVOICE_MANAGEMENT
         });
         groupRoles.put(GroupBean.FINANCE, new String[] {
         	RoleValidConstants.PAY_INVOICE_FIN_PROCESS,

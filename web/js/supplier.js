@@ -41,7 +41,8 @@ var dataSource = new kendo.data.DataSource({
 		},
 		create : {
 			url : crudServiceBaseUrl + "/suppliers/create",
-			dataType : "jsonp"
+			dataType : "jsonp",
+			method: "post"
 		},
 		parameterMap : function(options, operation) {
 			if (operation !== "read" && options.models) {
@@ -52,7 +53,7 @@ var dataSource = new kendo.data.DataSource({
 		}
 	},
 	batch : true,
-	pageSize : 20,
+	pageSize : 10,
 	schema : {
 		model : model,
 		total: "total", // total is returned in the "total" field of the response
@@ -61,42 +62,49 @@ var dataSource = new kendo.data.DataSource({
 	}
 });
 var dm = new model();
-
+var validator;
 $(document).ready(function() {
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
-		height : 430,
+		resizable: true,
 		toolbar : [ {
 			template : kendo.template($("#template").html())
 		} ],
 		columns : [
-		    { field : "supplierCode", title : "供应商编号" },
-	        { field : "supplierName", title : "供应商名称" },
-	        { field : "supplierDescription", title : "供应商描述" },
-	        { field : "supplierBankName", title : "开户行" },
-	        { field : "supplierBankAccount", title : "银行账号" },
-	        { field : "supplierTaxAccount", title : "税号" },
-	        { field : "supplierContact", title : "供应商联系人" },
-	        { field : "supplierLocation", title : "供应商所在地" },
-	        { field : "supplierAddress", title : "地址" },
-	        { field : "supplierContactPhone", title : "联系人电话" },
-	        { field : "supplierEmail", title : "联系人邮箱" },
-	        { field : "supplierFax", title : "传真" },
-	        { field : "supplierRemark", title : "备注" },
-	        { command : [ "edit", "destroy" ], title : "&nbsp;" }
+		    { field : "supplierCode", title : "供应商编号",width:"150px" },
+	        { field : "supplierName", title : "供应商名称",width:"250px" },
+	        { field : "supplierDescription", title : "供应商描述",width:"200px" },
+	        { field : "supplierBankName", title : "开户行",width:"100px" },
+	        { field : "supplierBankAccount", title : "银行账号",width:"180px" },
+	        { field : "supplierTaxAccount", title : "税号",width:"200px" },
+	        { field : "supplierContact", title : "供应商联系人",width:"120px" },
+	        { field : "supplierLocation", title : "供应商所在地",width:"150px" },
+	        { field : "supplierAddress", title : "地址",width:"100px" },
+	        { field : "supplierContactPhone", title : "联系人电话",width:"120px" },
+	        { field : "supplierEmail", title : "联系人邮箱",width:"200px" },
+	        { field : "supplierFax", title : "传真",width:"150px" },
+	        { field : "supplierRemark", title : "备注",width:"200px" },
+	        { command : [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}], title : "&nbsp;",width:"160px" }
         ],
 		editable : "popup"
 	});
+	
+	validator = $("#supplier-form-validate").kendoValidator().data("kendoValidator");
+	
 });
 
 function addNewSupplier() {
 	kendo.bind($("#supplier-edit"), dm);
-	var options = {id:"supplier-edit", width:"900px", height: "500px", title:"新建供应商"};
+	var options = {id:"supplier-edit", width:"500px", height: "200px", title:"新增供应商"};
 	openWindow(options);
 }
 
 function saveData() {
+	if(!validator.validate()){
+		return false;
+	}
+	console.log(11111);
 	dataSource.add(dm);
 	dataSource.sync();
 	var window = $("#supplier-edit");
@@ -108,6 +116,10 @@ function saveData() {
 	var grid = $("#grid");
 	if (window.data("kendoGrid")) {
 		window.data("kendoGrid").refresh();
-	}
-
+	}console.log(222);
+	loadPage("supplier");
+	console.log(333);
+}
+function myreflush(){
+	loadPage("supplier");
 }

@@ -39,7 +39,8 @@ var groupDataSource = new kendo.data.DataSource({
 			data : "data"
 		}
 	});
-		
+var validator;
+
 $(document).ready(function() {
 	
 	$("#groups").kendoMultiSelect({
@@ -57,6 +58,7 @@ $(document).ready(function() {
 	
 	});
 
+	validator = $("#user-form").kendoValidator().data("kendoValidator");
 	
 	// 如果是编辑
 	if (redirectParams || popupParams) {
@@ -75,6 +77,10 @@ $(document).ready(function() {
 
 
 function edit(user){
+	if(user){
+		user.oldPassword = user.password;
+		user.password = "";
+	}
 	editUser = new userModel(user);
 	kendo.bind($("#user-form"), editUser);
 
@@ -86,9 +92,9 @@ function save(){
 //	editUser.salesContractProcessType = $("#salesContractProcessType").data("kendoMultiSelect").value();
 	editUser.groups = $("#groups").data("kendoMultiSelect").value();
 	editUser.department = $("#department").data("kendoDropDownList").value();
-
-	
-	postAjaxRequest("/service/user/update", {models:kendo.stringify(editUser)} , saveSuccess);	
+	if(validator.validate()){
+		postAjaxRequest("/service/user/update", {models:kendo.stringify(editUser)} , saveSuccess);
+	}
 }
 
 function saveSuccess(data){

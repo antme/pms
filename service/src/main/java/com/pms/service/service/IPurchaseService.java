@@ -41,10 +41,6 @@ public interface IPurchaseService {
 	/**加载详情*/
 	public Map<String,Object> loadAllot(Map<String,Object> params);	
 	
-	
-	/**根据合同id获取调拨清单列表*/
-	public Map<String,Double> getAllotEqCountBySalesContractId(String saleId);
-
 
     public Map<String, Object> mergeBackRestEqCount(Map<String, Object> back);
         

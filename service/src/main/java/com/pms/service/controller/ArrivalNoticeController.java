@@ -55,4 +55,10 @@ public class ArrivalNoticeController extends AbstractController {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(arrivalNoticeService.listProjectsForSelect(params), request, response);
     }
+    
+    @RequestMapping("/create/byorder")
+    public void createByOrder(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(arrivalNoticeService.createByOrder(params), request, response);
+    }
 }

@@ -20,7 +20,7 @@ var dataSource = new kendo.data.DataSource({
 			dataType : "jsonp"
 		}
 	},
-	pageSize : 100,
+	pageSize : 10,
 	batch : true,
 	schema : {				
 		total: "total", // total is returned in the "total" field of the response
@@ -34,23 +34,28 @@ $(document).ready(function() {
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
+		resizable: true,
 		selectable : "row",
-		height: "600px",
 		columns : [ {
 			field : "userName",
-			title : "用户名"
+			title : "用户名",
+			width:"80px"
 		}, {
 			field : "phone",
-			title : "手机"
+			title : "手机",
+			width:"120px"
 		}, {
 			field : "email",
-			title : "Email"
+			title : "Email",
+			width:"200px"
 		}, {
 			field : "department",
-			title : "部门"
+			title : "部门",
+			width:"100px"
 		}, {
 			field : "groups",
 			title : "角色",
+			width:"200px",
 			template : function(dataItem) {
 				  if(dataItem.groups){
 					  var groups = dataItem.groups;

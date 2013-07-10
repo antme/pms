@@ -70,13 +70,19 @@ public class ShipController extends AbstractController {
     @RequestMapping("/submit")
     @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT, desc = RoleValidConstants.SHIP_MANAGEMENT_DESC)
     public void submit(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(shipService.option(parserJsonParameters(request, false)), request, response);
+    	responseWithData(shipService.submit(parserJsonParameters(request, false)), request, response);
     }
     
-    @RequestMapping("/option")
+    @RequestMapping("/approve")
     @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT_PROCESS, desc = RoleValidConstants.SHIP_MANAGEMENT_PROCESS_DESC)
-    public void option(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(shipService.option(parserJsonParameters(request, false)), request, response);
+    public void approve(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(shipService.approve(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/reject")
+    @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT_PROCESS, desc = RoleValidConstants.SHIP_MANAGEMENT_PROCESS_DESC)
+    public void reject(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(shipService.reject(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/eqlist")

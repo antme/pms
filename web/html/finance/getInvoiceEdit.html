@@ -4,48 +4,52 @@
 #searchDiv,#formadd,#formapprove,.invoicedone {display:none;}
 </style>
 <body>
-<div>
-		<h2>收票单</h2>
-		<div id="searchDiv">
-			<label>选择采购合同:</label>
-			<input id="searchfor"  style="width:250px;" type="text" value=""/>
-			<input id="searchbt" class="k-button" type="button" value="确定"/>
-		</div>
-		<br><hr>
+<h2>收票单</h2>
+<div id="objList" class="k-content">
 		<div id="form-container">
 			<table class="table_form">
 				<tr>
-					<td>采购合同编号： <span data-bind="text: purchaseContractCode"></span></td>	
+					<td>采购合同编号： <span data-bind="text: purchaseContractCode"></span></td>
 					<td>合同类别： <span data-bind="text: purchaseContractType"></span></td>
 					<td>执行状态： <span data-bind="text: eqcostDeliveryType"></span></td>
-					<td>签订日期： <span data-bind="text: signDate"></span></td>
+					<!-- <td>签订日期： <span data-bind="text: signDate"></span></td> -->
+					<td>收票类型： <span data-bind="text: invoiceType"></span></td>
+					<td></td>
 				</tr>
 				<tr>	
-					<td>收票类型： <span data-bind="text: invoiceType"></span></td>
 					<td>供应商： <span data-bind="text: supplierName"></span></td>
-					<td>供应商联系人： <span data-bind="text: supplierContact"></span></td>
-					<td></td>
+					<td>联系人： <span data-bind="text: supplierContact"></span></td>
+					<td>开户行：<span data-bind="text: supplierBankName" ></span></td>
+					<td colspan="2">银行账号：<span data-bind="text: supplierBankAccount" ></span></td>
 				</tr>			
 				<tr>
-					<td>申请部门: <select id="departmentItems" class="k-input" data-bind="value: getInvoiceDepartment"></select></td>
-					<td>收款情况：<input type="text" data-bind="value:getInvoiceReceivedMoneyStatus"/></td>
-					<td colspan="2">实际金额：<input data-role="numerictextbox" min="0" data-bind="value:getInvoiceActualMoney"/></td>
+					<td colspan="2">收款情况：
+						<select required validationMessage="请选择"  data-bind="value: getInvoiceReceivedMoneyStatus">
+							<option value="款已收待开票">款已收待开票</option>
+							<option value="款未收先开票">款未收先开票</option>
+						</select>
+					<td >实际金额：<input required validationMessage="请输入金额" data-role="numerictextbox" min="0" data-bind="value:getInvoiceActualMoney"/></td>
+					<td colspan="2">实际日期：<input  required validationMessage="请选择日期" data-role="datepicker" data-format="yyyy/MM/dd"  data-format="yyyy/MM/dd" data-bind="value:getInvoiceActualDate"/></td>
 				</tr>
 				<tr>
-					<td>实际日期：<input data-role="datepicker" data-format="yyyy/MM/dd"  data-format="yyyy/MM/dd" data-bind="value:getInvoiceActualDate"/></td>
-					<td>实际张数：<input data-role="numerictextbox" min="0" data-bind="value:getInvoiceActualSheetCount"/></td>
-					<td colspan="2">发票编号：<input type="text" data-bind="value:getInvoiceActualInvoiceNum"/></td>
+					<td colspan="2">实际张数：<input required validationMessage="请输入数量" data-role="numerictextbox" min="0" data-bind="value: getInvoiceActualSheetCount"/></td>
+					<td colspan="2">发票编号：<input required validationMessage="请输入编号" type="text" data-bind="value: getInvoiceActualInvoiceNum"/></td>
+					<td></td>
 				</tr>		
 			</table>
+			<hr>
             <div>
 				<h4>详情</h4>
 				<div id="subGrid" data-bind="source: getInvoiceItemList"></div>
-            	<br><label>备注:</label>
-            	<textarea rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: getInvoiceComment" ></textarea>
+				<div data-bind="text: getInvoiceComment" class="commentdiv"></div>
+				<div class="tempCommentdiv">
+					<label>备注:</label><br>
+					<textarea name="tempComment" rows="4" cols="120" class="k-textbox" style="width:505px;" data-bind="value: tempComment" ></textarea>
+				</div>
             </div>
             <br>
             <div id="form-container-button">
-            	<button access="finance_management" class="k-button access" value="save">提交</button>
+            	<button access="get_invoice_management" class="k-button access" value="save">提交</button>
             	<button class="k-button" value="cancel">取消</button>
             </div>
 		</div>

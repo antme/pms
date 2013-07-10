@@ -19,6 +19,7 @@ import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
+import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.ISalesContractService;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
@@ -26,6 +27,8 @@ import com.pms.service.util.status.ResponseCodeConstants;
 public class ArrivalNoticeServiceImpl extends AbstractService implements IArrivalNoticeService {
 	
 	protected ISalesContractService scs;
+	
+	private IPurchaseContractService pService;
 
 	public ISalesContractService getScs() {
 		return scs;
@@ -33,6 +36,14 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 
 	public void setScs(ISalesContractService scs) {
 		this.scs = scs;
+	}
+
+	public IPurchaseContractService getpService() {
+		return pService;
+	}
+
+	public void setpService(IPurchaseContractService pService) {
+		this.pService = pService;
 	}
 
 	@Override
@@ -155,7 +166,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		return result;
 	}
 	 
-    public Map<String, Object> listByScID(Object scId) {
+    public Map<String, Object> listEqListByScIDForShip(Object scId) {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, scId);
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
@@ -177,10 +188,18 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 
         Map<String, Object> result = new HashMap<String, Object>();
 
-        if (obj.size() == 1) {
-            result.put(ArrivalNoticeBean.EQ_LIST, obj.get(0));
-        }else{
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        
+        if (obj.size() == 0) {       
             result.put(ArrivalNoticeBean.EQ_LIST, new ArrayList<Map<String, Object>>());
+        }else{
+            
+            for(Object ob: obj){
+                List<Map<String, Object>> eqlistMap = (List<Map<String, Object>>) ob;
+                list.addAll(eqlistMap);
+            }
+            result.put(ArrivalNoticeBean.EQ_LIST, list);
+       
         }
         return result;
     }
@@ -209,5 +228,90 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		
 		return res;
     }
+    
+    /**
+     * 获取订单信息和已到货数量 - 暂时没用
+     * @param parameters
+     * @return
+     */
+    public Map<String, Object> getPurchaseOrder(Map<String, Object> parameters) {
+    	Map<String, Object> result = pService.getPurchaseOrder(parameters);
+        List<Map<String, Object>> mergeLoadedEqList = (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST);
+        
+        Map<String, Object> noticeParams = new HashMap<String, Object>();
+		
+        noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, parameters.get(ApiConstants.MONGO_ID));
+		Map<String, Object> notices = dao.list(parameters, DBBean.ARRIVAL_NOTICE);
+		List<Map<String, Object>> noticeList = (List<Map<String, Object>>) notices.get(ApiConstants.RESULTS_DATA);
+        
+		// 计算已到货的设备数量
+		Map<String, Object> arrivalEqCount = new HashMap<String, Object>();
+		
+		for (Map<String, Object> notice : noticeList) {
+			List<Map<String, Object>> noticeEqList = (List<Map<String, Object>>) notice.get(ArrivalNoticeBean.EQ_LIST);
+			for (Map<String, Object> eq : noticeEqList) {
+				Double amount = 0.0;
+				if (arrivalEqCount.containsKey(eq.get(ApiConstants.MONGO_ID))) {
+					amount = (Double) eq.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT);
+				} else {
+
+				}
+			}
+		}
+        
+        return result;
+    }
+    
+    /**
+     * 订单生产到货通知
+     */
+	public Map<String, Object> createByOrder(Map<String, Object> params) {
+		
+		Map<String, Object> order = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
+		
+		
+		//暂时注释掉，入库也会调用此方法
+//		if (!PurchaseCommonBean.STATUS_ORDER_FINISHED.equals(order.get(PurchaseCommonBean.PROCESS_STATUS))) {
+//			throw new ApiResponseException("采购未执行完毕", ResponseCodeConstants.PURCHASE_ORDER_UNFINISHED);
+//		}
+		
+		/**
+		 * TODO
+		 * 验证到货数量是否超过订单总数量
+		 */
+		
+		Map<String, Object> noticeParams = new HashMap<String, Object>();
+		noticeParams.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
+		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, order.get(ApiConstants.MONGO_ID));
+		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
+		noticeParams.put(ArrivalNoticeBean.PROJECT_ID, order.get(PurchaseCommonBean.PROJECT_ID));
+		noticeParams.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
+		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, order.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
+		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+		
+		List<Map<String, Object>> eqList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
+		List<Map<String, Object>> arrivalEqList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> map : eqList) {
+			Double arrivalAmount = (Double) map.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT);
+			if (arrivalAmount > 0) {
+				Map<String, Object> eq = new HashMap<String, Object>();
+				eq.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID));
+				eq.put(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, map.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
+				
+				//如下的信息用来在页面分组展示
+				eq.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, map.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
+				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID));
+				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));
+				eq.put(PurchaseCommonBean.PURCHASE_ORDER_ID, map.get(PurchaseCommonBean.PURCHASE_ORDER_ID));
+				eq.put(PurchaseCommonBean.PURCHASE_ORDER_CODE, map.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
+				
+				arrivalEqList.add(eq);
+			}
+		}
+		noticeParams.put(ArrivalNoticeBean.EQ_LIST, arrivalEqList);
+		
+		return dao.add(noticeParams, DBBean.ARRIVAL_NOTICE);
+	}
 
 }

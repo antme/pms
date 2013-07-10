@@ -19,7 +19,10 @@ var ship = kendo.data.Model.define( {
     	deliveryTime: {},
     	deliveryRequirements: {},
     	otherDeliveryRequirements: {},
-    	eqcostList: {}
+    	eqcostList: {},
+    	status :{
+    		
+    	}
     }
 });
 
@@ -39,35 +42,24 @@ var eqModel = kendo.data.Model.define( {
     }
 });
 
-var grid;
 
-var listDataSource = new kendo.data.DataSource({
-    transport: {
-        update: {
-            url: "../service/ship/update",
-            dataType: "jsonp",
-            type: "POST"
-        },
-        create: {
-            url: "../service/ship/create",
-            dataType: "jsonp",
-            type: "POST"
-        },
-        parameterMap: function(options, operation) {
-            if (operation !== "read" && options.models) {
-                return {models: kendo.stringify(options.models)};
-            }
-        }
-    },
-    batch: true,
+var project ;
+var salesContract;
+eqDataSource = new kendo.data.DataSource({
     schema: {
-        model: ship
-    }
+        model: eqModel,
+        total: "total",
+    	data: "data"
+    },
+    group: [
+        {field: "eqcostDeliveryType"},
+    	{field:"repositoryName"}
+    ]
 });
 
 $(document).ready(function() {
 	
-	var project = $("#project").kendoComboBox({
+	 project = $("#project").kendoComboBox({
         placeholder: "Select project",
         dataTextField: "projectName",
         dataValueField: "_id",
@@ -88,22 +80,100 @@ $(document).ready(function() {
             	data: "data"
             }
         }),
+        dataBound: function(e){
+        	loadSC();
+        },
         change: function(e) {
         	var dataItem = this.dataItem();
         	if (dataItem) {
         		model.set("projectName", dataItem.projectName);
         		model.set("customer", dataItem.customer);
         		model.set("applicationDepartment", dataItem.department);
-        		
-        		salesContract.value(null);
-	        	inProjectId = this.value();
-	        	salesContract.dataSource.read();
-	        	salesContract.readonly(false);
+        		loadSC();
         	}
         }
     }).data("kendoComboBox");
 
-	var salesContract = $("#salesContract").kendoComboBox({
+	
+	
+	$("#deliveryRequirements").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "text",
+        optionLabel : "选择货运要求...",
+        dataSource: deliveryRequirementsItems
+    });
+	
+	$("#equipments-grid").kendoGrid({
+		dataSource : eqDataSource,
+	    toolbar: [ { name: "cancel", text: "撤销编辑" } ],
+	    columns: [
+	        { field: "eqcostNo", title: "序号" },
+	        { field: "eqcostMaterialCode", title: "物料代码" },
+	        { field: "eqcostProductName", title: "产品名称" },
+	        { field: "eqcostProductType", title: "规格型号" },
+	        { field: "eqcostBrand", title: "品牌" },
+	        { field: "eqcostUnit", title: "单位" },
+	        { field: "eqcostAmount", title: "数量" },
+	        { field: "arrivalAmount", title: "实际发货数" },
+	        { 
+	        	field: "repositoryName", 
+	        	title: "仓库" ,
+				groupHeaderTemplate: function(dataItem){														
+					return dataItem.value;
+				}
+	        		
+	        },
+	        {
+				field : "purchaseContractType",
+				title : "采购合同类别"
+			},
+			 {
+				field : "eqcostDeliveryType",
+				title : "物流类别",
+				groupHeaderTemplate: function(dataItem){					
+					if(dataItem.value == "入公司库"){
+						return "仓库直发";
+					}
+					return "供应商直发";
+				}
+			},
+	        {
+	        	field: "giveUp",
+	        	title: "放弃未发",
+	        	editor: giveUpDropDownEditor
+	        },
+	        { field: "eqcostMemo", title: "备注" },
+	        { command: "destroy", title: "&nbsp;", width: 90 }],
+	    editable: true,
+	    groupable : true,
+	    save : function(e){
+	    	console.log(e);
+	    	if(e.values.eqcostAmount > e.model.leftAmount){
+				alert("最多可以申请" + e.model.leftAmount);
+				e.preventDefault();
+			}else{
+		    	var grid = $("#equipments-grid").data("kendoGrid");
+		    	grid.refresh();
+			}
+	    }
+	});
+    
+	if(popupParams){
+		console.log(popupParams);
+		postAjaxRequest("/service/ship/get", popupParams, edit);
+		disableAllInPoppup();
+	} else if (redirectParams) {//Edit
+		postAjaxRequest("/service/ship/get", redirectParams, edit);
+	} else {//Add
+		//添加表单绑定一个空的 Model
+		model = new ship();
+		kendo.bind($("#addShip"), model);
+	}
+});
+
+
+function loadSC(){
+	salesContract = $("#salesContract").kendoComboBox({
 		autoBind: false,
         placeholder: "销售合同编号",
         dataTextField: "contractCode",
@@ -132,77 +202,16 @@ $(document).ready(function() {
         	if (dataItem) {
             	model.set("contractCode", dataItem.contractCode);
             	model.set("contractType", dataItem.contractType);
-            	
-            	eqDataSource = new kendo.data.DataSource({
-            	    transport: {
-            	        read: {
-            	            url: crudServiceBaseUrl + "/arrivalNotice/canshipeq/list",
-            	            dataType: "jsonp",
-            	            data: {
-            	            	salesContractId: function() {
-                                    return salesContract.value();
-                                }
-            	            }
-            	        }
-            	    },
-            	    batch: true,
-            	    schema: {
-            	        model: eqModel,
-            	        total: "total",
-                    	data: "data"
-            	    }
-            	});
-            	
-            	grid.setDataSource(eqDataSource);
+            	postAjaxRequest("/service/ship/eqlist", {salesContractId:salesContract.value()}, loadEqList);
 			} else {
 				this.value("");
 				this.text("");
 			}
         }
     }).data("kendoComboBox");
-	salesContract.readonly();
-	
-	$("#deliveryRequirements").kendoDropDownList({
-        dataTextField: "text",
-        dataValueField: "text",
-        optionLabel : "选择货运要求...",
-        dataSource: deliveryRequirementsItems
-    });
-	
-	$("#equipments-grid").kendoGrid({
-	    toolbar: [ { name: "cancel", text: "撤销编辑" } ],
-	    columns: [
-	        { field: "eqcostNo", title: "序号" },
-	        { field: "eqcostMaterialCode", title: "物料代码" },
-	        { field: "eqcostProductName", title: "产品名称" },
-	        { field: "eqcostProductType", title: "规格型号" },
-	        { field: "eqcostBrand", title: "品牌" },
-	        { field: "eqcostUnit", title: "单位" },
-	        { field: "eqcostAmount", title: "数量" },
-	        { field: "arrivalAmount", title: "实际发货数" },
-	        {
-	        	field: "giveUp",
-	        	title: "放弃未发",
-	        	editor: giveUpDropDownEditor
-	        },
-	        { field: "eqcostMemo", title: "备注" },
-	        { command: "destroy", title: "&nbsp;", width: 90 }],
-	    editable: true
-	});
-	grid = $("#equipments-grid").data("kendoGrid");
-    
-	if(popupParams){
-		postAjaxRequest("/service/ship/get", popupParams, edit);
-		disableAllInPoppup();
-	} else if (redirectParams) {//Edit
-		postAjaxRequest("/service/ship/get", redirectParams, edit);
-	} else {//Add
-		//添加表单绑定一个空的 Model
-		model = new ship();
-		kendo.bind($("#addShip"), model);
-	}
-});
 
+
+}
 function giveUpDropDownEditor(container, options) {
 	var giveUpItems = [ "是", "否" ];
 	$('<input data-bind="value:' + options.field + '"/>')
@@ -215,19 +224,14 @@ function giveUpDropDownEditor(container, options) {
 function edit(data) {
 	model = new ship(data);
 	kendo.bind($("#addShip"), model);
-	eqDataSource = new kendo.data.DataSource({
-	    data: model.eqcostList,
-	    batch: true,
-	    schema: {
-	        model: eqModel
-	    }
-	});
-	
-	grid.setDataSource(eqDataSource);
+	eqDataSource.data(model.eqcostList);
 }
 
-function save() {
-	
+function loadEqList(data){
+	eqDataSource.data(data.data);
+}
+
+function saveShip() {	
 	var validator = $("#addShip").kendoValidator().data("kendoValidator");
 	if (!validator.validate()) {
 		return;
@@ -240,18 +244,21 @@ function save() {
     			model.set("issueTime", kendo.toString(model.issueTime, 'd'));
     			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
     			
-    			listDataSource.add(model);
-    	        
-    	    	if(listDataSource.at(0)){
-    	    		//force set haschanges = true
-    	    		listDataSource.at(0).set("uid", kendo.guid());
-    	    	}
-    	    	
-    	    	listDataSource.sync();
-    	        loadPage("ship");
+    			postAjaxRequest("/service/ship/create", {models:kendo.stringify(model)}, checkStatus);
+    		
 			}
 		}
     }
+}
+
+
+function checkStatus(data){
+    loadPage("ship");
+}
+function submitShip(){
+	model.set("status", "申请中");
+	model.status = "申请中";
+	saveShip();
 }
 
 function cancle() {

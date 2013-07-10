@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.validator.Arg;
 import org.apache.commons.validator.Field;
@@ -567,6 +569,29 @@ public abstract class AbstractService {
 		return str.toString();
 	}
 
+	protected void mergeCreatorInfo(Map<String,Object> params){
+		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+		if(params.containsKey(ApiConstants.RESULTS_DATA)){
+			list = (List<Map<String,Object>>)params.get(ApiConstants.RESULTS_DATA);
+		}else {
+			list.add(params);
+		}
+		List<String> uIds = new ArrayList<String>();
+		for(Map<String,Object> obj : list){
+			String id = (String)obj.get(ApiConstants.CREATOR);
+			if(!uIds.contains(id))uIds.add(id);
+		}
+		Map<String,Object> uQuery = new HashMap<String,Object>();
+		uQuery.put(ApiConstants.LIMIT_KEYS, new String[]{UserBean.USER_NAME});
+		uQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, uIds));
+		Map<String,Object> users = dao.listToOneMapAndIdAsKey(uQuery, DBBean.USER);
+		for(Map<String,Object> obj : list){
+			String id = (String)obj.get(ApiConstants.CREATOR);
+			Map<String,Object> user = (Map<String,Object>)users.get(id);
+			obj.put("creatorName", user.get(UserBean.USER_NAME));
+		}
+	}
+	
     public ISalesContractService getScs() {
         return scs;
     }
