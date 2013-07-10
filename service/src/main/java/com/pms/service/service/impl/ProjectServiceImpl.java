@@ -82,7 +82,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 				
 				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_MANAGER, pmNew);
 			}
-			//项目 customer 发生改变
+			//项目 customer 发生改变  (新的逻辑，客户信息源头在 销售合同中了)
 			/*String customerOld = (String) existProject.get(ProjectBean.PROJECT_CUSTOMER);
 			String customerNew = (String) projectBean.get(ProjectBean.PROJECT_CUSTOMER);
 			if (!customerOld.equals(customerNew)){
