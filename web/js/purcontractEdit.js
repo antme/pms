@@ -114,7 +114,11 @@ $(document).ready(function() {
 			open : {
 				effects : "fadeIn"
 			}
+		},
+		activate : function(e){
+			initMergedGrid();
 		}
+		
 	});	
 
 
@@ -284,6 +288,7 @@ function showOrderWindow() {
 		alert("没有相关订单");
 	}else{
 		itemListDataSource.data([]);
+		itemDataSource.data([]);
 		var selectedValues = kendoGrid.value();
 		for(id in selectedValues){	
 			for(index in dataItems){			
@@ -458,7 +463,7 @@ function edit(data) {
 					var grid1 = $("#purchasecontract-edit-grid").data("kendoGrid");
 					grid1.refresh();
 				}else{
-					initMergedGrid();
+
 				}
 
 				$("#requestedTotalMoney").val(requestActureMoney);
@@ -472,19 +477,17 @@ function edit(data) {
 
 
 var mergedDataSource = new kendo.data.DataSource({
-
+	 data : []
 });
 
 function initMergedGrid(){
 	mergedDataSource.data([]);
-	var itemData = itemDataSource.data();
+	var itemData = requestDataItem.eqcostList;
 	var data = eval(kendo.stringify(itemData));
 	while(mergedDataSource.at(0)){
 		mergedDataSource.remove(mergedDataSource.at(0));
 	}
 	
-
-
 	for(i=0; i<data.length; i++){
 		
 		var find = false;
@@ -509,7 +512,6 @@ function initMergedGrid(){
 			mergedDataSource.add(data[i]);
 		}
 	}
-	console.log(mergedDataSource.data());
 
 	
 	if (!$("#merged-grid").data("kendoGrid")) {

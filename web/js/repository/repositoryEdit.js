@@ -21,6 +21,12 @@ var model = kendo.data.Model.define({
 		},
 		inDate: {
 			type:"date"
+		},
+		eqcostApplyAmount : {
+			validation : {
+				min : 0
+			},
+			type : "number"
 		}
 	}
 });

@@ -36,7 +36,7 @@ var eqModel = kendo.data.Model.define( {
     	eqcostUnit: { editable: false },
     	eqcostBrand: { editable: false },
     	eqcostAmount: { type: "number", validation: { required: true, min: 1} },
-    	arrivalAmount: { type: "number", validation: { required: true, min: 0}, editable: false },
+    	arrivalAmount: { type: "number", validation: { required: true, min: 0} },
     	giveUp: { editable: false },
     	eqcostMemo: {}
     }
@@ -105,7 +105,6 @@ $(document).ready(function() {
 	
 	$("#equipments-grid").kendoGrid({
 		dataSource : eqDataSource,
-	    toolbar: [ { name: "cancel", text: "撤销编辑" } ],
 	    columns: [
 	        { field: "eqcostNo", title: "序号" },
 	        { field: "eqcostMaterialCode", title: "物料代码" },
@@ -136,12 +135,7 @@ $(document).ready(function() {
 					}
 					return "供应商直发";
 				}
-			},
-	        {
-	        	field: "giveUp",
-	        	title: "放弃未发",
-	        	editor: giveUpDropDownEditor
-	        },
+			},	        
 	        { field: "eqcostMemo", title: "备注" },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	    editable: true,
@@ -228,7 +222,19 @@ function edit(data) {
 }
 
 function loadEqList(data){
-	eqDataSource.data(data.data);
+	var eqList = data.data;
+	for(i=0; i<eqList.length; i++){
+		
+		if(eqList[i].eqcostDeliveryType == "直发现场"){
+			eqList[i].repositoryName="";
+		}else if(eqList[i].purchaseContractType == "同方采购"){
+			eqList[i].repositoryName="上海—北京泰德库";
+		}else{
+			eqList[i].repositoryName="上海—上海泰德库";
+		}
+		
+	}
+	eqDataSource.data(eqList);
 }
 
 function saveShip() {	

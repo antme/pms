@@ -519,7 +519,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> result = processRequest(order, DBBean.PURCHASE_CONTRACT, APPROVED);
 
         Map<String, Object> contract = dao.findOne(ApiConstants.MONGO_ID, result.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST,
-                PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, PurchaseCommonBean.CONTRACT_EXECUTE_CATE, PurchaseCommonBean.PURCHASE_CONTRACT_CODE,
+                PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, PurchaseCommonBean.PURCHASE_CONTRACT_CODE, PurchaseCommonBean.CONTRACT_EXECUTE_CATE, PurchaseCommonBean.PURCHASE_CONTRACT_CODE,
                 PurchaseCommonBean.EQCOST_DELIVERY_TYPE }, DBBean.PURCHASE_CONTRACT);
 
         updateOrderFinalStatus(contract);
@@ -531,9 +531,19 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         List<Object> emails = this.dao.listLimitKeyValues(userQuery, DBBean.USER);
         
-        if (contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE) != null) {
-            if (contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
-                EmailUtil.sendEqListEmails("test", emails, "test", contract.get(SalesContractBean.SC_EQ_LIST));
+        if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE) != null) {
+            if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
+                String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+                String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));                
+                EmailUtil.sendEqListEmails(subject, emails, content, contract.get(SalesContractBean.SC_EQ_LIST));
+            }else if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO)) {
+                String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+                String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单, 系统已经自动发货", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));                
+                EmailUtil.sendEqListEmails(subject, emails, content, contract.get(SalesContractBean.SC_EQ_LIST));
+            }else if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
+                String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+                String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));                
+                EmailUtil.sendEqListEmails(subject, emails, content, contract.get(SalesContractBean.SC_EQ_LIST));
             }
         }
         return result;
@@ -962,6 +972,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     eqOrderListMap.put(orderId, new ArrayList<Map<String, Object>>());
                 }
 
+                eqMap.put(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, eqMap.get(PurchaseCommonBean.EQCOST_APPLY_AMOUNT));
                 List<Map<String, Object>> list = eqOrderListMap.get(orderId);
                 list.add(eqMap);
                 eqOrderListMap.put(orderId, list);

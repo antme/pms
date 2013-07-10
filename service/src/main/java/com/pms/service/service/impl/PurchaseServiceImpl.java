@@ -217,24 +217,18 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    String comment = (String)params.get("tempComment");
 	    
 		String status = null;
-		if(isDepotManager()){//库管
-			if(PurchaseStatus.submited.toString().equals(dbStatus)){
-				status = PurchaseStatus.approved.toString();
-				comment = recordComment("批准",comment,oldComment);
-			} else if(PurchaseStatus.finalApprove.toString().equals(dbStatus)){
-				status = PurchaseStatus.done.toString();
-				comment = recordComment("结束",comment,oldComment);
-				allot.put(PurchaseBack.paNumber, params.get(PurchaseBack.paNumber));
-			}
-		}else if(isCoo()){//coo
-			if(PurchaseStatus.approved.toString().equals(dbStatus)){
-				status = PurchaseStatus.finalApprove.toString();
-				comment = recordComment("终审",comment,oldComment);
-			}
-		}
-		if(status == null){
-			throw new ApiResponseException(String.format("No role to for user,[%s]",params ), "role_required");
-		}
+		if (PurchaseStatus.finalApprove.toString().equals(dbStatus)) {
+            status = PurchaseStatus.done.toString();
+            comment = recordComment("结束", comment, oldComment);
+            allot.put(PurchaseBack.paNumber, params.get(PurchaseBack.paNumber));
+        }else if (PurchaseStatus.approved.toString().equals(dbStatus)) {
+            status = PurchaseStatus.finalApprove.toString();
+            comment = recordComment("终审", comment, oldComment);
+        } else {
+            status = PurchaseStatus.approved.toString();
+            comment = recordComment("批准", comment, oldComment);
+        }
+
 	    allot.put(PurchaseBack.paComment, comment);
 		allot.put(PurchaseBack.paStatus, status);
 		allot.put(PurchaseBack.paApproveDate, DateUtil.getDateString(new Date()));

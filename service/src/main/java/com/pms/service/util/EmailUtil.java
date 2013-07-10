@@ -44,6 +44,7 @@ public class EmailUtil {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            
             sendEmails(subject, emails, content, memail);
         } else {
             // Create the email message
@@ -83,7 +84,8 @@ public class EmailUtil {
     }
 
     public static void sendEqListEmails(String subject, List<String> emails, String content, List<Map<String, Object>> eqList) {
-
+        String colunmTitleHeaders[] = new String[] { "No.", "物料代码", "产品名称", "规格型号", "单位", "数量"};
+        
         String colunmHeaders[] = new String[] { SalesContractBean.SC_EQ_LIST_NO, SalesContractBean.SC_EQ_LIST_MATERIAL_CODE, SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE,
                 SalesContractBean.SC_EQ_LIST_BASE_PRICE, SalesContractBean.SC_EQ_LIST_PRODUCT_NAME };
         String fileDir = ConfigurationManager.getProperty("file_dir");
@@ -95,8 +97,9 @@ public class EmailUtil {
             eu.createFile(f);
             eu = new ExcleUtil(f);
 
+            int i=0;
             try {
-                eu.addRow(0, colunmHeaders);
+                eu.addRow(0, colunmTitleHeaders, i);
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -117,7 +120,7 @@ public class EmailUtil {
                 }
 
                 try {
-                    eu.addRow(0, rowsData);
+                    eu.addRow(0, rowsData, ++i);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

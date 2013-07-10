@@ -14,11 +14,6 @@ var userModel = kendo.data.Model.define({
 			validation : {
 				required : true
 			}
-		},
-		email : {
-			validation : {
-				required : true
-			}
 		}
 	}
 

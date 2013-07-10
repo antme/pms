@@ -46,9 +46,9 @@ public class InitBean {
         initRoleItems(dao);
         setLoginPathValidation();
 
-        createAdminGroup(dao);
-        createSystemDefaultGroups(dao);
-        createAdminUser(dao);
+//        createAdminGroup(dao);
+//        createSystemDefaultGroups(dao);
+//        createAdminUser(dao);
     }
 
     private static void createSystemDefaultGroups(ICommonDao dao) {
@@ -105,7 +105,8 @@ public class InitBean {
         groupRoles.put(GroupBean.COO_VALUE, new String[] {
                 RoleValidConstants.PURCHASE_CONTRACT_PROCESS, 
                 RoleValidConstants.PURCHASE_ORDER_PROCESS,
-                RoleValidConstants.PURCHASE_ALLOCATE_PROCESS
+                RoleValidConstants.PURCHASE_ALLOCATE_PROCESS,
+                RoleValidConstants.PURCHASE_ALLOCATE_DONE
             });
 
         for (String name : groupNames) {
@@ -253,8 +254,8 @@ public class InitBean {
                         @SuppressWarnings("unchecked")
                         Map<String, Object> role = dao.findOne(RoleBean.ROLE_ID, rv.roleID(), DBBean.ROLE_ITEM);
                         if (role != null) {
-                            role.put(RoleBean.ROLE_DESC, rv.desc());
-                            dao.updateById(role, DBBean.ROLE_ITEM);
+//                            role.put(RoleBean.ROLE_DESC, rv.desc());
+//                            dao.updateById(role, DBBean.ROLE_ITEM);
                         } else {
                             Map<String, Object> roleMap = new HashMap<String, Object>();
                             roleMap.put(RoleBean.ROLE_ID, rv.roleID());

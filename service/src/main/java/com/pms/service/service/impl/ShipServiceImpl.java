@@ -153,14 +153,12 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		List<Map<String, Object>> eqlist = (List<Map<String, Object>>) params.get(ShipBean.SHIP_EQ_LIST);
 		boolean close = true;
 		for (Map<String, Object> eq:eqlist) {
-			if (ShipBean.SHIP_EQ_GIVE_UP_FAULSE.equals(eq.get(ShipBean.SHIP_EQ_GIVE_UP))) {
 				Double arrivalAmount = (Double) eq.get(ShipBean.SHIP_EQ_ARRIVAL_AMOUNT);
 				Double amount = (Double) eq.get(EqCostListBean.EQ_LIST_AMOUNT);
 				if (amount != arrivalAmount) {
 					close = false;
 					break;
-				}
-			}
+				}			
 		}
 		
 		if (close) {
