@@ -165,8 +165,6 @@ td a {
 /**********JACK*******************/
 .table_form {width: 90%}
 .table_form td {padding: 3px 0}
-
-
 .commentdiv {
 	overflow: hidden;
 	overflow-y:auto;
@@ -178,4 +176,8 @@ td a {
 	background:rgb(245, 245, 242);
 	margin:5px 5px 5px 2px;
 	border: 1px solid #c5c5c5;
+}
+.k-grid td {
+	word-break: keep-all;
+	white-space:nowrap;
 }

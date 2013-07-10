@@ -48,7 +48,7 @@ var dataSource = new kendo.data.DataSource({
             		pageSize : options.pageSize,
             		skip : options.skip,
             		take : options.take
-            	}
+            	};
              }
         }
     },
@@ -141,6 +141,6 @@ function pcDropDownEditor(container, options) {
     });
 }
 function myreflush(){
-	loadPage("payMoney"); 会导致列表中某项的弹出款显示不出
+	loadPage("payMoney");
 	//location.reload();//临时解决方案
 }

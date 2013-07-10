@@ -10,35 +10,33 @@
 
 </head>
 <body>
+<div id="objList" class="k-content">
 	<h3>角色编辑页面</h3>
+	<hr>
 	<div class="k-edit-form-container" id="user-form">
 		<div class="k-edit-label ">
 			<label for="userName">用户名</label>
 		</div>
 		<div data-container-for="userName" class="k-edit-field ">
-			<input type="text" class="k-input k-textbox" name="userName"
-				required="required" data-bind="value:userName">
+			<input type="text" class="k-input k-textbox" name="userName" required="required" validationMessage="请输入用户名" data-bind="value:userName">
 		</div>
 		<div class="k-edit-label ">
 			<label for="phone">手机</label>
 		</div>
 		<div data-container-for="phone" class="k-edit-field ">
-			<input type="text" class="k-input k-textbox" name="phone"
-				data-bind="value:phone">
+			<input type="tel" pattern="\d{11}" validationMessage="号码不正确" class="k-input k-textbox" name="phone" data-bind="value:phone">
 		</div>
 		<div class="k-edit-label ">
 			<label for="email">Email</label>
 		</div>
 		<div data-container-for="email" class="k-edit-field ">
-			<input type="text" class="k-input k-textbox" name="email"
-				data-bind="value:email">
+			<input type="email" required data-email-msg="邮箱不正确" data-required-msg="请输入邮箱" class="k-input k-textbox" name="email" data-bind="value: email">
 		</div>
 		<div class="k-edit-label ">
             <label for="department">部门</label>
         </div>
         <div data-container-for="department" class="k-edit-field ">
-            <input type="text" class="k-input k-textbox" id="department"  
-                data-bind="value:department">
+            <input type="text" class="k-input k-textbox" id="department" data-bind="value:department">
         </div>
 		<!-- 
 		<div class="k-edit-label ">
@@ -71,12 +69,11 @@
 			<label for="password">密码</label>
 		</div>
 		<div data-container-for="password" class="k-edit-field ">
-			<input type="text" class="k-input k-textbox" name="password"
-				required="required" data-bind="value:password">
+			<input type="text" validationMessage="请输入密码" class="k-input k-textbox" name="password" required="required" data-bind="value: password">
 		</div>
 		<button class="k-button" onclick="save();">保存</button><button
 			class="k-button" onclick="cancel();">取消</button>
 	</div>
-
+</div>
 </body>
 </html>

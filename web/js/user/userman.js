@@ -20,7 +20,7 @@ var dataSource = new kendo.data.DataSource({
 			dataType : "jsonp"
 		}
 	},
-	pageSize : 100,
+	pageSize : 10,
 	batch : true,
 	schema : {				
 		total: "total", // total is returned in the "total" field of the response
@@ -35,7 +35,6 @@ $(document).ready(function() {
 		dataSource : dataSource,
 		pageable : true,
 		selectable : "row",
-		height: "600px",
 		columns : [ {
 			field : "userName",
 			title : "用户名"
