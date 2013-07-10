@@ -50,32 +50,13 @@ public abstract class AbstractController {
             }
         }
         logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
-
+        parametersMap.remove("_defaultId");
+        parametersMap.remove("defaults");
+        parametersMap.remove("fields");
         return parametersMap;
 
     }
-    
-    @SuppressWarnings("unchecked")
-    protected HashMap<String, Object> parserListJsonParameters(HttpServletRequest request, boolean emptyParameter) {
-        HashMap<String, Object> parametersMap = parserParameters(request, emptyParameter);
-
-        
-        if (parametersMap.get("models") != null) {
-            String v = parametersMap.get("models").toString();     
-            parametersMap.put(ApiConstants.RESULTS_DATA, new Gson().fromJson(v, List.class));
-            parametersMap.remove("models");
-        }
-
-        if (parametersMap.get("_id") != null) {
-            if (ApiUtil.isEmpty(parametersMap.get("_id"))) {
-                parametersMap.remove("_id");
-            }
-        }
-        logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
-
-        return parametersMap;
-    }
-
+   
     private HashMap<String, Object> parserParameters(HttpServletRequest request, boolean emptyParameter) {
         HashMap<String, Object> parametersMap = new HashMap<String, Object>();
 

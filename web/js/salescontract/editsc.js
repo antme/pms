@@ -371,6 +371,7 @@ $(document).ready(function() {
 		dataValueField : "value",
         optionLabel: "选择合同类型...",
 		dataSource : contractTypeItems,
+		enable:false
 	});
 	
 	//归档状态：已归档，未归档
@@ -405,6 +406,7 @@ $(document).ready(function() {
 		dataValueField : "_id",
         optionLabel: "选择项目...",
 		dataSource : projectItems,
+		enable:false
 	});
 	
 	//合同签订日期控件

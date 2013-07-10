@@ -232,8 +232,12 @@ function edit(data) {
 								title : "成本中总数"
 							}, {
 								field : "eqcostBasePrice",
-								title : "成本单价"
-							}, {
+								title : "标准成本单价"
+							}, 
+							{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
+							{ field: "eqcostDiscountRate",title : "折扣率"},
+							{ field: "eqcostLastBasePrice",title : "最终成本价"},
+							{
 								field : "eqcostContractTotalMoney",
 								title : "合同总价"
 							}, {
