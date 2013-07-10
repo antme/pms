@@ -59,31 +59,7 @@ $(document).ready(function () {
        					return '<a  onclick="openShipViewWindow(\'' + dataItem._id + '\');">' + dataItem.shipCode + '</a>';      				
        				}
                },
-               {
-            	field:"type",
-            	title: "类型",
-            	template:function(dataItem) {
-					var name = "";
-					if (dataItem.type == 0){
-						name = "供应商直发";
-					} else if (dataItem.type == 1){
-						name = "非供应商直发";
-					} else {
-						name = dataItem.type;
-					}
-					return name;
-				},
-				filterable : {
-					ui: function(e){
-						e.kendoDropDownList({
-							dataTextField: "text",
-					        dataValueField: "value",
-					        optionLabel : "选择发货类型...",
-					        dataSource: shipTypeItems
-						});
-					}
-				}
-            },
+              
             { field:"applicationDepartment", title: "申请部门" },
             { field: "applicationDate", title:"申请日期" },
             {
