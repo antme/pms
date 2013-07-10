@@ -269,9 +269,11 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		
 		Map<String, Object> order = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
 		
-		if (!PurchaseCommonBean.STATUS_ORDER_FINISHED.equals(order.get(PurchaseCommonBean.PROCESS_STATUS))) {
-			throw new ApiResponseException("采购未执行完毕", ResponseCodeConstants.PURCHASE_ORDER_UNFINISHED);
-		}
+		
+		//暂时注释掉，入库也会调用此方法
+//		if (!PurchaseCommonBean.STATUS_ORDER_FINISHED.equals(order.get(PurchaseCommonBean.PROCESS_STATUS))) {
+//			throw new ApiResponseException("采购未执行完毕", ResponseCodeConstants.PURCHASE_ORDER_UNFINISHED);
+//		}
 		
 		/**
 		 * TODO
@@ -284,7 +286,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
 		noticeParams.put(ArrivalNoticeBean.PROJECT_ID, order.get(PurchaseCommonBean.PROJECT_ID));
 		noticeParams.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
-		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, order.get("eqcostDeliveryType"));
+		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, order.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
 		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		
 		List<Map<String, Object>> eqList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
@@ -295,6 +297,15 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 				Map<String, Object> eq = new HashMap<String, Object>();
 				eq.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID));
 				eq.put(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, map.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
+				
+				//如下的信息用来在页面分组展示
+				eq.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, map.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
+				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID));
+				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));
+				eq.put(PurchaseCommonBean.PURCHASE_ORDER_ID, map.get(PurchaseCommonBean.PURCHASE_ORDER_ID));
+				eq.put(PurchaseCommonBean.PURCHASE_ORDER_CODE, map.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
+				
 				arrivalEqList.add(eq);
 			}
 		}

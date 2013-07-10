@@ -115,10 +115,10 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Integer> shipedCountMap = countEqByKey(parameters, DBBean.SHIP, "eqcostAmount", null);
         
         for (Map<String, Object> eqMap : purchaseEqList) {
-            int count = ApiUtil.getInteger(eqMap.get("eqcostAmount"), 0);
+            int count = ApiUtil.getInteger(eqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT), 0);
             if (shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)) != null) {
                 eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, count - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
-                eqMap.put("eqcostAmount", count - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+                eqMap.put(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, count - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
             } else {
                 eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, count);
             }

@@ -962,26 +962,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             
             for (String orderId : orderIds) {
                 Map<String, Object> arriveMap = new HashMap<String, Object>();
-
-                String foreignKey = orderId;
-                String type = ArrivalNoticeBean.SHIP_TYPE_2;
-
-                Map<String, Object> order = dao.findOne(ApiConstants.MONGO_ID, foreignKey, DBBean.PURCHASE_ORDER);
-
-                arriveMap.put(ShipBean.SHIP_TYPE, type);
-                arriveMap.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
-                arriveMap.put(ArrivalNoticeBean.FOREIGN_KEY, foreignKey);
-                arriveMap.put(ArrivalNoticeBean.PROJECT_ID, order.get(PurchaseCommonBean.PROJECT_ID));
-                arriveMap.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
-
+                arriveMap.put(ApiConstants.MONGO_ID, orderId);
                 arriveMap.put(ArrivalNoticeBean.EQ_LIST, eqOrderListMap.get(orderId));
-
-                arriveMap.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
-                dao.add(arriveMap, DBBean.ARRIVAL_NOTICE);
-
-            }
-            
-            
+                arriveService.createByOrder(arriveMap);
+            }                        
             return result;
         } else {
             //直发入库
