@@ -51,7 +51,15 @@ $(document).ready(function () {
 		filterable : filterable,
         selectable: "row",
         columns: [
-            {
+               {
+            	   field: "shipCode",
+            	   title: "编号",
+            	   template : function(dataItem) {
+            		   console.log(dataItem);
+       					return '<a  onclick="openShipViewWindow(\'' + dataItem._id + '\');">' + dataItem.shipCode + '</a>';      				
+       				}
+               },
+               {
             	field:"type",
             	title: "类型",
             	template:function(dataItem) {
@@ -83,7 +91,7 @@ $(document).ready(function () {
             	title:"销售合同编号",
 				template : function(dataItem) {
 					if (dataItem.contractCode) {
-						return '<a  onclick="openScViewWindow(\'' + dataItem.salesContractId + '\');">' + dataItem.contractCode + '</a>';
+						return '<a  onclick="openSCViewWindow(\'' + dataItem.salesContractId + '\');">' + dataItem.contractCode + '</a>';
 					} else {
 						return '';
 					}
@@ -91,26 +99,7 @@ $(document).ready(function () {
             },
             { field: "customer", title:"客户名称" },
             {
-            	field: "status", title:"状态",
-            	template:function(dataItem) {
-					var name = "";
-					if (dataItem.status == 0){
-						name = "草稿";
-					} else if (dataItem.status == 1){
-						name = "申请中";
-					} else if (dataItem.status == 2){
-						name = "批准";
-					} else if (dataItem.status == -1){
-						name = "拒绝";
-					} else if (dataItem.status == -2){
-						name = "终止";
-					} else if (dataItem.status == 3){
-						name = "关闭";
-					} else {
-						name = "未知";
-					}
-					return name;
-				}
+            	field: "status", title:"状态"
             }
         ],
         editable: "popup"
@@ -124,10 +113,10 @@ function toolbar_add() {
 function toolbar_edit() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-		if (rowData.status == 0 || rowData.status == -1){
-			loadPage("addShip",{_id:rowData._id});
+		if (rowData.status == "已批准" || rowData.status == "已关闭"){
+			alert("不允许编辑");
 		} else {
-			alert("无法执行该操作");
+			loadPage("addShip",{_id:rowData._id});
 		}
 	}
 }
@@ -158,72 +147,32 @@ function toolbar_delete() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
 
-		if (rowData.status == 0){
-			if(confirm('确实要删除该内容吗?')) {
+		if (rowData.status == "草稿" || rowData.status == "已拒绝" || rowData.status == "申请中") {
+			if (confirm('确实要删除该内容吗?')) {
 				dataSource.remove(rowData);
 				dataSource.sync();
 			}
 		} else {
-			alert("无法执行该操作");
+			alert("不允许删除");
 		}
 	}
 }
 
-function toolbar_submit(op) {
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	if (row) {
-		
-		var nextStatus = false;
-		
-		if (op == 1) { // 提交申请
-			// 草稿或打回
-			if (row.status == 0 || row.status == -1) {
-				nextStatus = 1;
-			}
-		} else if (op == 2) { // 终止
-			if (row.status == 2) {
-				nextStatus = -2;
-			}
-		}
-		
-		if (nextStatus) {
-			var param = {
-					_id : row._id,
-					"status" : nextStatus
-				};
-			postAjaxRequest(crudServiceBaseUrl + "/submit", param,
-						callback);
-		} else {
-			alert("无法执行该操作");
-		}
-	}
-}
 
 function toolbar_option(op) {
 	var row = getSelectedRowDataByGridWithMsg("grid");
+	var url =crudServiceBaseUrl + "/approve";
+	if(op == 2){
+		url = crudServiceBaseUrl + "/approve";
+	}
 	if (row) {
-		
-		var nextStatus = false;
-		
-		if (op == 1) { // 批准
-			if (row.status == 1 || row.status == -1) {
-				nextStatus = 2;
-			}
-		} else if (op == 2) { // 拒绝
-			if (row.status == 1) {
-				nextStatus = -1;
-			}
-		}
-		
-		if (nextStatus) {
+		if (row.status == "申请中") {
 			var param = {
-					_id : row._id,
-					"status" : nextStatus
-				};
-			postAjaxRequest(crudServiceBaseUrl + "/option", param,
-						callback);
+				_id : row._id
+			};
+			postAjaxRequest(url, param, callback);
 		} else {
-			alert("无法执行该操作");
+			alert("非申请中状态，不允许审核");
 		}
 	}
 }
@@ -233,15 +182,5 @@ function callback(response) {
 	dataSource.read();
 }
 
-function toolbar_view(){
-	var rowData = getSelectedRowDataByGridWithMsg("grid");
-	if (rowData) {
-		var options = { width:"1080px", height: "500px", title:"发货信息"};
-		openRemotePageWindow(options, "html/execution/addShip.html", {_id : rowData._id});
-	}
-}
 
-function openScViewWindow(param){
-	var options = { width:"1080px", height: "600px", title:"销售合同信息"};
-	openRemotePageWindow(options, "html/salescontract/viewsc.html", {_id : param});
-}
+

@@ -81,17 +81,22 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		dao.deleteByIds(ids, DBBean.SHIP);
 	}
 
-	public Map<String, Object> create(Map<String, Object> params) {
-		String status;
-		if (params.containsKey(ShipBean.SHIP_STATUS)) {
-			status = params.get(ShipBean.SHIP_STATUS).toString();
-		} else {
-			status = ShipBean.SHIP_STATUS_DRAFT;
-		}
-		
-		params.put(ShipBean.SHIP_STATUS, status);
-		return dao.add(params, DBBean.SHIP);
-	}
+    public Map<String, Object> create(Map<String, Object> params) {
+        String status;
+        if (params.containsKey(ShipBean.SHIP_STATUS)) {
+            status = params.get(ShipBean.SHIP_STATUS).toString();
+        } else {
+            status = ShipBean.SHIP_STATUS_DRAFT;
+        }
+        params.put(ShipBean.SHIP_STATUS, status);
+
+        if (params.get(ApiConstants.MONGO_ID) != null) {
+            return update(params);
+        } else {
+            return dao.add(params, DBBean.SHIP);
+
+        }
+    }
 	
 	public Map<String, Object> listCanShipEq(Map<String, Object> params) {
 		params.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
@@ -105,7 +110,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		// 已到货 的 设备清单，来自于调拨申请,入库和直发到货通知
 		Map<String, Object> map = arrivalService.listEqListByScIDForShip(saleId);
 		List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
-		scs.mergeEqListBasicInfo(purchaseEqList);
+		purchaseEqList = scs.mergeEqListBasicInfo(purchaseEqList);
 
 		
 		//已发货的数量统计
@@ -115,12 +120,12 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Integer> shipedCountMap = countEqByKey(parameters, DBBean.SHIP, "eqcostAmount", null);
         
         for (Map<String, Object> eqMap : purchaseEqList) {
-            int count = ApiUtil.getInteger(eqMap.get("eqcostAmount"), 0);
+            int arriveCount = ApiUtil.getInteger(eqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT), 0);
             if (shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)) != null) {
-                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, count - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
-                eqMap.put("eqcostAmount", count - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arriveCount - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+                eqMap.put("eqcostAmount", arriveCount - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
             } else {
-                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, count);
+                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arriveCount);
             }
         }
 
@@ -129,22 +134,19 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		return res;
 	}
 	
-	public Map<String, Object> option(Map<String, Object> params) {
-		Map<String, Object> result = null;
-		if (params.containsKey(ShipBean.SHIP_STATUS)) {
-			String status = params.get(ShipBean.SHIP_STATUS).toString();
-			Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
-	        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-	        params.put(ShipBean.SHIP_STATUS, status);
-	        
-	        if (status.equals(ShipBean.SHIP_STATUS_SUBMIT)) {
-	    		params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
-			}
-
-	        result =  dao.updateById(params, DBBean.SHIP);
-		}
-        
-        return result;
+    public Map<String, Object> submit(Map<String, Object> params) {
+        params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+        return this.dao.updateById(params, DBBean.SHIP);
+    }
+	   
+    public Map<String, Object> approve(Map<String, Object> params){
+        params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
+        return this.dao.updateById(params, DBBean.SHIP);
+    }
+    
+    public Map<String, Object> reject(Map<String, Object> params){
+        params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_REJECT);
+        return this.dao.updateById(params, DBBean.SHIP); 
     }
 	
 	public Map<String, Object> record(Map<String, Object> params) {
