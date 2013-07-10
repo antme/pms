@@ -816,7 +816,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	    String comment = (String)params.get("tempComment");
 	    comment = recordComment("提交",comment,oldComment);
 	    obj.put(MoneyBean.getMoneyComment, comment);//
-        
+	    obj.put("tempComment", params.get("tempComment"));
         return dao.save(obj, DBBean.SC_GOT_MONEY);
 	}
 

@@ -74,9 +74,10 @@ $(document).ready(function () {
 	    sortable : true,
 	    detailTemplate: kendo.template($("#template2").html()),
         columns: [
-            { field: "payMoneyActualData",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
-            { field: "payMoneyActualMoney", title:"金额", min:0},
             { field: "purchaseContractCode", title: "采购合同编号",editor:pcDropDownEditor},
+            { field: "creatorName", title: "申请人" },
+            { field: "payMoneyActualMoney", title:"金额", min:0},
+            { field: "payMoneyActualData",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
             { field: "supplierName", title: "供应商"},
             { field: "supplierBankName", title: "开户行"},
             { field: "supplierBankAccount", title: "银行账号"},
