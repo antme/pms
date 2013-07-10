@@ -1,6 +1,5 @@
 var editUrl = "/service/purcontract/order/get";
-var saveUrl =  "/service/purcontract/order/update";
-var addUrl =  "/service/purcontract/order/add";
+var saveUrl =  "/service/arrivalNotice/create/byorder";
 
 // 声明一个总的对象用来传递数据
 var requestDataItem = undefined;
@@ -103,11 +102,6 @@ var itemDataSource = new kendo.data.DataSource({
 	transport : {
 		update : {
 			url : saveUrl,
-			dataType : "jsonp",
-			type : "post"
-		},
-		create : {
-			url : addUrl,
 			dataType : "jsonp",
 			type : "post"
 		},
@@ -407,7 +401,17 @@ function edit(data) {
 }
 
 function closeWindow() {
+	var window = $("#popup");
 	window.data("kendoWindow").close();
 }
 
-function submitNotice() {}
+function submitNotice() {
+	if(itemDataSource.at(0)){		
+		//force set haschanges = true
+		itemDataSource.at(0).set("uid", kendo.guid());
+	}
+	// 同步数据
+	itemDataSource.sync();
+	alert("到货通知已生产");
+	closeWindow();
+}

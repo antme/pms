@@ -16,7 +16,6 @@ import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
-import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
@@ -222,6 +221,11 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		return res;
     }
     
+    /**
+     * 获取订单信息和已到货数量 - 暂时没用
+     * @param parameters
+     * @return
+     */
     public Map<String, Object> getPurchaseOrder(Map<String, Object> parameters) {
     	Map<String, Object> result = pService.getPurchaseOrder(parameters);
         List<Map<String, Object>> mergeLoadedEqList = (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST);
@@ -249,5 +253,46 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
         
         return result;
     }
+    
+    /**
+     * 订单生产到货通知
+     */
+	public Map<String, Object> createByOrder(Map<String, Object> params) {
+		
+		Map<String, Object> order = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
+		
+		if (!PurchaseCommonBean.STATUS_ORDER_FINISHED.equals(order.get(PurchaseCommonBean.PROCESS_STATUS))) {
+			throw new ApiResponseException("采购未执行完毕", ResponseCodeConstants.PURCHASE_ORDER_UNFINISHED);
+		}
+		
+		/**
+		 * TODO
+		 * 验证到货数量是否超过订单总数量
+		 */
+		
+		Map<String, Object> noticeParams = new HashMap<String, Object>();
+		noticeParams.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
+		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, order.get(ApiConstants.MONGO_ID));
+		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
+		noticeParams.put(ArrivalNoticeBean.PROJECT_ID, order.get(PurchaseCommonBean.PROJECT_ID));
+		noticeParams.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
+		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, order.get("eqcostDeliveryType"));
+		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+		
+		List<Map<String, Object>> eqList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
+		List<Map<String, Object>> arrivalEqList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> map : eqList) {
+			Double arrivalAmount = (Double) map.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT);
+			if (arrivalAmount > 0) {
+				Map<String, Object> eq = new HashMap<String, Object>();
+				eq.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID));
+				eq.put(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, map.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
+				arrivalEqList.add(eq);
+			}
+		}
+		noticeParams.put(ArrivalNoticeBean.EQ_LIST, arrivalEqList);
+		
+		return dao.add(noticeParams, DBBean.ARRIVAL_NOTICE);
+	}
 
 }
