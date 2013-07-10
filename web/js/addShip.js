@@ -35,7 +35,7 @@ var eqModel = kendo.data.Model.define( {
     	eqcostProductType: { editable: false },
     	eqcostUnit: { editable: false },
     	eqcostBrand: { editable: false },
-    	eqcostAmount: { type: "number", validation: { required: true, min: 1} },
+    	eqcostShipAmount: { type: "number", validation: { required: true, min: 1} },
     	arrivalAmount: { type: "number", validation: { required: true, min: 0} },
     	giveUp: { editable: false },
     	eqcostMemo: {}
@@ -112,7 +112,7 @@ $(document).ready(function() {
 	        { field: "eqcostProductType", title: "规格型号" },
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
-	        { field: "eqcostAmount", title: "数量" },
+	        { field: "eqcostShipAmount", title: "数量" },
 	        { field: "arrivalAmount", title: "实际发货数" },
 	        { 
 	        	field: "repositoryName", 
@@ -142,7 +142,7 @@ $(document).ready(function() {
 	    groupable : true,
 	    save : function(e){
 	    	console.log(e);
-	    	if(e.values.eqcostAmount > e.model.leftAmount){
+	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
 				alert("最多可以申请" + e.model.leftAmount);
 				e.preventDefault();
 			}else{

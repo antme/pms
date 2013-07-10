@@ -61,9 +61,12 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		return "ship";
 	}
 	
-	public Map<String, Object> get(Map<String, Object> params) {
-		return dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
-	}
+    public Map<String, Object> get(Map<String, Object> params) {
+        Map<String, Object> result = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
+        result.put(SalesContractBean.SC_EQ_LIST, scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST)));
+        return result;
+
+    }
 
 	public Map<String, Object> list(Map<String, Object> params) {
 	    mergeMyTaskQuery(params, DBBean.SHIP);
@@ -117,13 +120,13 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Object> parameters = new HashMap<String, Object>();
 //        parameters.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
         parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, saleId);
-        Map<String, Integer> shipedCountMap = countEqByKey(parameters, DBBean.SHIP, "eqcostAmount", null);
+        Map<String, Integer> shipedCountMap = countEqByKey(parameters, DBBean.SHIP, ShipBean.EQCOST_SHIP_AMOUNT, null);
         
         for (Map<String, Object> eqMap : purchaseEqList) {
             int arriveCount = ApiUtil.getInteger(eqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT), 0);
             if (shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)) != null) {
                 eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arriveCount - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
-                eqMap.put("eqcostAmount", arriveCount - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+                eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arriveCount - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
             } else {
                 eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arriveCount);
             }
