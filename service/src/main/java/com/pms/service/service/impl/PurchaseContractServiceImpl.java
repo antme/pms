@@ -530,9 +530,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.EMAIL);
 
         List<Object> emails = this.dao.listLimitKeyValues(userQuery, DBBean.USER);
-        
+
         if (contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE) != null) {
             if (contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
+                EmailUtil.sendEqListEmails("test", emails, "test", contract.get(SalesContractBean.SC_EQ_LIST));
+            } else if (contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO)) {
+                EmailUtil.sendEqListEmails("test", emails, "test", contract.get(SalesContractBean.SC_EQ_LIST));
+            } else if (contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
                 EmailUtil.sendEqListEmails("test", emails, "test", contract.get(SalesContractBean.SC_EQ_LIST));
             }
         }
