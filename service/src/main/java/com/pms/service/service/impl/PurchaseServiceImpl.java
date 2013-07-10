@@ -223,13 +223,13 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				comment = recordComment("批准",comment,oldComment);
 			} else if(PurchaseStatus.finalApprove.toString().equals(dbStatus)){
 				status = PurchaseStatus.done.toString();
-				comment = recordComment("终审",comment,oldComment);
+				comment = recordComment("结束",comment,oldComment);
 				allot.put(PurchaseBack.paNumber, params.get(PurchaseBack.paNumber));
 			}
 		}else if(isCoo()){//coo
 			if(PurchaseStatus.approved.toString().equals(dbStatus)){
 				status = PurchaseStatus.finalApprove.toString();
-				comment = recordComment("结束",comment,oldComment);
+				comment = recordComment("终审",comment,oldComment);
 			}
 		}
 		if(status == null){

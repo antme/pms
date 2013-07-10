@@ -117,7 +117,7 @@ $(document).ready(function () {
         detailInit: detailInit,
 	    columns: [
 			{ field: "_id", hidden: true},
-			{ field: "contractCode", title: "合同编号" },
+			{ field: "contractCode", title: "销售合同编号" },
 			{ field: "creatorName", title: "申请人" },
 			{ field: "payInvoiceStatus", title: "状态", width: "100px"},
 			{ field: "payInvoicePlanDate", title: "要求日期",format: "{0:yyyy/MM/dd}"},
@@ -170,17 +170,15 @@ $(document).ready(function () {
 			]
         },
         pageable: true,
-        //toolbar: [{name:"create",text:"新增"}],
+        detailTemplate: kendo.template($("#template1").html()),
         columns: [
-            { field: "contractCode", title: "合同编号" },
+            { field: "contractCode", title: "销售合同编号" },
             { field: "creatorName", title: "申请人" },
             { field: "getMoneyActualDate",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
             { field: "getMoneyActualMoney", title:"金额", min:0 ,footerTemplate: "总额: #=sum#"},
             { field: "customerName", title: "客户"},
             { field: "customerBankName", title: "客户开户行"},
-            { field: "customerBankAccount", title: "客户银行账号"},
-            { field: "getMoneyComment", title: "备注"}//,
-            //{ command: [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}], title: "&nbsp;", width: "170px"}
+            { field: "customerBankAccount", title: "客户银行账号"}
         ],
         editable:"popup"
     });
