@@ -188,10 +188,18 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 
         Map<String, Object> result = new HashMap<String, Object>();
 
-        if (obj.size() == 1) {
-            result.put(ArrivalNoticeBean.EQ_LIST, obj.get(0));
-        }else{
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        
+        if (obj.size() == 0) {       
             result.put(ArrivalNoticeBean.EQ_LIST, new ArrayList<Map<String, Object>>());
+        }else{
+            
+            for(Object ob: obj){
+                List<Map<String, Object>> eqlistMap = (List<Map<String, Object>>) ob;
+                list.addAll(eqlistMap);
+            }
+            result.put(ArrivalNoticeBean.EQ_LIST, list);
+       
         }
         return result;
     }

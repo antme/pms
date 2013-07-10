@@ -105,7 +105,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		// 已到货 的 设备清单，来自于调拨申请,入库和直发到货通知
 		Map<String, Object> map = arrivalService.listEqListByScIDForShip(saleId);
 		List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
-		scs.mergeEqListBasicInfo(purchaseEqList);
+		purchaseEqList = scs.mergeEqListBasicInfo(purchaseEqList);
 
 		
 		//已发货的数量统计
