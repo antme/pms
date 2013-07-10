@@ -132,7 +132,6 @@ var runningStatusItems = [{ text: "执行中", value: "执行中" }, { text: "�
 //采购合同相关数据
 //合同类型
 var purchaseContractType = [{text : "施工分包"}, {text : "代理产品"}, {text : "非代理产品"}, {text : "同方代采"}, {text : "同方采购"}];
-var purchaseContractCate = [{text : "正常采购"}, {text : "北京代采"}, {text : "北京库存"}, {text : "北京生产"}];
 
 
 //货物递送方式

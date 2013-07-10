@@ -2,6 +2,10 @@ package com.pms.service.base;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -11,6 +15,9 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dao.ICommonDao;
 import com.pms.service.dao.impl.mongo.CommonDaoMongoImpl;
+import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.IProjectService;
 import com.pms.service.service.IReportService;
 import com.pms.service.service.ISalesContractService;
@@ -43,22 +50,24 @@ public class BaseTestCase extends TestCase {
 
     public void testEmpty() throws IOException {
 
-        File f = new File("F:\\test.xls");
-
-        ExcleUtil eu = new ExcleUtil();
-        eu.createFile(f);
-        eu = new ExcleUtil(f);
-
-        try {
-            eu.addRow(0, new String[] { "a", "b", "c" });
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
         assertTrue(true);
 
-        EmailUtil.sendMail("test", "251148471@qq.com", "dylan", "test", "F:\\test.xls");
+        List<String> emails = new ArrayList<String>();
+        emails.add("251148471@qq.com");
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
+
+        List<Object> results = this.commonDao.listLimitKeyValues(parameters, DBBean.REPOSITORY);
+
+        for (Object obj : results) {
+            if (obj != null) {
+                List<Map<String, Object>> eqlistMap = (List<Map<String, Object>>) obj;
+                EmailUtil.sendEqListEmails("test", emails, "contract approved", eqlistMap);
+
+            }
+        }
+
     }
     
     public void testImportPurchaseContract(){

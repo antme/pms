@@ -153,10 +153,18 @@ $(document).ready(function() {
             	    },
             	    group: [
             	        {field: "eqcostDeliveryType"},
-            	    	{field:"purchaseContractType"}
-            	    ]
+            	    	{field:"repositoryName"}
+            	    ],
+            	    requestEnd: function(e) {
+            	        var data = e.response.data;
+            	    	for(i=0; i<data.length; i++){
+            	    		data[i].repositoryName = "上海—上海泰德库";
+            	    		if(data[i].purchaseContractType && data[i].purchaseContractType =="同方采购"){
+            	    			data[i].repositoryName = "上海—北京泰德库";
+            	    		}
+            	    	}
+            	      }
             	});
-            	
             	grid.setDataSource(eqDataSource);
 			} else {
 				this.value("");
@@ -184,17 +192,27 @@ $(document).ready(function() {
 	        { field: "eqcostUnit", title: "单位" },
 	        { field: "eqcostAmount", title: "数量" },
 	        { field: "arrivalAmount", title: "实际发货数" },
+	        { 
+	        	field: "repositoryName", 
+	        	title: "仓库" ,
+				groupHeaderTemplate: function(dataItem){														
+					return dataItem.value;
+				}
+	        		
+	        },
 	        {
 				field : "purchaseContractType",
-				title : "采购合同类别",
-				groupHeaderTemplate: "#= value # ",
-				hidden : true
+				title : "采购合同类别"
 			},
 			 {
 				field : "eqcostDeliveryType",
 				title : "物流类别",
-				groupHeaderTemplate: "#= value # ",
-				hidden : true
+				groupHeaderTemplate: function(dataItem){					
+					if(dataItem.value == "入公司库"){
+						return "仓库直发";
+					}
+					return "供应商直发";
+				}
 			},
 	        {
 	        	field: "giveUp",
@@ -204,7 +222,14 @@ $(document).ready(function() {
 	        { field: "eqcostMemo", title: "备注" },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	    editable: true,
-	    groupable : true
+	    groupable : true,
+	    save : function(e){
+	    	grid = $("#equipments-grid").data("kendoGrid");
+	    	grid.refresh();
+	    },
+	    dataBound : function(e){
+	
+	    }
 	});
 	grid = $("#equipments-grid").data("kendoGrid");
     

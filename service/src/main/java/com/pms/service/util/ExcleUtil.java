@@ -188,25 +188,32 @@ public class ExcleUtil {
 
 	}
 
-	public void addRow(int sheetIndex, String[] row) throws Exception {
+    public void addRow(int sheetIndex, String[] row) throws Exception {
+        Sheet sheet = null;
 
-	    HSSFSheet sheet = (HSSFSheet) wb.createSheet();
-	    
-		int rownum = this.getRowNum(sheetIndex);
-		Row addedRow = sheet.createRow(rownum);
-		Cell cell = null;
+        try {
+            sheet = wb.getSheetAt(sheetIndex);
+        } catch (Exception e) {
+        }
+        if (sheet == null) {
+            sheet = (HSSFSheet) wb.createSheet();
+        }
 
-		int colnum = this.getColumnNum(sheetIndex);
-		int count = colnum < row.length ? colnum : row.length;
-		for (int i = 0; i < row.length; i++) {
-			cell = addedRow.createCell(i);
-			cell.setCellValue(row[i]);
-		}
-		
-		fos = new FileOutputStream(this.file);
-		wb.write(this.fos);
-		fos.close();
-	}
+        int rownum = this.getRowNum(sheetIndex);
+        Row addedRow = sheet.createRow(rownum);
+        Cell cell = null;
+
+        int colnum = this.getColumnNum(sheetIndex);
+        int count = colnum < row.length ? colnum : row.length;
+        for (int i = 0; i < row.length; i++) {
+            cell = addedRow.createCell(i);
+            cell.setCellValue(row[i]);
+        }
+
+        fos = new FileOutputStream(this.file);
+        wb.write(this.fos);
+        fos.close();
+    }
 	
 	
 	public void createFile(File f){
