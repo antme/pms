@@ -3,6 +3,8 @@ package com.pms.service.util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -14,6 +16,7 @@ import org.apache.commons.mail.MultiPartEmail;
 import org.apache.commons.mail.SimpleEmail;
 
 import com.pms.service.cfg.ConfigurationManager;
+import com.pms.service.mockbean.SalesContractBean;
 
 public class EmailUtil {
 
@@ -21,6 +24,10 @@ public class EmailUtil {
 
         List<String> emails = new ArrayList<String>();
         emails.add(toEmail);
+        sendListMail(subject, emails, content, file);
+    }
+
+    public static void sendListMail(String subject, List<String> emails, String content, String file) {
 
         if (!ApiUtil.isEmpty(file) && new File(file).exists()) {
 
@@ -44,11 +51,6 @@ public class EmailUtil {
 
             sendEmails(subject, emails, content, email);
         }
-    }
-
-    public static void sendListMail(String subject, List<String> emails, String content, String file) {
-        SimpleEmail email = new SimpleEmail();
-        sendEmails(subject, emails, content, email);
     }
 
     private static void sendEmails(String subject, List<String> emails, String content, Email email) {
@@ -79,4 +81,52 @@ public class EmailUtil {
             e.printStackTrace();
         }
     }
+
+    public static void sendEqListEmails(String subject, List<String> emails, String content, List<Map<String, Object>> eqList) {
+
+        String colunmHeaders[] = new String[] { SalesContractBean.SC_EQ_LIST_NO, SalesContractBean.SC_EQ_LIST_MATERIAL_CODE, SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE,
+                SalesContractBean.SC_EQ_LIST_BASE_PRICE, SalesContractBean.SC_EQ_LIST_PRODUCT_NAME };
+        String fileDir = ConfigurationManager.getProperty("file_dir");
+
+        File f = new File(fileDir + UUID.randomUUID().toString() + ".xls");
+        if (!ApiUtil.isEmpty(emails)) {
+
+            ExcleUtil eu = new ExcleUtil();
+            eu.createFile(f);
+            eu = new ExcleUtil(f);
+
+            try {
+                eu.addRow(0, colunmHeaders);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            for (Map<String, Object> map : eqList) {
+                int length = colunmHeaders.length;
+                String rowsData[] = new String[length];
+
+                int index = 0;
+                for (String key : colunmHeaders) {
+                    if (map.get(key) == null) {
+                        rowsData[index] = "";
+                    } else {
+                        rowsData[index] = map.get(key).toString();
+                    }
+                    index++;
+                }
+
+                try {
+                    eu.addRow(0, rowsData);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        sendListMail(subject, emails, content, f.getAbsolutePath());
+
+    }
+
 }

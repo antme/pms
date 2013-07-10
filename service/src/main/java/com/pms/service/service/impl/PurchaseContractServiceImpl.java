@@ -18,12 +18,14 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.InvoiceBean;
 import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.PurchaseRequest;
+import com.pms.service.mockbean.RoleBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
@@ -514,15 +516,23 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public Map<String, Object> approvePurchaseContract(Map<String, Object> order) {
         Map<String, Object> result = processRequest(order, DBBean.PURCHASE_CONTRACT, APPROVED);
-        updateOrderFinalStatus(result);
+
+        Map<String, Object> contract = dao.findOne(ApiConstants.MONGO_ID, result.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST,
+                PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, PurchaseCommonBean.PURCHASE_CONTRACT_CODE, PurchaseCommonBean.EQCOST_DELIVERY_TYPE }, DBBean.PURCHASE_CONTRACT);
+
+        updateOrderFinalStatus(contract);
+
+        Map<String, Object> userQuery = new HashMap<String, Object>();
+        userQuery.put(UserBean.GROUPS,
+                new DBQuery(DBQueryOpertion.IN, this.dao.findOne(GroupBean.GROUP_NAME, GroupBean.DEPARTMENT_ASSISTANT_VALUE, DBBean.USER_GROUP).get(ApiConstants.MONGO_ID)));
+        userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.EMAIL);
+
+        List<Object> emails = this.dao.listLimitKeyValues(userQuery, DBBean.USER);
+
         return result;
     }
 
-    private void updateOrderFinalStatus(Map<String, Object> param) {
-        
-        Map<String, Object> contract = dao.findOne(ApiConstants.MONGO_ID, param.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST, PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, 
-            PurchaseCommonBean.PURCHASE_CONTRACT_CODE, PurchaseCommonBean.EQCOST_DELIVERY_TYPE },
-                DBBean.PURCHASE_CONTRACT);
+    private void updateOrderFinalStatus(Map<String, Object> contract) {        
         List<Map<String, Object>> eqListMap = (List<Map<String, Object>>)contract.get(SalesContractBean.SC_EQ_LIST);
 
         Set<String> orderIds = new HashSet<String>();
@@ -952,26 +962,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             
             for (String orderId : orderIds) {
                 Map<String, Object> arriveMap = new HashMap<String, Object>();
-
-                String foreignKey = orderId;
-                String type = ArrivalNoticeBean.SHIP_TYPE_2;
-
-                Map<String, Object> order = dao.findOne(ApiConstants.MONGO_ID, foreignKey, DBBean.PURCHASE_ORDER);
-
-                arriveMap.put(ShipBean.SHIP_TYPE, type);
-                arriveMap.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
-                arriveMap.put(ArrivalNoticeBean.FOREIGN_KEY, foreignKey);
-                arriveMap.put(ArrivalNoticeBean.PROJECT_ID, order.get(PurchaseCommonBean.PROJECT_ID));
-                arriveMap.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
-
+                arriveMap.put(ApiConstants.MONGO_ID, orderId);
                 arriveMap.put(ArrivalNoticeBean.EQ_LIST, eqOrderListMap.get(orderId));
-
-                arriveMap.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
-                dao.add(arriveMap, DBBean.ARRIVAL_NOTICE);
-
-            }
-            
-            
+                arriveService.createByOrder(arriveMap);
+            }                        
             return result;
         } else {
             //直发入库

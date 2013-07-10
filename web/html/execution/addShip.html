@@ -5,10 +5,7 @@
 <body>
     <div id="addShip" class="k-content">
 	    <h3>发货详情页面</h3>
-	    <div>
-		    <button onclick="save()" class="k-button">保存</button>
-		    <button onclick='loadPage("ship");' class="k-button">取消</button>
-	    </div>
+
 	    
 	    <div class="k-edit-form-container">
 	    	<div class="k-edit-label">
@@ -95,6 +92,12 @@
 	    
 	    <div id="equipments-grid" ></div>
 	    
+	    <div>
+            <button onclick="saveShip()" class="k-button">保存</button>
+            <button onclick="submitShip()" class="k-button">提交申请</button>
+            <button onclick='loadPage("ship");' class="k-button">取消</button>
+        </div>
+        
 	    <style scoped>
 	    	.k-edit-form-container {
 				width: 100%;

@@ -21,17 +21,23 @@ var dataSource = new kendo.data.DataSource({
 			url : "../service/user/group/delete",
 			dataType : "jsonp",
 			type : "post"
-		}
+		},
+        parameterMap: function(options, operation) {
+            if (operation !== "read" && options.models) {
+                return {
+                	models: kendo.stringify(options.models),
+    				mycallback : "myreflush"    	
+                };
+            } else if(operation === "read"){
+            	return {
+            		page : options.page,
+            		pageSize : options.pageSize,
+            		skip : options.skip,
+            		take : options.take
+            	}
+             }
+        }
 	},
-
-	parameterMap : function(options, operation) {
-		if (operation !== "read" && options.models) {
-			return {
-				models : kendo.stringify(options.models)
-			}
-		}
-	},
-
 	schema : {
 		model : {
 			id : "_id",
@@ -62,9 +68,8 @@ $(document).ready(function() {
 	$("#group-grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
+		resizable: true,
 		editable : "popup",
-//		selectable : "multiple",
-		height: "500px",
 		toolbar : [ {
 			name : "create",
 			text : "创建角色"
@@ -87,11 +92,7 @@ $(document).ready(function() {
 			editHidden : true
 
 		}, {
-			command : [ "edit", {
-				name : "destroy",
-				title : "删除",
-				text : "删除"
-			} ],
+			command : [{name : "edit",text : "编辑"}, {name : "destroy",text : "删除"} ],
 			title : "&nbsp;",
 			width : "160px"
 		} ]
@@ -172,4 +173,7 @@ function openGroupRoleWindow(id) {
 		activate : onActivate
 	};
 	openWindow(options);
+}
+function myreflush(){
+	loadPage("group");
 }
