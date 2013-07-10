@@ -250,14 +250,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	}
 	
 	private void createArrivalNotice(Map<String, Object> params) {
-		Map<String,Object> noticeParams = new HashMap<String,Object>();
-		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, ArrivalNoticeBean.SHIP_TYPE_0);
-		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, params.get(ApiConstants.MONGO_ID));
-		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, params.get(PurchaseBack.paCode));
-		noticeParams.put(ArrivalNoticeBean.PROJECT_ID, params.get(PurchaseCommonBean.PROJECT_ID));
-		noticeParams.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, params.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
-		noticeParams.put(ArrivalNoticeBean.EQ_LIST, params.get(SalesContractBean.SC_EQ_LIST));
-		arrivalNoticeService.create(noticeParams);
+		arrivalNoticeService.createByAllocate(params);
 	}
 	
 	@Override

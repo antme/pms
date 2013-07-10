@@ -14,6 +14,7 @@ import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
@@ -310,6 +311,23 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 			}
 		}
 		noticeParams.put(ArrivalNoticeBean.EQ_LIST, arrivalEqList);
+		
+		return dao.add(noticeParams, DBBean.ARRIVAL_NOTICE);
+	}
+    
+    /**
+     * 调拨生产到货通知
+     */
+	public Map<String, Object> createByAllocate(Map<String, Object> params) {
+		Map<String, Object> noticeParams = new HashMap<String, Object>();
+		noticeParams.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
+		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, params.get(ApiConstants.MONGO_ID));
+		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, params.get(PurchaseBack.paCode));
+		noticeParams.put(ArrivalNoticeBean.PROJECT_ID, params.get(PurchaseCommonBean.PROJECT_ID));
+		noticeParams.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, params.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
+		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, ArrivalNoticeBean.SHIP_TYPE_0);
+		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+		noticeParams.put(ArrivalNoticeBean.EQ_LIST, params.get(SalesContractBean.SC_EQ_LIST));
 		
 		return dao.add(noticeParams, DBBean.ARRIVAL_NOTICE);
 	}

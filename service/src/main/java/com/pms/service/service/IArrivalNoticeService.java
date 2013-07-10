@@ -21,5 +21,7 @@ public interface IArrivalNoticeService {
     public Map<String, Object> listCanShipEq(Map<String, Object> params);
     
     public Map<String, Object> createByOrder(Map<String, Object> params);
+
+	public Map<String, Object> createByAllocate(Map<String, Object> params);
 }
 
