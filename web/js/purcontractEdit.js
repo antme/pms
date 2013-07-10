@@ -116,12 +116,21 @@ $(document).ready(function() {
 			}
 		},
 		activate : function(e){
-			initMergedGrid();
+			if(e.item.id =="merged-select"){			
+				initMergedGrid();
+
+			}
 		}
 		
 	});	
 
 
+	$("#purchaseContractType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : purchaseContractType
+	});
+	
 	$("#supplier").kendoDropDownList({
 		dataTextField : "supplierName",
 		dataValueField : "_id",
@@ -140,11 +149,6 @@ $(document).ready(function() {
 	});
 	
 
-	$("#purchaseContractType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : purchaseContractType
-	});
 	
 	$("#executeStatus").kendoDropDownList({
 		dataTextField : "text",
@@ -551,8 +555,8 @@ function initMergedGrid(){
 
 function detailInit(e) {
 	
-	var data = new Array();
-	var mdata = mergedDataSource.data();
+	var subdata = new Array();
+	var mdata = eval(kendo.stringify(mergedDataSource.data()));
 	for(i=0; i<mdata.length; i++){
 		if(mdata[i].eqcostNo == e.data.eqcostNo && mdata[i].eqcostProductName == e.data.eqcostProductName
 				&& mdata[i].eqcostMaterialCode == e.data.eqcostMaterialCode
@@ -561,11 +565,13 @@ function detailInit(e) {
 				&& mdata[i].eqcostBrand == e.data.eqcostBrand)
 		{
 			if(mdata[i].items){
-				data = mdata[i].items;
-				data.push(mdata[i]);
+				subdata = mdata[i].items;
+				subdata.push(mdata[i]);
 			}else{
-				data.push(mdata[i]);
+				subdata.push(mdata[i]);
 			}
+			console.log(mdata[i]);
+
 			break;
 		}
 		
@@ -573,7 +579,7 @@ function detailInit(e) {
 
     $("<div/>").appendTo(e.detailCell).kendoGrid({
 		dataSource : {
-			data : data,
+			data : subdata,
 			aggregate : [ {
 				field : "eqcostApplyAmount",
 				aggregate : "sum"
@@ -582,9 +588,7 @@ function detailInit(e) {
 				aggregate : "sum"
 			} ]
 		},
-        scrollable: false,
-        sortable: true,
-        pageable: true,
+        scrollable: true,
         columns : [ {
 			field : "eqcostApplyAmount",
 			title : "订单数量",

@@ -35,8 +35,8 @@ var eqModel = kendo.data.Model.define( {
     	eqcostProductType: { editable: false },
     	eqcostUnit: { editable: false },
     	eqcostBrand: { editable: false },
-    	eqcostShipAmount: { type: "number", validation: { required: true, min: 1} },
-    	arrivalAmount: { type: "number", validation: { required: true, min: 0} },
+    	eqcostShipAmount: { type: "number", validation: { min: 1} },
+    	arrivalAmount: { type: "number", validation: {  min: 0} },
     	giveUp: { editable: false },
     	eqcostMemo: {}
     }
@@ -52,9 +52,12 @@ eqDataSource = new kendo.data.DataSource({
     	data: "data"
     },
     group: [
-        {field: "eqcostDeliveryType"},
     	{field:"repositoryName"}
     ]
+});
+
+var supplierShipDataSource = new kendo.data.DataSource({
+
 });
 
 $(document).ready(function() {
@@ -113,7 +116,6 @@ $(document).ready(function() {
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
 	        { field: "eqcostShipAmount", title: "数量" },
-	        { field: "arrivalAmount", title: "实际发货数" },
 	        { 
 	        	field: "repositoryName", 
 	        	title: "仓库" ,
@@ -123,18 +125,16 @@ $(document).ready(function() {
 	        		
 	        },
 	        {
+				field : "contractExecuteCate",
+				title : "虚拟采购合同类别"
+			},
+	        {
 				field : "purchaseContractType",
 				title : "采购合同类别"
 			},
 			 {
 				field : "eqcostDeliveryType",
-				title : "物流类别",
-				groupHeaderTemplate: function(dataItem){					
-					if(dataItem.value == "入公司库"){
-						return "仓库直发";
-					}
-					return "供应商直发";
-				}
+				title : "物流类别"
 			},	        
 	        { field: "eqcostMemo", title: "备注" },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
@@ -147,6 +147,46 @@ $(document).ready(function() {
 				e.preventDefault();
 			}else{
 		    	var grid = $("#equipments-grid").data("kendoGrid");
+		    	grid.refresh();
+			}
+	    }
+	});
+	
+	
+	$("#supplier-ship-grid").kendoGrid({
+		dataSource : supplierShipDataSource,
+	    columns: [
+	        { field: "eqcostNo", title: "序号" },
+	        { field: "eqcostMaterialCode", title: "物料代码" },
+	        { field: "eqcostProductName", title: "产品名称" },
+	        { field: "eqcostProductType", title: "规格型号" },
+	        { field: "eqcostBrand", title: "品牌" },
+	        { field: "eqcostUnit", title: "单位" },
+	        { field: "eqcostShipAmount", title: "数量" },
+	        { field: "arrivalAmount", title: "实际发货数" },
+	       
+	        {
+				field : "contractExecuteCate",
+				title : "虚拟采购合同类别"
+			},
+	        {
+				field : "purchaseContractType",
+				title : "采购合同类别"
+			},
+			 {
+				field : "eqcostDeliveryType",
+				title : "物流类别"
+			},	        
+	        { field: "eqcostMemo", title: "备注" },
+	        { command: "destroy", title: "&nbsp;", width: 90 }],
+	    editable: true,
+	    save : function(e){
+	    	console.log(e);
+	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
+				alert("最多可以申请" + e.model.leftAmount);
+				e.preventDefault();
+			}else{
+		    	var grid = $("#supplier-ship-grid").data("kendoGrid");
 		    	grid.refresh();
 			}
 	    }
@@ -216,25 +256,50 @@ function giveUpDropDownEditor(container, options) {
 }
 
 function edit(data) {
+	$("#project").data("kendoComboBox").enable(false);
+	$("#salesContract").data("kendoComboBox").enable(false);
 	model = new ship(data);
 	kendo.bind($("#addShip"), model);
-	eqDataSource.data(model.eqcostList);
+	loadEqList(model.eqcostList);
 }
 
 function loadEqList(data){
-	var eqList = data.data;
+	var eqList = data;
+	if(data.data){
+		 eqList = data.data;
+	}
+	
+	var dlist = new Array();
+	var rlist = new Array();
 	for(i=0; i<eqList.length; i++){
 		
 		if(eqList[i].eqcostDeliveryType == "直发现场"){
 			eqList[i].repositoryName="";
+			dlist.push(eqList[i]);
 		}else if(eqList[i].purchaseContractType == "同方采购"){
 			eqList[i].repositoryName="上海—北京泰德库";
+			rlist.push(eqList[i]);
 		}else{
 			eqList[i].repositoryName="上海—上海泰德库";
+			rlist.push(eqList[i]);
 		}
 		
 	}
-	eqDataSource.data(eqList);
+	
+	if(dlist.length >0){
+		$("#supplier-ship").show();
+	}else{
+		$("#supplier-ship").hide();
+	}
+	if(rlist.length >0){
+		$("#repo-ship").show();
+	}else{
+		$("#repo-ship").hide();
+	}
+	
+	
+	supplierShipDataSource.data(dlist);
+	eqDataSource.data(rlist);
 }
 
 function saveShip() {	
