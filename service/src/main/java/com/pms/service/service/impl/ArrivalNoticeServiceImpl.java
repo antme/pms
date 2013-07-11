@@ -16,6 +16,7 @@ import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
+import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
@@ -283,17 +284,18 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
     /**
      * 调拨生产到货通知
      */
-	public Map<String, Object> createByAllocate(Map<String, Object> params) {
+	public Map<String, Object> createByAllocate(Map<String, Object> allot) {
 		Map<String, Object> noticeParams = new HashMap<String, Object>();
 		noticeParams.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
-		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, params.get(ApiConstants.MONGO_ID));
-		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, params.get(PurchaseBack.paCode));
-		noticeParams.put(SalesContractBean.SC_ID, params.get(PurchaseBack.scId));
+		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, allot.get(ApiConstants.MONGO_ID));
+		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, allot.get(PurchaseBack.paCode));
+		noticeParams.put(SalesContractBean.SC_ID, allot.get(PurchaseBack.scId));
 		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, ArrivalNoticeBean.SHIP_TYPE_0);
 		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		
 		// 到货设备清单
-		List<Map<String, Object>> eqList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
+		List<Map<String, Object>> eqList = (List<Map<String, Object>>) allot.get(SalesContractBean.SC_EQ_LIST);
+		eqList = scs.mergeEqListBasicInfo(eqList);
 		List<Map<String, Object>> arrivalEqList = new ArrayList<Map<String, Object>>();
 		for (Map<String, Object> map : eqList) {
 			Map<String, Object> eq = new HashMap<String, Object>();
@@ -304,6 +306,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 			eq.put(SalesContractBean.SC_CODE, map.get(PurchaseBack.scCode));
 			eq.put(ProjectBean.PROJECT_ID, map.get(ProjectBean.PROJECT_ID));
 			eq.put(ProjectBean.PROJECT_CODE, map.get(ProjectBean.PROJECT_CODE));
+			eq.put(ShipBean.REPOSITORY_NAME, allot.get(PurchaseBack.paShelfCode));
+			
 			
 			arrivalEqList.add(eq);
 		}

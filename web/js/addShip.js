@@ -320,7 +320,8 @@ function loadEqList(data){
 		
 		
 		if(!eqList[i].eqcostDeliveryType){
-			eqList[i].repositoryName="";
+			//调拨，仓库取自货架
+//			eqList[i].repositoryName="";
 			alloList.push(eqList[i]);
 		}else{
 			if(eqList[i].eqcostDeliveryType == "直发现场"){
