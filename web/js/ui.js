@@ -73,7 +73,8 @@ function init(u){
 	});
 	
 	$("#user-info").click(function() {
-		loadPage("myinfo");
+		var options = { width:"500px", height: "320px", title:"修改密码"};
+		openRemotePageWindow(options, "html/user/changePassword.html", {_id:user._id});
 	});
 	
 }

@@ -63,6 +63,12 @@ public class UserController extends AbstractController {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
         responseWithData(userService.listUsers(params), request, response);
     }
+    
+    @RequestMapping("/pm/list")
+    public void listPMs(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+        responseWithData(userService.listPMs(params), request, response);
+    }
        
     @RequestMapping("/update")
     @RoleValidate(roleID = RoleValidConstants.USER_MANAGEMENT, desc = RoleValidConstants.USER_MANAGEMENT_DESC)
@@ -128,10 +134,14 @@ public class UserController extends AbstractController {
         responseWithData(null, request, response);
     }
     
-    
     @RequestMapping("/mytasks")
     public void listMyTasks(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(userService.listMyTasks(), request, response);
+    }
+    
+    @RequestMapping("/changepassword")
+    public void changePassword(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(userService.changePassword(parserJsonParameters(request,  false)), request, response, "change_success");
     }
        
 
