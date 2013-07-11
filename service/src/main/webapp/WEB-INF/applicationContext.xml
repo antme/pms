@@ -129,6 +129,7 @@
 		id="arrivalNoticeService">
 		<property name="dao" ref="commonDao"></property>
 		<property name="scs" ref="salesContractService"></property>
+		<property name="pService" ref="purchaseContractService"></property>
 	</bean>
 
 	<bean
