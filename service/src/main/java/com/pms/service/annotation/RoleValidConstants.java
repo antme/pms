@@ -40,8 +40,11 @@ public class RoleValidConstants {
     public static final String PURCHASE_ALLOCATE_MANAGEMENT_DESC = "调拨申请管理";
 
     public static final String PURCHASE_ALLOCATE_PROCESS = "purchase_allocate_process";
-    public static final String PURCHASE_ALLOCATE_PROCESS_DESC = "调拨申请审批";
+    public static final String PURCHASE_ALLOCATE_PROCESS_DESC = "调拨申请初审";
 
+    public static final String PURCHASE_ALLOCATE_FINAL_PROCESS = "purchase_allocate_final";
+    public static final String PURCHASE_ALLOCATE_FINAL_PROCESS_DESC = "调拨申请终审";
+    
     public static final String PURCHASE_ALLOCATE_DONE = "purchase_allocate_done";
     public static final String PURCHASE_ALLOCATE_DONE_DESC = "调拨申请结束";
     

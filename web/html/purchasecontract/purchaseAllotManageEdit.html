@@ -38,7 +38,7 @@
 				<tr>
 					<td>提交时间：<span data-bind="text: paSubmitDate" ></span></td>
 					<td>批准时间：<span data-bind="text: paApproveDate" ></span></td>
-					<td colspan="2"><label id="paNumberTd" style="display:none;">调拨单号：<input type="text" required validationMessage="请输入" data-bind="value: paNumber"/></label></td>
+					<td colspan="2"><label id="paNumberTd" >调拨单号：<input type="text" required validationMessage="请输入" data-bind="value: paNumber"/></label></td>
 				</tr>
 			</table>
 			<hr>
@@ -55,6 +55,8 @@
         <div id="form-container-button">
         	<button access="purchase_allocate_process" class="k-button access" value="approve">批准</button>
         	<button access="purchase_allocate_process" class="k-button access" value="reject">拒绝</button>
+        	<button access="purchase_allocate_final" class="k-button access" value="finalapprove">批准</button>
+        	<button access="purchase_allocate_final" class="k-button access" value="finalreject">拒绝</button>
         	<button access="purchase_allocate_done" class="k-button access" value="done">完成</button>
         	<button class="k-button" value="cancel">取消</button>
         </div>

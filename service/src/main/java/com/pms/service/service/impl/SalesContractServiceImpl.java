@@ -993,11 +993,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
     public void mergeCommonFieldsFromSc(Map<String, Object> data, Object scId){
         Map<String, Object> scQuery = new HashMap<String, Object>();
         scQuery.put(ApiConstants.MONGO_ID, scId);
-        scQuery.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE});
+        scQuery.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE, 
+        		SalesContractBean.SC_CUSTOMER});
         
         Map<String, Object> sc = this.dao.findOneByQuery(scQuery, DBBean.SALES_CONTRACT);
         data.put(SalesContractBean.SC_PROJECT_ID, sc.get(SalesContractBean.SC_PROJECT_ID));
         data.put(SalesContractBean.SC_TYPE, sc.get(SalesContractBean.SC_TYPE));
+        data.put(SalesContractBean.SC_CUSTOMER, sc.get(SalesContractBean.SC_CUSTOMER));
        
         mergeCommonProjectInfo(data, sc.get(SalesContractBean.SC_PROJECT_ID));              
  

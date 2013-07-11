@@ -108,6 +108,12 @@ public class PurchaseController extends AbstractController {
     public void approveAllotForBack(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.approveAllot(parserJsonParameters(request,  false)), request, response);
     }
+
+    @RequestMapping("/allot/finalapprove")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ALLOCATE_FINAL_PROCESS, desc = RoleValidConstants.PURCHASE_ALLOCATE_PROCESS_DESC)
+    public void fianlApproveAllotForBack(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.approveAllot(parserJsonParameters(request,  false)), request, response);
+    }
     
     @RequestMapping("/allot/done")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_ALLOCATE_DONE, desc = RoleValidConstants.PURCHASE_ALLOCATE_DONE_DESC)
@@ -120,7 +126,12 @@ public class PurchaseController extends AbstractController {
     public void rejectAllot(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.rejectAllot(parserJsonParameters(request,  false)), request, response);
     }
-
+    
+    @RequestMapping("/allot/finalreject")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ALLOCATE_FINAL_PROCESS, desc = RoleValidConstants.PURCHASE_ALLOCATE_FINAL_PROCESS_DESC)
+    public void finalRejectAllot(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(purchaseService.rejectAllot(parserJsonParameters(request,  false)), request, response);
+    }
     
 	public IPurchaseService getPurchaseService() {
 		return purchaseService;

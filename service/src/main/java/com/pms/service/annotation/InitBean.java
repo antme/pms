@@ -105,8 +105,7 @@ public class InitBean {
         groupRoles.put(GroupBean.COO_VALUE, new String[] {
                 RoleValidConstants.PURCHASE_CONTRACT_PROCESS, 
                 RoleValidConstants.PURCHASE_ORDER_PROCESS,
-                RoleValidConstants.PURCHASE_ALLOCATE_PROCESS,
-                RoleValidConstants.PURCHASE_ALLOCATE_DONE
+                RoleValidConstants.PURCHASE_ALLOCATE_FINAL_PROCESS
             });
 
         for (String name : groupNames) {
