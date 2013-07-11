@@ -48,8 +48,6 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listApprovedPurchaseOrderForSelect();
     
-    public Map<String, Object> listApprovedPurchaseOrderForRepositorySelect();
-
     
     public Map<String, Object> listPurchaseRequests(Map<String, Object> parameters);
     

@@ -106,39 +106,7 @@ var eqCostListDataSource = new kendo.data.DataSource({
 	}
 });
 
-var orderDataSource = new kendo.data.DataSource({
-	
-});
 
-function updateOrder(data) {
-	var value = $("#eqcostDeliveryType").data("kendoDropDownList").value();
-	if (value == "入公司库") {
-		$("#executeStatus").kendoDropDownList({
-			dataTextField : "text",
-			dataValueField : "text",
-			dataSource : executeType2
-		});
-
-		orderDataSource.data(data.repository);
-		
-		var purchasecontractin = $("#purchasecontractin").data("kendoMultiSelect");
-		purchasecontractin.value([]);
-		
-	} else {
-		$("#executeStatus").kendoDropDownList({
-			dataTextField : "text",
-			dataValueField : "text",
-			dataSource : executeType1
-		});
-		
-		
-		orderDataSource.data(data.directly);
-		
-		var purchasecontractin = $("#purchasecontractin").data("kendoMultiSelect");
-		purchasecontractin.value([]);
-		
-	}
-}
 
 
 $(document).ready(function() {
@@ -208,7 +176,25 @@ $(document).ready(function() {
 		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
 	} else{
 
-		postAjaxRequest("/service/purcontract/order/select", null, addOrder);
+		$("#purchasecontractin").kendoMultiSelect({
+			dataTextField : "purchaseOrderCode",
+			dataValueField : "_id",
+			placeholder : "选择采购订单...",
+			itemTemplate:  '${ data.purchaseOrderCode }:<strong>${ data.eqcostDeliveryType}</strong>',
+			dataSource : new kendo.data.DataSource({
+				transport : {
+					read : {
+						url : "/service/purcontract/order/select",
+						dataType : "jsonp"
+					}
+				},
+				schema : {
+					total : "total",
+					data : "data"
+				},
+			})
+		});
+		
 
 		$("#purchasecontract-edit-header").show();
 		$("#purchasecontract-edit-item").hide();
@@ -305,30 +291,6 @@ function addOrderInSCListForRuodian(){
     });
 }
 
-function addOrder(data){
-
-	
-	$("#purchasecontractin").kendoMultiSelect({
-		dataTextField : "purchaseOrderCode",
-		dataValueField : "_id",
-		placeholder : "选择采购订单...",
-		dataSource : orderDataSource
-	});
-	
-	$("#eqcostDeliveryType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : eqcostDeliveryType,
-		change : function(e) {
-			updateOrder(data);
-		},
-		dataBound : function(e){		
-			updateOrder(data);
-		}
-	});
-	
-
-}
 
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
@@ -414,22 +376,34 @@ function showOrderWindow() {
 	// 如果用户用默认的采购申请，select event不会触发， 需要初始化数据
 	var kendoGrid = $("#purchasecontractin").data("kendoMultiSelect");
 	var dataItems = kendoGrid.dataSource.data();
-	
+	var eqdelType = undefined;
+	var valid = true;
+	itemListDataSource.data([]);
+	itemDataSource.data([]);
 	if(dataItems.length==0){
 		alert("没有相关订单");
 	}else{
-		itemListDataSource.data([]);
-		itemDataSource.data([]);
 		var selectedValues = kendoGrid.value();
 		for(id in selectedValues){	
-			for(index in dataItems){			
+			if(!valid){
+				break;
+			}
+			for(index in dataItems){	
 				if(dataItems[index]._id == selectedValues[id]){
 					var eqcostList = dataItems[index].eqcostList;
-					for(listIndex in eqcostList){
+					
+					if(!eqdelType){
+						eqdelType = dataItems[index].eqcostDeliveryType;
+					}
+					
+					if(eqdelType != dataItems[index].eqcostDeliveryType){
+						alert("只能选择同一种物流类型的订单");
+						eqdelType = undefined;
+						valid = false;
+						break;
+					}
+					for (listIndex in eqcostList) {
 						if(eqcostList[listIndex].uid){
-							if(!eqcostList[listIndex].logisticsType ){
-								eqcostList[listIndex].logisticsType="";
-							}
 							eqcostList[listIndex].projectId = dataItems[index].projectId;
 							eqcostList[listIndex].salesContractId = dataItems[index].salesContractId;
 							eqcostList[listIndex].salesContractCode = dataItems[index].salesContractCode;
@@ -437,7 +411,6 @@ function showOrderWindow() {
 							eqcostList[listIndex].purchaseOrderCode = dataItems[index].purchaseOrderCode;
 							eqcostList[listIndex].purchaseRequestId = dataItems[index].purchaseRequestId;
 							eqcostList[listIndex].purchaseRequestCode = dataItems[index].purchaseRequestCode;
-							
 							itemListDataSource.add(eqcostList[listIndex]);
 						}
 					}
@@ -447,11 +420,13 @@ function showOrderWindow() {
 			
 		}
 		
-		requestDataItem = new contractModel({});
-		requestDataItem.eqcostList = itemListDataSource.data();
-		
-		requestDataItem.eqcostDeliveryType = $("#eqcostDeliveryType").data("kendoDropDownList").value();
-		edit();
+		if(valid){
+			requestDataItem = new contractModel({});
+			requestDataItem.eqcostList = itemListDataSource.data();
+			
+			requestDataItem.eqcostDeliveryType = eqdelType;
+			edit();
+		}
 	}
 }
 
@@ -681,9 +656,15 @@ function initMergedGrid(){
 }
 
 function detailInit(e) {
-	
 	var subdata = new Array();
-	var mdata = eval(kendo.stringify(mergedDataSource.data()));
+	var mdata = new Array();
+	
+	var mergedData = requestDataItem.eqcostList;
+	for(index=0; index <mergedData.length; index++){
+		eval("idata = " + kendo.stringify(mergedData[index]));
+		mdata.push(idata);
+	}
+
 	for(i=0; i<mdata.length; i++){
 		if(mdata[i].eqcostNo == e.data.eqcostNo && mdata[i].eqcostProductName == e.data.eqcostProductName
 				&& mdata[i].eqcostMaterialCode == e.data.eqcostMaterialCode
@@ -697,7 +678,6 @@ function detailInit(e) {
 			}else{
 				subdata.push(mdata[i]);
 			}
-			console.log(mdata[i]);
 
 			break;
 		}
