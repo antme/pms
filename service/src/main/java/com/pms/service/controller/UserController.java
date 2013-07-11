@@ -164,7 +164,7 @@ public class UserController extends AbstractController {
     		String subject = "我的邮箱我做主";
     		List toList = new ArrayList();
     		toList.add(email);
-    		EmailUtil.sendEqListEmails(subject, toList, model, "test.vm", new ArrayList());
+    		EmailUtil.sendMail(subject, toList, model, "test.vm", null);
     	}
     	responseWithKeyValue("发送成功","请查收", request, response);
     }

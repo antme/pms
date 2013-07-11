@@ -101,6 +101,7 @@ $(document).ready(function () {
 		},
 	    pageable: true,
 	    sortable : true,
+	    resizable: true,
 		selectable : "row",
         detailTemplate: kendo.template($("#template").html()),
         detailInit: detailInit,
@@ -142,6 +143,8 @@ $(document).ready(function () {
 			]
         },
         pageable: true,
+        resizable: true,
+        sortable : true,
         selectable : "row",
         detailTemplate: kendo.template($("#template2").html()),
         columns: [

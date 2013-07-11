@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -22,6 +24,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+
+import com.pms.service.cfg.ConfigurationManager;
+import com.pms.service.mockbean.PurchaseCommonBean;
+import com.pms.service.mockbean.SalesContractBean;
 
 public class ExcleUtil {
 
@@ -243,6 +249,58 @@ public class ExcleUtil {
 	public void setPath(String path) {
 		this.path = path;
 	}
+	
+	/**创建设备清单excel文件*/
+	public static String createEqcostExcel(Object eqcostList){
+        String colunmTitleHeaders[] = new String[] { "No.", "物料代码", "产品名称", "规格型号", "单位", "数量", "成本单价"};
+        
+        String colunmHeaders[] = new String[] { 
+        		SalesContractBean.SC_EQ_LIST_NO, SalesContractBean.SC_EQ_LIST_MATERIAL_CODE, SalesContractBean.SC_EQ_LIST_PRODUCT_NAME, 
+        		SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE, SalesContractBean.SC_EQ_LIST_UNIT,PurchaseCommonBean.EQCOST_APPLY_AMOUNT,
+        		SalesContractBean.SC_EQ_LIST_BASE_PRICE };
+        
+        String fileDir = ConfigurationManager.getProperty("file_dir");
+
+        File f = new File(fileDir + UUID.randomUUID().toString() + ".xls");
+
+        ExcleUtil eu = new ExcleUtil();
+        eu.createFile(f);
+        eu = new ExcleUtil(f);
+
+        int i=0;
+        try {
+            eu.addRow(0, colunmTitleHeaders, i);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(eqcostList instanceof List){
+        	
+        	List<Map<String,Object>> eqList = (List<Map<String,Object>>)eqcostList;
+        	
+            for (Map<String, Object> map : eqList) {
+                int length = colunmHeaders.length;
+                String rowsData[] = new String[length];
+
+                int index = 0;
+                for (String key : colunmHeaders) {
+                    if (map.get(key) == null) {
+                        rowsData[index] = "";
+                    } else {
+                        rowsData[index] = map.get(key).toString();
+                    }
+                    index++;
+                }
+                try {
+                    eu.addRow(0, rowsData, ++i);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+		return f.getAbsolutePath();
+	}
+	
 	
 	
 }

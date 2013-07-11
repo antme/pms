@@ -112,6 +112,7 @@ $(document).ready(function () {
 		},
 	    pageable: true,
 	    sortable : true,
+	    resizable: true,
 		selectable : "row",
         detailTemplate: kendo.template($("#template").html()),
         detailInit: detailInit,
@@ -170,6 +171,8 @@ $(document).ready(function () {
 			]
         },
         pageable: true,
+	    sortable : true,
+	    resizable: true,
         detailTemplate: kendo.template($("#template1").html()),
         columns: [
             { field: "contractCode", title: "销售合同编号" },

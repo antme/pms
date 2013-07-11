@@ -71,10 +71,11 @@ $(document).ready(function () {
     $("#moneyGrid").kendoGrid({
         dataSource: dataSource,
 	    pageable: true,
-	    sortable : true,
+	    resizable: true,
+        sortable : true,
 	    detailTemplate: kendo.template($("#template2").html()),
         columns: [
-            { field: "purchaseContractCode", title: "采购合同编号",editor:pcDropDownEditor},
+            { field: "purchaseContractCode", title: "采购合同编号",editor:pcDropDownEditor,width:"200px"},
             { field: "creatorName", title: "申请人" },
             { field: "payMoneyActualMoney", title:"金额", min:0},
             { field: "payMoneyActualData",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},

@@ -527,7 +527,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                 String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单,请到系统做入库处理", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));                
                 contract.put("titleContent", content);
-                EmailUtil.sendEqListEmails(subject, emails,contract, "purchaseContractApprove.vm", contract.get(SalesContractBean.SC_EQ_LIST));
+                sendEmailPCApprove(subject,emails,contract,"purchaseContractApprove.vm");
             }else if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO)) {
                 createArriveNotice(contract);
                 createAutoShip(contract);
@@ -535,19 +535,23 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                 String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单, 系统已经自动生成发货通知,请填写完整信息后发货", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));                
                 contract.put("titleContent", content);
-                EmailUtil.sendEqListEmails(subject, emails,contract, "purchaseContractApprove.vm", contract.get(SalesContractBean.SC_EQ_LIST));
-                
+                sendEmailPCApprove(subject,emails,contract,"purchaseContractApprove.vm");
                 
             }else if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
                 String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                 String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单, 请到系统填写到货通知", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));                
                 contract.put("titleContent", content);
-                EmailUtil.sendEqListEmails(subject, emails,contract, "purchaseContractApprove.vm", contract.get(SalesContractBean.SC_EQ_LIST));
+                sendEmailPCApprove(subject,emails,contract,"purchaseContractApprove.vm");
             }
         }
         return result;
     }
 
+    private void sendEmailPCApprove(String subject, List<Object> emails,Map<String,Object> model,String template){
+        List<Map<String,Object>> eqList = scs.mergeEqListBasicInfo(model.get(SalesContractBean.SC_EQ_LIST));
+        EmailUtil.sendEqListEmails(subject, emails,model, "purchaseContractApprove.vm", eqList);
+    }
+    
     private void updateOrderFinalStatus(Map<String, Object> contract) {        
         List<Map<String, Object>> eqListMap = (List<Map<String, Object>>)contract.get(SalesContractBean.SC_EQ_LIST);
 

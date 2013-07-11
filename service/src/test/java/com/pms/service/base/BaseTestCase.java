@@ -52,7 +52,7 @@ public class BaseTestCase extends TestCase {
 
         assertTrue(true);
 
-        List<String> emails = new ArrayList<String>();
+        List emails = new ArrayList();
         emails.add("251148471@qq.com");
 
         Map<String, Object> parameters = new HashMap<String, Object>();

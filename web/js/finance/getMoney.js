@@ -70,7 +70,8 @@ $(document).ready(function () {
     $("#getMoneyGrid").kendoGrid({
         dataSource: dataSource,
 	    pageable: true,
-	    sortable : true,
+	    resizable: true,
+        sortable : true,
         detailTemplate: kendo.template($("#template1").html()),
         columns: [
             { field: "getMoneyActualDate",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
