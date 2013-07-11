@@ -45,6 +45,10 @@ public class ConfigurationManager {
     public static String getDbName() {
         return properties.getProperty(DB_NAME);
     }
+  
+    public static String getEmailTemplatePath() {
+        return properties.getProperty("emailTemplatePath");
+    }
     
     public static String getProperty(String key) {
 

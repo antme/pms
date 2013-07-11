@@ -1,0 +1,16 @@
+${titleContent}
+
+
+.采购合同编号  ${purchaseContractCode}
+.虚拟采购合同类型  ${contractExecuteCate}
+.采购合同类别  ${purchaseContractType}
+.签订人  ${signBy}
+.采购合同性质  ${contractProperty}
+.合同签订日期  ${signDate}
+.首付 ${firstPay}
+.收票类型  ${invoiceType}
+
+-----------------------------------------------------
+注：附件为采购设备清单  
+
+       
