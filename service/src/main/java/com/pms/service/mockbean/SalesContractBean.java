@@ -83,6 +83,8 @@ public class SalesContractBean {
 	//合同类型
 	public static final String SC_TYPE_SC_WIRING = "产品销售（灯控/布线）";
 	public static final String SC_TYPE_INTEGRATION_WIRING = "产品集成（灯控/布线）";
+
+    
 	
 	//归档状态
 	public static final int SC_ARCHIVE_STATUS_ARCHIVED = 1;  //已归档

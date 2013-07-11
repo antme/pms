@@ -308,37 +308,40 @@ public abstract class AbstractService {
     }
     
     protected void mergeDataRoleQuery(Map<String, Object> param) {
-//        Map<String, Object> pmQuery = new HashMap<String, Object>();
-//
-//        if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() || isSalesAssistant()) {
-//            // query all data
-//        } else {
-//            pmQuery.put(ProjectBean.PROJECT_MANAGER, getCurrentUserId());
-//            pmQuery.put(ApiConstants.CREATOR, getCurrentUserId());
-//
-//            Map<String, Object> userQuery = new HashMap<String, Object>();
-//            userQuery.put(ApiConstants.MONGO_ID, getCurrentUserId());
-//            userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.DEPARTMENT);
-//            Map<String, Object> user = this.dao.findOneByQuery(userQuery, DBBean.USER);
-//
-//            if (user.get(UserBean.DEPARTMENT) != null) {
-//                List<String> departements = (List<String>)user.get(UserBean.DEPARTMENT);
-//                List<String> rolesIn = new ArrayList<String>();
-//                for(String dep:  departements){
-//                    if(dep.equalsIgnoreCase(UserBean.USER_DEPARTMENT_PROJECT)){
-//                        rolesIn.add(ProjectBean.PROJECT_TYPE_PROJECT);
-//                    }else{
-//                        rolesIn.add(ProjectBean.PROJECT_TYPE_PRODUCT);
-//                        rolesIn.add(ProjectBean.PROJECT_TYPE_SERVICE);
-//                    }
-//                }
-//                
-//                pmQuery.put(ProjectBean.PROJECT_TYPE, new DBQuery(DBQueryOpertion.IN, rolesIn));
-//            }
-//
-//            // list creator or manager's data
-//            param.put(ProjectBean.PROJECT_MANAGER, DBQueryUtil.buildQueryObject(pmQuery, false));
-//        }
+        Map<String, Object> pmQuery = new HashMap<String, Object>();
+
+        if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() ) {
+            // query all data
+        } else {
+            pmQuery.put(ProjectBean.PROJECT_MANAGER, getCurrentUserId());
+            pmQuery.put(ApiConstants.CREATOR, getCurrentUserId());
+
+            Map<String, Object> userQuery = new HashMap<String, Object>();
+            userQuery.put(ApiConstants.MONGO_ID, getCurrentUserId());
+            userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.DEPARTMENT);
+            Map<String, Object> user = this.dao.findOneByQuery(userQuery, DBBean.USER);
+            
+            if (user.get(UserBean.DEPARTMENT) != null) {
+                String dep = user.get(UserBean.DEPARTMENT).toString();
+
+                // FIXME: put into constants
+                List<String> scTypesIn = new ArrayList<String>();
+                scTypesIn.add("弱电工程");
+                scTypesIn.add("产品集成（灯控/布线）");
+                scTypesIn.add("产品集成（楼控）");
+                scTypesIn.add("产品集成（其他）");
+
+                if (dep.equalsIgnoreCase(UserBean.USER_DEPARTMENT_PROJECT)) {
+                    pmQuery.put(SalesContractBean.SC_TYPE, new DBQuery(DBQueryOpertion.IN, scTypesIn));
+                } else {
+                    pmQuery.put(SalesContractBean.SC_TYPE, new DBQuery(DBQueryOpertion.NOT_IN, scTypesIn));
+                }
+
+            }
+
+            // list creator or manager's data
+            param.put(ProjectBean.PROJECT_MANAGER, DBQueryUtil.buildQueryObject(pmQuery, false));
+        }
     }
     
     

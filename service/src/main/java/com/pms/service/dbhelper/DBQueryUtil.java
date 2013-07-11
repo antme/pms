@@ -33,9 +33,6 @@ public class DBQueryUtil {
         for (String key : keys) {
             Object value = cloneParameters.get(key);
 
-//            if (value == null) {// Comment by shihua , for condition is null
-//                continue;
-//            }
             DBObject object = new BasicDBObject();
             if (value instanceof DBQuery) {
                 QueryBuilder childBuilder = new QueryBuilder();
