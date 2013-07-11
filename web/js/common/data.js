@@ -97,7 +97,6 @@ var menus = [
              {
                  text: "财务",  id: "finance",  imageUrl: "/images/finance.png",
                  items: [
-                         { text: "财务资料", id: "contract",  imageUrl: "/images/order.png" },
                          { text: "开票信息", id: "payInvoice", imageUrl: "/images/calender.png" },
                          { text: "收款信息", id: "getMoney", imageUrl: "/images/invoice.png"},
                          { text: "付款信息", id: "payMoney", imageUrl: "/images/license.png"},
@@ -166,7 +165,7 @@ var shelfCodeItems =  [{ text: "北京备货货架"}, { text: "上海备货货�
 var proManagerItems = new kendo.data.DataSource({
 	transport : {
 		read : {
-			url : "/service/user/list",
+			url : "/service/user/pm/list",
 			dataType : "jsonp"
 		}
 	},

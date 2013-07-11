@@ -91,14 +91,14 @@
 	    </div>
 	     
 	    <div id="repo-ship" style="display:none;">
-	    <hr>
-	    <h5>仓库发货清单</h5>
-	    <div class="k-edit-label">
+	       <hr>
+	       <h5>仓库发货清单</h5>
+	        <div class="k-edit-label">
                 <label for="outCode">出库单号</label>
             </div>
             <div data-container-for="outCode" class="k-edit-field">
                 <input type="text" class="k-input k-textbox" name="outCode" data-bind="value:outCode">
-        </div>
+             </div>
 	    <div id="equipments-grid" ></div>
 	    </div>
 	   
@@ -107,11 +107,30 @@
 	     <hr>
 	    <h5>供应商直发清单</h5>
 	    <div id="supplier-ship-grid" style="margin-top:20px;"></div>
+	    
+	    </div>
+	    
+	    <div id="allocat-ship" style="display:none;">
+         <hr>
+        <h5>调拨发货</h5>
+            <div class="k-edit-label">
+                <label for="allocateOutCode">调拨出库单号</label>
+            </div>
+            <div data-container-for="allocateOutCode" class="k-edit-field">
+                <input type="text" class="k-input k-textbox" name="allocateOutCode" data-bind="value:allocateOutCode">
+             </div>
+        <div id="allocat-ship-grid" style="margin-top:20px;"></div>
+       </div>
+	    
 	    <div>
             <button onclick="saveShip()" class="k-button">保存</button>
             <button onclick="submitShip()" class="k-button">提交申请</button>
             <button onclick='loadPage("ship");' class="k-button">取消</button>
         </div>
+        
+
+        
+        
         </div>
 	    <style scoped>
 	    	.k-edit-form-container {

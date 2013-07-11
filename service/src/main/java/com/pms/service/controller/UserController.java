@@ -1,5 +1,8 @@
 package com.pms.service.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +20,8 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.IUserService;
 import com.pms.service.util.ApiThreadLocal;
+import com.pms.service.util.ApiUtil;
+import com.pms.service.util.EmailUtil;
 
 @Controller
 @RequestMapping("/user")
@@ -62,6 +67,12 @@ public class UserController extends AbstractController {
     public void listUsers(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
         responseWithData(userService.listUsers(params), request, response);
+    }
+    
+    @RequestMapping("/pm/list")
+    public void listPMs(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+        responseWithData(userService.listPMs(params), request, response);
     }
        
     @RequestMapping("/update")
@@ -128,14 +139,35 @@ public class UserController extends AbstractController {
         responseWithData(null, request, response);
     }
     
-    
     @RequestMapping("/mytasks")
     public void listMyTasks(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(userService.listMyTasks(), request, response);
     }
+    
+    @RequestMapping("/changepassword")
+    public void changePassword(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(userService.changePassword(parserJsonParameters(request,  false)), request, response, "change_success");
+    }
        
 
-
+    @RequestMapping("/testmail")
+    public void testMail(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String,Object> params = parserJsonParameters(request,  false);
+    	
+		Map model=new HashMap();  
+		model.put("username", "Jack Wang"); 
+		model.put("url", "www.baidu.com");  
+		model.put("email", "admin@test.com");
+		
+		String email = (String) params.get("to");
+    	if(!ApiUtil.isEmpty(email)) {
+    		String subject = "我的邮箱我做主";
+    		List toList = new ArrayList();
+    		toList.add(email);
+    		EmailUtil.sendEqListEmails(subject, toList, model, "test.vm", new ArrayList());
+    	}
+    	responseWithKeyValue("发送成功","请查收", request, response);
+    }
 
     public IUserService getUserService() {
         return userService;

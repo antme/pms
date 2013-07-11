@@ -10,6 +10,7 @@ public class ResponseCodeConstants {
     
     public static final String SERVER_ERROR = "-1";
     public static final String USER_LOGIN_USER_NAME_OR_PASSWORD_INCORRECT = "username_or_pass_incorrect";
+    public static final String USER_CHANGE_PASSWORD_OLD_PASSWORD_INCORRECT = "old_password_incorrect";
 
     
     public static final String  PARAMETERS_NOT_JSON = "-2";

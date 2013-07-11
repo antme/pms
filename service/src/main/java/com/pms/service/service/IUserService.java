@@ -28,6 +28,8 @@ public interface IUserService {
     
     public Map<String, Object> updateUserGroup(Map<String, Object> userGroup);
     
+    public Map<String, Object> changePassword(Map<String, Object> params);
+    
     
     public void deleteUserGroup(Map<String, Object> userGroup);
     
@@ -38,6 +40,8 @@ public interface IUserService {
     public void checkUserRole(String userId, String path);
     
     public Map<String, Object> listUsers(Map<String, Object> parameters);
+    
+    public Map<String, Object> listPMs(Map<String, Object> parameters);
 
     public Map<String, Object> listNotUserRoleItems(Map<String, Object> roles);
     

@@ -195,6 +195,7 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
         Map<String, Object> homeData = this.dao.list(query, DBBean.ROLE_ITEM);
         homeData.put(UserBean.USER_NAME, ApiThreadLocal.getCurrentUserName());
+        homeData.put(ApiConstants.MONGO_ID, userId);
 
         homeData.put("mytasks", listMyTasks());
         return homeData;
@@ -285,5 +286,42 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     public String logout(Map<String, Object> parameters) {
         return null;
     }
+
+	@Override
+	public Map<String, Object> changePassword(Map<String, Object> params) {
+		String oldPass = (String) params.get("passwordOld");
+		String oldPassEncry = DataEncrypt.generatePassword(oldPass);
+		
+		Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.USER);
+		String passIndb = (String) user.get(UserBean.PASSWORD);
+		if (!passIndb.equals(oldPassEncry)){
+			throw new ApiResponseException(String.format("Old password is not correct [%s] ", params), ResponseCodeConstants.USER_CHANGE_PASSWORD_OLD_PASSWORD_INCORRECT);
+		}
+		
+
+		String newPass = (String) params.get("passwordNew");
+		String newPassEncry = DataEncrypt.generatePassword(newPass);
+		
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		query.put(UserBean.PASSWORD, newPassEncry);
+		return dao.updateById(query, DBBean.USER);
+	}
+
+	@Override
+	public Map<String, Object> listPMs(Map<String, Object> parameters) {
+		Map<String, Object> groupPM = dao.findOne(GroupBean.GROUP_NAME, "项目经理", DBBean.USER_GROUP);
+		String pmGid = (String)groupPM.get(ApiConstants.MONGO_ID);
+		
+		List<String> groupIds = new ArrayList<String>();
+		if (!ApiUtil.isEmpty(pmGid)){
+			groupIds.add(pmGid);
+		}
+		
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(UserBean.GROUPS, new DBQuery(DBQueryOpertion.IN, groupIds));
+		
+		return dao.list(query, DBBean.USER);
+	}
 
 }

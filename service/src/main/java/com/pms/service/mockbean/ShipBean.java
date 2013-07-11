@@ -62,4 +62,6 @@ public class ShipBean {
 
     public static final String SHIP_LEFT_AMOUNT = "leftAmount"; // 可发货数量
     
+    public static final String REPOSITORY_NAME = "repositoryName"; //仓库名字
+    
 }
