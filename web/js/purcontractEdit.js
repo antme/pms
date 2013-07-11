@@ -72,6 +72,39 @@ var contractModel = kendo.data.Model.define({
 	}
 });
 
+//成本设备清单数据源
+var eqCostListDataSource = new kendo.data.DataSource({
+	group: {
+		field:"eqcostCategory",
+		aggregates: [
+                     { field: "eqcostCategory", aggregate: "count" }
+                  ]
+	},
+	
+	aggregate: [ { field: "eqcostCategory", aggregate: "count" }],
+	
+	schema : {
+		model : {
+            fields: {
+            	eqcostNo: { type: "string" },
+            	eqcostMaterialCode: { type: "string" },
+            	eqcostProductName: { type: "string" },
+            	eqcostProductType: { type: "string" },
+            	eqcostAmount: { type: "number" },
+            	eqcostUnit: { type: "string" },
+            	eqcostBrand: { type: "string" },
+            	eqcostBasePrice: { type: "number" },
+            	eqcostSalesBasePrice: { type: "number" },
+            	eqcostDiscountRate : {type: "number"},
+            	eqcostMemo: { type: "string" },
+        		eqcostTaxType : {type: "string"},
+        		eqcostCategory : {type: "string"},
+        		eqcostLastBasePrice: { type: "number" },
+        		eqcostTotalAmount : {type: "number"}
+            }
+        }
+	}
+});
 
 var orderDataSource = new kendo.data.DataSource({
 	
@@ -162,9 +195,14 @@ $(document).ready(function() {
 	});
 
 	if(popupParams){
-		$("#purchasecontract-edit-item").show();
-		postAjaxRequest("/service/purcontract/get", popupParams, edit);
-		disableAllInPoppup();
+		if (popupParams.addInSCList == 1){//销售合同列表中直接为 弱电工程 类添加
+			addOrderInSCListForRuodian();
+		}else{
+			$("#purchasecontract-edit-item").show();
+			postAjaxRequest("/service/purcontract/get", popupParams, edit);
+			disableAllInPoppup();
+		}
+		
 	}else if (redirectParams) {
 		$("#purchasecontract-edit-item").show();
 		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
@@ -177,6 +215,95 @@ $(document).ready(function() {
 	}
 	
 });
+
+function addOrderInSCListForRuodian(){
+	$("#purchasecontractselect").hide();
+	$("#purchasecontract-edit-item").show();
+	
+	var tabStrip = $("#tabstrip").data("kendoTabStrip");
+	if(!tabStrip){
+		$("#tabstrip").kendoTabStrip();
+		
+		tabStrip = $("#tabstrip").data("kendoTabStrip");
+	}
+	tabStrip.append({
+        text: "成本设备清单",
+        content: "<div><div><input name=\"files\" id=\"files\" type=\"file\" /></div><div><div id=\"scEqCostList\"></div></div></div>"//kendo.template($("#roleTemplate").html()),
+    });
+	
+	//成本设备清单
+	if (!$("#scEqCostList").data("kendoGrid")){
+		$("#scEqCostList").kendoGrid({
+			dataSource : eqCostListDataSource,
+			columns : [ 
+			            {
+				field : "eqcostNo",
+				title : "序号"
+			}, 
+			{
+				field : "eqcostMaterialCode",
+				title : "物料代码"
+			}, {
+				field : "eqcostProductName",
+				title : "产品名称"
+			}, {
+				field : "eqcostProductType",
+				title : "规格型号"
+
+			}, {
+				field : "eqcostAmount",
+				title : "数量"
+			}, {
+				field : "eqcostUnit",
+				title : "单位"
+			}, 
+//			{
+//				field : "eqcostBrand",
+//				title : "品牌"
+//			}, 
+			{
+				field : "eqcostBasePrice",
+				title : "标准成本价"
+			}, {
+				field : "eqcostSalesBasePrice",
+				title : "销售单价"
+			}, {
+				field : "eqcostDiscountRate",
+				title : "折扣率"
+			}, {
+				field : "eqcostLastBasePrice",
+				title : "最终成本价"
+			}, {
+				field : "eqcostTotalAmount",
+				title : "小计"
+			}, {
+				field : "eqcostTaxType",
+				title : "税收类型"
+			}, {
+				field : "eqcostCategory",
+				title : "类别",
+				groupHeaderTemplate: "#= value # (数量: #= count#)", footerTemplate: "总数: #=count#"//, groupFooterTemplate: "数量: #=count#"
+			}, {
+				field : "eqcostMemo",
+				title : "备注"
+			} ],
+
+			toolbar : [ {name:"create",text:"新增成本项"} ],
+			editable : true,
+			scrollable : true
+		});
+	};//成本设备清单
+	
+	$("#files").kendoUpload({
+        async: {
+            saveUrl: "/service/sc/upload/eqlist",
+            autoUpload: true
+        },
+        success:function(e){
+        	eqCostListDataSource.data(e.response.data);
+        }
+    });
+}
 
 function addOrder(data){
 

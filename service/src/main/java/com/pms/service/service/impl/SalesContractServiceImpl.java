@@ -47,7 +47,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		String[] limitKeys = {SalesContractBean.SC_CODE, SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER,
 				SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_RUNNING_STATUS, 
-				SalesContractBean.SC_ARCHIVE_STATUS};
+				SalesContractBean.SC_ARCHIVE_STATUS, SalesContractBean.SC_TYPE};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 
 		mergeDataRoleQueryWithProject(params);
