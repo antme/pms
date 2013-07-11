@@ -236,9 +236,7 @@ $(document).ready(function() {
 	} else if (redirectParams) {//Edit		
 		postAjaxRequest("/service/ship/get", {_id:redirectParams._id}, edit);
 	} else {//Add
-		//添加表单绑定一个空的 Model
-		model = new ship();
-		kendo.bind($("#addShip"), model);
+		edit();
 	}
 });
 
@@ -294,6 +292,14 @@ function giveUpDropDownEditor(container, options) {
 
 function edit(data) {
 	
+	if(redirectParams.type && redirectParams.type == "confirm"){
+		$("#save-button").hide();
+		$("#submit-button").hide();
+	}else{
+		$("#confirm-button").hide();
+	}
+	
+	
 	if($("#project").data("kendoComboBox")){
 		$("#project").data("kendoComboBox").enable(false);
 	}
@@ -301,9 +307,16 @@ function edit(data) {
 	if($("#salesContract").data("kendoComboBox")){
 		$("#salesContract").data("kendoComboBox").enable(false);
 	}
-	model = new ship(data);
+	if(data){
+		model = new ship(data);
+	}else{
+		model = new ship();
+	}
 	kendo.bind($("#addShip"), model);
-	loadEqList(model.eqcostList);
+	
+	if(model.eqcostList){
+		loadEqList(model.eqcostList);
+	}
 }
 
 var supplierlist = new Array();
@@ -384,20 +397,13 @@ function saveShip() {
 
 		if (allShipDataSource.data().length > 0) {
 			model.set("eqcostList", allShipDataSource.data());
-
+			model.set("issueTime", kendo.toString(model.issueTime, 'd'));
+			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
 			if(redirectParams.type && redirectParams.type == "confirm"){
-
-				model.set("issueTime", kendo.toString(model.issueTime, 'd'));
-				model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
 				postAjaxRequest("/service/ship/record", {models:kendo.stringify(model)}, checkStatus);
-
 			}else if(redirectParams.type && redirectParams.type == "submit") {
-				model.set("issueTime", kendo.toString(model.issueTime, 'd'));
-				model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
 				postAjaxRequest("/service/ship/submit", {models:kendo.stringify(model)}, checkStatus);
 			}else{
-				model.set("issueTime", kendo.toString(model.issueTime, 'd'));
-				model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
 				postAjaxRequest("/service/ship/create", {models:kendo.stringify(model)}, checkStatus);
 			}
 
