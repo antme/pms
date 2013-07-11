@@ -1,4 +1,4 @@
-var model, eqDataSource, crudServiceBaseUrl = "../service";
+var eqDataSource, crudServiceBaseUrl = "../service";
 
 var ship = kendo.data.Model.define( {
     id: "_id",
@@ -25,7 +25,7 @@ var ship = kendo.data.Model.define( {
     	}
     }
 });
-
+var model = new ship();
 var eqModel = kendo.data.Model.define( {
     id: "_id",
     fields: {
@@ -88,17 +88,17 @@ $(document).ready(function() {
             	data: "data"
             }
         }),
-        dataBound: function(e){
-        	loadSC();
-        },
         change: function(e) {
         	var dataItem = this.dataItem();
-        	if (dataItem) {
-        		model.set("projectName", dataItem.projectName);
-        		model.set("customer", dataItem.customer);
-        		model.set("applicationDepartment", dataItem.department);
-        		loadSC();
-        	}
+        	console.log(e);        
+        	model.set("projectName", dataItem.projectName);
+        	model.set("customer", dataItem.customer);
+        	model.set("applicationDepartment", dataItem.department);
+        	model.set("salesContractId", "");
+        	
+        	
+        	loadSC();
+        	
         }
     }).data("kendoComboBox");
 
@@ -268,14 +268,11 @@ function loadSC(){
         }),
         change: function(e) {
         	var dataItem = this.dataItem();
-        	if (dataItem) {
-            	model.set("contractCode", dataItem.contractCode);
-            	model.set("contractType", dataItem.contractType);
-            	postAjaxRequest("/service/ship/eqlist", {salesContractId:salesContract.value()}, loadEqList);
-			} else {
-				this.value("");
-				this.text("");
-			}
+       
+            model.set("contractCode", dataItem.contractCode);
+            model.set("contractType", dataItem.contractType);
+            postAjaxRequest("/service/ship/eqlist", {salesContractId:salesContract.value()}, loadEqList);
+		
         }
     }).data("kendoComboBox");
 
@@ -292,25 +289,25 @@ function giveUpDropDownEditor(container, options) {
 
 function edit(data) {
 	
-	if(redirectParams.type && redirectParams.type == "confirm"){
+	if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
 		$("#save-button").hide();
 		$("#submit-button").hide();
 	}else{
 		$("#confirm-button").hide();
 	}
 	
-	
-	if($("#project").data("kendoComboBox")){
-		$("#project").data("kendoComboBox").enable(false);
-	}
-	
-	if($("#salesContract").data("kendoComboBox")){
-		$("#salesContract").data("kendoComboBox").enable(false);
-	}
+
 	if(data){
 		model = new ship(data);
-	}else{
-		model = new ship();
+		
+		if($("#project").data("kendoComboBox")){
+			$("#project").data("kendoComboBox").enable(false);
+		}
+		
+		if($("#salesContract").data("kendoComboBox")){
+			$("#salesContract").data("kendoComboBox").enable(false);
+		}
+		
 	}
 	kendo.bind($("#addShip"), model);
 	
@@ -328,7 +325,13 @@ function loadEqList(data){
 	if(data.data){
 		 eqList = data.data;
 	}
-
+	supplierlist = new Array();
+	rKlist = new Array();
+	alloList = new Array();
+	
+	if(eqList.length ==0){
+		alert("没有清单数据");
+	}
 	for(i=0; i<eqList.length; i++){
 		
 		if(!eqList[i].arrivalAmount || eqList[i].arrivalAmount==0){
