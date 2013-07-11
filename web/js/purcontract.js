@@ -54,6 +54,12 @@ $(document).ready(function() {
 		}, {
 			field : "eqcostDeliveryType",
 			title : "货物递送方式"
+		}, {
+			field : "contractExecuteCate",
+			title : "虚拟采购类型"
+		}, {
+			field : "purchaseContractType",
+			title : "合同类型"
 		}]
 
 	});

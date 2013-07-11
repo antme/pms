@@ -16,6 +16,7 @@ import org.apache.commons.mail.MultiPartEmail;
 import org.apache.commons.mail.SimpleEmail;
 
 import com.pms.service.cfg.ConfigurationManager;
+import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
 
 public class EmailUtil {
@@ -44,6 +45,7 @@ public class EmailUtil {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            
             sendEmails(subject, emails, content, memail);
         } else {
             // Create the email message
@@ -83,9 +85,11 @@ public class EmailUtil {
     }
 
     public static void sendEqListEmails(String subject, List<String> emails, String content, List<Map<String, Object>> eqList) {
-
-        String colunmHeaders[] = new String[] { SalesContractBean.SC_EQ_LIST_NO, SalesContractBean.SC_EQ_LIST_MATERIAL_CODE, SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE,
-                SalesContractBean.SC_EQ_LIST_BASE_PRICE, SalesContractBean.SC_EQ_LIST_PRODUCT_NAME };
+        String colunmTitleHeaders[] = new String[] { "No.", "物料代码", "产品名称", "规格型号", "单位", "数量", "成本单价"};
+        
+        String colunmHeaders[] = new String[] { SalesContractBean.SC_EQ_LIST_NO, SalesContractBean.SC_EQ_LIST_MATERIAL_CODE, SalesContractBean.SC_EQ_LIST_PRODUCT_NAME, SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE, SalesContractBean.SC_EQ_LIST_UNIT,
+                PurchaseCommonBean.EQCOST_APPLY_AMOUNT, SalesContractBean.SC_EQ_LIST_BASE_PRICE };
+        
         String fileDir = ConfigurationManager.getProperty("file_dir");
 
         File f = new File(fileDir + UUID.randomUUID().toString() + ".xls");
@@ -95,8 +99,9 @@ public class EmailUtil {
             eu.createFile(f);
             eu = new ExcleUtil(f);
 
+            int i=0;
             try {
-                eu.addRow(0, colunmHeaders);
+                eu.addRow(0, colunmTitleHeaders, i);
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -117,7 +122,7 @@ public class EmailUtil {
                 }
 
                 try {
-                    eu.addRow(0, rowsData);
+                    eu.addRow(0, rowsData, ++i);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

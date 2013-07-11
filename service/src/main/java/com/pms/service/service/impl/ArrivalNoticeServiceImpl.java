@@ -293,7 +293,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		List<Map<String, Object>> eqList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
 		List<Map<String, Object>> arrivalEqList = new ArrayList<Map<String, Object>>();
 		for (Map<String, Object> map : eqList) {
-			Double arrivalAmount = (Double) map.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT);
+			int arrivalAmount = (int) ApiUtil.getInteger(map.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT),0);
 			if (arrivalAmount > 0) {
 				Map<String, Object> eq = new HashMap<String, Object>();
 				eq.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID));

@@ -188,7 +188,7 @@ public class ExcleUtil {
 
 	}
 
-    public void addRow(int sheetIndex, String[] row) throws Exception {
+    public void addRow(int sheetIndex, String[] row, int rownum) throws Exception {
         Sheet sheet = null;
 
         try {
@@ -199,7 +199,6 @@ public class ExcleUtil {
             sheet = (HSSFSheet) wb.createSheet();
         }
 
-        int rownum = this.getRowNum(sheetIndex);
         Row addedRow = sheet.createRow(rownum);
         Cell cell = null;
 
@@ -217,12 +216,13 @@ public class ExcleUtil {
 	
 	
 	public void createFile(File f){
-	    HSSFWorkbook wb = new HSSFWorkbook();
+	    wb = new HSSFWorkbook();
 	    try {
 	        
 	        if(f.exists()){
 	            f.delete();
 	        }
+	        f.getParentFile().mkdirs();
 	        FileOutputStream fileOut = new FileOutputStream(f);
             wb.write(fileOut);
             fileOut.close();
