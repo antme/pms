@@ -166,7 +166,7 @@ var shelfCodeItems =  [{ text: "北京备货货架"}, { text: "上海备货货�
 var proManagerItems = new kendo.data.DataSource({
 	transport : {
 		read : {
-			url : "/service/user/list",
+			url : "/service/user/pm/list",
 			dataType : "jsonp"
 		}
 	},
