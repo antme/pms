@@ -102,7 +102,7 @@ function toolbar_confirm() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
 		if (rowData.status == "已批准"){
-			loadPage("addShip",{_id:rowData._id});
+			loadPage("addShip",{_id:rowData._id, type: "confirm"});
 		} else {
 			alert("申请还未审批");
 		}
