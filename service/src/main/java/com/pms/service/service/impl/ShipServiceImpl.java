@@ -211,5 +211,14 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 			arrivalService.update(notice);
 		}
 	}
+	
+	// 统计三类虚拟的采购合同在每月的发货合计
+	public Map<String, Object> shipCountOfVPC(Map<String, Object> params) {
+		Map<String, Object> shipQuery = new HashMap<String, Object>();
+		shipQuery.put("eqcostList.contractExecuteCate", new DBQuery(DBQueryOpertion.NOT_NULL));
+		
+		Map<String, Integer> shipedCountMap = countEqByKey(shipQuery, DBBean.SHIP, ShipBean.EQCOST_SHIP_AMOUNT, null);
+		return null;
+	}
 
 }
