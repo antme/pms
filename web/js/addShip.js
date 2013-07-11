@@ -60,6 +60,10 @@ var supplierShipDataSource = new kendo.data.DataSource({
 
 });
 
+var allocatDataSource = new kendo.data.DataSource({
+
+});
+
 $(document).ready(function() {
 	
 	 project = $("#project").kendoComboBox({
@@ -191,6 +195,46 @@ $(document).ready(function() {
 			}
 	    }
 	});
+	
+	
+	$("#allocat-ship-grid").kendoGrid({
+		dataSource : allocatDataSource,
+	    columns: [
+	        { field: "eqcostNo", title: "序号" },
+	        { field: "eqcostMaterialCode", title: "物料代码" },
+	        { field: "eqcostProductName", title: "产品名称" },
+	        { field: "eqcostProductType", title: "规格型号" },
+	        { field: "eqcostBrand", title: "品牌" },
+	        { field: "eqcostUnit", title: "单位" },
+	        { field: "eqcostShipAmount", title: "数量" },
+	        { field: "arrivalAmount", title: "实际发货数" },
+	       
+	        {
+				field : "contractExecuteCate",
+				title : "虚拟采购合同类别"
+			},
+	        {
+				field : "purchaseContractType",
+				title : "采购合同类别"
+			},
+			 {
+				field : "eqcostDeliveryType",
+				title : "物流类别"
+			},	        
+	        { field: "eqcostMemo", title: "备注" },
+	        { command: "destroy", title: "&nbsp;", width: 90 }],
+	        editable: true,
+	        save : function(e){
+	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
+				alert("最多可以申请" + e.model.leftAmount);
+				e.preventDefault();
+			}else{
+		    	var grid = $("#allocat-ship-grid").data("kendoGrid");
+		    	grid.refresh();
+			}
+	    }
+	});
+	
     
 	if(popupParams){
 		console.log(popupParams);
@@ -269,37 +313,49 @@ function loadEqList(data){
 		 eqList = data.data;
 	}
 	
-	var dlist = new Array();
-	var rlist = new Array();
+	var supplierlist = new Array();
+	var rKlist = new Array();
+	var alloList = new Array();
 	for(i=0; i<eqList.length; i++){
 		
-		if(eqList[i].eqcostDeliveryType == "直发现场"){
+		
+		if(!eqList[i].eqcostDeliveryType){
 			eqList[i].repositoryName="";
-			dlist.push(eqList[i]);
-		}else if(eqList[i].purchaseContractType == "同方采购"){
-			eqList[i].repositoryName="上海—北京泰德库";
-			rlist.push(eqList[i]);
+			alloList.push(eqList[i]);
 		}else{
-			eqList[i].repositoryName="上海—上海泰德库";
-			rlist.push(eqList[i]);
+			if(eqList[i].eqcostDeliveryType == "直发现场"){
+				eqList[i].repositoryName="";
+				supplierlist.push(eqList[i]);
+			}else if(eqList[i].purchaseContractType == "同方采购"){
+				eqList[i].repositoryName="上海—北京泰德库";
+				rKlist.push(eqList[i]);
+			}else{
+				eqList[i].repositoryName="上海—上海泰德库";
+				rKlist.push(eqList[i]);
+			}
 		}
 		
 	}
 	
-	if(dlist.length >0){
+	if(supplierlist.length >0){
 		$("#supplier-ship").show();
 	}else{
 		$("#supplier-ship").hide();
 	}
-	if(rlist.length >0){
+	if(rKlist.length >0){
 		$("#repo-ship").show();
 	}else{
 		$("#repo-ship").hide();
 	}
-	
-	
-	supplierShipDataSource.data(dlist);
-	eqDataSource.data(rlist);
+	if(alloList.length >0){
+		$("#allocat-ship").show();
+	}else{
+		$("#allocat-ship").hide();
+	}
+
+	allocatDataSource.data(alloList);
+	supplierShipDataSource.data(supplierlist);
+	eqDataSource.data(rKlist);
 }
 
 function saveShip() {	
