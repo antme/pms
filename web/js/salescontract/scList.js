@@ -169,6 +169,22 @@ function toolbar_modifySalesContract() {
 	loadPage("editsc",{_id:rowData._id});
 };
 
+function toolbar_addPCForRuodianSC(){
+	var rowData = getSelectedRowDataByGrid("grid");
+	if (rowData == null){
+		alert("请点击选择一条弱电工程类合同！");
+		return;
+	}
+	if (rowData.contractType == "弱电工程"){
+		var options = { width:"800px", height: "760px", title:"新建采购合同-弱电工程"};
+		openRemotePageWindow(options, "html/purchasecontract/purchasecontractedit.html", {addInSCList:1});
+	}else{
+		alert("请点击选择一条弱电工程类合同！");
+		return;
+	}
+	
+}
+
 function toolbar_viewSalesContract() {
 	var rowData = getSelectedRowDataByGrid("grid");
 	if (rowData == null){
