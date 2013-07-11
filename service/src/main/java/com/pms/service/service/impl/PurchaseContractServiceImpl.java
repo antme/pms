@@ -329,16 +329,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public Map<String, Object> listApprovedPurchaseOrderForSelect() {
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
-        Map<String, Object> directOrders =  listOrdersForSelect(query);
-        Map<String, Object> repOrders =  listApprovedPurchaseOrderForRepositorySelect();
-        Map<String, Object> resutls = new HashMap<String ,Object>();
-        resutls.put("directly", directOrders.get(ApiConstants.RESULTS_DATA));
-        resutls.put("repository", repOrders.get(ApiConstants.RESULTS_DATA));
-        return resutls;
-    }
 
-    private Map<String, Object> listOrdersForSelect(Map<String, Object> query) {
         query.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseCommonBean.STATUS_SUBMITED, PurchaseCommonBean.STATUS_ORDERING}));
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_ORDER);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
@@ -364,14 +355,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         return results;
     }
-    
-    public Map<String, Object> listApprovedPurchaseOrderForRepositorySelect(){
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
-        return listOrdersForSelect(query);
-    }
-    
-    
+
     public Map<String, Object> mergeOrderRestEqCount(Map<String, Object> order) {
         if (order.get(SalesContractBean.SC_EQ_LIST) == null) {
             order = dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
