@@ -39,7 +39,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 				ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_ABBR};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		
-		mergeDataRoleQuery(params);
+		mergeDataRoleQueryWithProject(params);
 		Map<String, Object> result = this.dao.list(params, DBBean.PROJECT);
 		
 		mergePMandCustomerInfo(result);

@@ -273,7 +273,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				PurchaseBack.pbSubmitDate, PurchaseBack.prId,PurchaseBack.poId
 		};
 		params.put(ApiConstants.LIMIT_KEYS, keys);
-		mergeDataRoleQuery(params);
+		mergeDataRoleQueryWithProjectAndScType(params);
 		mergeMyTaskQuery(params, DBBean.PURCHASE_BACK);
 		
 		Map<String,Object> queryKeys = new HashMap<String,Object>();
@@ -315,7 +315,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				PurchaseBack.pbSubmitDate, PurchaseBack.prId,PurchaseBack.poId
 		};
 		params.put(ApiConstants.LIMIT_KEYS, keys);
-		mergeDataRoleQuery(params);
+		mergeDataRoleQueryWithProjectAndScType(params);
 		mergeMyTaskQuery(params, DBBean.PURCHASE_BACK);
 		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		mergeSalesContract(map);
@@ -342,7 +342,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				PurchaseBack.pbMoney,PurchaseBack.scId,PurchaseBack.pbSubmitDate, PurchaseBack.prId};
 		params.put(ApiConstants.LIMIT_KEYS, keys);
 		params.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
-		mergeDataRoleQuery(params);
+		mergeDataRoleQueryWithProjectAndScType(params);
 		mergeMyTaskQuery(params, DBBean.PURCHASE_BACK);
 		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		mergeSalesContract(map);

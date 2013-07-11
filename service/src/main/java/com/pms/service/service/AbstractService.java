@@ -307,7 +307,21 @@ public abstract class AbstractService {
         }
     }
     
-    protected void mergeDataRoleQuery(Map<String, Object> param) {
+    protected void mergeDataRoleQueryWithProject(Map<String, Object> param) {
+        Map<String, Object> pmQuery = new HashMap<String, Object>();
+
+        if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() ) {
+            // query all data
+        } else {
+            pmQuery.put(ProjectBean.PROJECT_MANAGER, getCurrentUserId());
+            pmQuery.put(ApiConstants.CREATOR, getCurrentUserId());
+            // list creator or manager's data
+            param.put(ProjectBean.PROJECT_MANAGER, DBQueryUtil.buildQueryObject(pmQuery, false));
+        }
+    }
+    
+    
+    protected void mergeDataRoleQueryWithProjectAndScType(Map<String, Object> param) {
         Map<String, Object> pmQuery = new HashMap<String, Object>();
 
         if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() ) {

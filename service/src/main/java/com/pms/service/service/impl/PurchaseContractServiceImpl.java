@@ -314,7 +314,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> listPurchaseOrders(Map<String, Object> parameters) {
-        mergeDataRoleQuery(parameters);
+        mergeDataRoleQueryWithProjectAndScType(parameters);
         mergeMyTaskQuery(parameters, DBBean.PURCHASE_ORDER);
         Map<String, Object> results = dao.list(parameters, DBBean.PURCHASE_ORDER);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
@@ -700,7 +700,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         
         mergeMyTaskQuery(params, DBBean.PURCHASE_REQUEST);
-        mergeDataRoleQuery(params);
+        mergeDataRoleQueryWithProjectAndScType(params);
         
         Map<String, Object> results = dao.list(params, DBBean.PURCHASE_REQUEST);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);

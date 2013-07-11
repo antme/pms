@@ -50,7 +50,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				SalesContractBean.SC_ARCHIVE_STATUS};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 
-		mergeDataRoleQuery(params);
+		mergeDataRoleQueryWithProject(params);
 		
 		Map<String, Object> result = dao.list(params, DBBean.SALES_CONTRACT);
 		
