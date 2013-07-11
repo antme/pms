@@ -233,8 +233,8 @@ $(document).ready(function() {
 		console.log(popupParams);
 		postAjaxRequest("/service/ship/get", popupParams, edit);
 		disableAllInPoppup();
-	} else if (redirectParams) {//Edit
-		postAjaxRequest("/service/ship/get", redirectParams, edit);
+	} else if (redirectParams) {//Edit		
+		postAjaxRequest("/service/ship/get", {_id:redirectParams._id}, edit);
 	} else {//Add
 		//添加表单绑定一个空的 Model
 		model = new ship();
@@ -318,7 +318,9 @@ function loadEqList(data){
 
 	for(i=0; i<eqList.length; i++){
 		
-		
+		if(!eqList[i].arrivalAmount || eqList[i].arrivalAmount==0){
+			eqList[i].arrivalAmount = eqList[i].eqcostShipAmount;
+		}
 		if(!eqList[i].eqcostDeliveryType){
 			//调拨，仓库取自货架
 //			eqList[i].repositoryName="";
@@ -383,10 +385,21 @@ function saveShip() {
 		if (allShipDataSource.data().length > 0) {
 			model.set("eqcostList", allShipDataSource.data());
 
-			model.set("issueTime", kendo.toString(model.issueTime, 'd'));
-			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
+			if(redirectParams.type && redirectParams.type == "confirm"){
 
-			postAjaxRequest("/service/ship/create", {models:kendo.stringify(model)}, checkStatus);
+				model.set("issueTime", kendo.toString(model.issueTime, 'd'));
+				model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
+				postAjaxRequest("/service/ship/record", {models:kendo.stringify(model)}, checkStatus);
+
+			}else if(redirectParams.type && redirectParams.type == "submit") {
+				model.set("issueTime", kendo.toString(model.issueTime, 'd'));
+				model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
+				postAjaxRequest("/service/ship/submit", {models:kendo.stringify(model)}, checkStatus);
+			}else{
+				model.set("issueTime", kendo.toString(model.issueTime, 'd'));
+				model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
+				postAjaxRequest("/service/ship/create", {models:kendo.stringify(model)}, checkStatus);
+			}
 
 		} else {
 			alert("无任何设备清单");
@@ -402,6 +415,7 @@ function checkStatus(data){
 function submitShip(){
 	model.set("status", "申请中");
 	model.status = "申请中";
+	redirectParams.type = "submit";
 	saveShip();
 }
 

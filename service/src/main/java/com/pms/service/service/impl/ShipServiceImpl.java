@@ -12,6 +12,7 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
+import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.service.AbstractService;
@@ -155,14 +156,18 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	public Map<String, Object> record(Map<String, Object> params) {
 		List<Map<String, Object>> eqlist = (List<Map<String, Object>>) params.get(ShipBean.SHIP_EQ_LIST);
 		boolean close = true;
-		for (Map<String, Object> eq:eqlist) {
-				Double arrivalAmount = (Double) eq.get(ShipBean.SHIP_EQ_ARRIVAL_AMOUNT);
-				Double amount = (Double) eq.get(EqCostListBean.EQ_LIST_AMOUNT);
-				if (amount != arrivalAmount) {
-					close = false;
-					break;
-				}			
-		}
+        for (Map<String, Object> eq : eqlist) {
+
+            if (ApiUtil.isEmpty(eq.get(ShipBean.REPOSITORY_NAME))) {
+                //直发才需要检查数量
+                Integer arrivalAmount = ApiUtil.getInteger(eq.get(ShipBean.SHIP_EQ_ARRIVAL_AMOUNT), 0);
+                Integer amount = ApiUtil.getInteger(eq.get(ShipBean.EQCOST_SHIP_AMOUNT), 0);
+                if (amount != arrivalAmount) {
+                    close = false;
+                    break;
+                }
+            }
+        }
 		
 		if (close) {
 			params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_CLOSE);
