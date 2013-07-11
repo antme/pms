@@ -77,13 +77,25 @@ $(document).ready(function () {
 	
 });
 
-
 function processPA(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.paStatus == "已提交" || row.paStatus == "已批准"){	
+	} else if(row.paStatus == "已提交"){	
 		loadPage("purchaseAllotManageEdit", { _id : row._id });
+	}else{
+		alert("请选择‘已提交’的数据");
+	}
+}
+
+function finalProcessPA(){
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else if(row.paStatus == "已批准"){	
+		loadPage("purchaseAllotManageEdit", { _id : row._id });
+	}else{
+		alert("请选择‘已批准’的数据");
 	}
 }
 function donePA(){
@@ -93,6 +105,6 @@ function donePA(){
 	} else if(row.paStatus == "已终审"){	
 		loadPage("purchaseAllotManageEdit", { _id : row._id });	
 	}else{
-		alert("COO还没批准");
+		alert("请选择‘已终审’的数据");
 	}
 }

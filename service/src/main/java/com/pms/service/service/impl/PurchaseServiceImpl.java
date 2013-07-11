@@ -226,7 +226,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
             comment = recordComment("终审", comment, oldComment);
         } else {
             status = PurchaseStatus.approved.toString();
-            comment = recordComment("批准", comment, oldComment);
+            comment = recordComment("初审", comment, oldComment);
         }
 
 	    allot.put(PurchaseBack.paComment, comment);
@@ -254,10 +254,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(ApiConstants.MONGO_ID, allot.get(ApiConstants.MONGO_ID));
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.rejected.toString());
 
-	    String oldComment = (String)dao.querySingleKeyById(PurchaseBack.paComment, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ALLOCATE);
+	    String oldComment = (String)allot.get(PurchaseBack.paComment);
 	    String comment = (String)params.get("tempComment");
 	    comment = recordComment("拒绝",comment,oldComment);
-	    allot.put(PurchaseBack.paComment, comment);
+	    obj.put(PurchaseBack.paComment, comment);
 	    
         Map<String, Object> res = dao.updateById(obj, DBBean.PURCHASE_ALLOCATE);
 /*        Map<String, Object> resqeury = this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { EqCostListBean.EQ_LIST_SC_ID },

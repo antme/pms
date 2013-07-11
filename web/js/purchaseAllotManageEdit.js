@@ -134,16 +134,19 @@ function saveSuccess(){
 }
 function editSucess(e){
 	$("#form-container [name!='tempComment']").attr("disabled",true);
-	if(e.paStatus == "已结束"){
-		$("#paNumberTd").show();
-	}else if(e.paStatus == "已终审") {
-		if(redirectParams) {
-			$("#paNumberTd").show();
-			$("#paNumberTd input").attr("disabled",false);
-			$("#form-container-button button[value!='cancel'][value!='done']").hide();
-		}
-	}else if(e.paStatus == "已提交"){
-		$("#form-container-button button[value='done']").hide();
+	if(e.paStatus == "已提交"){
+		$("#paNumberTd").hide();
+		$("#form-container-button button[value!='approve'][value!='reject'][value!='cancel']").hide();
+	}else if(e.paStatus == "已批准"){
+		$("#paNumberTd").hide();
+		$("#form-container-button button[value!='finalapprove'][value!='finalreject'][value!='cancel']").hide();
+	}else if(e.paStatus == "已终审"){
+		$("#paNumberTd input").attr("disabled",false);
+		$("#form-container-button button[value!='done'][value!='cancel']").hide();
+	}else if(e.paStatus == "已结束"){
+		$("#form-container-button button[value!='cancel']").hide();
+	}else{
+		$("#paNumberTd").hide();
 	}
 	currentObj = new myModel(e);
 	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));

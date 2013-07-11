@@ -34,7 +34,7 @@ public interface IPurchaseService {
 	public Map<String, Object> prepareAllot(Map<String, Object> params);
 	/**提交*/
 	public Map<String,Object> submitAllot(Map<String,Object> params);		
-	/**批准*/
+	/**初审 终审*/
 	public Map<String,Object> approveAllot(Map<String,Object> params);
 	/**拒绝*/
 	public Map<String,Object> rejectAllot(Map<String,Object> params);

@@ -4,7 +4,8 @@
  	<h3>调拨列表页面</h3>
 	<div id="objList" class="k-content">
 		<div class="k-toolbar k-grid-toolbar">
-			<button access="purchase_allocate_process" class="k-button access" onclick="processPA()">审核</button>
+			<button access="purchase_allocate_process" class="k-button access" onclick="processPA()">初审</button>
+			<button access="purchase_allocate_final" class="k-button access" onclick="finalProcessPA()">终审</button>
 			<button access="purchase_allocate_done" class="k-button access" onclick="donePA()">完成</button>
 		</div>
 		<div id="grid"></div>
