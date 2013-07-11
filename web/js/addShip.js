@@ -38,6 +38,9 @@ var eqModel = kendo.data.Model.define( {
     	eqcostShipAmount: { type: "number", validation: { min: 1} },
     	arrivalAmount: { type: "number", validation: {  min: 0} },
     	giveUp: { editable: false },
+    	leftAmount: { editable: false  },
+    	repositoryName: { editable: false  },
+    	eqcostDeliveryType : {editable: false},
     	eqcostMemo: {}
     }
 });
@@ -48,17 +51,25 @@ var salesContract;
 eqDataSource = new kendo.data.DataSource({
     group: [
     	{field:"repositoryName"}
-    ]
+    ],
+	schema : {
+		model : eqModel
+	}
 });
 
 var supplierShipDataSource = new kendo.data.DataSource({
-
+	schema : {
+		model : eqModel
+	}
 });
 
 var allocatDataSource = new kendo.data.DataSource({
 	  group: [
 	      	{field:"repositoryName"}
-	      ]
+	      ],
+	 schema : {
+		model : eqModel
+	 }
 });
 
 var allShipDataSource = new kendo.data.DataSource({
@@ -120,7 +131,8 @@ $(document).ready(function() {
 	        { field: "eqcostProductType", title: "规格型号" },
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
-	        { field: "eqcostShipAmount", title: "数量" },
+	        { field: "eqcostShipAmount", title: "发货数" },
+	        { field: "leftAmount", title: "可发货数量" },
 	        { 
 	        	field: "repositoryName", 
 	        	title: "仓库" ,
@@ -129,14 +141,6 @@ $(document).ready(function() {
 				}
 	        		
 	        },
-	        {
-				field : "contractExecuteCate",
-				title : "虚拟采购合同类别"
-			},
-	        {
-				field : "purchaseContractType",
-				title : "采购合同类别"
-			},
 			 {
 				field : "eqcostDeliveryType",
 				title : "物流类别"
@@ -167,17 +171,10 @@ $(document).ready(function() {
 	        { field: "eqcostProductType", title: "规格型号" },
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
-	        { field: "eqcostShipAmount", title: "数量" },
-	        { field: "arrivalAmount", title: "实际发货数" },
+	        { field: "eqcostShipAmount", title: "发货数" },
+	        { field: "leftAmount", title: "可发货数量" },
+	        { field: "actureAmount", title: "实际发货数" },
 	       
-	        {
-				field : "contractExecuteCate",
-				title : "虚拟采购合同类别"
-			},
-	        {
-				field : "purchaseContractType",
-				title : "采购合同类别"
-			},
 			 {
 				field : "eqcostDeliveryType",
 				title : "物流类别"
@@ -186,8 +183,13 @@ $(document).ready(function() {
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	    editable: true,
 	    save : function(e){
-	    	console.log(e);
-	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
+	    	if(e.values.actureAmount && model.status!="已批准"){
+				alert("实际发货数只能在发货审批后填写");
+				e.preventDefault();
+			}else if(e.values.actureAmount  > e.model.eqcostShipAmount){
+				alert("实际发货数不能大于发货数");
+				e.preventDefault();
+			}else if(e.values.eqcostShipAmount > e.model.leftAmount){
 				alert("最多可以申请" + e.model.leftAmount);
 				e.preventDefault();
 			}else{
@@ -207,7 +209,8 @@ $(document).ready(function() {
 	        { field: "eqcostProductType", title: "规格型号" },
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
-	        { field: "eqcostShipAmount", title: "数量" },
+	        { field: "eqcostShipAmount", title: "发货数" },
+	        { field: "leftAmount", title: "可发货数量" },
 			{
 				field : "repositoryName",
 				title : "货架"
@@ -402,9 +405,9 @@ function saveShip() {
 			model.set("eqcostList", allShipDataSource.data());
 			model.set("issueTime", kendo.toString(model.issueTime, 'd'));
 			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
-			if(redirectParams.type && redirectParams.type == "confirm"){
+			if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
 				postAjaxRequest("/service/ship/record", {models:kendo.stringify(model)}, checkStatus);
-			}else if(redirectParams.type && redirectParams.type == "submit") {
+			}else if(redirectParams && redirectParams.type && redirectParams.type == "submit") {
 				postAjaxRequest("/service/ship/submit", {models:kendo.stringify(model)}, checkStatus);
 			}else{
 				postAjaxRequest("/service/ship/create", {models:kendo.stringify(model)}, checkStatus);
@@ -424,6 +427,9 @@ function checkStatus(data){
 function submitShip(){
 	model.set("status", "申请中");
 	model.status = "申请中";
+	if(!redirectParams){
+		redirectParams = {};
+	}
 	redirectParams.type = "submit";
 	saveShip();
 }

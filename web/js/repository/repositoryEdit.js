@@ -1,4 +1,3 @@
-var requestDataItem;
 
 var listProjectUrl = "/service/purcontract/repository/contract/list";
 var updateUrl = "/service/purcontract/repository/update?type=in";
@@ -31,6 +30,7 @@ var model = kendo.data.Model.define({
 	}
 });
 
+var requestDataItem=new model();
 
 var projectDataSource = new kendo.data.DataSource({
 	transport : {
@@ -54,8 +54,10 @@ $(document).ready(function() {
 			dataSource : projectDataSource,
 			change : function(e) {
 				updateSupplier();
+				requestDataItem.projectName = this.dataItem().projectName;
 			},
-			dataBound : function(e){		
+			dataBound : function(e){	
+				requestDataItem.projectName = this.dataItem().projectName;
 				updateSupplier();
 			}
 		});
@@ -92,9 +94,15 @@ function updateSupplier(){
 		dataTextField : "supplierName",
 		dataValueField : "_id",
 		dataSource :{
-			data : supplier
-			
+			data : supplier			
+		},
+		change : function(e) {
+			requestDataItem.supplierName = this.dataItem().supplierName;
+		},
+		dataBound : function(e){	
+			requestDataItem.supplierName = this.dataItem().supplierName;
 		}
+
 	});
 }
 
@@ -193,7 +201,6 @@ function selectContracts() {
 }
 
 function loadContracts(data){
-	requestDataItem = new model();
 	requestDataItem.eqcostList = data.data;
 	edit();
 }

@@ -86,14 +86,9 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 
     public Map<String, Object> create(Map<String, Object> params) {
-        String status;
-        if (params.containsKey(ShipBean.SHIP_STATUS)) {
-            status = params.get(ShipBean.SHIP_STATUS).toString();
-        } else {
-            status = ShipBean.SHIP_STATUS_DRAFT;
-        }
-        params.put(ShipBean.SHIP_STATUS, status);
-
+        if (params.get(ShipBean.SHIP_STATUS) == null) {
+            params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_DRAFT);
+        } 
         if (params.get(ApiConstants.MONGO_ID) != null) {
             return update(params);
         } else {
@@ -130,6 +125,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
                 eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arriveCount - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
             } else {
                 eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arriveCount);
+                eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arriveCount);
             }
         }
 
@@ -140,7 +136,14 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	
     public Map<String, Object> submit(Map<String, Object> params) {
         params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
-        return this.dao.updateById(params, DBBean.SHIP);
+        
+        if (params.get(ApiConstants.MONGO_ID) != null) {
+            return update(params);
+        } else {
+            return dao.add(params, DBBean.SHIP);
+
+        }
+
     }
 	   
     public Map<String, Object> approve(Map<String, Object> params){
@@ -160,8 +163,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 
             if (ApiUtil.isEmpty(eq.get(ShipBean.REPOSITORY_NAME))) {
                 //直发才需要检查数量
-                Integer arrivalAmount = ApiUtil.getInteger(eq.get(ShipBean.SHIP_EQ_ARRIVAL_AMOUNT), 0);
-                Integer amount = ApiUtil.getInteger(eq.get(ShipBean.EQCOST_SHIP_AMOUNT), 0);
+                int arrivalAmount = ApiUtil.getInteger(eq.get(ShipBean.SHIP_EQ_ACTURE_AMOUNT), 0);
+                int amount = ApiUtil.getInteger(eq.get(ShipBean.EQCOST_SHIP_AMOUNT), 0);
                 if (amount != arrivalAmount) {
                     close = false;
                     break;
