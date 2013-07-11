@@ -46,11 +46,6 @@ var eqModel = kendo.data.Model.define( {
 var project ;
 var salesContract;
 eqDataSource = new kendo.data.DataSource({
-    schema: {
-        model: eqModel,
-        total: "total",
-    	data: "data"
-    },
     group: [
     	{field:"repositoryName"}
     ]
@@ -61,6 +56,12 @@ var supplierShipDataSource = new kendo.data.DataSource({
 });
 
 var allocatDataSource = new kendo.data.DataSource({
+	  group: [
+	      	{field:"repositoryName"}
+	      ]
+});
+
+var allShipDataSource = new kendo.data.DataSource({
 
 });
 
@@ -207,23 +208,15 @@ $(document).ready(function() {
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
 	        { field: "eqcostShipAmount", title: "数量" },
-	        { field: "arrivalAmount", title: "实际发货数" },
-	       
-	        {
-				field : "contractExecuteCate",
-				title : "虚拟采购合同类别"
-			},
-	        {
-				field : "purchaseContractType",
-				title : "采购合同类别"
-			},
-			 {
-				field : "eqcostDeliveryType",
-				title : "物流类别"
+			{
+				field : "repositoryName",
+				title : "货架"
 			},	        
 	        { field: "eqcostMemo", title: "备注" },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	        editable: true,
+		    groupable : true,
+
 	        save : function(e){
 	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
 				alert("最多可以申请" + e.model.leftAmount);
@@ -300,22 +293,29 @@ function giveUpDropDownEditor(container, options) {
 }
 
 function edit(data) {
-	$("#project").data("kendoComboBox").enable(false);
-	$("#salesContract").data("kendoComboBox").enable(false);
+	
+	if($("#project").data("kendoComboBox")){
+		$("#project").data("kendoComboBox").enable(false);
+	}
+	
+	if($("#salesContract").data("kendoComboBox")){
+		$("#salesContract").data("kendoComboBox").enable(false);
+	}
 	model = new ship(data);
 	kendo.bind($("#addShip"), model);
 	loadEqList(model.eqcostList);
 }
+
+var supplierlist = new Array();
+var rKlist = new Array();
+var alloList = new Array();
 
 function loadEqList(data){
 	var eqList = data;
 	if(data.data){
 		 eqList = data.data;
 	}
-	
-	var supplierlist = new Array();
-	var rKlist = new Array();
-	var alloList = new Array();
+
 	for(i=0; i<eqList.length; i++){
 		
 		
@@ -359,24 +359,40 @@ function loadEqList(data){
 	eqDataSource.data(rKlist);
 }
 
-function saveShip() {	
+function saveShip() {
 	var validator = $("#addShip").kendoValidator().data("kendoValidator");
 	if (!validator.validate()) {
-		return;
-    } else {
-    	if (eqDataSource) {
-    		var data = eqDataSource.data();
-    		if (data.length > 0) {
-    			model.set("eqcostList", data);
-    			
-    			model.set("issueTime", kendo.toString(model.issueTime, 'd'));
-    			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
-    			
-    			postAjaxRequest("/service/ship/create", {models:kendo.stringify(model)}, checkStatus);
-    		
-			}
+		alert("验证不通过，请检查表单");
+	} else {
+		allShipDataSource.data([]);
+		var data = allocatDataSource.data();
+		for(i=0; i<data.length; i++){
+			allShipDataSource.add(data[i]);
 		}
-    }
+		data = supplierShipDataSource.data();
+
+		for(i=0; i<data.length; i++){
+			allShipDataSource.add(data[i]);
+		}
+		
+		data = eqDataSource.data();
+		for(i=0; i<data.length; i++){
+			allShipDataSource.add(data[i]);
+		}
+
+		if (allShipDataSource.data().length > 0) {
+			model.set("eqcostList", allShipDataSource.data());
+
+			model.set("issueTime", kendo.toString(model.issueTime, 'd'));
+			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
+
+			postAjaxRequest("/service/ship/create", {models:kendo.stringify(model)}, checkStatus);
+
+		} else {
+			alert("无任何设备清单");
+		}
+
+	}
 }
 
 
