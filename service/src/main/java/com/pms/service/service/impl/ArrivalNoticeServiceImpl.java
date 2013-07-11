@@ -87,8 +87,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 				String eqcostDeliveryType = (String) order.get("eqcostDeliveryType");
 				
 				params.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
-				params.put(ArrivalNoticeBean.PROJECT_ID, order.get(PurchaseCommonBean.PROJECT_ID));
-				params.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
+				params.put(ProjectBean.PROJECT_ID, order.get(PurchaseCommonBean.PROJECT_ID));
+				params.put(SalesContractBean.SC_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
 				if(!ApiUtil.isEmpty(type)){
 				    params.put(ArrivalNoticeBean.SHIP_TYPE, type); 
 				}else{
@@ -110,7 +110,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 	
 	public Map<String, Object> listProjectsForSelect(Map<String, Object> params){
 		Map<String, Object> query = new HashMap<String, Object>();
-		query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.PROJECT_ID);
+		query.put(ApiConstants.LIMIT_KEYS, ProjectBean.PROJECT_ID);
 		List<Object> projectIds = this.dao.listLimitKeyValues(query, DBBean.ARRIVAL_NOTICE);
 		
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
@@ -169,7 +169,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 	 
     public Map<String, Object> listEqListByScIDForShip(Object scId) {
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, scId);
+        query.put(SalesContractBean.SC_ID, scId);
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
         return listEqlist(query);
     }
@@ -177,7 +177,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
     public Map<String, Object> listByScIdForBorrowing(Object scId){
 
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, scId);    
+        query.put(SalesContractBean.SC_ID, scId);    
         query.put(ArrivalNoticeBean.SHIP_TYPE, new DBQuery(DBQueryOpertion.NOT_IN, ArrivalNoticeBean.SHIP_TYPE_1));
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
         return listEqlist(query);
@@ -285,11 +285,11 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		noticeParams.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, order.get(ApiConstants.MONGO_ID));
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
-		noticeParams.put(ArrivalNoticeBean.PROJECT_ID, order.get(PurchaseCommonBean.PROJECT_ID));
-		noticeParams.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
+		noticeParams.put(SalesContractBean.SC_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
 		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, order.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
 		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		
+		// 到货设备清单
 		List<Map<String, Object>> eqList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
 		List<Map<String, Object>> arrivalEqList = new ArrayList<Map<String, Object>>();
 		for (Map<String, Object> map : eqList) {
@@ -312,6 +312,9 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		}
 		noticeParams.put(ArrivalNoticeBean.EQ_LIST, arrivalEqList);
 		
+		// 项目，销售合同冗余信息
+		scs.mergeCommonFieldsFromSc(noticeParams, noticeParams.get(SalesContractBean.SC_ID));
+		
 		return dao.add(noticeParams, DBBean.ARRIVAL_NOTICE);
 	}
     
@@ -323,11 +326,29 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		noticeParams.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, params.get(ApiConstants.MONGO_ID));
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, params.get(PurchaseBack.paCode));
-		noticeParams.put(ArrivalNoticeBean.PROJECT_ID, params.get(PurchaseCommonBean.PROJECT_ID));
-		noticeParams.put(ArrivalNoticeBean.SALES_COUNTRACT_ID, params.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
+		noticeParams.put(SalesContractBean.SC_ID, params.get(PurchaseBack.scId));
 		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, ArrivalNoticeBean.SHIP_TYPE_0);
 		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
-		noticeParams.put(ArrivalNoticeBean.EQ_LIST, params.get(SalesContractBean.SC_EQ_LIST));
+		
+		// 到货设备清单
+		List<Map<String, Object>> eqList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
+		List<Map<String, Object>> arrivalEqList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> map : eqList) {
+			Map<String, Object> eq = new HashMap<String, Object>();
+			eq.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID));
+			eq.put(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, map.get(PurchaseBack.paCount));
+			
+			eq.put(SalesContractBean.SC_ID, map.get(PurchaseBack.scId));
+			eq.put(SalesContractBean.SC_CODE, map.get(PurchaseBack.scCode));
+			eq.put(ProjectBean.PROJECT_ID, map.get(ProjectBean.PROJECT_ID));
+			eq.put(ProjectBean.PROJECT_CODE, map.get(ProjectBean.PROJECT_CODE));
+			
+			arrivalEqList.add(eq);
+		}
+		noticeParams.put(ArrivalNoticeBean.EQ_LIST, arrivalEqList);
+		
+		// 项目，销售合同冗余信息
+		scs.mergeCommonFieldsFromSc(noticeParams, noticeParams.get(SalesContractBean.SC_ID));
 		
 		return dao.add(noticeParams, DBBean.ARRIVAL_NOTICE);
 	}

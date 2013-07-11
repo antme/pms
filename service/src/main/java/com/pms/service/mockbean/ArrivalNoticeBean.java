@@ -20,10 +20,6 @@ public class ArrivalNoticeBean {
     
     public static final String SHIP_TYPE_3 = "其他采购"; // 其他采购
     
-    public static final String PROJECT_ID = "projectId";
-    
-    public static final String SALES_COUNTRACT_ID = "salesContractId";
-    
     public static final String EQ_LIST = "eqcostList";
     
     public static final String NOTICE_STATUS = "noticeStatus";
