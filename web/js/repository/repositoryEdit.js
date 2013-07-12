@@ -74,6 +74,15 @@ $(document).ready(function() {
 	    parseFormats: ["yyyy/MM/dd"]
 	});
 	
+	
+	
+	$("#storeHouse").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择库房...",
+		dataSource : storeHouseType,
+	});
+	
 	if (redirectParams && redirectParams._id) {
 		postAjaxRequest(loadUrl, redirectParams, edit);
 	} 
