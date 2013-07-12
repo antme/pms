@@ -3,15 +3,16 @@ package com.pms.service.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
-import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
@@ -223,9 +224,53 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	// 统计三类虚拟的采购合同在每月的发货合计
 	public Map<String, Object> shipCountOfVPC(Map<String, Object> params) {
 		Map<String, Object> shipQuery = new HashMap<String, Object>();
-		shipQuery.put("eqcostList.contractExecuteCate", new DBQuery(DBQueryOpertion.NOT_NULL));
+		// 日期范围
 		
-		Map<String, Integer> shipedCountMap = countEqByKey(shipQuery, DBBean.SHIP, ShipBean.EQCOST_SHIP_AMOUNT, null);
+		// 三类虚拟采购合同
+		shipQuery.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.CONTRACT_EXECUTE_CATE, new DBQuery(DBQueryOpertion.NOT_NULL));
+		
+		Map<String, Object> shipMap = dao.list(shipQuery, DBBean.SHIP);
+		List<Map<String, Object>> shipList = (List<Map<String, Object>>) shipMap.get(ApiConstants.RESULTS_DATA);
+		
+		// 采购订单id
+		Set<Object> orderIdSet = new HashSet();
+		
+		for (Map<String, Object> ship : shipList) {
+			List<Map<String, Object>> shipEqList = (List<Map<String, Object>>) ship.get(SalesContractBean.SC_EQ_LIST);
+			for (Map<String, Object> shipEq : shipEqList) {
+				orderIdSet.add(shipEq.get(PurchaseCommonBean.PURCHASE_ORDER_ID));
+			}
+		}
+		
+		// 获取采购订单中的采购价格
+		Map<String, Object> orderQuery = new HashMap<String, Object>();
+		orderQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(orderIdSet)));
+		Map<String, Object> orderInfoMap = dao.listToOneMapByKey(orderQuery, DBBean.PURCHASE_ORDER, ApiConstants.MONGO_ID);
+		
+		Map<String, Object> eqIdKeyMap = new HashMap<String, Object>();
+		Map<String, Object> orderIdKeyMap = new HashMap<String, Object>();
+		
+		for (Map.Entry mapEntry : orderInfoMap.entrySet()) {
+			// 采购订单id
+			String orderId =  (String) mapEntry.getKey();
+			// 对应采购订单信息
+			Map<String, Object> orderMap = (Map<String, Object>) mapEntry.getValue();
+			List<Map<String, Object>> orderEqList = (List<Map<String, Object>>) orderMap.get(SalesContractBean.SC_EQ_LIST);
+			for (Map<String, Object> orderEq : orderEqList) {
+				eqIdKeyMap.put((String) orderEq.get(ApiConstants.MONGO_ID), orderEq.get(PurchaseCommonBean.EQCOST_PRODUCT_UNIT_PRICE));
+			}
+			orderIdKeyMap.put(orderId, eqIdKeyMap);
+		}
+		
+		for (Map<String, Object> ship : shipList) {
+			List<Map<String, Object>> shipEqList = (List<Map<String, Object>>) ship.get(SalesContractBean.SC_EQ_LIST);
+			for (Map<String, Object> shipEq : shipEqList) {
+				if (shipEq.containsKey(ShipBean.SHIP_EQ_ACTURE_AMOUNT)) {
+				} else {
+				}
+			}
+		}
+		
 		return null;
 	}
 
