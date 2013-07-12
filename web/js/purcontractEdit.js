@@ -71,7 +71,7 @@ var contractModel = kendo.data.Model.define({
 		}
 	}
 });
-
+requestDataItem = new contractModel({});
 //成本设备清单数据源
 var eqCostListDataSource = new kendo.data.DataSource({
 	group: {
@@ -162,18 +162,19 @@ $(document).ready(function() {
 	    parseFormats: ["yyyy/MM/dd"]
 	});
 
-	if(popupParams){
-		if (popupParams.addInSCList == 1){//销售合同列表中直接为 弱电工程 类添加
+	if(popupParams){	
+		$("#purchasecontract-edit-item").show();
+		postAjaxRequest("/service/purcontract/get", popupParams, edit);
+		disableAllInPoppup();	
+	}else if (redirectParams) {
+		
+		if (redirectParams.addInSCList && redirectParams.addInSCList == 1){//销售合同列表中直接为 弱电工程 类添加
 			addOrderInSCListForRuodian();
+			disableTable();
 		}else{
 			$("#purchasecontract-edit-item").show();
-			postAjaxRequest("/service/purcontract/get", popupParams, edit);
-			disableAllInPoppup();
+			postAjaxRequest("/service/purcontract/get", redirectParams, edit);
 		}
-		
-	}else if (redirectParams) {
-		$("#purchasecontract-edit-item").show();
-		postAjaxRequest("/service/purcontract/get", redirectParams, edit);
 	} else{
 
 		$("#purchasecontractin").kendoMultiSelect({
@@ -202,6 +203,20 @@ $(document).ready(function() {
 	
 });
 
+function disableTable(){
+	
+	var tabStrip = $("#tabstrip").data("kendoTabStrip");
+	if(!tabStrip){
+		$("#tabstrip").kendoTabStrip();				
+		tabStrip = $("#tabstrip").data("kendoTabStrip");
+	}
+	var tab0 = tabStrip.tabGroup.children("li").eq(0);
+	var tab1 = tabStrip.tabGroup.children("li").eq(1);
+	var tab2 = tabStrip.tabGroup.children("li").eq(2);
+	tabStrip.enable(tab1, false);
+	tabStrip.enable(tab2, false);
+	
+}
 function addOrderInSCListForRuodian(){
 	$("#purchasecontractselect").hide();
 	$("#purchasecontract-edit-item").show();
@@ -286,7 +301,12 @@ function addOrderInSCListForRuodian(){
             autoUpload: true
         },
         success:function(e){
-        	eqCostListDataSource.data(e.response.data);
+  
+        	requestDataItem.eqcostList = e.response.data;
+        	eqCostListDataSource.data(requestDataItem.eqcostList);			
+			requestDataItem.eqcostDeliveryType = "直发现场";
+			requestDataItem.from = "弱电工程";
+			edit();
         }
     });
 }
@@ -331,7 +351,7 @@ function save(status) {
 	var validator = $("#purchasecontract-edit-item").kendoValidator().data("kendoValidator");
 	if (validator.validate()) {
 
-		if (!itemDataSource.at(0)) {
+		if (!itemDataSource.at(0) && !eqCostListDataSource.at(0)) {
 			alert("没有任何设备清单数据");
 		} else {
 			if (!requestDataItem.status) {
@@ -342,6 +362,12 @@ function save(status) {
 			}
 			requestDataItem.requestedTotalMoney = $("#requestedTotalMoney").val();
 			
+			
+			
+			if (eqCostListDataSource.at(0)) {
+				// force set haschanges = true
+				itemDataSource.data(requestDataItem.eqcostList);
+			}
 
 			if (itemDataSource.at(0)) {
 				// force set haschanges = true
@@ -353,6 +379,10 @@ function save(status) {
 				requestDataItem.supplier = dl.dataSource.at(0)._id;
 			}else if(requestDataItem.supplier._id){
 				requestDataItem.supplier = requestDataItem.supplier._id;
+			}
+			
+			if(!requestDataItem.contractExecuteCate){
+				requestDataItem.contractExecuteCate = "正常采购";
 			}
 			
 			if(requestDataItem.executeStatus && requestDataItem.executeStatus.text){
@@ -435,18 +465,24 @@ function edit(data) {
 
 	if(data){
 		$("#purchasecontractselect").hide();
-		requestDataItem = data;
+		requestDataItem = new contractModel(data);
 	}else{
 		$("#purchasecontractselect").show();
 	}
-
-	if (requestDataItem) {
-		requestDataItem = new contractModel(requestDataItem);
-	}
+	
+	
 	
 	if(requestDataItem.executeStatus && requestDataItem.executeStatus.text){
 		requestDataItem.executeStatus = requestDataItem.executeStatus.text;
 	}
+	
+	if(requestDataItem.from){
+		addOrderInSCListForRuodian();
+		disableTable();
+		console.log(requestDataItem);
+		eqCostListDataSource.data(requestDataItem.eqcostList);
+	}
+
 	
 
 	setDate(requestDataItem, "signDate", requestDataItem.signDate);
@@ -455,13 +491,11 @@ function edit(data) {
 
 	var eqcostList = requestDataItem.eqcostList;
 	
-	if(eqcostList){
-		for (i = 0; i < eqcostList.length; i++) {
-			if (!eqcostList[i].logisticsType) {
-				eqcostList[i].logisticsType = "";
-			}
-		}
-	}
+	
+	if (!redirectParams && redirectParams.addInSCList){
+		
+	}else{
+		
 	// 渲染成本编辑列表
 	itemDataSource.data(requestDataItem.eqcostList);
 
@@ -578,7 +612,7 @@ function edit(data) {
 
 		});
 	}
-	
+	}
 }
 
 
@@ -588,6 +622,7 @@ var mergedDataSource = new kendo.data.DataSource({
 
 function initMergedGrid(){
 	mergedDataSource.data([]);
+	if(requestDataItem && requestDataItem.eqcostList){
 	var itemData = requestDataItem.eqcostList;
 	var data = eval(kendo.stringify(itemData));
 	while(mergedDataSource.at(0)){
@@ -652,7 +687,7 @@ function initMergedGrid(){
 			
 		});
 	}
-	
+	}
 }
 
 function detailInit(e) {

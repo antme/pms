@@ -92,6 +92,9 @@ $(document).ready(function() {
 			field : "contractDate",
 			title : "签订日期",
 			format: "{0:yyyy/MM/dd}"
+		}, {
+			field : "contractType",
+			title : "合同类型"
 		}]
 	});
 	
@@ -177,7 +180,7 @@ function toolbar_addPCForRuodianSC(){
 	}
 	if (rowData.contractType == "弱电工程"){
 		var options = { width:"800px", height: "760px", title:"新建采购合同-弱电工程"};
-		openRemotePageWindow(options, "html/purchasecontract/purchasecontractedit.html", {addInSCList:1});
+		loadPage("html/purchasecontract/purchasecontractedit.html", {addInSCList:1});
 	}else{
 		alert("请点击选择一条弱电工程类合同！");
 		return;
