@@ -212,6 +212,11 @@ function edit(data) {
 	if(data){
 		$("#purchaserepository-div").hide();
 		requestDataItem = data;
+		
+		for (i in requestDataItem.eqcostList) {			
+//			requestDataItem.eqcostList[i].leftCount = requestDataItem.eqcostList[i].leftCount + requestDataItem.eqcostList[i].eqcostApplyAmount;
+		}
+	    
 	}else{
 		$("#purchaserepository-div").show();
 	}
@@ -279,8 +284,8 @@ function edit(data) {
 			save: function(e){
 				if (e.values.eqcostApplyAmount) {					
 					if(e.values.eqcostApplyAmount > e.model.leftCount){
-						alert("最多可以入库" + e.model.pbLeftCount);
-						e.preventDefault();
+//						alert("最多可以入库" + e.model.leftCount);
+//						e.preventDefault();
 					}
 				}
 			}
