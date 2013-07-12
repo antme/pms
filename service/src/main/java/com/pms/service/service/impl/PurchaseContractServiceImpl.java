@@ -39,6 +39,7 @@ import com.pms.service.util.EmailUtil;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
 
+    public static final String FROM = "from";
     public static final String SUPPLIER = "supplier";
     private static final String PURCHASE_ORDER_ID = "purchaseOrderId";
     private static final String APPROVED = PurchaseRequest.STATUS_APPROVED;
@@ -298,7 +299,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public Map<String, Object> getPurchaseContract(Map<String, Object> parameters) {
         Map<String, Object>  result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
-        if(result.get("from")==null){
+        if(result.get(FROM)==null){
             result.put(SalesContractBean.SC_EQ_LIST, scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST)));
         }
         return result;
@@ -316,7 +317,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract) {
         Object eqList = contract.get(SalesContractBean.SC_EQ_LIST);
 
-        if(contract.get("from")==null){
+        if(contract.get(FROM)==null){
             String keys[] = new String[] { "eqcostApplyAmount", "orderEqcostCode", "orderEqcostName", "orderEqcostModel", "eqcostProductUnitPrice", "purchaseOrderCode",
                     "salesContractCode", PURCHASE_ORDER_ID, "logisticsType", "logisticsArrivedTime", "logisticsStatus" };
             contract.put(SalesContractBean.SC_EQ_LIST, mergeSavedEqList(keys, eqList));
@@ -517,35 +518,36 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         Map<String, Object> contract = dao.findOne(ApiConstants.MONGO_ID, result.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
 
-        updateOrderFinalStatus(contract);
+        if (contract.get(FROM) == null) {
+            updateOrderFinalStatus(contract);
 
-        Map<String, Object> userQuery = new HashMap<String, Object>();
-        userQuery.put(UserBean.GROUPS,
-                new DBQuery(DBQueryOpertion.IN, this.dao.findOne(GroupBean.GROUP_NAME, GroupBean.DEPARTMENT_ASSISTANT_VALUE, DBBean.USER_GROUP).get(ApiConstants.MONGO_ID)));
-        userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.EMAIL);
+            Map<String, Object> userQuery = new HashMap<String, Object>();
+            userQuery.put(UserBean.GROUPS, new DBQuery(DBQueryOpertion.IN, this.dao.findOne(GroupBean.GROUP_NAME, GroupBean.DEPARTMENT_ASSISTANT_VALUE, DBBean.USER_GROUP).get(ApiConstants.MONGO_ID)));
+            userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.EMAIL);
 
-        List<Object> emails = this.dao.listLimitKeyValues(userQuery, DBBean.USER);
-        
-        if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE) != null) {
-            if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
-                String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
-                String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单,请到系统做入库处理", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));                
-                contract.put("titleContent", content);
-                sendEmailPCApprove(subject,emails,contract,"purchaseContractApprove.vm");
-            }else if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO)) {
-                createArriveNotice(contract);
-                createAutoShip(contract);
+            List<Object> emails = this.dao.listLimitKeyValues(userQuery, DBBean.USER);
 
-                String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
-                String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单, 系统已经自动生成发货通知,请填写完整信息后发货", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));                
-                contract.put("titleContent", content);
-                sendEmailPCApprove(subject,emails,contract,"purchaseContractApprove.vm");
-                
-            }else if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
-                String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
-                String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单, 请到系统填写到货通知", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));                
-                contract.put("titleContent", content);
-                sendEmailPCApprove(subject,emails,contract,"purchaseContractApprove.vm");
+            if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE) != null) {
+                if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
+                    String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+                    String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单,请到系统做入库处理", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+                    contract.put("titleContent", content);
+                    sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
+                } else if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO)) {
+                    createArriveNotice(contract);
+                    createAutoShip(contract);
+
+                    String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+                    String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单, 系统已经自动生成发货通知,请填写完整信息后发货", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+                    contract.put("titleContent", content);
+                    sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
+
+                } else if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
+                    String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+                    String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单, 请到系统填写到货通知", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+                    contract.put("titleContent", content);
+                    sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
+                }
             }
         }
         return result;
