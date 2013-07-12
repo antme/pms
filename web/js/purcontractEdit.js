@@ -492,7 +492,7 @@ function edit(data) {
 	var eqcostList = requestDataItem.eqcostList;
 	
 	
-	if (!redirectParams && redirectParams.addInSCList){
+	if (redirectParams && redirectParams.addInSCList){
 		
 	}else{
 		
