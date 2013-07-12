@@ -191,7 +191,12 @@ function edit(data) {
 
 	// 初始化空对象
 	if (data) {
-		requestDataItem = data;
+		requestDataItem = data;	    	
+		// 编辑时候初始化数据
+		for (i in requestDataItem.eqcostList) {			
+			requestDataItem.eqcostList[i].pbLeftCount = requestDataItem.eqcostList[i].pbLeftCount + requestDataItem.eqcostList[i].eqcostApplyAmount;
+		}
+	    
 	}
 
 	requestDataItem = new model(requestDataItem);
