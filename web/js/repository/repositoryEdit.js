@@ -74,6 +74,15 @@ $(document).ready(function() {
 	    parseFormats: ["yyyy/MM/dd"]
 	});
 	
+	
+	
+	$("#storeHouse").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择库房...",
+		dataSource : storeHouseType,
+	});
+	
 	if (redirectParams && redirectParams._id) {
 		postAjaxRequest(loadUrl, redirectParams, edit);
 	} 
@@ -260,7 +269,7 @@ function edit(data) {
 				title : "单位"
 
 			},{
-				field : "eqcostProductUnitPrice",
+				field : "eqcostBasePrice",
 				title : "采购单价"
 			},{
 				field : "leftCount",

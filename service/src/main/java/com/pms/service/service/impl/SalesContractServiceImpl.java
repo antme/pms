@@ -1101,8 +1101,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
     public List<Map<String, Object>> mergeEqListBasicInfo(Object eqList) {
         List<Map<String, Object>> needMergeList = (List<Map<String, Object>>) eqList;
-        
-        if(needMergeList == null){
+
+        if (needMergeList == null) {
             needMergeList = new ArrayList<Map<String, Object>>();
         }
 
@@ -1110,7 +1110,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         Set<String> ids = new HashSet<String>();
 
         for (Map<String, Object> old : needMergeList) {
-            if(old.get(ApiConstants.MONGO_ID)!=null){
+            if (old.get(ApiConstants.MONGO_ID) != null) {
                 ids.add(old.get(ApiConstants.MONGO_ID).toString());
             }
         }
@@ -1120,20 +1120,18 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
         List<Object> scEqList = this.dao.listLimitKeyValues(query, DBBean.EQ_COST);
 
-        for (Object obj : scEqList) {
-            Map<String, Object> scEq = (Map<String, Object>) obj;
-
-            for (Map<String, Object> savedEq : needMergeList) {
+        for (Map<String, Object> savedEq : needMergeList) {
+            for (Object obj : scEqList) {
+                Map<String, Object> scEq = (Map<String, Object>) obj;
 
                 if (savedEq.get(ApiConstants.MONGO_ID).toString().equalsIgnoreCase(scEq.get(ApiConstants.MONGO_ID).toString())) {
-                    scEq.putAll(savedEq);
+                    savedEq.putAll(scEq);
                     break;
                 }
             }
 
-            mapLists.add(scEq);
         }
 
-        return mapLists;
+        return needMergeList;
     }
 }

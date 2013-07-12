@@ -138,6 +138,8 @@ var eqcostDeliveryType = [{text : "入公司库"}, {text : "直发现场"}];
 var executeType1 = [{text : "内部流程中"}, {text : "备货中"}, {text : "备货待发"}, {text : "发货完毕"}, {text : "结束"}];
 var executeType2 = [{text : "内部流程中"}, {text : "备货中"}, {text : "备货待发"}, {text : "入库完毕"}, {text : "结束"}];
 
+var storeHouseType = [{text : "上海—上海泰德库"}, {text : "上海—北京泰德库"}];
+
 //项目类型
 var proCategoryItems = [{ text: "产品", value: "产品" }, { text: "工程", value: "工程" }, { text: "服务", value: "服务" }];
 //项目状态
