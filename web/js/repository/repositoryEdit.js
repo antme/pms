@@ -269,7 +269,7 @@ function edit(data) {
 				title : "单位"
 
 			},{
-				field : "eqcostProductUnitPrice",
+				field : "eqcostBasePrice",
 				title : "采购单价"
 			},{
 				field : "leftCount",

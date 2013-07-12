@@ -204,16 +204,18 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> query = new HashMap<String, Object>();
         Object projectId = params.get("projectId");
         query.put("eqcostList.projectId", projectId);
-        query.put(SUPPLIER, params.get(SUPPLIER));
         boolean isDirect =false;
         Map<String, Object> results = new HashMap<String, Object>();
         if (params.get("type") != null && params.get("type") .toString().equalsIgnoreCase("out")) {
             query.put("eqcostList.eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
             query.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[]{ShipBean.SHIP_STATUS_APPROVE, ShipBean.SHIP_STATUS_CLOSE}));
+            query.put("eqcostList."+SUPPLIER, params.get(SUPPLIER));
             results = this.dao.list(query, DBBean.SHIP);
             isDirect = true;
         }else{
             query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
+            query.put(SUPPLIER, params.get(SUPPLIER));
+
             params.put("type", "in");
             query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
             results = this.dao.list(query, DBBean.PURCHASE_CONTRACT);
@@ -227,8 +229,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             List<Map<String, Object>> pList = (List<Map<String, Object>>) data.get("eqcostList");
 
             for (Map<String, Object> p : pList) {
-                if (p.get("projectId").equals(projectId)) {
-                    eqclist.add(p);
+
+                if (isDirect) {
+                    if (p.get("projectId").equals(projectId) && p.get(SUPPLIER) != null && p.get(SUPPLIER).equals(params.get(SUPPLIER)) && 
+                            p.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE).equals(PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY)) {
+                        eqclist.add(p);
+                    }
+
+                } else {
+                    if (p.get("projectId").equals(projectId)) {
+                        eqclist.add(p);
+                    }
                 }
             }
         }
