@@ -1079,7 +1079,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         
         Map<String, Object> pquery = new HashMap<String, Object>();
-        pquery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<>(proIds)));
+        pquery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<String>(proIds)));
         pquery.put(ApiConstants.LIMIT_KEYS, ProjectBean.PROJECT_NAME);
 
         return this.dao.list(pquery, DBBean.PROJECT);

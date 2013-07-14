@@ -79,7 +79,9 @@ public class EmailUtil {
             
             email.send();
             
-        } catch (EmailException | AddressException e) {
+        } catch (EmailException e) {
+            e.printStackTrace();
+        } catch (AddressException e){
             e.printStackTrace();
         }
     }
