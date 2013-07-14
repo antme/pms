@@ -175,8 +175,10 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/purchasecontract/purchaseRequestApprove.html";
 	} else if (page == "addProject") {
 		page = "html/project/addProject.html";
-	}  else if (page == "ship") {
+	} else if (page == "ship") {
 		page = "html/execution/ship.html";
+	} else if (page == "shipCount") {
+		page = "html/execution/shipCount.html";
 	} else if (page == "addShip") {
 		page = "html/execution/addShip.html";
 	} else if (page == "shipRecord") {
