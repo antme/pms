@@ -27,7 +27,6 @@ import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dao.ICommonDao;
 import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.dbhelper.Pagnation;
-import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
@@ -132,7 +131,11 @@ public class CommonDaoMongoImpl implements ICommonDao {
     
     public Map<String, Object> listToOneMapByKey(Map<String, Object> parameters, String collection, String mapKey){
         DBObject query = DBQueryUtil.buildQueryObject(parameters, true, true);
-        return doPageNationQuery(parameters, collection, query, true, mapKey);
+        Map<String, Object> result = doPageNationQuery(parameters, collection, query, true, mapKey);
+        result.remove(ApiConstants.TOTAL);
+        result.remove(ApiConstants.RESULTS_DATA);
+        result.remove(ApiConstants.PAGENATION);
+        return result;
         
     }
 

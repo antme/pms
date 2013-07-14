@@ -226,7 +226,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		// 日期范围
 		
 		// 三类虚拟采购合同
-		params.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.CONTRACT_EXECUTE_CATE, new DBQuery(DBQueryOpertion.NOT_NULL));
+//		params.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.CONTRACT_EXECUTE_CATE, new DBQuery(DBQueryOpertion.NOT_NULL));
 		
 		Map<String, Object> shipMap = dao.list(params, DBBean.SHIP);
 		List<Map<String, Object>> shipList = (List<Map<String, Object>>) shipMap.get(ApiConstants.RESULTS_DATA);
@@ -244,7 +244,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		// 获取采购订单中的采购价格
 		Map<String, Object> orderQuery = new HashMap<String, Object>();
 		orderQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(orderIdSet)));
-		Map<String, Object> orderInfoMap = dao.listToOneMapByKey(orderQuery, DBBean.PURCHASE_ORDER, ApiConstants.MONGO_ID);
+		Map<String, Object> orderInfoMap = dao.listToOneMapAndIdAsKey(orderQuery, DBBean.PURCHASE_ORDER);
 		
 		Map<String, Object> eqIdKeyMap = new HashMap<String, Object>();
 		Map<String, Object> orderIdKeyMap = new HashMap<String, Object>();
