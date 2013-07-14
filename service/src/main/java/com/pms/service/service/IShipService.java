@@ -24,4 +24,6 @@ public interface IShipService {
 	public Map<String, Object> reject(Map<String, Object> params);
 	
 	public Map<String, Object> record(Map<String, Object> params);
+	
+	public Map<String, Object> shipCountOfVPC(Map<String, Object> params);
 }

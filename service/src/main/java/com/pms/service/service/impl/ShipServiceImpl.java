@@ -223,13 +223,12 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	
 	// 统计三类虚拟的采购合同在每月的发货合计
 	public Map<String, Object> shipCountOfVPC(Map<String, Object> params) {
-		Map<String, Object> shipQuery = new HashMap<String, Object>();
 		// 日期范围
 		
 		// 三类虚拟采购合同
-		shipQuery.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.CONTRACT_EXECUTE_CATE, new DBQuery(DBQueryOpertion.NOT_NULL));
+		params.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.CONTRACT_EXECUTE_CATE, new DBQuery(DBQueryOpertion.NOT_NULL));
 		
-		Map<String, Object> shipMap = dao.list(shipQuery, DBBean.SHIP);
+		Map<String, Object> shipMap = dao.list(params, DBBean.SHIP);
 		List<Map<String, Object>> shipList = (List<Map<String, Object>>) shipMap.get(ApiConstants.RESULTS_DATA);
 		
 		// 采购订单id
@@ -262,16 +261,48 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 			orderIdKeyMap.put(orderId, eqIdKeyMap);
 		}
 		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
 		for (Map<String, Object> ship : shipList) {
 			List<Map<String, Object>> shipEqList = (List<Map<String, Object>>) ship.get(SalesContractBean.SC_EQ_LIST);
 			for (Map<String, Object> shipEq : shipEqList) {
+				String eqId = (String) shipEq.get(ApiConstants.MONGO_ID);
+				// 发货数量
+				Double shipAmount;
 				if (shipEq.containsKey(ShipBean.SHIP_EQ_ACTURE_AMOUNT)) {
+					shipAmount = (Double) ApiUtil.getDouble(shipEq, ShipBean.SHIP_EQ_ACTURE_AMOUNT, 0);
 				} else {
+					shipAmount = (Double) ApiUtil.getDouble(shipEq, ShipBean.EQCOST_SHIP_AMOUNT, 0);
 				}
+				
+				Map<String, Object> map = (Map<String, Object>) orderIdKeyMap.get(shipEq.get(PurchaseCommonBean.PURCHASE_ORDER_ID));
+				// 价格
+				Double eqcostProductUnitPrice = ApiUtil.getDouble(map, eqId, 0);
+				// 发货金额
+				Double money = shipAmount * eqcostProductUnitPrice;
+				
+				Map<String, Object> listMap = new HashMap<String, Object>();
+				if (resultMap.containsKey(eqId)) {
+					Map<String, Object> countMap = (Map<String, Object>) resultMap.get(eqId);
+					listMap.put(ShipBean.VC_SHIP_AMOUNT, shipAmount + ApiUtil.getDouble(countMap, ShipBean.VC_SHIP_AMOUNT, 0));
+					listMap.put(ShipBean.VC_SHIP_MONEY, money + ApiUtil.getDouble(countMap, ShipBean.VC_SHIP_MONEY, 0));
+				} else {
+					listMap.put(ApiConstants.MONGO_ID, eqId);
+					listMap.put(ShipBean.VC_SHIP_AMOUNT, shipAmount);
+					listMap.put(ShipBean.VC_SHIP_MONEY, money);
+				}
+				resultMap.put(eqId, listMap);
 			}
 		}
 		
-		return null;
+		List<Map<String, Object>> returnList = new ArrayList<Map<String, Object>>();
+		for (Map.Entry mapEntry : resultMap.entrySet()) {
+			returnList.add((Map<String, Object>) mapEntry.getValue());
+		}
+		
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put(ApiConstants.RESULTS_DATA, returnList);
+		return res;
 	}
 
 }
