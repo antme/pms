@@ -229,7 +229,11 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		shipQuery.put(ShipBean.SHIP_ISSUE_TIME, new DBQuery(DBQueryOpertion.BETWEEN_AND, ta));
 		// 三类虚拟采购合同
 //		shipQuery.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.CONTRACT_EXECUTE_CATE, new DBQuery(DBQueryOpertion.NOT_NULL));
-		
+		// 申请状态
+		List<String> statusList = new ArrayList<String>();
+		statusList.add(ShipBean.SHIP_STATUS_APPROVE);
+		statusList.add(ShipBean.SHIP_STATUS_CLOSE);
+		shipQuery.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, statusList));
 		Map<String, Object> shipMap = dao.list(shipQuery, DBBean.SHIP);
 		List<Map<String, Object>> shipList = (List<Map<String, Object>>) shipMap.get(ApiConstants.RESULTS_DATA);
 		

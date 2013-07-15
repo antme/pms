@@ -22,10 +22,10 @@ $(document).ready(function () {
                 dataType: "jsonp",
                 data: {
                 	startDate: function() {
-                		return sdatepicker.value();
+                		return kendo.toString(sdatepicker.value(), 'yyyy-MM-dd');
                 	},
                 	endDate: function() {
-                		return edatepicker.value();
+                		return kendo.toString(edatepicker.value(), 'yyyy-MM-dd');
                 	}
                 }
             }
