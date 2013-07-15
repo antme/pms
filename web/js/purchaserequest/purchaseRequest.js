@@ -121,7 +121,7 @@ function cancelRe() {
 		if(row.status == "已提交" || row.status == "草稿" || row.status == "审批拒绝" || row.status == "审批中"){
 			process(cancelUrl);
 		}else {
-			alert("不能中止此数据");
+			alert("只能中止未发采购订单的数据或则正在提交的数据");
 		}
 	}
 }
@@ -129,10 +129,10 @@ function cancelRe() {
 function approveRe() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "审批中" ||　row.status == "中止申请中"){
+		if(row.status == "中止申请中" || row.status == "审批中"){
 			process(approveUrl);
 		}else{
-			alert("此状态不需要审批");
+			alert('只能审批 "中止申请中" 或则  "审批中" 中的状态');
 		}
 	}
 }

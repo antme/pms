@@ -551,26 +551,41 @@ public abstract class AbstractService {
     
     
     
-    
-    
-    public void removeEmptyEqList(Map<String, Object> result, String key) {
-        if (result.get("eqcostList") != null) {
-            List<Map<String, Object>> eqCostList = (List<Map<String, Object>>) result.get("eqcostList");
-
-            List<Map<String, Object>> removedList = new ArrayList<Map<String, Object>>();
-            for (Map<String, Object> data : eqCostList) {
-                if (ApiUtil.getInteger(data.get(key), 0) <= 0) {
-                    removedList.add(data);
-                }
+    /**
+     * 
+     * 根据设备清单中的某个key来过滤数据小于等于0的数据
+     * @param eqCostList
+     * @param key
+     */
+    public void removeEmptyEqList(List<Map<String, Object>> eqCostList, String key) {
+        List<Map<String, Object>> removedList = new ArrayList<Map<String, Object>>();
+        for (Map<String, Object> data : eqCostList) {
+            if (ApiUtil.getInteger(data.get(key), 0) <= 0) {
+                removedList.add(data);
             }
+        }
 
-            for (Map<String, Object> orderMap : removedList) {
-                eqCostList.remove(orderMap);
-            }
-
+        for (Map<String, Object> orderMap : removedList) {
+            eqCostList.remove(orderMap);
         }
 
     }
+
+    /**
+     * 
+     * 根据设备清单中的某个key来过滤数据小于等于0的数据
+     * @param eqCostList
+     * @param key
+     */
+    public void removeEmptyEqList(Map<String, Object> eqListMap, String key) {
+        if (eqListMap.get("eqcostList") != null) {
+            List<Map<String, Object>> eqCostList = (List<Map<String, Object>>) eqListMap.get("eqcostList");
+            removeEmptyEqList(eqCostList, key);
+        }
+
+    }
+    
+    
     
     public String generateCode(String prefix, String db) {
         Map<String, Object> map = new HashMap<String, Object>();
