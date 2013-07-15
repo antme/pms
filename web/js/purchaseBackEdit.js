@@ -149,6 +149,7 @@ $(document).ready(function () {
 			loadPage("purchaseBack");
 		} else if(validateModel()){
 			if(confirm("提交表单，确认？")){
+				currentObj.pbPlanDate = kendo.toString(currentObj.pbPlanDate,"yyyy-MM-dd");
 				postAjaxRequest("/service/purchase/back/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
 			}
 		}
