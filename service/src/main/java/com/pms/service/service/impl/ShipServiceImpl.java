@@ -223,12 +223,18 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	
 	// 统计三类虚拟的采购合同在每月的发货合计
 	public Map<String, Object> shipCountOfVPC(Map<String, Object> params) {
+		Map<String, Object> shipQuery = new HashMap<String, Object>();
 		// 日期范围
-		
+		Object[] ta = {params.get("startDate"), params.get("endDate")};
+		shipQuery.put(ShipBean.SHIP_ISSUE_TIME, new DBQuery(DBQueryOpertion.BETWEEN_AND, ta));
 		// 三类虚拟采购合同
-//		params.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.CONTRACT_EXECUTE_CATE, new DBQuery(DBQueryOpertion.NOT_NULL));
-		
-		Map<String, Object> shipMap = dao.list(params, DBBean.SHIP);
+//		shipQuery.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.CONTRACT_EXECUTE_CATE, new DBQuery(DBQueryOpertion.NOT_NULL));
+		// 申请状态
+		List<String> statusList = new ArrayList<String>();
+		statusList.add(ShipBean.SHIP_STATUS_APPROVE);
+		statusList.add(ShipBean.SHIP_STATUS_CLOSE);
+		shipQuery.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, statusList));
+		Map<String, Object> shipMap = dao.list(shipQuery, DBBean.SHIP);
 		List<Map<String, Object>> shipList = (List<Map<String, Object>>) shipMap.get(ApiConstants.RESULTS_DATA);
 		
 		// 采购订单id
@@ -301,7 +307,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		}
 		
 		Map<String, Object> res = new HashMap<String, Object>();
-		res.put(ApiConstants.RESULTS_DATA, returnList);
+		res.put(ApiConstants.RESULTS_DATA, scs.mergeEqListBasicInfo(returnList));
 		return res;
 	}
 

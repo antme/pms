@@ -2,39 +2,51 @@ var dataSource, crudServiceBaseUrl = "../service/ship";
 
 $(document).ready(function () {
 	checkRoles();
+	
+	$("#sdatepicker").kendoDatePicker();
+	var sdatepicker = $("#sdatepicker").data("kendoDatePicker");
+	
+	$("#edatepicker").kendoDatePicker();
+	var edatepicker = $("#edatepicker").data("kendoDatePicker");
+	
+	$("#count").click(function() {
+		if (sdatepicker.value() && edatepicker.value()) {
+			dataSource.read();
+		}
+	});
+	
     dataSource = new kendo.data.DataSource({
         transport: {
             read:  {
                 url: crudServiceBaseUrl + "/count",
-                dataType: "jsonp"
-            },
-            parameterMap: function(options, operation) {
-                if (operation !== "read" && options.models) {
-                    return {models: kendo.stringify(options.models)};
+                dataType: "jsonp",
+                data: {
+                	startDate: function() {
+                		return kendo.toString(sdatepicker.value(), 'yyyy-MM-dd');
+                	},
+                	endDate: function() {
+                		return kendo.toString(edatepicker.value(), 'yyyy-MM-dd');
+                	}
                 }
             }
         },
-        batch: true,
-        pageSize: 10,
-    	serverPaging: true,
-    	serverSorting: true,
-    	serverFiltering : true,
         schema: {
-        	total: "total",
         	data: "data"
         }
     });
 
     $("#grid").kendoGrid({
+    	autoBind: false,
         dataSource: dataSource,
-        pageable : true,
-		sortable : true,
-		filterable : filterable,
         columns: [
-            { field: "_id", title:"id" },
+            { field: "eqcostNo", title:"序号" },
+            { field: "eqcostMaterialCode", title:"物料代码" },
+            { field: "eqcostProductName", title: "产品名称" },
+	        { field: "eqcostProductType", title: "规格型号" },
+	        { field: "eqcostBrand", title: "品牌" },
+	        { field: "eqcostUnit", title: "单位" },
             { field: "vcShipAmount", title:"数量" },
             { field: "vcShipMoney", title:"金额" }
-        ],
-        editable: "popup"
+        ]
     });
 });

@@ -403,8 +403,8 @@ function saveShip() {
 
 		if (allShipDataSource.data().length > 0) {
 			model.set("eqcostList", allShipDataSource.data());
-			model.set("issueTime", kendo.toString(model.issueTime, 'd'));
-			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
+			model.set("issueTime", kendo.toString(model.issueTime, 'yyyy-MM-dd'));
+			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'yyyy-MM-dd'));
 			if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
 				postAjaxRequest("/service/ship/record", {models:kendo.stringify(model)}, checkStatus);
 			}else if(redirectParams && redirectParams.type && redirectParams.type == "submit") {
