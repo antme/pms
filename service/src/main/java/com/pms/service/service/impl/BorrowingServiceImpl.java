@@ -190,7 +190,21 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		params.put(BorrowingBean.BORROW_STATUS, "0");
 		Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, getCurrentUserId(), DBBean.USER);
     	params.put(BorrowingBean.BORROW_APPLICANT, user.get(UserBean.USER_NAME));
-		return dao.add(params, DBBean.BORROWING);
+    	// 借货调拨编号
+    	String[] limitKeys = { BorrowingBean.BORROW_CODE };
+    	Map<String, Object> lastRecord = dao.getLastRecordByCreatedOn(DBBean.BORROWING, null, limitKeys);
+    	String code = "JHDB-" + ApiUtil.formateDate(new Date(), "yyyy") + "-";
+    	if (ApiUtil.isEmpty(lastRecord)) {
+    		code += "0001";
+		} else {
+			String borrowCode = (String) lastRecord.get(BorrowingBean.BORROW_CODE);
+	    	String[] codeArr = borrowCode.split("-");
+	    	String str = String.format("%04d", codeArr[2]);
+	    	code += str;
+		}
+    	params.put(BorrowingBean.BORROW_CODE, code);
+		
+    	return dao.add(params, DBBean.BORROWING);
 	}
 	
 	public Map<String, Object> eqlist(Map<String, Object> params) {
@@ -290,6 +304,12 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		Map<String, Object> returnParams = new HashMap<String, Object>();
 		returnParams.put(ReturnBean.BORROW_ID, params.get(ApiConstants.MONGO_ID));
 		returnParams.put(ReturnBean.BORROW_CODE, params.get(BorrowingBean.BORROW_CODE));
+		
+		String borrowCode = (String) params.get(BorrowingBean.BORROW_CODE);
+    	String[] codeArr = borrowCode.split("-");
+    	String code = "HHDB" + "-" + codeArr[1] + "-" + codeArr[2];
+		returnParams.put(ReturnBean.RETURN_CODE, code);
+		
 		return returnService.create(returnParams);
 	}
 	
