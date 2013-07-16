@@ -110,7 +110,7 @@ $(document).ready(function () {
 			{ field: "purchaseContractCode", title: "采购合同编号" },
 			{ field: "creatorName", title: "申请人" },
 			{ field: "getInvoiceActualMoney", title: "金额",footerTemplate: "总额: #=sum#" },
-			{ field: "getInvoiceActualDate", title: "日期",format: "{0:yyyy/MM/dd}" },
+			{ field: "getInvoiceActualDate", title: "日期",format: "{0:yyyy-MM-dd}" },
 			{ field: "getInvoiceReceivedMoneyStatus", title: "付款情况"},
 			{ field: "getInvoiceActualInvoiceNum", title: "发票号" },
 			{ field: "getInvoiceActualSheetCount", title: "开票张数"},
@@ -151,7 +151,7 @@ $(document).ready(function () {
             { field: "purchaseContractCode", title: "采购合同编号",editor:pcDropDownEditor},
             { field: "creatorName", title: "申请人" },
             { field: "payMoneyActualMoney", title:"金额", min:0,footerTemplate: "总额: #=sum#"},
-            { field: "payMoneyActualData",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
+            { field: "payMoneyActualData",title:"日期",format: "{0:yyyy-MM-dd}",width:"120px"},
             { field: "supplierName", title: "供货商"},
             { field: "supplierBankName", title: "开户行"},
             { field: "supplierBankAccount", title: "银行账号"}

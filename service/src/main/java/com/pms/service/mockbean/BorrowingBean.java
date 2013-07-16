@@ -42,6 +42,8 @@ public class BorrowingBean {
 
     public static final String BORROW_OUT_SALES_CONTRACT_ID = "outSalesContractId"; // 调出销售合同数据库_id-外键
     
-    public static final String SHIP_EQ_LIST = "eqcostList"; // 设备清单
+    public static final String EQCOST_BORROW_AMOUNT = "eqcostBorrowAmount"; // 借货数量
+    
+    public static final String EQCOST_CAN_BORROW_AMOUNT = "eqcostCanBorrowAmount"; // 借货数量
     
 }

@@ -141,7 +141,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(SalesContractBean.SC_ID, scId);    
-        query.put(ArrivalNoticeBean.SHIP_TYPE, new DBQuery(DBQueryOpertion.NOT_IN, ArrivalNoticeBean.SHIP_TYPE_1));
+        query.put(ArrivalNoticeBean.SHIP_TYPE, new DBQuery(DBQueryOpertion.NOT_IN, ArrivalNoticeBean.SHIP_TYPE_0));
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
         return listEqlist(query);
     
