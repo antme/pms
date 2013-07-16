@@ -493,6 +493,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		//获取相关开票信息列表数据
 		Map<String, Object> invoiceQuery = new HashMap<String, Object>();
 		invoiceQuery.put(MoneyBean.scId, _id);
+		Map<String, Object> orderByMap = new LinkedHashMap<String, Object>();
+		orderByMap.put(InvoiceBean.payInvoiceActualDate, ApiConstants.DB_QUERY_ORDER_BY_ASC);
+        invoiceQuery.put(ApiConstants.DB_QUERY_ORDER_BY, orderByMap);
 		Map<String, Object> invoiceList = dao.list(invoiceQuery, DBBean.SC_INVOICE);
 		List<Map<String, Object>> invoiceListData = (List<Map<String, Object>>) invoiceList.get(ApiConstants.RESULTS_DATA); 
 		
