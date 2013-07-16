@@ -915,6 +915,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return result;
     }
 
+    
+    public Map<String, Object> updatePurchaseContractPo(HashMap<String, Object> params){
+        
+        return dao.updateById(params, DBBean.PURCHASE_CONTRACT);
+    }
 
     @Override
     public Map<String, Object> listRepositoryRequests(Map<String, Object> params) {

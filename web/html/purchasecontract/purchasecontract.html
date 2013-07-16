@@ -16,6 +16,7 @@
 	    <button class="k-button access" access="purchase_contract_management" onclick="editCon();">编辑</button>
 	    <button class="k-button access" access="purchase_contract_process" onclick="approveCon()">批准</button>
 	    <button class="k-button access" access="purchase_contract_process" onclick="rejectCon()">拒绝</button>
+	    <button class="k-button access" access="purchase_contract_management" onclick="addPOBumber()">补填PO</button>
     </div>
 		<div id="grid"></div>
 	</div>
@@ -26,5 +27,16 @@
            <br>
            <button onclick="approveSubmit();">提交</button>
      </div>
+
+	<div id="ponum" style="display: none;">
+
+		<div class="k-edit-label ">
+			<label for="poNumber">PO号:</label>
+		</div>
+		<div  class="k-edit-field ">
+			<input type="text" name="poNumber" id="poNumber" >
+		</div>
+		<button onclick="submitPo();">提交</button>
+	</div>
 </body>
 </html>

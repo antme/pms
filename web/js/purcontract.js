@@ -113,6 +113,55 @@ function rejectCon() {
 	
 }
 
+var rowId = undefined;
+function addPOBumber(){
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if (row.contractExecuteCate == "北京代采") {
+
+			var options = {
+				width : 500,
+				height : 200,
+				actions : [ "Maximize", "Close" ]
+			};
+			$("#ponum").kendoWindow({
+				width : options.width,
+				height : options.height,
+				title : options.title
+			});
+
+			kendoWindow = $("#ponum").data("kendoWindow");
+			kendoWindow.open();
+			kendoWindow.center();
+			rowId = row._id;
+			console.log(row.poNumer);
+			if(row.poNumber){
+				$("#poNumber").val(row.poNumber);
+			}else{
+				$("#poNumber").val("");
+			}
+		}else{
+			alert("只能针对北京代采的采购合同补填PO号");
+		}
+	}
+	
+}
+
+function submitPo() {
+	if (rowId) {
+		var poNumer = $("#poNumber").val();
+		postAjaxRequest("/service/purcontract/po", {
+			_id : rowId,
+			poNumber : poNumer
+		}, function(data) {
+
+			var kendoWindow = $("#ponum").data("kendoWindow");
+			kendoWindow.close();
+		});
+
+	}
+}
+
 
 
 

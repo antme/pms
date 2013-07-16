@@ -1,5 +1,6 @@
 package com.pms.service.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -101,6 +102,8 @@ public interface IPurchaseContractService {
     public void destroyGetInvoice(Map<String, Object> params);
 
     public Map<String, Object> listProjectsForRepositoryDirect(Map<String, Object> parserJsonParameters);
+
+    public Map<String, Object> updatePurchaseContractPo(HashMap<String, Object> params);
 
    
 

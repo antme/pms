@@ -59,6 +59,12 @@ public class PurchaseContractController extends AbstractController {
     public void addPurchaseContract(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.updatePurchaseContract(parserJsonParameters(request, false)), request, response, "save_success");
     }
+    
+    @RequestMapping("/po")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, desc = RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT_DESC)
+    public void addPurchaseContractPo(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.updatePurchaseContractPo(parserJsonParameters(request, false)), request, response, "save_success");
+    }
  
     @RequestMapping("/delete")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, desc = RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT_DESC)
