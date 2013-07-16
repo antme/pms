@@ -33,6 +33,7 @@ import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISupplierService;
+import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
 import com.pms.service.util.EmailUtil;
@@ -701,8 +702,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
      */
     public Map<String, Object> listBackRequestForSelect() {
         Map<String, Object> query = new HashMap<String, Object>();
-//        query.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
+        query.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
         query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode, PurchaseBack.scCode });
+        //FIXME: 过滤掉申请数为0的数据
         return dao.list(query, DBBean.PURCHASE_BACK);
     }
 
