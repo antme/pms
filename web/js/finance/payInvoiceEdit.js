@@ -67,6 +67,7 @@ $(document).ready(function () {
 			loadPage("payInvoice");
 		} else if(validateModel()){
 			if(confirm("提交表单，确认？")){
+				currentObj.payInvoicePlanDate = kendo.toString(currentObj.payInvoicePlanDate,"yyyy-MM-dd");
 				postAjaxRequest("/service/sc/invoice/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
 			}
 		}

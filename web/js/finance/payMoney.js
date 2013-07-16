@@ -10,7 +10,8 @@ var requestModel = kendo.data.Model.define({
        supplierName: {},
        supplierBankName: {},
        supplierBankAccount: {},
-   	   payMoneyComment:{}
+   	   payMoneyComment:{},
+   	   creatorName:{editable: false}
     }
 });
 
@@ -78,7 +79,7 @@ $(document).ready(function () {
             { field: "purchaseContractCode", title: "采购合同编号",editor:pcDropDownEditor,width:"200px"},
             { field: "creatorName", title: "申请人" },
             { field: "payMoneyActualMoney", title:"金额", min:0},
-            { field: "payMoneyActualData",title:"日期",format: "{0:yyyy/MM/dd}",width:"120px"},
+            { field: "payMoneyActualData",title:"日期",format: "{0:yyyy-MM-dd}",width:"120px"},
             { field: "supplierName", title: "供应商"},
             { field: "supplierBankName", title: "开户行"},
             { field: "supplierBankAccount", title: "银行账号"},

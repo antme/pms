@@ -350,6 +350,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(EqCostListBean.EQ_LIST_SC_ID, cId);
 		query.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
+		
+		Map<String,Object> order = new HashMap<String,Object>();
+		order.put(EqCostListBean.EQ_LIST_NO, ApiConstants.DB_QUERY_ORDER_BY_ASC);
+		query.put(ApiConstants.DB_QUERY_ORDER_BY, order);
+		
 		Map<String, Object> result = dao.list(query, DBBean.EQ_COST);
 		return result;
 	}
@@ -589,7 +594,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		invoice.put(InvoiceBean.scId, params.get(InvoiceBean.scId));
 		invoice.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
 		
-		invoice.put(InvoiceBean.payInvoicePlanDate, params.get(InvoiceBean.payInvoicePlanDate));
+		invoice.put(InvoiceBean.payInvoicePlanDate, DateUtil.converUIDate(params.get(InvoiceBean.payInvoicePlanDate)));
 		invoice.put(InvoiceBean.payInvoiceReceivedMoneyStatus, params.get(InvoiceBean.payInvoiceReceivedMoneyStatus));
 		invoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusSubmit);
 		invoice.put(InvoiceBean.payInvoiceSubmitDate, DateUtil.getDateString(new Date()));
@@ -616,7 +621,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		invoice.put(InvoiceBean.payInvoiceMoney, total);
 		invoice.put(InvoiceBean.payInvoiceActualMoney, 0);
 		dao.add(invoice, DBBean.SC_INVOICE);
-		//添加任务
+		//TODO: 添加任务
 		return invoice;
 	}
 
@@ -664,7 +669,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				comment = recordComment("开票结束",comment,oldComment);
 			}else{
 				uInvoice.put(InvoiceBean.payInvoiceActualMoney, params.get(InvoiceBean.payInvoiceActualMoney));
-				uInvoice.put(InvoiceBean.payInvoiceActualDate, params.get(InvoiceBean.payInvoiceActualDate));
+				uInvoice.put(InvoiceBean.payInvoiceActualDate, DateUtil.converUIDate(params.get(InvoiceBean.payInvoiceActualDate)));
 				uInvoice.put(InvoiceBean.payInvoiceActualInvoiceNum, params.get(InvoiceBean.payInvoiceActualInvoiceNum));
 				uInvoice.put(InvoiceBean.payInvoiceActualSheetCount, params.get(InvoiceBean.payInvoiceActualSheetCount));
 				comment = recordComment("开票",comment,oldComment);
@@ -789,7 +794,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         Map<String, Object> obj = new HashMap<String, Object>();
         obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
         obj.put(MoneyBean.getMoneyActualMoney, ApiUtil.getDouble(params, MoneyBean.getMoneyActualMoney));
-        obj.put(MoneyBean.getMoneyActualDate, params.get(MoneyBean.getMoneyActualDate));
+        obj.put(MoneyBean.getMoneyActualDate, DateUtil.converUIDate(params.get(MoneyBean.getMoneyActualDate)));
         obj.put(MoneyBean.customerBankAccount, params.get(MoneyBean.customerBankAccount));
         obj.put(MoneyBean.customerBankName, params.get(MoneyBean.customerBankName));
         

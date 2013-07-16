@@ -575,16 +575,18 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Set<String> orderIds = new HashSet<String>();
         // 批准后更新订单状态
         for (Map<String, Object> eqMap : eqListMap) {
-            String orderId = eqMap.get(PURCHASE_ORDER_ID).toString();
-            orderIds.add(orderId);
             
-            eqMap.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
-            eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
-            eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));   
-            eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));  
-            eqMap.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));  
+            if(eqMap.get(PURCHASE_ORDER_ID) !=null){
+                String orderId = eqMap.get(PURCHASE_ORDER_ID).toString();
+                orderIds.add(orderId);
+                
+                eqMap.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
+                eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
+                eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));   
+                eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));  
+                eqMap.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));  
             eqMap.put(SUPPLIER, contract.get(SUPPLIER));  
-            
+            }
         }
         
         this.dao.updateById(contract, DBBean.PURCHASE_CONTRACT);
@@ -1164,7 +1166,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> obj = new HashMap<String, Object>();
         obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
         obj.put(MoneyBean.payMoneyActualMoney, ApiUtil.getDouble(params, MoneyBean.payMoneyActualMoney));
-        obj.put(MoneyBean.payMoneyActualDate, params.get(MoneyBean.payMoneyActualDate));
+        obj.put(MoneyBean.payMoneyActualDate, DateUtil.converUIDate(params.get(MoneyBean.payMoneyActualDate)));
         obj.put(MoneyBean.payMoneyComment, params.get(MoneyBean.payMoneyComment));
         obj.put(MoneyBean.supplierBankAccount, params.get(MoneyBean.supplierBankAccount));
         obj.put(MoneyBean.supplierBankName, params.get(MoneyBean.supplierBankName));
@@ -1213,7 +1215,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> saveGetInvoice(Map<String, Object> params) {
     	Map<String,Object> invoice = new HashMap<String,Object>();
     	invoice.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
-    	invoice.put(InvoiceBean.getInvoiceActualDate, params.get(InvoiceBean.getInvoiceActualDate));
+    	invoice.put(InvoiceBean.getInvoiceActualDate, DateUtil.converUIDate(params.get(InvoiceBean.getInvoiceActualDate)));
     	invoice.put(InvoiceBean.getInvoiceActualInvoiceNum, params.get(InvoiceBean.getInvoiceActualInvoiceNum));
     	invoice.put(InvoiceBean.getInvoiceActualMoney, ApiUtil.getDouble(params, InvoiceBean.getInvoiceActualMoney, 0));
     	invoice.put(InvoiceBean.getInvoiceActualSheetCount, ApiUtil.getInteger(params, InvoiceBean.getInvoiceActualSheetCount, 0));
