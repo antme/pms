@@ -61,23 +61,32 @@ public class EmailUtil {
             
             List<InternetAddress> address = new ArrayList<InternetAddress>();
             for (Object mail : toList) {
-                if(mail != null) address.add(new InternetAddress(mail.toString()));
-            }
-            email.setTo(address);// 设置收件人邮箱
-            email.setSubject(subject);// 设置邮件的主题
-            
-            email.setHtmlMsg(content);email.setTextMsg("您的邮箱不支持HTML消息格式");
-            email.setCharset("UTF-8");
-            
-            if (!ApiUtil.isEmpty(file) && new File(file).exists()) {
-                EmailAttachment attachment = new EmailAttachment();
-                attachment.setPath(file);
-                attachment.setDisposition(EmailAttachment.ATTACHMENT);
-                attachment.setName(new File(file).getName());
-                email.attach(attachment);
+                if (!ApiUtil.isEmpty(mail)) {
+                    String[] emailList = mail.toString().split(",");
+                    for (String em : emailList) {
+                        address.add(new InternetAddress(em));
+                    }
+                }
             }
             
-            email.send();
+            if (!address.isEmpty()) {
+                email.setTo(address);// 设置收件人邮箱
+                email.setSubject(subject);// 设置邮件的主题
+
+                email.setHtmlMsg(content);
+                email.setTextMsg("您的邮箱不支持HTML消息格式");
+                email.setCharset("UTF-8");
+
+                if (!ApiUtil.isEmpty(file) && new File(file).exists()) {
+                    EmailAttachment attachment = new EmailAttachment();
+                    attachment.setPath(file);
+                    attachment.setDisposition(EmailAttachment.ATTACHMENT);
+                    attachment.setName(new File(file).getName());
+                    email.attach(attachment);
+                }
+
+                email.send();
+            }
             
         } catch (EmailException e) {
             e.printStackTrace();

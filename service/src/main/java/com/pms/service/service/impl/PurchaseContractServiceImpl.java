@@ -534,7 +534,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             updateOrderFinalStatus(contract);
 
             Map<String, Object> userQuery = new HashMap<String, Object>();
-            userQuery.put(UserBean.GROUPS, new DBQuery(DBQueryOpertion.IN, this.dao.findOne(GroupBean.GROUP_NAME, GroupBean.DEPARTMENT_ASSISTANT_VALUE, DBBean.USER_GROUP).get(ApiConstants.MONGO_ID)));
+            userQuery.put(UserBean.GROUPS, new DBQuery(DBQueryOpertion.IN, this.dao.findOne(GroupBean.GROUP_NAME, GroupBean.PURCHASE_VALUE, DBBean.USER_GROUP).get(ApiConstants.MONGO_ID)));
             userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.EMAIL);
 
             List<Object> emails = this.dao.listLimitKeyValues(userQuery, DBBean.USER);
