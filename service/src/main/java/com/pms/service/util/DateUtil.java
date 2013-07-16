@@ -7,17 +7,29 @@ import java.util.Date;
 
 public class DateUtil {
 	
-	private static final String format = "yyyy/MM/dd HH:mm:ss";
+	private static final String format = "yyyy-MM-dd HH:mm:ss";
+	
+	private static final String formatSimple = "yyyy-MM-dd";
 	
 	public static String getDateString(Date date){
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		return sdf.format(date);
 	}
 	
 	public static Date getDate(String date) throws ParseException{
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		SimpleDateFormat sdf = new SimpleDateFormat(formatSimple);
 		return sdf.parse(date);
 	}
+	
+	/*conver '2010-01-01T10:10:10Z' to  '2010-01-01' **/
+	public static String converUIDate(Object date){
+		String value = null;
+		if(date != null && date.toString().length() >=10){
+			value = date.toString().substring(0,10);
+		}
+		return value;
+	}
+	
 	
 	public static Integer getSimpleDay(Long times) {
 		Date date = new Date();
@@ -139,6 +151,12 @@ public class DateUtil {
 		int days = (int) ((end - begin)/aDay) + 1;
 		return days;
 	}
+	
+	public static int getNowYearString(){
+		Calendar c = Calendar.getInstance();
+		return c.get(Calendar.YEAR);
+	}
+	
 	public static void main(String[] args) throws ParseException{
 	    getAgeByBirthDay(null);
 //	    getJustYearNow();

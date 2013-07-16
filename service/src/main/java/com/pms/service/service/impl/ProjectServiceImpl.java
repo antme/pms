@@ -18,6 +18,7 @@ import com.pms.service.service.ICustomerService;
 import com.pms.service.service.IProjectService;
 import com.pms.service.service.IUserService;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DateUtil;
 import com.pms.service.util.ExcleUtil;
 
 public class ProjectServiceImpl extends AbstractService implements IProjectService {
@@ -51,17 +52,20 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		String _id = (String) params.get(ApiConstants.MONGO_ID);
 		
 		Map<String, Object> projectBean = new HashMap<String, Object>();
-		projectBean.put(ProjectBean.PROJECT_CODE, params.get(ProjectBean.PROJECT_CODE));
+//		projectBean.put(ProjectBean.PROJECT_CODE, params.get(ProjectBean.PROJECT_CODE));
+		String projectType = (String)params.get(ProjectBean.PROJECT_TYPE);
+		String projectStatus = (String)params.get(ProjectBean.PROJECT_STATUS);
 		projectBean.put(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME));
 		projectBean.put(ProjectBean.PROJECT_MANAGER, params.get(ProjectBean.PROJECT_MANAGER));
-		projectBean.put(ProjectBean.PROJECT_STATUS, params.get(ProjectBean.PROJECT_STATUS));
-		projectBean.put(ProjectBean.PROJECT_TYPE, params.get(ProjectBean.PROJECT_TYPE));
+		projectBean.put(ProjectBean.PROJECT_STATUS, projectStatus);
+		projectBean.put(ProjectBean.PROJECT_TYPE, projectType);
 		projectBean.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
 		projectBean.put(ProjectBean.PROJECT_MEMO, params.get(ProjectBean.PROJECT_MEMO));
 		projectBean.put(ProjectBean.PROJECT_CUSTOMER, params.get(ProjectBean.PROJECT_CUSTOMER));
 		projectBean.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
 		
 		if (_id == null){//Add
+			projectBean.put(ProjectBean.PROJECT_CODE, genProjectCode(projectType, projectStatus));
 			return dao.add(projectBean, DBBean.PROJECT);
 		}else{//Update
 			projectBean.put(ApiConstants.MONGO_ID, _id);
@@ -94,8 +98,9 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 				
 				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_CUSTOMER, customerNew);
 			}*/
-			//项目 type 发生改变
-			String typeOld = (String) existProject.get(ProjectBean.PROJECT_TYPE);
+			
+			//项目 type 发生改变 comment by shihua 20130716. New logic can not update the project type
+			/*String typeOld = (String) existProject.get(ProjectBean.PROJECT_TYPE);
 			String typeNew = (String) projectBean.get(ProjectBean.PROJECT_TYPE);
 			if (!typeOld.equals(typeNew)){
 				//1.冗余存放 项目 type 且存有 projectId 的相关集合，均需同步更新 项目 type 字段
@@ -105,7 +110,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 				relatedCQuery.put(ProjectBean.PROJECT_ID, _id);
 				
 				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_TYPE, typeNew);
-			}
+			}*/
 			
 			return dao.updateById(projectBean, DBBean.PROJECT);
 		}
@@ -190,11 +195,22 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		return dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
 	}
 
+	/**
+	 * 预立项 转 正式立项：
+	 * 1.项目状态改变；
+	 * 2.项目编号 预立项前缀 Y- 去除
+	 */
 	@Override
 	public Map<String, Object> setupProject(Map<String, Object> params) {
 		String _id = (String) params.get(ApiConstants.MONGO_ID);
 		Map<String, Object> pro = dao.findOne(ApiConstants.MONGO_ID, _id, DBBean.PROJECT);
+		String pCode = (String)pro.get(ProjectBean.PROJECT_CODE);
 		pro.put(ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS_OFFICIAL);
+		int prefixIndex = pCode.indexOf(ProjectBean.PROJECT_YULIXIANG_PREFIX);
+		if (prefixIndex != -1){//考虑到老数据编号字段格式没有 Y-前缀
+			pro.put(ProjectBean.PROJECT_CODE, pCode.substring(prefixIndex+2, pCode.length()));
+		}
+		
 		return dao.updateById(pro, DBBean.PROJECT);
 	}
 	
@@ -377,6 +393,36 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		}
 		p.put("scs", scList.get(ApiConstants.RESULTS_DATA));
 		return p;
+	}
+	
+	private String genProjectCode(String ptype, String pStatus){
+		String prefix = ProjectBean.PROJECT_CODE_PREFIX_SERVICE;
+		if (ProjectBean.PROJECT_TYPE_PRODUCT.equals(ptype)){
+			prefix = ProjectBean.PROJECT_CODE_PREFIX_PRODUCT;
+		}else if (ProjectBean.PROJECT_TYPE_PROJECT.equals(ptype)){
+			prefix = ProjectBean.PROJECT_CODE_PREFIX_PROJECT;
+		}
+		
+		if (!ProjectBean.PROJECT_STATUS_OFFICIAL.equals(pStatus)){
+			prefix = ProjectBean.PROJECT_YULIXIANG_PREFIX+prefix;
+		}
+		
+		int year = DateUtil.getNowYearString();
+		
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		String[] limitKeys = {ProjectBean.PROJECT_CODE};
+		Map<String, Object> p = dao.getLastRecordByCreatedOn(DBBean.PROJECT, queryMap, limitKeys);
+		String pCode = (String)p.get(ProjectBean.PROJECT_CODE);
+		String pCodeNoString = pCode.substring(pCode.lastIndexOf("-")+1, pCode.length());
+		Integer pCodeNo = 1;
+		try {
+			pCodeNo = Integer.parseInt(pCodeNoString);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+//			e.printStackTrace();  旧数据会出异常，就pCodeNo=1 开始
+		}
+		pCodeNo = pCodeNo + 1;
+		return prefix+year+"-"+pCodeNo;
 	}
 
 }

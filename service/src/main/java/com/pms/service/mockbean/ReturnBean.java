@@ -2,6 +2,8 @@ package com.pms.service.mockbean;
 
 public class ReturnBean {
 	
+	public static final String RETURN_CODE = "returnCode"; // 还货调拨编号
+	
     public static final String BORROW_ID = "borrowId"; // id
     
     public static final String BORROW_CODE = "borrowCode"; // 借货申请编号
