@@ -13,15 +13,19 @@ import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
+import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
+import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.IShipService;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.EmailUtil;
 
 public class ShipServiceImpl extends AbstractService implements IShipService {
 	
@@ -149,7 +153,68 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	   
     public Map<String, Object> approve(Map<String, Object> params){
         params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
-        return this.dao.updateById(params, DBBean.SHIP);
+        this.dao.updateById(params, DBBean.SHIP);
+        
+        Map<String, Object> eqList = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST },
+                DBBean.SHIP);  
+        
+        List<Map<String, Object>> eqMapList = (List<Map<String, Object>>) eqList.get(SalesContractBean.SC_EQ_LIST);
+        
+        Map<String, Object> shipMap = new HashMap<String, Object>();
+        Set<String> contractIds = new HashSet<String>();
+        for (Map<String, Object> eq : eqMapList) {
+            if (eq.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE) != null && eq.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).toString().equalsIgnoreCase(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
+                if (eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID) != null) {
+                    contractIds.add(eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID).toString());
+                    shipMap.put(eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID).toString(), eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
+                }
+            }
+        }
+        
+        
+        for (String contractId : contractIds) {
+            // 只统计此订单下的同样的设备清单
+            Map<String, Object> compareMap = new HashMap<String, Object>();
+            compareMap.put("purchaseContractId", contractId);
+
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[]{ShipBean.SHIP_STATUS_APPROVE, ShipBean.SHIP_STATUS_CLOSE}));            
+            query.put("eqcostList.purchaseContractId", contractId);
+            Map<String, Integer> repCountMap = countEqByKey(query, DBBean.SHIP, ShipBean.EQCOST_SHIP_AMOUNT, null, compareMap);
+
+            Map<String, Object> conQuery = new HashMap<String, Object>();
+            conQuery.put(ApiConstants.MONGO_ID, contractId);
+            Map<String, Integer> contractCountMap = countEqByKey(conQuery, DBBean.PURCHASE_CONTRACT, "eqcostApplyAmount", null);
+
+            boolean sendMail = true;
+            for (String key : contractCountMap.keySet()) {
+
+                if (repCountMap.get(key) == null) {
+                    sendMail = false;
+                    break;
+                } else {
+                    if (repCountMap.get(key) < contractCountMap.get(key)) {
+                        sendMail = false;
+                        break;
+                    }
+                }
+
+            }
+
+            if (sendMail) {
+                Map<String, Object> userQuery = new HashMap<String, Object>();
+                userQuery.put(UserBean.GROUPS, new DBQuery(DBQueryOpertion.IN, this.dao.findOne(GroupBean.GROUP_NAME, GroupBean.PURCHASE_VALUE, DBBean.USER_GROUP).get(ApiConstants.MONGO_ID)));
+                userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.EMAIL);
+                List<Object> emails = this.dao.listLimitKeyValues(userQuery, DBBean.USER);
+                String subject = String.format("采购合同 - %s -已发货完毕", shipMap.get(contractId));
+                String content = String.format("采购合同 - %s -已发货完毕", shipMap.get(contractId));
+                EmailUtil.sendMail(subject, emails, content);
+
+            }
+        }
+        
+        return new HashMap<String, Object>();
+        
     }
     
     public Map<String, Object> reject(Map<String, Object> params){
