@@ -575,16 +575,18 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Set<String> orderIds = new HashSet<String>();
         // 批准后更新订单状态
         for (Map<String, Object> eqMap : eqListMap) {
-            String orderId = eqMap.get(PURCHASE_ORDER_ID).toString();
-            orderIds.add(orderId);
             
-            eqMap.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
-            eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
-            eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));   
-            eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));  
-            eqMap.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));  
+            if(eqMap.get(PURCHASE_ORDER_ID) !=null){
+                String orderId = eqMap.get(PURCHASE_ORDER_ID).toString();
+                orderIds.add(orderId);
+                
+                eqMap.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
+                eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
+                eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));   
+                eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));  
+                eqMap.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));  
             eqMap.put(SUPPLIER, contract.get(SUPPLIER));  
-            
+            }
         }
         
         this.dao.updateById(contract, DBBean.PURCHASE_CONTRACT);
