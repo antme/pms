@@ -1164,7 +1164,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> obj = new HashMap<String, Object>();
         obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
         obj.put(MoneyBean.payMoneyActualMoney, ApiUtil.getDouble(params, MoneyBean.payMoneyActualMoney));
-        obj.put(MoneyBean.payMoneyActualDate, params.get(MoneyBean.payMoneyActualDate));
+        obj.put(MoneyBean.payMoneyActualDate, DateUtil.converUIDate(params.get(MoneyBean.payMoneyActualDate)));
         obj.put(MoneyBean.payMoneyComment, params.get(MoneyBean.payMoneyComment));
         obj.put(MoneyBean.supplierBankAccount, params.get(MoneyBean.supplierBankAccount));
         obj.put(MoneyBean.supplierBankName, params.get(MoneyBean.supplierBankName));
@@ -1213,7 +1213,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> saveGetInvoice(Map<String, Object> params) {
     	Map<String,Object> invoice = new HashMap<String,Object>();
     	invoice.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
-    	invoice.put(InvoiceBean.getInvoiceActualDate, params.get(InvoiceBean.getInvoiceActualDate));
+    	invoice.put(InvoiceBean.getInvoiceActualDate, DateUtil.converUIDate(params.get(InvoiceBean.getInvoiceActualDate)));
     	invoice.put(InvoiceBean.getInvoiceActualInvoiceNum, params.get(InvoiceBean.getInvoiceActualInvoiceNum));
     	invoice.put(InvoiceBean.getInvoiceActualMoney, ApiUtil.getDouble(params, InvoiceBean.getInvoiceActualMoney, 0));
     	invoice.put(InvoiceBean.getInvoiceActualSheetCount, ApiUtil.getInteger(params, InvoiceBean.getInvoiceActualSheetCount, 0));
