@@ -85,6 +85,27 @@ public class CommonDaoMongoImpl implements ICommonDao {
         return doPageNationQuery(parameters, collection, query, false, null);
     }
     
+    public Map<String, Object> getLastRecordByCreatedOn(String collection, Map<String, Object> queryMap, String[] limitKeys){
+    	Map<String, Object> result =null;
+    	DBObject query = DBQueryUtil.buildQueryObject(queryMap, true, true);
+    	
+        BasicDBObject queryKeys = new BasicDBObject();
+        queryKeys.put(ApiConstants.MONGO_ID, 1);
+        for (String queryKey : limitKeys) {
+            queryKeys.put(queryKey, 1);
+        }
+        
+        BasicDBObject orderObj = new BasicDBObject();
+        orderObj.put(ApiConstants.CREATED_ON, ApiConstants.DB_QUERY_ORDER_BY_DESC);
+    	DBCursor cursor = this.getConnection(ConfigurationManager.getDbName(), collection).find(query, queryKeys).sort(orderObj).limit(1);
+    	
+    	while (cursor.hasNext()) {
+    		result = cursor.next().toMap();
+    	}
+    	
+    	return result;
+    }
+    
     
     public List<Object> listLimitKeyValues(Map<String, Object> parameters, String collection) {
 

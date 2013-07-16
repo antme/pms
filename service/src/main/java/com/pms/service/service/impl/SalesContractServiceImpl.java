@@ -64,7 +64,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		//构造合同信息
 		Map<String, Object> contract = new HashMap<String, Object>();
-		contract.put(SalesContractBean.SC_PROJECT_ID, params.get(SalesContractBean.SC_PROJECT_ID));
+		String scPId = (String)params.get(SalesContractBean.SC_PROJECT_ID);
+		contract.put(SalesContractBean.SC_PROJECT_ID, scPId);
 		contract.put(SalesContractBean.SC_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT));
 		contract.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
 		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_EQ_COST0));
@@ -78,7 +79,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT, ApiUtil.getDouble(params, SalesContractBean.SC_EXTIMATE_GROSS_PROFIT));
 		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE, params.get(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE));
 		
-		contract.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE));
+//		contract.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE));
 		contract.put(SalesContractBean.SC_PERSON, params.get(SalesContractBean.SC_PERSON));
 		contract.put(SalesContractBean.SC_CUSTOMER, params.get(SalesContractBean.SC_CUSTOMER));
 		contract.put(SalesContractBean.SC_TYPE, params.get(SalesContractBean.SC_TYPE));
@@ -103,6 +104,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		if (_id == null){//Add
 			contract.put(SalesContractBean.SC_MODIFY_TIMES, 0);
 			contract.put(SalesContractBean.SC_LAST_TOTAL_AMOUNT, ApiUtil.getDouble(params, SalesContractBean.SC_AMOUNT));
+			
+			String genSCCode = genSCCode(scPId);
+			contract.put(SalesContractBean.SC_CODE, genSCCode);
 			addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
 			
 			//更新关联项目customer(新的需求，添加 SC时 选择客户)
@@ -113,7 +117,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 			//添加成本设备清单记录
 			if (eqcostList != null && !eqcostList.isEmpty()){
-				addEqCostListForContract(eqcostList, (String)addedContract.get(ApiConstants.MONGO_ID), 
+				addEqCostListForContract(eqcostList, (String)addedContract.get(ApiConstants.MONGO_ID), genSCCode,
 						(String)addedContract.get(SalesContractBean.SC_PROJECT_ID) );
 			}
 			
@@ -125,7 +129,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			existContractQuery.put(ApiConstants.MONGO_ID, _id);
 			existContractQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE, 
 					SalesContractBean.SC_MODIFY_TIMES, SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER,
-					SalesContractBean.SC_MODIFY_HISTORY, SalesContractBean.SC_LAST_TOTAL_AMOUNT});
+					SalesContractBean.SC_MODIFY_HISTORY, SalesContractBean.SC_LAST_TOTAL_AMOUNT, SalesContractBean.SC_CODE});
 			Map<String, Object> existContract = dao.findOneByQuery(existContractQuery, DBBean.SALES_CONTRACT);
 			
 			//更新销售合同变更次数 comment by danny in 20130704. New logic is update the modify times when add new eqcostList
@@ -210,7 +214,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			//添加成本设备清单记录
 			if (!eqcostList.isEmpty()){
 				updateTheModifyHistoryAndModifyTimesAndscLastAmount(params, eqcostList, contract, existContract);
-				addEqCostListForContract(eqcostList, _id, (String) existContract.get(SalesContractBean.SC_PROJECT_ID));
+				String scProjectId = (String) existContract.get(SalesContractBean.SC_PROJECT_ID);
+				String scCode = (String) existContract.get(SalesContractBean.SC_CODE);
+				addEqCostListForContract(eqcostList, _id, scCode, scProjectId);
 			}
 			
 			return dao.updateById(contract, DBBean.SALES_CONTRACT);
@@ -251,7 +257,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		return amount;
 	}
 	
-	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId, String proId){
+	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId, String scCode, String proId){
 		int nextVersionNo = this.getEqCostNextVersionNo(cId);
 		for (Map<String, Object> item : eqcostList){
 
@@ -289,6 +295,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			item.put(SalesContractBean.SC_PROJECT_ID, proId);
 			item.put(EqCostListBean.EQ_LIST_SC_ID, cId);
 			item.put(EqCostListBean.EQ_LIST_VERSION_NO, nextVersionNo);
+			
+			String eqcostCode = genEqcostListCode(scCode, nextVersionNo);
+			item.put(EqCostListBean.EQ_LIST_CODE, eqcostCode);
 			dao.add(item, DBBean.EQ_COST);
 		}
 	}
@@ -1133,5 +1142,47 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         }
 
         return needMergeList;
+    }
+    
+    private String genSCCode(String pId){
+    	String prefix = SalesContractBean.SC_CODE_PREFIX;
+		
+		int year = DateUtil.getNowYearString();
+		
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		String[] limitKeys = {SalesContractBean.SC_CODE};
+		Map<String, Object> re = dao.getLastRecordByCreatedOn(DBBean.SALES_CONTRACT, queryMap, limitKeys);
+		String scCode = (String)re.get(SalesContractBean.SC_CODE);
+		String scCodeNoString = scCode.substring(scCode.lastIndexOf("-")+1, scCode.length());
+		Integer scCodeNo = 0;
+		try {
+			scCodeNo = Integer.parseInt(scCodeNoString);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+//			e.printStackTrace();  旧数据会出异常，就pCodeNo=1 开始
+		}
+		scCodeNo = scCodeNo + 1;
+		String genCode = prefix+year+"-"+scCodeNo;
+		
+		Map<String, Object> scQuery = new HashMap<String, Object>();
+		scQuery.put(SalesContractBean.SC_PROJECT_ID, pId);
+		int sameSCCount = dao.count(scQuery, DBBean.SALES_CONTRACT);
+		if (sameSCCount>0){
+			genCode = genCode + "-ADD" + sameSCCount;
+		}
+		return genCode;
+    }
+    
+    private String genEqcostListCode(String scCode, int nextVersion){
+    	int index = scCode.lastIndexOf("-");
+    	String scInfo = null;
+    	if (index != -1){
+    		String scInfo1 = scCode.substring(index-2, index);
+        	String scInfo2 = scCode.substring(index+1, scCode.length());
+        	scInfo = scInfo1 + scInfo2;
+    	}
+    	String prefix = EqCostListBean.EQ_LIST_CODE_PREFIX + scInfo+"-";
+    	
+    	return prefix + nextVersion;
     }
 }

@@ -138,9 +138,11 @@ $(document).ready(function() {
 		dataSource : customerItems,
 	});*/
 	if(popupParams){
-		if (popupParams.scAddProject == 1){
+		if (popupParams.scAddProject == 1){//销售合同中进入添加
 			pModel = new projectModel();
 			kendo.bind($("#addProject"), pModel);
+			
+			$("#projectStatus").data("kendoDropDownList").setDataSource(proStatusItems);
 		}else{
 			postAjaxRequest("/service/project/getandmergescinfo", popupParams, popView);
 			disableAllInPoppup();
@@ -194,6 +196,10 @@ function popView(data){
 function edit(data){
 	pModel = new projectModel(data);
 	kendo.bind($("#addProject"), pModel);
+	var pTypeList = $("#projectType").data("kendoDropDownList");
+	pTypeList.enable(false);
+	
+	$("#projectCode").attr("disabled",true);
 }
 
 function saveProject(){

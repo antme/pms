@@ -87,16 +87,16 @@ public class SalesContractBean {
     
 	
 	//归档状态
-	public static final int SC_ARCHIVE_STATUS_ARCHIVED = 1;  //已归档
-	public static final int SC_ARCHIVE_STATUS_UN_ARCHIVED = 0;  //未归档
+	public static final String SC_ARCHIVE_STATUS_ARCHIVED = "已归档";  //已归档
+	public static final String SC_ARCHIVE_STATUS_UN_ARCHIVED = "未归档";  //未归档
 	
 	//执行状态
 	public static final String SC_RUNNING_STATUS_RUNNING = "执行中"; //执行中
-	public static final int SC_RUNNING_STATUS_PAUSE = 2; //中止或暂停
-	public static final int SC_RUNNING_STATUS_END_PHASE = 3; //收尾阶段
-	public static final int SC_RUNNING_STATUS_OVER = 4; //结束
-	public static final int SC_RUNNING_STATUS_WARRANTY = 5; //质保期
-	public static final int SC_RUNNING_STATUS_CANCEL = 6; //作废
+//	public static final int SC_RUNNING_STATUS_PAUSE = 2; //中止或暂停
+//	public static final int SC_RUNNING_STATUS_END_PHASE = 3; //收尾阶段
+//	public static final int SC_RUNNING_STATUS_OVER = 4; //结束
+//	public static final int SC_RUNNING_STATUS_WARRANTY = 5; //质保期
+//	public static final int SC_RUNNING_STATUS_CANCEL = 6; //作废
 	
 	//发票类型
 //	增值税专用，增值税普通，建筑业发票，服务业发票
@@ -127,4 +127,7 @@ public class SalesContractBean {
 	public static final String SC_MODIFY_PERSON = "addNewEqCostPerson";//合同  增补操作人
 	public static final String SC_MODIFY_REASON = "addNewEqCostReason";//合同  增补原因 (成本设备的勘误或增补修改)
 	public static final String SC_MODIFY_MEMO = "addNewEqCostMemo";//合同  增补备注
+	
+	
+	public static final String SC_CODE_PREFIX = "TDSH-XS-";
 }

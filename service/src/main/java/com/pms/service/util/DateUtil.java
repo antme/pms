@@ -139,6 +139,12 @@ public class DateUtil {
 		int days = (int) ((end - begin)/aDay) + 1;
 		return days;
 	}
+	
+	public static int getNowYearString(){
+		Calendar c = Calendar.getInstance();
+		return c.get(Calendar.YEAR);
+	}
+	
 	public static void main(String[] args) throws ParseException{
 	    getAgeByBirthDay(null);
 //	    getJustYearNow();

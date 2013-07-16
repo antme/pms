@@ -26,5 +26,8 @@ public class EqCostListBean {
 	public static final String EQ_LIST_TAX_TYPE = "eqcostTaxType";//税收类型：增值税 or 非增值税
 	public static final String EQ_LIST_CATEGORY = "eqcostCategory";//所属 分类
 	public static final String EQ_LIST_LAST_BASE_PRICE = "eqcostLastBasePrice";//最终成本单价
+
+	public static final String EQ_LIST_CODE_PREFIX = "HTCB-"; //每批次成本清单对应一个编号 eg.HTCB-1301-1
+	public static final String EQ_LIST_CODE = "eqcostCode"; //每批次成本清单对应一个编号
 	
 }
