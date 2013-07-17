@@ -109,7 +109,8 @@ var menus = [
                  text: "基础信息",  id: "system", imageUrl: "/images/user.png",
                  	items: [
                              { text: "客户", id: "customer", imageUrl: "/images/toy.png" },
-                             { text: "供应商", id: "supplier", imageUrl: "/images/ccontract.png" }
+                             { text: "供应商", id: "supplier", imageUrl: "/images/ccontract.png" },
+                             { text: "数据导入", id: "historyDataImport", imageUrl: "/images/ccontract.png" }
                          ]
              } , {
                  text: "权限管理", id: "user", expanded: false, imageUrl: "/images/friends_group.png",

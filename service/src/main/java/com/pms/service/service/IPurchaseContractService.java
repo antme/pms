@@ -12,9 +12,9 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters);
     
-    public Map<String, Object> listProjectsFromApproveContractsForRepositorySelect(Map<String, Object> parameters);
+    public Map<String, Object> listProjectsAndSuppliersFromContractsForRepositorySelect(Map<String, Object> parameters);
             
-    public Map<String, Object> listContractsByProjectAndSupplier(Map<String, Object> params);
+    public Map<String, Object> listEqListByProjectAndSupplierForRepository(Map<String, Object> params);
     
     public Map<String, Object> listSalesContractsForShipSelect(Map<String, Object> params);  
         

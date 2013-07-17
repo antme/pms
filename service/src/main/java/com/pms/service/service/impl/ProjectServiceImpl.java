@@ -425,4 +425,16 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		return prefix+year+"-"+pCodeNo;
 	}
 
+	@Override
+	public Map<String, Object> importProject(String pName, String customer) {
+		Map<String, Object> p = dao.findOne(ProjectBean.PROJECT_NAME, pName, DBBean.PROJECT);
+		if (p == null){
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put(ProjectBean.PROJECT_NAME, pName);
+			map.put(ProjectBean.PROJECT_CUSTOMER, customer);
+			return dao.add(map, DBBean.PROJECT);
+		}
+		return p;
+	}
+
 }
