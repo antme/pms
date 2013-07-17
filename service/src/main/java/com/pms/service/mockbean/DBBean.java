@@ -45,4 +45,6 @@ public class DBBean {
     public static final String RETURN = "return";
     
     public static final String ARRIVAL_NOTICE = "arrivalNotice";
+    
+    public static final String SHIP_COUNT = "shipCount";
 }

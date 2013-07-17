@@ -1,5 +1,8 @@
 package com.pms.service.service.impl;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +20,7 @@ import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
+import com.pms.service.mockbean.ShipCountBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
@@ -387,9 +391,49 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 			returnList.add((Map<String, Object>) mapEntry.getValue());
 		}
 		
-		Map<String, Object> res = new HashMap<String, Object>();
-		res.put(ApiConstants.RESULTS_DATA, scs.mergeEqListBasicInfo(returnList));
-		return res;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(ShipCountBean.SHIP_COUNT_DATE, returnList);
+		map.put(ShipCountBean.SHIP_TOTAL_AMOUNT, returnList);
+		map.put(ShipCountBean.SHIP_TOTAL_MONEY, returnList);
+		map.put(SalesContractBean.SC_EQ_LIST, returnList);
+		
+		return dao.add(map, DBBean.SHIP_COUNT);
+	}
+	
+	// 发货统计
+	public Map<String, Object> listShipCount(Map<String, Object> params) {
+		aotuCountShip();
+		return dao.list(params, DBBean.SHIP_COUNT);
+	}
+	
+	private void aotuCountShip() {
+		// 取最后生成的一条记录 - 判断是否需要统计
+    	String[] limitKeys = { ShipCountBean.SHIP_COUNT_DATE };
+    	Map<String, Object> lastRecord = dao.getLastRecordByCreatedOn(DBBean.SHIP_COUNT, null, limitKeys);
+    	if (ApiUtil.isEmpty(lastRecord)) {
+    		
+    	} else {
+    		String lastCountDate = (String) lastRecord.get(ShipCountBean.SHIP_COUNT_DATE);
+    		String[] dateArr = lastCountDate.split("-");
+    		int month = Integer.parseInt(dateArr[1]);
+    		month++;
+        	String str = String.format("%02d", month);
+        	str += "-21";
+        	
+        	DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        	try {
+    			Date nextCountDate = df.parse(str);
+    	    	Date now = new Date();
+    	    	if (now.getTime() > nextCountDate.getTime()) {
+    				
+    			}
+    		} catch (ParseException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+		}
+		
+    	
 	}
 
 }
