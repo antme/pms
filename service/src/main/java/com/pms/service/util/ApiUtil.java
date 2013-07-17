@@ -108,6 +108,23 @@ public class ApiUtil {
         }        
         return in;
     }
+
+    //转换 String==>double（保留4位小数）
+    public static Double getDoubleMultiply100(String value) {
+        Double in = 0.00;
+        if (value != null && !value.trim().isEmpty()) {
+            try {
+            	DecimalFormat df = new DecimalFormat("#.00");
+            	in = Double.valueOf(value);
+            	in = in*100;
+            	in = Double.valueOf(df.format(in));
+            } catch (Exception e) {
+                throw new ApiResponseException(String.format("Double parameter illegal [%s]", value),
+                        ResponseCodeConstants.NUMBER_PARAMETER_ILLEGAL);
+            }
+        }        
+        return in;
+    }
  
     public static Double getDouble(String value,double defaultValue) {
         Double in = null;

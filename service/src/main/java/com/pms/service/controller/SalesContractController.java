@@ -253,6 +253,24 @@ public class SalesContractController extends AbstractController {
     	result.put("filename", filename);
     	result.put("size", size);*/
     	responseWithData(result, request, response);
+    } 
+
+    @RequestMapping("/importsc")
+    //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
+    public void importScExcle(HttpServletRequest request, HttpServletResponse response){
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;   
+        MultipartFile uploadFile = multipartRequest.getFile("scFile");        
+        Map<String,Object> result = new HashMap<String,Object>();
+        try {
+			InputStream inputStream = uploadFile.getInputStream();
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("inputStream", inputStream);
+			result = salesContractService.importSCExcleFile(map);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+    	responseWithData(result, request, response);
     }  
     
 }

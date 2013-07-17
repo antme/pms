@@ -81,6 +81,8 @@ public class SalesContractBean {
 	//**********下拉列表基础数据
 	
 	//合同类型
+	public static final String SC_TYPE_RD = "弱电工程";
+	public static final String SC_TYPE_FW = "维护及服务";
 	public static final String SC_TYPE_SC_WIRING = "产品销售（灯控/布线）";
 	public static final String SC_TYPE_INTEGRATION_WIRING = "产品集成（灯控/布线）";
 
@@ -100,23 +102,20 @@ public class SalesContractBean {
 	
 	//发票类型
 //	增值税专用，增值税普通，建筑业发票，服务业发票
-//	public static final int SC_INVOICE_TYPE_ = 1; //增值税专用
-//	public static final int SC_INVOICE_TYPE_ = 2; //增值税普通
-//	public static final int SC_INVOICE_TYPE_ = 3; //建筑业发票
-//	public static final int SC_INVOICE_TYPE_ = 4; //服务业发票
-	
-	//调试费用类型
-//	public static final int SC_DEBUG_COST_TYPE_ = 1; //
-//	public static final int SC_DEBUG_COST_TYPE_ = 1; //
-//	public static final int SC_DEBUG_COST_TYPE_ = 1; //
-//	public static final int SC_DEBUG_COST_TYPE_ = 1; //
-//	public static final int SC_DEBUG_COST_TYPE_ = 1; //
+	public static final String SC_INVOICE_TYPE_1 = "增值税专用"; //增值税专用
+	public static final String SC_INVOICE_TYPE_2 = "增值税普通"; //增值税普通
+	public static final String SC_INVOICE_TYPE_3 = "建筑业发票"; //建筑业发票
+	public static final String SC_INVOICE_TYPE_4 = "服务业发票"; //服务业发票
 	
 	//税收类型
 //	public static final int SC_TAX_TYPE_ = 1; //
 //	public static final int SC_TAX_TYPE_ = 1; //
 //	public static final int SC_TAX_TYPE_ = 1; //
 	
+	//进度款
+	public static final String SC_PROGRESS_PAYMENT_NO = "progressPaymentNo"; //进度款 序号
+	public static final String SC_PROGRESS_PAYMENT_AMOUNT = "progressPaymentAmount"; //进度款 金额
+	public static final String SC_PROGRESS_PAYMENT_MEMO = "progressPaymentMemo"; //进度款 备注
 	
 	public static final String SC_BACK_REQUEST_COUNT = "backRequestCount";//合同下申请单数量
 	public static final String SC_LAST_TOTAL_AMOUNT = "scLastTotalAmount";//合同 最终总金额

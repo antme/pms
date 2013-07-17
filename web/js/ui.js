@@ -217,7 +217,9 @@ function loadPage(page, parameters, popupDiv) {
 		page = "html/execution/arrivalNotice.html";
 	} else if(page == "payInvoiceView"){
 		page = "html/finance/payInvoiceView.html";
-	}	
+	} else if (page == "historyDataImport"){
+		page = "html/import/historyDataImport.html";
+	}
 	
 
 	if (page == "mytask") {

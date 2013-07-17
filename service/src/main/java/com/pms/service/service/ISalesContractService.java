@@ -66,5 +66,7 @@ public interface ISalesContractService {
 	public Map<String, Object> setSCArchiveStatusStatus(Map<String, Object> params);
 	
     public List<Map<String, Object>> mergeEqListBasicInfo(Object eqList);
+    
+    public Map<String, Object> importSCExcleFile(Map<String, Object> params); 
 
 }

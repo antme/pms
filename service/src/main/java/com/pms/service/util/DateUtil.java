@@ -21,7 +21,11 @@ public class DateUtil {
 		return sdf.parse(date);
 	}
 	
-	/*conver '2010-01-01T10:10:10Z' to  '2010-01-01' **/
+	public static String getStringByDate(Date date){
+		SimpleDateFormat sdf = new SimpleDateFormat(formatSimple);
+		return sdf.format(date);
+	}
+	/*convert '2010-01-01T10:10:10Z' to  '2010-01-01' **/
 	public static String converUIDate(Object date){
 		String value = null;
 		if(date != null && date.toString().length() >=10){
