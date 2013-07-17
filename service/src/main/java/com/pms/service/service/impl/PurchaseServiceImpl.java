@@ -58,7 +58,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			    obj.put(PurchaseBack.pbTotalCount, obj.get(PurchaseBack.eqcostLeftAmount));
 			}
 		}
-		
+		removeEmptyEqList(eqList, PurchaseBack.eqcostLeftAmount);
 		request.put(PurchaseBack.pbDepartment, request.get("projectManagerDepartment"));
 		request.remove("projectManagerDepartment");
 		request.put(PurchaseBack.pbSpecialRequireRadio, new String[]{});
@@ -214,6 +214,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		
 		List<Map<String, Object>> eqList = (List<Map<String, Object>>) allot.get(PurchaseBack.eqcostList);
 		if(eqList != null){
+			removeEmptyEqList(eqList, PurchaseBack.pbLeftCount);
 			for(Map<String,Object> obj : eqList){		
 			    obj.put(PurchaseBack.paCount, obj.get(PurchaseBack.pbLeftCount));
 			}
