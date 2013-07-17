@@ -802,3 +802,7 @@ function categoryDropDownEditor(container, options) {
 				dataSource : data
 			});
 }
+
+function cancel(){
+	loadPage("purchasecontract");
+}
