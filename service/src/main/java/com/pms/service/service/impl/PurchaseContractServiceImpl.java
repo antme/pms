@@ -201,7 +201,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     //非直发入库
-    public Map<String, Object> listContractsByProjectAndSupplier(Map<String, Object> params) {
+    public Map<String, Object> listEqListByProjectAndSupplierForRepository(Map<String, Object> params) {
         Map<String, Object> query = new HashMap<String, Object>();
         Object projectId = params.get("projectId");
         query.put("eqcostList.projectId", projectId);

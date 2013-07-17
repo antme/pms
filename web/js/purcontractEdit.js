@@ -303,9 +303,19 @@ function addOrderInSCListForRuodian(){
         success:function(e){
   
         	requestDataItem.eqcostList = e.response.data;
+        	
+        	for (listIndex in requestDataItem.eqcostList) {
+				requestDataItem.eqcostList[listIndex].projectId = redirectParams.projectId;
+				requestDataItem.eqcostList[listIndex].salesContractId = redirectParams.scId;
+				requestDataItem.eqcostList[listIndex].salesContractCode = redirectParams.contractCode;				
+			}
         	eqCostListDataSource.data(requestDataItem.eqcostList);			
 			requestDataItem.eqcostDeliveryType = "直发现场";
 			requestDataItem.from = "弱电工程";
+			requestDataItem.projectId = redirectParams.projectId;
+			requestDataItem.scId = redirectParams.scId;
+			
+			console.log(requestDataItem);
 			edit();
         }
     });

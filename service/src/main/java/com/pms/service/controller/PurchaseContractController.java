@@ -34,7 +34,7 @@ public class PurchaseContractController extends AbstractController {
 
     @RequestMapping("/get/byproject_supplier")
     public void listContractsByProjectAndSupplier(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listContractsByProjectAndSupplier(parserJsonParameters(request, false)), request, response);
+        responseWithData(pService.listEqListByProjectAndSupplierForRepository(parserJsonParameters(request, false)), request, response);
     }
     
     
