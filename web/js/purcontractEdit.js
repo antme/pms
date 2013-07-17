@@ -313,7 +313,7 @@ function addOrderInSCListForRuodian(){
 			requestDataItem.eqcostDeliveryType = "直发现场";
 			requestDataItem.from = "弱电工程";
 			requestDataItem.projectId = redirectParams.projectId;
-			requestDataItem.scId = redirectParams.scId;
+			requestDataItem.salesContractId = redirectParams.scId;
 			
 			console.log(requestDataItem);
 			edit();

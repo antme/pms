@@ -29,7 +29,7 @@ public class PurchaseContractController extends AbstractController {
     //非直发采购数据
     @RequestMapping("/repository/contract/list")
     public void listProjectsFromApproveContractsForRepositorySelect(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.listProjectsFromApproveContractsForRepositorySelect(parserJsonParameters(request, true)), request, response);
+        responseWithData(pService.listProjectsAndSuppliersFromContractsForRepositorySelect(parserJsonParameters(request, true)), request, response);
     }
 
     @RequestMapping("/get/byproject_supplier")
