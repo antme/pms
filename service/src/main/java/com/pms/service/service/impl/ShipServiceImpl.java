@@ -15,7 +15,6 @@ import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
-import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
@@ -97,6 +96,23 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         if (params.get(ApiConstants.MONGO_ID) != null) {
             return update(params);
         } else {
+        	// 发货申请编号
+        	String[] limitKeys = { ShipBean.SHIP_CODE, ShipBean.SHIP_SALES_CONTRACT_CODE };
+        	Map<String, Object> lastRecord = dao.getLastRecordByCreatedOn(DBBean.SHIP, null, limitKeys);
+        	String scCode = (String) lastRecord.get(ShipBean.SHIP_SALES_CONTRACT_CODE);
+        	String[] scCodeArr = scCode.split("-");
+        	String code = "FHSQ-" + scCodeArr[1].substring(2) + scCodeArr[2].substring(2) + "-";
+        	if (ApiUtil.isEmpty(lastRecord)) {
+        		code += "0001";
+    		} else {
+    			String shipCode = (String) lastRecord.get(ShipBean.SHIP_CODE);
+    	    	String[] codeArr = shipCode.split("-");
+    	    	int i = Integer.parseInt(codeArr[2]);
+    	    	i++;
+    	    	String str = String.format("%04d", i);
+    	    	code += str;
+    		}
+        	params.put(ShipBean.SHIP_CODE, code);
             return dao.add(params, DBBean.SHIP);
 
         }
