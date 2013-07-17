@@ -199,7 +199,9 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		} else {
 			String borrowCode = (String) lastRecord.get(BorrowingBean.BORROW_CODE);
 	    	String[] codeArr = borrowCode.split("-");
-	    	String str = String.format("%04d", codeArr[2]);
+	    	int i = Integer.parseInt(codeArr[2]);
+	    	i++;
+	    	String str = String.format("%04d", i);
 	    	code += str;
 		}
     	params.put(BorrowingBean.BORROW_CODE, code);
