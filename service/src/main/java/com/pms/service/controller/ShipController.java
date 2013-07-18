@@ -98,9 +98,9 @@ public class ShipController extends AbstractController {
         responseWithData(shipService.record(params), request, response);
     }
     
-    @RequestMapping("/count")
-    public void shipCountOfVPC(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping("/count/list")
+    public void listShipCount(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
-    	responseWithData(shipService.shipCountOfVPC(params), request, response);
+    	responseWithData(shipService.listShipCount(params), request, response);
     }
 }

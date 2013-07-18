@@ -1,6 +1,5 @@
 package com.pms.service.service;
 
-import java.util.List;
 import java.util.Map;
 
 public interface IShipService {
@@ -25,5 +24,5 @@ public interface IShipService {
 	
 	public Map<String, Object> record(Map<String, Object> params);
 	
-	public Map<String, Object> shipCountOfVPC(Map<String, Object> params);
+	public Map<String, Object> listShipCount(Map<String, Object> params);
 }

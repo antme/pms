@@ -18,16 +18,8 @@ $(document).ready(function () {
     dataSource = new kendo.data.DataSource({
         transport: {
             read:  {
-                url: crudServiceBaseUrl + "/count",
-                dataType: "jsonp",
-                data: {
-                	startDate: function() {
-                		return kendo.toString(sdatepicker.value(), 'yyyy-MM-dd');
-                	},
-                	endDate: function() {
-                		return kendo.toString(edatepicker.value(), 'yyyy-MM-dd');
-                	}
-                }
+                url: crudServiceBaseUrl + "/count/list",
+                dataType: "jsonp"
             }
         },
         schema: {
@@ -36,17 +28,12 @@ $(document).ready(function () {
     });
 
     $("#grid").kendoGrid({
-    	autoBind: false,
         dataSource: dataSource,
         columns: [
-            { field: "eqcostNo", title:"序号" },
-            { field: "eqcostMaterialCode", title:"物料代码" },
-            { field: "eqcostProductName", title: "产品名称" },
-	        { field: "eqcostProductType", title: "规格型号" },
-	        { field: "eqcostBrand", title: "品牌" },
-	        { field: "eqcostUnit", title: "单位" },
-            { field: "vcShipAmount", title:"数量" },
-            { field: "vcShipMoney", title:"金额" }
+            { field: "shipCountDate", title:"统计日期" },
+            { field: "contractExecuteCate", title:"虚拟采购类型" },
+            { field: "shipTotalAmount", title:"总数量" },
+            { field: "shipTotalMoney", title:"总金额" }
         ]
     });
 });
