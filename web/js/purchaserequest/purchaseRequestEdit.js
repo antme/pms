@@ -4,6 +4,8 @@ editUrl = "/service/purcontract/request/get";
 saveUrl =  "/service/purcontract/request/update";
 addUrl =  "/service/purcontract/request/add";
 var getSelectUrl = "/service/purcontract/back/load";
+var approveUrl =  "/service/purcontract/request/approve";
+var rejectUrl =  "/service/purcontract/request/approve";
 
 //申明选择备货申请的id
 var selectBackId = undefined;
@@ -47,6 +49,21 @@ var sumDataSource = new kendo.data.DataSource({
 
 
 $(document).ready(function() {
+	checkRoles();
+	
+	if(redirectParams && redirectParams.page && redirectParams.page=="approve"){
+		$("#save-button").hide();
+		$("#submit-button").hide();
+		$("#approve-button").show();
+		$("#reject-button").show();
+		$("#approve-comment").show();
+	}else{
+		$("#save-button").show();
+		$("#submit-button").show();
+		$("#approve-button").hide();
+		$("#reject-button").hide();
+	}
+	
 	
 	$("#eqcostDeliveryType").kendoDropDownList({
 		dataTextField : "text",
@@ -72,7 +89,7 @@ $(document).ready(function() {
 				selectBackId = redirectParams.backId;
 				selectBackRequest();
 			}else{
-				postAjaxRequest(editUrl, redirectParams, edit);
+				postAjaxRequest(editUrl, {_id : redirectParams._id}, edit);
 			}
 		}
 	} else {
@@ -407,6 +424,13 @@ function edit(data) {
 
 						});
 	}
+	
+	if(redirectParams && redirectParams.page && redirectParams.page=="approve"){
+		disableAllInPoppup();
+	}
+	
+
+	
 
 }
 
@@ -455,3 +479,33 @@ function saveRequest(status) {
 	// 同步数据
 	itemDataSource.sync();
 }
+
+
+function approve(){
+	var param = {
+			"_id" : row._id,
+			"approveComment" : $("#approve-comment").val()
+		};
+	postAjaxRequest(approveUrl, param, function(data){
+		loadPage("purchaseRequestByAssistant");
+	});
+}
+
+function reject(){
+	var param = {
+			"_id" : row._id,
+			"approveComment" : $("#approve-comment").val()
+		};
+	postAjaxRequest(rejectUrl, param, function(data){
+		loadPage("purchaseRequestByAssistant");
+	});
+}
+
+function cancel(){
+	if(redirectParams && redirectParams.page && redirectParams.page=="approve"){
+		loadPage("purchaseRequestApprove");
+	}else{
+		loadPage("purchaseRequestByAssistant");
+	}
+}
+

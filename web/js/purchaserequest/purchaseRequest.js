@@ -130,7 +130,10 @@ function approveRe() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if(row.status == "中止申请中" || row.status == "审批中"){
-			process(approveUrl);
+			loadPage("html/purchasecontract/purchaseRequestEdit.html", {
+				_id : row._id,
+				page: "approve"
+			});
 		}else{
 			alert('只能审批 "中止申请中" 或则  "审批中" 中的状态');
 		}
