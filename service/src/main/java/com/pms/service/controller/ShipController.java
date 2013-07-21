@@ -103,4 +103,16 @@ public class ShipController extends AbstractController {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
     	responseWithData(shipService.listShipCount(params), request, response);
     }
+    
+    @RequestMapping("/count")
+    public void doCount(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = parserJsonParameters(request, false);
+        shipService.doCount(params);
+        responseWithData(null, request, response);
+    }
+    
+    @RequestMapping("/count/date")
+    public void getCountDate(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(shipService.getCountDate(), request, response);
+    }
 }

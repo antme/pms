@@ -1,21 +1,29 @@
-var dataSource, crudServiceBaseUrl = "../service/ship";
+var model, crudServiceBaseUrl = "../service/ship";
+
+var date = kendo.data.Model.define({
+    fields: {
+    	bjdc: {},
+    	bjkc: {},
+    	bjsc: {}
+    }
+});
 
 $(document).ready(function () {
 	checkRoles();
 	
-	$("#sdatepicker").kendoDatePicker();
-	var sdatepicker = $("#sdatepicker").data("kendoDatePicker");
-	
-	$("#edatepicker").kendoDatePicker();
-	var edatepicker = $("#edatepicker").data("kendoDatePicker");
-	
-	$("#count").click(function() {
-		if (sdatepicker.value() && edatepicker.value()) {
-			dataSource.read();
-		}
+	$("#bjdc").click(function() {
+		count("北京代采");
 	});
 	
-    dataSource = new kendo.data.DataSource({
+	$("#bjkc").click(function() {
+		count("北京库存");
+	});
+	
+	$("#bjsc").click(function() {
+		count("北京生产");
+	});
+	
+    var dataSource = new kendo.data.DataSource({
         transport: {
             read:  {
                 url: crudServiceBaseUrl + "/count/list",
@@ -36,4 +44,20 @@ $(document).ready(function () {
             { field: "shipTotalMoney", title:"总金额" }
         ]
     });
+    
+    postAjaxRequest(crudServiceBaseUrl + "/count/date", null, getDate);
 });
+
+function getDate(data) {
+	model = new date(data);
+	kendo.bind($("#countDate"), model);
+}
+
+function count(contractExecuteCate) {
+	postAjaxRequest(crudServiceBaseUrl + "/count", {contractExecuteCate:contractExecuteCate}, countReturn);
+}
+
+function countReturn() {
+	alert("统计完成");
+	loadPage("shipCount");
+}

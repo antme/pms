@@ -25,4 +25,8 @@ public interface IShipService {
 	public Map<String, Object> record(Map<String, Object> params);
 	
 	public Map<String, Object> listShipCount(Map<String, Object> params);
+	
+	public void doCount(Map<String, Object> params);
+	
+	public Map<String, Object> getCountDate();
 }
