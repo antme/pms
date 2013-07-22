@@ -487,7 +487,9 @@ function edit(data) {
 	}
 	
 	if(requestDataItem.from){
-		addOrderInSCListForRuodian();
+		if(!redirectParams.addInSCList){
+			addOrderInSCListForRuodian();
+		}
 		disableTable();
 		console.log(requestDataItem);
 		eqCostListDataSource.data(requestDataItem.eqcostList);

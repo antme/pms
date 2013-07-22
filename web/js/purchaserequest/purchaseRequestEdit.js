@@ -5,7 +5,7 @@ saveUrl =  "/service/purcontract/request/update";
 addUrl =  "/service/purcontract/request/add";
 var getSelectUrl = "/service/purcontract/back/load";
 var approveUrl =  "/service/purcontract/request/approve";
-var rejectUrl =  "/service/purcontract/request/approve";
+var rejectUrl =  "/service/purcontract/request/reject";
 
 //申明选择备货申请的id
 var selectBackId = undefined;
@@ -483,7 +483,7 @@ function saveRequest(status) {
 
 function approve(){
 	var param = {
-			"_id" : row._id,
+			"_id" : requestDataItem._id,
 			"approveComment" : $("#approve-comment").val()
 		};
 	postAjaxRequest(approveUrl, param, function(data){
@@ -493,7 +493,7 @@ function approve(){
 
 function reject(){
 	var param = {
-			"_id" : row._id,
+			"_id" : requestDataItem._id,
 			"approveComment" : $("#approve-comment").val()
 		};
 	postAjaxRequest(rejectUrl, param, function(data){

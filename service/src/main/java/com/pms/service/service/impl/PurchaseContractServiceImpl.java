@@ -109,12 +109,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         for (Map<String, Object> contract : contractList) {
             List<Map<String, Object>> eqCostList = (List<Map<String, Object>>) contract.get("eqcostList");
             for (Map<String, Object> p : eqCostList) {
-                String projectId = p.get("projectId").toString();
-                projectIds.add(projectId);
-                if (projectSupplierMap.get(projectId) == null) {
-                    projectSupplierMap.put(projectId, new HashSet<String>());
+                if (p.get("projectId") != null) {
+                    String projectId = p.get("projectId").toString();
+                    projectIds.add(projectId);
+                    if (projectSupplierMap.get(projectId) == null) {
+                        projectSupplierMap.put(projectId, new HashSet<String>());
+                    }
+                    projectSupplierMap.get(projectId).add(contract.get(SUPPLIER).toString());
                 }
-                projectSupplierMap.get(projectId).add(contract.get(SUPPLIER).toString());
             }
         }
 
