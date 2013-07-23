@@ -153,6 +153,7 @@ $(document).ready(function() {
 		//添加表单绑定一个空的 Model
 		pModel = new projectModel();
 		kendo.bind($("#addProject"), pModel);
+		$("#projectCode").attr("disabled",true);
 	}
 	
 });//end dom ready
@@ -199,7 +200,7 @@ function edit(data){
 	var pTypeList = $("#projectType").data("kendoDropDownList");
 	pTypeList.enable(false);
 	
-	$("#projectCode").attr("disabled",true);
+	//$("#projectCode").attr("disabled",true);
 }
 
 function saveProject(){

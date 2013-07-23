@@ -131,6 +131,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			return addedContract;
 		}else{//Update
 			contract.put(ApiConstants.MONGO_ID, _id);
+			contract.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE));
 			
 			Map<String, Object> existContractQuery = new HashMap<String, Object>();
 			existContractQuery.put(ApiConstants.MONGO_ID, _id);
@@ -1172,6 +1173,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		String[] limitKeys = {SalesContractBean.SC_CODE};
 		Map<String, Object> re = dao.getLastRecordByCreatedOn(DBBean.SALES_CONTRACT, queryMap, limitKeys);
 		String scCode = (String)re.get(SalesContractBean.SC_CODE);
+		if (scCode.indexOf("-ADD") != -1){
+			scCode = scCode.substring(0, scCode.length()-4);
+		}
 		String scCodeNoString = scCode.substring(scCode.lastIndexOf("-")+1, scCode.length());
 		Integer scCodeNo = 0;
 		try {
@@ -1253,6 +1257,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				Map<String, Object> customerMap = customerService.importCustomer(customerQuery);
 				String customerId = (String) customerMap.get(ApiConstants.MONGO_ID);
 				scMap.put(SalesContractBean.SC_CUSTOMER, customerId);//客户
+				
 				
 				Map<String, Object> pro = projectService.importProject(list.get(i)[9].trim(), customerId);
 				String projectId = (String) pro.get(ApiConstants.MONGO_ID);

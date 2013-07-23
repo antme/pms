@@ -69,6 +69,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			return dao.add(projectBean, DBBean.PROJECT);
 		}else{//Update
 			projectBean.put(ApiConstants.MONGO_ID, _id);
+			projectBean.put(ProjectBean.PROJECT_CODE, params.get(ProjectBean.PROJECT_CODE));
 			
 			Map<String, Object> existProjectQuery = new HashMap<String, Object>();
 			existProjectQuery.put(ApiConstants.MONGO_ID, _id);
@@ -395,7 +396,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		return p;
 	}
 	
-	private String genProjectCode(String ptype, String pStatus){
+	public String genProjectCode(String ptype, String pStatus){
 		String prefix = ProjectBean.PROJECT_CODE_PREFIX_SERVICE;
 		if (ProjectBean.PROJECT_TYPE_PRODUCT.equals(ptype)){
 			prefix = ProjectBean.PROJECT_CODE_PREFIX_PRODUCT;
@@ -413,8 +414,11 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		String[] limitKeys = {ProjectBean.PROJECT_CODE};
 		Map<String, Object> p = dao.getLastRecordByCreatedOn(DBBean.PROJECT, queryMap, limitKeys);
 		String pCode = (String)p.get(ProjectBean.PROJECT_CODE);
-		String pCodeNoString = pCode.substring(pCode.lastIndexOf("-")+1, pCode.length());
-		Integer pCodeNo = 1;
+		String pCodeNoString = "1";
+		if (pCode != null){
+			pCodeNoString = pCode.substring(pCode.lastIndexOf("-")+1, pCode.length());
+		}
+		Integer pCodeNo = 0;
 		try {
 			pCodeNo = Integer.parseInt(pCodeNoString);
 		} catch (NumberFormatException e) {
