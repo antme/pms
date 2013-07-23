@@ -297,7 +297,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 	
 	// 统计三类虚拟的采购合同在每月的发货合计
-	public void doCount(Map<String, Object> params) {
+	public Map<String, Object> doCount(Map<String, Object> params) {
 		String date = (String) params.get(ShipCountBean.SHIP_COUNT_DATE);
 		String cate =  (String) params.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE);
 		
@@ -346,6 +346,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		Map<String, Object> shipMap = dao.list(shipQuery, DBBean.SHIP);
 		List<Map<String, Object>> shipList = (List<Map<String, Object>>) shipMap.get(ApiConstants.RESULTS_DATA);
 		
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		if (!ApiUtil.isEmpty(shipList)) {
 			// 采购订单id
 			Set<Object> orderIdSet = new HashSet();
@@ -429,13 +430,23 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 			map.put(ShipCountBean.SHIP_TOTAL_MONEY, totalMoney);
 			map.put(SalesContractBean.SC_EQ_LIST, returnList);
 			
-			dao.add(map, DBBean.SHIP_COUNT);
+			returnMap = dao.add(map, DBBean.SHIP_COUNT);
 		}
+		
+		return returnMap;
 	}
 	
 	// 发货统计
 	public Map<String, Object> listShipCount(Map<String, Object> params) {
 		return dao.list(params, DBBean.SHIP_COUNT);
+	}
+	
+	public Map<String, Object> listCountEq(Map<String, Object> params) {
+		String[] limitKeys = { SalesContractBean.SC_EQ_LIST };
+		Map<String, Object> countMap = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), limitKeys, DBBean.SHIP_COUNT);
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put(ApiConstants.RESULTS_DATA, scs.mergeEqListBasicInfo(countMap.get(SalesContractBean.SC_EQ_LIST)));
+		return res;
 	}
 	
 	public Map<String, Object> getCountDate() {

@@ -242,10 +242,8 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 			}
 		}
 		
-		scs.mergeEqListBasicInfo(result);
-				
 		Map<String, Object> res = new HashMap<String, Object>();
-		res.put(ApiConstants.RESULTS_DATA, result);
+		res.put(ApiConstants.RESULTS_DATA, scs.mergeEqListBasicInfo(result));
 		return res;
 	}
 
