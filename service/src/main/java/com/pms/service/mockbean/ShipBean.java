@@ -64,8 +64,4 @@ public class ShipBean {
     
     public static final String REPOSITORY_NAME = "repositoryName"; //仓库名字
     
-    public static final String VC_SHIP_AMOUNT = "vcShipAmount"; // 虚拟合同发货数量
-    
-    public static final String VC_SHIP_MONEY = "vcShipMoney"; // 虚拟合同发货金额
-    
 }

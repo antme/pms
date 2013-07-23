@@ -6,13 +6,27 @@
 	<div id="shipCount" class="k-content">
 		<h3>三类虚拟采购合同的发货合计</h3>
 		
-		<div style="margin-bottom:5px">
-            <input id="sdatepicker" />
-            <input id="edatepicker" />
-            <button id="count" class="k-button">统计</button>
-        </div>
+		<div id="countDate">
+			<div style="margin-bottom:5px">
+				北京代采：<span data-bind="text: bjdc"></span>
+				<button id="bjdc" class="k-button">统计</button>
+			</div>
+			<div style="margin-bottom:5px">
+				北京库存：<span data-bind="text: bjkc"></span>
+				<button id="bjkc" class="k-button">统计</button>
+			</div>
+			<div style="margin-bottom:5px">
+				北京生产：<span data-bind="text: bjsc"></span>
+				<button id="bjsc" class="k-button">统计</button>
+			</div>
+		</div>
 
 		<div id="grid"></div>
+		
+		<script type="text/x-kendo-template" id="template">
+			<div class="orders"></div>
+		</script>
+		
 	</div>
 </body>
 </html>

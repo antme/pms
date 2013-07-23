@@ -178,6 +178,5 @@ td a {
 	border: 1px solid #c5c5c5;
 }
 .k-grid td {
-	word-break: keep-all;
 	white-space:nowrap;
 }

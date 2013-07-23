@@ -109,12 +109,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         for (Map<String, Object> contract : contractList) {
             List<Map<String, Object>> eqCostList = (List<Map<String, Object>>) contract.get("eqcostList");
             for (Map<String, Object> p : eqCostList) {
-                String projectId = p.get("projectId").toString();
-                projectIds.add(projectId);
-                if (projectSupplierMap.get(projectId) == null) {
-                    projectSupplierMap.put(projectId, new HashSet<String>());
+                if (p.get("projectId") != null) {
+                    String projectId = p.get("projectId").toString();
+                    projectIds.add(projectId);
+                    if (projectSupplierMap.get(projectId) == null) {
+                        projectSupplierMap.put(projectId, new HashSet<String>());
+                    }
+                    projectSupplierMap.get(projectId).add(contract.get(SUPPLIER).toString());
                 }
-                projectSupplierMap.get(projectId).add(contract.get(SUPPLIER).toString());
             }
         }
 
@@ -206,6 +208,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Object projectId = params.get("projectId");
         query.put("eqcostList.projectId", projectId);
         boolean isDirect =false;
+        boolean isRuoDian = false;
         Map<String, Object> results = new HashMap<String, Object>();
         if (params.get("type") != null && params.get("type").toString().equalsIgnoreCase("out")) {
             query.put("eqcostList.eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
@@ -216,6 +219,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 query.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseCommonBean.STATUS_APPROVED }));
                 query.put("eqcostList." + SUPPLIER, params.get(SUPPLIER));
                 results = this.dao.list(query, DBBean.PURCHASE_CONTRACT);
+                isRuoDian = true;
             } else {
                 query.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { ShipBean.SHIP_STATUS_APPROVE, ShipBean.SHIP_STATUS_CLOSE }));
                 query.put("eqcostList." + SUPPLIER, params.get(SUPPLIER));
@@ -267,8 +271,15 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         for (Map<String, Object> eqMap : eqBackMapList) {
             int prCount = 0;
             if (isDirect) {
-                if (eqMap.get(ShipBean.SHIP_EQ_ACTURE_AMOUNT) != null) {
-                    prCount = ApiUtil.getInteger(eqMap.get(ShipBean.SHIP_EQ_ACTURE_AMOUNT), 0);
+
+                if (isRuoDian) {
+                    if (eqMap.get(SalesContractBean.SC_EQ_LIST_AMOUNT) != null) {
+                        prCount = ApiUtil.getInteger(eqMap.get(SalesContractBean.SC_EQ_LIST_AMOUNT), 0);
+                    }
+                } else {
+                    if (eqMap.get(ShipBean.SHIP_EQ_ACTURE_AMOUNT) != null) {
+                        prCount = ApiUtil.getInteger(eqMap.get(ShipBean.SHIP_EQ_ACTURE_AMOUNT), 0);
+                    }
                 }
             } else {
                 if (eqMap.get("eqcostApplyAmount") != null) {
