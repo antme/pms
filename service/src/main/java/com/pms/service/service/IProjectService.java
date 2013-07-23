@@ -29,4 +29,6 @@ public interface IProjectService {
 	public void importProjectAndSCData(Map<String, Object> params);
 	
 	public Map<String, Object> importProject(String pName, String customer);
+	
+	public String genProjectCode(String ptype, String pStatus);
 }

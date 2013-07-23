@@ -45,7 +45,7 @@ public class BaseTestCase extends TestCase {
         projectService = (ProjectServiceImpl) ac.getBean("projectService");
         reportService = (ReportServiceImpl) ac.getBean("reportService");
         scService = (ISalesContractService) ac.getBean("salesContractService");
-        ConfigurationManager.setProperties(ConfigurationManager.DB_NAME, "pms_dev");
+        ConfigurationManager.setProperties(ConfigurationManager.DB_NAME, "pms");
     }
 
     public void testEmpty() throws IOException {
