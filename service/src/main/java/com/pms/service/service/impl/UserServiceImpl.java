@@ -324,4 +324,20 @@ public class UserServiceImpl extends AbstractService implements IUserService {
 		return dao.list(query, DBBean.USER);
 	}
 
+	@Override
+	public Map<String, Object> importPM(Map<String, Object> map) {
+		Map<String, Object> user = dao.findOne(UserBean.USER_NAME, map.get(UserBean.USER_NAME), DBBean.USER);
+		
+        if (user == null) {
+        	Map<String, Object> userGroup = dao.findOne("groupName", "项目经理", DBBean.USER_GROUP);
+        	String ugId = (String) userGroup.get(ApiConstants.MONGO_ID);
+        	List<String> groups = new ArrayList<String>();
+        	groups.add(ugId);
+        	map.put(UserBean.GROUPS, groups);
+        	map.put(UserBean.PASSWORD, DataEncrypt.generatePassword("123456"));
+            user = dao.add(map, DBBean.USER);
+        }
+        return user;
+	}
+
 }

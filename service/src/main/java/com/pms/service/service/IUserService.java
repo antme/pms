@@ -14,6 +14,8 @@ public interface IUserService {
     
     public Map<String, Object> importUser(Map<String, Object> map);
     
+    public Map<String, Object> importPM(Map<String, Object> map);
+    
     public void deleteUser(Map<String, Object> user);
 
     public Map<String, Object> login(Map<String, Object> parameters);

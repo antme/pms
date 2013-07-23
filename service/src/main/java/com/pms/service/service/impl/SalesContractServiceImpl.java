@@ -31,6 +31,7 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.ICustomerService;
 import com.pms.service.service.IProjectService;
 import com.pms.service.service.ISalesContractService;
+import com.pms.service.service.IUserService;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
@@ -42,6 +43,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	private ICustomerService customerService;
 	
 	private IProjectService projectService;
+	
+	private IUserService userService;
 
 	@Override
 	public String geValidatorFileName() {
@@ -1222,9 +1225,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					break;
 				}
 				
-				if(dao.exist(SalesContractBean.SC_CODE, scCode, DBBean.SALES_CONTRACT)){
-					continue;
-				}
+				
 				Map<String, Object> scMap = new HashMap<String, Object>();
 				scMap.put(SalesContractBean.SC_CODE, scCode);//合同编号
 				scMap.put(SalesContractBean.SC_PERSON, list.get(i)[6].trim());//签订人
@@ -1258,8 +1259,23 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				String customerId = (String) customerMap.get(ApiConstants.MONGO_ID);
 				scMap.put(SalesContractBean.SC_CUSTOMER, customerId);//客户
 				
+				Map<String, Object> pmQuery = new HashMap<String, Object>();
+				pmQuery.put(UserBean.USER_NAME, list.get(i)[5].trim());
+				Map<String, Object> pm = userService.importPM(pmQuery);
+				String pmId = (String) pm.get(ApiConstants.MONGO_ID);  //新建PM
 				
-				Map<String, Object> pro = projectService.importProject(list.get(i)[9].trim(), customerId);
+				String projectType = list.get(i)[12].trim(); //项目类型
+				if ("销售".equals(projectType)){
+					projectType = ProjectBean.PROJECT_TYPE_PRODUCT;
+				}
+				
+				Map<String, Object> importProject = new HashMap<String, Object>();
+				importProject.put(ProjectBean.PROJECT_MANAGER, pmId);
+				importProject.put(ProjectBean.PROJECT_TYPE, projectType);
+				importProject.put(ProjectBean.PROJECT_NAME, list.get(i)[9].trim());
+				importProject.put(ProjectBean.PROJECT_CUSTOMER, customerId);
+				
+				Map<String, Object> pro = projectService.importProject(importProject);
 				String projectId = (String) pro.get(ApiConstants.MONGO_ID);
 				scMap.put(SalesContractBean.SC_PROJECT_ID, projectId);//关联项目
 				
@@ -1293,7 +1309,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				scMap.put(SalesContractBean.SC_ESTIMATE_TAX, 0d);//预估税收
 				scMap.put(SalesContractBean.SC_TOTAL_ESTIMATE_COST, 0d);//成本总计
 				
-				dao.add(scMap, DBBean.SALES_CONTRACT);
+				if(dao.exist(SalesContractBean.SC_CODE, scCode, DBBean.SALES_CONTRACT)){
+					dao.updateById(scMap, DBBean.SALES_CONTRACT);
+				}else{
+					dao.add(scMap, DBBean.SALES_CONTRACT);
+				}
+				
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -1318,6 +1339,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	public void setProjectService(IProjectService projectService) {
 		this.projectService = projectService;
+	}
+
+	public IUserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(IUserService userService) {
+		this.userService = userService;
 	}
 	
 	

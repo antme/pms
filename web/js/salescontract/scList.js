@@ -63,7 +63,8 @@ $(document).ready(function() {
 		filterable : filterable,
 		columns : [ {
 			field : "contractCode",
-			title : "合同编号"
+			title : "合同编号",
+			width : "160px"
 		},{
 			field : "projectCode",
 			title : "项目编号"
