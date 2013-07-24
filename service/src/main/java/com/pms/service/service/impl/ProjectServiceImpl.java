@@ -410,34 +410,52 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		
 		int year = DateUtil.getNowYearString();
 		
+		Integer pCodeNo = 0;
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		String[] limitKeys = {ProjectBean.PROJECT_CODE};
 		Map<String, Object> p = dao.getLastRecordByCreatedOn(DBBean.PROJECT, queryMap, limitKeys);
-		String pCode = (String)p.get(ProjectBean.PROJECT_CODE);
-		String pCodeNoString = "1";
-		if (pCode != null){
-			pCodeNoString = pCode.substring(pCode.lastIndexOf("-")+1, pCode.length());
+		if(p != null){
+			String pCode = (String)p.get(ProjectBean.PROJECT_CODE);
+			String pCodeNoString = "1";
+			if (pCode != null){
+				pCodeNoString = pCode.substring(pCode.lastIndexOf("-")+1, pCode.length());
+			}
+			
+			try {
+				pCodeNo = Integer.parseInt(pCodeNoString);
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+//				e.printStackTrace();  旧数据会出异常，就pCodeNo=1 开始
+			}
 		}
-		Integer pCodeNo = 0;
-		try {
-			pCodeNo = Integer.parseInt(pCodeNoString);
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();  旧数据会出异常，就pCodeNo=1 开始
-		}
+		
 		pCodeNo = pCodeNo + 1;
 		return prefix+year+"-"+pCodeNo;
 	}
 
 	@Override
-	public Map<String, Object> importProject(String pName, String customer) {
-		Map<String, Object> p = dao.findOne(ProjectBean.PROJECT_NAME, pName, DBBean.PROJECT);
+	public Map<String, Object> importProject(Map<String, Object> params) {
+		Map<String, Object> p = dao.findOne(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME), DBBean.PROJECT);
+		
 		if (p == null){
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(ProjectBean.PROJECT_NAME, pName);
-			map.put(ProjectBean.PROJECT_CUSTOMER, customer);
-			return dao.add(map, DBBean.PROJECT);
+			Object pt = params.get(ProjectBean.PROJECT_TYPE);
+			String ptString = pt == null? ProjectBean.PROJECT_TYPE_PROJECT : pt.toString();
+			params.put(ProjectBean.PROJECT_CODE, genProjectCode(ptString, ProjectBean.PROJECT_STATUS_OFFICIAL));
+			return dao.add(params, DBBean.PROJECT);
 		}
+		
+		if (p.get(ProjectBean.PROJECT_CODE) == null){
+			Object pt = params.get(ProjectBean.PROJECT_TYPE);
+			String ptString = pt == null? ProjectBean.PROJECT_TYPE_PROJECT : pt.toString();
+			p.put(ProjectBean.PROJECT_CODE, genProjectCode(ptString, ProjectBean.PROJECT_STATUS_OFFICIAL));
+		}
+		
+		if (p.get(ProjectBean.PROJECT_TYPE) == null){
+			p.put(ProjectBean.PROJECT_MANAGER, params.get(ProjectBean.PROJECT_MANAGER));
+			p.put(ProjectBean.PROJECT_TYPE, params.get(ProjectBean.PROJECT_TYPE));
+			return dao.updateById(p, DBBean.PROJECT);
+		}
+		
 		return p;
 	}
 
