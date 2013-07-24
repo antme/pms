@@ -96,7 +96,7 @@ $(document).ready(function () {
 		        }
 		    },
 		    batch: true,
-		    pageSize: 5,
+		    pageSize: 10,
 			serverPaging: true,
 			serverSorting: true,
 			serverFiltering : true,
@@ -118,16 +118,16 @@ $(document).ready(function () {
         detailInit: detailInit,
 	    columns: [
 			{ field: "_id", hidden: true},
-			{ field: "contractCode", title: "销售合同编号" },
-			{ field: "creatorName", title: "申请人" },
+			{ field: "contractCode", title: "销售合同编号", width:"160px"},
+			{ field: "creatorName", title: "申请人" , width:"100px"},
 			{ field: "payInvoiceStatus", title: "状态", width: "100px"},
-			{ field: "payInvoicePlanDate", title: "要求日期",format: "{0:yyyy-MM-dd}"},
-			{ field: "payInvoiceMoney", title: "金额" ,footerTemplate: "总额: #=sum#"},
-			{ field: "payInvoiceReceivedMoneyStatus", title: "收款情况"},
-			{ field: "payInvoiceActualMoney", title: "实际金额" ,footerTemplate: "总额: #=sum#"},
-			{ field: "payInvoiceActualDate", title: "实际开票日期",format: "{0:yyyy-MM-dd}" },
-			{ field: "payInvoiceActualInvoiceNum", title: "发票号" },
-			{ field: "payInvoiceActualSheetCount", title: "开票张数"},
+			{ field: "payInvoicePlanDate", title: "要求日期",format: "{0:yyyy-MM-dd}",width:"100px"},
+			{ field: "payInvoiceMoney", title: "金额" ,footerTemplate: "总额: #=sum#", width:"120px"},
+			{ field: "payInvoiceReceivedMoneyStatus", title: "收款情况", width:"100px"},
+			{ field: "payInvoiceActualMoney", title: "实际金额" ,footerTemplate: "总额: #=sum#", width:"120px"},
+			{ field: "payInvoiceActualDate", title: "实际开票日期",format: "{0:yyyy-MM-dd}",width:"100px" },
+			{ field: "payInvoiceActualInvoiceNum", title: "发票号" , width:"200px"},
+			{ field: "payInvoiceActualSheetCount", title: "开票张数", width:"80px"},
 			{ hidden: true, field: "payInvoiceItemList" },
 	  	]
 	});
@@ -157,7 +157,7 @@ $(document).ready(function () {
                 }
             },
             batch: true,
-            pageSize: 5,
+            pageSize: 10,
         	serverPaging: true,
         	serverSorting: true,
         	serverFiltering : true,
@@ -175,13 +175,13 @@ $(document).ready(function () {
 	    resizable: true,
         detailTemplate: kendo.template($("#template1").html()),
         columns: [
-            { field: "contractCode", title: "销售合同编号" },
-            { field: "creatorName", title: "申请人" },
-            { field: "getMoneyActualDate",title:"日期",format: "{0:yyyy-MM-dd}",width:"120px"},
-            { field: "getMoneyActualMoney", title:"金额", min:0 ,footerTemplate: "总额: #=sum#"},
-            { field: "customerName", title: "客户"},
-            { field: "customerBankName", title: "客户开户行"},
-            { field: "customerBankAccount", title: "客户银行账号"}
+            { field: "contractCode", title: "销售合同编号", width:"160px" },
+            { field: "creatorName", title: "申请人", width:"100px" },
+            { field: "getMoneyActualDate",title:"日期",format: "{0:yyyy-MM-dd}",width:"100px"},
+            { field: "getMoneyActualMoney", title:"金额", min:0 ,footerTemplate: "总额: #=sum#", width:"120px"},
+            { field: "customerName", title: "客户", width:"200px"},
+            { field: "customerBankName", title: "客户开户行", width:"100px"},
+            { field: "customerBankAccount", title: "客户银行账号", width:"200px"}
         ],
         editable:"popup"
     });

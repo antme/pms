@@ -1294,6 +1294,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				scMap.put(SalesContractBean.SC_TOTAL_ESTIMATE_COST, 0d);//成本总计
 				
 				dao.add(scMap, DBBean.SALES_CONTRACT);
+				
+				importFinInfo(list.get(i));
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -1304,6 +1306,66 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		return result;
 	}
 
+	private void importFinInfo(String[] info){
+		String scCode = info[2].trim();
+		double invoiceMoney = ApiUtil.getDouble(info[37], 0);
+		double payMoney = ApiUtil.getDouble(info[38], 0);
+		String data = "2012-12-01";
+		String today = DateUtil.getStringByDate(new Date());
+		insertFinInfo(invoiceMoney, payMoney, data, scCode);
+		
+		int num = 43;//12此循环，每次跳3
+		for(int i=1; i<=12; i++){
+			invoiceMoney = ApiUtil.getDouble(info[num], 0);
+			payMoney = ApiUtil.getDouble(info[num+1], 0);
+			if(i>9) {
+				data = "2013-"+ i +"-01";
+			} else {
+				data = "2013-0"+ i +"-01";
+			}
+			if(data.compareTo(today) > 0) break;
+			insertFinInfo(invoiceMoney, payMoney, data, scCode);
+			num +=2;
+		}
+		
+	}
+	
+	private void insertFinInfo(double invoiceMoney,double payMoney, String date,String scCode){
+		
+		Map<String,Object> sc = dao.findOne(SalesContractBean.SC_CODE ,scCode, DBBean.SALES_CONTRACT);
+		
+		Map<String,Object> invoice = new LinkedHashMap<String,Object>();
+		invoice.put(InvoiceBean.payInvoiceMoney, invoiceMoney);
+		invoice.put(InvoiceBean.payInvoiceActualMoney, invoiceMoney);
+		invoice.put(InvoiceBean.payInvoiceActualDate, date);
+		invoice.put(InvoiceBean.payInvoicePlanDate, date);
+		invoice.put(InvoiceBean.payInvoiceSubmitDate, date);
+		
+		invoice.put(InvoiceBean.payInvoiceReceivedMoneyStatus, "期初数据导入");//TODO: 正确？删除？
+		invoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusDone);
+	    String comment = recordComment("提交", "期初数据导入",null);
+	    invoice.put(InvoiceBean.payInvoiceComment, comment);
+		invoice.put(InvoiceBean.payInvoiceItemList, new ArrayList());
+		
+		invoice.put(InvoiceBean.scId, sc.get(ApiConstants.MONGO_ID));
+		invoice.put("contractCode", scCode);
+		invoice.put(SalesContractBean.SC_TYPE, sc.get(SalesContractBean.SC_TYPE));
+		invoice.put(SalesContractBean.SC_INVOICE_TYPE, sc.get(SalesContractBean.SC_INVOICE_TYPE));
+
+		mergeCommonFieldsFromSc(invoice, sc.get(ApiConstants.MONGO_ID));
+		dao.add(invoice, DBBean.SC_INVOICE);		
+		
+		////////////////////////////////////////
+		Map<String,Object> moneyObj = new LinkedHashMap<String,Object>();
+		moneyObj.put("tempComment", "期初数据导入");
+		moneyObj.put(MoneyBean.getMoneyActualDate, date);
+		moneyObj.put(MoneyBean.getMoneyActualMoney, payMoney);
+		moneyObj.put(MoneyBean.contractCode, scCode);
+		saveGetMoneyForSC(moneyObj);
+		
+	}
+	
+	
 	public ICustomerService getCustomerService() {
 		return customerService;
 	}

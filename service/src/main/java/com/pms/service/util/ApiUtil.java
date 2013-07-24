@@ -128,7 +128,7 @@ public class ApiUtil {
  
     public static Double getDouble(String value,double defaultValue) {
         Double in = null;
-        if (value != null) {
+        if (value != null && !value.isEmpty()) {
             try {
             	in = Double.valueOf(value);
             } catch (Exception e) {
