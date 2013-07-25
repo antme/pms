@@ -98,17 +98,39 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
             return update(params);
         } else {
         	// 发货申请编号
-        	String[] limitKeys = { ShipBean.SHIP_CODE, ShipBean.SHIP_SALES_CONTRACT_CODE };
+        	String code = "FHSQ-";
+        	String[] limitKeys = { ShipBean.SHIP_CODE };
         	Map<String, Object> lastRecord = dao.getLastRecordByCreatedOn(DBBean.SHIP, null, limitKeys);
-        	String scCode = (String) lastRecord.get(ShipBean.SHIP_SALES_CONTRACT_CODE);
+        	String scCode = (String) params.get(ShipBean.SHIP_SALES_CONTRACT_CODE);
         	String[] scCodeArr = scCode.split("-");
-        	String code = "FHSQ-" + scCodeArr[1].substring(2) + scCodeArr[2].substring(2) + "-";
+        	if (scCodeArr.length > 3) {
+        		if (scCodeArr[2].length() > 2) {
+        			code += scCodeArr[2].substring(2);
+				} else {
+					int i = Integer.parseInt(scCodeArr[2]);
+					code += String.format("%02d", i);
+				}
+        		if (scCodeArr[3].length() > 2) {
+        			code += scCodeArr[3].substring(2);
+				} else {
+					int i = Integer.parseInt(scCodeArr[3]);
+					code += String.format("%02d", i);
+				}
+        		code += "-";
+			}
+        	
         	if (ApiUtil.isEmpty(lastRecord)) {
         		code += "0001";
     		} else {
     			String shipCode = (String) lastRecord.get(ShipBean.SHIP_CODE);
-    	    	String[] codeArr = shipCode.split("-");
-    	    	int i = Integer.parseInt(codeArr[2]);
+    	    	String codeNum = shipCode.substring(shipCode.length()-4, shipCode.length());
+    	    	int i = 0;
+    	    	try {
+    	    		i = Integer.parseInt(codeNum);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+    	    	
     	    	i++;
     	    	String str = String.format("%04d", i);
     	    	code += str;
