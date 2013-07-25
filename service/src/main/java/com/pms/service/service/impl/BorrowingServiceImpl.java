@@ -199,7 +199,11 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		} else {
 			String borrowCode = (String) lastRecord.get(BorrowingBean.BORROW_CODE);
 	    	String[] codeArr = borrowCode.split("-");
-	    	int i = Integer.parseInt(codeArr[2]);
+	    	int i = 0;
+	    	if (codeArr.length > 2) {
+	    		i = Integer.parseInt(codeArr[2]);
+			}
+	    	
 	    	i++;
 	    	String str = String.format("%04d", i);
 	    	code += str;
@@ -221,7 +225,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		List<Map<String, Object>> shipedEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
 		Map<String, Double> shipedEqMap = new HashMap<String, Double>();
 		for (Map<String, Object> p : shipedEqList){
-			shipedEqMap.put((String) p.get(ApiConstants.MONGO_ID), ApiUtil.getDouble((String) p.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT)));
+			shipedEqMap.put((String) p.get(ApiConstants.MONGO_ID), ApiUtil.getDouble(p.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT).toString()));
 		}
 		
 		// 结果数据
@@ -279,7 +283,6 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
     	shipParams.put(ShipBean.SHIP_DEPARTMENT, params.get(ShipBean.SHIP_DEPARTMENT));
     	shipParams.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
     	shipParams.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
-    	shipParams.put(ShipBean.SHIP_TYPE, params.get(ShipBean.SHIP_TYPE));
     	shipParams.put(ShipBean.SHIP_WAREHOUSE, params.get(ShipBean.SHIP_WAREHOUSE));
     	shipParams.put(ShipBean.SHIP_PROJECT_ID, params.get(BorrowingBean.BORROW_IN_PROJECT_ID));
     	shipParams.put(ShipBean.SHIP_PROJECT_NAME, params.get(BorrowingBean.BORROW_IN_PROJECT_NAME));
@@ -295,7 +298,12 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
     	shipParams.put(ShipBean.SHIP_DELIVERY_TIME, params.get(ShipBean.SHIP_DELIVERY_TIME));
     	shipParams.put(ShipBean.SHIP_DELIVERY_REQUIREMENTS, params.get(ShipBean.SHIP_DELIVERY_REQUIREMENTS));
     	shipParams.put(ShipBean.SHIP_OTHER_DELIVERY_REQUIREMENTS, params.get(ShipBean.SHIP_OTHER_DELIVERY_REQUIREMENTS));
-    	shipParams.put(ShipBean.SHIP_EQ_LIST, params.get(SalesContractBean.SC_EQ_LIST));
+    	
+    	List<Map<String, Object>> borrowedEqList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
+    	for (Map<String, Object> map : borrowedEqList) {
+			map.put(ShipBean.EQCOST_SHIP_AMOUNT, map.get(BorrowingBean.EQCOST_BORROW_AMOUNT));
+		}
+    	shipParams.put(ShipBean.SHIP_EQ_LIST, borrowedEqList);
 		return shipService.create(shipParams);
 	}
 	
@@ -304,6 +312,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		Map<String, Object> returnParams = new HashMap<String, Object>();
 		returnParams.put(ReturnBean.BORROW_ID, params.get(ApiConstants.MONGO_ID));
 		returnParams.put(ReturnBean.BORROW_CODE, params.get(BorrowingBean.BORROW_CODE));
+		returnParams.put(ReturnBean.RETURN_APPLICANT, params.get(BorrowingBean.BORROW_APPLICANT));
 		
 		String borrowCode = (String) params.get(BorrowingBean.BORROW_CODE);
     	String[] codeArr = borrowCode.split("-");
@@ -376,6 +385,46 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		}
 		pQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(projectIdsList)));
 		Map<String, Object> result = dao.list(pQuery, DBBean.PROJECT);
+		
+		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
+		Set<String> uids = new HashSet<String>();
+		for(Map<String, Object> p : resultList){
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
+			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			if (!ApiUtil.isEmpty(pmid)){
+				uids.add(pmid);
+			}
+			if (!ApiUtil.isEmpty(cid)){
+				uids.add(cid);
+			}
+		}
+		
+		Map<String, Object> pmQuery = new HashMap<String, Object>();
+		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(uids)));
+		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME, UserBean.DEPARTMENT});
+		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
+		
+		for (Map<String, Object> p : resultList){
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
+			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmid);
+			if(ApiUtil.isEmpty(pmInfo)){
+				p.put(ProjectBean.PROJECT_MANAGER, "N/A");
+				p.put(UserBean.DEPARTMENT, "N/A");
+			}else{
+				p.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+				p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
+			}
+			
+			
+			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			Map<String, Object> customerInfo = (Map<String, Object>) pmData.get(customerId);
+			if(ApiUtil.isEmpty(pmInfo)){
+				p.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
+			}else{
+				p.put(ProjectBean.PROJECT_CUSTOMER, pmInfo.get(UserBean.USER_NAME));
+			}
+		}
+		
 		return result;
 	}
 

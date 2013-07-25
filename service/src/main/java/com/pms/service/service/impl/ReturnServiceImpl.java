@@ -7,7 +7,6 @@ import java.util.Map;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ReturnBean;
-import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IReturnService;
 import com.pms.service.util.ApiUtil;
@@ -35,8 +34,6 @@ public class ReturnServiceImpl extends AbstractService implements IReturnService
 
 	public Map<String, Object> create(Map<String, Object> params) {
 		params.put(ReturnBean.RETURN_STATUS, ReturnBean.RETURN_STATUS_TOBE);
-		Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, getCurrentUserId(), DBBean.USER);
-    	params.put(ReturnBean.RETURN_APPLICANT, user.get(UserBean.USER_NAME));
 		return dao.add(params, DBBean.RETURN);
 	}
 	
