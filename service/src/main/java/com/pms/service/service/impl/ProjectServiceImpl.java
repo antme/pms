@@ -256,6 +256,8 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			Map<String, Object> cInfo = (Map<String, Object>) customerData.get(cId);
 			if (cInfo != null){
 				pro.put(ProjectBean.PROJECT_CUSTOMER, cInfo.get(CustomerBean.NAME));
+			}else{
+				pro.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
 			}
 			
 		}
