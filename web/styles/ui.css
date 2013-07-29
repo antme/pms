@@ -156,10 +156,10 @@ td a {
 	color: red;
 }
 
-/*
-.k-selectable{
-	height:100% !important;
-}*/
+
+.k-grid TABLE{
+	width:100% !important;
+}
 
 
 /**********JACK*******************/

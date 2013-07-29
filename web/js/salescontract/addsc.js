@@ -144,7 +144,7 @@ $(document).ready(function() {
 		dataTextField : "text",
 		dataValueField : "value",
         optionLabel: "选择发票类型...",
-		dataSource : invoiceTypeItems,
+		dataSource : invoiceTypeItems
 	});
 	
 //	var taxTypeItems = [{ text: "taxType1", value: "1" }, { text: "taxType2", value: "2" }, { text: "taxType3", value: "3" }];
@@ -152,7 +152,7 @@ $(document).ready(function() {
 //		dataTextField : "text",
 //		dataValueField : "value",
 //        optionLabel: "选择税收类型...",
-//		dataSource : taxTypeItems,
+//		dataSource : taxTypeItems
 //	});
 	
 //	var debugCostTypeItems = [{ text: "debugCostType1", value: "1" }, { text: "debugCostType2", value: "2" }, { text: "debugCostType3", value: "3" }];
@@ -160,7 +160,7 @@ $(document).ready(function() {
 //		dataTextField : "text",
 //		dataValueField : "value",
 //        optionLabel: "选择调试费用类型...",
-//		dataSource : debugCostTypeItems,
+//		dataSource : debugCostTypeItems
 //	});
 
 	var customerItems = new kendo.data.DataSource({
@@ -178,7 +178,7 @@ $(document).ready(function() {
 		dataTextField : "name",
 		dataValueField : "_id",
         optionLabel: "选择客户...",
-		dataSource : customerItems,
+		dataSource : customerItems
 	});
 	
 	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
@@ -199,7 +199,7 @@ $(document).ready(function() {
 		dataTextField : "text",
 		dataValueField : "value",
         optionLabel: "选择归档状态...",
-		dataSource : archiveStatusItems,
+		dataSource : archiveStatusItems
 	});
 	
 	//执行中、收尾阶段、质保期、结束、中止或暂停、作废
@@ -208,7 +208,7 @@ $(document).ready(function() {
 		dataTextField : "text",
 		dataValueField : "value",
         optionLabel: "选择执行状态...",
-		dataSource : runningStatusItems,
+		dataSource : runningStatusItems
 	});
 	
 	$("#projectId").kendoDropDownList({

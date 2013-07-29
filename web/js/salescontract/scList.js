@@ -33,9 +33,7 @@ $(document).ready(function() {
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : {
-			buttonCount:5,
-			//input:true,
-			//pageSizes:true
+			buttonCount:5
 		},
 		editable : "popup",
 		change : function(e) {

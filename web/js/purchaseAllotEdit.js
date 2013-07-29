@@ -108,11 +108,11 @@ $(document).ready(function () {
 	});
 	
 	$("#form-container-button button").click(function(){
-		if(this.value == "cancel") {
+		if(this.id == "cancel") {
 			loadPage("purchaseAllot");
 		} else if(validateModel()){
 			if(confirm("提交表单，确认？")){
-				postAjaxRequest("/service/purchase/allot/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
+				postAjaxRequest("/service/purchase/allot/"+this.id, {models:kendo.stringify(currentObj)} , saveSuccess);
 			}
 		}
 	});

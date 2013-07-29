@@ -117,7 +117,7 @@ $(document).ready(function() {
 		dataTextField : "userName",
 		dataValueField : "_id",
         optionLabel: "选择项目经理...",
-		dataSource : proManagerItems,
+		dataSource : proManagerItems
 	});
 	
 	/*var customerItems = new kendo.data.DataSource({
@@ -135,7 +135,7 @@ $(document).ready(function() {
 		dataTextField : "name",
 		dataValueField : "_id",
         optionLabel: "选择客户...",
-		dataSource : customerItems,
+		dataSource : customerItems
 	});*/
 	if(popupParams){
 		if (popupParams.scAddProject == 1){//销售合同中进入添加

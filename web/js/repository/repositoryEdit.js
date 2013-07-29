@@ -66,7 +66,7 @@ $(document).ready(function() {
 		dataTextField : "userName",
 		dataValueField : "_id",
 		optionLabel: "选择入库人...",
-		dataSource : proManagerItems,
+		dataSource : proManagerItems
 	});
 	
 	$("#inDate").kendoDatePicker({
@@ -80,7 +80,7 @@ $(document).ready(function() {
 		dataTextField : "text",
 		dataValueField : "value",
         optionLabel: "选择库房...",
-		dataSource : storeHouseType,
+		dataSource : storeHouseType
 	});
 	
 	if (redirectParams && redirectParams._id) {

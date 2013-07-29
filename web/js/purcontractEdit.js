@@ -192,7 +192,7 @@ $(document).ready(function() {
 				schema : {
 					total : "total",
 					data : "data"
-				},
+				}
 			})
 		});
 		

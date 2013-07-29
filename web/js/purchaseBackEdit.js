@@ -122,7 +122,7 @@ $(document).ready(function () {
 			{ field: "eqcostMemo", title: "备注1" },
 			{ field: "pbComment", title: "备注2" }
 	  	],
-	  	editable:true,
+	  	editable:true
 	  	
 	});
 
@@ -134,7 +134,7 @@ $(document).ready(function () {
 			transport : {
 				read : {
 					dataType : "jsonp",
-					url : baseUrl+"/sc/listforselect",
+					url : baseUrl+"/sc/listforselect"
 				}
 			},
 			schema : {
@@ -145,12 +145,12 @@ $(document).ready(function () {
 	});	
 
 	$("#form-container-button button").click(function(){
-		if(this.value == "cancel") {
+		if(this.id == "cancel") {
 			loadPage("purchaseBack");
 		} else if(validateModel()){
 			if(confirm("提交表单，确认？")){
 				currentObj.pbPlanDate = kendo.toString(currentObj.pbPlanDate,"yyyy-MM-dd");
-				postAjaxRequest("/service/purchase/back/"+this.value, {models:kendo.stringify(currentObj)} , saveSuccess);
+				postAjaxRequest("/service/purchase/back/"+this.id, {models:kendo.stringify(currentObj)} , saveSuccess);
 			}
 		}
 	});
