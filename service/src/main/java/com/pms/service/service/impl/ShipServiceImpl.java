@@ -179,11 +179,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
     public Map<String, Object> submit(Map<String, Object> params) {
         params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
         params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_SUBMIT);
-        if (params.get(ApiConstants.MONGO_ID) != null) {
-            return dao.updateById(params, DBBean.SHIP);
-        } else {
-            return dao.add(params, DBBean.SHIP);
-        }
+        return create(params);
     }
 	   
     public Map<String, Object> approve(Map<String, Object> params){
