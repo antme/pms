@@ -18,7 +18,6 @@ var borrowing = kendo.data.Model.define( {
     	outSalesContractId: {},
     	eqcostList: {},
     	// 发货信息
-    	type: {},
     	shipCode: {},
     	applicationDepartment: {},
     	warehouse: {},
@@ -82,20 +81,6 @@ $(document).ready(function() {
             }
         }
     });
-    
-    $("#type").kendoDropDownList({
-        dataTextField: "text",
-        dataValueField: "value",
-        optionLabel : "选择发货类型...",
-        dataSource: shipTypeItems
-    });
-	
-	$("#applicationDepartment").kendoDropDownList({
-        dataTextField: "text",
-        dataValueField: "text",
-        optionLabel : "选择申请部门...",
-        dataSource: departmentItems
-    });
 	
 	$("#deliveryRequirements").kendoDropDownList({
         dataTextField: "text",
@@ -135,6 +120,7 @@ $(document).ready(function() {
         		model.set("inProjectCode", dataItem.projectCode);
         		model.set("inProjectManager", dataItem.projectManager);
         		model.set("inProjectName", dataItem.projectName);
+        		model.set("applicationDepartment", dataItem.department);
         		
 	        	inSalesContract.value(null);
 	        	inProjectId = this.value();
@@ -328,8 +314,8 @@ function save() {
     		if (data.length > 0) {
     			model.set("eqcostList", data);
     			
-    			model.set("issueTime", kendo.toString(model.issueTime, 'd'));
-    			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'd'));
+    			model.set("issueTime", kendo.toString(model.issueTime, 'yyyy-MM-dd'));
+    			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'yyyy-MM-dd'));
     			
     			listDataSource.add(model);
     	        

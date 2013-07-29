@@ -29,8 +29,6 @@
 			    	</div>
 			    	<div class="k-edit-label"></div>
 			    	<div class="k-edit-field"></div>
-			    	<div class="k-edit-label"></div>
-			    	<div class="k-edit-field"></div>
 			    	<div class="k-edit-label">
 			    		<label for="in-projects">调入项目名称</label>
 			    	</div>
@@ -43,8 +41,6 @@
 			    	<div data-container-for="inSalesContract" class="k-edit-field">
 			    		<input id="inSalesContract" name="inSalesContract" required="required" data-bind="value:inSalesContractId">
 			    	</div>
-			    	<div class="k-edit-label"></div>
-			    	<div class="k-edit-field"></div>
 			    	<div class="k-edit-label">
 			    		<label for="out-projects">调出项目名称</label>
 			    	</div>
@@ -64,28 +60,28 @@
             <div>
                 <div class="k-edit-form-container">
 			    	<div class="k-edit-label">
-			    		<label for="type">发货类型</label>
+			    		<label for="project">项目名称</label>
 			    	</div>
-			    	<div data-container-for="type" class="k-edit-field">
-			    		<input id="type" name="type" required="required" data-bind="value:type">
+			    	<div data-container-for="project" class="k-edit-field">
+			    		<input readonly type="text" class="k-input k-textbox" name="project" required="required" data-bind="value:inProjectName">
 			    	</div>
 			    	<div class="k-edit-label">
-			    		<label for="shipCode">编号</label>
+			    		<label for="salesContract">销售合同编号</label>
 			    	</div>
-			    	<div data-container-for="shipCode" class="k-edit-field">
-			    		<input type="text" class="k-input k-textbox" name="shipCode" required="required" data-bind="value:shipCode">
+			    	<div data-container-for="salesContract" class="k-edit-field">
+			    		<input readonly type="text" class="k-input k-textbox" name="salesContract" required="required" data-bind="value:inSalesContractCode">
 			    	</div>
 			    	<div class="k-edit-label">
 			    		<label for="applicationDepartment">申请部门</label>
 			    	</div>
 			    	<div data-container-for="applicationDepartment" class="k-edit-field">
-			    		<input id="applicationDepartment" name="applicationDepartment" required="required" data-bind="value:applicationDepartment">
+			    		<input readonly type="text" class="k-input k-textbox" name="applicationDepartment" required="required" data-bind="value:applicationDepartment">
 			    	</div>
 			    	<div class="k-edit-label">
-			    		<label for="warehouse">仓库</label>
+			    		<label for="customer">客户名称</label>
 			    	</div>
-			    	<div data-container-for="warehouse" class="k-edit-field">
-			    		<input type="text" class="k-input k-textbox" name="warehouse" data-bind="value:warehouse">
+			    	<div data-container-for="customer" class="k-edit-field">
+			    		<input readonly type="text" class="k-input k-textbox" name="customer" required="required" data-bind="value:inProjectCustomer">
 			    	</div>
 			    	<div class="k-edit-label">
 			    		<label for="deliveryContact">收货联系人</label>
@@ -115,13 +111,13 @@
 			    		<label for="issueTime">发出时间</label>
 			    	</div>
 			    	<div data-container-for="issueTime" class="k-edit-field">
-			    		<input data-role="datepicker" name="issueTime" data-bind="value:issueTime">
+			    		<input data-role="datepicker" data-format="yyyy-MM-dd" name="issueTime" data-bind="value:issueTime">
 			    	</div>
 			    	<div class="k-edit-label">
 			    		<label for="deliveryTime">送达时间</label>
 			    	</div>
 			    	<div data-container-for="deliveryTime" class="k-edit-field">
-			    		<input data-role="datepicker" name="deliveryTime" data-bind="value:deliveryTime">
+			    		<input data-role="datepicker" data-format="yyyy-MM-dd" name="deliveryTime" data-bind="value:deliveryTime">
 			    	</div>
 			    	<div class="k-edit-label">
 			    		<label for="deliveryRequirements">货运要求</label>
@@ -142,10 +138,10 @@
 					}
 			    	.k-edit-label {
 						padding-right: 1%;
-			    		width: 10%;
+			    		width: 15%;
 			    	}
 			    	.k-edit-field {
-			    		width: 20%;
+			    		width: 30%;
 			    	}
 			    </style>
             </div>
