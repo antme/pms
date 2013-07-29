@@ -68,23 +68,16 @@ $(document).ready(function() {
 		dataSource : dataSource,
 		pageable : true,
 		resizable: true,
+		selectable : "row",
 		toolbar : [ {
 			template : kendo.template($("#template").html())
 		} ],
 		columns : [
 		    { field : "supplierCode", title : "供应商编号",width:"150px" },
 	        { field : "supplierName", title : "供应商名称",width:"250px" },
-	        { field : "supplierDescription", title : "供应商描述",width:"200px" },
-	        { field : "supplierBankName", title : "开户行",width:"100px" },
-	        { field : "supplierBankAccount", title : "银行账号",width:"180px" },
-	        { field : "supplierTaxAccount", title : "税号",width:"200px" },
 	        { field : "supplierContact", title : "供应商联系人",width:"120px" },
-	        { field : "supplierLocation", title : "供应商所在地",width:"150px" },
-	        { field : "supplierAddress", title : "地址",width:"100px" },
 	        { field : "supplierContactPhone", title : "联系人电话",width:"120px" },
 	        { field : "supplierEmail", title : "联系人邮箱",width:"200px" },
-	        { field : "supplierFax", title : "传真",width:"150px" },
-	        { field : "supplierRemark", title : "备注",width:"200px" },
 	        { command : [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}], title : "&nbsp;",width:"160px" }
         ],
 		editable : "popup"

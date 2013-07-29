@@ -74,21 +74,14 @@ $(document).ready(function () {
         dataSource: datasource,
         pageable: true,
         resizable: true,
+        selectable : "row",
         toolbar: [{name: "create", text:"新增"}],
         columns: [
             { field: "code", title: "客户编号",width:"150px"},
             { field: "name", title: "客户名称",width:"250px" },
-            { field: "description", title: "客户描述",width:"200px" },
-            { field: "customerBankName", title: "开户行",width:"100px" },
-            { field: "customerBankAccount", title: "银行账号",width:"180px" },
-            { field: "taxAccount", title: "税号",width:"200px" },
             { field: "contact", title: "客户联系人",width:"80px" },
-            { field: "location", title: "客户所在地",width:"150px" },
-            { field: "address", title: "地址",width:"200px" },
             { field: "phone", title: "联系人电话",width:"120px" },
             { field: "email", title: "联系人邮箱",width:"200px" },
-            { field: "fax", title: "传真",width:"150px" },
-            { field: "remark", title: "备注",width:"200px" },
             { command: [{name: "edit", text: "编辑"},{name: "destroy", text: "删除"}], width:"160px"}
         ],
         editable: "popup"
