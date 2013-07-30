@@ -50,6 +50,7 @@ $(document).ready(function () {
 		sortable : true,
 		filterable : filterable,
         selectable: "row",
+        height: "400px",
         columns: [
                {
             	   field: "shipCode",

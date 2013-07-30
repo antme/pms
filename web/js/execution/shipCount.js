@@ -37,6 +37,7 @@ $(document).ready(function () {
 
     $("#grid").kendoGrid({
         dataSource: dataSource,
+        height: "200px",
         detailTemplate: kendo.template($("#template").html()),
         detailInit: detailInit,
         columns: [

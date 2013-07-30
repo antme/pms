@@ -45,6 +45,7 @@ $(document).ready(function () {
 		sortable : true,
 		filterable : filterable,
         selectable: "row",
+        height: "400px",
         columns: [
             { field:"applicant", title: "申请人" },
             { field: "applicationDate", title:"申请日期" },
@@ -136,5 +137,5 @@ function callback(response) {
 
 function openProjectViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"借货信息"};
-	openRemotePageWindow(options, "html/execution/addBorrowing.html", {_id : param});
+	openRemotePageWindow(options, "execution_addBorrowing", {_id : param});
 }

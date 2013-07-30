@@ -74,7 +74,7 @@ function init(u){
 	
 	$("#user-info").click(function() {
 		var options = { width:"500px", height: "320px", title:"修改密码"};
-		openRemotePageWindow(options, "html/user/changePassword.html", {_id:user._id});
+		openRemotePageWindow(options, "user_changePassword", {_id:user._id});
 	});
 	
 }
@@ -465,66 +465,66 @@ function disableAllInPoppup(){
 
 function openPMViewWindow(param){
 	var options = { width:"680px", height: "400px", title:"项目经理信息"};
-	openRemotePageWindow(options, "html/user/userview.html", {_id : param});
+	openRemotePageWindow(options, "user_userview", {_id : param});
 }
 
 function openCustomerViewWindow(param){
 	var options = { width:"680px", height: "400px", title:"客户信息"};
-	openRemotePageWindow(options, "html/customer/view.html", {_id : param});
+	openRemotePageWindow(options, "customer_view", {_id : param});
 }
 	
 
 
 function openProjectViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"项目信息"};
-	openRemotePageWindow(options, "html/project/addProject.html", {_id : param});
+	openRemotePageWindow(options, "project_addProject", {_id : param});
 }
 
 
 function openPurchaseRequestViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"采购申请信息"};
-	openRemotePageWindow(options, "html/purchasecontract/purchaseRequestEdit.html", {_id : param});
+	openRemotePageWindow(options, "purchasecontract_purchaseRequestEdit", {_id : param});
 }
 
 
 function openPurchaseOrderViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"采购订单信息"};
-	openRemotePageWindow(options, "html/purchasecontract/purchaseOrderEdit.html", {_id : param});
+	openRemotePageWindow(options, "purchasecontract_purchaseOrderEdit", {_id : param});
 }
 
 function openBackRequestViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"备货申请信息"};
-	openRemotePageWindow(options, "purchaseBackEdit", {_id : param});
+	openRemotePageWindow(options, "purchaseback_purchaseBackEdit", {_id : param});
 }
 
 function openPayInvoiceViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"开票信息"};
-	openRemotePageWindow(options, "html/finance/payInvoiceEdit.html", {_id : param});
+	openRemotePageWindow(options, "finance_payInvoiceEdit", {_id : param});
 }
 
 function openGetInvoiceViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"收票信息"};
-	openRemotePageWindow(options, "html/finance/getInvoiceEdit.html", {_id : param});
+	openRemotePageWindow(options, "finance_getInvoiceEdit", {_id : param});
 }
 
 function openPurchaseAllotViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"调拨申请信息"};
-	openRemotePageWindow(options, "purchaseAllotManageEdit", {_id : param});
+	openRemotePageWindow(options, "purchaseback_purchaseAllotManageEdit", {_id : param});
 }
 
 function openSCViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"销售合同信息"};
-	openRemotePageWindow(options, "html/salescontract/editsc.html", {_id : param});
+	openRemotePageWindow(options, "salescontract_editsc", {_id : param});
 }
 
 function openPurchaseContractViewWindow(param){
 	var options = { width:"1080px", height: "800px", title:"采购合同信息"};
-	openRemotePageWindow(options, "html/purchasecontract/purchasecontractedit.html", {_id : param});
+	openRemotePageWindow(options, "purchasecontract_purchasecontractedit", {_id : param});
 }
 
 function openShipViewWindow(param){
 	var options = { width:"1080px", height: "500px", title:"发货信息"};
-	openRemotePageWindow(options, "html/execution/addShip.html", {_id : param});	
+	openRemotePageWindow(options, "execution_addShip", {_id : param});	
 }
 
 function myTaskQueryParam(options, operation){

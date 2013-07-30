@@ -52,6 +52,7 @@ $(document).ready(function () {
 		sortable : true,
 		filterable : filterable,
         selectable: "row",
+        height: "400px",
         columns: [
             { field:"borrowCode", title: "编号" },
             { field:"applicant", title: "申请人" },
@@ -188,11 +189,11 @@ function toolbar_view(){
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
 		var options = { width:"1080px", height: "400px", title:"借货信息"};
-		openRemotePageWindow(options, "html/execution/addBorrowing.html", {_id : rowData._id});
+		openRemotePageWindow(options, "execution_addBorrowing", {_id : rowData._id});
 	}
 }
 
 function openProjectViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"项目信息"};
-	openRemotePageWindow(options, "html/project/addProject.html", {_id : param});
+	openRemotePageWindow(options, "project_addProject", {_id : param});
 }

@@ -204,17 +204,17 @@ function toolbar_viewEqListHistory(){
 	}
 	
 	var options = { width:"900px", height: "600px", title:"成本设备变更历史"};
-	openRemotePageWindow(options, "html/salescontract/eqcostChangeHistory.html", {_id:rowData._id});
+	openRemotePageWindow(options, "salescontract_eqcostChangeHistory", {_id:rowData._id});
 }
 
 function openTraceWindow(param){
 	var options = { width:"680px", height: "400px", title:"合同金额变更历史"};
-	openRemotePageWindow(options, "html/salescontract/traceSCAmount.html", {_id : param});
+	openRemotePageWindow(options, "salescontract_traceSCAmount", {_id : param});
 }
 
 function viewProject(param){
 	var options = { width:"680px", height: "480px", title:"项目信息"};
-	openRemotePageWindow(options, "html/project/addProject.html", {_id : param});
+	openRemotePageWindow(options, "project_addProject", {_id : param});
 }
 
 

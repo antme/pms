@@ -471,5 +471,5 @@ function edit(data){
 
 function openTraceWindow(){
 	var options = { width:"680px", height: "400px", title:"合同金额变更历史"};
-	openRemotePageWindow(options, "html/salescontract/traceSCAmount.html", {_id : scm._id});
+	openRemotePageWindow(options, "salescontract_traceSCAmount", {_id : scm._id});
 }
