@@ -61,4 +61,12 @@ public class ArrivalNoticeController extends AbstractController {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(arrivalNoticeService.createByOrder(params), request, response);
     }
+    
+    
+    
+    @RequestMapping("/order/eqlist")
+    public void loadArrivalEqListByOrder(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(arrivalNoticeService.loadArrivalEqListByOrder(params), request, response);
+    }
 }

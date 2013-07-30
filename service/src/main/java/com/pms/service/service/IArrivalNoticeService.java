@@ -23,5 +23,8 @@ public interface IArrivalNoticeService {
     public Map<String, Object> createByOrder(Map<String, Object> params);
 
 	public Map<String, Object> createByAllocate(Map<String, Object> params);
+
+    public Map<String, Object> loadArrivalEqListByOrder(Map<String, Object> params);
+    
 }
 

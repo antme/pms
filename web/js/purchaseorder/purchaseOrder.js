@@ -145,7 +145,7 @@ function arrivalNotice() {
 				alert("只能针对直发发到货通知，非直发入库时会自动发到货通知");
 			}else{
 				var options = { width:"1080px", height: "600px", title:"编辑到货数量"};
-				openRemotePageWindow(options, "html/execution/addArrivalNotice.html", {_id : row._id});
+				openRemotePageWindow(options, "execution_addArrivalNotice", {_id : row._id});
 			}
 		} else {
 			alert("未采购完毕，不能生成到货通知");

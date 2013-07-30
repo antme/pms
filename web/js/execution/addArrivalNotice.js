@@ -1,4 +1,4 @@
-var editUrl = "/service/purcontract/order/get";
+var editUrl = "/service/arrivalNotice/order/eqlist";
 var saveUrl =  "/service/arrivalNotice/create/byorder";
 
 // 声明一个总的对象用来传递数据
@@ -166,10 +166,10 @@ function sumOrders(e) {
 
 
     var flag = true;
-	if (e.values.eqcostApplyAmount) {
+	if (e.values.eqcostArrivalAmount) {
 		
-		if(e.values.eqcostApplyAmount > e.model.orderRequestCount){
-			alert("最多可以申请" + e.model.orderRequestCount);
+		if(e.values.eqcostArrivalAmount > e.model.eqcostArrivalAmount){
+			alert("最多可以到货" + e.model.eqcostArrivalAmount);
 			flag = false;
 			e.preventDefault();
 		}
@@ -237,7 +237,10 @@ function edit(data) {
 								title : "合同总价"
 							}, {
 								field : "eqcostApplyAmount",
-								title : "采购数量"
+								title : "本次采购数量"
+							}, {
+								field : "arrivedRequestCount",
+								title : "已到货"
 							},{
 								field : "eqcostProductUnitPrice",
 								title : "采购单价"
@@ -246,13 +249,10 @@ function edit(data) {
 								title : "采购总价"
 							}, {
 								field : "eqcostArrivalAmount",
-								title : "到货数量",
+								title : "本次到货",
 								template : function(dataItem){
 									return '<span class="edit-tip">' + dataItem.eqcostArrivalAmount + '</span>';
 								}
-							}, {
-								field : "differenceAmount",
-								title : "金额差值"
 							} ],
 
 							editable : true,

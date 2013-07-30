@@ -22,6 +22,7 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.ISalesContractService;
+import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
 
 public class ArrivalNoticeServiceImpl extends AbstractService implements IArrivalNoticeService {
@@ -320,5 +321,47 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		
 		return dao.add(noticeParams, DBBean.ARRIVAL_NOTICE);
 	}
+	
+	
+    public Map<String, Object> loadArrivalEqListByOrder(Map<String, Object> params) {
+        Map<String, Object> order = pService.getPurchaseOrder(params);
+
+        List<Map<String, Object>> prEqList = (List<Map<String, Object>>) order.get(SalesContractBean.SC_EQ_LIST);
+        Map<String, Integer> countMap = new HashMap<String, Integer>();
+        for (Map<String, Object> orderEq : prEqList) {
+            countMap.put(orderEq.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(orderEq.get(PurchaseCommonBean.EQCOST_APPLY_AMOUNT), 0));
+        }
+        // 获取剩余可到货清单
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ArrivalNoticeBean.FOREIGN_KEY, order.get(ApiConstants.MONGO_ID));
+        Map<String, Integer> arrivecount = countEqByKey(query, DBBean.ARRIVAL_NOTICE, ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, null);
+       
+        
+        for (Map<String, Object> orderEq : prEqList) {
+            orderEq.put("arrivedRequestCount", arrivecount.get(orderEq.get(ApiConstants.MONGO_ID).toString()));
+        }
+
+        
+        Map<String, Integer> restEqCount = new HashMap<String, Integer>();
+        for (String id : countMap.keySet()) {
+            int eqCount = 0;
+            int arrcount = 0;
+            if (countMap.get(id) != null) {
+                eqCount = countMap.get(id);
+            }
+            if (arrivecount.get(id) != null) {
+                arrcount = arrivecount.get(id);
+            }
+            restEqCount.put(id, eqCount - arrcount);
+        }
+        
+        for (Map<String, Object> orderEq : prEqList) {
+            orderEq.put("orderRequestCount", restEqCount.get(orderEq.get(ApiConstants.MONGO_ID).toString()));
+            
+            orderEq.put("eqcostArrivalAmount", restEqCount.get(orderEq.get(ApiConstants.MONGO_ID).toString()));
+        }
+
+        return order;
+    }
 
 }
