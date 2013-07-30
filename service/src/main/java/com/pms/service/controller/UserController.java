@@ -63,6 +63,11 @@ public class UserController extends AbstractController {
         responseWithData(userService.loadUserInfo(parserJsonParameters(request,  false)), request, response);
     }
     
+    @RequestMapping("/mine/load")
+    public void loadMyUserInfo(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(userService.loadMyUserInfo(parserJsonParameters(request,  false)), request, response);
+    }
+    
     @RequestMapping("/list")
     public void listUsers(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);

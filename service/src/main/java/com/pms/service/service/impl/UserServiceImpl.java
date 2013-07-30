@@ -75,6 +75,11 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         return dao.findOne(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID), DBBean.USER);
     }
     
+    public Map<String, Object> loadMyUserInfo(Map<String, Object> map) {
+        String[] limitKeys = new String[] { UserBean.EMAIL, "phone" };
+        return dao.findOne(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID), limitKeys, DBBean.USER);
+    }
+    
     public Map<String, Object> loadUserInfo(String userId){
         return dao.findOne(ApiConstants.MONGO_ID, userId, DBBean.USER);
     }
@@ -288,25 +293,26 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     }
 
 	@Override
-	public Map<String, Object> changePassword(Map<String, Object> params) {
-		String oldPass = (String) params.get("passwordOld");
-		String oldPassEncry = DataEncrypt.generatePassword(oldPass);
-		
-		Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.USER);
-		String passIndb = (String) user.get(UserBean.PASSWORD);
-		if (!passIndb.equals(oldPassEncry)){
-			throw new ApiResponseException(String.format("Old password is not correct [%s] ", params), ResponseCodeConstants.USER_CHANGE_PASSWORD_OLD_PASSWORD_INCORRECT);
-		}
-		
+    public Map<String, Object> changePassword(Map<String, Object> params) {
 
-		String newPass = (String) params.get("passwordNew");
-		String newPassEncry = DataEncrypt.generatePassword(newPass);
-		
-		Map<String, Object> query = new HashMap<String, Object>();
-		query.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
-		query.put(UserBean.PASSWORD, newPassEncry);
-		return dao.updateById(query, DBBean.USER);
-	}
+        if (!ApiUtil.isEmpty(params.get("passwordOld")) && !ApiUtil.isEmpty(params.get("passwordNew"))) {
+            String oldPass = (String) params.get("passwordOld");
+            String oldPassEncry = DataEncrypt.generatePassword(oldPass);
+
+            Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.USER);
+            String passIndb = (String) user.get(UserBean.PASSWORD);
+            if (!passIndb.equals(oldPassEncry)) {
+                throw new ApiResponseException(String.format("Old password is not correct [%s] ", params), ResponseCodeConstants.USER_CHANGE_PASSWORD_OLD_PASSWORD_INCORRECT);
+            }
+
+            String newPass = (String) params.get("passwordNew");
+            String newPassEncry = DataEncrypt.generatePassword(newPass);
+            params.put(UserBean.PASSWORD, newPassEncry);
+        }
+        params.remove("passwordNew");
+        params.remove("passwordOld");
+        return dao.updateById(params, DBBean.USER);
+    }
 
 	@Override
 	public Map<String, Object> listPMs(Map<String, Object> parameters) {

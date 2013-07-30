@@ -31,18 +31,21 @@ $(document).ready(function() {
 	
 	if (popupParams) {
 		var userId = popupParams._id;
-		console.log("************"+userId);
-		cpModel = new changePasswordModel();
-		cpModel.set("_id",userId);
-		kendo.bind($("#changePasswordForm"), cpModel);
+		postAjaxRequest("/service/user/mine/load", {_id:popupParams._id}, loadUserInfo);
+	
 	}	
 });
 
+
+function loadUserInfo(data){
+	cpModel = new changePasswordModel(data);
+	kendo.bind($("#changePasswordForm"), cpModel);
+}
 function changePasswordSave(){
 	var validator = $("#changePasswordForm").kendoValidator().data("kendoValidator");
 	var new1 = $("#passwordNew").val().trim();
 	var new2 = $("#passwordNew2").val().trim();
-	console.log("***new1:"+new1+"***"+new2);
+	console.log(cpModel.toJSON());
 	if (!validator.validate()){
 		return;
 	}else if(new1 != new2){

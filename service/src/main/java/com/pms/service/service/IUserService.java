@@ -8,6 +8,8 @@ public interface IUserService {
     
     public Map<String, Object> loadUserInfo(Map<String, Object> map); 
     
+    public Map<String, Object> loadMyUserInfo(Map<String, Object> map); 
+    
     public Map<String, Object> loadUserInfo(String userId); 
     
     public Map<String, Object> loadCurrentUserInfo(); 
