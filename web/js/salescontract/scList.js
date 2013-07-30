@@ -159,7 +159,7 @@ function toolbar_deleteSalesContract() {
 };//end toolbar_delete
 	
 function toolbar_addSalesContract(){
-	loadPage("addsc");
+	loadPage("salescontract_addsc");
 }
 
 function toolbar_modifySalesContract() {
@@ -168,7 +168,7 @@ function toolbar_modifySalesContract() {
 		alert("请点击选择一条合同记录！");
 		return;
 	}
-	loadPage("editsc",{_id:rowData._id});
+	loadPage("salescontract_editsc",{_id:rowData._id});
 };
 
 function toolbar_addPCForRuodianSC(){
@@ -179,7 +179,7 @@ function toolbar_addPCForRuodianSC(){
 	}
 	if (rowData.contractType == "弱电工程"){
 		var options = { width:"800px", height: "760px", title:"新建采购合同-弱电工程"};
-		loadPage("html/purchasecontract/purchasecontractedit.html", {addInSCList:1, projectId:rowData.projectId, scId:rowData._id, contractCode:rowData.contractCode});
+		loadPage("purchasecontract_purchasecontractedit", {addInSCList:1, projectId:rowData.projectId, scId:rowData._id, contractCode:rowData.contractCode});
 	}else{
 		alert("请点击选择一条弱电工程类合同！");
 		return;
@@ -193,7 +193,7 @@ function toolbar_viewSalesContract() {
 		alert("请点击选择一条合同记录！");
 		return;
 	}
-	loadPage("viewsc",{_id:rowData._id});
+	loadPage("salescontract_viewsc",{_id:rowData._id});
 };
 
 function toolbar_viewEqListHistory(){

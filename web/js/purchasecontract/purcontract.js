@@ -67,7 +67,7 @@ $(document).ready(function() {
 
 
 function add() {
-	loadPage("html/purchasecontract/purchasecontractedit.html");
+	loadPage("purchasecontract_purchasecontractedit");
 }
 
 function editCon() {
@@ -80,7 +80,7 @@ function editCon() {
 		} else if (row.status == "已锁定") {
 			alert("数据已锁定，不能编辑");
 		} else {
-			loadPage("html/purchasecontract/purchasecontractedit.html", {
+			loadPage("purchasecontract_purchasecontractedit", {
 				_id : row._id
 			});
 		}

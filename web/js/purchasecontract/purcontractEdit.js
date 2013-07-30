@@ -408,7 +408,7 @@ function save(status) {
 }
 
 function checkStatus() {
-	loadPage("purchasecontract", null);
+	loadPage("purchasecontract_purchasecontract", null);
 }
 // 计算成
 
@@ -806,5 +806,5 @@ function categoryDropDownEditor(container, options) {
 }
 
 function cancel(){
-	loadPage("purchasecontract");
+	loadPage("purchasecontract_purchasecontract");
 }

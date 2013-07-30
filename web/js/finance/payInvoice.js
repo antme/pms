@@ -193,7 +193,7 @@ function addPI(){
 	if($("#searchfor").val() == "") {
 		alert("请选择合同");
 	}else{
-		loadPage("payInvoiceEdit",{scId: $("#searchfor").val()});
+		loadPage("finance_payInvoiceEdit",{scId: $("#searchfor").val()});
 	}	
 }
 function editManagerPI(){
@@ -201,7 +201,7 @@ function editManagerPI(){
 	if(!row) {
 		alert("点击列表可以选中数据");
 	} else if(row.payInvoiceStatus == "待部门经理审核"){
-		loadPage("payInvoiceEdit", {_id:row._id});		
+		loadPage("finance_payInvoiceEdit", {_id:row._id});		
 	} else {	
 		alert("请选择‘待部门经理审核’的数据");
 	}
@@ -211,7 +211,7 @@ function editFinPI(){
 	if(!row) {
 		alert("点击列表可以选中数据");
 	} else if(row.payInvoiceStatus == "待财务经理审核"){
-		loadPage("payInvoiceEdit", {_id:row._id});		
+		loadPage("finance_payInvoiceEdit", {_id:row._id});		
 	} else {	
 		alert("请选择‘待财务经理审核’的数据");
 	}
@@ -221,7 +221,7 @@ function donePI(){
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else if(row.payInvoiceStatus == "开票中"){
-		loadPage("payInvoiceEdit", {_id:row._id});	
+		loadPage("finance_payInvoiceEdit", {_id:row._id});	
 	} else {	
 		alert("请选择‘开票中’的数据");
 	}

@@ -90,5 +90,5 @@ $(document).ready(function () {
 });
 
 function myreflush(){
-	loadPage("customer");
+	loadPage("customer_customer");
 }

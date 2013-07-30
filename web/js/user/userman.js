@@ -79,13 +79,13 @@ $(document).ready(function() {
 
 
 function add(){
-	loadPage("html/user/useredit.html");
+	loadPage("user_useredit");
 }
 
 function edit(){
 	var row = getSelectedRowDataByGridWithMsg("grid");	
 	if(row){
-		loadPage("html/user/useredit.html", {
+		loadPage("user_useredit", {
 			_id : row._id
 		});
 	}
@@ -98,5 +98,5 @@ function del() {
 }
 
 function saveSuccess(){
-	loadPage("userman");
+	loadPage("user_userman");
 }

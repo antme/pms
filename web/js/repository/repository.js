@@ -61,7 +61,7 @@ $(document).ready(function() {
 
 
 function add(){
-	loadPage("html/repository/repositoryEdit.html");
+	loadPage("repository_repositoryEdit");
 }
 
 
@@ -84,7 +84,7 @@ function editRepo() {
 	if(row.status == "已入库"){
 		alert("已入库，不能再编辑!");
 	}else{
-		loadPage("html/repository/repositoryEdit.html", {
+		loadPage("repository_repositoryEdit", {
 			_id : row._id
 		});
 	}
@@ -97,7 +97,7 @@ function confirmRepository(){
 		if(row.status == "已入库"){
 			alert("此申请已入库，不需要再次入库");
 		}else{
-			loadPage("html/repository/repositoryEdit.html", {
+			loadPage("repository_repositoryEdit", {
 				_id : row._id
 			});
 		}

@@ -422,7 +422,7 @@ function saveSC(){
 		scm.set("totalEstimateCost", totalEstimate);
 		dataSource_SC.add(scm);
 		dataSource_SC.sync();
-		loadPage("scList");
+		loadPage("salescontract_scList");
     }
 };
 

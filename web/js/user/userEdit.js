@@ -93,11 +93,11 @@ function save(){
 }
 
 function saveSuccess(data){
-	loadPage("userman");
+	loadPage("user_userman");
 }
 
 function cancel(){
-	loadPage("userman");
+	loadPage("user_userman");
 }
 
 function del(){

@@ -143,6 +143,6 @@ function pcDropDownEditor(container, options) {
     });
 }
 function myreflush(){
-	loadPage("payMoney");
+	loadPage("finance_payMoney");
 	//location.reload();//临时解决方案
 }

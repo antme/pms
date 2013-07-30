@@ -175,5 +175,5 @@ function openGroupRoleWindow(id) {
 	openWindow(options);
 }
 function myreflush(){
-	loadPage("group");
+	loadPage("user_group");
 }

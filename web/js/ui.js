@@ -139,89 +139,6 @@ function loadPage(page, parameters, popupDiv) {
 
 	var uid = kendo.guid();
 
-	if (page == "userman") {
-		page = "html/user/userman.html";
-	} else if (page == "projectList") {
-		page = "html/project/projectList.html";
-	} else if (page == "scList") {
-		page = "html/salescontract/scList.html";
-	} else if (page == "addsc") {
-		page = "html/salescontract/addsc.html";
-	} else if (page == "editsc") {
-		page = "html/salescontract/editsc.html";
-	} else if (page == "viewsc") {
-		page = "html/salescontract/viewsc.html";
-	} else if (page == "payInvoice") {
-		page = "html/finance/payInvoice.html";
-	} else if(page == "payInvoiceEdit"){
-		page = "html/finance/payInvoiceEdit.html";
-	} else if (page == "getMoney") {
-		page = "html/finance/gotMoneyList.html";
-	} else if (page == "group") {
-		page = "html/user/group.html";
-	} else if (page == "customer") {
-		page = "html/customer/customer.html";
-	} else if (page == "supplier") {
-		page = "html/supplier/supplier.html";
-	} else if (page == "allocate") {
-		page = "html/execution/allocate.html";
-	} else if (page == "purchasecontract") {
-		page = "html/purchasecontract/purchasecontract.html";
-	} else if (page == "purchaseorder" ) {
-		page = "html/purchasecontract/purchaseOrder.html";
-	} else if (page == "purchaseRequestByAssistant") {
-		page = "html/purchasecontract/purchaseRequest.html";
-	} else if (page == "purchaseRequestApprove") {
-		page = "html/purchasecontract/purchaseRequestApprove.html";
-	} else if (page == "addProject") {
-		page = "html/project/addProject.html";
-	} else if (page == "ship") {
-		page = "html/execution/ship.html";
-	} else if (page == "shipCount") {
-		page = "html/execution/shipCount.html";
-	} else if (page == "addShip") {
-		page = "html/execution/addShip.html";
-	} else if (page == "shipRecord") {
-		page = "html/execution/shipRecord.html";
-	} else if (page == "purchaseBack") {
-		page = "html/purchasecontract/purchaseBack.html";
-	} else if (page == "purchaseBackEdit") {
-		page = "html/purchasecontract/purchaseBackEdit.html";
-	} else if(page == "purchaseAllot"){
-		page = "html/purchasecontract/purchaseAllot.html";		
-	} else if(page == "purchaseAllotEdit"){
-		page = "html/purchasecontract/purchaseAllotEdit.html";		
-	} else if(page == "purchaseAllotManage"){
-		page = "html/purchasecontract/purchaseAllotManage.html";		
-	} else if(page == "purchaseAllotManageEdit"){
-		page = "html/purchasecontract/purchaseAllotManageEdit.html";
-	} else if(page == "borrowing"){
-		page = "html/execution/borrowing.html";
-	} else if (page == "addBorrowing") {
-		page = "html/execution/addBorrowing.html";
-	}else if (page == "repository") {
-		page = "html/repository/repository.html";
-	}else if (page == "directRepository") {
-		page = "html/repository/directRepository.html";
-	}else if(page == "payMoney"){
-		page = "html/finance/payMoney.html";
-	}else if(page == "getInvoice"){
-		page = "html/finance/getInvoice.html";
-	}else if(page == "getInvoiceEdit"){
-		page = "html/finance/getInvoiceEdit.html";		
-	}else if (page == "repositoryOut") {
-		page = "html/repository/repositoryout.html";
-	} else if(page == "return"){
-		page = "html/execution/return.html";
-	} else if(page == "arrivalNotice"){
-		page = "html/execution/arrivalNotice.html";
-	} else if(page == "payInvoiceView"){
-		page = "html/finance/payInvoiceView.html";
-	} else if (page == "historyDataImport"){
-		page = "html/import/historyDataImport.html";
-	}
-	
-
 	if (page == "mytask") {
 		$("#myTask").show();
 		var tabMyTask = $("#tabMyTask").data("kendoTabStrip");
@@ -248,14 +165,24 @@ function loadPage(page, parameters, popupDiv) {
 		$("#approved-length").html("(" + user.mytasks.approvedLength + ")");
 		$("#tip-length").html("(0)");
 		
-	}else if(!page.endWith(".html")){
-		alert("暂未开放");
 	}else{
-		var url = page + "?_uid=" + uid;
-	
-		if (page.indexOf("?") != -1) {
-			url = page + "&_uid=" + uid;	
+		
+		var url = page;
+		console.log(page);
+		if (!page.endWith(".html")) {
+			var pages = page.split("_");
+			if (pages.length == 2) {
+				url = "html/" + pages[0] + "/" + pages[1] + ".html";
+			}
 		}
+
+		console.log(url);
+		if (url.indexOf("?") != -1) {
+			url = url + "&_uid=" + uid;
+		}else{
+			url = url + "?uid=" + uid;
+		}
+
 		$.ajax({
 			url : url,
 			success : function(data) {
@@ -330,9 +257,9 @@ function initMyDraftTasks(id, data){
 					var param = "'" +id + "'";
 					if(dataItem.db == "purchaseRequest"){
 						if(id=="inprogress"){
-							return '<a onclick="loadTreePage(' + "'purchaseRequestApprove'," + param + ')">' + dataItem.count + '</a>';
+							return '<a onclick="loadTreePage(' + "'purchasecontract_purchaseRequestApprove'," + param + ')">' + dataItem.count + '</a>';
 						}
-						return '<a onclick="loadTreePage(' + "'purchaseRequestByAssistant'," + param + ')">' + dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'purchasecontract_purchaseRequest'," + param + ')">' + dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "purchaseBack"){

@@ -117,7 +117,7 @@ function detailPI(){
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else {	
-		loadPage("payInvoiceEdit", { _id : row._id});
+		loadPage("finance_payInvoiceEdit", { _id : row._id});
 	}
 }
 function editSucess(e){

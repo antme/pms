@@ -92,7 +92,7 @@ $(document).ready(function() {
 
 
 function add(){
-	loadPage("html/purchasecontract/purchaseOrderEdit.html");
+	loadPage("purchasecontract_purchaseOrderEdit");
 }
 
 function editOr() {
@@ -101,7 +101,7 @@ function editOr() {
 	
 	if (row) {
 		if (row.status == "已提交" || row.status == "草稿" || row.status == "中止申请中") {
-			loadPage("html/purchasecontract/purchaseOrderEdit.html", {
+			loadPage("purchasecontract_purchaseOrderEdit", {
 				_id : row._id
 			});
 		} else {
@@ -155,5 +155,5 @@ function arrivalNotice() {
 
 function callback(response) {
 	alert("到货通知已生成");
-	loadPage("html/execution/arrivalNotice.html");
+	loadPage("purchasecontract_arrivalNotice");
 }

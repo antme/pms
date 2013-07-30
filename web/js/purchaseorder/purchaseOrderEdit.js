@@ -61,7 +61,7 @@ $(document).ready(function() {
 
 
 function checkStatus(data) {
-	loadPage("purchaseorder", null);
+	loadPage("purchasecontract_purchaseOrder", null);
 }
 
 

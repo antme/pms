@@ -735,7 +735,7 @@ function saveSC(){
 		
 		dataSource.add(scm);
 		dataSource.sync();
-		loadPage("scList");
+		loadPage("salescontract_scList");
 	}
 };
 

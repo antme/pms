@@ -119,7 +119,7 @@ $(document).ready(function() {
 });//end dom ready	
 	
 function toolbar_addProject() {
-	loadPage("addProject");
+	loadPage("project_addProject");
 }
 
 function toolbar_deleteProject() {
@@ -135,7 +135,7 @@ function toolbar_editProject(){
 		return;
 	}
 	
-	loadPage("addProject",{_id:rowData._id});
+	loadPage("project_addProject",{_id:rowData._id});
 }
 	
 function toolbar_setupProject() {//1:正式立项；2：预立项；3：内部立项

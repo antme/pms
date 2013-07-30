@@ -64,7 +64,7 @@ $(document).ready(function () {
 
 	$("#form-container-button button").click(function(){
 		if(this.value == "cancel") {
-			loadPage("payInvoice");
+			loadPage("finance_payInvoice");
 		} else if(validateModel()){
 			if(confirm("提交表单，确认？")){
 				currentObj.payInvoicePlanDate = kendo.toString(currentObj.payInvoicePlanDate,"yyyy-MM-dd");
@@ -87,7 +87,7 @@ $(document).ready(function () {
 });
 
 function saveSuccess(){
-	loadPage("payInvoice");
+	loadPage("finance_payInvoice");
 }
 function editSucess(e){
 	if(e.payInvoiceStatus == '草稿'){//只 提交 可见

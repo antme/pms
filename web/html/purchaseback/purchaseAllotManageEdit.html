@@ -1,0 +1,64 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script  src="js/purchaseback/purchaseAllotManageEdit.js"></script>
+<body>
+<h2>备货调拨审核</h2>
+<div id="objList" class="k-content">
+		<div id="form-container">
+			<table class="table_form">
+				<tr>
+					<td>项目名： <span data-bind="text: projectName"></span></td>	
+					<td>项目编号： <span data-bind="text: projectCode"></span></td>
+					<td>合同编号： <span data-bind="text: contractCode"></span></td>
+					<td>客户名称： <span data-bind="text: customer"></span></td>
+				</tr>
+				<tr>
+					<td>备货编号：<span data-bind="text: pbCode" ></span></td>
+					<td>申请部门： <span data-bind="text: pbDepartment"></span></td>
+					<td>到货要求日期： <span data-bind="text: pbPlanDate" data-format="yyyy/MM/dd"></span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<label>特殊要求:</label><br>
+						<label><input disabled="disabled" type="checkbox" value="0" data-bind="checked: pbSpecialRequireRadio"/>1、是否要满足ROHS/REACH/UL/CCC要求？</label><br>   
+						<label><input disabled="disabled" type="checkbox" value="1" data-bind="checked: pbSpecialRequireRadio"/>2、如是进口产品，是否需要商检？</label><br>
+						<label><input disabled="disabled" type="checkbox" value="2" data-bind="checked: pbSpecialRequireRadio"/>3、其它要求，请注明：</label><br>					
+					</td>
+					<td colspan="2">
+						<br><label>若有,请注明：</label><br>
+						<textarea disabled="disabled" rows="4" cols="120" class="k-textbox" style="width:300px;" data-bind="value: pbSpecialRequire" ></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>调拨编号：<span data-bind="text: paCode" ></span></td>
+					<td>调出货架编号: <span data-bind="text: paShelfCode"></span></td>
+					<td>调拨状态：<span data-bind="text: paStatus" ></span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>提交时间：<span data-bind="text: paSubmitDate" ></span></td>
+					<td>批准时间：<span data-bind="text: paApproveDate" ></span></td>
+					<td colspan="2"><label id="paNumberTd" >调拨单号：<input type="text" required validationMessage="请输入" data-bind="value: paNumber"/></label></td>
+				</tr>
+			</table>
+			<hr>
+            <div>
+				<h4>成本设备清单</h4>
+				<div id="subGrid" data-bind="source: eqcostList"></div>
+				<div data-bind="text: paComment" class="commentdiv"></div>
+				<div class="tempCommentdiv">
+					<label>备注:</label><br>
+					<textarea name="tempComment" rows="4" cols="120" class="k-textbox" style="width:505px;" data-bind="value: tempComment" ></textarea>
+				</div>
+            </div>
+		</div>
+        <div id="form-container-button">
+        	<button access="purchase_allocate_process" class="k-button access" value="approve">批准</button>
+        	<button access="purchase_allocate_process" class="k-button access" value="reject">拒绝</button>
+        	<button access="purchase_allocate_final" class="k-button access" value="finalapprove">批准</button>
+        	<button access="purchase_allocate_final" class="k-button access" value="finalreject">拒绝</button>
+        	<button access="purchase_allocate_done" class="k-button access" value="done">完成</button>
+        	<button class="k-button" value="cancel">取消</button>
+        </div>
+</div>		
+</body>

@@ -108,7 +108,7 @@ function editRe() {
 		} else if(row.status == "审批通过"){
 			alert("此采购申请已审批通过，不允许编辑!");
 		}else {
-			loadPage("html/purchasecontract/purchaseRequestEdit.html", {
+			loadPage("purchasecontract_purchaseRequestEdit", {
 				_id : row._id
 			});
 		}
@@ -130,7 +130,7 @@ function approveRe() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if(row.status == "中止申请中" || row.status == "审批中"){
-			loadPage("html/purchasecontract/purchaseRequestEdit.html", {
+			loadPage("purchasecontract_purchaseRequestEdit", {
 				_id : row._id,
 				page: "approve"
 			});
@@ -142,7 +142,7 @@ function approveRe() {
 
 
 function add(){
-	loadPage("html/purchasecontract/purchaseRequestEdit.html");
+	loadPage("purchasecontract_purchaseRequestEdit");
 }
 
 

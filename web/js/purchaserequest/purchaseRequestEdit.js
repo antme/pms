@@ -127,7 +127,7 @@ $(document).ready(function() {
 });
 
 function checkStatus(data) {
-	loadPage("purchaseRequestByAssistant", null);
+	loadPage("purchasecontract_purchaseRequest", null);
 }
 
 
@@ -487,7 +487,7 @@ function approve(){
 			"approveComment" : $("#approve-comment").val()
 		};
 	postAjaxRequest(approveUrl, param, function(data){
-		loadPage("purchaseRequestByAssistant");
+		loadPage("purchasecontract_purchaseRequest");
 	});
 }
 
@@ -497,15 +497,15 @@ function reject(){
 			"approveComment" : $("#approve-comment").val()
 		};
 	postAjaxRequest(rejectUrl, param, function(data){
-		loadPage("purchaseRequestByAssistant");
+		loadPage("purchasecontract_purchaseRequest");
 	});
 }
 
 function cancel(){
 	if(redirectParams && redirectParams.page && redirectParams.page=="approve"){
-		loadPage("purchaseRequestApprove");
+		loadPage("purchasecontract_purchaseRequestApprove");
 	}else{
-		loadPage("purchaseRequestByAssistant");
+		loadPage("purchasecontract_purchaseRequest");
 	}
 }
 

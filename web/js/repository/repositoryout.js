@@ -71,7 +71,7 @@ $(document).ready(function() {
 
 
 function add(){
-	loadPage("html/repository/repositoryOutEdit.html", {
+	loadPage("repository_repositoryOutEdit", {
 		type : "out"
 	});
 }
@@ -79,7 +79,7 @@ function add(){
 function editRepo() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
-	loadPage("html/repository/repositoryOutEdit.html", {
+	loadPage("repository_repositoryOutEdit", {
 		_id : row._id,
 		type : "out"
 	});

@@ -163,7 +163,7 @@ function addGI() {
 	if($("#searchfor").val() == "") {
 		alert("请选择合同");
 	}else{
-		loadPage("getInvoiceEdit",{purchaseContractId: $("#searchfor").val()});
+		loadPage("finance_getInvoiceEdit",{purchaseContractId: $("#searchfor").val()});
 	}
 }
 function editGI() {
@@ -171,7 +171,7 @@ function editGI() {
 	if(!row) {
 		alert("点击列表可以选中数据");
 	} else {
-		loadPage("getInvoiceEdit", {_id:row._id});		
+		loadPage("finance_getInvoiceEdit", {_id:row._id});		
 	}
 }
 
@@ -229,6 +229,6 @@ function changeSuccess(e){
 	kendo.bind($("#baseinfo"), e);	
 }
 function myreflush(){
-	loadPage("getInvoice");
+	loadPage("finance_getInvoice");
 }
 

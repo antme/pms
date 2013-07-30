@@ -213,7 +213,7 @@ function saveProject(){
 		}else{
 	    	dataSource.add(pModel);
 	    	dataSource.sync();
-			loadPage("projectList");
+			loadPage("project_projectList");
 		}
     	
     }
@@ -225,7 +225,7 @@ function cancelAddProject(){
 		//close the window
 		$("#popup").data("kendoWindow").close();
 	}else{
-		loadPage("projectList");
+		loadPage("project_projectList");
 	}
 }
 

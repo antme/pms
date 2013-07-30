@@ -185,14 +185,14 @@ function confirmRepository(){
 }
 
 function cancel(){
-	loadPage("repository", null);
+	loadPage("repository_repository", null);
 }
 
 function checkStatus() {
 	if(redirectParams && redirectParams.type == "out"){
-		loadPage("repositoryOut", null);
+		loadPage("repository_repositoryOut", null);
 	}else{
-		loadPage("repository", null);
+		loadPage("repository_repository", null);
 	}
 }
 // 计算成
