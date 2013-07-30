@@ -49,7 +49,7 @@ $(document).ready(function () {
 	    dataSource: listDatasource,
 	    pageable: true,
 	    selectable : "row",
-	    //height: "400px",
+	    height: "400px",
 	    sortable : true,
 	    columns: [
 	        { 

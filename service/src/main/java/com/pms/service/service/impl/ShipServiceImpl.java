@@ -80,7 +80,6 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 
 	public Map<String, Object> update(Map<String, Object> params) {
-		params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_DRAFT);
 		return dao.updateById(params, DBBean.SHIP);
 	}
 

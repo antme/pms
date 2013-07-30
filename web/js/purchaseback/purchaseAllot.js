@@ -56,7 +56,7 @@ $(document).ready(function () {
 	    pageable: true,
 	    selectable : "row",
 	    sortable : true,
-	    //height: "400px",
+	    height: "400px",
 	    columns: [
 	        { 
 	        	field: "pbCode", 

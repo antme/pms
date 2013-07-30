@@ -190,7 +190,7 @@ function cancel(){
 
 function checkStatus() {
 	if(redirectParams && redirectParams.type == "out"){
-		loadPage("repository_repositoryOut", null);
+		loadPage("repository_repositoryout", null);
 	}else{
 		loadPage("repository_repository", null);
 	}
