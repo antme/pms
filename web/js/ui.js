@@ -545,6 +545,15 @@ String.prototype.endWith = function(s) {
 	return true;
 }
 
+Number.prototype.toFixed  =   function ( exponent)
+{ 
+     return  parseInt( this   *  Math.pow(  10 , exponent)  +   0.5 )/Math.pow(10,exponent);
+}
+
+function percentToFixed(number){
+	return  parseFloat(number).toFixed(2);
+}
+
 function intSelectInput(){
 	var html;
 	if(document.getElementById("departmentItems")){

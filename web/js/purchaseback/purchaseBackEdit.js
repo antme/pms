@@ -112,15 +112,15 @@ $(document).ready(function () {
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "eqcostUnit", title: "单位" },
 			{ field: "pbTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}},
-			{ field: "eqcostLeftAmount", title: "合同下剩下备货数量"},
+			{ field: "eqcostLeftAmount", title: "合同下剩余可备货数量"},
 			{ field: "eqcostRealAmount", title: "成本中总数"},
 			{ field: "eqcostBasePrice", title: "标准成本价" },
 			{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
 			{ field: "eqcostDiscountRate",title : "折扣率"},
 			{ field: "eqcostLastBasePrice",title : "最终成本价"},
 			{ field: "eqcostCategory", title: "类别" },
-			{ field: "eqcostMemo", title: "备注1" },
-			{ field: "pbComment", title: "备注2" }
+			{ field: "eqcostMemo", title: "清单备注" },
+			{ field: "pbComment", title: "备货备注" }
 	  	],
 	  	editable:true
 	  	
@@ -206,6 +206,9 @@ function dataBound(e) {
 	if (totalMoney != 0) {
 		requestActureMoneyPercent = (totalRequestMoney / totalMoney) * 100;
 	}
+	
+	totalPercent = percentToFixed(totalPercent);
+	requestActureMoneyPercent = percentToFixed(requestActureMoneyPercent);
 	sumDataSource.data({});
 	sumDataSource
 			.add({
