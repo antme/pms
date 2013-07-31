@@ -186,7 +186,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			
 		}
 		
-		//mergeScTypeInfo(proIds, result);
+		mergeScTypeInfo(proIds, result);
 		
 		return result;
 	}

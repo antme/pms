@@ -126,6 +126,8 @@ var projectItems = new kendo.data.DataSource({
 
 var tabs;
 $(document).ready(function() {
+	
+	scm = new scModel();
 	//选项卡
 	
 	if (!tabs){
@@ -221,12 +223,21 @@ $(document).ready(function() {
 //            console.log("*******dataItem"+dataItem.projectName+"****projectType"+dataItem.projectType);
             $("#selProjectName").html(dataItem.projectName);
             showTabs(dataItem.projectStatus);
+            
+          var relatedScType = dataItem.contractType;
+          var sctypelist = $("#contractType").data("kendoDropDownList");
+          if (relatedScType != null){
+          	sctypelist.value(relatedScType);
+          	sctypelist.enable(false);
+          	scm.set("contractType",relatedScType)
+          }
 		}
 	});
 	
 	//合同签订日期控件
 	var ddd = $("#contractDate").kendoDatePicker({
 		format: "yyyy/MM/dd",
+		max: new Date(),
 		parseFormats: ["yyyy/MM/dd"]
 	});
 	//ddd.value("2013/06/06");
@@ -269,7 +280,7 @@ $(document).ready(function() {
 	});
 	
 	//进度款
-	if (!$("#progressPayment").data("kendoGrid")){
+	/*if (!$("#progressPayment").data("kendoGrid")){
 		$("#progressPayment").kendoGrid({
 			dataSource : scProgressPaymentDatasource,
 			columns : [ {
@@ -289,7 +300,7 @@ $(document).ready(function() {
 			scrollable : true
 		});
 	}//进度款
-	
+*/	
 	//成本设备清单
 	if (!$("#scEqCostList").data("kendoGrid")){
 		$("#scEqCostList").kendoGrid({
@@ -364,18 +375,17 @@ $(document).ready(function() {
     });	
 	
 	//添加表单绑定一个空的 Model
-	scm = new scModel();
+	
 	kendo.bind($("#addSalesContract"), scm);
 	
 });//end dom ready	
 
 function saveSC(){
 	
-	
 	var validator = $("#addSalesContract").kendoValidator().data("kendoValidator");
 	var validatestatus = $("#validate-status");
 	var eqCostData = eqCostListDataSource.data();
-	var progressPaymentData = scProgressPaymentDatasource.data();
+//	var progressPaymentData = scProgressPaymentDatasource.data();
 	var projectId = scm.get("projectId");
 	var projectStatus = projectItems.get(projectId).get("projectStatus");
 	var scType = scm.get("contractType");
@@ -414,7 +424,7 @@ function saveSC(){
 		return;
     } else {
 		scm.set("eqcostList", eqCostData);
-		scm.set("progressPayment", progressPaymentData);
+//		scm.set("progressPayment", progressPaymentData);
 
 		var profit = $("#estimateGrossProfit").val();
 		var profitRate = $("#estimateGrossProfitRate").val();

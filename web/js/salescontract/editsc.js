@@ -410,7 +410,9 @@ $(document).ready(function() {
 	});
 	
 	//合同签订日期控件
-	$("#contractDate").kendoDatePicker();
+	$("#contractDate").kendoDatePicker({
+		max: new Date()
+	});
 	
 	$("#contractAmount").kendoNumericTextBox({
 		min:0
@@ -534,7 +536,7 @@ $(document).ready(function() {
 function edit(data){
 	scm = new scModel(data);
 	//进度款
-	if (!$("#progressPayment").data("kendoGrid")){
+	/*if (!$("#progressPayment").data("kendoGrid")){
 		$("#progressPayment").kendoGrid({
 			dataSource : scm.progressPayment,
 			columns : [ {
@@ -554,7 +556,7 @@ function edit(data){
 			scrollable : true
 		});
 	}//进度款
-	
+*/	
 	eqCostListDataSourceOld.data(scm.eqcostList);
 	//成本设备清单_old
 	if (!$("#scEqCostListOld").data("kendoGrid")){
