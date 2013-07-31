@@ -63,13 +63,7 @@ $(document).ready(function() {
 		$("#approve-button").hide();
 		$("#reject-button").hide();
 	}
-	
-	
-	$("#eqcostDeliveryType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : eqcostDeliveryType
-	});
+
 	$("#purchaseType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "text",
@@ -258,11 +252,7 @@ function edit(data) {
 							}, 
 							{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
 							{ field: "eqcostDiscountRate",title : "折扣率"},
-							{ field: "eqcostLastBasePrice",title : "最终成本价"},
-							{
-								field : "eqcostContractTotalMoney",
-								title : "合同总价"
-							}, {
+							{ field: "eqcostLastBasePrice",title : "最终成本价"}, {
 								field : "pbTotalCount",
 								title : "备货数"
 							}, {
@@ -274,15 +264,9 @@ function edit(data) {
 								template : function(dataItem){
 									return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
 								}
-							}, {
-								field : "requestedTotalMoney",
-								title : "成本总价"
 							},{
 								field : "remark",
 								title : "备注"
-							}, {
-								field : "differenceAmount",
-								title : "金额差值"
 							} ],
 							schemal :{
 								model: model
@@ -405,8 +389,8 @@ function edit(data) {
 									requestActureMoneyPercent = (requestActureMoney / eqcostContractTotalMoney) * 100;
 								}
 
-								requestDataItem.numbersPercentOfContract = totalPercent;
-								requestDataItem.moneyPercentOfContract = requestActureMoneyPercent;
+								requestDataItem.numbersPercentOfContract = percentToFixed(totalPercent);
+								requestDataItem.moneyPercentOfContract = percentToFixed(requestActureMoneyPercent);
 
 								sumDataSource.data({});
 								sumDataSource
@@ -456,10 +440,7 @@ function saveRequest(status) {
 		requestDataItem.pbDepartment = requestDataItem.pbDepartment.join(",");
 	}
 	
-	if(requestDataItem.eqcostDeliveryType && requestDataItem.eqcostDeliveryType.text){
-		requestDataItem.eqcostDeliveryType = requestDataItem.eqcostDeliveryType.text;
-	}
-	
+
 	if(requestDataItem.purchaseType && requestDataItem.purchaseType.text){
 		requestDataItem.purchaseType = requestDataItem.purchaseType.text;
 	}
@@ -468,12 +449,7 @@ function saveRequest(status) {
 		var purchaseType= $("#purchaseType").data("kendoDropDownList");
 		requestDataItem.purchaseType = purchaseType.value();
 	}
-	
-	
-	if(!requestDataItem.eqcostDeliveryType){
-		var eqcostDeliveryType = $("#eqcostDeliveryType").data("kendoDropDownList");
-		requestDataItem.eqcostDeliveryType = eqcostDeliveryType.value();
-	}
+
 	
 	console.log(requestDataItem);
 	// 同步数据

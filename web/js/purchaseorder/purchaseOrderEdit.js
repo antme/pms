@@ -14,6 +14,13 @@ var selectedRequestId = undefined;
 
 $(document).ready(function() {
 	
+	
+	$("#eqcostDeliveryType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : eqcostDeliveryType
+	});
+	
 	if(popupParams){
 		$("#purchase-request-select").hide();
 		$("#purchaseorder-edit-item").show();
@@ -366,10 +373,10 @@ function edit(data) {
 								if (eqcostContractTotalMoney != 0) {
 									requestActureMoneyPercent = (requestActureMoney / eqcostContractTotalMoney) * 100;
 								}
-
-								requestDataItem.numbersPercentOfContract = totalPercent;
-								requestDataItem.moneyPercentOfContract = requestActureMoneyPercent;
-
+						
+								requestDataItem.numbersPercentOfContract = percentToFixed(totalPercent);
+								requestDataItem.moneyPercentOfContract = percentToFixed(requestActureMoneyPercent);
+								
 								sumDataSource.data({});
 								sumDataSource
 										.add({
@@ -387,4 +394,44 @@ function edit(data) {
 						});
 	}
 
+}
+
+
+
+//保存操作
+function saveOrder(status) {
+	if(!requestDataItem.status){
+		requestDataItem.status = "草稿";
+	}
+	
+	if(status){
+		requestDataItem.status = status;
+	}
+	
+	if(itemDataSource.at(0)){		
+		//force set haschanges = true
+		itemDataSource.at(0).set("uid", kendo.guid());
+	}
+	
+	if(requestDataItem.pbDepartment && requestDataItem.pbDepartment instanceof Object){
+		requestDataItem.pbDepartment = requestDataItem.pbDepartment.join(",");
+	}
+	
+	
+	if(requestDataItem.eqcostDeliveryType && requestDataItem.eqcostDeliveryType.text){
+		requestDataItem.eqcostDeliveryType = requestDataItem.eqcostDeliveryType.text;
+	}
+	
+	if(!requestDataItem.eqcostDeliveryType){
+		var eqcostDeliveryType = $("#eqcostDeliveryType").data("kendoDropDownList");
+		requestDataItem.eqcostDeliveryType = eqcostDeliveryType.value();
+	}
+	
+	console.log(requestDataItem);
+	// 同步数据
+	itemDataSource.sync();
+}
+
+function cancel(){
+	loadPage("purchasecontract_purchaseOrder");
 }
