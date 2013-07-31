@@ -68,9 +68,6 @@ $(document).ready(function() {
 				field : "status",
 				title : "订单状态"
 			}, {
-				field : "approvedDate",
-				title : "批准时间"
-			}, {
 				field : "requestedTotalMoney",
 				title : "金额"
 			}, {

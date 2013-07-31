@@ -389,8 +389,10 @@ function edit(data) {
 									requestActureMoneyPercent = (requestActureMoney / eqcostContractTotalMoney) * 100;
 								}
 
-								requestDataItem.numbersPercentOfContract = percentToFixed(totalPercent);
-								requestDataItem.moneyPercentOfContract = percentToFixed(requestActureMoneyPercent);
+								totalPercent = percentToFixed(totalPercent);
+								requestActureMoneyPercent = percentToFixed(requestActureMoneyPercent);
+								requestDataItem.numbersPercentOfContract = totalPercent;
+								requestDataItem.moneyPercentOfContract = requestActureMoneyPercent;
 
 								sumDataSource.data({});
 								sumDataSource
