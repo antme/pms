@@ -794,7 +794,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> pcrequest = new HashMap<String, Object>();
         
         if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
-            request.setPurchaseRequestCode(generateCode("CGSQ", DBBean.PURCHASE_ORDER));
+            request.setPurchaseRequestCode(generateCode("CGSQ", DBBean.PURCHASE_REQUEST));
             pcrequest = request.toMap();
             adding = true;
         }else{
@@ -911,9 +911,16 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         if (parameters.get(PurchaseCommonBean.SALES_COUNTRACT_ID) != null) {
             scs.mergeCommonFieldsFromSc(parameters, parameters.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
         }
-        if (parameters.get("requestedDate") == null && parameters.get(PurchaseCommonBean.PROCESS_STATUS) != null
+        if (ApiUtil.isEmpty(parameters.get("requestedDate")) && parameters.get(PurchaseCommonBean.PROCESS_STATUS) != null
                 && parameters.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_NEW)) {
             parameters.put("requestedDate", DateUtil.getDateString(new Date()));
+        }
+        
+        if(db.equalsIgnoreCase(DBBean.PURCHASE_ORDER)){
+            if (ApiUtil.isEmpty(parameters.get("requestedDate")) && parameters.get(PurchaseCommonBean.PROCESS_STATUS) != null
+                    && parameters.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_SUBMITED)) {
+                parameters.put("requestedDate", DateUtil.getDateString(new Date()));
+            }
         }
 
         Map<String, Object> result = null;

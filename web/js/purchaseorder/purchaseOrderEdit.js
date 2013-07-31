@@ -192,6 +192,8 @@ function edit(data) {
 	itemDataSource.data(requestDataItem.eqcostList);
 
 	requestDataItem.set("pbPlanDate", kendo.toString(requestDataItem.pbPlanDate, 'd'));
+	setDate(requestDataItem, "requestedDate", requestDataItem.requestedDate);
+
 	kendo.bind($("#purchaseorder-edit-item"), requestDataItem);
 	$("#purchaseorder-edit-item").show();
 
