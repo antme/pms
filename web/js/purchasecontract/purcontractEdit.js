@@ -218,6 +218,8 @@ function disableTable(){
 	
 }
 function addOrderInSCListForRuodian(){
+	kendo.bind($("#purchasecontract-edit"), requestDataItem);
+
 	$("#purchasecontractselect").hide();
 	$("#purchasecontract-edit-item").show();
 	
@@ -316,6 +318,7 @@ function addOrderInSCListForRuodian(){
 			requestDataItem.salesContractId = redirectParams.scId;
 			
 			console.log(requestDataItem);
+
 			edit();
         }
     });
@@ -494,8 +497,6 @@ function edit(data) {
 		console.log(requestDataItem);
 		eqCostListDataSource.data(requestDataItem.eqcostList);
 	}
-
-	
 
 	setDate(requestDataItem, "signDate", requestDataItem.signDate);
 	
