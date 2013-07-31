@@ -141,9 +141,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
 		List<String> pmIds = new ArrayList<String>(); 
 		List<String> cIds = new ArrayList<String>();
+		List<String> proIds = new ArrayList<String>();
 		for(Map<String, Object> p : resultList){
 			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
 			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			String proid = (String)p.get(ApiConstants.MONGO_ID);
+			proIds.add(proid);
 			if (!ApiUtil.isEmpty(pmid)){
 				pmIds.add(pmid);
 			}
@@ -183,7 +186,27 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			
 		}
 		
+		//mergeScTypeInfo(proIds, result);
+		
 		return result;
+	}
+	
+	private void mergeScTypeInfo(List<String> proIds, Map<String, Object> result){
+		Map<String, Object> scQuery = new HashMap<String, Object>();
+		scQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_TYPE, SalesContractBean.SC_PROJECT_ID});
+		scQuery.put(SalesContractBean.SC_PROJECT_ID, new DBQuery(DBQueryOpertion.IN, proIds));
+		Map<String, Object> scData = dao.listToOneMapByKey(scQuery, DBBean.SALES_CONTRACT, SalesContractBean.SC_PROJECT_ID);
+		
+		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+		for (Map<String, Object> map : resultList){
+			String proid = (String) map.get(ApiConstants.MONGO_ID);
+			Map<String, Object> scMap = (Map<String, Object>) scData.get(proid);
+			if (ApiUtil.isEmpty(scMap)){
+				map.put(SalesContractBean.SC_TYPE, null);
+			}else{
+				map.put(SalesContractBean.SC_TYPE, scMap.get(SalesContractBean.SC_TYPE));
+			}
+		}
 	}
 
 	@Override

@@ -31,7 +31,7 @@ var scModel = kendo.data.Model.define({
 		contractPerson : {},
 		contractType : {},
 		contractDate : {},
-		contractDownPayment : {},
+		contractDownPayment : { type : "number"},
 		contractDownPaymentMemo:{},
 		progressPayment : {},
 		qualityMoney : {},
@@ -370,6 +370,8 @@ $(document).ready(function() {
 });//end dom ready	
 
 function saveSC(){
+	
+	
 	var validator = $("#addSalesContract").kendoValidator().data("kendoValidator");
 	var validatestatus = $("#validate-status");
 	var eqCostData = eqCostListDataSource.data();
@@ -447,7 +449,6 @@ function addAProject(){
 
 function moneyOnChange(){
 	var scAmount = $("#contractAmount").val();
-	
 	var estimateEqCost0 = $("#estimateEqCost0").val();
 	var estimateEqCost1 = $("#estimateEqCost1").val();
 	var estimateSubCost = $("#estimateSubCost").val();
