@@ -22,7 +22,6 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.ISalesContractService;
-import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
 
 public class ArrivalNoticeServiceImpl extends AbstractService implements IArrivalNoticeService {
@@ -121,10 +120,10 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 			
 			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
 			Map<String, Object> customerInfo = (Map<String, Object>) cusData.get(customerId);
-			if(ApiUtil.isEmpty(pmInfo)){
+			if(ApiUtil.isEmpty(customerInfo)){
 				p.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
 			}else{
-				p.put(ProjectBean.PROJECT_CUSTOMER, pmInfo.get(UserBean.USER_NAME));
+				p.put(ProjectBean.PROJECT_CUSTOMER, customerInfo.get(UserBean.USER_NAME));
 			}
 		}
 		
