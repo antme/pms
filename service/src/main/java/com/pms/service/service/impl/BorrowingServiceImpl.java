@@ -334,7 +334,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
-        query.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI);
+        query.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI);
         query.put("eqcostList.projectId", pId);
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.scId" });
         Map<String, Object> purConEq = dao.list(query, DBBean.PURCHASE_CONTRACT);
@@ -362,7 +362,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	public Map<String, Object> listProjectForBorrowing(Map<String, Object> params) {
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
-        query.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI);
+        query.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI);
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.projectId" });
         Map<String, Object> purConEq = dao.list(query, DBBean.PURCHASE_CONTRACT);
         List<Map<String, Object>> projectResults = (List<Map<String, Object>>) purConEq.get(ApiConstants.RESULTS_DATA);

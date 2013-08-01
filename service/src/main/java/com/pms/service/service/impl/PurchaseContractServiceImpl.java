@@ -350,9 +350,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Object eqList = contract.get(SalesContractBean.SC_EQ_LIST);
 
         if(contract.get(FROM)==null){
-            String keys[] = new String[] { "eqcostApplyAmount", "orderEqcostCode", "orderEqcostName", "orderEqcostModel", "eqcostProductUnitPrice", "purchaseOrderCode",
-                    "salesContractCode", PURCHASE_ORDER_ID, "logisticsType", "logisticsArrivedTime", "logisticsStatus" };
-            contract.put(SalesContractBean.SC_EQ_LIST, mergeSavedEqList(keys, eqList));
+            contract.put(SalesContractBean.SC_EQ_LIST, eqList);
         }
 
         return updatePurchase(contract, DBBean.PURCHASE_CONTRACT);
@@ -473,11 +471,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         }
         
-        String keys[] = new String[] { "eqcostApplyAmount", "orderEqcostCode", "orderEqcostName", "orderEqcostModel", "eqcostProductUnitPrice" };
-        List<Map<String, Object>> mergeSavedEqList = mergeSavedEqList(keys, eqList);
 
-        
-        parameters.put(SalesContractBean.SC_EQ_LIST, mergeSavedEqList);
+        parameters.put(SalesContractBean.SC_EQ_LIST, eqList);
 
 
         Map<String, Object> order = updatePurchase(parameters, DBBean.PURCHASE_ORDER);
@@ -496,30 +491,30 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return order;
     }
 
-    private List<Map<String, Object>> mergeSavedEqList(String keys[], Object eqList) {
-        List<String> finalKeys = new ArrayList<String>();
-        for (String key : keys) {
-            finalKeys.add(key);
-        }
-        finalKeys.add(ApiConstants.MONGO_ID);
-        finalKeys.add(SalesContractBean.SC_ID);
-        finalKeys.add(SalesContractBean.SC_PROJECT_ID);
-        finalKeys.add("eqcostBrand");
-        finalKeys.add("remark");
-
-        List<Map<String, Object>> orgin = (List<Map<String, Object>>) eqList;
-        List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
-
-        for (Map<String, Object> old : orgin) {
-            Map<String, Object> neq = new HashMap<String, Object>();
-            for (String key : finalKeys) {
-                neq.put(key, old.get(key));
-            }
-            maps.add(neq);
-        }
-
-        return maps;
-    }
+//    private List<Map<String, Object>> mergeSavedEqList(String keys[], Object eqList) {
+//        List<String> finalKeys = new ArrayList<String>();
+//        for (String key : keys) {
+//            finalKeys.add(key);
+//        }
+//        finalKeys.add(ApiConstants.MONGO_ID);
+//        finalKeys.add(SalesContractBean.SC_ID);
+//        finalKeys.add(SalesContractBean.SC_PROJECT_ID);
+//        finalKeys.add("eqcostBrand");
+//        finalKeys.add("remark");
+//
+//        List<Map<String, Object>> orgin = (List<Map<String, Object>>) eqList;
+//        List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
+//
+//        for (Map<String, Object> old : orgin) {
+//            Map<String, Object> neq = new HashMap<String, Object>();
+//            for (String key : finalKeys) {
+//                neq.put(key, old.get(key));
+//            }
+//            maps.add(neq);
+//        }
+//
+//        return maps;
+//    }
 
 
     public Map<String, Object> getPurchaseOrder(Map<String, Object> parameters) {
@@ -559,13 +554,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
             List<Object> emails = this.dao.listLimitKeyValues(userQuery, DBBean.USER);
 
-            if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE) != null) {
-                if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
+            if (contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE) != null) {
+                if (contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
                     String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单,请到系统做入库处理", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     contract.put("titleContent", content);
                     sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
-                } else if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO)) {
+                } else if (contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO)) {
                     createArriveNotice(contract);
                     createAutoShip(contract);
 
@@ -574,7 +569,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     contract.put("titleContent", content);
                     sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
 
-                } else if (contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
+                } else if (contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
                     String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单, 请到系统填写到货通知", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     contract.put("titleContent", content);
@@ -800,8 +795,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }else{
             pcrequest.putAll(parameters);
         }
-        String keys[] = new String[] { "eqcostApplyAmount", "orderEqcostCode", "orderEqcostName", "orderEqcostModel", "eqcostProductUnitPrice" };
-        pcrequest.put(SalesContractBean.SC_EQ_LIST, mergeSavedEqList(keys, parameters.get(SalesContractBean.SC_EQ_LIST)));
+        pcrequest.put(SalesContractBean.SC_EQ_LIST, parameters.get(SalesContractBean.SC_EQ_LIST));
         
         Map<String, Object> prequest = updatePurchase(pcrequest, DBBean.PURCHASE_REQUEST);
 
@@ -824,13 +818,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> approvePurchaseRequest(Map<String, Object> request) {
         Map<String, Object> requestMap = this.dao.findOne(ApiConstants.MONGO_ID, request.get(ApiConstants.MONGO_ID), 
                 new String[] { PurchaseCommonBean.PROCESS_STATUS }, DBBean.PURCHASE_REQUEST);      
-        
-//        if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS) == null) {
-//            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.MANAGER_APPROVED);
-//        }
-//        if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.MANAGER_APPROVED)) {
-//            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_APPROVED);
-//        } else
             
        if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_CANCELL_NEED_APPROVED)) {
            Map<String,Object> result = processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELLED); 
@@ -979,10 +966,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> updateRepositoryRequest(Map<String, Object> parameters) {
    
-        String keys[] = new String[] { "eqcostApplyAmount", "orderEqcostCode", "orderEqcostName", "orderEqcostModel", "eqcostProductUnitPrice", "purchaseOrderCode",
-                "salesContractCode", PURCHASE_ORDER_ID,  "purchaseRequestId", "purchaseRequestCode", 
-                "eqcostDeliveryType", "logisticsArrivedTime", "logisticsStatus", "purchaseContractType", "purchaseContractCode", "purchaseContractId" , PurchaseCommonBean.CONTRACT_EXECUTE_CATE};
-        List<Map<String, Object>> mergeSavedEqList = mergeSavedEqList(keys, parameters.get("eqcostList"));
+        List<Map<String, Object>> mergeSavedEqList = (List<Map<String, Object>>) parameters.get("eqcostList");
         
         double total = 0;
         for(Map<String, Object> eq: mergeSavedEqList){
@@ -1021,7 +1005,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> contractMap = new HashMap<String, Object>();
         Set<String> contractIds = new HashSet<String>();
         for (Map<String, Object> eq : eqMapList) {
-            if (eq.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE) != null && eq.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).toString().equalsIgnoreCase(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
+            if (eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE) != null && eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE).toString().equalsIgnoreCase(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
                 if (eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID) != null) {
                     contractIds.add(eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID).toString());
                     contractMap.put(eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID).toString(), eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
@@ -1181,6 +1165,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> listSelectForPayment(Map<String, Object> params) {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(ApiConstants.LIMIT_KEYS, new String[] { "purchaseContractCode", SUPPLIER });
+        query.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, PurchaseCommonBean.CONTRACT_EXECUTE_NORMAL);
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
         
         List<Map<String, Object>> list =(List<Map<String, Object>>)results.get(ApiConstants.RESULTS_DATA); 
