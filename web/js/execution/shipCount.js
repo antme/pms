@@ -42,7 +42,7 @@ $(document).ready(function () {
         detailInit: detailInit,
         columns: [
             { field: "shipCountDate", title:"统计日期" },
-            { field: "contractExecuteCate", title:"虚拟采购类型" },
+            { field: "purchaseContractType", title:"虚拟采购类型" },
             { field: "shipTotalAmount", title:"总数量" },
             { field: "shipTotalMoney", title:"总金额" }
         ]
@@ -87,8 +87,8 @@ function getDate(data) {
 	kendo.bind($("#countDate"), model);
 }
 
-function count(contractExecuteCate) {
-	postAjaxRequest(crudServiceBaseUrl + "/count", {contractExecuteCate:contractExecuteCate}, countReturn);
+function count(purchaseContractType) {
+	postAjaxRequest(crudServiceBaseUrl + "/count", {purchaseContractType:purchaseContractType}, countReturn);
 }
 
 function countReturn(data) {

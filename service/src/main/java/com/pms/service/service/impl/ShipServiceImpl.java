@@ -193,7 +193,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Object> shipMap = new HashMap<String, Object>();
         Set<String> contractIds = new HashSet<String>();
         for (Map<String, Object> eq : eqMapList) {
-            if (eq.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE) != null && eq.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE).toString().equalsIgnoreCase(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
+            if (eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE) != null && eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE).toString().equalsIgnoreCase(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
                 if (eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID) != null) {
                     contractIds.add(eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID).toString());
                     shipMap.put(eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID).toString(), eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
@@ -316,7 +316,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	// 统计三类虚拟的采购合同在每月的发货合计
 	public Map<String, Object> doCount(Map<String, Object> params) {
 		String date = (String) params.get(ShipCountBean.SHIP_COUNT_DATE);
-		String cate =  (String) params.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE);
+		String cate =  (String) params.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE);
 		
 		String key = null;
 		if (PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI.equals(cate)) {
@@ -352,7 +352,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		Object[] ta = { startDate, endDate };
 		shipQuery.put(ShipBean.SHIP_ISSUE_TIME, new DBQuery(DBQueryOpertion.BETWEEN_AND, ta));
 		// 三类虚拟采购合同
-		shipQuery.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.CONTRACT_EXECUTE_CATE, cate);
+		shipQuery.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, cate);
 		// 申请状态
 		List<String> statusList = new ArrayList<String>();
 		statusList.add(ShipBean.SHIP_STATUS_APPROVE);
@@ -442,7 +442,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put(ShipCountBean.SHIP_COUNT_DATE, date);
-			map.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, cate);
+			map.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, cate);
 			map.put(ShipCountBean.SHIP_TOTAL_AMOUNT, totalAmount);
 			map.put(ShipCountBean.SHIP_TOTAL_MONEY, totalMoney);
 			map.put(SalesContractBean.SC_EQ_LIST, returnList);
@@ -509,7 +509,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
     	
     	if (count) {
     		// 三类虚拟采购合同
-    		shipQuery.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.CONTRACT_EXECUTE_CATE, new DBQuery(DBQueryOpertion.NOT_NULL));
+    		shipQuery.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, new DBQuery(DBQueryOpertion.NOT_NULL));
     		// 申请状态
     		List<String> statusList = new ArrayList<String>();
     		statusList.add(ShipBean.SHIP_STATUS_APPROVE);

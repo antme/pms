@@ -37,29 +37,28 @@
 					<div class="k-edit-form-container">
 						<!-- 采购合同基本信息 -->
 					<div>
+					    <div class="k-edit-label ">
+                            <label for="purchaseContractCode">采购合同编号</label>
+                        </div>
+                        <div data-container-for="purchaseContractCode"
+                            class="k-edit-field ">
+                            <input type="text" class="k-input k-textbox"
+                                name="purchaseContractCode" required
+                                data-required-msg="Input 采购合同编号"
+                                data-bind="value: purchaseContractCode">
+                        </div>
+                        
 						<div class="k-edit-label ">
 							<label for="contractExecuteCate">虚拟采购合同类型</label>
 						</div>
 						<div data-container-for="contractExecuteCate"
 							class="k-edit-field ">
 							<input type="radio" name="contractExecuteCate" value="正常采购 " checked
-								data-bind="checked: contractExecuteCate" />正常采购 <input type="radio"
-								name="contractExecuteCate" value="北京代采" data-bind="checked: contractExecuteCate" />北京代采
-							<input type="radio" name="contractExecuteCate" value="北京库存"
-								data-bind="checked: contractExecuteCate" />北京库存 <input type="radio"
-								name="contractExecuteCate" value="北京生产"
-								data-bind="checked: contractExecuteCate" />北京生产
+								data-bind="checked: contractExecuteCate"  onclick="changeCType(0);")/>正常采购 <input type="radio"
+								name="contractExecuteCate" value="虚拟合同"  onclick="changeCType(1);" data-bind="checked: contractExecuteCate" />虚拟合同
+							
 						</div>
-						<div class="k-edit-label ">
-							<label for="purchaseContractCode">采购合同编号</label>
-						</div>
-						<div data-container-for="purchaseContractCode"
-							class="k-edit-field ">
-							<input type="text" class="k-input k-textbox"
-								name="purchaseContractCode" required
-								data-required-msg="Input 采购合同编号"
-								data-bind="value: purchaseContractCode">
-						</div>
+		
 
 						<div class="k-edit-label ">
 							<label for="purchaseContractType">采购合同类别</label>

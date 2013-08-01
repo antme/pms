@@ -55,11 +55,8 @@ $(document).ready(function() {
 			field : "eqcostDeliveryType",
 			title : "货物递送方式"
 		}, {
-			field : "contractExecuteCate",
-			title : "虚拟采购类型"
-		}, {
 			field : "purchaseContractType",
-			title : "合同类型"
+			title : "采购类型"
 		}]
 
 	});
@@ -117,7 +114,7 @@ var rowId = undefined;
 function addPOBumber(){
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if (row.contractExecuteCate == "北京代采") {
+		if (row.purchaseContractType == "北京代采") {
 
 			var options = {
 				width : 500,

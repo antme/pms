@@ -129,7 +129,7 @@ $(document).ready(function() {
 	$("#purchaseContractType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "text",
-		dataSource : purchaseContractType
+		dataSource : purchaseContractTypeNormal
 	});
 	
 	$("#supplier").kendoDropDownList({
@@ -203,6 +203,23 @@ $(document).ready(function() {
 	
 });
 
+
+function changeCType(index){
+	if(index==0){
+		$("#purchaseContractType").kendoDropDownList({
+			dataTextField : "text",
+			dataValueField : "text",
+			dataSource : purchaseContractTypeNormal
+		});
+	}else{
+		$("#purchaseContractType").kendoDropDownList({
+			dataTextField : "text",
+			dataValueField : "text",
+			dataSource : purchaseContractTypeVirtual
+		});
+	}
+	
+}
 function disableTable(){
 	
 	var tabStrip = $("#tabstrip").data("kendoTabStrip");

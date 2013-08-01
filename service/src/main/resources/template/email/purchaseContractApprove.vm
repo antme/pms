@@ -14,7 +14,7 @@ font-family: "Microsoft Yahei",Tahoma,Arial,Helvetica,STHeiti;
 #set($signDate = $signDate.substring(0,10))
 <ul>
 	<li>采购合同编号  ${purchaseContractCode}</li>
-	<li>虚拟采购合同类型  ${contractExecuteCate}</li>
+	<li>虚拟采购合同类型  ${purchaseContractType}</li>
 	<li>采购合同类别  ${purchaseContractType}</li>
 	<li>签订人  ${signBy}</li>
 	<li>采购合同性质  ${contractProperty}</li>
