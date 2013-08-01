@@ -245,11 +245,17 @@ var eqCostListDataSourceNew = new kendo.data.DataSource({
 	group: {
 		field: "eqcostCategory",
 		aggregates: [
-                     { field: "eqcostCategory", aggregate: "count" }
-                  ]
+						{ field: "eqcostCategory", aggregate: "count" },
+						{ field: "eqcostAmount", aggregate: "sum" },
+						{ field: "eqcostTotalAmount", aggregate: "sum" }
+		             ]
 	},
 	
-	aggregate: [ { field: "eqcostCategory", aggregate: "count" }],
+	aggregate: [ { field: "eqcostCategory", aggregate: "count" },
+                 { field: "eqcostAmount", aggregate: "sum" },
+                 { field: "eqcostTotalAmount", aggregate: "sum" }
+	
+	],
 	
 	schema : {
 		model : {
@@ -276,13 +282,19 @@ var eqCostListDataSourceNew = new kendo.data.DataSource({
 
 var eqCostListDataSourceOld = new kendo.data.DataSource({
 	group: {
-		field: "eqcostCategory",
+		field:"eqcostCategory",
 		aggregates: [
-                     { field: "eqcostCategory", aggregate: "count" }
+                     { field: "eqcostCategory", aggregate: "count" },
+                     { field: "eqcostRealAmount", aggregate: "sum" },
+                     { field: "eqcostTotalAmount", aggregate: "sum" }
                   ]
 	},
 	
-	aggregate: [ { field: "eqcostCategory", aggregate: "count" }],
+	aggregate: [ 
+	             { field: "eqcostCategory", aggregate: "count" },
+                 { field: "eqcostRealAmount", aggregate: "sum" },
+                 { field: "eqcostTotalAmount", aggregate: "sum" }
+               ],
 	
 	schema : {
 		model : {
@@ -456,57 +468,67 @@ $(document).ready(function() {
 		$("#scEqCostListNew").kendoGrid({
 			dataSource : eqCostListDataSourceNew,
 			columns : [ 
-					{
-					field : "eqcostNo",
-					title : "序号"
-					}, 
-					{
-					field : "eqcostMaterialCode",
-					title : "物料代码"
-					}, {
-					field : "eqcostProductName",
-					title : "产品名称"
-					}, {
-					field : "eqcostProductType",
-					title : "规格型号"
-					
-					}, {
-					field : "eqcostAmount",
-					title : "数量"
-					}, {
-					field : "eqcostUnit",
-					title : "单位"
-					}, 
-					//{
-					//field : "eqcostBrand",
-					//title : "品牌"
-					//}, 
-					{
-					field : "eqcostBasePrice",
-					title : "成本价"
-					}, {
-					field : "eqcostSalesBasePrice",
-					title : "销售单价"
-					}, {
-					field : "eqcostDiscountRate",
-					title : "折扣率"
-					}, {
-						field : "eqcostLastBasePrice",
-						title : "最终成本价"
-					}, {
-						field : "eqcostTotalAmount",
-						title : "小计"
-					}, {
-					field : "eqcostTaxType",
-					title : "税收类型"
-					}, {
-					field : "eqcostCategory",
-					title : "类别",
-					groupHeaderTemplate: "#= value # (数量: #= count#)", footerTemplate: "总数: #=count#"//, groupFooterTemplate: "数量: #=count#"
-					}, {
-					field : "eqcostMemo",
-					title : "备注"
-					} ],
+			            {
+				field : "eqcostNo",
+				title : "序号"
+			}, 
+			{
+				field : "eqcostMaterialCode",
+				title : "物料代码"
+			}, {
+				field : "eqcostProductName",
+				title : "产品名称"
+			}, {
+				field : "eqcostProductType",
+				title : "规格型号",
+				groupFooterTemplate: "合计：", 
+				footerTemplate: "总计："
+
+			}, {
+				field : "eqcostAmount",
+				title : "数量",
+				groupFooterTemplate: "#= sum#", 
+				footerTemplate: "#=sum#"
+			}, {
+				field : "eqcostUnit",
+				title : "单位"
+			}, 
+			{
+				field : "eqcostBrand",
+				title : "品牌"
+			}, 
+			{
+				field : "eqcostBasePrice",
+				title : "标准成本价"
+			}, {
+				field : "eqcostSalesBasePrice",
+				title : "销售单价"
+			}, {
+				field : "eqcostDiscountRate",
+				title : "折扣率"
+			}, {
+				field : "eqcostLastBasePrice",
+				title : "最终成本价",
+				groupFooterTemplate: "合计：", 
+				footerTemplate: "总计："
+			}, {
+				field : "eqcostTotalAmount",
+				title : "小计",
+//				format: "{0:c}",
+				groupFooterTemplate: "#= sum#", 
+				footerTemplate: "#=sum#"
+			}, {
+				field : "eqcostTaxType",
+				title : "税收类型"
+			}, {
+				field : "eqcostMemo",
+				title : "备注"
+			}, {
+				field : "eqcostCategory",
+				title : "类别",
+				groupHeaderTemplate: "#= value # (物料数: #= count#)", 
+				footerTemplate: "总数: #=count#"
+			} ],
 
 			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
@@ -563,57 +585,67 @@ function edit(data){
 		$("#scEqCostListOld").kendoGrid({
 			dataSource : eqCostListDataSourceOld,
 			columns : [ 
-					{
-					field : "eqcostNo",
-					title : "序号"
-					}, 
-					{
-					field : "eqcostMaterialCode",
-					title : "物料代码"
-					}, {
-					field : "eqcostProductName",
-					title : "产品名称"
-					}, {
-					field : "eqcostProductType",
-					title : "规格型号"
-					
-					}, {
-					field : "eqcostAmount",
-					title : "数量"
-					}, {
-					field : "eqcostUnit",
-					title : "单位"
-					}, 
-					//{
-					//field : "eqcostBrand",
-					//title : "品牌"
-					//}, 
-					{
-					field : "eqcostBasePrice",
-					title : "成本价"
-					}, {
-					field : "eqcostSalesBasePrice",
-					title : "销售单价"
-					}, {
-					field : "eqcostDiscountRate",
-					title : "折扣率"
-					}, {
-						field : "eqcostLastBasePrice",
-						title : "最终成本价"
-					}, {
-						field : "eqcostTotalAmount",
-						title : "小计"
-					}, {
-					field : "eqcostTaxType",
-					title : "税收类型"
-					}, {
-					field : "eqcostCategory",
-					title : "类别",
-					groupHeaderTemplate: "#= value # (数量: #= count#)", footerTemplate: "总数: #=count#"//, groupFooterTemplate: "数量: #=count#"
-					}, {
-					field : "eqcostMemo",
-					title : "备注"
-					} ],
+			            {
+				field : "eqcostNo",
+				title : "序号"
+			}, 
+			{
+				field : "eqcostMaterialCode",
+				title : "物料代码"
+			}, {
+				field : "eqcostProductName",
+				title : "产品名称"
+			}, {
+				field : "eqcostProductType",
+				title : "规格型号",
+				groupFooterTemplate: "合计：", 
+				footerTemplate: "总计："
+
+			}, {
+				field : "eqcostRealAmount",
+				title : "数量",
+				groupFooterTemplate: "#= sum#", 
+				footerTemplate: "#=sum#"
+			}, {
+				field : "eqcostUnit",
+				title : "单位"
+			}, 
+			{
+				field : "eqcostBrand",
+				title : "品牌"
+			}, 
+			{
+				field : "eqcostBasePrice",
+				title : "标准成本价"
+			}, {
+				field : "eqcostSalesBasePrice",
+				title : "销售单价"
+			}, {
+				field : "eqcostDiscountRate",
+				title : "折扣率"
+			}, {
+				field : "eqcostLastBasePrice",
+				title : "最终成本价",
+				groupFooterTemplate: "合计：", 
+				footerTemplate: "总计："
+			}, {
+				field : "eqcostTotalAmount",
+				title : "小计",
+//				format: "{0:c}",
+				groupFooterTemplate: "#= sum#", 
+				footerTemplate: "#=sum#"
+			}, {
+				field : "eqcostTaxType",
+				title : "税收类型"
+			}, {
+				field : "eqcostMemo",
+				title : "备注"
+			}, {
+				field : "eqcostCategory",
+				title : "类别",
+				groupHeaderTemplate: "#= value # (物料数: #= count#)", 
+				footerTemplate: "总数: #=count#"
+			} ],
 			scrollable : true
 		});
 	}//成本设备清单_old

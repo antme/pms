@@ -516,6 +516,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		//获取相关的 设备清单列表数据
 		Map<String, Object> eqCostQuery = new HashMap<String, Object>();
 		eqCostQuery.put(EqCostListBean.EQ_LIST_SC_ID, _id);
+		eqCostQuery.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
 		Map<String, Object> eqList = dao.list(eqCostQuery, DBBean.EQ_COST);
 		List<Map<String, Object>> eqListData = (List<Map<String, Object>>) eqList.get(ApiConstants.RESULTS_DATA);
 		
@@ -1076,26 +1077,26 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			ExcleUtil excleUtil = new ExcleUtil(inputStream);
 			List<String[]> list = excleUtil.getAllData(0);
 			List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
-			for (int i=8; i<list.size(); i++){//硬编码从第9行开始读数据
+			for (int i=1; i<list.size(); i++){//硬编码从第9行开始读数据
 				Map<String, Object> eq = new HashMap<String, Object>();
 				String amount = list.get(i)[6].trim();
 				if (amount.length() == 0){//读到某一行数量为空时，认为清单数据结束
 					break;
 				}
-				eq.put(EqCostListBean.EQ_LIST_NO, list.get(i)[1].trim());
-				eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, list.get(i)[2].trim());
-				eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, list.get(i)[3].trim());
-				eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, list.get(i)[4].trim());
+				eq.put(EqCostListBean.EQ_LIST_NO, list.get(i)[0].trim());
+				eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, list.get(i)[1].trim());
+				eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, list.get(i)[2].trim());
+				eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, list.get(i)[3].trim());
+				eq.put(EqCostListBean.EQ_LIST_BRAND, list.get(i)[4].trim());
 				eq.put(EqCostListBean.EQ_LIST_UNIT, list.get(i)[5].trim());
-				eq.put(EqCostListBean.EQ_LIST_AMOUNT, list.get(i)[6].trim());
-				eq.put(EqCostListBean.EQ_LIST_BRAND, "N/A");
+				eq.put(EqCostListBean.EQ_LIST_AMOUNT, ApiUtil.getDouble(list.get(i)[6].trim()));
 				eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, list.get(i)[7].trim());
 				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[8].trim());
 				eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, list.get(i)[9].trim());
 				eq.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, list.get(i)[10].trim());
 				eq.put(EqCostListBean.EQ_LIST_CATEGORY, list.get(i)[11].trim());
 				eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, list.get(i)[12].trim());
-				eq.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, list.get(i)[13].trim());
+				eq.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, ApiUtil.getDouble(list.get(i)[13].trim()));
 				eq.put(EqCostListBean.EQ_LIST_MEMO, list.get(i)[14].trim());
 				
 				eqList.add(eq);
@@ -1204,6 +1205,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
     }
     
     private String genEqcostListCode(String scCode, int nextVersion){
+    	if (scCode.indexOf("-ADD") != -1){
+    		scCode = scCode.substring(0, scCode.lastIndexOf("-"));
+    	}
     	int index = scCode.lastIndexOf("-");
     	String scInfo = null;
     	if (index != -1){

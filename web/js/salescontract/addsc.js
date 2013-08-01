@@ -83,11 +83,17 @@ var eqCostListDataSource = new kendo.data.DataSource({
 	group: {
 		field:"eqcostCategory",
 		aggregates: [
-                     { field: "eqcostCategory", aggregate: "count" }
+                     { field: "eqcostCategory", aggregate: "count" },
+                     { field: "eqcostAmount", aggregate: "sum" },
+                     { field: "eqcostTotalAmount", aggregate: "sum" }
                   ]
 	},
 	
-	aggregate: [ { field: "eqcostCategory", aggregate: "count" }],
+	aggregate: [ 
+	             { field: "eqcostCategory", aggregate: "count" },
+                 { field: "eqcostAmount", aggregate: "sum" },
+                 { field: "eqcostTotalAmount", aggregate: "sum" }
+               ],
 	
 	schema : {
 		model : {
@@ -318,19 +324,23 @@ $(document).ready(function() {
 				title : "产品名称"
 			}, {
 				field : "eqcostProductType",
-				title : "规格型号"
+				title : "规格型号",
+				groupFooterTemplate: "合计：", 
+				footerTemplate: "总计："
 
 			}, {
 				field : "eqcostAmount",
-				title : "数量"
+				title : "数量",
+				groupFooterTemplate: "#= sum#", 
+				footerTemplate: "#=sum#"
 			}, {
 				field : "eqcostUnit",
 				title : "单位"
 			}, 
-//			{
-//				field : "eqcostBrand",
-//				title : "品牌"
-//			}, 
+			{
+				field : "eqcostBrand",
+				title : "品牌"
+			}, 
 			{
 				field : "eqcostBasePrice",
 				title : "标准成本价"
@@ -342,20 +352,26 @@ $(document).ready(function() {
 				title : "折扣率"
 			}, {
 				field : "eqcostLastBasePrice",
-				title : "最终成本价"
+				title : "最终成本价",
+				groupFooterTemplate: "合计：", 
+				footerTemplate: "总计："
 			}, {
 				field : "eqcostTotalAmount",
-				title : "小计"
+				title : "小计",
+//				format: "{0:c}",
+				groupFooterTemplate: "#= sum#", 
+				footerTemplate: "#=sum#"
 			}, {
 				field : "eqcostTaxType",
 				title : "税收类型"
 			}, {
-				field : "eqcostCategory",
-				title : "类别",
-				groupHeaderTemplate: "#= value # (数量: #= count#)", footerTemplate: "总数: #=count#"//, groupFooterTemplate: "数量: #=count#"
-			}, {
 				field : "eqcostMemo",
 				title : "备注"
+			}, {
+				field : "eqcostCategory",
+				title : "类别",
+				groupHeaderTemplate: "#= value # (物料数: #= count#)", 
+				footerTemplate: "总数: #=count#"
 			} ],
 
 			toolbar : [ {name:"create",text:"新增成本项"} ],
