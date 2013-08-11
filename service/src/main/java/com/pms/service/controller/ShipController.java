@@ -110,11 +110,6 @@ public class ShipController extends AbstractController {
         responseWithData(shipService.doCount(params), request, response);
     }
     
-    @RequestMapping("/count/date")
-    public void getCountDate(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(shipService.getCountDate(), request, response);
-    }
-    
     @RequestMapping("/count/eqlist")
     public void listCountEq(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = parserJsonParameters(request, false);

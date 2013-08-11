@@ -17,15 +17,19 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pms.service.PackageRole;
+import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dao.ICommonDao;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
+import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.RoleBean;
+import com.pms.service.mockbean.ShipCountBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.util.DataEncrypt;
+import com.pms.service.util.DateUtil;
 
 public class InitBean {
 
@@ -49,6 +53,8 @@ public class InitBean {
         createAdminGroup(dao);
         createSystemDefaultGroups(dao);
         createAdminUser(dao);
+        
+        initVirtureContractShipCountData(dao);
     }
 
     private static void createSystemDefaultGroups(ICommonDao dao) {
@@ -273,6 +279,30 @@ public class InitBean {
                 }
             }
         }
+    }
+    
+    
+    /**
+     * 初始化3中虚拟采购类型的发货初始数据
+     * 
+     * @param dao
+     */
+    private static void initVirtureContractShipCountData(ICommonDao dao) {
+
+        if (dao.count(null, DBBean.SHIP_COUNT) == 0) {
+            String date = ConfigurationManager.getProperty("ship_count_init_date");
+            String types[] = new String[] { PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI, PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO, PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE };
+            for (String type : types) {
+                Map<String, Object> shipRecord = new HashMap<String, Object>();
+                shipRecord.put(ShipCountBean.SHIP_COUNT_DATE, date);
+                shipRecord.put("status", "未结算");
+                shipRecord.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, type);
+                shipRecord.put(ShipCountBean.SHIP_TOTAL_AMOUNT, 0);
+                shipRecord.put(ShipCountBean.SHIP_TOTAL_MONEY, 0);
+                dao.add(shipRecord, DBBean.SHIP_COUNT);
+            }
+        }
+
     }
 
 }

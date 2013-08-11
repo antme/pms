@@ -37,50 +37,19 @@ $(document).ready(function () {
 
     $("#grid").kendoGrid({
         dataSource: dataSource,
-        height: "200px",
-        detailTemplate: kendo.template($("#template").html()),
-        detailInit: detailInit,
+        height: "450px",
         columns: [
-            { field: "shipCountDate", title:"统计日期" },
+            { field: "shipCountDate", title:"统计月份" },
             { field: "purchaseContractType", title:"虚拟采购类型" },
+            { field: "status", title:"状态" },
             { field: "shipTotalAmount", title:"总数量" },
             { field: "shipTotalMoney", title:"总金额" }
         ]
     });
     
-    postAjaxRequest(crudServiceBaseUrl + "/count/date", null, getDate);
 });
 
-function detailInit(e) {
-    var detailRow = e.detailRow;
 
-    detailRow.find(".orders").kendoGrid({
-        dataSource: {
-            transport: {
-            	read: {
-                    url: crudServiceBaseUrl + "/count/eqlist",
-                    dataType: "jsonp",
-    	            data: {
-    	            	_id: e.data._id
-    	            }
-                }
-            },
-            schema: {
-            	data: "data"
-            }
-        },
-        columns: [
-            { field: "eqcostNo", title:"序号" },
-            { field: "eqcostMaterialCode", title:"物料代码" },
-            { field: "eqcostProductName", title: "产品名称" },
-	        { field: "eqcostProductType", title: "规格型号" },
-	        { field: "eqcostBrand", title: "品牌" },
-	        { field: "eqcostUnit", title: "单位" },
-            { field: "vcShipAmount", title:"数量" },
-            { field: "vcShipMoney", title:"金额" }
-        ]
-    });
-}
 
 function getDate(data) {
 	model = new date(data);
