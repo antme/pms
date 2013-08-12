@@ -211,6 +211,7 @@ function initMyDraftTasks(id, data){
 			dataSource : data,
 			pageable : false,
 			selectable : "row",
+			height: "400px",
 			columns : [ {
 				field : "db",
 				title : "我的模块",

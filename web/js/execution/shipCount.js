@@ -38,6 +38,7 @@ $(document).ready(function () {
     $("#grid").kendoGrid({
         dataSource: dataSource,
         height: "450px",
+		selectable : "row",
         columns: [
             { field: "shipCountDate", title:"统计月份" },
             { field: "purchaseContractType", title:"虚拟采购类型" },
@@ -49,7 +50,19 @@ $(document).ready(function () {
     
 });
 
-
+function confirmShipCount(){
+	
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		 if(row.status == "已结算"){
+			alert("不需要结算");
+		} else {
+			loadPage("execution_shipCountEdit", {
+				_id : row._id
+			});
+		}
+	}
+}
 
 function getDate(data) {
 	model = new date(data);
@@ -60,20 +73,3 @@ function count(purchaseContractType) {
 	postAjaxRequest(crudServiceBaseUrl + "/count", {purchaseContractType:purchaseContractType}, countReturn);
 }
 
-function countReturn(data) {
-	if (isEmpty(data)) {
-		alert("没有数据");
-	} else {
-		alert("统计完成");
-	}
-	loadPage("execution_shipCount");
-}
-
-function isEmpty(obj)
-{
-    for (var name in obj) 
-    {
-        return false;
-    }
-    return true;
-};
