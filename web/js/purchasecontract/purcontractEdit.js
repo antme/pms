@@ -211,12 +211,30 @@ function changeCType(index){
 			dataValueField : "text",
 			dataSource : purchaseContractTypeNormal
 		});
+
+		$("#supplierNameContact").val("");
+		$("#supplierNameContact").attr("disabled", false);
+		$("#contractProperty").attr("disabled", false);
+		
+		$("#supplierBJ").hide();
+		$("#supplierSelect").show();
+		$("#supplierNamebj").val("");
+		
 	}else{
 		$("#purchaseContractType").kendoDropDownList({
 			dataTextField : "text",
 			dataValueField : "text",
 			dataSource : purchaseContractTypeVirtual
 		});
+		
+		$("#supplierNamebj").val("同方北京");
+		$("#supplierNamebj").attr("disabled", true);
+		$("#supplierBJ").show();
+		$("#supplierSelect").hide();
+		$("#supplierNameContact").val("同方北京");
+		$("#supplierNameContact").attr("disabled", true);
+		$("#contractProperty").val("闭口合同");
+		$("#contractProperty").attr("disabled", true);
 	}
 	
 }
@@ -334,7 +352,6 @@ function addOrderInSCListForRuodian(){
 			requestDataItem.projectId = redirectParams.projectId;
 			requestDataItem.salesContractId = redirectParams.scId;
 			
-			console.log(requestDataItem);
 
 			edit();
         }
@@ -378,6 +395,8 @@ var itemListDataSource = new kendo.data.DataSource({
 });
 
 function save(status) {
+
+	
 	var validator = $("#purchasecontract-edit-item").kendoValidator().data("kendoValidator");
 	if (validator.validate()) {
 
@@ -501,7 +520,10 @@ function edit(data) {
 	}
 	
 	
-	
+	if(!requestDataItem.signBy){
+		requestDataItem.signBy = user.userName;
+
+	}
 	if(requestDataItem.executeStatus && requestDataItem.executeStatus.text){
 		requestDataItem.executeStatus = requestDataItem.executeStatus.text;
 	}
@@ -511,13 +533,19 @@ function edit(data) {
 			addOrderInSCListForRuodian();
 		}
 		disableTable();
-		console.log(requestDataItem);
 		eqCostListDataSource.data(requestDataItem.eqcostList);
 	}
 
 	setDate(requestDataItem, "signDate", requestDataItem.signDate);
 	
 	kendo.bind($("#purchasecontract-edit"), requestDataItem);
+
+	
+	if(!requestDataItem.contractExecuteCate || requestDataItem.contractExecuteCate.indexOf("正常采购")>=0){
+		changeCType(0);
+	}else{
+		changeCType(1);
+	}
 
 	var eqcostList = requestDataItem.eqcostList;
 	

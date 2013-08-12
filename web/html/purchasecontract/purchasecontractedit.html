@@ -78,14 +78,29 @@
 								id="signBy" required="required" data-bind="value: signBy">
 						</div>
 
+                        <div id="supplierSelect">
 						<div class="k-edit-label ">
 							<label for="supplierName">供应商名称</label>
 						</div>
 						<div data-container-for="supplier" class="k-edit-field ">
 							<input type="text" name="supplier" id="supplier"
-								required="required" data-bind="value: supplier">
+								data-bind="value: supplier">
 						</div>
-
+	
+                        </div>
+                        
+                      <div id="supplierBJ" style="display:none;">
+                        <div class="k-edit-label ">
+                            <label for="supplierName">供应商名称</label>
+                        </div>
+                        <div data-container-for="supplierNamebj" class="k-edit-field ">
+                 
+                              <input type="text" name="supplierNamebj" id="supplierNamebj"
+                                data-bind="value: supplierNamebj" >
+                        </div>
+    
+                        </div>
+                        
 						<div class="k-edit-label ">
 							<label for="supplierNameContact">供应商联系人</label>
 						</div>
