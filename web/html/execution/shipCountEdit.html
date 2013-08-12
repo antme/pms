@@ -1,0 +1,74 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+<head>
+<style>
+
+label{
+   margin-left: 5px;
+   
+}
+
+
+#purchaseorder-edit-header{
+    margin-bottom: 10px;
+}
+
+
+#purchaseorder-edit-header span{
+    font-weight: bold;
+}
+
+</style>
+
+<script type="text/javascript" src="js/execution/shipCountEdit.js"></script>
+</head>
+
+
+
+<body>
+   
+    <div id="purchase-request-edit">
+        <div id="purchase-back-select" class="k-content">
+            <div>
+                <label>选择备货申请: </label><input id="purchaseBackSelect" style="width: 250px" /><button onclick="selectBackRequest();">确定</button>
+            </div>  
+        </div>
+    
+        <div id="purchase-request-edit-item">
+    
+            <div>
+                <table style="width: 80%">
+                    <tr>
+                        <td>统计月份：<strong><span data-bind="text: shipCountDate" ></span></strong></td>                    
+                        <td>虚拟采购类型： <strong><span data-bind="text: purchaseContractType"></span></strong></td>   
+                        <td>总数量： <strong><span data-bind="text: shipTotalAmount"></span></strong></td>
+                        <td>总金额： <strong><span data-bind="text: shipTotalMoney"></span></strong></td>
+                    </tr>
+            
+                </table>
+            </div>
+			
+
+			<hr>
+            <div>
+                <div style="margin-bottom:5px; margin-top:5px;"><label>提示: 点击单元格可以编辑:</label></div>
+                <div id="purchase-request-edit-grid"></div>        
+            </div>
+            
+            
+            
+            <div style="width:400px; margin-top:50px;">
+                <div>
+                    <button  class="k-button " onclick="saveRequest();" id="save-button">保存</button>
+                    <button  class="k-button " onclick="submitRequest();" id="submit-button">提交</button>
+                    <button class="k-button" onclick="cancel();">取消</button>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+
+
+
+</body>
+</html>
