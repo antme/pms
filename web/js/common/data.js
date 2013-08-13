@@ -116,7 +116,8 @@ var menus = [
                  text: "权限管理", id: "user", expanded: false, imageUrl: "/images/friends_group.png",
                  items: [
                          { text: "用户管理", id: "user_userman", imageUrl: "/images/toy.png" },
-                         { text: "角色管理", id: "user_group", imageUrl: "/images/ccontract.png" }
+                         { text: "角色管理", id: "user_group", imageUrl: "/images/ccontract.png" },
+                         { text: "菜单管理", id: "user_menu", imageUrl: "/images/ccontract.png" }
                      ]
              }
   ];

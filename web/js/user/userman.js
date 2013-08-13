@@ -7,6 +7,7 @@ var groupDataSource = new kendo.data.DataSource({
 		}
 	},
 	requestEnd: function(e) {
+		init();
 	},
 	schema : {
 		total: "total", // total is returned in the "total" field of the response
@@ -30,12 +31,16 @@ var dataSource = new kendo.data.DataSource({
 
 $(document).ready(function() {	
 	groupDataSource.read();
+});
+
+function init(){
 
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
 		resizable: true,
 		selectable : "row",
+		height : "450px",
 		columns : [ {
 			field : "userName",
 			title : "用户名",
@@ -75,9 +80,7 @@ $(document).ready(function() {
 			
 		}]
 	});
-});
-
-
+}
 function add(){
 	loadPage("user_useredit");
 }
