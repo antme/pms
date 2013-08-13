@@ -414,14 +414,12 @@ function saveSC(){
 			alert("成本设备清单为空！");
 			return;
 		}
-		console.log(eqCostListDataSource.data());
 		var map = new Map();
 		for(i=0; i<eqTotal; i++){
 			var item = eqCostListDataSource.at(i);
 			var itemCate = item.eqcostCategory;
 			var itemTaxType = item.eqcostTaxType;
 			
-			console.log(map.get(itemCate));
 			var savedCateTaxType = map.get(itemCate);
 			if(savedCateTaxType == null){
 				map.put(itemCate, itemTaxType);
@@ -532,7 +530,7 @@ function showTabs(projectStatus){
 	var tab0 = tabStrip.tabGroup.children("li").eq(0);
 	var tab1 = tabStrip.tabGroup.children("li").eq(1);
 	var tab2 = tabStrip.tabGroup.children("li").eq(2);
-	var scType = $("#contractType").val();console.log("*************c type" + scType);
+	var scType = $("#contractType").val();
 	if (projectStatus == "销售正式立项"){
 		$("#tabDiv").show();
 		tabStrip.enable(tab0, true);

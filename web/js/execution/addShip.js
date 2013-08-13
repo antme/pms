@@ -101,7 +101,6 @@ $(document).ready(function() {
         }),
         change: function(e) {
         	var dataItem = this.dataItem();
-        	console.log(e);        
         	model.set("projectName", dataItem.projectName);
         	model.set("customer", dataItem.customer);
         	model.set("applicationDepartment", dataItem.department);
@@ -150,7 +149,6 @@ $(document).ready(function() {
 	    editable: true,
 	    groupable : true,
 	    save : function(e){
-	    	console.log(e);
 	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
 				alert("最多可以申请" + e.model.leftAmount);
 				e.preventDefault();
@@ -233,7 +231,6 @@ $(document).ready(function() {
 	
     
 	if(popupParams){
-		console.log(popupParams);
 		postAjaxRequest("/service/ship/get", popupParams, edit);
 		disableAllInPoppup();
 	} else if (redirectParams) {//Edit		

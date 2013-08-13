@@ -118,7 +118,6 @@ function save(status) {
 		requestDataItem.pbDepartment = requestDataItem.pbDepartment.join(",");
 	}
 
-	console.log(requestDataItem);
 	// 同步数据
 	itemDataSource.sync();
 }

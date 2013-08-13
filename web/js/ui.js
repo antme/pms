@@ -168,7 +168,6 @@ function loadPage(page, parameters, popupDiv) {
 	}else{
 		
 		var url = page;
-		console.log(page);
 		if (!page.endWith(".html")) {
 			var pages = page.split("_");
 			if (pages.length == 2) {
@@ -176,7 +175,6 @@ function loadPage(page, parameters, popupDiv) {
 			}
 		}
 
-		console.log(url);
 		if (url.indexOf("?") != -1) {
 			url = url + "&_uid=" + uid;
 		}else{

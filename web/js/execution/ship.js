@@ -56,7 +56,6 @@ $(document).ready(function () {
             	   field: "shipCode",
             	   title: "编号",
             	   template : function(dataItem) {
-            		   console.log(dataItem);
        					return '<a  onclick="openShipViewWindow(\'' + dataItem._id + '\');">' + dataItem.shipCode + '</a>';      				
        				}
                },

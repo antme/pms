@@ -97,7 +97,6 @@ function saveData() {
 	if(!validator.validate()){
 		return false;
 	}
-	console.log(11111);
 	dataSource.add(dm);
 	dataSource.sync();
 	var window = $("#supplier-edit");

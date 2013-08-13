@@ -183,7 +183,6 @@ function dataBound(e) {
 	var totalMoney=0;
 	for (i = 0; i < data.length; i++) {
 		var item = data[i];
-		console.log(item);
 		if (!item.pbTotalCount) {item.pbTotalCount = 0;}
 		if (!item.eqcostLeftAmount) {item.eqcostLeftAmount = 0;}
 		if (!item.eqcostRealAmount) {item.eqcostRealAmount = 0;}

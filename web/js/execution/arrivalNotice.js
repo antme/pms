@@ -58,7 +58,6 @@ function toolbar_createShip() {
 	var grid = $("#grid").data("kendoGrid");
 	var row = grid.select();
 	var data = grid.dataItem(row);
-	console.log(kendo.toString(row[0]));return;
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
 		if (rowData.status == 0 || rowData.status == -1){

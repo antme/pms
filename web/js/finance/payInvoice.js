@@ -228,7 +228,6 @@ function donePI(){
 }
 function detailInit(e) {
     var detailRow = e.detailRow;
-    console.log(e);
     detailRow.find(".tabstrip").kendoTabStrip({
         animation: {
             open: { effects: "fadeIn" }

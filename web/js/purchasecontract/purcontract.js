@@ -131,7 +131,6 @@ function addPOBumber(){
 			kendoWindow.open();
 			kendoWindow.center();
 			rowId = row._id;
-			console.log(row.poNumer);
 			if(row.poNumber){
 				$("#poNumber").val(row.poNumber);
 			}else{

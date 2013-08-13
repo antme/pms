@@ -193,7 +193,6 @@ function loadBackRequest(data) {
 		// // 新增，所以设置_id为空
 		requestDataItem._id = "";	
 		requestDataItem.status="草稿";
-		console.log(requestDataItem);
 		edit();
 	}
 }
@@ -453,7 +452,6 @@ function saveRequest(status) {
 	}
 
 	
-	console.log(requestDataItem);
 	// 同步数据
 	itemDataSource.sync();
 }

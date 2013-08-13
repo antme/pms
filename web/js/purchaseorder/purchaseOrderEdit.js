@@ -430,7 +430,6 @@ function saveOrder(status) {
 		requestDataItem.eqcostDeliveryType = eqcostDeliveryType.value();
 	}
 	
-	console.log(requestDataItem);
 	// 同步数据
 	itemDataSource.sync();
 }

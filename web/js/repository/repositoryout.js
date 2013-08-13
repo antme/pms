@@ -94,7 +94,6 @@ function confirmRepository(){
 			alert("此申请已入库，不需要再次入库");
 		}else{
 			confirmEntity = new confirmModel(row);
-			console.log(confirmEntity);
 			kendo.bind($("#confirm-form"), confirmEntity);
 			setDate(confirmEntity, "outDate", confirmEntity.outDate);
 			var options = {
@@ -117,7 +116,6 @@ function confirmRepository(){
 
 
 function submitConfirm(){
-	 console.log(confirmEntity);	 
 	 postAjaxRequest(approveUrl, {models:kendo.stringify(confirmEntity)}, approveStatusCheck);
 	
 }

@@ -45,7 +45,6 @@ function changePasswordSave(){
 	var validator = $("#changePasswordForm").kendoValidator().data("kendoValidator");
 	var new1 = $("#passwordNew").val().trim();
 	var new2 = $("#passwordNew2").val().trim();
-	console.log(cpModel.toJSON());
 	if (!validator.validate()){
 		return;
 	}else if(new1 != new2){

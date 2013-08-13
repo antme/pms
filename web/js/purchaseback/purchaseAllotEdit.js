@@ -176,7 +176,6 @@ function validateModel(){
 	for(var i=0;i<eqList.length;i++){
 		if(eqList[i].paCount) eqTotalCount+=eqList[i].paCount;
 	}
-	console.log(eqTotalCount);
 	if(eqTotalCount == 0){
 		alert("请审核设备清单");
 		return false;

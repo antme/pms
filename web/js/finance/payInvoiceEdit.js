@@ -72,7 +72,6 @@ $(document).ready(function () {
 			}
 		}
 	});
-	console.log(redirectParams);
 	if(popupParams){
 		postAjaxRequest("/service/sc/invoice/load", popupParams, editSucess);
 		disableAllInPoppup();
