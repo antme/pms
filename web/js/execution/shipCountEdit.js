@@ -1,7 +1,6 @@
 
-var saveUrl = "/service/purcontract/repository/update?type=in";
-var submitUrl = "/service/purcontract/repository/add?type=in";
-var loadUrl = "/service/purcontract/repository/get";
+var submitUrl = "/service/ship/count/submit";
+var loadUrl = "/service/ship/count/get";
 
 
 var model = kendo.data.Model.define({
@@ -51,38 +50,26 @@ function checkStatus() {
 function edit(data) {
 
 	// 初始化空对象
-	var dataItem = new model();
-	if(data){
-		$("#purchaserepository-div").hide();
-		requestDataItem = data;
-		
-		for (i in requestDataItem.eqcostList) {			
-//			requestDataItem.eqcostList[i].leftCount = requestDataItem.eqcostList[i].leftCount + requestDataItem.eqcostList[i].eqcostApplyAmount;
-		}
-	    
-	}else{
-		$("#purchaserepository-div").show();
-	}
 
 	if (requestDataItem) {
 		requestDataItem = new model(requestDataItem);
 
 	}
 	
-//	requestDataItem.inDate = "10/10/2013";
-	requestDataItem.set("inDate", kendo.toString(requestDataItem.inDate, 'd'));
-	kendo.bind($("#purchaserepository-edit-item"), requestDataItem);
+	if(data){
+		requestDataItem = new model(data);
 
-	// 渲染成本编辑列表
-	itemDataSource.data(requestDataItem.eqcostList);
+	}
+	
+	kendo.bind($("#ship-count-edit"), requestDataItem);
+	
+	if(!requestDataItem.eqList){
+		$("#ship-count-grid").html("无发货数据");
+	}
 
-	$("#purchasecontract-edit-item").show();
-	$("#purchasecontract-select").hide();
-
-
-	if (!$("#purchaserepository-edit-grid").data("kendoGrid")) {
-		$("#purchaserepository-edit-grid").kendoGrid({
-			dataSource : itemDataSource,
+	if (!$("#ship-count-grid").data("kendoGrid")) {
+		$("#ship-count-grid").kendoGrid({
+			data : requestDataItem.eqList,
 			columns : [ {
 				field : "eqcostNo",
 				title : "序号",
@@ -105,15 +92,6 @@ function edit(data) {
 			},{
 				field : "eqcostBasePrice",
 				title : "采购单价"
-			},{
-				field : "leftCount",
-				title : "可入库数量"
-			}, {
-				field : "eqcostApplyAmount",
-				title : "入库数量"
-			}, {
-				field : "requestedTotalMoney",
-				title : "金额"
 			}, {
 				field : "salesContractCode",
 				title : "销售合同编号"

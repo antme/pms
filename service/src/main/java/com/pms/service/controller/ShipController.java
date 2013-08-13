@@ -115,4 +115,10 @@ public class ShipController extends AbstractController {
     	Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(shipService.listCountEq(params), request, response);
     }
+    
+    @RequestMapping("/count/get")
+    public void getShipCount(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = parserJsonParameters(request, false);
+        responseWithData(shipService.getShipCount(params), request, response);
+    }
 }

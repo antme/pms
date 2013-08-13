@@ -27,14 +27,10 @@ label{
 
 <body>
    
-    <div id="purchase-request-edit">
-        <div id="purchase-back-select" class="k-content">
-            <div>
-                <label>选择备货申请: </label><input id="purchaseBackSelect" style="width: 250px" /><button onclick="selectBackRequest();">确定</button>
-            </div>  
-        </div>
+    <div id="ship-count-edit">
+
     
-        <div id="purchase-request-edit-item">
+        <div id="ship-count-edit-item">
     
             <div>
                 <table style="width: 80%">
@@ -52,15 +48,14 @@ label{
 			<hr>
             <div>
                 <div style="margin-bottom:5px; margin-top:5px;"><label>提示: 点击单元格可以编辑:</label></div>
-                <div id="purchase-request-edit-grid"></div>        
+                <div id="ship-count-grid"></div>        
             </div>
             
             
             
             <div style="width:400px; margin-top:50px;">
                 <div>
-                    <button  class="k-button " onclick="saveRequest();" id="save-button">保存</button>
-                    <button  class="k-button " onclick="submitRequest();" id="submit-button">提交</button>
+                    <button  class="k-button " onclick="submitRequest();" id="submit-button">结算</button>
                     <button class="k-button" onclick="cancel();">取消</button>
                 </div>
             </div>

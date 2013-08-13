@@ -275,135 +275,136 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 
 	
 	// 统计三类虚拟的采购合同在每月的发货合计
-	public Map<String, Object> doCount(Map<String, Object> params) {
-		String date = (String) params.get(ShipCountBean.SHIP_COUNT_DATE);
-		String cate =  (String) params.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE);
-		
-		
-		date = ConfigurationManager.getProperty("ship_count_init_date");
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-		Date dt = null;
-		try {
-			dt = sdf.parse(date);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(dt);
-		cal.add(Calendar.MONTH, 1);
-		Date dt1 = cal.getTime();
-		String nextCountDate = sdf.format(dt1);
-		
-		Map<String, Object> shipQuery = new HashMap<String, Object>();
-		// 日期范围
-		cal.add(Calendar.MONTH, -2);
-		Date dt2 = cal.getTime();
-		String startDate = sdf.format(dt2) + "-21";
-		String endDate = date + "-20";
-		Object[] ta = { startDate, endDate };
-		shipQuery.put(ShipBean.SHIP_ISSUE_TIME, new DBQuery(DBQueryOpertion.BETWEEN_AND, ta));
-		// 三类虚拟采购合同
-		shipQuery.put(SalesContractBean.SC_EQ_LIST+"."+PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, cate);
-		// 申请状态
-		List<String> statusList = new ArrayList<String>();
-		statusList.add(ShipBean.SHIP_STATUS_APPROVE);
-		statusList.add(ShipBean.SHIP_STATUS_CLOSE);
-		shipQuery.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, statusList));
-		String[] limitKeys = { SalesContractBean.SC_EQ_LIST };
-		shipQuery.put(ApiConstants.LIMIT_KEYS, limitKeys);
-		Map<String, Object> shipMap = dao.list(shipQuery, DBBean.SHIP);
-		List<Map<String, Object>> shipList = (List<Map<String, Object>>) shipMap.get(ApiConstants.RESULTS_DATA);
-		
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		if (!ApiUtil.isEmpty(shipList)) {
-			// 采购订单id
-			Set<Object> orderIdSet = new HashSet();
-			
-			for (Map<String, Object> ship : shipList) {
-				List<Map<String, Object>> shipEqList = (List<Map<String, Object>>) ship.get(SalesContractBean.SC_EQ_LIST);
-				for (Map<String, Object> shipEq : shipEqList) {
-					orderIdSet.add(shipEq.get(PurchaseCommonBean.PURCHASE_ORDER_ID));
-				}
-			}
-			
-			// 获取采购订单中的采购价格
-			Map<String, Object> orderQuery = new HashMap<String, Object>();
-			orderQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(orderIdSet)));
-			Map<String, Object> orderInfoMap = dao.listToOneMapAndIdAsKey(orderQuery, DBBean.PURCHASE_ORDER);
-			
-			Map<String, Object> eqIdKeyMap = new HashMap<String, Object>();
-			Map<String, Object> orderIdKeyMap = new HashMap<String, Object>();
-			
-			for (Map.Entry mapEntry : orderInfoMap.entrySet()) {
-				// 采购订单id
-				String orderId =  (String) mapEntry.getKey();
-				// 对应采购订单信息
-				Map<String, Object> orderMap = (Map<String, Object>) mapEntry.getValue();
-				List<Map<String, Object>> orderEqList = (List<Map<String, Object>>) orderMap.get(SalesContractBean.SC_EQ_LIST);
-				for (Map<String, Object> orderEq : orderEqList) {
-					eqIdKeyMap.put((String) orderEq.get(ApiConstants.MONGO_ID), orderEq.get(PurchaseCommonBean.EQCOST_PRODUCT_UNIT_PRICE));
-				}
-				orderIdKeyMap.put(orderId, eqIdKeyMap);
-			}
-			
-			Map<String, Object> resultMap = new HashMap<String, Object>();
-			
-			Double totalAmount = 0.0;
-			Double totalMoney = 0.0;
-			
-			for (Map<String, Object> ship : shipList) {
-				List<Map<String, Object>> shipEqList = (List<Map<String, Object>>) ship.get(SalesContractBean.SC_EQ_LIST);
-				for (Map<String, Object> shipEq : shipEqList) {
-					String eqId = (String) shipEq.get(ApiConstants.MONGO_ID);
-					// 发货数量
-					Double shipAmount;
-					if (shipEq.containsKey(ShipBean.SHIP_EQ_ACTURE_AMOUNT)) {
-						shipAmount = (Double) ApiUtil.getDouble(shipEq, ShipBean.SHIP_EQ_ACTURE_AMOUNT, 0);
-					} else {
-						shipAmount = (Double) ApiUtil.getDouble(shipEq, ShipBean.EQCOST_SHIP_AMOUNT, 0);
-					}
-					totalAmount += shipAmount;
-					
-					Map<String, Object> map = (Map<String, Object>) orderIdKeyMap.get(shipEq.get(PurchaseCommonBean.PURCHASE_ORDER_ID));
-					// 价格
-					Double eqcostProductUnitPrice = ApiUtil.getDouble(map, eqId, 0);
-					// 发货金额
-					Double money = shipAmount * eqcostProductUnitPrice;
-					
-					totalMoney += money;
-					
-					Map<String, Object> listMap = new HashMap<String, Object>();
-					if (resultMap.containsKey(eqId)) {
-						Map<String, Object> countMap = (Map<String, Object>) resultMap.get(eqId);
-						listMap.put(ShipCountBean.VC_SHIP_AMOUNT, shipAmount + ApiUtil.getDouble(countMap, ShipCountBean.VC_SHIP_AMOUNT, 0));
-						listMap.put(ShipCountBean.VC_SHIP_MONEY, money + ApiUtil.getDouble(countMap, ShipCountBean.VC_SHIP_MONEY, 0));
-					} else {
-						listMap.put(ApiConstants.MONGO_ID, eqId);
-						listMap.put(ShipCountBean.VC_SHIP_AMOUNT, shipAmount);
-						listMap.put(ShipCountBean.VC_SHIP_MONEY, money);
-					}
-					resultMap.put(eqId, listMap);
-				}
-			}
-			
-			List<Map<String, Object>> returnList = new ArrayList<Map<String, Object>>();
-			for (Map.Entry mapEntry : resultMap.entrySet()) {
-				returnList.add((Map<String, Object>) mapEntry.getValue());
-			}
-			
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(ShipCountBean.SHIP_COUNT_DATE, date);
-			map.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, cate);
-			map.put(ShipCountBean.SHIP_TOTAL_AMOUNT, totalAmount);
-			map.put(ShipCountBean.SHIP_TOTAL_MONEY, totalMoney);
-			map.put(SalesContractBean.SC_EQ_LIST, returnList);
-			
-			returnMap = dao.add(map, DBBean.SHIP_COUNT);
-		}
-		
-		return returnMap;
-	}
+    public Map<String, Object> doCount(Map<String, Object> params) {
+
+        Map<String, Object> shipCount = this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP_COUNT);
+
+        if (shipCount != null && shipCount.get("status").toString().equalsIgnoreCase("已结算")) {
+            return shipCount;
+        }
+
+        String date = (String) shipCount.get(ShipCountBean.SHIP_COUNT_DATE);
+        String cate = (String) shipCount.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        Date dt = null;
+        try {
+            dt = sdf.parse(date);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dt);
+        cal.add(Calendar.MONTH, 1);
+        Date dt1 = cal.getTime();
+
+        Map<String, Object> shipQuery = new HashMap<String, Object>();
+        // 日期范围
+        cal.add(Calendar.MONTH, -2);
+        Date dt2 = cal.getTime();
+        String startDate = sdf.format(dt2) + "-21";
+        String endDate = date + "-20";
+        Object[] ta = { startDate, endDate };
+        shipQuery.put(ShipBean.SHIP_ISSUE_TIME, new DBQuery(DBQueryOpertion.BETWEEN_AND, ta));
+        // 三类虚拟采购合同
+        shipQuery.put(SalesContractBean.SC_EQ_LIST + "." + PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, cate);
+        // 申请状态
+        List<String> statusList = new ArrayList<String>();
+        statusList.add(ShipBean.SHIP_STATUS_APPROVE);
+        statusList.add(ShipBean.SHIP_STATUS_CLOSE);
+        shipQuery.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, statusList));
+        String[] limitKeys = { SalesContractBean.SC_EQ_LIST };
+        shipQuery.put(ApiConstants.LIMIT_KEYS, limitKeys);
+        Map<String, Object> shipMap = dao.list(shipQuery, DBBean.SHIP);
+        List<Map<String, Object>> shipList = (List<Map<String, Object>>) shipMap.get(ApiConstants.RESULTS_DATA);
+
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+        if (!ApiUtil.isEmpty(shipList)) {
+            // 采购订单id
+            Set<Object> orderIdSet = new HashSet();
+
+            for (Map<String, Object> ship : shipList) {
+                List<Map<String, Object>> shipEqList = (List<Map<String, Object>>) ship.get(SalesContractBean.SC_EQ_LIST);
+                for (Map<String, Object> shipEq : shipEqList) {
+                    orderIdSet.add(shipEq.get(PurchaseCommonBean.PURCHASE_ORDER_ID));
+                }
+            }
+
+            // 获取采购订单中的采购价格
+            Map<String, Object> orderQuery = new HashMap<String, Object>();
+            orderQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(orderIdSet)));
+            Map<String, Object> orderInfoMap = dao.listToOneMapAndIdAsKey(orderQuery, DBBean.PURCHASE_ORDER);
+
+            Map<String, Object> eqIdKeyMap = new HashMap<String, Object>();
+            Map<String, Object> orderIdKeyMap = new HashMap<String, Object>();
+
+            for (Map.Entry mapEntry : orderInfoMap.entrySet()) {
+                // 采购订单id
+                String orderId = (String) mapEntry.getKey();
+                // 对应采购订单信息
+                Map<String, Object> orderMap = (Map<String, Object>) mapEntry.getValue();
+                List<Map<String, Object>> orderEqList = (List<Map<String, Object>>) orderMap.get(SalesContractBean.SC_EQ_LIST);
+                for (Map<String, Object> orderEq : orderEqList) {
+                    eqIdKeyMap.put((String) orderEq.get(ApiConstants.MONGO_ID), orderEq.get(PurchaseCommonBean.EQCOST_PRODUCT_UNIT_PRICE));
+                }
+                orderIdKeyMap.put(orderId, eqIdKeyMap);
+            }
+
+            Map<String, Object> resultMap = new HashMap<String, Object>();
+
+            Double totalAmount = 0.0;
+            Double totalMoney = 0.0;
+
+            for (Map<String, Object> ship : shipList) {
+                List<Map<String, Object>> shipEqList = (List<Map<String, Object>>) ship.get(SalesContractBean.SC_EQ_LIST);
+                for (Map<String, Object> shipEq : shipEqList) {
+                    String eqId = (String) shipEq.get(ApiConstants.MONGO_ID);
+                    // 发货数量
+                    Double shipAmount;
+                    if (shipEq.containsKey(ShipBean.SHIP_EQ_ACTURE_AMOUNT)) {
+                        shipAmount = (Double) ApiUtil.getDouble(shipEq, ShipBean.SHIP_EQ_ACTURE_AMOUNT, 0);
+                    } else {
+                        shipAmount = (Double) ApiUtil.getDouble(shipEq, ShipBean.EQCOST_SHIP_AMOUNT, 0);
+                    }
+                    totalAmount += shipAmount;
+
+                    Map<String, Object> map = (Map<String, Object>) orderIdKeyMap.get(shipEq.get(PurchaseCommonBean.PURCHASE_ORDER_ID));
+                    // 价格
+                    Double eqcostProductUnitPrice = ApiUtil.getDouble(map, eqId, 0);
+                    // 发货金额
+                    Double money = shipAmount * eqcostProductUnitPrice;
+
+                    totalMoney += money;
+
+                    Map<String, Object> listMap = new HashMap<String, Object>();
+                    if (resultMap.containsKey(eqId)) {
+                        Map<String, Object> countMap = (Map<String, Object>) resultMap.get(eqId);
+                        listMap.put(ShipCountBean.VC_SHIP_AMOUNT, shipAmount + ApiUtil.getDouble(countMap, ShipCountBean.VC_SHIP_AMOUNT, 0));
+                        listMap.put(ShipCountBean.VC_SHIP_MONEY, money + ApiUtil.getDouble(countMap, ShipCountBean.VC_SHIP_MONEY, 0));
+                    } else {
+                        listMap.put(ApiConstants.MONGO_ID, eqId);
+                        listMap.put(ShipCountBean.VC_SHIP_AMOUNT, shipAmount);
+                        listMap.put(ShipCountBean.VC_SHIP_MONEY, money);
+                    }
+                    resultMap.put(eqId, listMap);
+                }
+            }
+
+            List<Map<String, Object>> returnList = new ArrayList<Map<String, Object>>();
+            for (Map.Entry mapEntry : resultMap.entrySet()) {
+                returnList.add((Map<String, Object>) mapEntry.getValue());
+            }
+
+            shipCount.put(ShipCountBean.SHIP_TOTAL_AMOUNT, totalAmount);
+            shipCount.put(ShipCountBean.SHIP_TOTAL_MONEY, totalMoney);
+            shipCount.put(SalesContractBean.SC_EQ_LIST, returnList);
+
+            dao.updateById(shipCount, DBBean.SHIP_COUNT);
+        }
+
+        return shipCount;
+    }
 	
 	// 发货统计
 	public Map<String, Object> listShipCount(Map<String, Object> params) {
@@ -418,6 +419,10 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		return res;
 	}
 	
+	
+	 public Map<String, Object> getShipCount(Map<String, Object> params){
+	        return doCount(params);
+	 }
 	
 
 }
