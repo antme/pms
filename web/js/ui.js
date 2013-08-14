@@ -83,7 +83,6 @@ function init(u){
 function removeTreeItems(items) {
 	// 拷贝数据
 	var newItems = items.slice(0);
-	console.log(newItems);
 	for (i in newItems) {
 		var id = newItems[i].id;
 		var hasAccess = false;

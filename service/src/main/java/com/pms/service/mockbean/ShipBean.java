@@ -40,9 +40,9 @@ public class ShipBean {
     
     public static final String SHIP_DELIVERY_ADDRESS = "deliveryAddress"; // 交货地点
     
-    public static final String SHIP_ISSUE_TIME = "issueTime"; // 发出时间
+    public static final String SHIP_DELIVERY_START_DATE = "deliveryStartDate"; // 发出时间
     
-    public static final String SHIP_DELIVERY_TIME = "deliveryTime"; // 送达时间
+    public static final String SHIP_DELIVERY_TIME = "deliveryEndDate"; // 送达时间
     
     public static final String SHIP_DELIVERY_REQUIREMENTS = "deliveryRequirements"; // 货运要求
     

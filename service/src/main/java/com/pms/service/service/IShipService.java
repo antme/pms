@@ -31,4 +31,6 @@ public interface IShipService {
 	public Map<String, Object> listCountEq(Map<String, Object> params);
 
     public Map<String, Object> getShipCount(Map<String, Object> params);
+
+    public Map<String, Object> submitShipCount(Map<String, Object> params);
 }

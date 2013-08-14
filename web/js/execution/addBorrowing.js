@@ -25,8 +25,8 @@ var borrowing = kendo.data.Model.define( {
     	deliveryContactWay: {},
     	deliveryUnit: {},
     	deliveryAddress: {},
-    	issueTime: {},
-    	deliveryTime: {},
+    	deliveryStartDate: {},
+    	deliveryEndDate: {},
     	deliveryRequirements: {},
     	otherDeliveryRequirements: {}
     }
@@ -314,8 +314,8 @@ function save() {
     		if (data.length > 0) {
     			model.set("eqcostList", data);
     			
-    			model.set("issueTime", kendo.toString(model.issueTime, 'yyyy-MM-dd'));
-    			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'yyyy-MM-dd'));
+    			model.set("deliveryStartDate", kendo.toString(model.deliveryStartDate, 'yyyy-MM-dd'));
+    			model.set("deliveryEndDate", kendo.toString(model.deliveryEndDate, 'yyyy-MM-dd'));
     			
     			listDataSource.add(model);
     	        

@@ -1,5 +1,6 @@
 package com.pms.service.service.impl;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import com.pms.service.service.IReturnService;
 import com.pms.service.service.IShipService;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DateUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
 
 public class BorrowingServiceImpl extends AbstractService implements IBorrowingService {
@@ -294,8 +296,19 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
     	shipParams.put(ShipBean.SHIP_DELIVERY_CONTACTWAY, params.get(ShipBean.SHIP_DELIVERY_CONTACTWAY));
     	shipParams.put(ShipBean.SHIP_DELIVERY_UNIT, params.get(ShipBean.SHIP_DELIVERY_UNIT));
     	shipParams.put(ShipBean.SHIP_DELIVERY_ADDRESS, params.get(ShipBean.SHIP_DELIVERY_ADDRESS));
-    	shipParams.put(ShipBean.SHIP_ISSUE_TIME, params.get(ShipBean.SHIP_ISSUE_TIME));
-    	shipParams.put(ShipBean.SHIP_DELIVERY_TIME, params.get(ShipBean.SHIP_DELIVERY_TIME));
+    	try {
+            shipParams.put(ShipBean.SHIP_DELIVERY_START_DATE, DateUtil.getDate((String)params.get(ShipBean.SHIP_DELIVERY_START_DATE)));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    	try {
+             shipParams.put(ShipBean.SHIP_DELIVERY_TIME, DateUtil.getDate((String)params.get(ShipBean.SHIP_DELIVERY_TIME)));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+    	
     	shipParams.put(ShipBean.SHIP_DELIVERY_REQUIREMENTS, params.get(ShipBean.SHIP_DELIVERY_REQUIREMENTS));
     	shipParams.put(ShipBean.SHIP_OTHER_DELIVERY_REQUIREMENTS, params.get(ShipBean.SHIP_OTHER_DELIVERY_REQUIREMENTS));
     	

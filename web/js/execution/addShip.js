@@ -15,8 +15,8 @@ var ship = kendo.data.Model.define( {
     	deliveryContactWay: {},
     	deliveryUnit: {},
     	deliveryAddress: {},
-    	issueTime: {},
-    	deliveryTime: {},
+    	deliveryStartDate: {},
+    	deliveryEndDate: {},
     	deliveryRequirements: {},
     	otherDeliveryRequirements: {},
     	eqcostList: {},
@@ -400,8 +400,8 @@ function saveShip() {
 
 		if (allShipDataSource.data().length > 0) {
 			model.set("eqcostList", allShipDataSource.data());
-			model.set("issueTime", kendo.toString(model.issueTime, 'yyyy-MM-dd'));
-			model.set("deliveryTime", kendo.toString(model.deliveryTime, 'yyyy-MM-dd'));
+			model.set("deliveryStartDate", kendo.toString(model.deliveryStartDate, 'yyyy-MM-dd'));
+			model.set("deliveryEndDate", kendo.toString(model.deliveryEndDate, 'yyyy-MM-dd'));
 			if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
 				postAjaxRequest("/service/ship/record", {models:kendo.stringify(model)}, checkStatus);
 			}else if(redirectParams && redirectParams.type && redirectParams.type == "submit") {

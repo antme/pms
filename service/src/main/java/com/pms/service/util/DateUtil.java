@@ -17,6 +17,10 @@ public class DateUtil {
 	}
 	
 	public static Date getDate(String date) throws ParseException{
+	    
+	    if(ApiUtil.isEmpty(date)){
+	        return null;
+	    }
 		SimpleDateFormat sdf = new SimpleDateFormat(formatSimple);
 		return sdf.parse(date);
 	}

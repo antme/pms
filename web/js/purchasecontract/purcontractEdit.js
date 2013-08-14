@@ -13,11 +13,7 @@ var contractModel = kendo.data.Model.define({
 				required : true
 			}
 		},
-		purchaseContractType : {
-			defaultValue : "代理产品"
-		},
-		
-	
+
 		contractProperty: {
 			defaultValue: "闭口合同"
 		},
@@ -211,6 +207,10 @@ function changeCType(index){
 			dataValueField : "text",
 			dataSource : purchaseContractTypeNormal
 		});
+		
+		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="北京代采" || requestDataItem.purchaseContractType=="北京生产" || requestDataItem.purchaseContractType=="北京库存"){
+			requestDataItem.purchaseContractType = "代理产品"
+		}
 
 		$("#supplierNameContact").val("");
 		$("#supplierNameContact").attr("disabled", false);
@@ -227,6 +227,10 @@ function changeCType(index){
 			dataSource : purchaseContractTypeVirtual
 		});
 		
+		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="施工分包" || requestDataItem.purchaseContractType=="代理产品" || requestDataItem.purchaseContractType=="非代理产品"){
+			requestDataItem.purchaseContractType = "北京代采";
+		}		
+		
 		$("#supplierNamebj").val("同方北京");
 		$("#supplierNamebj").attr("disabled", true);
 		$("#supplierBJ").show();
@@ -236,6 +240,8 @@ function changeCType(index){
 		$("#contractProperty").val("闭口合同");
 		$("#contractProperty").attr("disabled", true);
 	}
+	
+
 	
 }
 function disableTable(){
@@ -266,7 +272,7 @@ function addOrderInSCListForRuodian(){
 	}
 	tabStrip.append({
         text: "成本设备清单",
-        content: "<div><div><input name=\"files\" id=\"files\" type=\"file\" /></div><div><div id=\"scEqCostList\"></div></div></div>"//kendo.template($("#roleTemplate").html()),
+        content: "<div><div><a href=\"/template/chengbenqingdan.xlsx\">数据模版下载</a> <input name=\"files\" id=\"files\" type=\"file\" /></div><div><div id=\"scEqCostList\"></div></div></div>"//kendo.template($("#roleTemplate").html()),
     });
 	
 	//成本设备清单
@@ -438,7 +444,6 @@ function save(status) {
 				requestDataItem.executeStatus = requestDataItem.executeStatus.text;
 			}
 			
-
 			// 同步数据
 			itemDataSource.sync();
 		}
@@ -537,7 +542,6 @@ function edit(data) {
 	}
 
 	setDate(requestDataItem, "signDate", requestDataItem.signDate);
-	
 	kendo.bind($("#purchasecontract-edit"), requestDataItem);
 
 	

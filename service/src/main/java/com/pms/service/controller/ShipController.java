@@ -104,10 +104,10 @@ public class ShipController extends AbstractController {
     	responseWithData(shipService.listShipCount(params), request, response);
     }
     
-    @RequestMapping("/count")
+    @RequestMapping("/count/submit")
     public void doCount(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(shipService.doCount(params), request, response);
+        responseWithData(shipService.submitShipCount(params), request, response);
     }
     
     @RequestMapping("/count/eqlist")
