@@ -232,7 +232,8 @@ $(document).ready(function() {
             
           var relatedScType = dataItem.contractType;
           var sctypelist = $("#contractType").data("kendoDropDownList");
-          if (relatedScType != null){
+                    
+          if (relatedScType != null && sctypelist){
           	sctypelist.value(relatedScType);
           	sctypelist.enable(false);
           	scm.set("contractType",relatedScType)
