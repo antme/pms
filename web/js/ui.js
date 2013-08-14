@@ -42,6 +42,7 @@ $(document).ready(function() {
 function init(u){
 	kendo.ui.progress($("#main"), false);
 	userRoles = u.data;
+	userMenus = u.menus;
 	user = u;
 	$("#user_info").html(user.userName);
 	
@@ -80,29 +81,25 @@ function init(u){
 }
 
 function removeTreeItems(items) {
-	
-	//拷贝数据
+	// 拷贝数据
 	var newItems = items.slice(0);
-
+	console.log(newItems);
 	for (i in newItems) {
 		var id = newItems[i].id;
-		var accRoles = "";
-		var target = "accessRoles."+id;
-//		console.log(target);
-//		eval("accRoles = target");
-		if(accRoles){
-			var hasAccess = false;
-			for (j in userRoles) {
-				if (accRoles.indexOf(userRoles[j].roleID) >= 0) {
-					hasAccess = true;
-					break;
-				}
-			}
-			if (!hasAccess) {
-				var node = items.indexOf(newItems[i]);
-				items.splice(node, 1);
+		var hasAccess = false;
+		for (j in userMenus) {
+			if (id.indexOf(userMenus[j].menuId) >= 0) {
+				hasAccess = true;
+				break;
 			}
 		}
+		if (!hasAccess) {
+			//FIXME IE7不支持此方法
+//			var node = items.indexOf(newItems[i]);
+			//菜单权限，先注释掉
+//			items.splice(node, 1);
+		}
+
 	}
 }
 

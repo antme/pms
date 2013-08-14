@@ -144,6 +144,16 @@ public class UserController extends AbstractController {
         responseWithData(null, request, response);
     }
     
+    @RequestMapping("/menu/get")
+    public void getMenuInfo(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(userService.getMenuInfo(parserJsonParameters(request,  false)), request, response);
+    }
+    
+    @RequestMapping("/menu/save")
+    public void saveMenuInfo(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(userService.saveMenuInfo(parserJsonParameters(request,  false)), request, response);
+    }
+    
     @RequestMapping("/mytasks")
     public void listMyTasks(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(userService.listMyTasks(), request, response);

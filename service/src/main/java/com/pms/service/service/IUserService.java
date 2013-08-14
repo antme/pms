@@ -1,5 +1,6 @@
 package com.pms.service.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public interface IUserService {
@@ -51,6 +52,10 @@ public interface IUserService {
     
     
     public Map<String, Object> listMyTasks();
+
+    public Map<String, Object> getMenuInfo(HashMap<String, Object> parameters);
+
+    public Map<String, Object> saveMenuInfo(HashMap<String, Object> parameters);
 
     
 }

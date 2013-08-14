@@ -1,5 +1,6 @@
 package com.pms.service.service.impl;
 
+import java.awt.MenuBar;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
+import com.pms.service.mockbean.MenuBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.RoleBean;
@@ -199,10 +201,18 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
         Map<String, Object> homeData = this.dao.list(query, DBBean.ROLE_ITEM);
+                
         homeData.put(UserBean.USER_NAME, ApiThreadLocal.getCurrentUserName());
         homeData.put(ApiConstants.MONGO_ID, userId);
-
         homeData.put("mytasks", listMyTasks());
+        
+        Map<String, Object> user = this.dao.findOne(ApiConstants.MONGO_ID, userId, new String[]{UserBean.GROUPS}, DBBean.USER);
+        Map<String, Object> menuQuery = new HashMap<String, Object>();
+        menuQuery.put(MenuBean.GROUPS, new DBQuery(DBQueryOpertion.IN, user.get(UserBean.GROUPS)));
+        menuQuery.put(ApiConstants.LIMIT_KEYS, MenuBean.MENUID);
+        
+        homeData.put("menus", this.dao.list(menuQuery, DBBean.MENU).get(ApiConstants.RESULTS_DATA));
+         
         return homeData;
     }
     
@@ -345,5 +355,21 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         }
         return user;
 	}
+	
+	 public Map<String, Object> getMenuInfo(HashMap<String, Object> parameters){
+	     
+	     return this.dao.findOne("menuId", parameters.get("menuId"), "menu");
+	 }
+	 
+    public Map<String, Object> saveMenuInfo(HashMap<String, Object> parameters) {
+        Map<String, Object> menu = this.dao.findOne("menuId", parameters.get("menuId"), "menu");
+        if (!ApiUtil.isEmpty(menu)) {
+            parameters.put(ApiConstants.MONGO_ID, menu.get(ApiConstants.MONGO_ID));
+            this.dao.updateById(parameters, "menu");
+        } else {
+            this.dao.add(parameters, "menu");
+        }
+        return null;
+    }
 
 }

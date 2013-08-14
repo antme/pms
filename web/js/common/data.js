@@ -13,6 +13,8 @@ var fromPage = undefined;
 //用户的权限，用来显示隐藏按钮，菜单等
 var userRoles = undefined;
 
+var userMenus = undefined;
+
 var user = {};
 
 var listUrl;
