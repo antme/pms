@@ -107,13 +107,6 @@ $(document).ready(function() {
 			template : function(dataItem) {
 				return '<a  onclick="openPMViewWindow(\'' + dataItem.pmId + '\');">' + dataItem.projectManager + '</a>';
 			}
-		}, {
-			field : "customer",
-			title : "客户名",
-			filterable : false,
-			template : function(dataItem) {
-				return '<a  onclick="openCustomerViewWindow(\'' + dataItem.cId + '\');">' + dataItem.customer + '</a>';
-			}
 		}]
 	});
 });//end dom ready	
