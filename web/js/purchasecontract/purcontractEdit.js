@@ -272,7 +272,7 @@ function addOrderInSCListForRuodian(){
 	}
 	tabStrip.append({
         text: "成本设备清单",
-        content: "<div><div><a href=\"/template/chengbenqingdan.xlsx\">数据模版下载</a> <input name=\"files\" id=\"files\" type=\"file\" /></div><div><div id=\"scEqCostList\"></div></div></div>"//kendo.template($("#roleTemplate").html()),
+        content: "<div><div><a href=\"/template/cbqd.xlsx\">数据模版下载</a> <input name=\"files\" id=\"files\" type=\"file\" /></div><div><div id=\"scEqCostList\"></div></div></div>"//kendo.template($("#roleTemplate").html()),
     });
 	
 	//成本设备清单
