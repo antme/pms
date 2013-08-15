@@ -129,7 +129,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         newObj.put(PurchaseBack.pbPlanDate, DateUtil.converUIDate(params.get(PurchaseBack.pbPlanDate)));
         newObj.put(PurchaseBack.scId, params.get(PurchaseBack.scId));
         if (params.get(PurchaseBack.pbCode) == null) {
-            newObj.put(PurchaseBack.pbCode, generateCode("BHSQ", DBBean.PURCHASE_BACK));
+            newObj.put(PurchaseBack.pbCode, generateCode("BHSQ", DBBean.PURCHASE_BACK, PurchaseBack.pbCode));
         }
         
         String status = String.valueOf(newObj.get(PurchaseBack.pbStatus));
@@ -184,7 +184,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
 		obj.put(PurchaseBack.paSubmitDate, DateUtil.getDateString(new Date()));
 		obj.put(PurchaseBack.paShelfCode, params.get(PurchaseBack.paShelfCode));
-		obj.put(PurchaseBack.paCode, generateCode("DBSQ", DBBean.PURCHASE_ALLOCATE));
+		obj.put(PurchaseBack.paCode, generateCode("DBSQ", DBBean.PURCHASE_ALLOCATE, PurchaseBack.paCode));
 		
 	    String comment = (String)params.get("tempComment");
 	    comment = recordComment("提交",comment,null);

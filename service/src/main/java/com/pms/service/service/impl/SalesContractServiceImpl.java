@@ -1077,27 +1077,40 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			ExcleUtil excleUtil = new ExcleUtil(inputStream);
 			List<String[]> list = excleUtil.getAllData(0);
 			List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
+			Map<String, Integer> keyMap = new HashMap<String, Integer>();
+			
+            if (list.get(0) != null) {
+                
+                //MAX 15 COLUMN
+                for (int i = 0; i < list.get(0).length; i++) {
+                    String key = list.get(0)[i].trim();
+                    if (!ApiUtil.isEmpty(key)) {
+                        keyMap.put(key, i);
+                    }
+                }
+            }
+			
 			for (int i=1; i<list.size(); i++){//硬编码从第9行开始读数据
 				Map<String, Object> eq = new HashMap<String, Object>();
 				String amount = list.get(i)[6].trim();
 				if (amount.length() == 0){//读到某一行数量为空时，认为清单数据结束
 					break;
 				}
-				eq.put(EqCostListBean.EQ_LIST_NO, list.get(i)[0].trim());
-				eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, list.get(i)[1].trim());
-				eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, list.get(i)[2].trim());
-				eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, list.get(i)[3].trim());
-				eq.put(EqCostListBean.EQ_LIST_BRAND, list.get(i)[4].trim());
-				eq.put(EqCostListBean.EQ_LIST_UNIT, list.get(i)[5].trim());
-				eq.put(EqCostListBean.EQ_LIST_AMOUNT, ApiUtil.getDouble(list.get(i)[6].trim()));
-				eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, list.get(i)[7].trim());
-				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[8].trim());
-				eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, list.get(i)[9].trim());
-				eq.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, list.get(i)[10].trim());
-				eq.put(EqCostListBean.EQ_LIST_CATEGORY, list.get(i)[11].trim());
-				eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, list.get(i)[12].trim());
-				eq.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, ApiUtil.getDouble(list.get(i)[13].trim()));
-				eq.put(EqCostListBean.EQ_LIST_MEMO, list.get(i)[14].trim());
+				eq.put(EqCostListBean.EQ_LIST_NO, list.get(i)[keyMap.get("No.")].trim());
+				eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, list.get(i)[keyMap.get("物料代码")].trim());
+				eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, list.get(i)[keyMap.get("产品名称")].trim());
+				eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, list.get(i)[keyMap.get("规格型号")].trim());
+				eq.put(EqCostListBean.EQ_LIST_BRAND, list.get(i)[keyMap.get("品牌")].trim());
+				eq.put(EqCostListBean.EQ_LIST_UNIT, list.get(i)[keyMap.get("单位")].trim());
+				eq.put(EqCostListBean.EQ_LIST_AMOUNT, ApiUtil.getDouble(list.get(i)[keyMap.get("数量")].trim()));
+				eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, list.get(i)[keyMap.get("销售单价")].trim());
+				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[keyMap.get("标准成本价")].trim());
+				eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, list.get(i)[keyMap.get("折扣率")].trim());
+				eq.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, list.get(i)[keyMap.get("最终成本单价")].trim());
+				eq.put(EqCostListBean.EQ_LIST_CATEGORY, list.get(i)[keyMap.get("物料类别")].trim());
+				eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, list.get(i)[keyMap.get("税收类型")].trim());
+				eq.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, ApiUtil.getDouble(list.get(i)[keyMap.get("小计")].trim()));
+				eq.put(EqCostListBean.EQ_LIST_MEMO, list.get(i)[keyMap.get("备注")].trim());
 				
 				eqList.add(eq);
 			}
@@ -1182,6 +1195,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}
 		
 		if (scCode.indexOf("-ADD") != -1){
+		    //FIXME: why 4?
 			scCode = scCode.substring(0, scCode.length()-4);
 		}
 		String scCodeNoString = scCode.substring(scCode.lastIndexOf("-")+1, scCode.length());

@@ -466,7 +466,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 request.setStatus(PurchaseRequest.STATUS_DRAFT);
             }
             request.setApprovedDate(null);
-            request.setPurchaseOrderCode(generateCode("CGDD", DBBean.PURCHASE_ORDER));
+            request.setPurchaseOrderCode(generateCode("CGDD", DBBean.PURCHASE_ORDER, PurchaseCommonBean.PURCHASE_ORDER_CODE));
             parameters = request.toMap();
 
         }
@@ -791,7 +791,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> pcrequest = new HashMap<String, Object>();
         
         if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
-            request.setPurchaseRequestCode(generateCode("CGSQ", DBBean.PURCHASE_REQUEST));
+            request.setPurchaseRequestCode(generateCode("CGSQ", DBBean.PURCHASE_REQUEST, PurchaseCommonBean.PURCHASE_REQUEST_CODE));
             pcrequest = request.toMap();
             adding = true;
         }else{
@@ -976,7 +976,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         
         if(parameters.get(ApiConstants.MONGO_ID) == null){
-            parameters.put("repositoryCode", generateCode("RKSQ", DBBean.REPOSITORY));
+            parameters.put("repositoryCode", generateCode("RKSQ", DBBean.REPOSITORY, "repositoryCode"));
         }
         
         parameters.put("totalIn", (int)total);

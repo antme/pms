@@ -587,9 +587,32 @@ public abstract class AbstractService {
     
     
     
-    public String generateCode(String prefix, String db) {
+    public String generateCode(String prefix, String db, String codeKey) {
         Map<String, Object> map = new HashMap<String, Object>();
-        return prefix + "-2013-" + (this.dao.count(map, db) + 1);
+        String[] limitKeys = { codeKey };
+        Map<String, Object> queryMap = new HashMap<String, Object>();
+        int year = DateUtil.getNowYearString();
+        Map<String, Object> re = dao.getLastRecordByCreatedOn(db, queryMap, limitKeys);
+        String code = null;
+        if (re != null) {
+            code = (String) re.get(codeKey);
+        }
+
+        String scCodeNoString = code.substring(code.lastIndexOf("-") + 1, code.length());
+        Integer scCodeNo = 0;
+        try {
+            scCodeNo = Integer.parseInt(scCodeNoString);
+        } catch (NumberFormatException e) {
+            // TODO Auto-generated catch block
+            // e.printStackTrace(); 旧数据会出异常，就pCodeNo=1 开始
+        }
+        scCodeNo = scCodeNo + 1;
+        String codeNum = "000" + scCodeNo;
+
+        codeNum = codeNum.substring(codeNum.length() - 4, codeNum.length());
+        String genCode = prefix + year + "-" + codeNum;
+
+        return genCode;
     }
 
 	public String recordComment(String action,String newComment,String oldComment){
