@@ -765,7 +765,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             customerQuery.put(ApiConstants.MONGO_ID, cId);
             Map<String, Object> customerData = dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
 
+            if(customerData!=null){
             project.put(ProjectBean.PROJECT_CUSTOMER, customerData.get(CustomerBean.NAME));
+            }
 
             params.put("customerName", project.get(ProjectBean.PROJECT_CUSTOMER));
             params.put("projectName", project.get("projectName"));
