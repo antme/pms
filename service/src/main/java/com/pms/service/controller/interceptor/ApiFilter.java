@@ -57,14 +57,16 @@ public class ApiFilter extends AbstractController implements Filter {
                     // do nothing
                     responseServerError(t, (HttpServletRequest) request, (HttpServletResponse) response);
                 } else {
-                    logger.error("Fatal error when user try to call API ", e);
+//                    logger.error("Fatal error when user try to call API ", e);
+                    e.printStackTrace();
                     responseServerError(e, (HttpServletRequest) request, (HttpServletResponse) response);
 
                 }
             } else if (e instanceof ApiLoginException) {
                 forceLogin((HttpServletRequest) request, (HttpServletResponse) response);
             } else {
-                logger.error("Fatal error when user try to call API ", e);
+//                logger.error("Fatal error when user try to call API ", e);
+                e.printStackTrace();
                 responseServerError(e, (HttpServletRequest) request, (HttpServletResponse) response);
             }
 
