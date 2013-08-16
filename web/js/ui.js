@@ -132,7 +132,7 @@ function loadPage(page, parameters, popupDiv) {
 		redirectParams = parameters;
 	}
 	
-	if(parameters == null){
+	if(parameters == null && !popupDiv){
 		popupParams = undefined;
 	}
 
