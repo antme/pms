@@ -276,7 +276,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             realItemQuery.put(SalesContractBean.SC_ID, cId);
             realItemQuery.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, item.get(EqCostListBean.EQ_LIST_MATERIAL_CODE));
             realItemQuery.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, item.get(EqCostListBean.EQ_LIST_PRODUCT_NAME));
-            realItemQuery.put(EqCostListBean.EQ_LIST_NO, item.get(EqCostListBean.EQ_LIST_NO));
             realItemQuery.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, item.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE));
             realItemQuery.put(EqCostListBean.EQ_LIST_UNIT, item.get(EqCostListBean.EQ_LIST_UNIT));
             realItemQuery.put(EqCostListBean.EQ_LIST_BRAND, item.get(EqCostListBean.EQ_LIST_BRAND));
@@ -370,10 +369,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(EqCostListBean.EQ_LIST_SC_ID, cId);
 		query.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
-		
-		Map<String,Object> order = new HashMap<String,Object>();
-		order.put(EqCostListBean.EQ_LIST_NO, ApiConstants.DB_QUERY_ORDER_BY_ASC);
-		query.put(ApiConstants.DB_QUERY_ORDER_BY, order);
 		
 		Map<String, Object> result = dao.list(query, DBBean.EQ_COST);
 		return result;

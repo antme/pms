@@ -721,9 +721,6 @@ function initMergedGrid(){
 		$("#merged-grid").kendoGrid({
 			dataSource : mergedDataSource,
 			columns : [ {
-				field : "eqcostNo",
-				title : "序号"
-			}, {
 				field : "eqcostMaterialCode",
 				title : "物料代码"
 			}, {
