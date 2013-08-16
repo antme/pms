@@ -79,6 +79,9 @@ $(document).ready(function() {
 			field : "runningStatus",
 			title : "执行状态"
 		}, {
+			field : "archiveStatus",
+			title : "归档状态"
+		}, {
 			field : "customer",
 			title : "客户名"
 		}, {
