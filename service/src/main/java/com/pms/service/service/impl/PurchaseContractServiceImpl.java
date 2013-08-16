@@ -1,5 +1,6 @@
 package com.pms.service.service.impl;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
 import com.pms.service.util.EmailUtil;
+import com.pms.service.util.ExcleUtil;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
 
@@ -1355,6 +1357,32 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         List<String> ids = new ArrayList<String>();
         ids.add(String.valueOf(params.get(ApiConstants.MONGO_ID)));
         dao.deleteByIds(ids, DBBean.GET_INVOICE);
+    }
+    
+    public Map<String, Object> importContractHistoryData(InputStream inputStream){
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ExcleUtil excleUtil = new ExcleUtil(inputStream);
+			List<String[]> list = excleUtil.getAllData(0);
+			for(int i=4; i<list.size(); i++){//从第5行开始读数据
+				String pCode = list.get(i)[2].trim();
+				if (ApiUtil.isEmpty(pCode)){
+					break;
+				}
+				
+				
+				
+				
+				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			result.put("status", 0);
+			throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
+		}
+		result.put("status", 1);
+		return result;
     }
 
     public IPurchaseService getBackService() {

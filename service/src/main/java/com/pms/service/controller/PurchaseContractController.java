@@ -1,12 +1,17 @@
 package com.pms.service.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.pms.service.annotation.LoginRequired;
 import com.pms.service.annotation.RoleValidConstants;
@@ -327,6 +332,24 @@ public class PurchaseContractController extends AbstractController {
     	pService.destroyGetInvoice(parserJsonParameters(request,  false));
     	responseWithData(new HashMap(), request, response);
     }    
+    
+    
+
+    @RequestMapping("/importpc")
+    //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
+    public void importContractHistoryData(HttpServletRequest request, HttpServletResponse response){
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;   
+        MultipartFile uploadFile = multipartRequest.getFile("scFile");        
+        Map<String,Object> result = new HashMap<String,Object>();
+        try {
+
+			result = pService.importContractHistoryData(uploadFile.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+    	responseWithData(result, request, response);
+    }  
     
     public IPurchaseContractService getpService() {
         return pService;

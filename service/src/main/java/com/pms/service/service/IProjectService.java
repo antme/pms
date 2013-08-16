@@ -26,6 +26,8 @@ public interface IProjectService {
 	
 	public String getCustomerNameByProId(String pId);
 	
+	
+	//FIXME: REMOVED? NOT USED?
 	public void importProjectAndSCData(Map<String, Object> params);
 	
 	public Map<String, Object> importProject(Map<String, Object> params);

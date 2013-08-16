@@ -501,7 +501,8 @@ $(document).ready(function() {
 
 			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
-			scrollable : true
+			scrollable : true,
+			sortable : true
 		});
 	}//成本设备清单_new
 	
@@ -615,7 +616,8 @@ function edit(data){
 				groupHeaderTemplate: "#= value # (物料数: #= count#)", 
 				footerTemplate: "总数: #=count#"
 			} ],
-			scrollable : true
+			scrollable : true,
+			sortable : true
 		});
 	}//成本设备清单_old
 
