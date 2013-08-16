@@ -58,38 +58,6 @@ var projectModel = kendo.data.Model.define({
 
 var pModel;
 
-var dataSource = new kendo.data.DataSource({
-	transport : {
-		read : {
-			url : "../service/project/list",
-			dataType : "jsonp"
-		},
-		update : {
-			url : "../service/project/update",
-			dataType : "jsonp",
-			method : "post"
-		},
-		create : {
-			url : "../service/project/add",
-			dataType : "jsonp",
-			method : "post"
-		},
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
-		}
-	},
-	
-	pageSize: 10,
-	batch : true,
-	
-	schema : {
-		model : projectModel
-	}
-});
 
 var pSCInfoDatasource = new kendo.data.DataSource({
 	schema: {
@@ -211,13 +179,11 @@ function saveProject(){
     	if (popupParams !=null && popupParams.scAddProject == 1){//创建销售合同时 创建项目
     		saveProjectInAddSC(pModel.toJSON());
 		}else{
-	    	dataSource.add(pModel);
-	    	dataSource.sync();
-			loadPage("project_projectList");
-		}
-    	
-    }
-	
+	    	postAjaxRequest("/service/project/add", pModel.toJSON(), function(data){
+				loadPage("project_projectList");
+	    	});
+		}    	
+    }	
 };
 
 function cancelAddProject(){

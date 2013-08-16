@@ -1207,7 +1207,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 //			e.printStackTrace();  旧数据会出异常，就pCodeNo=1 开始
 		}
 		scCodeNo = scCodeNo + 1;
-		String genCode = prefix+year+"-"+scCodeNo;
+		
+        String codeNum = "000" + scCodeNo;
+
+        codeNum = codeNum.substring(codeNum.length() - 4, codeNum.length());
+        
+		String genCode = prefix+year+"-"+codeNum;
 		
 		Map<String, Object> scQuery = new HashMap<String, Object>();
 		scQuery.put(SalesContractBean.SC_PROJECT_ID, pId);

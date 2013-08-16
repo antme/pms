@@ -186,6 +186,13 @@ public abstract class AbstractService {
 
     }
 
+    //助理
+    protected boolean isDepartmentAssistant() {
+
+        return inGroup(GroupBean.DEPARTMENT_ASSISTANT_VALUE);
+
+    }
+    
     
     //库管
     protected boolean isDepotManager() {
@@ -310,7 +317,7 @@ public abstract class AbstractService {
     protected void mergeDataRoleQueryWithProject(Map<String, Object> param) {
         Map<String, Object> pmQuery = new HashMap<String, Object>();
 
-        if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() ) {
+        if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() || isDepartmentAssistant()) {
             // query all data
         } else {
             pmQuery.put(ProjectBean.PROJECT_MANAGER, getCurrentUserId());
@@ -324,7 +331,7 @@ public abstract class AbstractService {
     protected void mergeDataRoleQueryWithProjectAndScType(Map<String, Object> param) {
         Map<String, Object> pmQuery = new HashMap<String, Object>();
 
-        if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() ) {
+        if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() || isDepartmentAssistant()) {
             // query all data
         } else {
             pmQuery.put(ProjectBean.PROJECT_MANAGER, getCurrentUserId());
@@ -597,14 +604,16 @@ public abstract class AbstractService {
         if (re != null) {
             code = (String) re.get(codeKey);
         }
-
-        String scCodeNoString = code.substring(code.lastIndexOf("-") + 1, code.length());
         Integer scCodeNo = 0;
-        try {
-            scCodeNo = Integer.parseInt(scCodeNoString);
-        } catch (NumberFormatException e) {
-            // TODO Auto-generated catch block
-            // e.printStackTrace(); 旧数据会出异常，就pCodeNo=1 开始
+
+        if (re != null) {
+            String scCodeNoString = code.substring(code.lastIndexOf("-") + 1, code.length());
+            try {
+                scCodeNo = Integer.parseInt(scCodeNoString);
+            } catch (NumberFormatException e) {
+                // TODO Auto-generated catch block
+                // e.printStackTrace(); 旧数据会出异常，就pCodeNo=1 开始
+            }
         }
         scCodeNo = scCodeNo + 1;
         String codeNum = "000" + scCodeNo;

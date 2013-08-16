@@ -455,7 +455,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		}
 		
 		pCodeNo = pCodeNo + 1;
-		return prefix+year+"-"+pCodeNo;
+		
+        String codeNum = "000" + pCodeNo;
+
+        codeNum = codeNum.substring(codeNum.length() - 4, codeNum.length());
+        
+		return prefix+year+"-"+codeNum;
 	}
 
 	@Override
