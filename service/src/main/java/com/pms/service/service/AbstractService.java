@@ -619,7 +619,7 @@ public abstract class AbstractService {
         String codeNum = "000" + scCodeNo;
 
         codeNum = codeNum.substring(codeNum.length() - 4, codeNum.length());
-        String genCode = prefix + year + "-" + codeNum;
+        String genCode = prefix + "-" + year + "-" + codeNum;
 
         return genCode;
     }

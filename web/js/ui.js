@@ -126,11 +126,14 @@ function loadPage(page, parameters, popupDiv) {
 		$(".k-window").hide();
 		$(".k-overlay").hide();
 	}
-	
 	if(!popupDiv){
 		fromPage = redirecPage;
 		redirecPage = page;
 		redirectParams = parameters;
+	}
+	
+	if(parameters == null){
+		popupParams = undefined;
 	}
 
 	var uid = kendo.guid();
