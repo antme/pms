@@ -45,38 +45,6 @@ var scModel = kendo.data.Model.define({
 
 var scm;
 
-var dataSource_SC = new kendo.data.DataSource({
-	transport : {
-		read : {
-			url : "../service/sc/list",
-			dataType : "jsonp"
-		},
-		update : {
-			url : "../service/sc/update",
-			dataType : "jsonp",
-			method : "post"
-		},
-		create : {
-			url : "../service/sc/add",
-			dataType : "jsonp",	
-			method : "post"
-		},
-
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
-		}
-	},
-	pageSize: 10,
-	batch : true,
-	
-	schema : {
-		model : scModel
-	}
-});
 
 //成本设备清单数据源
 var eqCostListDataSource = new kendo.data.DataSource({
@@ -434,9 +402,9 @@ function saveSC(){
 		scm.set("estimateGrossProfit", profit);
 		scm.set("estimateGrossProfitRate", profitRate);
 		scm.set("totalEstimateCost", totalEstimate);
-		dataSource_SC.add(scm);
-		dataSource_SC.sync();
-		loadPage("salescontract_scList");
+		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
+			loadPage("salescontract_scList");
+    	});
     }
 };
 

@@ -194,38 +194,7 @@ var monthShipmentsSource = new kendo.data.DataSource({
 		model : scMonthShipmentsModel
 	}
 });
-var dataSource = new kendo.data.DataSource({
-	transport : {
-		read : {
-			url : "../service/sc/list",
-			dataType : "jsonp"
-		},
-		update : {
-			url : "../service/sc/update",
-			dataType : "jsonp",
-			method : "post"
-		},
-		create : {
-			url : "../service/sc/add",
-			dataType : "jsonp",
-			method : "post"
-		},
 
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
-		}
-	},
-	pageSize: 10,
-	batch : true,
-	
-	schema : {
-		model : scModel
-	}
-});
 
 var projectItems = new kendo.data.DataSource({
 	transport : {
@@ -767,9 +736,10 @@ function saveSC(){
 		scm.set("estimateGrossProfitRate", profitRate);
 		scm.set("totalEstimateCost", totalEstimate);
 		
-		dataSource.add(scm);
-		dataSource.sync();
-		loadPage("salescontract_scList");
+		postAjaxRequest("/service/sc/add",  {models:kendo.stringify(scm)}, function(data){
+			loadPage("salescontract_scList");
+    	});
+
 	}
 };
 
