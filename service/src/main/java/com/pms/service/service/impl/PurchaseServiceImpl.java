@@ -624,7 +624,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         Map<String, Object> backQuery = new HashMap<String, Object>();
         backQuery.put(PurchaseBack.scId, scId);
         List<String> sl = new ArrayList<String>();
-        sl.add(PurchaseStatus.submited.toString());
+//        sl.add(PurchaseStatus.submited.toString());
         sl.add(PurchaseStatus.approved.toString());
         backQuery.put(PurchaseBack.pbStatus, new DBQuery(DBQueryOpertion.IN, sl)); 
         Map<String, Integer> backEqCountMap = countEqByKey(backQuery, DBBean.PURCHASE_BACK, PurchaseBack.pbTotalCount, null);
