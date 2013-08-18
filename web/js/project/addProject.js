@@ -165,8 +165,16 @@ function popView(data){
 function edit(data){
 	pModel = new projectModel(data);
 	kendo.bind($("#addProject"), pModel);
+
+	$("#projectCode").attr("disabled",true);
+	$("#projectName").attr("disabled",true);
+	$("#projectAbbr").attr("disabled",true);
 	var pTypeList = $("#projectType").data("kendoDropDownList");
 	pTypeList.enable(false);
+	var pManager = $("#projectManager").data("kendoDropDownList");
+	pManager.enable(false);
+	var pStatus = $("#projectStatus").data("kendoDropDownList");
+	pStatus.enable(false);
 	
 	//$("#projectCode").attr("disabled",true);
 }
@@ -179,6 +187,13 @@ function saveProject(){
     	if (popupParams !=null && popupParams.scAddProject == 1){//创建销售合同时 创建项目
     		saveProjectInAddSC(pModel.toJSON());
 		}else{
+			var proType = pModel.projectType;
+			var proAbbr = pModel.projectAbbr.trim();
+			console.log("***********"+proAbbr);
+			if ("工程"==proType && (proAbbr==null || proAbbr.length==0)){
+				alert("工程类项目缩写不能为空！");
+				return;
+			}
 	    	postAjaxRequest("/service/project/add", pModel.toJSON(), function(data){
 				loadPage("project_projectList");
 	    	});
