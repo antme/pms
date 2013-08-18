@@ -211,6 +211,10 @@ function edit(data) {
 
 	requestDataItem = new model(requestDataItem);
 
+	if(!requestDataItem.requestedDate){
+		requestDataItem.requestedDate = new Date();
+	}
+	
 	
 	setDate(requestDataItem, "pbPlanDate", requestDataItem.pbPlanDate);
 	setDate(requestDataItem, "requestedDate", requestDataItem.requestedDate);

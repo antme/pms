@@ -47,6 +47,15 @@ var model = kendo.data.Model.define({
 			type : "number",
 			editable : false
 		},
+		eqcostSalesBasePrice : {
+			editable : false
+		},
+		eqcostDiscountRate : {
+			editable : false
+		},
+		eqcostLastBasePrice : {
+			editable : false
+		},
 		eqcostProductName : {
 			editable : false
 		},
