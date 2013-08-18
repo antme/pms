@@ -73,6 +73,23 @@ function checkStatus(data) {
 
 
 
+var orderFields = {
+	eqcostApplyAmount : {
+		editable : false,
+		type : "number"
+	}
+
+}
+orderFields =  $.extend( commonFileds, orderFields);
+
+
+//编辑页面的model对象
+//抽象model对象， datasource对象必须绑定一个model为了方便解析parameterMap中需要提交的参数
+var orderModel = kendo.data.Model.define({
+	id : "_id",
+	fields : orderFields
+});
+
 //编辑页面数据同步对象
 var itemDataSource = new kendo.data.DataSource({
 	transport : {
@@ -98,7 +115,7 @@ var itemDataSource = new kendo.data.DataSource({
 	},
 	batch : true,
 	schema : {
-		model : model
+		model : orderModel
 	}
 });
 
@@ -243,9 +260,6 @@ function edit(data) {
 								template : function(dataItem){
 									return '<span class="edit-tip">' + dataItem.eqcostProductUnitPrice + '</span>';
 								}
-							}, {
-								field : "requestedTotalMoney",
-								title : "采购总价"
 							},{
 								field : "eqcostBrand",
 								title : "品牌"
@@ -253,9 +267,9 @@ function edit(data) {
 								field : "remark",
 								title : "备注"
 							}, {
-								field : "differenceAmount",
-								title : "金额差值"
-							} ],
+								field : "requestedTotalMoney",
+								title : "采购总价"
+							}],
 
 							editable : true,
 							scrollable : true,
@@ -316,16 +330,12 @@ function edit(data) {
 										item.eqcostProductUnitPrice = 0;
 									}
 
-									if (!item.differenceAmount) {
-										item.differenceAmount = 0;
-									}
 
 									if (!item.eqcostBasePrice) {
 										item.eqcostBasePrice = 0;
 									}
 									
 									var requestedTotalMoney = item.requestedTotalMoney;
-									var itemDifferenceAmount = item.differenceAmount;
 
 									// 计算总的申请数量
 									total = total + item.eqcostApplyAmount;
@@ -344,13 +354,8 @@ function edit(data) {
 									item.eqcostContractTotalMoney = item.eqcostRealAmount
 											* item.eqcostBasePrice;
 
-									item.differenceAmount = item.eqcostApplyAmount
-											* item.eqcostProductUnitPrice
-											- item.eqcostRealAmount
-											* item.eqcostBasePrice;
 
-									if ( requestedTotalMoney != item.requestedTotalMoney
-											|| itemDifferenceAmount != item.differenceAmount) {
+									if ( requestedTotalMoney != item.requestedTotalMoney) {
 										refresh = true;
 									}
 

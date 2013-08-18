@@ -7,11 +7,7 @@ var listUrl;
 //声明一个总的对象用来传递数据
 var requestDataItem = undefined;
 
-//编辑页面的model对象
-//抽象model对象， datasource对象必须绑定一个model为了方便解析parameterMap中需要提交的参数
-var model = kendo.data.Model.define({
-	id : "_id",
-	fields : {
+var commonFileds = {
 		eqcostAvailableAmount : {
 			type : "number"
 		},
@@ -40,10 +36,6 @@ var model = kendo.data.Model.define({
 			editable : false
 		},
 		eqcostContractTotalMoney : {
-			type : "number",
-			editable : false
-		},
-		differenceAmount : {
 			type : "number",
 			editable : false
 		},
@@ -104,7 +96,13 @@ var model = kendo.data.Model.define({
 		purchaseType : {
 			
 		}
-	}
+	};
+
+//编辑页面的model对象
+//抽象model对象， datasource对象必须绑定一个model为了方便解析parameterMap中需要提交的参数
+var model = kendo.data.Model.define({
+	id : "_id",
+	fields : commonFileds
 });
 
 

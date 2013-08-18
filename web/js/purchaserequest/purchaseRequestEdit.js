@@ -332,16 +332,11 @@ function edit(data) {
 									}
 
 
-									if (!item.differenceAmount) {
-										item.differenceAmount = 0;
-									}
-
 									if (!item.eqcostBasePrice) {
 										item.eqcostBasePrice = 0;
 									}
 									
 									var requestedTotalMoney = item.requestedTotalMoney;
-									var itemDifferenceAmount = item.differenceAmount;
 
 									// 计算总的申请数量
 									total = total + item.eqcostApplyAmount;
@@ -360,13 +355,9 @@ function edit(data) {
 									item.eqcostContractTotalMoney = item.eqcostRealAmount
 											* item.eqcostBasePrice;
 
-									item.differenceAmount = item.eqcostApplyAmount
-											* item.eqcostBasePrice
-											- item.eqcostRealAmount
-											* item.eqcostBasePrice;
 
-									if ( requestedTotalMoney != item.requestedTotalMoney
-											|| itemDifferenceAmount != item.differenceAmount) {
+
+									if ( requestedTotalMoney != item.requestedTotalMoney) {
 										refresh = true;
 									}
 
