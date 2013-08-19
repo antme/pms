@@ -1100,7 +1100,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				eq.put(EqCostListBean.EQ_LIST_AMOUNT, ApiUtil.getDouble(list.get(i)[keyMap.get("数量")].trim()));
 				eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, list.get(i)[keyMap.get("销售单价")].trim());
 				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[keyMap.get("标准成本价")].trim());
-				eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, list.get(i)[keyMap.get("折扣率")].trim());
+				
+				float dr = Float.parseFloat(String.valueOf(list.get(i)[keyMap.get("折扣率")].trim()));
+				
+				eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, dr*100);
 				eq.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, list.get(i)[keyMap.get("最终成本单价")].trim());
 				eq.put(EqCostListBean.EQ_LIST_CATEGORY, list.get(i)[keyMap.get("物料类别")].trim());
 				eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, list.get(i)[keyMap.get("税收类型")].trim());
@@ -1276,7 +1279,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				scMap.put(SalesContractBean.SC_INVOICE_TYPE, SalesContractBean.SC_INVOICE_TYPE_1);//发票类型
 				
 				Map<String, Object> customerQuery = new HashMap<String, Object>();
-				customerQuery.put(CustomerBean.NAME, list.get(i)[7].trim());
+				customerQuery.put(CustomerBean.NAME, list.get(i)[7].trim());  //客户名称
 				Map<String, Object> customerMap = customerService.importCustomer(customerQuery);
 				String customerId = (String) customerMap.get(ApiConstants.MONGO_ID);
 				scMap.put(SalesContractBean.SC_CUSTOMER, customerId);//客户
@@ -1291,11 +1294,18 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					projectType = ProjectBean.PROJECT_TYPE_PRODUCT;
 				}
 				
+				String yulixiang = list.get(i)[8].trim();
+				String lxType = ProjectBean.PROJECT_STATUS_OFFICIAL;
+				if (yulixiang != null && yulixiang.length() != 0){
+					lxType = yulixiang;
+				}
 				Map<String, Object> importProject = new HashMap<String, Object>();
 				importProject.put(ProjectBean.PROJECT_MANAGER, pmId);
 				importProject.put(ProjectBean.PROJECT_TYPE, projectType);
 				importProject.put(ProjectBean.PROJECT_NAME, list.get(i)[9].trim());
 				importProject.put(ProjectBean.PROJECT_CUSTOMER, customerId);
+				
+				importProject.put(ProjectBean.PROJECT_STATUS, lxType);
 				
 				Map<String, Object> pro = projectService.importProject(importProject);
 				String projectId = (String) pro.get(ApiConstants.MONGO_ID);
