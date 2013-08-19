@@ -177,6 +177,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			
 			
 			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			p.put("cId", customerId);
 			Map<String, Object> customerInfo = (Map<String, Object>) cusData.get(customerId);
 			if(ApiUtil.isEmpty(pmInfo)){
 				p.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
