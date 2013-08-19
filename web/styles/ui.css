@@ -2,6 +2,10 @@ body {
 	/* background-color: #f6f6f6; */
 }
 
+.k-textarea {
+	height: 50px;
+	width: 450px;
+}
 
 .k-content h3{
 	margin-top: 0px;
