@@ -20,6 +20,7 @@ var ship = kendo.data.Model.define( {
     	deliveryRequirements: {},
     	otherDeliveryRequirements: {},
     	eqcostList: {},
+    	shipType: {},
     	status :{
     		
     	}
@@ -356,20 +357,54 @@ function loadEqList(data){
 		
 	}
 	
+	var shipType = new kendo.data.DataSource({
+
+	});
+	
 	if(supplierlist.length >0){
+		shipType.add({ text: "直发" });
 		$("#supplier-ship").show();
 	}else{
 		$("#supplier-ship").hide();
 	}
 	if(rKlist.length >0){
+		shipType.add({ text: "采购" });
 		$("#repo-ship").show();
 	}else{
 		$("#repo-ship").hide();
 	}
 	if(alloList.length >0){
+		shipType.add({ text: "库存" });
 		$("#allocat-ship").show();
 	}else{
 		$("#allocat-ship").hide();
+	}
+	
+	if (shipType.data().length > 0) {
+		$("#shipType").kendoDropDownList({
+	        dataTextField: "text",
+	        dataValueField: "text",
+	        dataSource: shipType,
+	        change: function(e) {
+	        	var dataItem = this.dataItem();
+	        	if (dataItem.text == "库存") {
+	        		$("#supplier-ship").hide();
+					$("#repo-ship").hide();
+					$("#allocat-ship").show();
+				} else if (dataItem.text == "直发") {
+					$("#supplier-ship").show();
+					$("#repo-ship").hide();
+					$("#allocat-ship").hide();
+				} else if (dataItem.text == "采购") {
+					$("#supplier-ship").hide();
+					$("#repo-ship").show();
+					$("#allocat-ship").hide();
+				}
+	        }
+	    });
+		$("#ship-type").show();
+	}else{
+		$("#ship-type").hide();
 	}
 
 	allocatDataSource.data(alloList);
@@ -383,17 +418,15 @@ function saveShip() {
 		alert("验证不通过，请检查表单");
 	} else {
 		allShipDataSource.data([]);
-		var data = allocatDataSource.data();
-		for(i=0; i<data.length; i++){
-			allShipDataSource.add(data[i]);
-		}
-		data = supplierShipDataSource.data();
-
-		for(i=0; i<data.length; i++){
-			allShipDataSource.add(data[i]);
+		
+		if (model.shipType == "库存") {
+			var data = allocatDataSource.data();
+		} else if (model.shipType == "采购") {
+			var data = eqDataSource.data();
+		} else if (model.shipType == "直发") {
+			var data = supplierShipDataSource.data();
 		}
 		
-		data = eqDataSource.data();
 		for(i=0; i<data.length; i++){
 			allShipDataSource.add(data[i]);
 		}
