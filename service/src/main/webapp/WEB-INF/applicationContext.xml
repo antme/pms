@@ -81,6 +81,7 @@
         <property name="scs" ref="salesContractService"></property>
         <property name="supplierService" ref="supplierService"></property>
         <property name="arriveService" ref="arrivalNoticeService"></property>
+        <property name="projectService" ref="projectService"></property>
     </bean>
     
     <bean name="allocateService" class="com.pms.service.service.impl.AllocateServiceImpl"

@@ -49,8 +49,8 @@ $(document).ready(function() {
 			field : "signDate",
 			title : "签署时间"
 		}, {
-			field : "requestedTotalMoney",
-			title : "金额"
+			field : "contractMoney",
+			title : "合同金额"
 		}, {
 			field : "eqcostDeliveryType",
 			title : "货物递送方式"

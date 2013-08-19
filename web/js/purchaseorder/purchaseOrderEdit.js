@@ -29,6 +29,7 @@ $(document).ready(function() {
 	}else if (redirectParams) {
 		$("#purchase-request-select").hide();
 		$("#purchaseorder-edit-item").show();
+
 		postAjaxRequest(editUrl, redirectParams, edit);
 	} else {
 		$("#purchase-request-select").show();
@@ -202,7 +203,17 @@ function edit(data) {
 		$("#purchase-request-select").hide();
 		requestDataItem = data;
 	}
-
+	
+	if(!popupParams){
+		if(redirectParams && redirectParams.pageId){
+			$(".save").hide();
+			$(".approve").show();
+		}else{
+			$(".approve").hide();
+			$(".save").show();
+		}
+	}
+	
 	requestDataItem = new model(requestDataItem);
 
 	// 渲染成本编辑列表

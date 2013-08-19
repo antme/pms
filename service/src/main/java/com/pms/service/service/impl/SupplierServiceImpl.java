@@ -1,18 +1,20 @@
 package com.pms.service.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.pms.service.mockbean.ApiConstants;
-import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.SupplierBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ISupplierService;
 
 public class SupplierServiceImpl extends AbstractService implements ISupplierService {
 
-	@Override
+
+    @Override
 	public String geValidatorFileName() {
 		return "supplier";
 	}
@@ -31,14 +33,17 @@ public class SupplierServiceImpl extends AbstractService implements ISupplierSer
 		dao.deleteByIds(ids, DBBean.SUPPLIER);
 	}
 
-	public Map<String, Object> create(Map<String, Object> params) {
-		return dao.add(params, DBBean.SUPPLIER);
-	}
+    public Map<String, Object> create(Map<String, Object> params) {
+        params.put(SupplierBean.SUPPLIER_CODE, generateCode("GYS", DBBean.SUPPLIER, SupplierBean.SUPPLIER_CODE));
+        return dao.add(params, DBBean.SUPPLIER);
+    }
 	
-    public Map<String, Object> importSupplier(Map<String, Object> params) {
-        Map<String, Object> supplier = dao.findOne("supplierName", params.get("supplierName"), DBBean.SUPPLIER);
+    public Map<String, Object> importSupplier(String supplierName) {
+        Map<String, Object> supplier = dao.findOne(SupplierBean.SUPPLIER_NAME, supplierName, DBBean.SUPPLIER);
         if (supplier == null) {
-            supplier = dao.add(supplier, DBBean.SUPPLIER);
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put(SupplierBean.SUPPLIER_NAME, supplierName);
+            supplier = create(map);
         }
         return supplier;
     }

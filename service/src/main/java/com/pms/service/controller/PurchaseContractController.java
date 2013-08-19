@@ -339,10 +339,9 @@ public class PurchaseContractController extends AbstractController {
     //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
     public void importContractHistoryData(HttpServletRequest request, HttpServletResponse response){
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;   
-        MultipartFile uploadFile = multipartRequest.getFile("scFile");        
+        MultipartFile uploadFile = multipartRequest.getFile("pcFile");        
         Map<String,Object> result = new HashMap<String,Object>();
         try {
-
 			result = pService.importContractHistoryData(uploadFile.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();

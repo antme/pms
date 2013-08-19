@@ -1,7 +1,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript" src="js/common/purchaseCommon.js"></script>
 <script type="text/javascript" src="js/purchasecontract/purcontractEdit.js"></script>
+<style>
+    
+.k-edit-form-container {
+    width: 100%;
+}
 
+.k-edit-label {
+    padding-right: 1%;
+    width: 10%;
+}
+
+.k-edit-field {
+    width: 20%;
+}
+</style>
 
 <div id="purchasecontract-edit" class="k-content">
 	<div class="k-edit-field " id="purchasecontractselect"
@@ -78,28 +92,26 @@
 								id="signBy" required="required" data-bind="value: signBy">
 						</div>
 
-                        <div id="supplierSelect">
-						<div class="k-edit-label ">
+						<div class="k-edit-label supplierSelect">
 							<label for="supplierName">供应商名称</label>
 						</div>
-						<div data-container-for="supplier" class="k-edit-field ">
+						<div data-container-for="supplier" class="k-edit-field supplierSelect">
 							<input type="text" name="supplier" id="supplier"
-								data-bind="value: supplier">
+									data-bind="value: supplier">
 						</div>
 	
-                        </div>
+                       
                         
-                      <div id="supplierBJ" style="display:none;">
-                        <div class="k-edit-label ">
+                        <div class="k-edit-label supplierBJ">
                             <label for="supplierName">供应商名称</label>
                         </div>
-                        <div data-container-for="supplierNamebj" class="k-edit-field ">
+                        <div data-container-for="supplierNamebj" class="k-edit-field supplierBJ">
                  
                               <input type="text" name="supplierNamebj" id="supplierNamebj"
                                 data-bind="value: supplierNamebj" >
                         </div>
     
-                        </div>
+                   
                         
 						<div class="k-edit-label ">
 							<label for="supplierNameContact">供应商联系人</label>
@@ -147,6 +159,14 @@
 
 						</div>
 
+                        <div class="k-edit-label ">
+                            <label for="contractPaymentType">付款方式</label>
+                        </div>
+                        <div data-container-for="contractPaymentType" class="k-edit-field ">
+                            <input type="number" class="k-input k-textbox" name="contractPaymentType"
+                                id="contractPaymentType" required="required" data-bind="value: contractPaymentType">
+                        </div>
+                        
 						<div class="k-edit-label ">
 							<label for="firstPay">首付</label>
 						</div>
@@ -173,13 +193,13 @@
 						</div>
 
 						<div class="k-edit-label ">
-							<label for="requestedTotalMoney">合同金额</label>
+							<label for="contractMoney">合同金额</label>
 						</div>
-						<div data-container-for="requestedTotalMoney"
+						<div data-container-for="contractMoney"
 							class="k-edit-field ">
 							<input type="number" class="k-input k-textbox"
-								name="requestedTotalMoney" id="requestedTotalMoney"
-								required="required" data-bind="value: requestedTotalMoney">
+								name="contractMoney" id="contractMoney"
+								required="required" data-bind="value: contractMoney">
 						</div>
 
 						<div class="k-edit-label ">

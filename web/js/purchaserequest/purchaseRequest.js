@@ -129,7 +129,7 @@ function approveRe() {
 		if(row.status == "中止申请中" || row.status == "审批中"){
 			loadPage("purchasecontract_purchaseRequestEdit", {
 				_id : row._id,
-				page: "approve"
+				pageId: "approve"
 			});
 		}else{
 			alert('只能审批 "中止申请中" 或则  "审批中" 中的状态');

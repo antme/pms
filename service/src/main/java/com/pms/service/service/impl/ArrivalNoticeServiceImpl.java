@@ -15,6 +15,7 @@ import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
+import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
@@ -266,11 +267,11 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 				eq.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, map.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
 				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID));
 				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
-				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));
+				eq.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, map.get(PurchaseContract.PURCHASE_CONTRACT_TYPE));
 				eq.put(PurchaseCommonBean.PURCHASE_ORDER_ID, map.get(PurchaseCommonBean.PURCHASE_ORDER_ID));
 				eq.put(PurchaseCommonBean.PURCHASE_ORDER_CODE, map.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
                 eq.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, map.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));  
-				eq.put(PurchaseContractServiceImpl.SUPPLIER, map.get(PurchaseContractServiceImpl.SUPPLIER));
+				eq.put(PurchaseContract.SUPPLIER, map.get(PurchaseContract.SUPPLIER));
 				
 				arrivalEqList.add(eq);
 			}

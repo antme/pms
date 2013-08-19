@@ -222,6 +222,7 @@ public class PurchaseCommonBean extends BaseEntity {
     
     public static final String STATUS_ORDER_LOCKED = "已锁定";
     public static final String STATUS_ORDER_FINISHED = "采购完毕";
+    public static final String STATUS_COMPLETED = "执行完毕";
     
     //物流类型
     public static final String LOGISTICS_TYPE_VALUE_DIRECTY = "直发"; 
@@ -238,7 +239,6 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String PURCHASE_ORDER_ID = "purchaseOrderId";
     public static final String PURCHASE_CONTRACT_ID = "purchaseContractId";
     public static final String PURCHASE_CONTRACT_CODE = "purchaseContractCode";
-    public static final String PURCHASE_CONTRACT_TYPE = "purchaseContractType";
     
     
     
@@ -262,4 +262,8 @@ public class PurchaseCommonBean extends BaseEntity {
 
     
     public static final String EQCOST_PRODUCT_UNIT_PRICE = "eqcostProductUnitPrice";
+    
+    public static final String DESCRIPTION = "description";
+    public static final String REMARK = "remark";
+    
 }

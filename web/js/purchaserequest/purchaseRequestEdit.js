@@ -51,7 +51,7 @@ var sumDataSource = new kendo.data.DataSource({
 $(document).ready(function() {
 	checkRoles();
 	
-	if(redirectParams && redirectParams.page && redirectParams.page=="approve"){
+	if(redirectParams && redirectParams.pageId && redirectParams.pageId=="approve"){
 		$("#save-button").hide();
 		$("#submit-button").hide();
 		$("#approve-button").show();
@@ -405,7 +405,7 @@ function edit(data) {
 						});
 	}
 	
-	if(redirectParams && redirectParams.page && redirectParams.page=="approve"){
+	if(redirectParams && redirectParams.pageId && redirectParams.pageId=="approve"){
 		disableAllInPoppup();
 	}
 	
@@ -473,7 +473,7 @@ function reject(){
 }
 
 function cancel(){
-	if(redirectParams && redirectParams.page && redirectParams.page=="approve"){
+	if(redirectParams && redirectParams.pageId && redirectParams.pageId=="approve"){
 		loadPage("purchasecontract_purchaseRequestApprove");
 	}else{
 		loadPage("purchasecontract_purchaseRequest");

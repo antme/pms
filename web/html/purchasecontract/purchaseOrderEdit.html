@@ -2,22 +2,25 @@
 <html>
 <head>
 <style>
-
-label{
-   margin-left: 5px;
-   
+label {
+	margin-left: 5px;
 }
 
-
-#purchaseorder-edit-header{
-    margin-bottom: 10px;
+.save {
+	display: none;
 }
 
-
-#purchaseorder-edit-header span{
-    font-weight: bold;
+.approve {
+	display: none;
 }
 
+#purchaseorder-edit-header {
+	margin-bottom: 10px;
+}
+
+#purchaseorder-edit-header span {
+	font-weight: bold;
+}
 </style>
 
 <script type="text/javascript" src="js/common/purchaseCommon.js"></script>
@@ -76,8 +79,10 @@ label{
             <div style="width:400px; margin-top:50px;">
                 <div id="purchaseorder-sum-grid"></div>
                 <div>
-                    <button onclick="saveOrder();">保存</button>
-                    <button onclick="saveOrder('已提交');">提交申请</button>
+                    <button onclick="saveOrder();" class="save">保存</button>
+                    <button onclick="saveOrder('已提交');"  class="save">提交申请</button>
+                    <button onclick="approveOrder();" class="approve">批准</button>
+                    <button onclick="rejectOrder();" class="approve">拒绝</button>
                     <button onclick="cancel();">取消</button>
                 </div>
             </div>

@@ -15,7 +15,9 @@ import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GetInvoiceBean;
 import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.SalesContractBean;
+import com.pms.service.mockbean.SupplierBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IReportService;
 import com.pms.service.util.ApiUtil;
@@ -49,9 +51,9 @@ public class ReportServiceImpl extends AbstractService implements IReportService
 			item.put("signDate", row[3]);// 签订日期
 			item.put("goodType", row[4]);// 产品类型
 	
-			item.put("supplierName", row[5]);// 供应商名称
+			item.put(SupplierBean.SUPPLIER_NAME, row[5]);// 供应商名称
 			item.put("supplierNameContact", row[6]);// 联系人名称
-			item.put("supplier", getSupplierId(row[5], row[6]));
+			item.put(PurchaseContract.SUPPLIER, getSupplierId(row[5], row[6]));
 	
 			item.put("salesContractCode", row[7]);// 销售合同编号
 			item.put("salesContractId", getSalesContactId(row[7]));
@@ -132,7 +134,7 @@ public class ReportServiceImpl extends AbstractService implements IReportService
 	}
 
 	private String getSupplierId(String supplierName, String supplierContact){
-		Map<String,Object> obj = dao.findOne("supplierName", supplierName, DBBean.SUPPLIER);
+		Map<String,Object> obj = dao.findOne(SupplierBean.SUPPLIER_NAME, supplierName, DBBean.SUPPLIER);
 		if(obj == null){
 			return "testid";
 		}
@@ -146,29 +148,5 @@ public class ReportServiceImpl extends AbstractService implements IReportService
 		}
 		return (String) obj.get(ApiConstants.MONGO_ID);
 	}	
-	
-/*	private Map<String,Object> getProjectNameAndId(){
-		Map<String,Object> result = new HashMap<String,Object>();
-		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME});
-		Map<String,Object> map = dao.list(query, DBBean.PROJECT);
-		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
-		for(Map<String,Object> obj : list){
-			result.put(String.valueOf(obj.get(ProjectBean.PROJECT_NAME)),obj.get(ApiConstants.MONGO_ID));
-		}
-		return result;
-	}
-	
-	private Map<String,Object> getSupplierNameAndId(){
-		Map<String,Object> result = new HashMap<String,Object>();
-		Map<String,Object> query = new HashMap<String,Object>();
-		query.put(ApiConstants.LIMIT_KEYS, new String[]{"supplierName"});
-		Map<String,Object> map = dao.list(query, DBBean.SUPPLIER);
-		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
-		for(Map<String,Object> obj : list){
-			result.put(String.valueOf("supplierName"),obj.get(ApiConstants.MONGO_ID));
-		}
-		return result;
-	}	
-	*/
+
 }

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
@@ -19,6 +18,7 @@ import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
+import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.ShipCountBean;
@@ -214,7 +214,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Object> shipMap = new HashMap<String, Object>();
         Set<String> contractIds = new HashSet<String>();
         for (Map<String, Object> eq : eqMapList) {
-            if (eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE) != null && eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE).toString().equalsIgnoreCase(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
+            if (eq.get(PurchaseContract.PURCHASE_CONTRACT_TYPE) != null && eq.get(PurchaseContract.PURCHASE_CONTRACT_TYPE).toString().equalsIgnoreCase(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
                 if (eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID) != null) {
                     contractIds.add(eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID).toString());
                     shipMap.put(eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID).toString(), eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
@@ -305,7 +305,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         }
 
         String date = (String) shipCount.get(ShipCountBean.SHIP_COUNT_DATE);
-        String cate = (String) shipCount.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE);
+        String cate = (String) shipCount.get(PurchaseContract.PURCHASE_CONTRACT_TYPE);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
         Date countDate = null;
@@ -331,7 +331,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Object[] dateQuery = { startDate, endDate };
         shipQuery.put(ShipBean.SHIP_DELIVERY_START_DATE, new DBQuery(DBQueryOpertion.BETWEEN_AND, dateQuery));
         // 三类虚拟采购合同
-        shipQuery.put(SalesContractBean.SC_EQ_LIST + "." + PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, cate);
+        shipQuery.put(SalesContractBean.SC_EQ_LIST + "." + PurchaseContract.PURCHASE_CONTRACT_TYPE, cate);
         // 申请状态
         List<String> statusList = new ArrayList<String>();
         statusList.add(ShipBean.SHIP_STATUS_APPROVE);
@@ -420,7 +420,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
      
         
         Map<String, Object> nextShipCount = new HashMap<String, Object>();
-        nextShipCount.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, shipCount.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));
+        nextShipCount.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, shipCount.get(PurchaseContract.PURCHASE_CONTRACT_TYPE));
         nextShipCount.put(ShipCountBean.SHIP_COUNT_DATE, sdf.format(startDate));
         nextShipCount.put(ShipCountBean.SHIP_TOTAL_AMOUNT, 0);
         nextShipCount.put(ShipCountBean.SHIP_TOTAL_MONEY, 0);

@@ -82,72 +82,62 @@ public class ExcleUtil {
 
 	}
 
-	public List<String[]> getAllData(int sheetIndex) {
-		int columnNum = 0;
-		Sheet sheet = wb.getSheetAt(sheetIndex);
-		if (sheet.getRow(0) != null) {
-			columnNum = sheet.getRow(0).getLastCellNum()
-					- sheet.getRow(0).getFirstCellNum();
-		}
-		if (columnNum > 0) {
-			for (Row row : sheet) {
-				String[] singleRow = new String[columnNum];
-				int n = 0;
-				for (int i = 0; i < columnNum; i++) {
-					Cell cell = row.getCell(i, Row.CREATE_NULL_AS_BLANK);
-					switch (cell.getCellType()) {
-					case Cell.CELL_TYPE_BLANK:
-						singleRow[n] = "";
-						break;
-					case Cell.CELL_TYPE_BOOLEAN:
-						singleRow[n] = Boolean.toString(cell
-								.getBooleanCellValue());
-						break;
-					
-					case Cell.CELL_TYPE_NUMERIC:
-						if (DateUtil.isCellDateFormatted(cell)) {
-							singleRow[n] = String.valueOf(cell
-									.getDateCellValue());
-						} else {
-							cell.setCellType(Cell.CELL_TYPE_STRING);
-							String temp = cell.getStringCellValue();
-							//
-							if (temp.indexOf(".") > -1) {
-								singleRow[n] = String.valueOf(new Double(temp))
-										.trim();
-							} else {
-								singleRow[n] = temp.trim();
-							}
-						}
-						break;
-					case Cell.CELL_TYPE_STRING:
-						singleRow[n] = cell.getStringCellValue().trim();
-						break;
-					case Cell.CELL_TYPE_ERROR:
-						singleRow[n] = "";
-						break;
-					case Cell.CELL_TYPE_FORMULA:
-						cell.setCellType(Cell.CELL_TYPE_STRING);
-						singleRow[n] = cell.getStringCellValue();
-						if (singleRow[n] != null) {
-							singleRow[n] = singleRow[n].replaceAll("#N/A", "")
-									.trim();
-						}
-						break;
-					default:
-						singleRow[n] = "";
-						break;
-					}
-					n++;
-				}
-//				if ("".equals(singleRow[0])) {
-//					continue;
-//				}
-				dataList.add(singleRow);
-			}
-		}
-		return dataList;
-	}
+    public List<String[]> getAllData(int sheetIndex) {
+        Sheet sheet = wb.getSheetAt(sheetIndex);
+
+        for (Row row : sheet) {
+
+            if (row.getLastCellNum() > 0) {
+                String[] singleRow = new String[row.getLastCellNum()];
+                for (int i = 0; i < row.getLastCellNum(); i++) {
+                    Cell cell = row.getCell(i, Row.CREATE_NULL_AS_BLANK);
+                    switch (cell.getCellType()) {
+                    case Cell.CELL_TYPE_BLANK:
+                        singleRow[i] = "";
+                        break;
+                    case Cell.CELL_TYPE_BOOLEAN:
+                        singleRow[i] = Boolean.toString(cell.getBooleanCellValue());
+                        break;
+
+                    case Cell.CELL_TYPE_NUMERIC:
+                        if (DateUtil.isCellDateFormatted(cell)) {
+                            singleRow[i] = String.valueOf(cell.getDateCellValue());
+                        } else {
+                            cell.setCellType(Cell.CELL_TYPE_STRING);
+                            String temp = cell.getStringCellValue();
+                            //
+                            if (temp.indexOf(".") > -1) {
+                                singleRow[i] = String.valueOf(new Double(temp)).trim();
+                            } else {
+                                singleRow[i] = temp.trim();
+                            }
+                        }
+                        break;
+                    case Cell.CELL_TYPE_STRING:
+                        singleRow[i] = cell.getStringCellValue().trim();
+                        break;
+                    case Cell.CELL_TYPE_ERROR:
+                        singleRow[i] = "";
+                        break;
+                    case Cell.CELL_TYPE_FORMULA:
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                        singleRow[i] = cell.getStringCellValue();
+                        if (singleRow[i] != null) {
+                            singleRow[i] = singleRow[i].replaceAll("#N/A", "").trim();
+                        }
+                        break;
+                    default:
+                        singleRow[i] = "";
+                        break;
+                    }
+                }
+
+                dataList.add(singleRow);
+            }
+        }
+
+        return dataList;
+    }
 
 	public int getRowNum(int sheetIndex) {
 		Sheet sheet = wb.getSheetAt(sheetIndex);

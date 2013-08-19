@@ -25,12 +25,15 @@ import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
+import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
+import com.pms.service.mockbean.SupplierBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
+import com.pms.service.service.IProjectService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISupplierService;
@@ -43,7 +46,6 @@ import com.pms.service.util.ExcleUtil;
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
 
     public static final String FROM = "from";
-    public static final String SUPPLIER = "supplier";
     private static final String PURCHASE_ORDER_ID = "purchaseOrderId";
     private static final String APPROVED = PurchaseRequest.STATUS_APPROVED;
     private static final Logger logger = LogManager.getLogger(PurchaseContractServiceImpl.class);
@@ -53,6 +55,16 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     private ISupplierService supplierService;
     
     private IArrivalNoticeService arriveService;    
+    
+    private IProjectService projectService;
+
+    public IProjectService getProjectService() {
+        return projectService;
+    }
+
+    public void setProjectService(IProjectService prjectService) {
+        this.projectService = prjectService;
+    }
 
     public IArrivalNoticeService getArriveService() {
         return arriveService;
@@ -88,7 +100,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters) {    
         mergeMyTaskQuery(parameters, DBBean.PURCHASE_CONTRACT);
         Map<String, Object> results = dao.list(parameters, DBBean.PURCHASE_CONTRACT);
-        supplierService.mergeSupplierInfo(results, SUPPLIER, new String[]{"supplierName"});
+        supplierService.mergeSupplierInfo(results, PurchaseContract.SUPPLIER, new String[]{SupplierBean.SUPPLIER_NAME});
         return results;
     }
 
@@ -101,7 +113,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         } else {
             query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
         }
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.projectId", SUPPLIER });
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.projectId", PurchaseContract.SUPPLIER });
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
 
         List<Map<String, Object>> contractList = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
@@ -117,7 +129,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     if (projectSupplierMap.get(projectId) == null) {
                         projectSupplierMap.put(projectId, new HashSet<String>());
                     }
-                    projectSupplierMap.get(projectId).add(contract.get(SUPPLIER).toString());
+                    projectSupplierMap.get(projectId).add(contract.get(PurchaseContract.SUPPLIER).toString());
                 }
             }
         }
@@ -142,7 +154,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
             Map<String, Object> supplierMap = new HashMap<String, Object>();
             supplierMap.put(ApiConstants.RESULTS_DATA, suppliersMap);
-            supplierService.mergeSupplierInfo(supplierMap, ApiConstants.MONGO_ID, new String[] { "supplierName" });
+            supplierService.mergeSupplierInfo(supplierMap, ApiConstants.MONGO_ID, new String[] { SupplierBean.SUPPLIER_NAME });
 
             project.put("suppliers", supplierMap.get(ApiConstants.RESULTS_DATA));
         }
@@ -219,18 +231,18 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
             if (dao.exist("projectId", projectId, DBBean.PURCHASE_CONTRACT)) {
                 query.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseCommonBean.STATUS_APPROVED }));
-                query.put("eqcostList." + SUPPLIER, params.get(SUPPLIER));
+                query.put("eqcostList." + PurchaseContract.SUPPLIER, params.get(PurchaseContract.SUPPLIER));
                 results = this.dao.list(query, DBBean.PURCHASE_CONTRACT);
                 isRuoDian = true;
             } else {
                 query.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { ShipBean.SHIP_STATUS_APPROVE, ShipBean.SHIP_STATUS_CLOSE }));
-                query.put("eqcostList." + SUPPLIER, params.get(SUPPLIER));
+                query.put("eqcostList." + PurchaseContract.SUPPLIER, params.get(PurchaseContract.SUPPLIER));
                 results = this.dao.list(query, DBBean.SHIP);
             }
             isDirect = true;
         }else{
             query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
-            query.put(SUPPLIER, params.get(SUPPLIER));
+            query.put(PurchaseContract.SUPPLIER, params.get(PurchaseContract.SUPPLIER));
 
             params.put("type", "in");
             query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
@@ -247,7 +259,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             for (Map<String, Object> p : pList) {
 
                 if (isDirect) {
-                    if (p.get("projectId").equals(projectId) && p.get(SUPPLIER) != null && p.get(SUPPLIER).equals(params.get(SUPPLIER)) && 
+                    if (p.get("projectId").equals(projectId) && p.get(PurchaseContract.SUPPLIER) != null && p.get(PurchaseContract.SUPPLIER).equals(params.get(PurchaseContract.SUPPLIER)) && 
                             p.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE).equals(PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY)) {
                         eqclist.add(p);
                     }
@@ -262,7 +274,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         Map<String, Object> requery = new HashMap<String, Object>();
         requery.put(SalesContractBean.SC_PROJECT_ID, projectId);
-        requery.put("supplierId", params.get(SUPPLIER));
+        requery.put("supplierId", params.get(PurchaseContract.SUPPLIER));
         requery.put("type", params.get("type"));
         Map<String, Integer> eqCountMap = countEqByKey(requery, DBBean.REPOSITORY, "eqcostApplyAmount", null);
 
@@ -352,7 +364,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Object eqList = contract.get(SalesContractBean.SC_EQ_LIST);
 
         if(contract.get(FROM)==null){
+            
             contract.put(SalesContractBean.SC_EQ_LIST, eqList);
+            
         }
 
         return updatePurchase(contract, DBBean.PURCHASE_CONTRACT);
@@ -540,9 +554,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             eqMap.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, contract.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
             eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
             eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
-            eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));
+            eqMap.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, contract.get(PurchaseContract.PURCHASE_CONTRACT_TYPE));
             eqMap.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));
-            eqMap.put(SUPPLIER, contract.get(SUPPLIER));
+            eqMap.put(PurchaseContract.SUPPLIER, contract.get(PurchaseContract.SUPPLIER));
 
         }       
         this.dao.updateById(contract, DBBean.PURCHASE_CONTRACT);
@@ -556,13 +570,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
             List<Object> emails = this.dao.listLimitKeyValues(userQuery, DBBean.USER);
 
-            if (contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE) != null) {
-                if (contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
+            if (contract.get(PurchaseContract.PURCHASE_CONTRACT_TYPE) != null) {
+                if (contract.get(PurchaseContract.PURCHASE_CONTRACT_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
                     String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单,请到系统做入库处理", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     contract.put("titleContent", content);
                     sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
-                } else if (contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO)) {
+                } else if (contract.get(PurchaseContract.PURCHASE_CONTRACT_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO)) {
                     createArriveNotice(contract);
                     createAutoShip(contract);
 
@@ -571,7 +585,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     contract.put("titleContent", content);
                     sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
 
-                } else if (contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
+                } else if (contract.get(PurchaseContract.PURCHASE_CONTRACT_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
                     String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单, 请到系统填写到货通知", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     contract.put("titleContent", content);
@@ -633,9 +647,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_REQUEST_CODE, orderMap.get(PurchaseCommonBean.PURCHASE_REQUEST_CODE));
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));   
-                        eqOrderMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE));  
+                        eqOrderMap.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, contract.get(PurchaseContract.PURCHASE_CONTRACT_TYPE));  
                         eqOrderMap.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));  
-                        eqOrderMap.put(SUPPLIER, contract.get(SUPPLIER));                          
+                        eqOrderMap.put(PurchaseContract.SUPPLIER, contract.get(PurchaseContract.SUPPLIER));                          
                     }
                 }
                 
@@ -938,7 +952,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(ApiConstants.LIMIT_KEYS, "supplierName");
+        query.put(ApiConstants.LIMIT_KEYS, SupplierBean.SUPPLIER_NAME);
 
         Map<String, Object> suppliers = this.dao.listToOneMapAndIdAsKey(query, DBBean.SUPPLIER);
 
@@ -947,7 +961,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             if (data.get("supplierId") != null) {
                 Map<String, Object> supplier = (Map<String, Object>) suppliers.get(data.get("supplierId"));
                 if (supplier != null) {
-                    data.put("supplierName", supplier.get("supplierName"));
+                    data.put(SupplierBean.SUPPLIER_NAME, supplier.get(SupplierBean.SUPPLIER_NAME));
                 }
             }
 
@@ -1009,7 +1023,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> contractMap = new HashMap<String, Object>();
         Set<String> contractIds = new HashSet<String>();
         for (Map<String, Object> eq : eqMapList) {
-            if (eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE) != null && eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE).toString().equalsIgnoreCase(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
+            if (eq.get(PurchaseContract.PURCHASE_CONTRACT_TYPE) != null && eq.get(PurchaseContract.PURCHASE_CONTRACT_TYPE).toString().equalsIgnoreCase(PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
                 if (eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID) != null) {
                     contractIds.add(eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID).toString());
                     contractMap.put(eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID).toString(), eq.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
@@ -1168,7 +1182,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     // 采购合同列表为付款
     public Map<String, Object> listSelectForPayment(Map<String, Object> params) {
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "purchaseContractCode", SUPPLIER });
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { "purchaseContractCode", PurchaseContract.SUPPLIER });
         query.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, PurchaseCommonBean.CONTRACT_EXECUTE_NORMAL);
         Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
         
@@ -1176,7 +1190,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         Set<String> set = new HashSet<String>();
         for(Map<String, Object> obj : list){
-        	set.add((String)obj.get(SUPPLIER));
+        	set.add((String)obj.get(PurchaseContract.SUPPLIER));
         }
         set.remove(null);set.remove("");
         Map<String,Object> query2 = new HashMap<String,Object>();
@@ -1184,10 +1198,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String,Object> suMap = dao.listToOneMapAndIdAsKey(query2, DBBean.SUPPLIER);
         
         for(Map<String, Object> obj : list){
-        	String id = (String)obj.get(SUPPLIER);
+        	String id = (String)obj.get(PurchaseContract.SUPPLIER);
         	if(suMap.containsKey(id)){
         		Map<String,Object> su = (Map)suMap.get(id);
-        		obj.put("supplierName", su.get("supplierName"));
+        		obj.put(SupplierBean.SUPPLIER_NAME, su.get(SupplierBean.SUPPLIER_NAME));
         		obj.put(MoneyBean.supplierBankName, su.get(MoneyBean.supplierBankName));
         		obj.put(MoneyBean.supplierBankAccount, su.get(MoneyBean.supplierBankAccount));
         	}
@@ -1226,7 +1240,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             String id = (String) obj.get(MoneyBean.supplierId);
             if (map.get(id) != null) {
                 Map<String, Object> su = (Map<String, Object>) map.get(id);
-                obj.put("supplierName", su.get("supplierName"));
+                obj.put(SupplierBean.SUPPLIER_NAME, su.get(SupplierBean.SUPPLIER_NAME));
             }
         }
     }
@@ -1241,17 +1255,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         obj.put(MoneyBean.supplierBankAccount, params.get(MoneyBean.supplierBankAccount));
         obj.put(MoneyBean.supplierBankName, params.get(MoneyBean.supplierBankName));
         
-        String[] keys = new String[] { SUPPLIER, "purchaseContractCode" };
+        String[] keys = new String[] { PurchaseContract.SUPPLIER, "purchaseContractCode" };
         Map<String, Object> pc = dao.findOne("purchaseContractCode", params.get(MoneyBean.purchaseContractCode), keys,DBBean.PURCHASE_CONTRACT);
         if(pc == null) {
         	throw new ApiResponseException("采购合同不存在", params, "请输入正确合同编号");
         }
         obj.put(MoneyBean.purchaseContractCode, pc.get("purchaseContractCode"));
         obj.put(MoneyBean.purchaseContractId, pc.get(ApiConstants.MONGO_ID));
-        obj.put(MoneyBean.supplierId, pc.get(SUPPLIER));
+        obj.put(MoneyBean.supplierId, pc.get(PurchaseContract.SUPPLIER));
         
         //如果供应商没有初始化 银行账号，则初始化
-        Map<String,Object> supplier = dao.findOne(ApiConstants.MONGO_ID, pc.get(SUPPLIER), DBBean.SUPPLIER);
+        Map<String,Object> supplier = dao.findOne(ApiConstants.MONGO_ID, pc.get(PurchaseContract.SUPPLIER), DBBean.SUPPLIER);
         String cardName = (String)supplier.get(MoneyBean.supplierBankName);
         if(cardName == null || cardName.isEmpty()){
         	supplier.put(MoneyBean.supplierBankName, params.get(MoneyBean.supplierBankName));
@@ -1293,11 +1307,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     	invoice.put(InvoiceBean.getInvoiceReceivedMoneyStatus, params.get(InvoiceBean.getInvoiceReceivedMoneyStatus));
     	invoice.put(InvoiceBean.getInvoiceItemList, params.get(InvoiceBean.getInvoiceItemList));
 		
-		Map<String,Object> pc = dao.findOne(ApiConstants.MONGO_ID, params.get(InvoiceBean.purchaseContractId), new String[]{"purchaseContractCode",SUPPLIER,"invoiceType"}, DBBean.PURCHASE_CONTRACT);
+		Map<String,Object> pc = dao.findOne(ApiConstants.MONGO_ID, params.get(InvoiceBean.purchaseContractId), new String[]{"purchaseContractCode",PurchaseContract.SUPPLIER,"invoiceType"}, DBBean.PURCHASE_CONTRACT);
 		invoice.put(InvoiceBean.purchaseContractId, pc.get(ApiConstants.MONGO_ID));
 		invoice.put(InvoiceBean.purchaseContractCode, pc.get("purchaseContractCode"));
 		invoice.put(InvoiceBean.invoiceType, pc.get("invoiceType"));
-		invoice.put(InvoiceBean.getInvoiceSupplierId, pc.get(SUPPLIER));
+		invoice.put(InvoiceBean.getInvoiceSupplierId, pc.get(PurchaseContract.SUPPLIER));
 		
 	    String oldComment = (String)dao.querySingleKeyById(InvoiceBean.getInvoiceComment, params.get(ApiConstants.MONGO_ID), DBBean.GET_INVOICE);
 	    String comment = (String)params.get("tempComment");
@@ -1310,9 +1324,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 	public Map<String, Object> viewPCForInvoice(Map<String, Object> params) {
     	String pcId = (String)params.get(InvoiceBean.purchaseContractId);
     	String[] keys = new String[]{"purchaseContractCode","requestedTotalMoney","purchaseContractType",
-        		"eqcostDeliveryType","signDate","invoiceType",SUPPLIER};
+        		"eqcostDeliveryType","signDate","invoiceType",PurchaseContract.SUPPLIER};
 		Map<String,Object> pc = dao.findOne(ApiConstants.MONGO_ID, pcId, keys, DBBean.PURCHASE_CONTRACT);
-        Map<String,Object> suppier = dao.findOne(ApiConstants.MONGO_ID, pc.get(SUPPLIER), DBBean.SUPPLIER);
+        Map<String,Object> suppier = dao.findOne(ApiConstants.MONGO_ID, pc.get(PurchaseContract.SUPPLIER), DBBean.SUPPLIER);
         suppier.remove(ApiConstants.MONGO_ID);
         pc.putAll(suppier);
 		return pc;
@@ -1335,10 +1349,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
     private void mergePcAndSupplierForInvoice(Map<String,Object> params){
         String[] keys = new String[]{"purchaseContractCode","requestedTotalMoney","purchaseContractType",
-        		"eqcostDeliveryType","signDate","invoiceType",SUPPLIER};
+        		"eqcostDeliveryType","signDate","invoiceType",PurchaseContract.SUPPLIER};
         Map<String, Object> pc = dao.findOne(ApiConstants.MONGO_ID,  params.get("purchaseContractId"),keys, DBBean.PURCHASE_CONTRACT);
         if(pc != null){
-        	 Map<String, Object> supplier = dao.findOne(ApiConstants.MONGO_ID, pc.get(SUPPLIER), DBBean.SUPPLIER);
+        	 Map<String, Object> supplier = dao.findOne(ApiConstants.MONGO_ID, pc.get(PurchaseContract.SUPPLIER), DBBean.SUPPLIER);
         	 pc.remove(ApiConstants.MONGO_ID);
         	 params.putAll(pc);
         	 if(supplier != null){
@@ -1359,30 +1373,87 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         dao.deleteByIds(ids, DBBean.GET_INVOICE);
     }
     
-    public Map<String, Object> importContractHistoryData(InputStream inputStream){
+    public Map<String, Object> importContractHistoryData(InputStream inputStream) {
 
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			ExcleUtil excleUtil = new ExcleUtil(inputStream);
-			List<String[]> list = excleUtil.getAllData(0);
-			for(int i=4; i<list.size(); i++){//从第5行开始读数据
-				String pCode = list.get(i)[2].trim();
-				if (ApiUtil.isEmpty(pCode)){
-					break;
-				}
-				
-				
-				
-				
-				
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			result.put("status", 0);
-			throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
-		}
-		result.put("status", 1);
-		return result;
+        Map<String, Object> result = new HashMap<String, Object>();
+        try {
+            ExcleUtil excleUtil = new ExcleUtil(inputStream);
+            List<String[]> list = excleUtil.getAllData(0);
+
+            Map<String, Integer> columnIndexMap = new HashMap<String, Integer>();
+
+            String[] titles = list.get(3);
+            if (titles != null) {
+                for (int i = 0; i < titles.length; i++) {
+                    String key = titles[i].trim();
+                    if (!ApiUtil.isEmpty(key)) {
+                        columnIndexMap.put(key, i);
+                    }
+                }
+            }
+
+            for (int i = 4; i < list.size(); i++) {// 从第5行开始读数据
+                Map<String, Object> contract = new HashMap<String, Object>();
+
+                String[] item = list.get(i);
+                String pCode = item[2].trim();
+                if (ApiUtil.isEmpty(pCode)) {
+                    break;
+                }
+
+                String supplierName = item[columnIndexMap.get("供应商单位名称")].trim();
+
+                if (!ApiUtil.isEmpty(supplierName)) {
+                    Map<String, Object> supplier = supplierService.importSupplier(supplierName);
+                    contract.put(PurchaseContract.SUPPLIER, supplier.get(ApiConstants.MONGO_ID));
+                }
+
+                contract.put(PurchaseContract.PURCHASE_CONTRACT_CODE, item[columnIndexMap.get("采购合同编号")].trim());
+                contract.put(PurchaseContract.DESCRIPTION, item[columnIndexMap.get("合同描述")].trim());
+                contract.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, item[columnIndexMap.get("合同类别")].trim());
+                String contractProperty = item[columnIndexMap.get("开口/闭口")].trim();
+
+                if (ApiUtil.isEmpty(contractProperty)) {
+                    contractProperty = PurchaseContract.PURCHASE_CONTRACT_PROPERTY_OPEN;
+                } else if (contractProperty.indexOf("闭口") != -1) {
+                    contractProperty = PurchaseContract.PURCHASE_CONTRACT_PROPERTY_CLOSE;
+
+                } else {
+                    contractProperty = PurchaseContract.PURCHASE_CONTRACT_PROPERTY_OPEN;
+                }
+                contract.put(PurchaseContract.PURCHASE_CONTRACT_PROPERTY, contractProperty);
+
+                Map<String, Object> project = new HashMap<String, Object>();
+                String projectName = item[columnIndexMap.get("销售项目名称")].trim();
+                if(!ApiUtil.isEmpty(projectName)){
+                    project.put(ProjectBean.PROJECT_NAME, projectName);
+                    projectService.importProject(project);
+                }
+        
+
+                contract.put(PurchaseContract.PURCHASE_CONTRACT_MONEY, ApiUtil.getDouble(item[columnIndexMap.get("合同金额")].trim(), 0));
+
+                contract.put(PurchaseContract.PURCHASE_CONTRACT_PAYMENT_TYPE, item[columnIndexMap.get("付款方式")].trim());
+                contract.put(PurchaseContract.REMARK, item[columnIndexMap.get("备注")].trim());
+
+                String isCompleted = item[columnIndexMap.get("是否执行完")].trim();
+                if (!ApiUtil.isEmpty(isCompleted) && isCompleted.equalsIgnoreCase("y")) {
+                    contract.put(PurchaseContract.PROCESS_STATUS, PurchaseContract.STATUS_COMPLETED);
+                } else {
+                    contract.put(PurchaseContract.PROCESS_STATUS, PurchaseContract.STATUS_APPROVED);
+                }
+                
+                this.updatePurchaseContract(contract);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // TODO Auto-generated catch block
+            result.put("status", 0);
+            throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
+        }
+        result.put("status", 1);
+        return result;
     }
 
     public IPurchaseService getBackService() {

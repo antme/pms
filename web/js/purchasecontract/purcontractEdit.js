@@ -64,6 +64,9 @@ var contractModel = kendo.data.Model.define({
 		},
 		contractExecuteCate : {
 			
+		},
+		contractPaymentType : {
+			
 		}
 	}
 });
@@ -216,8 +219,8 @@ function changeCType(index){
 		$("#supplierNameContact").attr("disabled", false);
 		$("#contractProperty").attr("disabled", false);
 		
-		$("#supplierBJ").hide();
-		$("#supplierSelect").show();
+		$(".supplierBJ").hide();
+		$(".supplierSelect").show();
 		$("#supplierNamebj").val("");
 		
 	}else{
@@ -233,8 +236,8 @@ function changeCType(index){
 		
 		$("#supplierNamebj").val("同方北京");
 		$("#supplierNamebj").attr("disabled", true);
-		$("#supplierBJ").show();
-		$("#supplierSelect").hide();
+		$(".supplierBJ").show();
+		$(".supplierSelect").hide();
 		$("#supplierNameContact").val("同方北京");
 		$("#supplierNameContact").attr("disabled", true);
 		$("#contractProperty").val("闭口合同");
@@ -415,7 +418,7 @@ function save(status) {
 			if (status) {
 				requestDataItem.status = status;
 			}
-			requestDataItem.requestedTotalMoney = $("#requestedTotalMoney").val();
+			requestDataItem.contractMoney = $("#contractMoney").val();
 			
 			
 			
@@ -668,7 +671,7 @@ function edit(data) {
 
 				}
 
-				$("#requestedTotalMoney").val(requestActureMoney);
+				$("#contractMoney").val(requestActureMoney);
 				
 			}
 

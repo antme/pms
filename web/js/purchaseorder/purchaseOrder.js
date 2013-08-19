@@ -125,7 +125,10 @@ function approveOrder(){
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if(row.status == "中止申请中"){
-			process(approveUrl);
+			loadPage("purchasecontract_purchaseOrderEdit", {
+				_id : row._id,
+				pageId: "approve"
+			});
 		}else {
 			alert("不需要审批,只有中止申请中的订单才可以审批");
 		}

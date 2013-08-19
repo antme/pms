@@ -25,11 +25,11 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
+import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.RoleBean;
 import com.pms.service.mockbean.ShipCountBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.util.DataEncrypt;
-import com.pms.service.util.DateUtil;
 
 public class InitBean {
 
@@ -296,7 +296,7 @@ public class InitBean {
                 Map<String, Object> shipRecord = new HashMap<String, Object>();
                 shipRecord.put(ShipCountBean.SHIP_COUNT_DATE, date);
                 shipRecord.put("status", "未结算");
-                shipRecord.put(PurchaseCommonBean.PURCHASE_CONTRACT_TYPE, type);
+                shipRecord.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, type);
                 shipRecord.put(ShipCountBean.SHIP_TOTAL_AMOUNT, 0);
                 shipRecord.put(ShipCountBean.SHIP_TOTAL_MONEY, 0);
                 dao.add(shipRecord, DBBean.SHIP_COUNT);
