@@ -193,6 +193,17 @@ $(document).ready(function() {
           	sctypelist.enable(false);
           	scm.set("contractType",relatedScType)
           }
+          
+          //start: add for customer info
+          var haveCustomer = dataItem.cId;
+          var cusList = $("#customer").data("kendoDropDownList");
+          console.log("********"+haveCustomer);
+          if (haveCustomer != null){
+	    	  cusList.value(haveCustomer);
+	    	  cusList.enable(false);
+	    	  scm.set("customer",haveCustomer)
+         }
+          //end: add for customer info 
 		}
 	});
 	
@@ -305,7 +316,7 @@ $(document).ready(function() {
 				title : "销售单价"
 			}, {
 				field : "eqcostDiscountRate",
-				title : "折扣率"
+				title : "折扣率 %"
 			}, {
 				field : "eqcostLastBasePrice",
 				title : "最终成本价",
@@ -376,6 +387,49 @@ function saveSC(){
 			var item = eqCostListDataSource.at(i);
 			var itemCate = item.eqcostCategory;
 			var itemTaxType = item.eqcostTaxType;
+			
+			//---start : add logic for check can not empty col
+			var itemUnit = item.eqcostUnit;  //单位
+			if (itemUnit==null || itemUnit.length == 0){
+				alert("单位不能为空！");
+				return;
+			}
+			
+			var itemProductType = item.eqcostProductType;  //规格型号
+			if (itemProductType==null || itemProductType.length == 0){
+				alert("规格型号不能为空！");
+				return;
+			}
+			
+			var itemProductName = item.eqcostProductName;  //产品名称
+			if (itemProductName==null || itemProductName.length == 0){
+				alert("产品名称不能为空！");
+				return;
+			}
+			
+			var itemAmount = item.eqcostAmount;  //数量
+			if (itemAmount==null || itemAmount.length == 0){
+				alert("数量不能为空！");
+				return;
+			}
+			
+			if (itemAmount != null && itemAmount < 0){
+				alert("第一次添加设备清单数量不能为负数！");
+				return;
+			}
+			
+			var itemBasePrice = item.eqcostBasePrice;  //标准成本价
+			if (itemBasePrice==null || itemBasePrice.length == 0){
+				alert("标准成本价不能为空！");
+				return;
+			}
+			
+			var itemDiscountRate = item.eqcostDiscountRate;  //折扣率
+			if (itemDiscountRate==null || itemDiscountRate.length == 0){
+				alert("折扣率不能为空！");
+				return;
+			}
+			//---end : add logic for check can not empty col
 			
 			var savedCateTaxType = map.get(itemCate);
 			if(savedCateTaxType == null){

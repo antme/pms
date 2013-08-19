@@ -209,7 +209,7 @@ var projectItems = new kendo.data.DataSource({
 	}
 });
 
-//变更新的成本设备清单
+//变更-新的成本设备清单
 var eqCostListDataSourceNew = new kendo.data.DataSource({
 	group: {
 		field: "eqcostCategory",
@@ -344,6 +344,7 @@ $(document).ready(function() {
 		dataValueField : "_id",
         optionLabel: "选择客户...",
 		dataSource : customerItems,
+		enable:false
 	});
 	//合同类型
 	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
@@ -373,7 +374,7 @@ $(document).ready(function() {
 		dataSource : runningStatusItems,
 	});
 	
-	var addNewEqCostReasonItems = [{ text: "勘误", value: "勘误" }, { text: "增补", value: "增补" }];
+	var addNewEqCostReasonItems = [{ text: "勘误", value: "勘误" }, { text: "变更", value: "变更" }];
 	$("#addNewEqCostReason").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
@@ -592,7 +593,7 @@ function edit(data){
 				title : "销售单价"
 			}, {
 				field : "eqcostDiscountRate",
-				title : "折扣率"
+				title : "折扣率 %"
 			}, {
 				field : "eqcostLastBasePrice",
 				title : "最终成本价",
@@ -723,6 +724,94 @@ function saveSC(){
     			alert("请填写增补备注！");
     			return;
     		}
+    		
+    		var map = new Map();
+    		for(i=0; i<newEqTotal; i++){
+    			var item = eqCostListDataSourceNew.at(i);
+    			var itemCate = item.eqcostCategory;
+    			var itemTaxType = item.eqcostTaxType;
+    			
+    			//---start : add logic for check can not empty col
+    			var itemUnit = item.eqcostUnit;  //单位
+    			if (itemUnit==null || itemUnit.length == 0){
+    				alert("单位不能为空！");
+    				return;
+    			}
+    			
+    			var itemProductType = item.eqcostProductType;  //规格型号
+    			if (itemProductType==null || itemProductType.length == 0){
+    				alert("规格型号不能为空！");
+    				return;
+    			}
+    			
+    			var itemProductName = item.eqcostProductName;  //产品名称
+    			if (itemProductName==null || itemProductName.length == 0){
+    				alert("产品名称不能为空！");
+    				return;
+    			}
+    			
+    			var itemAmount = item.eqcostAmount;  //数量
+    			if (itemAmount==null || itemAmount.length == 0){
+    				alert("数量不能为空！");
+    				return;
+    			}
+    			
+    			var itemBasePrice = item.eqcostBasePrice;  //标准成本价
+    			if (itemBasePrice==null || itemBasePrice.length == 0){
+    				alert("标准成本价不能为空！");
+    				return;
+    			}
+    			
+    			var itemDiscountRate = item.eqcostDiscountRate;  //折扣率
+    			if (itemDiscountRate==null || itemDiscountRate.length == 0){
+    				alert("折扣率不能为空！");
+    				return;
+    			}
+    			//---end : add logic for check can not empty col
+    			
+    			//---start : add logic for check new record amount is negative number
+    			if (itemAmount < 0){
+    				var oldEqTotal = eqCostListDataSourceOld.total();
+    				var haveFlag = false;
+    				var haveOldAmount = 0;
+    				for(i=0; i<oldEqTotal; i++){
+    					
+    					var oldItem = eqCostListDataSourceOld.at(i);
+    					var oldName = oldItem.eqcostProductName;
+    					var oldPtype = oldItem.eqcostProductType;
+    					var oldAmount = oldItem.eqcostRealAmount;
+    					
+    					if (itemProductType == oldPtype && itemProductName ==oldName){
+    						haveFlag = true;
+    						haveOldAmount = oldAmount;
+    						break;
+    					}
+    					console.log("ptype:"+oldPtype + "**new:"+itemProductType);
+    					console.log("pname:"+oldName + "**new:"+itemProductName);
+    					console.log("haveFlag:"+haveFlag);
+    					
+    				}
+    				
+    				if (haveFlag){
+						if (itemAmount + haveOldAmount < 0){
+							alert(itemProductName + "原有清单数量不够抵消！");
+							return;
+						}
+					}else{
+						alert(itemProductName + "原有清单中无此设备，数量不能是负数！");
+						return;
+					}
+    			}
+    			//---end : add logic for check new record amount is negative number
+    			
+    			var savedCateTaxType = map.get(itemCate);
+    			if(savedCateTaxType == null){
+    				map.put(itemCate, itemTaxType);
+    			}else if(savedCateTaxType != itemTaxType){
+    				alert("成本设备清单：" + itemCate + "类别中税收类型不统一！");
+    				return;
+    			}
+    		}
     	}//End 
     	
 		var _id = scm.get("_id");
@@ -744,6 +833,20 @@ function saveSC(){
 
 	}
 };
+
+function Map(){
+	this.container = new Object();
+}
+
+
+Map.prototype.put = function(key, value){
+	this.container[key] = value;
+}
+
+
+Map.prototype.get = function(key){
+	return this.container[key];
+}
 
 function addInvoice(){
 	im = new scInvoiceModel();
