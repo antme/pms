@@ -57,6 +57,9 @@ $(document).ready(function() {
 		$("#approve-button").show();
 		$("#reject-button").show();
 		$("#approve-comment").show();
+		$("#pbPlanDate").attr("disabled", true);
+		$("#purchaseType").attr("disabled", true);
+		
 	}else{
 		$("#save-button").show();
 		$("#submit-button").show();
