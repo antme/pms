@@ -71,6 +71,8 @@ var menus = [
                  text: "项目执行", id: "projectex", imageUrl: "/images/ccontract.png",
                  items: [
                          { text: "备货申请", id: "purchaseback_purchaseBack", imageUrl: "/images/order.png" },
+                         { text: "备货拆分", id: "purchaseback_purchaseAllot",imageUrl: "/images/order.png" },
+                         { text: "调拨申请", id: "purchaseback_purchaseAllotManage", imageUrl: "/images/allocate.png" },
                          { text: "采购申请", id: "purchasecontract_purchaseRequest", imageUrl: "/images/purchase.png"},
                          { text: "开票申请", id: "finance_payInvoice", imageUrl: "/images/involce.png" },
                          { text: "发货申请", id: "execution_ship", imageUrl: "/images/borrowing.png"},
@@ -87,8 +89,6 @@ var menus = [
              {
 	             text : "采购合同", id : "purchasecontract", expanded : false, imageUrl : "/images/contract.png",
                  items: [
-                     { text: "备货申请", id: "purchaseback_purchaseAllot", imageUrl: "/images/order.png" },
-                     { text: "调拨申请", id: "purchaseback_purchaseAllotManage", imageUrl: "/images/allocate.png" },
                      { text: "采购申请", id: "purchasecontract_purchaseRequestApprove", imageUrl: "/images/purchase.png"},
                      { text: "采购订单", id: "purchasecontract_purchaseOrder",  imageUrl: "/images/porder.png"},
                      { text: "采购合同", id: "purchasecontract_purchasecontract", imageUrl: "/images/order.png" },
