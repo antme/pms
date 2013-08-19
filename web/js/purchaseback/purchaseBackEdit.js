@@ -42,7 +42,16 @@ var subModel = kendo.data.Model.define({
                  min: 0
              }
         },
-        pbComment: {}
+        pbComment: {},
+        eqcostSalesBasePrice:{
+        	editable : false
+        },
+        eqcostDiscountRate:{
+        	editable : false
+        },
+        eqcostLastBasePrice:{
+        	editable : false
+        }
 	}
 });	
 var myModel = kendo.data.Model.define({
@@ -93,6 +102,9 @@ $(document).ready(function () {
 	
 	$("#subGrid").kendoGrid({
 		dataSource: {
+			group: {
+				field:"eqcostCategory"
+			},
 			schema: {
 				model: subModel
 			},
@@ -109,7 +121,7 @@ $(document).ready(function () {
 			{ field: "eqcostNo", title: "序号"},
 			{ field: "eqcostMaterialCode", title: "物料代码" },
 			{ field: "eqcostProductName", title: "产品名称" },
-			{ field: "eqcostProductType", title: "规格型号" },
+			{ field: "eqcostProductType", title: "规格型号"},
 			{ field: "eqcostUnit", title: "单位" },
 			{ field: "pbTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}},
 			{ field: "eqcostLeftAmount", title: "合同下剩余可备货数量"},
@@ -118,10 +130,10 @@ $(document).ready(function () {
 			{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
 			{ field: "eqcostDiscountRate",title : "折扣率"},
 			{ field: "eqcostLastBasePrice",title : "最终成本价"},
-			{ field: "eqcostCategory", title: "类别" },
-			{ field: "eqcostMemo", title: "清单备注" },
-			{ field: "pbComment", title: "备货备注" }
+			{ field: "eqcostCategory", title: "类别"},
+			{ field: "eqcostMemo", title: "备注" }
 	  	],
+	  	sortable : true,
 	  	editable:true
 	  	
 	});

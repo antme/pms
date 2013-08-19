@@ -89,7 +89,13 @@ function generateAllot() {
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else {
-		loadPage("purchaseback_purchaseAllotEdit",{pbId:row._id});
+		postAjaxRequest("/service/purcontract/back/load", { _id : row._id }, function(data){
+			if(!data.eqcostList || (data.eqcostList　&& data.eqcostList.length==0)){
+				alert("此备货申请已无可备货货品");
+			}else{
+				loadPage("purchaseback_purchaseAllotEdit",{pbId:row._id});
+			}
+		});
 	}
 }
 

@@ -241,6 +241,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         } else {
             status = PurchaseStatus.approved.toString();
             comment = recordComment("初审", comment, oldComment);
+            allot.put(PurchaseBack.eqcostList, params.get(PurchaseBack.eqcostList));
         }
 
 	    allot.put(PurchaseBack.paComment, comment);

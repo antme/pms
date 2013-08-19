@@ -53,6 +53,19 @@ var subModel = kendo.data.Model.define({
        },
        paComment:{
     	   editable : false
+       },
+       eqcostSalesBasePrice:{
+       		editable : false
+       },
+       eqcostDiscountRate:{
+       		editable : false
+       },
+       eqcostLastBasePrice:{
+       		editable : false
+       },
+       eqcostDepotPrice:{
+    	   type: "number",
+    	   defaultValue:0
        }
 	}
 });	
@@ -94,16 +107,27 @@ $(document).ready(function () {
 			{ field: "eqcostProductName", title: "产品名称" },
 			{ field: "eqcostProductType", title: "规格型号" },
 			{ field: "paCount", title: "本次申请数量", attributes: { "style": "color:red"}},
-			{ field: "pbLeftCount", title: "可申请数量"},
+			/*{ field: "pbLeftCount", title: "可申请数量"},*/
 			{ field: "pbTotalCount", title: "备货数量"},
 			{ field: "eqcostBasePrice", title: "标准成本价" },
 			{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
 			{ field: "eqcostDiscountRate",title : "折扣率"},
 			{ field: "eqcostLastBasePrice",title : "最终成本价"},
+			{ field: "eqcostDepotPrice",
+				title : "库存单价", 
+				attributes: { "style": "color:red"},
+				template :  function(dataItem) {
+					if(dataItem.eqcostDepotPrice == null){
+						return 0;
+					} else {
+						return dataItem.eqcostDepotPrice;
+					}
+				}
+			},
 			{ field: "eqcostCategory", title: "类别" },
-			{ field: "eqcostMemo", title: "备注1" },
-			{ field: "pbComment", title: "备注2" }
-	  	],	 
+			{ field: "eqcostMemo", title: "备注" }
+	  	],	
+	  	sortable : true,
 	  	editable:true
 	});
 

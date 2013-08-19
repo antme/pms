@@ -51,6 +51,15 @@ var subModel = kendo.data.Model.define({
        },
        paComment:{
     	   editable : false
+       },
+       eqcostSalesBasePrice:{
+       	editable : false
+       },
+       eqcostDiscountRate:{
+       	editable : false
+       },
+       eqcostLastBasePrice:{
+       	editable : false
        }
 	}
 });
@@ -101,9 +110,9 @@ $(document).ready(function () {
 			{ field: "eqcostDiscountRate",title : "折扣率"},
 			{ field: "eqcostLastBasePrice",title : "最终成本价"},
 			{ field: "eqcostCategory", title: "类别" },
-			{ field: "eqcostMemo", title: "备注1" },
-			{ field: "pbComment", title: "备注2" }
-	  	],	 
+			{ field: "eqcostMemo", title: "备注" }
+	  	],
+	  	sortable : true,
 	  	editable:true
 	});
 	
