@@ -163,6 +163,12 @@ function popView(data){
 }
 
 function edit(data){
+	var pStatus = $("#projectStatus").data("kendoDropDownList");
+
+	if(data){
+		//立项类别不可修改， 所以编辑时候切换到包含 销售正式立项的datasource
+		pStatus.setDataSource(proStatusItems);
+	}
 	pModel = new projectModel(data);
 	kendo.bind($("#addProject"), pModel);
 
@@ -173,7 +179,6 @@ function edit(data){
 	pTypeList.enable(false);
 	var pManager = $("#projectManager").data("kendoDropDownList");
 	pManager.enable(false);
-	var pStatus = $("#projectStatus").data("kendoDropDownList");
 	pStatus.enable(false);
 	
 	//$("#projectCode").attr("disabled",true);
