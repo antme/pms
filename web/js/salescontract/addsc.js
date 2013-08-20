@@ -346,7 +346,13 @@ $(document).ready(function() {
 			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
 			scrollable : true,
-			sortable : true
+			sortable : true,
+			save: function(e) {
+				alert(e.values.eqcostBasePrice);
+				var dataItem = eqCostListDataSource.at(0);
+				alert(dataItem.eqcostBasePrice);
+				dataItem.eqcostBasePrice =100;
+			}
 		});
 	}//成本设备清单
 	
@@ -366,6 +372,23 @@ $(document).ready(function() {
 	
 });//end dom ready	
 
+
+function saveSCDraft(){
+	var eqCostData = eqCostListDataSource.data();
+	scm.set("eqcostList", eqCostData);
+
+	var profit = $("#estimateGrossProfit").val();
+	var profitRate = $("#estimateGrossProfitRate").val();
+	var totalEstimate = $("#totalEstimateCost").val();
+	scm.set("estimateGrossProfit", profit);
+	scm.set("estimateGrossProfitRate", profitRate);
+	scm.set("totalEstimateCost", totalEstimate);
+	scm.set("status", "草稿");
+	postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
+		loadPage("salescontract_scList");
+	});
+    
+}
 function saveSC(){
 	
 	var validator = $("#addSalesContract").kendoValidator().data("kendoValidator");

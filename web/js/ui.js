@@ -245,6 +245,10 @@ function initMyDraftTasks(id, data){
 					if(dataItem.db == "return"){
 						return "还货申请";
 					}
+					
+					if(dataItem.db == "salesContract"){
+						return "销售合同";
+					}
 	
 				}
 			}, {
@@ -288,6 +292,10 @@ function initMyDraftTasks(id, data){
 					
 					if(dataItem.db == "return"){
 						return '<a onclick="loadTreePage(' + "'return'," + param + ')">'+ dataItem.count + '</a>';
+					}
+					
+					if(dataItem.db == "salesContract"){
+						return '<a onclick="loadTreePage(' + "'salescontract_scList'," + param + ')">'+ dataItem.count + '</a>';
 					}
 				
 				}

@@ -521,6 +521,12 @@ $(document).ready(function() {
 		postAjaxRequest("/service/sc/get", popupParams, edit);
 		disableAllInPoppup();
 	}else{
+		var status = redirectParams.status;
+		console.log("*********"+status);
+		if (status == null || status == ""){
+			$("#saveDraftBtn").removeClass("k-button");
+			$("#saveDraftBtn").attr("disabled", true);
+		}
 		postAjaxRequest("/service/sc/get", redirectParams, edit);
 	}
 	
@@ -699,7 +705,24 @@ function edit(data){
 	scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
 	kendo.bind($("#editSalesContract"), scm);
 }
-		
+	
+function saveSCDraft(){
+	var eqCostData = eqCostListDataSourceNew.data();
+	scm.set("eqcostList", eqCostData);
+
+	var profit = $("#estimateGrossProfit").val();
+	var profitRate = $("#estimateGrossProfitRate").val();
+	var totalEstimate = $("#totalEstimateCost").val();
+	scm.set("estimateGrossProfit", profit);
+	scm.set("estimateGrossProfitRate", profitRate);
+	scm.set("totalEstimateCost", totalEstimate);
+	scm.set("status", "草稿");
+	postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
+		loadPage("salescontract_scList");
+	});
+    
+}
+
 function saveSC(){
 	var validator = $("#editSalesContract").kendoValidator().data("kendoValidator");
 	

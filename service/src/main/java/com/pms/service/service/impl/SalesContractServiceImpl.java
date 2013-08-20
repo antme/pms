@@ -53,11 +53,15 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		String[] limitKeys = {SalesContractBean.SC_CODE, SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER,
 				SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_RUNNING_STATUS, 
-				SalesContractBean.SC_ARCHIVE_STATUS, SalesContractBean.SC_TYPE};
+				SalesContractBean.SC_ARCHIVE_STATUS, SalesContractBean.SC_TYPE, "status"};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 
 		mergeDataRoleQueryWithProject(params);
+		mergeMyTaskQuery(params, DBBean.SALES_CONTRACT);
 		
+		if(params.get("status") == null){//status 字段： “草稿” or null
+			params.put("status", null);
+		}
 		Map<String, Object> result = dao.list(params, DBBean.SALES_CONTRACT);
 		
 		mergeProjectInfoForSC(result);
@@ -100,6 +104,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		contract.put(SalesContractBean.SC_DOWN_PAYMENT_MEMO, params.get(SalesContractBean.SC_DOWN_PAYMENT_MEMO));
 		contract.put(SalesContractBean.SC_QUALITY_MONEY_MEMO, params.get(SalesContractBean.SC_QUALITY_MONEY_MEMO));
 		contract.put(SalesContractBean.SC_MEMO, params.get(SalesContractBean.SC_MEMO));
+		
+		contract.put("status", params.get("status"));
 		
 		mergeCommonProjectInfo(contract, contract.get(SalesContractBean.SC_PROJECT_ID));
 		

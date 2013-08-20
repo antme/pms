@@ -262,7 +262,9 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     private Map<String, Object> queryTasks(String key, Map<String, Object> result, Map<String, Object> query) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         
-        String[] dbs = new String[]{DBBean.PURCHASE_REQUEST, DBBean.PURCHASE_BACK, DBBean.PURCHASE_ORDER, DBBean.PURCHASE_CONTRACT, DBBean.BORROWING, DBBean.PURCHASE_ALLOCATE, DBBean.REPOSITORY, DBBean.SHIP};
+        String[] dbs = new String[]{DBBean.PURCHASE_REQUEST, DBBean.PURCHASE_BACK, DBBean.PURCHASE_ORDER, 
+        		DBBean.PURCHASE_CONTRACT, DBBean.BORROWING, DBBean.PURCHASE_ALLOCATE, DBBean.REPOSITORY, 
+        		DBBean.SHIP, DBBean.SALES_CONTRACT};
         
         for(String db: dbs){
             if(query == null){
