@@ -130,8 +130,8 @@ $(document).ready(function () {
 			{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
 			{ field: "eqcostDiscountRate",title : "折扣率"},
 			{ field: "eqcostLastBasePrice",title : "最终成本价"},
-			{ field: "eqcostCategory", title: "类别"},
-			{ field: "eqcostMemo", title: "备注" }
+			{ field: "eqcostCategory", title: "类别",groupHeaderTemplate: kendo.template($("#headerTemplate").html())},
+			{ field: "pbComment", title: "备注" }
 	  	],
 	  	sortable : true,
 	  	editable:true
@@ -261,7 +261,15 @@ function validateModel(){
 	}
 	var eqList = currentObj.eqcostList;
 	var eqTotalCount = 0;
+	
+	var category;
 	for(var i=0;i<eqList.length;i++){
+		if(!category){
+			category = eqList[i].eqcostCategory;
+		} else if(category != eqList[i].eqcostCategory){
+			alert("请审核设备清单,只可为同一类别！");
+			return false;
+		}
 		eqTotalCount+=eqList[i].pbTotalCount;
 	}
 	if(eqTotalCount== 0){
@@ -269,4 +277,21 @@ function validateModel(){
 		return false;
 	}
 	return true;
+}
+function delGridItem(value){
+	var temp = new Array();
+	var dataSource = $("#subGrid").data("kendoGrid").dataSource;
+	for(var i=0;;i++){
+		var item = dataSource.at(i);
+		if(item){
+			if(item.eqcostCategory == value){
+				temp[temp.length++] = item;
+			}
+		}else{
+			break;
+		}
+	}
+	for(var i=0;i<temp.length;i++){
+		dataSource.remove(temp[i]);
+	}
 }
