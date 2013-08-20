@@ -4,7 +4,8 @@ var dataSource = new kendo.data.DataSource({
 		read : {
 			url : "../service/sc/list",
 			dataType : "jsonp"
-		}
+		},
+		parameterMap : myTaskQueryParam	
 	},
 	schema : {
 		total : "total", 
@@ -171,7 +172,7 @@ function toolbar_modifySalesContract() {
 		alert("请点击选择一条合同记录！");
 		return;
 	}
-	loadPage("salescontract_editsc",{_id:rowData._id});
+	loadPage("salescontract_editsc",{_id:rowData._id,status:rowData.status});
 };
 
 function toolbar_addPCForRuodianSC(){
