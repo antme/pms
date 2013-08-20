@@ -362,6 +362,18 @@ $(document).ready(function() {
 	
 	kendo.bind($("#addSalesContract"), scm);
 	
+	if(redirectParams && redirectParams.pageId && redirectParams.pageId=="newProject"){
+		
+		var tabStrip = $("#tabstrip").data("kendoTabStrip");
+		if(!tabStrip){
+			$("#tabstrip").kendoTabStrip();		
+			tabStrip = $("#tabstrip").data("kendoTabStrip");
+		}
+		tabStrip.append({
+	        text: "项目信息"
+	    });
+	}
+	
 });//end dom ready	
 
 function saveSC(){

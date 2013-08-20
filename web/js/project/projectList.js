@@ -112,7 +112,8 @@ $(document).ready(function() {
 });//end dom ready	
 	
 function toolbar_addProject() {
-	loadPage("project_addProject");
+	loadPage("salescontract_addsc",{pageId:"newProject"});
+	
 }
 
 function toolbar_deleteProject() {
