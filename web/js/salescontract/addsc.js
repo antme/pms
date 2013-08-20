@@ -572,7 +572,7 @@ function saveSC(){
 		}
 	}
 	
-	if(!validator.validate() && projectStatus == "销售正式立项") {
+	if(projectStatus == "销售正式立项" && !validator.validate()) {
 		validatestatus.text("表单验证不通过！")
         .removeClass("valid")
         .addClass("invalid");

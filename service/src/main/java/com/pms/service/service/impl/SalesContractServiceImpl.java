@@ -133,6 +133,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
                 Map<String, Object> project = projectService.addProject(projectInfo);
                 contract.put(SalesContractBean.SC_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
             }
+            
+//            if(params.get(SalesContractBean.SC_CODE)!=null){
+//                params.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE).toString().replace("-DRAFT", ""));
+//            }
         }
 	             
 		mergeCommonProjectInfo(contract, contract.get(SalesContractBean.SC_PROJECT_ID));
@@ -153,7 +157,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			        genSCCode = params.get(SalesContractBean.SC_CODE).toString();
 			    }else{
 			        //草稿不占用正常编号
-			        genSCCode = generateCode(SalesContractBean.SC_CODE_PREFIX_DRAFT, DBBean.SALES_CONTRACT, SalesContractBean.SC_CODE);
+//			        genSCCode = generateCode(SalesContractBean.SC_CODE_PREFIX_DRAFT, DBBean.SALES_CONTRACT, SalesContractBean.SC_CODE);
+	                genSCCode = genSCCode(scPId);
 		            contract.put(SalesContractBean.SC_CODE, genSCCode);
 			        addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
 			    }

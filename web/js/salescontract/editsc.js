@@ -739,7 +739,7 @@ function saveSC(){
 	var projectId = scm.get("projectId");
 	var projectStatus = projectItems.get(projectId).get("projectStatus")
 	
-	if (!validator.validate() && projectStatus == "销售正式立项") {
+	if (projectStatus == "销售正式立项" && !validator.validate()) {
 		alert("表单验证不通过！");
 		return;
     } else {
