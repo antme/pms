@@ -366,7 +366,7 @@ $(document).ready(function() {
 				}
 				
 				var eqcostLastBasePrice = eqcostBasePrice*eqcostDiscountRate/100;
-				e.model.set({"eqcostLastBasePrice", eqcostLastBasePrice});
+				e.model.set("eqcostLastBasePrice", eqcostLastBasePrice);
 				
 				var eqcostTotalAmount = eqcostAmount*eqcostLastBasePrice;
 				e.model.set("eqcostTotalAmount", eqcostTotalAmount);
