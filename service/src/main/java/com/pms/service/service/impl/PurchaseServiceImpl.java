@@ -56,6 +56,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		if(eqList != null){
 			for(Map<String,Object> obj : eqList){		
 			    obj.put(PurchaseBack.pbTotalCount, obj.get(PurchaseBack.eqcostLeftAmount));
+			    obj.put(PurchaseBack.pbComment, obj.get(EqCostListBean.EQ_LIST_MEMO));
 			}
 		}
 		removeEmptyEqList(eqList, PurchaseBack.eqcostLeftAmount);
