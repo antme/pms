@@ -1,6 +1,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script  src="js/purchaseback/purchaseBackEdit.js"></script>
 <body>
+<script type="text/x-kendo-template" id="headerTemplate">
+<label>类别：#=value#</label>&nbsp;&nbsp;
+<a onclick="delGridItem('#=value#')">删除</a>
+</script>
 <h2>备货申请</h2>
 <div id="objList" class="k-content">
 		<div id="searchDiv">

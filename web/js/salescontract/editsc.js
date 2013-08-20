@@ -522,7 +522,7 @@ $(document).ready(function() {
 		disableAllInPoppup();
 	}else{
 		var status = redirectParams.status;
-		console.log("*********"+status);
+//		console.log("*********"+status);
 		if (status == null || status == ""){
 			$("#saveDraftBtn").removeClass("k-button");
 			$("#saveDraftBtn").attr("disabled", true);
@@ -809,9 +809,9 @@ function saveSC(){
     						haveOldAmount = oldAmount;
     						break;
     					}
-    					console.log("ptype:"+oldPtype + "**new:"+itemProductType);
-    					console.log("pname:"+oldName + "**new:"+itemProductName);
-    					console.log("haveFlag:"+haveFlag);
+//    					console.log("ptype:"+oldPtype + "**new:"+itemProductType);
+//    					console.log("pname:"+oldName + "**new:"+itemProductName);
+//    					console.log("haveFlag:"+haveFlag);
     					
     				}
     				
