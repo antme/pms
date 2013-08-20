@@ -465,19 +465,19 @@ function edit(data){
 			dataSource : scm.scModifyHistory,
 			columns : [ {
 				field : "addNewEqCostMoney",
-				title : "增补额"
+				title : "变更额"
 			}, {
 				field : "addNewEqCostTime",
-				title : "增补时间"
+				title : "变更时间"
 			}, {
 				field : "addNewEqCostPerson",
-				title : "增补操作人"
+				title : "变更操作人"
 			}, {
 				field : "addNewEqCostReason",
-				title : "增补原因"
+				title : "变更原因"
 			}, {
 				field : "addNewEqCostMemo",
-				title : "增补备注"
+				title : "变更备注"
 			}],
 			scrollable : true
 		});
