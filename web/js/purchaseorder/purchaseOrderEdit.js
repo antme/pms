@@ -5,6 +5,8 @@ editUrl = "/service/purcontract/order/get";
 saveUrl =  "/service/purcontract/order/update";
 addUrl =  "/service/purcontract/order/add";
 var getSelectUrl = "/service/purcontract/request/get";
+var approveUrl = "/service/purcontract/order/approve";
+var rejectUrl = "/service/purcontract/order/reject";
 
 // 声明一个总的对象用来传递数据
 var requestDataItem = undefined;
@@ -208,6 +210,7 @@ function edit(data) {
 		if(redirectParams && redirectParams.pageId){
 			$(".save").hide();
 			$(".approve").show();
+			$("#approve-comment").show();
 		}else{
 			$(".approve").hide();
 			$(".save").show();
@@ -452,4 +455,26 @@ function saveOrder(status) {
 
 function cancel(){
 	loadPage("purchasecontract_purchaseOrder");
+}
+
+
+
+function approvePurOrder(){
+	var param = {
+			"_id" : requestDataItem._id,
+			"approveComment" : $("#approve-comment").val()
+		};
+	postAjaxRequest(approveUrl, param, function(data){
+		loadPage("purchasecontract_purchaseOrder");
+	});
+}
+
+function rejectPurOrder(){
+	var param = {
+			"_id" : requestDataItem._id,
+			"approveComment" : $("#approve-comment").val()
+		};
+	postAjaxRequest(rejectUrl, param, function(data){
+		loadPage("purchasecontract_purchaseOrder");
+	});
 }

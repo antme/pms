@@ -249,6 +249,12 @@
 							<textarea class="k-textarea"
 								data-bind="value: comment"></textarea>
 						</div>
+						
+						  <hr>
+			             <div>
+			                <label>审核备注:</label>
+			                <textarea class="k-textarea  foredit" style="width:400px; display:none;" id="approve-comment" ></textarea>
+			            </div>
 
 					</div>
 				</div>
@@ -262,8 +268,10 @@
                 </div>
 			</div>
             <div>
-                <button onclick="save();">保存</button>
-                <button onclick="save('审批中');">提交申请</button>
+                <button onclick="save();" class="save">保存</button>
+                <button onclick="save('审批中');" class="save">提交申请</button>
+                <button onclick="approvePurCon();" class="approve">批准</button>
+                <button onclick="rejectPurCon();" class="approve">拒绝</button>
                 <button onclick="cancel();">取消</button>
             </div>
 		</div>

@@ -90,25 +90,17 @@ function approveCon() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if(row.status == "审批中"){
-			process(approveUrl);
+			loadPage("purchasecontract_purchasecontractedit", {
+				_id : row._id,
+				pageId : "approve"
+			});
 		}else{
 			alert("此数据状态不需要审批");
 		}
 	}
 }
 
-function rejectCon() {
-	
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	if (row) {
-		if(row.status == "审批中"){
-			process(rejectUrl);
-		}else{
-			alert("此数据状态不能拒绝");
-		}
-	}
-	
-}
+
 
 var rowId = undefined;
 function addPOBumber(){

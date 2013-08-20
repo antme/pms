@@ -97,7 +97,7 @@ function editOr() {
 	var row = getSelectedRowDataByGrid("grid");
 	
 	if (row) {
-		if (row.status == "已提交" || row.status == "草稿" || row.status == "中止申请中") {
+		if (row.status == "已提交" || row.status == "草稿" || row.status == "废除待审批" || row.status == "审批拒绝") {
 			loadPage("purchasecontract_purchaseOrderEdit", {
 				_id : row._id
 			});
@@ -116,7 +116,7 @@ function cancelOrder() {
 		if(row.status == "草稿" || row.status == "已提交"){
 			process(cancelUrl);
 		}else {
-			alert("不能中止");
+			alert("不能废除");
 		}
 	}
 }
@@ -124,13 +124,13 @@ function cancelOrder() {
 function approveOrder(){
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "中止申请中"){
+		if(row.status == "废除待审批"){
 			loadPage("purchasecontract_purchaseOrderEdit", {
 				_id : row._id,
 				pageId: "approve"
 			});
 		}else {
-			alert("不需要审批,只有中止申请中的订单才可以审批");
+			alert("不需要审批,只有废除待审批的订单才可以审批");
 		}
 	}
 }
