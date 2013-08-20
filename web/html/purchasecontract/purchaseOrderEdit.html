@@ -6,13 +6,6 @@ label {
 	margin-left: 5px;
 }
 
-.save {
-	display: none;
-}
-
-.approve {
-	display: none;
-}
 
 #purchaseorder-edit-header {
 	margin-bottom: 10px;
@@ -74,15 +67,20 @@ label {
            <br><br>
             <div>
                 <label>备注:</label>
-                <textarea rows="8" cols="220" class="k-textbox  foredit" style="width:400px;" data-bind="value: comment" ></textarea>
+                <textarea class="k-textarea  foredit" style="width:400px;" data-bind="value: comment" ></textarea>
+            </div>
+            <hr>
+             <div>
+                <label>审核备注:</label>
+                <textarea class="k-textarea  foredit" style="width:400px; display:none;" id="approve-comment" ></textarea>
             </div>
             <div style="width:400px; margin-top:50px;">
                 <div id="purchaseorder-sum-grid"></div>
                 <div>
                     <button onclick="saveOrder();" class="save">保存</button>
                     <button onclick="saveOrder('已提交');"  class="save">提交申请</button>
-                    <button onclick="approveOrder();" class="approve">批准</button>
-                    <button onclick="rejectOrder();" class="approve">拒绝</button>
+                    <button onclick="approvePurOrder();" class="approve">批准</button>
+                    <button onclick="rejectPurOrder();" class="approve">拒绝</button>
                     <button onclick="cancel();">取消</button>
                 </div>
             </div>

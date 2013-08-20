@@ -378,7 +378,7 @@ $(document).ready(function() {
 	$("#addNewEqCostReason").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
-        optionLabel: "选择增补原因...",
+        optionLabel: "选择变更原因...",
 		dataSource : addNewEqCostReasonItems,
 	});
 	
@@ -733,18 +733,18 @@ function saveSC(){
 		alert("表单验证不通过！");
 		return;
     } else {
-    	//如果添加新的成本设备，严重增补原因、增补备注必填
+    	//如果添加新的成本设备，严重变更原因、变更备注必填
     	var newEqTotal = eqCostListDataSourceNew.total();
 		var reason = $("#addNewEqCostReason").data("kendoDropDownList").value();
 		scm.set("addNewEqCostReason", reason);
     	if (newEqTotal>0){
     		if (reason == null || reason == ""){
-    			alert("请选择增补原因！");
+    			alert("请选择变更原因！");
     			return;
     		}
     		var newEqMemo = $("#addNewEqCostMemo").val().trim();
     		if (newEqMemo == null || newEqMemo == ""){
-    			alert("请填写增补备注！");
+    			alert("请填写变更备注！");
     			return;
     		}
     		

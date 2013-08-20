@@ -1,5 +1,6 @@
 var requestDataItem;
-
+var approveUrl = "/service/purcontract/approve";
+var rejectUrl = "/service/purcontract/reject";
 
 var contractModel = kendo.data.Model.define({
 	id : "_id",
@@ -450,6 +451,8 @@ function save(status) {
 			// 同步数据
 			itemDataSource.sync();
 		}
+	}else{
+		alert("数据校验不通过，请检查不同的tab");
 	}
 
 }
@@ -527,7 +530,16 @@ function edit(data) {
 		$("#purchasecontractselect").show();
 	}
 	
-	
+	if(!popupParams){
+		if(redirectParams && redirectParams.pageId){
+			$(".save").hide();
+			$(".approve").show();
+			$("#approve-comment").show();
+		}else{
+			$(".approve").hide();
+			$(".save").show();
+		}
+	}
 	if(!requestDataItem.signBy){
 		requestDataItem.signBy = user.userName;
 
@@ -858,3 +870,26 @@ function categoryDropDownEditor(container, options) {
 function cancel(){
 	loadPage("purchasecontract_purchasecontract");
 }
+
+
+
+function approvePurCon(){
+	var param = {
+			"_id" : requestDataItem._id,
+			"approveComment" : $("#approve-comment").val()
+		};
+	postAjaxRequest(approveUrl, param, function(data){
+		loadPage("purchasecontract_purchasecontract");
+	});
+}
+
+function rejectPurCon(){
+	var param = {
+			"_id" : requestDataItem._id,
+			"approveComment" : $("#approve-comment").val()
+		};
+	postAjaxRequest(rejectUrl, param, function(data){
+		loadPage("purchasecontract_purchasecontract");
+	});
+}
+
