@@ -1,7 +1,6 @@
 package com.pms.service.service.impl;
 
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,10 +11,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.mongodb.DBObject;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
-import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.CustomerBean;
@@ -24,7 +21,6 @@ import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.InvoiceBean;
 import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
-import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
@@ -1097,17 +1093,20 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, list.get(i)[keyMap.get("规格型号")].trim());
 				eq.put(EqCostListBean.EQ_LIST_BRAND, list.get(i)[keyMap.get("品牌")].trim());
 				eq.put(EqCostListBean.EQ_LIST_UNIT, list.get(i)[keyMap.get("单位")].trim());
-				eq.put(EqCostListBean.EQ_LIST_AMOUNT, ApiUtil.getDouble(list.get(i)[keyMap.get("数量")].trim()));
 				eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, list.get(i)[keyMap.get("销售单价")].trim());
-				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[keyMap.get("标准成本价")].trim());
 				
 				float dr = Float.parseFloat(String.valueOf(list.get(i)[keyMap.get("折扣率")].trim()));
+				float basePrice = Float.parseFloat(String.valueOf(list.get(i)[keyMap.get("标准成本价")].trim()));
+				Double eqcostAmount = ApiUtil.getDouble(list.get(i)[keyMap.get("数量")].trim());
+				float lastBasePrice = dr*basePrice;
 				
+				eq.put(EqCostListBean.EQ_LIST_AMOUNT, eqcostAmount);
+				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, basePrice);
 				eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, dr*100);
-				eq.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, list.get(i)[keyMap.get("最终成本单价")].trim());
+				eq.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, lastBasePrice);
 				eq.put(EqCostListBean.EQ_LIST_CATEGORY, list.get(i)[keyMap.get("物料类别")].trim());
 				eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, list.get(i)[keyMap.get("税收类型")].trim());
-				eq.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, ApiUtil.getDouble(list.get(i)[keyMap.get("小计")].trim()));
+				eq.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, lastBasePrice*eqcostAmount);
 				eq.put(EqCostListBean.EQ_LIST_MEMO, list.get(i)[keyMap.get("备注")].trim());
 				
 				eqList.add(eq);

@@ -182,12 +182,26 @@
                
                <div><!-- 第2个Tab -->
                    <div class="k-edit-form-container"><!-- 商务信息-->
-	                   <div class="k-edit-label ">
+                   		<div class="k-edit-label ">
 							<label for="contractAmount">合同金额</label>
 						</div>
 						<div data-container-for="contractAmount" class="k-edit-field ">
-							<input type="number" min="0" name="contractAmount" id="contractAmount" onchange="moneyOnChange();"
-								required="required" validationMessage="必填" data-bind="value: contractAmount">
+							<input type="text" readonly name="contractAmount" id="contractAmount" data-bind="value: contractAmount">
+						</div>
+						
+						<div class="k-edit-label ">
+							<label for="equipmentAmount">设备金额</label>
+						</div>
+						<div data-container-for="equipmentAmount" class="k-edit-field ">
+							<input type="text" readonly name="equipmentAmount" id="equipmentAmount" data-bind="value: equipmentAmount">
+						</div>
+						
+	                    <div class="k-edit-label ">
+							<label for="serviceAmount">服务金额</label>
+						</div>
+						<div data-container-for="serviceAmount" class="k-edit-field ">
+							<input type="number" min="0" name="serviceAmount" id="serviceAmount" onchange="moneyOnChange();"
+								required="required" validationMessage="必填" data-bind="value: serviceAmount">
 						</div>
 						
 	                   <div class="k-edit-label ">
