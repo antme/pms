@@ -850,6 +850,8 @@ function saveSC(){
 		scm.set("estimateGrossProfitRate", profitRate);
 		scm.set("totalEstimateCost", totalEstimate);
 		
+		scm.set("status", null);
+		
 		postAjaxRequest("/service/sc/add",  {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
     	});
