@@ -15,6 +15,8 @@ var scModel = kendo.data.Model.define({
 		archiveStatus : {},
 		runningStatus : {},
 		contractAmount : {},
+		equipmentAmount : {},
+		serviceAmount : {},
 		invoiceType : {},
 		estimateEqCost0 : {},
 		estimateEqCost1 : {},
@@ -344,7 +346,13 @@ $(document).ready(function() {
 			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
 			scrollable : true,
-			sortable : true
+			sortable : true,
+			save: function(e) {
+				alert(e.values.eqcostBasePrice);
+				var dataItem = eqCostListDataSource.at(0);
+				alert(dataItem.eqcostBasePrice);
+				dataItem.eqcostBasePrice =100;
+			}
 		});
 	}//成本设备清单
 	
