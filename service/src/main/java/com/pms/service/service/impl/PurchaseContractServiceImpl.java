@@ -1408,7 +1408,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     contract.put(PurchaseContract.SUPPLIER, supplier.get(ApiConstants.MONGO_ID));
                 }
 
-                contract.put(PurchaseContract.PURCHASE_CONTRACT_CODE, item[columnIndexMap.get("采购合同编号")].trim());
+                String code = item[columnIndexMap.get("采购合同编号")].trim();
+                contract.put(PurchaseContract.PURCHASE_CONTRACT_CODE, code);
                 contract.put(PurchaseContract.DESCRIPTION, item[columnIndexMap.get("合同描述")].trim());
                 contract.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, item[columnIndexMap.get("合同类别")].trim());
                 String contractProperty = item[columnIndexMap.get("开口/闭口")].trim();
@@ -1441,6 +1442,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     contract.put(PurchaseContract.PROCESS_STATUS, PurchaseContract.STATUS_COMPLETED);
                 } else {
                     contract.put(PurchaseContract.PROCESS_STATUS, PurchaseContract.STATUS_APPROVED);
+                }
+                
+                Map<String, Object> con = this.dao.findOne(PurchaseContract.PURCHASE_CONTRACT_CODE, code, DBBean.PURCHASE_CONTRACT);
+                
+                if (!ApiUtil.isEmpty(con)) {
+                    contract.put(ApiConstants.MONGO_ID, con.get(ApiConstants.MONGO_ID));
                 }
                 
                 this.updatePurchaseContract(contract);
