@@ -348,8 +348,28 @@ $(document).ready(function() {
 			scrollable : true,
 			sortable : true,
 			save: function(e) {
-				var dataItem = eqCostListDataSource.at(0);
-				dataItem.eqcostBasePrice =100;
+				var eqcostBasePrice,eqcostDiscountRate,eqcostAmount = 0;
+				if (e.values.eqcostBasePrice) {
+					eqcostBasePrice = e.values.eqcostBasePrice;
+				} else {
+					eqcostBasePrice = e.model.eqcostBasePrice;
+				}
+				if (e.values.eqcostDiscountRate) {
+					eqcostDiscountRate = e.values.eqcostDiscountRate;
+				} else {
+					eqcostDiscountRate = e.model.eqcostDiscountRate;
+				}
+				if (e.values.eqcostAmount) {
+					eqcostAmount = e.values.eqcostAmount;
+				} else {
+					eqcostAmount = e.model.eqcostAmount;
+				}
+				
+				var eqcostLastBasePrice = eqcostBasePrice*eqcostDiscountRate/100;
+				e.model.set({"eqcostLastBasePrice", eqcostLastBasePrice});
+				
+				var eqcostTotalAmount = eqcostAmount*eqcostLastBasePrice;
+				e.model.set("eqcostTotalAmount", eqcostTotalAmount);
 			}
 		});
 	}//成本设备清单
