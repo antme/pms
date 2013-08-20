@@ -102,7 +102,7 @@ var projectItems = new kendo.data.DataSource({
 
 var tabs;
 $(document).ready(function() {
-	
+	projectItems.read();
 	scm = new scModel();
 	//选项卡
 	
@@ -348,9 +348,7 @@ $(document).ready(function() {
 			scrollable : true,
 			sortable : true,
 			save: function(e) {
-				alert(e.values.eqcostBasePrice);
 				var dataItem = eqCostListDataSource.at(0);
-				alert(dataItem.eqcostBasePrice);
 				dataItem.eqcostBasePrice =100;
 			}
 		});
@@ -368,37 +366,95 @@ $(document).ready(function() {
 	
 	//添加表单绑定一个空的 Model
 	
-	kendo.bind($("#addSalesContract"), scm);
 	
 	if(redirectParams && redirectParams.pageId && redirectParams.pageId=="newProject"){
-		
-		var tabStrip = $("#tabstrip").data("kendoTabStrip");
-		if(!tabStrip){
-			$("#tabstrip").kendoTabStrip();		
-			tabStrip = $("#tabstrip").data("kendoTabStrip");
+		$(".projectId").hide();
+
+		if(redirectParams._id){
+			postAjaxRequest("/service/sc/get", redirectParams, editDraftSc);
+		}else{
+			editDraftSc();
 		}
-		tabStrip.append({
-	        text: "项目信息"
-	    });
+		
+		
+	}else{
+		kendo.bind($("#addSalesContract"), scm);
+
 	}
 	
 });//end dom ready	
 
+function editDraftSc(data){
+	$("#projectCode").attr("disabled", true);
+	var tabStrip = $("#tabstrip").data("kendoTabStrip");
+	if(!tabStrip){
+		$("#tabstrip").kendoTabStrip();		
+		tabStrip = $("#tabstrip").data("kendoTabStrip");
+	}
+	
+	if(data){
+		scm = new scModel(data);
+		eqCostListDataSource.data(scm.eqcostList);
+	}
+	
+	kendo.bind($("#addSalesContract"), scm);
+
+	tabStrip.append({
+        text: "项目信息"
+    });
+	
+	
+	$("#projectStatus").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+		optionLabel : "选择项目状态...",
+		dataSource : proStatusItemsForAdd,
+		select:function(e){
+			var dataItem = this.dataItem(e.item.index());
+			showTabs(dataItem.value);
+		}
+	});
+	$("#projectType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		optionLabel : "选择立项类别...",
+		dataSource : proCategoryItems,
+		select:function(e){
+			var dataItem = this.dataItem(e.item.index());
+		}
+	});
+	
+
+	$("#projectManager").kendoDropDownList({
+		dataTextField : "userName",
+		dataValueField : "_id",
+        optionLabel: "选择项目经理...",
+		dataSource : proManagerItems
+	});
+	
+	showTabs("内部立项");
+}
+
 
 function saveSCDraft(){
-	var eqCostData = eqCostListDataSource.data();
-	scm.set("eqcostList", eqCostData);
-
-	var profit = $("#estimateGrossProfit").val();
-	var profitRate = $("#estimateGrossProfitRate").val();
-	var totalEstimate = $("#totalEstimateCost").val();
-	scm.set("estimateGrossProfit", profit);
-	scm.set("estimateGrossProfitRate", profitRate);
-	scm.set("totalEstimateCost", totalEstimate);
-	scm.set("status", "草稿");
-	postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
-		loadPage("salescontract_scList");
-	});
+	if(scm.get("status") == "已提交"){
+		alert("已提交的销售合同不能保存为草稿");
+	}else{		
+		var eqCostData = eqCostListDataSource.data();
+		scm.set("eqcostList", eqCostData);
+	
+		var profit = $("#estimateGrossProfit").val();
+		var profitRate = $("#estimateGrossProfitRate").val();
+		var totalEstimate = $("#totalEstimateCost").val();
+		scm.set("estimateGrossProfit", profit);
+		scm.set("estimateGrossProfitRate", profitRate);
+		scm.set("totalEstimateCost", totalEstimate);
+	
+		scm.set("status", "草稿");
+		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
+			loadPage("salescontract_scList");
+		});
+	}
     
 }
 function saveSC(){
@@ -408,7 +464,25 @@ function saveSC(){
 	var eqCostData = eqCostListDataSource.data();
 //	var progressPaymentData = scProgressPaymentDatasource.data();
 	var projectId = scm.get("projectId");
-	var projectStatus = projectItems.get(projectId).get("projectStatus");
+	var projectStatus = undefined;	
+	if(projectId){
+		projectStatus = projectItems.get(projectId).get("projectStatus");
+	}else{		
+		var pStatus = $("#projectStatus").data("kendoDropDownList");
+		if(pStatus){
+			projectStatus = pStatus.value();
+		}
+	}
+	
+	if(scm.projectType && scm.projectType.text){
+		scm.projectType = scm.projectType.text;
+	}
+	
+	if(scm.projectManager && scm.projectManager._id){
+		scm.projectManager = scm.projectManager._id;
+	}
+	
+	console.log(projectStatus);
 	var scType = scm.get("contractType");
 	if (scType == null || scType == ""){
 		alert("请选择合同类型！");
@@ -485,6 +559,17 @@ function saveSC(){
 		alert("表单验证不通过！");
 		return;
     } else {
+    	
+    	if(!projectId){    		
+    		var proValidator = $("#projectInfo").kendoValidator().data("kendoValidator");
+    		if(!proValidator.validate()) {
+    			validatestatus.text("请填写项目信息！")
+    	        .removeClass("valid")
+    	        .addClass("invalid");
+    			alert("表单验证不通过！");
+    			return;
+    	    }
+    	}
 		scm.set("eqcostList", eqCostData);
 //		scm.set("progressPayment", progressPaymentData);
 
@@ -494,6 +579,8 @@ function saveSC(){
 		scm.set("estimateGrossProfit", profit);
 		scm.set("estimateGrossProfitRate", profitRate);
 		scm.set("totalEstimateCost", totalEstimate);
+		scm.set("status", "已提交");
+		console.log(scm);
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
     	});

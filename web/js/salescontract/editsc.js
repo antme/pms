@@ -343,8 +343,7 @@ $(document).ready(function() {
 		dataTextField : "name",
 		dataValueField : "_id",
         optionLabel: "选择客户...",
-		dataSource : customerItems,
-		enable:false
+		dataSource : customerItems
 	});
 	//合同类型
 	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
@@ -704,22 +703,33 @@ function edit(data){
 	
 	scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
 	kendo.bind($("#editSalesContract"), scm);
+	
+	var customer = $("#customer").data("kendoDropDownList");
+	if(scm.customer){
+		customer.enable(false);
+	}else{
+		customer.enable(true);
+	}
 }
 	
 function saveSCDraft(){
-	var eqCostData = eqCostListDataSourceNew.data();
-	scm.set("eqcostList", eqCostData);
-
-	var profit = $("#estimateGrossProfit").val();
-	var profitRate = $("#estimateGrossProfitRate").val();
-	var totalEstimate = $("#totalEstimateCost").val();
-	scm.set("estimateGrossProfit", profit);
-	scm.set("estimateGrossProfitRate", profitRate);
-	scm.set("totalEstimateCost", totalEstimate);
-	scm.set("status", "草稿");
-	postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
-		loadPage("salescontract_scList");
-	});
+	if(scm.get("status") == "已提交"){
+		alert("已提交的销售合同不能保存为草稿");
+	}else{	
+		var eqCostData = eqCostListDataSourceNew.data();
+		scm.set("eqcostList", eqCostData);
+	
+		var profit = $("#estimateGrossProfit").val();
+		var profitRate = $("#estimateGrossProfitRate").val();
+		var totalEstimate = $("#totalEstimateCost").val();
+		scm.set("estimateGrossProfit", profit);
+		scm.set("estimateGrossProfitRate", profitRate);
+		scm.set("totalEstimateCost", totalEstimate);
+		scm.set("status", "草稿");
+		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
+			loadPage("salescontract_scList");
+		});
+	}
     
 }
 
@@ -849,7 +859,7 @@ function saveSC(){
 		scm.set("estimateGrossProfit", profit);
 		scm.set("estimateGrossProfitRate", profitRate);
 		scm.set("totalEstimateCost", totalEstimate);
-		
+		scm.set("status", "已提交");
 		postAjaxRequest("/service/sc/add",  {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
     	});

@@ -96,7 +96,7 @@ $(document).ready(function() {
 						dataSource : proCategoryItems,
 						optionLabel : "...",
 						dataTextField : "text",
-						dataValueField : "value"
+						dataValueField : "text"
 					});
 				}
 			}

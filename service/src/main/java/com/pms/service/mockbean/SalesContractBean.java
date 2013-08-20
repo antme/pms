@@ -129,4 +129,9 @@ public class SalesContractBean {
 	
 	
 	public static final String SC_CODE_PREFIX = "TDSH-XS-";
+	
+	public static final String SC_CODE_PREFIX_DRAFT = "TDSH-XS-DRAFT";
+	
+	public static final String SC_STATUS_DRAFT = "草稿";
+	public static final String SC_STATUS_SUBMITED = "已提交";
 }

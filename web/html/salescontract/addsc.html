@@ -20,20 +20,20 @@
 	
 	<div id="addSalesContract" class="k-content test">
 		<div>
-			<button class="k-button"  onclick="saveSCDraft();">保存</button>
-			<button class="k-button"  onclick="saveSC();">提交</button>
+			<button class="k-button"  onclick="saveSCDraft();">草稿</button>
+			<button class="k-button"  onclick="saveSC();">保存</button>
 			<button class="k-button"  onclick='loadPage("salescontract_scList");'>取消</button>
 		</div>
 		
 		<div id="validate-status"></div>
 	
 		<div>
-			<div class="k-edit-label ">
+			<div class="k-edit-label projectId" >
 				<label for="projectId">关联项目</label>
 			</div>
-			<div data-container-for="projectId" class="k-edit-field ">
+			<div data-container-for="projectId" class="k-edit-field projectId" >
 				<input type="text" class="pro-dropdownlist" name="projectId" id="projectId"
-					required="required" validationMessage="必填" data-bind="value: projectId">
+					   validationMessage="必填" data-bind="value: projectId">
 				<span id="selProjectName"></span>
 			</div>
 			
@@ -327,7 +327,7 @@
                </div>
                <!-- 第 4 个Tab 新建项目时候-->
                <div>
-	                <div class="k-edit-form-container">
+	                <div class="k-edit-form-container" id="projectInfo">
 	                <div class="k-edit-label ">
 	                <label for="projectCode"  class="required">项目编号</label>
 	                </div>
@@ -341,7 +341,7 @@
 	                </div>
 	                <div data-container-for="projectName" class="k-edit-field ">
 	                    <input type="text" class="k-input k-textbox" name="projectName" id="projectName"
-	                        required="required" validationMessage="必填" data-bind="value: projectName">
+	                        required validationMessage="必填" data-bind="value: projectName">
 	                </div>
 	                <div class="k-edit-label ">
 	                    <label for="projectAbbr">项目缩写</label>
@@ -372,7 +372,7 @@
 	                    <label for="projectType">项目类型</label>
 	                </div>
 	                <div data-container-for="projectType" class="k-edit-field ">
-	                    <input type="text" class="pro-dropdownlist" name="projectType" id="projectType"
+	                    <input type="text"  name="projectType" id="projectType"
 	                        required="required" validationMessage="必填" data-bind="value: projectType">
 	                </div>
 	                
