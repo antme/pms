@@ -479,7 +479,7 @@ function saveSCDraft(){
 }
 function saveSC(){
 	
-	var validator = $("#addSalesContract").kendoValidator().data("kendoValidator");
+	var validator = $(".addSalesContract").kendoValidator().data("kendoValidator");
 	var validatestatus = $("#validate-status");
 	var eqCostData = eqCostListDataSource.data();
 //	var progressPaymentData = scProgressPaymentDatasource.data();
@@ -586,9 +586,15 @@ function saveSC(){
     			validatestatus.text("请填写项目信息！")
     	        .removeClass("valid")
     	        .addClass("invalid");
-    			alert("表单验证不通过！");
+    			alert("项目表单验证不通过！");
     			return;
     	    }
+    		
+    		if(scType == "弱电工程"){
+    			if($("#projectAbbr").val()=="" || !$("#projectAbbr").val()){}
+    			alert("弱电工程的合同项目缩写必须填写！");
+    			return;
+    		}
     	}
 		scm.set("eqcostList", eqCostData);
 //		scm.set("progressPayment", progressPaymentData);
@@ -685,6 +691,7 @@ function showTabs(projectStatus){
 	var tab0 = tabStrip.tabGroup.children("li").eq(0);
 	var tab1 = tabStrip.tabGroup.children("li").eq(1);
 	var tab2 = tabStrip.tabGroup.children("li").eq(2);
+	var tab3 = tabStrip.tabGroup.children("li").eq(3);
 	var scType = $("#contractType").val();
 	if (projectStatus == "销售正式立项"){
 		$("#tabDiv").show();
@@ -695,12 +702,24 @@ function showTabs(projectStatus){
 		tabStrip.enable(tab0, false);
 		tabStrip.enable(tab1, false);
 		if(scType != "弱电工程"){
-			tabStrip.select(2);
+			if(tab3){
+				tabStrip.select(3);
+			}else{
+				tabStrip.select(2);
+			}
 //			tabStrip.deactivateTab(tab2);
 		}else{
 			tabStrip.deactivateTab(tab0);
 			tabStrip.deactivateTab(tab1);
 			tabStrip.deactivateTab(tab2);
+			if(tab3){
+				//先出发其它的
+				tabStrip.enable(tab3, true);
+				tabStrip.select(2);
+				//再出发选择项目的
+				tabStrip.select(3);
+			}
+	
 		}
 	}
 }
@@ -713,12 +732,24 @@ function scTypeShowTabs(scType){
 		tabStrip = $("#tabstrip").data("kendoTabStrip");
 	}
 	var tab2 = tabStrip.tabGroup.children("li").eq(2);
+	var tab3 = tabStrip.tabGroup.children("li").eq(3);
 //	console.log("***"+scType);
 	if (scType == "弱电工程"){
 		tabStrip.enable(tab2, false);
 		tabStrip.deactivateTab(tab2);
+		if(tab3){
+			tabStrip.enable(tab3, true);
+			//先出发其它的
+			tabStrip.select(2);
+			//再出发选择项目的
+			tabStrip.select(3);
+		}
 	}else{
 		tabStrip.enable(tab2, true);
-		tabStrip.select(2);
+		if(tab3){
+			tabStrip.select(3);
+		}else{
+			tabStrip.select(2);
+		}
 	}
 }
