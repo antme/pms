@@ -264,33 +264,33 @@ function initMyDraftTasks(id, data){
 					}
 					
 					if(dataItem.db == "purchaseBack"){
-						return '<a onclick="loadTreePage(' + "'purchaseBack'," + param + ')">' + dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'purchaseback_purchaseBack'," + param + ')">' + dataItem.count + '</a>';
 					}
 					if(dataItem.db == "purchaseContract"){
-						return '<a onclick="loadTreePage(' + "'purchasecontract'," + param + ')">' + dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'purchasecontract_purchasecontract'," + param + ')">' + dataItem.count + '</a>';
 					}
 					if(dataItem.db == "purchaseOrder"){
-						return '<a onclick="loadTreePage(' + "'purchaseorder'," + param + ')">'+ dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'purchasecontract_purchaseOrder'," + param + ')">'+ dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "purchaseAllocate"){
-						return '<a onclick="loadTreePage(' + "'purchaseAllotManage'," + param + ')">'+ dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'purchaseback_purchaseAllotManage'," + param + ')">'+ dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "repository"){
-						return '<a onclick="loadTreePage(' + "'repository'," + param + ')">'+ dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'repository_repository'," + param + ')">'+ dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "ship"){
-						return '<a onclick="loadTreePage(' + "'ship'," + param + ')">'+ dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'execution_ship'," + param + ')">'+ dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "borrowing"){
-						return '<a onclick="loadTreePage(' + "'borrowing'," + param + ')">'+ dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'execution_borrowing'," + param + ')">'+ dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "return"){
-						return '<a onclick="loadTreePage(' + "'return'," + param + ')">'+ dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'execution_return'," + param + ')">'+ dataItem.count + '</a>';
 					}
 					
 					if(dataItem.db == "salesContract"){
