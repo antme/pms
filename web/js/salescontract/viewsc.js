@@ -457,10 +457,36 @@ function edit(data){
 	kendo.bind($("#editSalesContract"), scm);
 	
 	//Render the title show info
-	var showSCAmount = scm.get("contractAmount");
-	var showSCLastAmount = scm.get("scLastTotalAmount");
-	$("#titleShowContractAmount").html(showSCAmount);
-	$("#titleShowLastContractAmount").html(showSCLastAmount);
+//	var showSCAmount = scm.get("contractAmount");
+//	var showSCLastAmount = scm.get("scLastTotalAmount");
+//	$("#titleShowContractAmount").html(showSCAmount);
+//	$("#titleShowLastContractAmount").html(showSCLastAmount);
+	
+	if (!$("#titleCompare").data("kendoGrid")){
+		$("#titleCompare").kendoGrid({
+			dataSource : [
+			              { name: "第一次", contractAmount: scm.firstContractAmount, equipmentAmount: scm.firstEquipmentAmount, serviceAmount: scm.firstServiceAmount, estimateGrossProfit: scm.firstEstimateGrossProfit },
+			              { name: "最后一次", contractAmount: scm.contractAmount, equipmentAmount: scm.equipmentAmount, serviceAmount: scm.serviceAmount, estimateGrossProfit: scm.estimateGrossProfit }
+			          ],
+			columns : [ {
+				field : "name",
+				title : "数据源"
+			}, {
+				field : "contractAmount",
+				title : "合同金额"
+			}, {
+				field : "equipmentAmount",
+				title : "设备金额"
+			}, {
+				field : "serviceAmount",
+				title : "服务金额"
+			}, {
+				field : "estimateGrossProfit",
+				title : "预计毛利"
+			}],
+			scrollable : true
+		});
+	}
 	
 	if (!$("#titleShowSCModifyHistory").data("kendoGrid")){
 		$("#titleShowSCModifyHistory").kendoGrid({

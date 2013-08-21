@@ -167,6 +167,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             } else {
                 genSCCode = genSCCode(scPId);
                 contract.put(SalesContractBean.SC_CODE, genSCCode);
+                
+                // 第一次提交的值
+                contract.put(SalesContractBean.SC_FIRST_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT));
+        		contract.put(SalesContractBean.SC_FIRST_EQUIPMENT_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_EQUIPMENT_AMOUNT));
+        		contract.put(SalesContractBean.SC_FIRST_SERVICE_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_SERVICE_AMOUNT));
+        		contract.put(SalesContractBean.SC_FIRST_EXTIMATE_GROSS_PROFIT, ApiUtil.getDouble(params, SalesContractBean.SC_EXTIMATE_GROSS_PROFIT));
+        		
                 addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
 
                 if (!ApiUtil.isEmpty(params.get(SalesContractBean.SC_PROJECT_ID)) && !ApiUtil.isEmpty(params.get(SalesContractBean.SC_CUSTOMER))) {

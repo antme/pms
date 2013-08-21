@@ -136,4 +136,10 @@ public class SalesContractBean {
 	
 	public static final String SC_STATUS_DRAFT = "草稿";
 	public static final String SC_STATUS_SUBMITED = "已提交";
+	
+	// 第一次提交的值
+	public static final String SC_FIRST_AMOUNT = "firstContractAmount"; //合同金额
+	public static final String SC_FIRST_EQUIPMENT_AMOUNT = "firstEquipmentAmount"; //设备金额
+	public static final String SC_FIRST_SERVICE_AMOUNT = "firstServiceAmount"; //服务金额
+	public static final String SC_FIRST_EXTIMATE_GROSS_PROFIT ="firstEstimateGrossProfit";//==预计毛利
 }
