@@ -78,6 +78,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		String scPId = (String)params.get(SalesContractBean.SC_PROJECT_ID);
 		contract.put(SalesContractBean.SC_PROJECT_ID, scPId);
 		contract.put(SalesContractBean.SC_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT));
+		contract.put(SalesContractBean.SC_EQUIPMENT_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_EQUIPMENT_AMOUNT));
+		contract.put(SalesContractBean.SC_SERVICE_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_SERVICE_AMOUNT));
 		contract.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
 		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_EQ_COST0));
 		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST1, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_EQ_COST1));

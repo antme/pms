@@ -508,6 +508,7 @@ $(document).ready(function() {
 			save: function(e) {
 				if (excuSave) {
 					excuSave = false;
+					var oldTotalAmount = e.model.eqcostTotalAmount;
 					var eqcostBasePrice,eqcostDiscountRate,eqcostAmount = 0;
 					if (e.values.eqcostBasePrice) {
 						eqcostBasePrice = e.values.eqcostBasePrice;

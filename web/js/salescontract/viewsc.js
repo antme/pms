@@ -15,6 +15,8 @@ var scModel = kendo.data.Model.define({
 		archiveStatus : {},
 		runningStatus : {},
 		contractAmount : {},
+		equipmentAmount : {},
+		serviceAmount : {},
 		invoiceType : {},
 		estimateEqCost0 : {},
 		estimateEqCost1 : {},
@@ -195,7 +197,7 @@ $(document).ready(function() {
 	//合同签订日期控件
 	$("#contractDate").kendoDatePicker();
 	
-	$("#contractAmount").kendoNumericTextBox({
+	$("#serviceAmount").kendoNumericTextBox({
 		min:0
 	});
 	$("#estimateEqCost0").kendoNumericTextBox({

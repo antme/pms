@@ -23,6 +23,8 @@ public class SalesContractBean {
 	
 	//商务信息字段
 	public static final String SC_AMOUNT = "contractAmount"; //合同金额
+	public static final String SC_EQUIPMENT_AMOUNT = "equipmentAmount"; //设备金额
+	public static final String SC_SERVICE_AMOUNT = "serviceAmount"; //服务金额
 	public static final String SC_INVOICE_TYPE = "invoiceType"; //发票类型*********
 	public static final String SC_EXTIMATE_GROSS_PROFIT_RATE = "estimateGrossProfitRate";//==预计毛利率
 	public static final String SC_EXTIMATE_GROSS_PROFIT ="estimateGrossProfit";//==预计毛利
