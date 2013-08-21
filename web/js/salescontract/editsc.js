@@ -1,4 +1,4 @@
-
+var excuSave = true;
 var scModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
@@ -15,6 +15,8 @@ var scModel = kendo.data.Model.define({
 		archiveStatus : {},
 		runningStatus : {},
 		contractAmount : {},
+		equipmentAmount : {},
+		serviceAmount : {},
 		invoiceType : {},
 		estimateEqCost0 : {},
 		estimateEqCost1 : {},
@@ -395,7 +397,7 @@ $(document).ready(function() {
 		max: new Date()
 	});
 	
-	$("#contractAmount").kendoNumericTextBox({
+	$("#serviceAmount").kendoNumericTextBox({
 		min:0
 	});
 	$("#estimateEqCost0").kendoNumericTextBox({
@@ -502,7 +504,41 @@ $(document).ready(function() {
 			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
 			scrollable : true,
-			sortable : true
+			sortable : true,
+			save: function(e) {
+				if (excuSave) {
+					excuSave = false;
+					var eqcostBasePrice,eqcostDiscountRate,eqcostAmount = 0;
+					if (e.values.eqcostBasePrice) {
+						eqcostBasePrice = e.values.eqcostBasePrice;
+					} else {
+						eqcostBasePrice = e.model.eqcostBasePrice;
+					}
+					if (e.values.eqcostDiscountRate) {
+						eqcostDiscountRate = e.values.eqcostDiscountRate;
+					} else {
+						eqcostDiscountRate = e.model.eqcostDiscountRate;
+					}
+					if (e.values.eqcostAmount) {
+						eqcostAmount = e.values.eqcostAmount;
+					} else {
+						eqcostAmount = e.model.eqcostAmount;
+					}
+					
+					var eqcostLastBasePrice = eqcostBasePrice*eqcostDiscountRate/100;
+					e.model.set("eqcostLastBasePrice", eqcostLastBasePrice);
+					
+					var eqcostTotalAmount = eqcostAmount*eqcostLastBasePrice;
+					e.model.set("eqcostTotalAmount", eqcostTotalAmount);
+
+					// 商务信息 - 设备金额
+					var equipmentAmount = scm.equipmentAmount - oldTotalAmount + eqcostTotalAmount
+					scm.set("equipmentAmount", equipmentAmount);
+					moneyOnChange();
+					
+					excuSave = true;
+				}
+			}
 		});
 	}//成本设备清单_new
 	
@@ -513,6 +549,12 @@ $(document).ready(function() {
         },
         success:function(e){
         	eqCostListDataSourceNew.data(e.response.data);
+        	var equipmentAmount = 0;
+        	for ( var int = 0; int < e.response.data.length; int++) {
+        		equipmentAmount += e.response.data[int].eqcostTotalAmount;
+			}
+        	scm.set("equipmentAmount",scm.equipmentAmount+equipmentAmount);
+        	moneyOnChange();
         }
     });	
 	
@@ -969,8 +1011,12 @@ function closeWindow(windowId){
 }
 	
 function moneyOnChange(){
-	var scAmount = $("#contractAmount").val();
-	
+	var equipmentAmount = 0;
+	if (scm.equipmentAmount) {
+		equipmentAmount = scm.equipmentAmount;
+	}
+	var scAmount = scm.serviceAmount + equipmentAmount;
+	scm.set("contractAmount",scAmount);
 	var estimateEqCost0 = $("#estimateEqCost0").val();
 	var estimateEqCost1 = $("#estimateEqCost1").val();
 	var estimateSubCost = $("#estimateSubCost").val();

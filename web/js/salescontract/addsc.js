@@ -1,4 +1,4 @@
-
+var excuSave = true;
 var scModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
@@ -46,7 +46,6 @@ var scModel = kendo.data.Model.define({
 });
 
 var scm;
-
 
 //成本设备清单数据源
 var eqCostListDataSource = new kendo.data.DataSource({
@@ -217,7 +216,7 @@ $(document).ready(function() {
 	});
 	//ddd.value("2013/06/06");
 	
-	$("#contractAmount").kendoNumericTextBox({
+	$("#serviceAmount").kendoNumericTextBox({
 		min:0
 	});
 	$("#estimateEqCost0").kendoNumericTextBox({
@@ -322,12 +321,13 @@ $(document).ready(function() {
 			}, {
 				field : "eqcostLastBasePrice",
 				title : "最终成本价",
+//				format: "{0:n}",
 				groupFooterTemplate: "合计：", 
 				footerTemplate: "总计："
 			}, {
 				field : "eqcostTotalAmount",
 				title : "小计",
-//				format: "{0:c}",
+//				format: "{0:n}",
 				groupFooterTemplate: "#= sum#", 
 				footerTemplate: "#=sum#"
 			}, {
@@ -348,28 +348,39 @@ $(document).ready(function() {
 			scrollable : true,
 			sortable : true,
 			save: function(e) {
-				var eqcostBasePrice,eqcostDiscountRate,eqcostAmount = 0;
-				if (e.values.eqcostBasePrice) {
-					eqcostBasePrice = e.values.eqcostBasePrice;
-				} else {
-					eqcostBasePrice = e.model.eqcostBasePrice;
+				if (excuSave) {
+					excuSave = false;
+					var oldTotalAmount = e.model.eqcostTotalAmount;
+					var eqcostBasePrice,eqcostDiscountRate,eqcostAmount = 0;
+					if (e.values.eqcostBasePrice) {
+						eqcostBasePrice = e.values.eqcostBasePrice;
+					} else {
+						eqcostBasePrice = e.model.eqcostBasePrice;
+					}
+					if (e.values.eqcostDiscountRate) {
+						eqcostDiscountRate = e.values.eqcostDiscountRate;
+					} else {
+						eqcostDiscountRate = e.model.eqcostDiscountRate;
+					}
+					if (e.values.eqcostAmount) {
+						eqcostAmount = e.values.eqcostAmount;
+					} else {
+						eqcostAmount = e.model.eqcostAmount;
+					}
+					
+					var eqcostLastBasePrice = eqcostBasePrice*eqcostDiscountRate/100;
+					e.model.set("eqcostLastBasePrice", eqcostLastBasePrice);
+					
+					var eqcostTotalAmount = eqcostAmount*eqcostLastBasePrice;
+					e.model.set("eqcostTotalAmount", eqcostTotalAmount);
+					
+					// 商务信息 - 设备金额
+					var equipmentAmount = scm.equipmentAmount - oldTotalAmount + eqcostTotalAmount
+					scm.set("equipmentAmount", equipmentAmount);
+					moneyOnChange();
+					
+					excuSave = true;
 				}
-				if (e.values.eqcostDiscountRate) {
-					eqcostDiscountRate = e.values.eqcostDiscountRate;
-				} else {
-					eqcostDiscountRate = e.model.eqcostDiscountRate;
-				}
-				if (e.values.eqcostAmount) {
-					eqcostAmount = e.values.eqcostAmount;
-				} else {
-					eqcostAmount = e.model.eqcostAmount;
-				}
-				
-				var eqcostLastBasePrice = eqcostBasePrice*eqcostDiscountRate/100;
-				e.model.set("eqcostLastBasePrice", eqcostLastBasePrice);
-				
-				var eqcostTotalAmount = eqcostAmount*eqcostLastBasePrice;
-				e.model.set("eqcostTotalAmount", eqcostTotalAmount);
 			}
 		});
 	}//成本设备清单
@@ -381,6 +392,12 @@ $(document).ready(function() {
         },
         success:function(e){
         	eqCostListDataSource.data(e.response.data);
+        	var equipmentAmount = 0;
+        	for ( var int = 0; int < e.response.data.length; int++) {
+        		equipmentAmount += e.response.data[int].eqcostTotalAmount;
+			}
+        	scm.set("equipmentAmount",equipmentAmount);
+        	moneyOnChange();
         }
     });	
 	
@@ -627,7 +644,9 @@ function addAProject(){
 }
 
 function moneyOnChange(){
-	var scAmount = $("#contractAmount").val();
+	
+	var scAmount = scm.serviceAmount + scm.equipmentAmount;
+	scm.set("contractAmount",scAmount);
 	var estimateEqCost0 = $("#estimateEqCost0").val();
 	var estimateEqCost1 = $("#estimateEqCost1").val();
 	var estimateSubCost = $("#estimateSubCost").val();
