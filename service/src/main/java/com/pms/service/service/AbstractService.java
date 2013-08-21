@@ -391,49 +391,49 @@ public abstract class AbstractService {
         return taskQuery;
     }
 
-    protected Map<String, Object> getMyInprogressQuery(String type) {
+    protected Map<String, Object> getMyInprogressQuery(String db) {
         //我的待批
         Map<String, Object> ownerQuery = new HashMap<String, Object>();
         ownerQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
 
         //FIXME 根据部门查询数据
-        if (type.equalsIgnoreCase(DBBean.PURCHASE_REQUEST)) {
+        if (db.equalsIgnoreCase(DBBean.PURCHASE_REQUEST)) {
             if (inRole(RoleValidConstants.PURCHASE_REQUEST_PROCESS)) {
                 ownerQuery.remove(ApiConstants.CREATOR);
             }
         }
 
-        if (type.equalsIgnoreCase(DBBean.PURCHASE_ORDER)) {
+        if (db.equalsIgnoreCase(DBBean.PURCHASE_ORDER)) {
             if (inRole(RoleValidConstants.PURCHASE_ORDER_PROCESS)) {
                 ownerQuery.remove(ApiConstants.CREATOR);
             }
         }
 
-        if (type.equalsIgnoreCase(DBBean.PURCHASE_CONTRACT)) {
+        if (db.equalsIgnoreCase(DBBean.PURCHASE_CONTRACT)) {
             if (inRole(RoleValidConstants.PURCHASE_CONTRACT_PROCESS)) {
                 ownerQuery.remove(ApiConstants.CREATOR);
             }
         }
 
-        if (type.equalsIgnoreCase(DBBean.BORROWING)) {
+        if (db.equalsIgnoreCase(DBBean.BORROWING)) {
             if (inRole(RoleValidConstants.BORROWING_MANAGEMENT_PROCESS)) {
                 ownerQuery.remove(ApiConstants.CREATOR);
             }
         }
 
-        if (type.equalsIgnoreCase(DBBean.PURCHASE_ALLOCATE)) {
+        if (db.equalsIgnoreCase(DBBean.PURCHASE_ALLOCATE)) {
             if (inRole(RoleValidConstants.PURCHASE_ALLOCATE_PROCESS)) {
                 ownerQuery.remove(ApiConstants.CREATOR);
             }
         }
 
-        if (type.equalsIgnoreCase(DBBean.REPOSITORY)) {
+        if (db.equalsIgnoreCase(DBBean.REPOSITORY)) {
             if (inRole(RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS)) {
                 ownerQuery.remove(ApiConstants.CREATOR);
             }
         }
 
-        if (type.equalsIgnoreCase(DBBean.SHIP)) {
+        if (db.equalsIgnoreCase(DBBean.SHIP)) {
             if (inRole(RoleValidConstants.SHIP_MANAGEMENT_PROCESS)) {
                 ownerQuery.remove(ApiConstants.CREATOR);
             }
@@ -464,7 +464,7 @@ public abstract class AbstractService {
         return taskQuery;
     }
     
-    protected void mergeMyTaskQuery(Map<String, Object> param, String type) {
+    protected void mergeMyTaskQuery(Map<String, Object> param, String db) {
 
         if (ApiThreadLocal.getMyTask() != null) {
 
@@ -473,7 +473,7 @@ public abstract class AbstractService {
             if (task.equalsIgnoreCase("draft")) {
                 param.putAll(getMyDraftQuery());
             } else if (task.equalsIgnoreCase("inprogress")) {
-                param.putAll(getMyInprogressQuery(type));
+                param.putAll(getMyInprogressQuery(db));
             } else if (task.equalsIgnoreCase("rejected")) {
                 param.putAll(getMyRejectedQuey());
             } else if (task.equalsIgnoreCase("approved")) {

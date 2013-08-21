@@ -172,7 +172,12 @@ function toolbar_modifySalesContract() {
 		alert("请点击选择一条合同记录！");
 		return;
 	}
-	loadPage("salescontract_editsc",{_id:rowData._id,status:rowData.status});
+	
+	if(rowData.status == "草稿" && !rowData.projectId){
+		loadPage("salescontract_addsc",{_id:rowData._id, pageId:"newProject"});
+	}else{
+		loadPage("salescontract_editsc",{_id:rowData._id,status:rowData.status});
+	}
 };
 
 function toolbar_addPCForRuodianSC(){

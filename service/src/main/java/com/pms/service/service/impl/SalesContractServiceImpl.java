@@ -1,7 +1,6 @@
 package com.pms.service.service.impl;
 
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,10 +11,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.mongodb.DBObject;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
-import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.CustomerBean;
@@ -24,17 +21,13 @@ import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.InvoiceBean;
 import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
-import com.pms.service.mockbean.PurchaseBack;
-import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
-import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ICustomerService;
 import com.pms.service.service.IProjectService;
 import com.pms.service.service.ISalesContractService;
 import com.pms.service.service.IUserService;
-import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
@@ -64,11 +57,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 
 		mergeDataRoleQueryWithProject(params);
-		mergeMyTaskQuery(params, DBBean.SALES_CONTRACT);
-		
-		if(params.get("status") == null){//status 字段： “草稿” or null
-			params.put("status", null);
+		if(ApiThreadLocal.getMyTask() != null){	    
+		    mergeMyTaskQuery(params, DBBean.SALES_CONTRACT);
+		}else{		    
+	        params.put("status", new DBQuery(DBQueryOpertion.NOT_IN, new String[]{SalesContractBean.SC_STATUS_DRAFT}));	        
 		}
+
 		Map<String, Object> result = dao.list(params, DBBean.SALES_CONTRACT);
 		
 		mergeProjectInfoForSC(result);
@@ -114,32 +108,80 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		contract.put("status", params.get("status"));
 		
+        String status = SalesContractBean.SC_STATUS_SUBMITED;
+
+        if (contract.get("status") != null) {
+            status = contract.get("status").toString();
+        }
+        
+        
+        Map<String, Object> projectInfo = new HashMap<String, Object>();
+        
+        projectInfo.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
+        projectInfo.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
+        projectInfo.put(ProjectBean.PROJECT_MANAGER, params.get(ProjectBean.PROJECT_MANAGER));
+        projectInfo.put(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME));
+        projectInfo.put(ProjectBean.PROJECT_STATUS, params.get(ProjectBean.PROJECT_STATUS));
+        projectInfo.put(ProjectBean.PROJECT_TYPE, params.get(ProjectBean.PROJECT_TYPE));
+        projectInfo.put(ProjectBean.PROJECT_MEMO, params.get(ProjectBean.PROJECT_MEMO));
+        contract.putAll(projectInfo);
+        
+        if(status.equalsIgnoreCase(SalesContractBean.SC_STATUS_SUBMITED)){
+            
+            if(ApiUtil.isEmpty(contract.get(SalesContractBean.SC_PROJECT_ID))){
+                //如果提交的数据没包含项目，创建项目
+                Map<String, Object> project = projectService.addProject(projectInfo);
+                contract.put(SalesContractBean.SC_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
+            }
+            
+//            if(params.get(SalesContractBean.SC_CODE)!=null){
+//                params.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE).toString().replace("-DRAFT", ""));
+//            }
+        }
+	             
 		mergeCommonProjectInfo(contract, contract.get(SalesContractBean.SC_PROJECT_ID));
-		
 		List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
 		eqcostList = (List<Map<String, Object>>)params.get(SalesContractBean.SC_EQ_LIST);
-		
+	
 		Map<String, Object> addedContract = null;
-		if (_id == null){//Add
+		if (_id == null || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)){//Add
 			contract.put(SalesContractBean.SC_MODIFY_TIMES, 0);
 			contract.put(SalesContractBean.SC_LAST_TOTAL_AMOUNT, ApiUtil.getDouble(params, SalesContractBean.SC_AMOUNT));
-			
-			String genSCCode = genSCCode(scPId);
-			contract.put(SalesContractBean.SC_CODE, genSCCode);
-			addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
-			
-			//更新关联项目customer(新的需求，添加 SC时 选择客户)
-			Map<String, Object> updateProjectCustomer = new HashMap<String, Object>();
-			updateProjectCustomer.put(ApiConstants.MONGO_ID, params.get(SalesContractBean.SC_PROJECT_ID));
-			updateProjectCustomer.put(ProjectBean.PROJECT_CUSTOMER, params.get(SalesContractBean.SC_CUSTOMER));
-			dao.updateById(updateProjectCustomer, DBBean.PROJECT);
+            String genSCCode = null;
 
-			//添加成本设备清单记录
-			if (eqcostList != null && !eqcostList.isEmpty()){
-				addEqCostListForContract(eqcostList, (String)addedContract.get(ApiConstants.MONGO_ID), genSCCode,
-						(String)addedContract.get(SalesContractBean.SC_PROJECT_ID) );
-			}
-			
+			if(status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)){
+			    //草稿
+			    if(_id !=null){
+			        contract.put(ApiConstants.MONGO_ID, _id);
+			        addedContract = dao.updateById(contract, DBBean.SALES_CONTRACT);
+			        genSCCode = params.get(SalesContractBean.SC_CODE).toString();
+			    }else{
+			        //草稿不占用正常编号
+//			        genSCCode = generateCode(SalesContractBean.SC_CODE_PREFIX_DRAFT, DBBean.SALES_CONTRACT, SalesContractBean.SC_CODE);
+	                genSCCode = genSCCode(scPId);
+		            contract.put(SalesContractBean.SC_CODE, genSCCode);
+			        addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
+			    }
+            } else {
+                genSCCode = genSCCode(scPId);
+                contract.put(SalesContractBean.SC_CODE, genSCCode);
+                addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
+
+                if (!ApiUtil.isEmpty(params.get(SalesContractBean.SC_PROJECT_ID)) && !ApiUtil.isEmpty(params.get(SalesContractBean.SC_CUSTOMER))) {
+                    // 更新关联项目customer(新的需求，添加 SC时 选择客户)
+                    Map<String, Object> updateProjectCustomer = new HashMap<String, Object>();
+                    updateProjectCustomer.put(ApiConstants.MONGO_ID, params.get(SalesContractBean.SC_PROJECT_ID));
+                    updateProjectCustomer.put(ProjectBean.PROJECT_CUSTOMER, params.get(SalesContractBean.SC_CUSTOMER));
+                    dao.updateById(updateProjectCustomer, DBBean.PROJECT);
+                }
+
+            }
+
+            // 添加成本设备清单记录
+            if (eqcostList != null && !eqcostList.isEmpty()) {
+                addEqCostListForContract(eqcostList, (String) addedContract.get(ApiConstants.MONGO_ID), genSCCode, (String) addedContract.get(SalesContractBean.SC_PROJECT_ID));
+            }
+            
 			return addedContract;
 		}else{//Update
 			contract.put(ApiConstants.MONGO_ID, _id);
@@ -317,7 +359,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			
 			String eqcostCode = genEqcostListCode(scCode, nextVersionNo);
 			item.put(EqCostListBean.EQ_LIST_CODE, eqcostCode);
-			dao.add(item, DBBean.EQ_COST);
+			
+			if(item.get(ApiConstants.MONGO_ID)!=null){
+			    dao.updateById(item,  DBBean.EQ_COST);
+			}else{
+			    dao.add(item, DBBean.EQ_COST);
+			}
 		}
 	}
 	
@@ -349,6 +396,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID, "customer"});
 		query.put(SalesContractBean.SC_CODE, new DBQuery(DBQueryOpertion.NOT_NULL));
 		query.put(SalesContractBean.SC_CODE, new DBQuery(DBQueryOpertion.NOT_EQUALS, ""));
+		query.put("status", new DBQuery(DBQueryOpertion.NOT_IN, new String[]{SalesContractBean.SC_STATUS_DRAFT}));    
 		
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
 		projectQuery.put(ApiConstants.LIMIT_KEYS,ProjectBean.PROJECT_NAME);
@@ -490,7 +538,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public Map<String, Object> getSC(Map<String, Object> params) {
 		String _id = (String) params.get(ApiConstants.MONGO_ID);
 		Map<String, Object> sc = dao.findOne(ApiConstants.MONGO_ID, _id, DBBean.SALES_CONTRACT);
-		
+
 		//Tab 页头显示增补历史，操作人信息merge
 		List<Map<String, Object>> scHistoryList = (List<Map<String, Object>>)sc.get(SalesContractBean.SC_MODIFY_HISTORY);
 		if (ApiUtil.isEmpty(scHistoryList)){
@@ -1044,12 +1092,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
     private void mergeCommonProjectInfo(Map<String, Object> data, Object projectId) {
         Map<String, Object> projectQuery = new HashMap<String, Object>();
-        projectQuery.put(ApiConstants.MONGO_ID, projectId);       
-        projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_TYPE});
-              
+        projectQuery.put(ApiConstants.MONGO_ID, projectId);
+        projectQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_TYPE });
+
         Map<String, Object> project = this.dao.findOneByQuery(projectQuery, DBBean.PROJECT);
-        data.put(ProjectBean.PROJECT_MANAGER, project.get(ProjectBean.PROJECT_MANAGER));
-        data.put(ProjectBean.PROJECT_TYPE, project.get(ProjectBean.PROJECT_TYPE));
+        if (project != null) {
+            data.put(ProjectBean.PROJECT_MANAGER, project.get(ProjectBean.PROJECT_MANAGER));
+            data.put(ProjectBean.PROJECT_TYPE, project.get(ProjectBean.PROJECT_TYPE));
+        }
     }
 
 	@Override
@@ -1106,17 +1156,20 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, list.get(i)[keyMap.get("规格型号")].trim());
 				eq.put(EqCostListBean.EQ_LIST_BRAND, list.get(i)[keyMap.get("品牌")].trim());
 				eq.put(EqCostListBean.EQ_LIST_UNIT, list.get(i)[keyMap.get("单位")].trim());
-				eq.put(EqCostListBean.EQ_LIST_AMOUNT, ApiUtil.getDouble(list.get(i)[keyMap.get("数量")].trim()));
 				eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, list.get(i)[keyMap.get("销售单价")].trim());
-				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, list.get(i)[keyMap.get("标准成本价")].trim());
 				
 				float dr = Float.parseFloat(String.valueOf(list.get(i)[keyMap.get("折扣率")].trim()));
+				float basePrice = Float.parseFloat(String.valueOf(list.get(i)[keyMap.get("标准成本价")].trim()));
+				Double eqcostAmount = ApiUtil.getDouble(list.get(i)[keyMap.get("数量")].trim());
+				float lastBasePrice = dr*basePrice;
 				
+				eq.put(EqCostListBean.EQ_LIST_AMOUNT, eqcostAmount);
+				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, basePrice);
 				eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, dr*100);
-				eq.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, list.get(i)[keyMap.get("最终成本单价")].trim());
+				eq.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, lastBasePrice);
 				eq.put(EqCostListBean.EQ_LIST_CATEGORY, list.get(i)[keyMap.get("物料类别")].trim());
 				eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, list.get(i)[keyMap.get("税收类型")].trim());
-				eq.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, ApiUtil.getDouble(list.get(i)[keyMap.get("小计")].trim()));
+				eq.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, lastBasePrice*eqcostAmount);
 				eq.put(EqCostListBean.EQ_LIST_MEMO, list.get(i)[keyMap.get("备注")].trim());
 				
 				eqList.add(eq);

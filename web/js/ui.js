@@ -213,7 +213,7 @@ function initMyDraftTasks(id, data){
 				field : "db",
 				title : "我的模块",
 				template : function(dataItem){
-					
+
 					if(dataItem.db == "purchaseRequest"){
 						return "采购申请";
 					}
@@ -245,7 +245,6 @@ function initMyDraftTasks(id, data){
 					if(dataItem.db == "return"){
 						return "还货申请";
 					}
-					
 					if(dataItem.db == "salesContract"){
 						return "销售合同";
 					}

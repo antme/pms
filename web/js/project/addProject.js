@@ -75,7 +75,7 @@ $(document).ready(function() {
 	});
 	$("#projectType").kendoDropDownList({
 		dataTextField : "text",
-		dataValueField : "value",
+		dataValueField : "text",
 		optionLabel : "选择立项类别...",
 		dataSource : proCategoryItems
 	});
@@ -87,24 +87,7 @@ $(document).ready(function() {
         optionLabel: "选择项目经理...",
 		dataSource : proManagerItems
 	});
-	
-	/*var customerItems = new kendo.data.DataSource({
-		transport : {
-			read : {
-				url : "/service/customer/list",
-				dataType : "jsonp"
-			}
-		},
-		schema: {
-		    data: "data"
-		}
-	});
-	$("#customer").kendoDropDownList({
-		dataTextField : "name",
-		dataValueField : "_id",
-        optionLabel: "选择客户...",
-		dataSource : customerItems
-	});*/
+
 	if(popupParams){
 		if (popupParams.scAddProject == 1){//销售合同中进入添加
 			pModel = new projectModel();

@@ -125,7 +125,7 @@ $(document).ready(function () {
 				}
 			},
 			{ field: "eqcostCategory", title: "类别" },
-			{ field: "eqcostMemo", title: "备注" }
+			{ field: "pbComment", title: "备注" }
 	  	],	
 	  	sortable : true,
 	  	editable:true

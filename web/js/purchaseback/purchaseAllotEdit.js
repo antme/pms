@@ -110,7 +110,7 @@ $(document).ready(function () {
 			{ field: "eqcostDiscountRate",title : "折扣率"},
 			{ field: "eqcostLastBasePrice",title : "最终成本价"},
 			{ field: "eqcostCategory", title: "类别" },
-			{ field: "eqcostMemo", title: "备注" }
+			{ field: "pbComment", title: "备注" }
 	  	],
 	  	sortable : true,
 	  	editable:true
