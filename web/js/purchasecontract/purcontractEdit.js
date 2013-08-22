@@ -683,7 +683,7 @@ function edit(data) {
 
 				}
 
-				$("#contractMoney").val(requestActureMoney);
+				$("#contractMoney").val(percentToFixed(requestActureMoney));
 				
 			}
 

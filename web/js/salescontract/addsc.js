@@ -444,7 +444,7 @@ function editDraftSc(data){
 		dataTextField : "text",
 		dataValueField : "value",
 		optionLabel : "选择项目状态...",
-		dataSource : proStatusItemsForAdd,
+		dataSource : proStatusItems,
 		select:function(e){
 			var dataItem = this.dataItem(e.item.index());
 			showTabs(dataItem.value);

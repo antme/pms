@@ -71,7 +71,7 @@ $(document).ready(function() {
 		dataTextField : "text",
 		dataValueField : "value",
 		optionLabel : "选择项目状态...",
-		dataSource : proStatusItemsForAdd
+		dataSource : proStatusItems
 	});
 	$("#projectType").kendoDropDownList({
 		dataTextField : "text",
