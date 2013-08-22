@@ -482,7 +482,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 request.setStatus(PurchaseRequest.STATUS_DRAFT);
             }
             request.setApprovedDate(null);
-            request.setPurchaseOrderCode(generateCode("CGDD", DBBean.PURCHASE_ORDER, PurchaseCommonBean.PURCHASE_ORDER_CODE));
+            String purchaseRequestCode = parameters.get(PurchaseRequest.PURCHASE_REQUEST_CODE).toString();
+            request.setPurchaseOrderCode(purchaseRequestCode.replaceAll("CGSQ", "CGDD"));
             parameters = request.toMap();
 
         }

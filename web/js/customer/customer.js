@@ -82,7 +82,7 @@ $(document).ready(function () {
             { field: "contact", title: "客户联系人",width:"80px" },
             { field: "phone", title: "联系人电话",width:"120px" },
             { field: "email", title: "联系人邮箱",width:"200px" },
-            { command: [{name: "edit", text: "编辑"},{name: "destroy", text: "删除"}], width:"160px"}
+            { command: [{name: "edit", text: "编辑"}], width:"160px"}
         ],
         editable: "popup"
     });

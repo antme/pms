@@ -175,7 +175,7 @@ function loadPage(page, parameters, popupDiv) {
 		}
 
 		if (url.indexOf("?") != -1) {
-			url = url + "&_uid=" + uid;
+			url = url + "&uid=" + uid;
 		}else{
 			url = url + "?uid=" + uid;
 		}

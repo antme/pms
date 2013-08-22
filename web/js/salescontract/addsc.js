@@ -198,7 +198,6 @@ $(document).ready(function() {
           //start: add for customer info
           var haveCustomer = dataItem.cId;
           var cusList = $("#customer").data("kendoDropDownList");
-          console.log("********"+haveCustomer);
           if (haveCustomer != null){
 	    	  cusList.value(haveCustomer);
 	    	  cusList.enable(false);
@@ -519,7 +518,6 @@ function saveSC(){
 		scm.projectManager = scm.projectManager._id;
 	}
 	
-	console.log(projectStatus);
 	var scType = scm.get("contractType");
 	if (scType == null || scType == ""){
 		alert("请选择合同类型！");
@@ -623,7 +621,6 @@ function saveSC(){
 		scm.set("estimateGrossProfitRate", profitRate);
 		scm.set("totalEstimateCost", totalEstimate);
 		scm.set("status", "已提交");
-		console.log(scm);
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
     	});

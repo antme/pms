@@ -78,7 +78,7 @@ $(document).ready(function() {
 	        { field : "supplierContact", title : "供应商联系人",width:"120px" },
 	        { field : "supplierContactPhone", title : "联系人电话",width:"120px" },
 	        { field : "supplierEmail", title : "联系人邮箱",width:"200px" },
-	        { command : [{name:"edit",text:"编辑"},{name:"destroy",text:"删除"}], title : "&nbsp;",width:"160px" }
+	        { command : [{name:"edit",text:"编辑"}], title : "&nbsp;",width:"160px" }
         ],
 		editable : "popup"
 	});
