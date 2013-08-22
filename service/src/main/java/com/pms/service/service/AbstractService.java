@@ -439,10 +439,16 @@ public abstract class AbstractService {
             }
         }
         
+		if (db.equalsIgnoreCase(DBBean.PURCHASE_BACK)) {
+            if (inRole(RoleValidConstants.PURCHASE_BACK_PROCESS)) {
+                ownerQuery.remove(ApiConstants.CREATOR);
+            }
+        }
         
         Map<String, Object>  statusQuery = new HashMap<String, Object>();
         statusQuery.put("status", new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_NEW, PurchaseRequest.STATUS_REPOSITORY_NEW, ShipBean.SHIP_STATUS_SUBMIT }));
         statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
+        statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
         // or query
         ownerQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
 
