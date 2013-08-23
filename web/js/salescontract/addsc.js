@@ -195,6 +195,10 @@ $(document).ready(function() {
           	scm.set("contractType",relatedScType)
           }
           
+          if(dataItem.projectStatus == "销售正式立项" && relatedScType=="N/A"){
+        		sctypelist.enable(true);
+          }
+          
           //start: add for customer info
           var haveCustomer = dataItem.cId;
           var cusList = $("#customer").data("kendoDropDownList");
@@ -218,6 +222,13 @@ $(document).ready(function() {
 	$("#serviceAmount").kendoNumericTextBox({
 		min:0
 	});
+	$("#contractAmount").kendoNumericTextBox({
+		min:0
+	});
+	$("#equipmentAmount").kendoNumericTextBox({
+		min:0
+	});
+	
 	$("#estimateEqCost0").kendoNumericTextBox({
 		min:0
 	});
@@ -447,7 +458,7 @@ function editDraftSc(data){
 		dataSource : proStatusItems,
 		select:function(e){
 			var dataItem = this.dataItem(e.item.index());
-			showTabs(dataItem.value);
+			showTabs(dataItem.text);
 		}
 	});
 	$("#projectType").kendoDropDownList({
@@ -482,8 +493,29 @@ function saveSCDraft(){
 		var profit = $("#estimateGrossProfit").val();
 		var profitRate = $("#estimateGrossProfitRate").val();
 		var totalEstimate = $("#totalEstimateCost").val();
-		scm.set("estimateGrossProfit", profit);
-		scm.set("estimateGrossProfitRate", profitRate);
+		
+		if(profit=="NaN"){
+			scm.set("estimateGrossProfit", 0);
+		}else{
+			scm.set("estimateGrossProfit", profit);
+		}
+		
+		
+		if(profitRate=="NaN %"){
+			scm.set("estimateGrossProfitRate", "0 %");
+		}else{
+			scm.set("estimateGrossProfitRate", profitRate);
+		}
+		
+		if(totalEstimate=="NaN"){
+			scm.set("totalEstimateCost", 0);
+		}else{
+			scm.set("totalEstimateCost", totalEstimate);
+		}
+		if(!scm.get("contractAmount")){
+			scm.set("contractAmount", 0);
+		}
+
 		scm.set("totalEstimateCost", totalEstimate);
 	
 		scm.set("status", "草稿");
@@ -519,7 +551,7 @@ function saveSC(){
 	}
 	
 	var scType = scm.get("contractType");
-	if (scType == null || scType == ""){
+	if ((scType == null || scType == "" || scType =="N/A") && projectStatus=="销售正式立项"){
 		alert("请选择合同类型！");
 		return;
 	}else if (scType != "弱电工程"){//弱点工程 类型 无设备清单数据
@@ -617,9 +649,29 @@ function saveSC(){
 		var profit = $("#estimateGrossProfit").val();
 		var profitRate = $("#estimateGrossProfitRate").val();
 		var totalEstimate = $("#totalEstimateCost").val();
-		scm.set("estimateGrossProfit", profit);
-		scm.set("estimateGrossProfitRate", profitRate);
-		scm.set("totalEstimateCost", totalEstimate);
+		
+		if(profit=="NaN"){
+			scm.set("estimateGrossProfit", 0);
+		}else{
+			scm.set("estimateGrossProfit", profit);
+		}
+		
+		
+		if(profitRate=="NaN %"){
+			scm.set("estimateGrossProfitRate", "0 %");
+		}else{
+			scm.set("estimateGrossProfitRate", profitRate);
+		}
+		
+		if(totalEstimate=="NaN"){
+			scm.set("totalEstimateCost", 0);
+		}else{
+			scm.set("totalEstimateCost", totalEstimate);
+		}
+		if(!scm.get("contractAmount")){
+			scm.set("contractAmount", 0);
+		}
+
 		scm.set("status", "已提交");
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
@@ -711,14 +763,20 @@ function showTabs(projectStatus){
 	var scType = $("#contractType").val();
 	if (projectStatus == "销售正式立项"){
 		$("#tabDiv").show();
+
 		tabStrip.enable(tab0, true);
 		tabStrip.enable(tab1, true);
-	}else{//虚拟合同，只显示 设备清单Tab	
+
+	}else{
+		
+		scm.set("contractType", "N/A");
+	
+		//虚拟合同，只显示 设备清单Tab	
 		$("#tabDiv").show();
 		tabStrip.enable(tab0, false);
 		tabStrip.enable(tab1, false);
 		if(scType != "弱电工程"){
-			if(tab3){
+			if(tab3.length>0){
 				tabStrip.select(3);
 			}else{
 				tabStrip.select(2);
@@ -728,11 +786,11 @@ function showTabs(projectStatus){
 			tabStrip.deactivateTab(tab0);
 			tabStrip.deactivateTab(tab1);
 			tabStrip.deactivateTab(tab2);
-			if(tab3){
-				//先出发其它的
+			if(tab3.length>0){
+				//先触发其它的
 				tabStrip.enable(tab3, true);
 				tabStrip.select(2);
-				//再出发选择项目的
+				//再触发选择项目的
 				tabStrip.select(3);
 			}
 	
@@ -747,13 +805,17 @@ function scTypeShowTabs(scType){
 		
 		tabStrip = $("#tabstrip").data("kendoTabStrip");
 	}
+	var tab0 = tabStrip.tabGroup.children("li").eq(0);
+	var tab1 = tabStrip.tabGroup.children("li").eq(1);
 	var tab2 = tabStrip.tabGroup.children("li").eq(2);
 	var tab3 = tabStrip.tabGroup.children("li").eq(3);
 //	console.log("***"+scType);
 	if (scType == "弱电工程"){
+		tabStrip.enable(tab0, false);
+		tabStrip.enable(tab1, false);
 		tabStrip.enable(tab2, false);
 		tabStrip.deactivateTab(tab2);
-		if(tab3){
+		if(tab3.length>0){
 			tabStrip.enable(tab3, true);
 			//先出发其它的
 			tabStrip.select(2);
@@ -762,7 +824,7 @@ function scTypeShowTabs(scType){
 		}
 	}else{
 		tabStrip.enable(tab2, true);
-		if(tab3){
+		if(tab3.length>0){
 			tabStrip.select(3);
 		}else{
 			tabStrip.select(2);

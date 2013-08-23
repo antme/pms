@@ -75,8 +75,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		//构造合同信息
 		Map<String, Object> contract = new HashMap<String, Object>();
-		String scPId = (String)params.get(SalesContractBean.SC_PROJECT_ID);
-		contract.put(SalesContractBean.SC_PROJECT_ID, scPId);
+		contract.put(SalesContractBean.SC_PROJECT_ID, params.get(SalesContractBean.SC_PROJECT_ID));
 		contract.put(SalesContractBean.SC_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT));
 		contract.put(SalesContractBean.SC_EQUIPMENT_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_EQUIPMENT_AMOUNT));
 		contract.put(SalesContractBean.SC_SERVICE_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_SERVICE_AMOUNT));
@@ -140,6 +139,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 //                params.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE).toString().replace("-DRAFT", ""));
 //            }
         }
+        String scPId = (String)contract.get(SalesContractBean.SC_PROJECT_ID);
+
 	             
 		mergeCommonProjectInfo(contract, contract.get(SalesContractBean.SC_PROJECT_ID));
 		List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
@@ -1277,19 +1278,36 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}
 		scCodeNo = scCodeNo + 1;
 		
+        String codeNum = getCodeNo(scCodeNo);
+        
+		String genCode = prefix + year+"-"+codeNum;
+		
+
+        // 草稿的销售合同项目编号可能为空
+        Map<String, Object> scQuery = new HashMap<String, Object>();
+        scQuery.put(SalesContractBean.SC_PROJECT_ID, pId);
+        int sameSCCount = dao.count(scQuery, DBBean.SALES_CONTRACT);
+        if (sameSCCount > 0 && !ApiUtil.isEmpty(pId)) {
+            Map<String, Object> scInfo = dao.findOne(SalesContractBean.SC_PROJECT_ID, pId, new String[] { SalesContractBean.SC_CODE }, DBBean.SALES_CONTRACT);
+            String code = scInfo.get(SalesContractBean.SC_CODE).toString();
+            code = code.substring(0, 17);
+            genCode = code + "-ADD" + sameSCCount;
+
+        } else {
+            while (this.dao.exist(SalesContractBean.SC_CODE, genCode, DBBean.SALES_CONTRACT)) {
+                scCodeNo = scCodeNo + 1;
+                genCode = prefix + year + "-" + getCodeNo(scCodeNo);
+            }
+        }
+        
+		return genCode;
+    }
+
+    private String getCodeNo(Integer scCodeNo) {
         String codeNum = "000" + scCodeNo;
 
         codeNum = codeNum.substring(codeNum.length() - 4, codeNum.length());
-        
-		String genCode = prefix+year+"-"+codeNum;
-		
-		Map<String, Object> scQuery = new HashMap<String, Object>();
-		scQuery.put(SalesContractBean.SC_PROJECT_ID, pId);
-		int sameSCCount = dao.count(scQuery, DBBean.SALES_CONTRACT);
-		if (sameSCCount>0){
-			genCode = genCode + "-ADD" + sameSCCount;
-		}
-		return genCode;
+        return codeNum;
     }
     
     private String genEqcostListCode(String scCode, int nextVersion){

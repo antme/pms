@@ -187,14 +187,14 @@
 							<label for="contractAmount">合同金额</label>
 						</div>
 						<div data-container-for="contractAmount" class="k-edit-field ">
-							<input type="text" readonly name="contractAmount" id="contractAmount" data-bind="value: contractAmount">
+							<input type="number" min="0" readonly name="contractAmount" id="contractAmount" data-bind="value: contractAmount">
 						</div>
 						
 						<div class="k-edit-label ">
 							<label for="equipmentAmount">设备金额</label>
 						</div>
 						<div data-container-for="equipmentAmount" class="k-edit-field ">
-							<input type="text" readonly name="equipmentAmount" id="equipmentAmount" data-bind="value: equipmentAmount">
+							<input type="number" min="0" name="equipmentAmount" id="equipmentAmount" data-bind="value: equipmentAmount" onchange="moneyOnChange();" required="required">
 						</div>
 						
 	                    <div class="k-edit-label ">

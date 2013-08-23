@@ -128,7 +128,7 @@ var menus = [
 
 //销售合同相关的数据
 //弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
-var contractTypeItems = [{ text: "弱电工程", value: "弱电工程" }, { text: "产品集成（灯控/布线）", value: "产品集成（灯控/布线）" }, { text: "产品集成（楼控）", value: "产品集成（楼控）" }, { text: "产品集成（其他）", value: "产品集成（其他）" }, { text: "产品销售（灯控/布线）", value: "产品销售（灯控/布线）" }, { text: "产品销售（楼控）", value: "产品销售（楼控）" }, { text: "产品销售（其他）", value: "产品销售（其他）" }, { text: "维护及服务", value: "维护及服务" }];
+var contractTypeItems = [{ text: "弱电工程", value: "弱电工程" }, { text: "产品集成（灯控/布线）", value: "产品集成（灯控/布线）" }, { text: "产品集成（楼控）", value: "产品集成（楼控）" }, { text: "产品集成（其他）", value: "产品集成（其他）" }, { text: "产品销售（灯控/布线）", value: "产品销售（灯控/布线）" }, { text: "产品销售（楼控）", value: "产品销售（楼控）" }, { text: "产品销售（其他）", value: "产品销售（其他）" }, { text: "维护及服务", value: "维护及服务" }, { text: "N/A", value: "N/A" }];
 var invoiceTypeItems = [{ text: "增值税专用", value: "增值税专用" }, { text: "增值税普通", value: "增值税普通" }, { text: "建筑业发票", value: "建筑业发票" }, { text: "服务业发票", value: "服务业发票" }];
 var archiveStatusItems = [{ text: "已归档", value: "已归档" }, { text: "未归档", value: "未归档" }];
 var runningStatusItems = [{ text: "执行中", value: "执行中" }, { text: "中止或暂停", value: "中止或暂停" }, { text: "收尾阶段", value: "收尾阶段" }, { text: "结束", value: "结束" }, { text: "质保期", value: "质保期" }, { text: "作废", value: "作废" }];

@@ -200,6 +200,14 @@ $(document).ready(function() {
 	$("#serviceAmount").kendoNumericTextBox({
 		min:0
 	});
+	
+	$("#contractAmount").kendoNumericTextBox({
+		min:0
+	});
+	$("#equipmentAmount").kendoNumericTextBox({
+		min:0
+	});
+	
 	$("#estimateEqCost0").kendoNumericTextBox({
 		min:0
 	});

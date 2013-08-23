@@ -400,6 +400,13 @@ $(document).ready(function() {
 	$("#serviceAmount").kendoNumericTextBox({
 		min:0
 	});
+	$("#contractAmount").kendoNumericTextBox({
+		min:0
+	});
+	$("#equipmentAmount").kendoNumericTextBox({
+		min:0
+	});
+	
 	$("#estimateEqCost0").kendoNumericTextBox({
 		min:0
 	});
@@ -753,6 +760,7 @@ function edit(data){
 	}else{
 		customer.enable(true);
 	}
+
 }
 	
 function saveSCDraft(){
@@ -765,9 +773,28 @@ function saveSCDraft(){
 		var profit = $("#estimateGrossProfit").val();
 		var profitRate = $("#estimateGrossProfitRate").val();
 		var totalEstimate = $("#totalEstimateCost").val();
-		scm.set("estimateGrossProfit", profit);
-		scm.set("estimateGrossProfitRate", profitRate);
-		scm.set("totalEstimateCost", totalEstimate);
+		if(profit=="NaN"){
+			scm.set("estimateGrossProfit", 0);
+		}else{
+			scm.set("estimateGrossProfit", profit);
+		}
+		
+		
+		if(profitRate=="NaN %"){
+			scm.set("estimateGrossProfitRate", "0 %");
+		}else{
+			scm.set("estimateGrossProfitRate", profitRate);
+		}
+		
+		if(totalEstimate=="NaN"){
+			scm.set("totalEstimateCost", 0);
+		}else{
+			scm.set("totalEstimateCost", totalEstimate);
+		}
+		if(!scm.get("contractAmount")){
+			scm.set("contractAmount", 0);
+		}
+		
 		scm.set("status", "草稿");
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
@@ -781,6 +808,13 @@ function saveSC(){
 	
 	var projectId = scm.get("projectId");
 	var projectStatus = projectItems.get(projectId).get("projectStatus")
+	
+	
+	if (projectStatus == "销售正式立项" && scm.get("contractType") =="N/A"){
+		var contype = $("#contractType").data("kendoDropDownList");
+		contype.enable(true);
+		scm.set("contractType", "");
+	}
 	
 	if (projectStatus == "销售正式立项" && !validator.validate()) {
 		alert("表单验证不通过！");
@@ -899,9 +933,29 @@ function saveSC(){
 		var profit = $("#estimateGrossProfit").val();
 		var profitRate = $("#estimateGrossProfitRate").val();
 		var totalEstimate = $("#totalEstimateCost").val();
-		scm.set("estimateGrossProfit", profit);
-		scm.set("estimateGrossProfitRate", profitRate);
-		scm.set("totalEstimateCost", totalEstimate);
+		
+		if(profit=="NaN"){
+			scm.set("estimateGrossProfit", 0);
+		}else{
+			scm.set("estimateGrossProfit", profit);
+		}
+		
+		
+		if(profitRate=="NaN %"){
+			scm.set("estimateGrossProfitRate", "0 %");
+		}else{
+			scm.set("estimateGrossProfitRate", profitRate);
+		}
+		
+		if(totalEstimate=="NaN"){
+			scm.set("totalEstimateCost", 0);
+		}else{
+			scm.set("totalEstimateCost", totalEstimate);
+		}
+		if(!scm.get("contractAmount")){
+			scm.set("contractAmount", 0);
+		}
+		
 		scm.set("status", "已提交");
 		postAjaxRequest("/service/sc/add",  {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
