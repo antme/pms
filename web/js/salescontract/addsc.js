@@ -360,6 +360,7 @@ $(document).ready(function() {
 			save: function(e) {
 				if (excuSave) {
 					excuSave = false;
+					var oldEqcostTaxType = e.model.eqcostTaxType;
 					var oldTotalAmount = e.model.eqcostTotalAmount;
 					var eqcostBasePrice,eqcostDiscountRate,eqcostAmount = 0;
 					if (e.values.eqcostBasePrice) {
@@ -384,9 +385,22 @@ $(document).ready(function() {
 					var eqcostTotalAmount = eqcostAmount*eqcostLastBasePrice;
 					e.model.set("eqcostTotalAmount", eqcostTotalAmount);
 					
-					// 商务信息 - 设备金额
-					var equipmentAmount = scm.equipmentAmount - oldTotalAmount + eqcostTotalAmount
-					scm.set("equipmentAmount", equipmentAmount);
+					var estimateEqCost0 = scm.estimateEqCost0;
+					var estimateEqCost1 = scm.estimateEqCost1;
+					// 商务信息 - 预估设备成本
+					if (oldEqcostTaxType == "增值税") {
+						estimateEqCost0 -= oldTotalAmount;
+					}
+					if (oldEqcostTaxType == "非增值税") {
+						estimateEqCost1 -= oldTotalAmount;
+					}
+					if (e.values.eqcostTaxType == "增值税") {
+						estimateEqCost0 += eqcostTotalAmount;
+					} else if (e.values.eqcostTaxType == "非增值税") {
+						estimateEqCost1 += eqcostTotalAmount;
+					}
+					scm.set("estimateEqCost0",estimateEqCost0);
+		        	scm.set("estimateEqCost1",estimateEqCost1);
 					moneyOnChange();
 					
 					excuSave = true;
@@ -402,11 +416,17 @@ $(document).ready(function() {
         },
         success:function(e){
         	eqCostListDataSource.data(e.response.data);
-        	var equipmentAmount = 0;
+        	var estimateEqCost0 = 0; // 预估设备成本（增）
+        	var estimateEqCost1 = 0; // 预估设备成本（非增）
         	for ( var int = 0; int < e.response.data.length; int++) {
-        		equipmentAmount += e.response.data[int].eqcostTotalAmount;
+        		if (e.response.data[int].eqcostTaxType == "增值税") {
+        			estimateEqCost0 += e.response.data[int].eqcostTotalAmount;
+				} else if (e.response.data[int].eqcostTaxType == "非增值税") {
+					estimateEqCost1 += e.response.data[int].eqcostTotalAmount;
+				}
 			}
-        	scm.set("equipmentAmount",equipmentAmount);
+        	scm.set("estimateEqCost0",estimateEqCost0);
+        	scm.set("estimateEqCost1",estimateEqCost1);
         	moneyOnChange();
         }
     });	
@@ -699,8 +719,15 @@ function addAProject(){
 }
 
 function moneyOnChange(){
-	
-	var scAmount = scm.serviceAmount + scm.equipmentAmount;
+	var equipmentAmount = 0;
+	if (scm.equipmentAmount) {
+		equipmentAmount = scm.equipmentAmount;
+	}
+	var serviceAmount = 0;
+	if (scm.serviceAmount) {
+		serviceAmount = scm.serviceAmount;
+	}
+	var scAmount = serviceAmount + equipmentAmount;
 	scm.set("contractAmount",scAmount);
 	var estimateEqCost0 = $("#estimateEqCost0").val();
 	var estimateEqCost1 = $("#estimateEqCost1").val();
