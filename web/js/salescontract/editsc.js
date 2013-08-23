@@ -1152,6 +1152,7 @@ function moneyOnChange(){
 	if (scAmount != null && scAmount != ""){
 		var profit = scAmount - totalCost;
 		var profitRate = profit/scAmount * 100;
+		profitRate = profitRate.toFixed(2);
 		$("#estimateGrossProfit").val(profit);
 		$("#estimateGrossProfitRate").val(profitRate+" %");
 	}
