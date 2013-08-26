@@ -909,9 +909,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 }
             }
         }
-        removeEmptyEqList(result, PurchaseCommonBean.EQCOST_APPLY_AMOUNT);
+        removeEmptyEqList(result, PurchaseBack.pbTotalCount);
+
         if (result.get(PurchaseRequest.PROCESS_STATUS) != null && !result.get(PurchaseRequest.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseRequest.STATUS_DRAFT)) {
-            removeEmptyEqList(result, PurchaseBack.pbTotalCount);
+            removeEmptyEqList(result, PurchaseCommonBean.EQCOST_APPLY_AMOUNT);
         }
         return result;
     }
