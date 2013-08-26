@@ -26,6 +26,7 @@ import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.PurchaseContract;
+import com.pms.service.mockbean.PurchaseOrder;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
@@ -488,6 +489,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         }
         
+        removeEmptyEqList((List<Map<String, Object>>) eqList, PurchaseOrder.EQCOST_APPLY_AMOUNT);
 
         parameters.put(SalesContractBean.SC_EQ_LIST, eqList);
 

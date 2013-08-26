@@ -418,7 +418,10 @@ var itemListDataSource = new kendo.data.DataSource({
 
 function save(status) {
 
-	
+	if(requestDataItem.eqcostList　&& requestDataItem.eqcostList.length==0){
+		alert("此申请无任何货品");
+		return;
+	}
 	var validator = $("#purchasecontract-edit-item").kendoValidator().data("kendoValidator");
 	if (validator.validate()) {
 
