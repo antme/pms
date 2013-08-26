@@ -75,7 +75,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		//构造合同信息
 		Map<String, Object> contract = new HashMap<String, Object>();
-		contract.put(SalesContractBean.SC_PROJECT_ID, params.get(SalesContractBean.SC_PROJECT_ID));
 		contract.put(SalesContractBean.SC_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT));
 		contract.put(SalesContractBean.SC_EQUIPMENT_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_EQUIPMENT_AMOUNT));
 		contract.put(SalesContractBean.SC_SERVICE_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_SERVICE_AMOUNT));
@@ -127,18 +126,21 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         projectInfo.put(ProjectBean.PROJECT_MEMO, params.get(ProjectBean.PROJECT_MEMO));
         contract.putAll(projectInfo);
         
+        Object projectId = params.get(SalesContractBean.SC_PROJECT_ID);
+
         if(status.equalsIgnoreCase(SalesContractBean.SC_STATUS_SUBMITED)){
             
             if(ApiUtil.isEmpty(contract.get(SalesContractBean.SC_PROJECT_ID))){
                 //如果提交的数据没包含项目，创建项目
                 Map<String, Object> project = projectService.addProject(projectInfo);
                 contract.put(SalesContractBean.SC_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
+                projectId = project.get(ApiConstants.MONGO_ID);
             }
-            
-//            if(params.get(SalesContractBean.SC_CODE)!=null){
-//                params.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE).toString().replace("-DRAFT", ""));
-//            }
+
         }
+        
+        contract.put(SalesContractBean.SC_PROJECT_ID, projectId);
+
         String scPId = (String)contract.get(SalesContractBean.SC_PROJECT_ID);
 
 	             
@@ -177,10 +179,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         		
                 addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
 
-                if (!ApiUtil.isEmpty(params.get(SalesContractBean.SC_PROJECT_ID)) && !ApiUtil.isEmpty(params.get(SalesContractBean.SC_CUSTOMER))) {
+                if (!ApiUtil.isEmpty(projectId) && !ApiUtil.isEmpty(params.get(SalesContractBean.SC_CUSTOMER))) {
                     // 更新关联项目customer(新的需求，添加 SC时 选择客户)
                     Map<String, Object> updateProjectCustomer = new HashMap<String, Object>();
-                    updateProjectCustomer.put(ApiConstants.MONGO_ID, params.get(SalesContractBean.SC_PROJECT_ID));
+                    updateProjectCustomer.put(ApiConstants.MONGO_ID, projectId);
                     updateProjectCustomer.put(ProjectBean.PROJECT_CUSTOMER, params.get(SalesContractBean.SC_CUSTOMER));
                     dao.updateById(updateProjectCustomer, DBBean.PROJECT);
                 }
@@ -237,7 +239,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				
 				//单独更新关联项目中 冗余存的  customer (因为项目中没有外键关联到 SC ， 所以要单独更新处理)
 				Map<String, Object> pCustomerUpdate = new HashMap<String, Object>();
-				pCustomerUpdate.put(ApiConstants.MONGO_ID, params.get(SalesContractBean.SC_PROJECT_ID));
+				pCustomerUpdate.put(ApiConstants.MONGO_ID, projectId);
 				pCustomerUpdate.put(ProjectBean.PROJECT_CUSTOMER, customerNew);
 				dao.updateById(pCustomerUpdate, DBBean.PROJECT);
 			}

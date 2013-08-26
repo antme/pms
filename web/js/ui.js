@@ -568,13 +568,7 @@ function intSelectInput(){
 		}
 		document.getElementById("departmentItems").innerHTML=html;
 	}
-	if(document.getElementById("pbTypeItems")){
-		html = "";
-		for (var i=0;i < pbTypeItems.length; i++){
-			html += "<option value='"+pbTypeItems[i].text+"'>"+pbTypeItems[i].text+"</option>";
-		}
-		document.getElementById("pbTypeItems").innerHTML=html;
-	}
+
 	if(document.getElementById("shelfCodeItems")){
 		html = "";
 		for (var i=0;i < shelfCodeItems.length; i++){

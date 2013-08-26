@@ -1,6 +1,17 @@
 package com.pms.service.mockbean;
 
 public class PurchaseContract extends PurchaseCommonBean {
+       
+    private String eqcostDeliveryType;
+
+    public String getEqcostDeliveryType() {
+        return eqcostDeliveryType;
+    }
+
+    public void setEqcostDeliveryType(String eqcostDeliveryType) {
+        this.eqcostDeliveryType = eqcostDeliveryType;
+    }
+    public static final String EQCOST_DELIVERY_TYPE =  "eqcostDeliveryType";
 
     public static final String SUPPLIER = "supplier";
 

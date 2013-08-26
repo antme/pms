@@ -212,8 +212,9 @@ function changeCType(index){
 			dataSource : purchaseContractTypeNormal
 		});
 		
-		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="北京代采" || requestDataItem.purchaseContractType=="北京生产" || requestDataItem.purchaseContractType=="北京库存"){
-			requestDataItem.purchaseContractType = "代理产品"
+		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="施耐德北京代采" || requestDataItem.purchaseContractType=="泰康北京生产" ||
+				requestDataItem.purchaseContractType=="施耐德北京库存" || requestDataItem.purchaseContractType=="泰康北京库存"){
+			requestDataItem.purchaseContractType = "上海代理产品"
 		}
 
 		$("#supplierNameContact").val("");
@@ -224,6 +225,12 @@ function changeCType(index){
 		$(".supplierSelect").show();
 		$("#supplierNamebj").val("");
 		
+		$("#firstPay").attr("disabled", false);
+		$("#moneyProgress").attr("disabled", false);
+		$("#deposit").attr("disabled", false);
+		$("#invoiceType").attr("disabled", false);
+		$("#invoiceType").show();
+		
 	}else{
 		$("#purchaseContractType").kendoDropDownList({
 			dataTextField : "text",
@@ -231,8 +238,8 @@ function changeCType(index){
 			dataSource : purchaseContractTypeVirtual
 		});
 		
-		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="施工分包" || requestDataItem.purchaseContractType=="代理产品" || requestDataItem.purchaseContractType=="非代理产品"){
-			requestDataItem.purchaseContractType = "北京代采";
+		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="上海代理产品" || requestDataItem.purchaseContractType=="上海其他"){
+			requestDataItem.purchaseContractType = "施耐德北京代采";
 		}		
 		
 		$("#supplierNamebj").val("同方北京");
@@ -243,6 +250,11 @@ function changeCType(index){
 		$("#supplierNameContact").attr("disabled", true);
 		$("#contractProperty").val("闭口合同");
 		$("#contractProperty").attr("disabled", true);
+		$("#firstPay").attr("disabled", true);
+		$("#moneyProgress").attr("disabled", true);
+		$("#deposit").attr("disabled", true);
+		$("#invoiceType").attr("disabled", true);
+		$("#invoiceType").hide();
 	}
 	
 
@@ -629,14 +641,6 @@ function edit(data) {
 			},{
 				field : "purchaseOrderCode",
 				title : "订单编号"
-			},{
-				command : [  {
-					name : "destroy",
-					title : "删除",
-					text : "删除"
-				} ],
-				title : "&nbsp;",
-				width : "160px"
 			}],
 			scrollable : true,
 			editable : true,

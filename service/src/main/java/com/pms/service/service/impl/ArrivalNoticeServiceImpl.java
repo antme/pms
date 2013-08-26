@@ -250,7 +250,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, order.get(ApiConstants.MONGO_ID));
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
 		noticeParams.put(SalesContractBean.SC_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
-		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, order.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
+		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, order.get(PurchaseContract.EQCOST_DELIVERY_TYPE));
 		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		
 		// 到货设备清单
@@ -264,7 +264,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 				eq.put(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, map.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
 				
 				//如下的信息用来在页面分组展示
-				eq.put(PurchaseCommonBean.EQCOST_DELIVERY_TYPE, map.get(PurchaseCommonBean.EQCOST_DELIVERY_TYPE));
+				eq.put(PurchaseContract.EQCOST_DELIVERY_TYPE, map.get(PurchaseContract.EQCOST_DELIVERY_TYPE));
 				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID));
 				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
 				eq.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, map.get(PurchaseContract.PURCHASE_CONTRACT_TYPE));

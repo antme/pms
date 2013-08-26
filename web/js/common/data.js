@@ -135,8 +135,9 @@ var runningStatusItems = [{ text: "执行中", value: "执行中" }, { text: "�
 
 //采购合同相关数据
 //合同类型
-var purchaseContractTypeNormal = [{text : "施工分包"}, {text : "代理产品"}, {text : "非代理产品"}];
-var purchaseContractTypeVirtual = [{text : "北京代采"}, {text : "北京生产"}, {text : "北京库存"}];
+var purchaseContractTypeNormal = [ {text : "上海代理产品"}, {text : "上海其他"}];
+var purchaseContractTypeVirtual = [{text : "施耐德北京代采"}, {text : "泰康北京生产"}, {text : "施耐德北京库存"}, {text : "泰康北京库存"}];
+var purchaseRequestTypeItems = [{text : "上海代理产品"}, {text : "上海其他"}, {text : "施耐德北京代采"}, {text : "泰康北京生产"}, {text : "施耐德北京库存"}, {text : "泰康北京库存"}];
 
 
 //货物递送方式
@@ -152,9 +153,6 @@ var proCategoryItems = [{ text: "产品"}, { text: "工程"}, { text: "服务"}]
 var proStatusItems = [{ text: "内部立项"}, { text: "销售预立项"}, { text: "销售正式立项"}];
 var proStatusItemsForAdd = [{ text: "销售预立项"}, { text: "内部立项"}];
 
-
-//备货申请 - 采购类别
-var pbTypeItems = [{ text: "上海代理产品采购"}, { text: "同方自主产品采购"}, { text: "其它渠道采购"}];
 
 var departmentItems =  [{ text: "销售部"}, { text: "工程部"}, { text: "产品部"} , { text: "服务部"}];
 

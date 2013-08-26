@@ -1,27 +1,9 @@
 var model, crudServiceBaseUrl = "../service/ship";
 
-var date = kendo.data.Model.define({
-    fields: {
-    	bjdc: {},
-    	bjkc: {},
-    	bjsc: {}
-    }
-});
 
 $(document).ready(function () {
 	checkRoles();
-	
-	$("#bjdc").click(function() {
-		count("北京代采");
-	});
-	
-	$("#bjkc").click(function() {
-		count("北京库存");
-	});
-	
-	$("#bjsc").click(function() {
-		count("北京生产");
-	});
+
 	
     var dataSource = new kendo.data.DataSource({
         transport: {
@@ -63,13 +45,3 @@ function confirmShipCount(){
 		}
 	}
 }
-
-function getDate(data) {
-	model = new date(data);
-	kendo.bind($("#countDate"), model);
-}
-
-function count(purchaseContractType) {
-	postAjaxRequest(crudServiceBaseUrl + "/count", {purchaseContractType:purchaseContractType}, countReturn);
-}
-

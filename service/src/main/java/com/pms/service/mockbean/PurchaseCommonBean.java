@@ -38,22 +38,9 @@ public class PurchaseCommonBean extends BaseEntity {
     private String pbPlanDate;
     
     
-    private String purchaseType;
     
     private String pbDepartment;
-    
-    private String eqcostDeliveryType;
-    
-    
-    
 
-    public String getEqcostDeliveryType() {
-        return eqcostDeliveryType;
-    }
-
-    public void setEqcostDeliveryType(String eqcostDeliveryType) {
-        this.eqcostDeliveryType = eqcostDeliveryType;
-    }
 
     public String getPbPlanDate() {
         return pbPlanDate;
@@ -63,15 +50,6 @@ public class PurchaseCommonBean extends BaseEntity {
         this.pbPlanDate = pbPlanDate;
     }
 
-
-
-    public String getPurchaseType() {
-        return purchaseType;
-    }
-
-    public void setPurchaseType(String pbType) {
-        this.purchaseType = pbType;
-    }
 
     public String getPbDepartment() {
         return pbDepartment;
@@ -229,7 +207,6 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String EQCOST_DELIVERY_TYPE_DIRECTY = "直发现场"; 
     public static final String EQCOST_DELIVERY_TYPE_REPOSITORY = "入公司库"; 
     
-    public static final String EQCOST_DELIVERY_TYPE =  "eqcostDeliveryType";
     
     public static final String LOGISTICS_TYPE = "logisticsType";
     
@@ -254,9 +231,9 @@ public class PurchaseCommonBean extends BaseEntity {
     // 虚拟采购合同类型
     public static final String CONTRACT_EXECUTE_CATE = "contractExecuteCate";
     
-    public static final String CONTRACT_EXECUTE_CATE_BEIJINGDAICAI = "北京代采";
-    public static final String CONTRACT_EXECUTE_BJ_REPO = "北京库存";
-    public static final String CONTRACT_EXECUTE_BJ_MAKE = "北京生产";
+    public static final String CONTRACT_EXECUTE_CATE_BEIJINGDAICAI = "施耐德北京代采";
+    public static final String CONTRACT_EXECUTE_BJ_REPO = "施耐德北京库存";
+    public static final String CONTRACT_EXECUTE_BJ_MAKE = "泰康北京生产";
     public static final String CONTRACT_EXECUTE_NORMAL = "正常采购";
     public static final String CONTRACT_EXECUTE_CATE_NORMAL = "正常采购";
 

@@ -106,7 +106,7 @@ var rowId = undefined;
 function addPOBumber(){
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if (row.purchaseContractType == "北京代采") {
+		if (row.purchaseContractType == "施耐德北京代采") {
 
 			var options = {
 				width : 500,
@@ -129,7 +129,7 @@ function addPOBumber(){
 				$("#poNumber").val("");
 			}
 		}else{
-			alert("只能针对北京代采的采购合同补填PO号");
+			alert("只能针对施耐德北京代采的采购合同补填PO号");
 		}
 	}
 	

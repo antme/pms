@@ -92,10 +92,7 @@ var commonFileds = {
 		comment : {
 
 		},
-		eqcostList: {},
-		purchaseType : {
-			
-		}
+		eqcostList: {}
 	};
 
 //编辑页面的model对象
