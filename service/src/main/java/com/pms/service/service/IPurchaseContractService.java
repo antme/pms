@@ -35,9 +35,9 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> cancelPurchaseOrder(Map<String, Object> request);
     
-    public Map<String, Object> approvePurchaseContract(Map<String, Object> order);
+    public Map<String, Object> approvePurchaseContract(Map<String, Object> params);
     
-    public Map<String, Object> rejectPurchaseContract(Map<String, Object> order);
+    public Map<String, Object> rejectPurchaseContract(Map<String, Object> params);
     
     public Map<String, Object> listBackRequestForSelect();
     

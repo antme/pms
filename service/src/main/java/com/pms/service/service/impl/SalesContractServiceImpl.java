@@ -130,15 +130,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         
         Object projectId = params.get(SalesContractBean.SC_PROJECT_ID);
 
-        if(status.equalsIgnoreCase(SalesContractBean.SC_STATUS_SUBMITED)){
-            
-            if(ApiUtil.isEmpty(contract.get(SalesContractBean.SC_PROJECT_ID))){
+        if(status.equalsIgnoreCase(SalesContractBean.SC_STATUS_SUBMITED) && ApiUtil.isEmpty(projectId)){            
                 //如果提交的数据没包含项目，创建项目
                 Map<String, Object> project = projectService.addProject(projectInfo);
                 contract.put(SalesContractBean.SC_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
-                projectId = project.get(ApiConstants.MONGO_ID);
-            }
-
+                projectId = project.get(ApiConstants.MONGO_ID);            
         }
         
         contract.put(SalesContractBean.SC_PROJECT_ID, projectId);

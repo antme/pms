@@ -261,8 +261,10 @@ function edit(data) {
 								template : function(dataItem){
 									return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
 								}
-							},{
-								field : "remark",
+							},
+							{ field: "eqcostCategory", title: "类别"},
+							{
+								field : "pbComment",
 								title : "备注"
 							} ],
 							schemal :{

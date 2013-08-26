@@ -390,7 +390,8 @@ function edit(data){
 				groupHeaderTemplate: "#= value # (物料数: #= count#)", 
 				footerTemplate: "总数: #=count#"
 			} ],
-			scrollable : true
+			scrollable : true,
+			sortable : true,
 		});
 	}//成本设备清单_old
 

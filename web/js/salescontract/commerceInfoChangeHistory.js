@@ -1,6 +1,6 @@
 var commerceInfoHistoryDS = new kendo.data.DataSource({
 	group: {
-		field: "key",
+		field: "time",
 		aggregates: [
 		             	{ field: "key", aggregate: "count" }
 	    ]

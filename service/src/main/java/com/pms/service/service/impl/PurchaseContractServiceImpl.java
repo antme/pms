@@ -544,16 +544,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return result;
     }
 
-    public Map<String, Object> approvePurchaseContract(Map<String, Object> order) {
-        Map<String, Object> result = processRequest(order, DBBean.PURCHASE_CONTRACT, APPROVED);
+    public Map<String, Object> approvePurchaseContract(Map<String, Object> params) {
+        Map<String, Object> result = processRequest(params, DBBean.PURCHASE_CONTRACT, APPROVED);
 
         Map<String, Object> contract = dao.findOne(ApiConstants.MONGO_ID, result.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_CONTRACT);
 
         List<Map<String, Object>> eqListMap = (List<Map<String, Object>>)contract.get(SalesContractBean.SC_EQ_LIST);
-
-        // 批准后更新订单状态
+        // 批准后更新何种中不同清单的信息数据
         for (Map<String, Object> eqMap : eqListMap) {
-
             eqMap.put(PurchaseContract.EQCOST_DELIVERY_TYPE, contract.get(PurchaseContract.EQCOST_DELIVERY_TYPE));
             eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
             eqMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
@@ -563,6 +561,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         }       
         this.dao.updateById(contract, DBBean.PURCHASE_CONTRACT);
+        
+        
         
         if (contract.get(FROM) == null) {
             updateOrderFinalStatus(contract);
@@ -663,6 +663,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     Map<String, Object> ordeUpdate = new HashMap<String, Object>();
                     ordeUpdate.put(ApiConstants.MONGO_ID, orderId);
                     ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
+                    ordeUpdate.put(PurchaseContract.EQCOST_DELIVERY_TYPE, contract.get(PurchaseContract.EQCOST_DELIVERY_TYPE));
+                    ordeUpdate.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
+                    ordeUpdate.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));
                     this.dao.updateById(ordeUpdate, DBBean.PURCHASE_ORDER);
 
                     Map<String, Object> order = this.dao.findOne(ApiConstants.MONGO_ID, orderId, new String[] { PurchaseCommonBean.PURCHASE_REQUEST_ID, PurchaseCommonBean.PURCHASE_ORDER_CODE }, DBBean.PURCHASE_ORDER);
@@ -678,6 +681,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     Map<String, Object> ordeUpdate = new HashMap<String, Object>();
                     ordeUpdate.put(ApiConstants.MONGO_ID, orderId);
                     ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDERING);
+                    ordeUpdate.put(PurchaseContract.EQCOST_DELIVERY_TYPE, contract.get(PurchaseContract.EQCOST_DELIVERY_TYPE));
+                    ordeUpdate.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
+                    ordeUpdate.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));                    
                     this.dao.updateById(ordeUpdate, DBBean.PURCHASE_ORDER);
                 }
 
@@ -698,8 +704,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     }
 
-    public Map<String, Object> rejectPurchaseContract(Map<String, Object> order) {
-        return processRequest(order, DBBean.PURCHASE_CONTRACT, PurchaseRequest.STATUS_REJECTED);
+    public Map<String, Object> rejectPurchaseContract(Map<String, Object> params) {
+        return processRequest(params, DBBean.PURCHASE_CONTRACT, PurchaseRequest.STATUS_REJECTED);
     }
 
     public void approvePurchaseOrder(Map<String, Object> order) {

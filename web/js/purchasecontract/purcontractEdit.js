@@ -222,7 +222,8 @@ function changeCType(index){
 				requestDataItem.purchaseContractType=="施耐德北京库存" || requestDataItem.purchaseContractType=="泰康北京库存"){
 			requestDataItem.purchaseContractType = "上海代理产品"
 		}
-
+		
+		$("input[name=contractExecuteCate]:eq(0)").attr("checked",true);
 		$("#supplierNameContact").val("");
 		$("#supplierNameContact").attr("disabled", false);
 		$("#contractProperty").attr("disabled", false);
@@ -246,8 +247,9 @@ function changeCType(index){
 		
 		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="上海代理产品" || requestDataItem.purchaseContractType=="上海其他"){
 			requestDataItem.purchaseContractType = "施耐德北京代采";
-		}		
-		
+		}	
+		$("input[name=contractExecuteCate]:eq(1)").attr("checked",true);
+	
 		$("#supplierNamebj").val("同方北京");
 		$("#supplierNamebj").attr("disabled", true);
 		$(".supplierBJ").show();
@@ -519,7 +521,7 @@ function showOrderWindow() {
 					}
 					
 					if(eqdelType != dataItems[index].purchaseContractType){
-						alert("只能选择同一种物流类型的订单");
+						alert("只能选择同一种采购类别的订单");
 						eqdelType = undefined;
 						valid = false;
 						break;
@@ -546,7 +548,7 @@ function showOrderWindow() {
 			requestDataItem = new contractModel({});
 			requestDataItem.eqcostList = itemListDataSource.data();
 			
-			requestDataItem.eqcostDeliveryType = eqdelType;
+			requestDataItem.purchaseContractType = eqdelType;
 			edit();
 		}
 	}
@@ -590,11 +592,12 @@ function edit(data) {
 
 	setDate(requestDataItem, "signDate", requestDataItem.signDate);
 	kendo.bind($("#purchasecontract-edit"), requestDataItem);
-
 	
-	if(!requestDataItem.contractExecuteCate || requestDataItem.contractExecuteCate.indexOf("正常采购")>=0){
+	if(requestDataItem.purchaseContractType =="上海代理产品" || requestDataItem.purchaseContractType =="上海其他"){
+		requestDataItem.contractExecuteCate =="正常采购";
 		changeCType(0);
 	}else{
+		requestDataItem.contractExecuteCate =="虚拟合同";
 		changeCType(1);
 	}
 
@@ -663,6 +666,7 @@ function edit(data) {
 				title : "订单编号"
 			}],
 			scrollable : true,
+			sortable : true,
 			editable : true,
 			width : "800px",
 			save : sumOrders,
@@ -743,20 +747,39 @@ function initMergedGrid(){
 					&& mdata[j].eqcostUnit == data[i].eqcostUnit && mdata[j].eqcostProductUnitPrice == data[i].eqcostProductUnitPrice
 					&& mdata[j].eqcostBrand == data[i].eqcostBrand)
 			{				
-				if(!mdata[j].items){
-					mdata[j].items = new Array();
-				}
-				console.log(data[i]);
-				mdata[j].eqcostApplyAmount = eqcostApplyAmount + data[i].eqcostApplyAmount;
-				mdata[j].requestedTotalMoney = requestedTotalMoney + data[i].requestedTotalMoney;
-				mdata[j].items.push(data[i]);
 				find =true;
+				break;
 			}
 		}
 		
 		if(!find){
+			data[i].eqcostApplyAmount=0;
+			data[i].requestedTotalMoney=0;
 			mergedDataSource.add(data[i]);
 		}
+	}
+
+	var sumData = eval(kendo.stringify(itemData));
+	var mdata = mergedDataSource.data();
+	for(j=0; j<mdata.length; j++){	
+		for(i=0; i<sumData.length; i++){
+				
+			if(mdata[j].eqcostProductName == sumData[i].eqcostProductName
+					&& mdata[j].eqcostMaterialCode == sumData[i].eqcostMaterialCode
+					&& mdata[j].eqcostProductType == sumData[i].eqcostProductType
+					&& mdata[j].eqcostUnit == sumData[i].eqcostUnit && mdata[j].eqcostProductUnitPrice == sumData[i].eqcostProductUnitPrice
+					&& mdata[j].eqcostBrand == sumData[i].eqcostBrand)
+			{			
+				mdata[j].eqcostApplyAmount = mdata[j].eqcostApplyAmount + sumData[i].eqcostApplyAmount;
+				mdata[j].requestedTotalMoney = mdata[j].requestedTotalMoney + sumData[i].requestedTotalMoney;
+			}
+		}
+
+	}
+	
+	if($("#merged-grid").data("kendoGrid")){
+		var mgrid = $("#merged-grid").data("kendoGrid");
+		mgrid.refresh();
 	}
 
 	
@@ -765,7 +788,7 @@ function initMergedGrid(){
 			dataSource : mergedDataSource,
 			columns : [ {
 				field : "eqcostApplyAmount",
-				title : "总数"
+				title : "申请总数"
 			},{
 				field : "requestedTotalMoney",
 				title : "总价"
@@ -788,77 +811,13 @@ function initMergedGrid(){
 				field : "eqcostBrand",
 				title : "品牌"
 			}],
-			dataBound: function() {
-                 this.expandRow(this.tbody.find("tr.k-master-row").first());
-            },
-            detailInit: detailInit
+			sortable: true
 			
 		});
 	}
 	}
 }
 
-function detailInit(e) {
-	var subdata = new Array();
-	var mdata = new Array();
-	
-	var mergedData = requestDataItem.eqcostList;
-	for(index=0; index <mergedData.length; index++){
-		eval("idata = " + kendo.stringify(mergedData[index]));
-		mdata.push(idata);
-	}
-
-	for(i=0; i<mdata.length; i++){
-		if(mdata[i].eqcostNo == e.data.eqcostNo && mdata[i].eqcostProductName == e.data.eqcostProductName
-				&& mdata[i].eqcostMaterialCode == e.data.eqcostMaterialCode
-				&& mdata[i].eqcostProductType == e.data.eqcostProductType
-				&& mdata[i].eqcostUnit == e.data.eqcostUnit && mdata[i].eqcostProductUnitPrice == e.data.eqcostProductUnitPrice
-				&& mdata[i].eqcostBrand == e.data.eqcostBrand)
-		{
-			if(mdata[i].items){
-				subdata = mdata[i].items;
-				subdata.push(mdata[i]);
-			}else{
-				subdata.push(mdata[i]);
-			}
-
-			break;
-		}
-		
-	}
-
-    $("<div/>").appendTo(e.detailCell).kendoGrid({
-		dataSource : {
-			data : subdata,
-			aggregate : [ {
-				field : "eqcostApplyAmount",
-				aggregate : "sum"
-			}, {
-				field : "requestedTotalMoney",
-				aggregate : "sum"
-			} ]
-		},
-        scrollable: true,
-        columns : [ {
-			field : "eqcostApplyAmount",
-			title : "订单数量",
-			footerTemplate: "总数: #=sum#" 
-		}, {
-			field : "requestedTotalMoney",
-			title : "总价",
-			footerTemplate: "总价: #=sum#" 
-		}, {
-			field : "salesContractCode",
-			title : "销售合同编号"
-		},{
-			field : "purchaseOrderCode",
-			title : "订单编号"
-		}, {
-			field : "remark",
-			title : "备注"
-		}]
-    });
-}
 
 
 function sumOrders(e) {
