@@ -216,6 +216,17 @@ function toolbar_viewEqListHistory(){
 	openRemotePageWindow(options, "salescontract_eqcostChangeHistory", {_id:rowData._id});
 }
 
+function toolbar_viewCommerceInfoHistory(){
+	var rowData = getSelectedRowDataByGrid("grid");
+	if (rowData == null){
+		alert("请点击选择一条合同记录！");
+		return;
+	}
+	
+	var options = { width:"900px", height: "600px", title:"商务信息变更历史"};
+	openRemotePageWindow(options, "salescontract_commerceInfoChangeHistory", {_id:rowData._id});
+}
+
 function openTraceWindow(param){
 	var options = { width:"680px", height: "400px", title:"合同金额变更历史"};
 	openRemotePageWindow(options, "salescontract_traceSCAmount", {_id : param});

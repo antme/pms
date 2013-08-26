@@ -53,6 +53,8 @@ public interface ISalesContractService {
 	
 	public Map<String, Object> listEqHistoryAndLatestEqList(Map<String, Object> params);
 	
+	public Map<String, Object> listCommerceInfoHistory(Map<String, Object> params);
+	
 	public Map<String, Object> importEqCostList(Map<String, Object> params);
 	///
 	public Map<String, Object> saveGetMoneyForSC(Map<String, Object> params);

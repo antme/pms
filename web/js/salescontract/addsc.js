@@ -770,6 +770,7 @@ function moneyOnChange(){
 	$("#totalEstimateCost").val(totalCost);
 	if (scAmount != null && scAmount != ""){
 		var profit = scAmount - totalCost;
+		profit = profit.toFixed(2);
 		var profitRate = profit/scAmount * 100;
 		profitRate = profitRate.toFixed(2);
 		$("#estimateGrossProfit").val(profit);

@@ -2,6 +2,8 @@ package com.pms.service.service.impl;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1130,6 +1132,58 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> distinctEqListData = dao.list(distinctEQQuery, DBBean.EQ_COST);
 		List<Map<String, Object>> distinctEqList = (List<Map<String, Object>>) distinctEqListData.get(ApiConstants.RESULTS_DATA);
 		result.put("latestEqList", distinctEqList);
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> listCommerceInfoHistory(
+			Map<String, Object> params) {
+		String cId = (String) params.get(ApiConstants.MONGO_ID);
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		String[] keys = {SalesContractBean.SC_AMOUNT, SalesContractBean.SC_SERVICE_AMOUNT, SalesContractBean.SC_EQUIPMENT_AMOUNT,
+				SalesContractBean.SC_ESTIMATE_EQ_COST0, SalesContractBean.SC_ESTIMATE_EQ_COST1, SalesContractBean.SC_ESTIMATE_SUB_COST,
+				SalesContractBean.SC_ESTIMATE_PM_COST, SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST, 
+				SalesContractBean.SC_ESTIMATE_DEBUG_COST, SalesContractBean.SC_ESTIMATE_OTHER_COST, SalesContractBean.SC_INVOICE_TYPE};
+		
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.HISTORY_DATA_ID, cId);
+		query.put(ApiConstants.HISTORY_KEY, new DBQuery(DBQueryOpertion.IN, keys));
+		query.put(ApiConstants.HISTORY_OLD, new DBQuery(DBQueryOpertion.NOT_NULL));
+		
+		Map<String, Object> order = new LinkedHashMap<String, Object>();
+        order.put(ApiConstants.HISTORY_TIME, ApiConstants.DB_QUERY_ORDER_BY_DESC);
+        query.put(ApiConstants.DB_QUERY_ORDER_BY, order);
+		
+		result = dao.list(query, DBBean.SALES_CONTRACT+"_history");
+		
+		List<Map<String, Object>> dataList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+		List<String> uIds = new ArrayList<String>();
+		for (Map<String, Object> map : dataList){
+			String uid = (String) map.get(ApiConstants.HISTORY_OPERATOR);
+			if (!ApiUtil.isEmpty(uid)){
+				uIds.add(uid);
+			}
+		}
+		
+		Map<String, Object> userQuery = new HashMap<String, Object>();
+		userQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, uIds));
+		userQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME});
+		Map<String, Object> users = dao.listToOneMapAndIdAsKey(userQuery, DBBean.USER);
+		
+		for (Map<String, Object> map : dataList){
+			String uid = (String) map.get(ApiConstants.HISTORY_OPERATOR);
+			Map<String, Object> user = (Map<String, Object>) users.get(uid);
+			if (!ApiUtil.isEmpty(user)){
+				map.put(ApiConstants.HISTORY_OPERATOR, user.get(UserBean.USER_NAME));
+			} else {
+				map.put(ApiConstants.HISTORY_OPERATOR, "N/A");
+			}
+			
+			Long time = ApiUtil.getLongParam(map, ApiConstants.HISTORY_TIME);
+			String timeString = DateUtil.getDateStringByLong(time);
+			map.put(ApiConstants.HISTORY_TIME, timeString);
+		}
 		return result;
 	}
 
