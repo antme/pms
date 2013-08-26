@@ -13,6 +13,7 @@ import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.SupplierBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ICustomerService;
@@ -31,6 +32,8 @@ public class CustomerServiceImpl extends AbstractService implements ICustomerSer
 
 	@Override
 	public Map<String,Object> create(Map<String, Object> params) {
+        params.put(CustomerBean.CODE, generateCode("KH", DBBean.CUSTOMER, CustomerBean.CODE));
+
 		return dao.add(params, DBBean.CUSTOMER);
 	}
 	

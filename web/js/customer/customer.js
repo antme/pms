@@ -3,7 +3,7 @@ var requestModel = kendo.data.Model.define({
     id: "_id",
     fields: {
         _id: { editable: false, nullable: true },
-        code: { validation: { required: true } },
+        code: { editable: false},
         name: { validation: { required: true } },
         description: { validation: { required: true } },
         bankName: { validation: { required: true } },

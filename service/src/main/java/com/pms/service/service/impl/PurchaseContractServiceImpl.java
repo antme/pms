@@ -541,6 +541,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         List<Map<String, Object>> mergeLoadedEqList = scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST));
         result.put(SalesContractBean.SC_EQ_LIST, mergeLoadedEqList);
         mergeProjectInfo(result);
+        removeEmptyEqList(result, PurchaseCommonBean.EQCOST_APPLY_AMOUNT);
         return result;
     }
 
@@ -908,8 +909,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 }
             }
         }
-
-        removeEmptyEqList(result, PurchaseBack.pbTotalCount);
+        removeEmptyEqList(result, PurchaseCommonBean.EQCOST_APPLY_AMOUNT);
+        if (result.get(PurchaseRequest.PROCESS_STATUS) != null && !result.get(PurchaseRequest.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseRequest.STATUS_DRAFT)) {
+            removeEmptyEqList(result, PurchaseBack.pbTotalCount);
+        }
         return result;
     }
 
