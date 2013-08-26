@@ -43,6 +43,17 @@ public class PurchaseCommonBean extends BaseEntity {
     
     
     private String pbDepartment;
+    
+    private String purchaseContractType;
+
+
+    public String getPurchaseContractType() {
+		return purchaseContractType;
+	}
+
+	public void setPurchaseContractType(String purchaseContractType) {
+		this.purchaseContractType = purchaseContractType;
+	}
 
 
     public String getApproveComment() {

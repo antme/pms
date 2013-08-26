@@ -19,9 +19,10 @@ public class PurchaseRequest extends PurchaseCommonBean {
     private float numbersPercentOfContract;
 
     private float moneyPercentOfContract;
+    
 
 
-    public BigDecimal getRequestedTotalMoney() {
+	public BigDecimal getRequestedTotalMoney() {
         return requestedTotalMoney;
     }
 

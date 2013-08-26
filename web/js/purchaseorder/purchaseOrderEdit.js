@@ -16,13 +16,7 @@ var selectedRequestId = undefined;
 
 $(document).ready(function() {
 	
-	
-	$("#eqcostDeliveryType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		dataSource : eqcostDeliveryType
-	});
-	
+
 	if(popupParams){
 		$("#purchase-request-select").hide();
 		$("#purchaseorder-edit-item").show();
@@ -439,15 +433,6 @@ function saveOrder(status) {
 		requestDataItem.pbDepartment = requestDataItem.pbDepartment.join(",");
 	}
 	
-	
-	if(requestDataItem.eqcostDeliveryType && requestDataItem.eqcostDeliveryType.text){
-		requestDataItem.eqcostDeliveryType = requestDataItem.eqcostDeliveryType.text;
-	}
-	
-	if(!requestDataItem.eqcostDeliveryType){
-		var eqcostDeliveryType = $("#eqcostDeliveryType").data("kendoDropDownList");
-		requestDataItem.eqcostDeliveryType = eqcostDeliveryType.value();
-	}
 	
 	// 同步数据
 	itemDataSource.sync();

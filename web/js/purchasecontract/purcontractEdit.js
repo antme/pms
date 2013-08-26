@@ -125,7 +125,13 @@ $(document).ready(function() {
 		
 	});	
 
-
+	
+	$("#eqcostDeliveryType").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "text",
+		dataSource : eqcostDeliveryType
+	});
+	
 	$("#purchaseContractType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "text",
@@ -181,7 +187,7 @@ $(document).ready(function() {
 			dataTextField : "purchaseOrderCode",
 			dataValueField : "_id",
 			placeholder : "选择采购订单...",
-			itemTemplate:  '${ data.purchaseOrderCode }:<strong>${ data.eqcostDeliveryType}</strong>',
+			itemTemplate:  '${ data.purchaseOrderCode }:<strong>${ data.purchaseContractType}</strong>',
 			dataSource : new kendo.data.DataSource({
 				transport : {
 					read : {
@@ -463,6 +469,17 @@ function save(status) {
 				requestDataItem.executeStatus = requestDataItem.executeStatus.text;
 			}
 			
+
+			if(requestDataItem.eqcostDeliveryType && requestDataItem.eqcostDeliveryType.text){
+				requestDataItem.eqcostDeliveryType = requestDataItem.eqcostDeliveryType.text;
+			}
+			
+			if(!requestDataItem.eqcostDeliveryType){
+				var eqcostDeliveryType = $("#eqcostDeliveryType").data("kendoDropDownList");
+				requestDataItem.eqcostDeliveryType = eqcostDeliveryType.value();
+			}
+			
+			
 			// 同步数据
 			itemDataSource.sync();
 		}
@@ -498,10 +515,10 @@ function showOrderWindow() {
 					var eqcostList = dataItems[index].eqcostList;
 					
 					if(!eqdelType){
-						eqdelType = dataItems[index].eqcostDeliveryType;
+						eqdelType = dataItems[index].purchaseContractType;
 					}
 					
-					if(eqdelType != dataItems[index].eqcostDeliveryType){
+					if(eqdelType != dataItems[index].purchaseContractType){
 						alert("只能选择同一种物流类型的订单");
 						eqdelType = undefined;
 						valid = false;
