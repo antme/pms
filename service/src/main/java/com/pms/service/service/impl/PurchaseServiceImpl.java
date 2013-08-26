@@ -10,16 +10,15 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mongodb.DBObject;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
-import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
+import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
@@ -655,9 +654,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         Map<String, Integer> backEqCountMap = countEqByKey(backQuery, DBBean.PURCHASE_BACK, PurchaseBack.pbTotalCount, null);
 
         // 获取已发的采购申请的数据总和
+        //FIXME 草稿的数据不算
         Map<String, Object> purchaseRequestQuery = new HashMap<String, Object>();
-        purchaseRequestQuery.put(PurchaseCommonBean.BACK_REQUEST_ID, backId);//TODO: 
-        purchaseRequestQuery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseCommonBean.STATUS_CANCELLED));
+        purchaseRequestQuery.put(PurchaseRequest.BACK_REQUEST_ID, backId);//TODO: 
+        purchaseRequestQuery.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseRequest.STATUS_CANCELLED));
         Map<String, Integer> requestEqCountMap = countEqByKey(purchaseRequestQuery, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.EQCOST_APPLY_AMOUNT, null);
 
         // 获取调拨中的数据总和

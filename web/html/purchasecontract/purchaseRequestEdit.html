@@ -56,7 +56,7 @@ label {
                 <label>采购类别</label>
             </div>
             <div  class="k-edit-field " style="padding-right:0px;">
-                <input type="text" id="purchaseType" required="required" data-bind="value: purchaseType">
+                <input type="text" id="purchaseContractType" required="required" data-bind="value: purchaseContractType">
             </div>
 	
 			<hr>
@@ -80,7 +80,7 @@ label {
                 <div id="purchase-request-sum-grid"></div>
                 <div>
                     <button access="purchase_request_management" class="k-button access" onclick="saveRequest();" id="save-button">保存</button>
-                    <button access="purchase_request_management" class="k-button access" onclick="saveRequest('审批中');" id="submit-button">提交申请</button>
+                    <button access="purchase_request_management" class="k-button access" onclick="saveRequest('已提交');" id="submit-button">提交申请</button>
                     <button access="purchase_request_management" class="k-button access" onclick="approve();" id="approve-button">批准</button>
                     <button access="purchase_request_management" class="k-button access" onclick="reject();" id="reject-button">拒绝</button>
                     <button class="k-button" onclick="cancel();">取消</button>

@@ -58,7 +58,7 @@ $(document).ready(function() {
 		$("#reject-button").show();
 		$("#approve-comment").show();
 		$("#pbPlanDate").attr("disabled", true);
-		$("#purchaseType").attr("disabled", true);
+		$("#purchaseContractType").attr("disabled", true);
 		
 	}else{
 		$("#save-button").show();
@@ -67,10 +67,10 @@ $(document).ready(function() {
 		$("#reject-button").hide();
 	}
 
-	$("#purchaseType").kendoDropDownList({
+	$("#purchaseContractType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "text",
-		dataSource : pbTypeItems
+		dataSource : purchaseRequestTypeItems
 	});
 	
 	// 如果是编辑
@@ -250,21 +250,12 @@ function edit(data) {
 								title : "单位"
 
 							}, {
-								field : "eqcostRealAmount",
-								title : "成本中总数"
-							}, {
 								field : "eqcostBasePrice",
 								title : "标准成本单价"
 							}, 
 							{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
 							{ field: "eqcostDiscountRate",title : "折扣率"},
 							{ field: "eqcostLastBasePrice",title : "最终成本价"}, {
-								field : "pbTotalCount",
-								title : "备货数"
-							}, {
-								field : "pbLeftCount",
-								title : "备货中剩余数量"
-							}, {
 								field : "eqcostApplyAmount",
 								title : "本次申请数量",
 								template : function(dataItem){
@@ -440,13 +431,13 @@ function saveRequest(status) {
 	}
 	
 
-	if(requestDataItem.purchaseType && requestDataItem.purchaseType.text){
-		requestDataItem.purchaseType = requestDataItem.purchaseType.text;
+	if(requestDataItem.purchaseContractType && requestDataItem.purchaseContractType.text){
+		requestDataItem.purchaseContractType = requestDataItem.purchaseContractType.text;
 	}
 	
-	if(!requestDataItem.purchaseType){
-		var purchaseType= $("#purchaseType").data("kendoDropDownList");
-		requestDataItem.purchaseType = purchaseType.value();
+	if(!requestDataItem.purchaseContractType){
+		var purchaseContractType= $("#purchaseContractType").data("kendoDropDownList");
+		requestDataItem.purchaseContractType = purchaseContractType.value();
 	}
 
 	

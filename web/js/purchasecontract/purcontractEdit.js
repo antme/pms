@@ -212,8 +212,9 @@ function changeCType(index){
 			dataSource : purchaseContractTypeNormal
 		});
 		
-		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="北京代采" || requestDataItem.purchaseContractType=="北京生产" || requestDataItem.purchaseContractType=="北京库存"){
-			requestDataItem.purchaseContractType = "代理产品"
+		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="施耐德北京代采" || requestDataItem.purchaseContractType=="泰康北京生产" ||
+				requestDataItem.purchaseContractType=="施耐德北京库存" || requestDataItem.purchaseContractType=="泰康北京库存"){
+			requestDataItem.purchaseContractType = "上海代理产品"
 		}
 
 		$("#supplierNameContact").val("");
@@ -224,6 +225,12 @@ function changeCType(index){
 		$(".supplierSelect").show();
 		$("#supplierNamebj").val("");
 		
+		$("#firstPay").attr("disabled", false);
+		$("#moneyProgress").attr("disabled", false);
+		$("#deposit").attr("disabled", false);
+		$("#invoiceType").attr("disabled", false);
+		$("#invoiceType").show();
+		
 	}else{
 		$("#purchaseContractType").kendoDropDownList({
 			dataTextField : "text",
@@ -231,8 +238,8 @@ function changeCType(index){
 			dataSource : purchaseContractTypeVirtual
 		});
 		
-		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="施工分包" || requestDataItem.purchaseContractType=="代理产品" || requestDataItem.purchaseContractType=="非代理产品"){
-			requestDataItem.purchaseContractType = "北京代采";
+		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="上海代理产品" || requestDataItem.purchaseContractType=="上海其他"){
+			requestDataItem.purchaseContractType = "施耐德北京代采";
 		}		
 		
 		$("#supplierNamebj").val("同方北京");
@@ -243,6 +250,11 @@ function changeCType(index){
 		$("#supplierNameContact").attr("disabled", true);
 		$("#contractProperty").val("闭口合同");
 		$("#contractProperty").attr("disabled", true);
+		$("#firstPay").attr("disabled", true);
+		$("#moneyProgress").attr("disabled", true);
+		$("#deposit").attr("disabled", true);
+		$("#invoiceType").attr("disabled", true);
+		$("#invoiceType").hide();
 	}
 	
 
@@ -406,7 +418,10 @@ var itemListDataSource = new kendo.data.DataSource({
 
 function save(status) {
 
-	
+	if(requestDataItem.eqcostList　&& requestDataItem.eqcostList.length==0){
+		alert("此申请无任何货品");
+		return;
+	}
 	var validator = $("#purchasecontract-edit-item").kendoValidator().data("kendoValidator");
 	if (validator.validate()) {
 
@@ -629,14 +644,6 @@ function edit(data) {
 			},{
 				field : "purchaseOrderCode",
 				title : "订单编号"
-			},{
-				command : [  {
-					name : "destroy",
-					title : "删除",
-					text : "删除"
-				} ],
-				title : "&nbsp;",
-				width : "160px"
 			}],
 			scrollable : true,
 			editable : true,
@@ -710,8 +717,10 @@ function initMergedGrid(){
 		
 		var find = false;
 		var mdata = mergedDataSource.data();
+		var eqcostApplyAmount = 0;
+		var requestedTotalMoney = 0;
 		for(j=0; j<mdata.length; j++){	
-			if(mdata[j].eqcostNo == data[i].eqcostNo && mdata[j].eqcostProductName == data[i].eqcostProductName
+			if(mdata[j].eqcostProductName == data[i].eqcostProductName
 					&& mdata[j].eqcostMaterialCode == data[i].eqcostMaterialCode
 					&& mdata[j].eqcostProductType == data[i].eqcostProductType
 					&& mdata[j].eqcostUnit == data[i].eqcostUnit && mdata[j].eqcostProductUnitPrice == data[i].eqcostProductUnitPrice
@@ -720,9 +729,11 @@ function initMergedGrid(){
 				if(!mdata[j].items){
 					mdata[j].items = new Array();
 				}
+				console.log(data[i]);
+				mdata[j].eqcostApplyAmount = eqcostApplyAmount + data[i].eqcostApplyAmount;
+				mdata[j].requestedTotalMoney = requestedTotalMoney + data[i].requestedTotalMoney;
 				mdata[j].items.push(data[i]);
 				find =true;
-				break;
 			}
 		}
 		
@@ -736,6 +747,12 @@ function initMergedGrid(){
 		$("#merged-grid").kendoGrid({
 			dataSource : mergedDataSource,
 			columns : [ {
+				field : "eqcostApplyAmount",
+				title : "总数"
+			},{
+				field : "requestedTotalMoney",
+				title : "总价"
+			},{
 				field : "eqcostMaterialCode",
 				title : "物料代码"
 			}, {

@@ -61,12 +61,14 @@ var subModel = kendo.data.Model.define({
        		editable : false
        },
        eqcostLastBasePrice:{
-       		editable : false
+    	   type: "number",
+    	   defaultValue:0
        },
        eqcostDepotPrice:{
     	   type: "number",
     	   defaultValue:0
-       }
+       },
+       allotProductType:{}
 	}
 });	
 var myModel = kendo.data.Model.define({
@@ -105,28 +107,30 @@ $(document).ready(function () {
 			{ field: "eqcostNo", title: "序号"},
 			{ field: "eqcostMaterialCode", title: "物料代码" },
 			{ field: "eqcostProductName", title: "产品名称" },
-			{ field: "eqcostProductType", title: "规格型号" },
-			{ field: "paCount", title: "本次申请数量", attributes: { "style": "color:red"}},
-			/*{ field: "pbLeftCount", title: "可申请数量"},*/
+			{ field: "allotProductType", title: "调拨型号",attributes: { "style": "color:red"},
+				template :  function(dataItem) {
+					if(!dataItem.allotProductType && dataItem.eqcostProductType){
+						dataItem.allotProductType = dataItem.eqcostProductType;
+					}
+					return dataItem.allotProductType;
+				}
+			},
+			{ field: "paCount", title: "本次申请数量",width:"90px"},
 			{ field: "pbTotalCount", title: "备货数量"},
 			{ field: "eqcostBasePrice", title: "标准成本价" },
 			{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
 			{ field: "eqcostDiscountRate",title : "折扣率"},
-			{ field: "eqcostLastBasePrice",title : "最终成本价"},
-			{ field: "eqcostDepotPrice",
-				title : "库存单价", 
-				attributes: { "style": "color:red"},
+			{ field: "eqcostLastBasePrice",title : "最终成本价",attributes: { "style": "color:red"},
 				template :  function(dataItem) {
-					if(dataItem.eqcostDepotPrice == null){
-						return 0;
-					} else {
-						return dataItem.eqcostDepotPrice;
+					if(!dataItem.eqcostLastBasePrice){
+						dataItem.eqcostLastBasePrice = 0;
 					}
+					return dataItem.eqcostLastBasePrice;
 				}
 			},
 			{ field: "eqcostCategory", title: "类别" },
-			{ field: "pbComment", title: "备注" }
-	  	],	
+			{ field: "eqcostProductType", title: "规格型号" }
+	  	],
 	  	sortable : true,
 	  	editable:true
 	});

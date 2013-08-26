@@ -102,8 +102,8 @@ function editRe() {
 			alert("不允许编辑!");
 		}else if(row.status == "已废除"){
 			alert("此采购申请已废除，不允许编辑!");
-		} else if(row.status == "审批通过"){
-			alert("此采购申请已审批通过，不允许编辑!");
+		} else if(row.status == "已提交"){
+			alert("此采购申请已提交，不允许编辑!");
 		}else {
 			loadPage("purchasecontract_purchaseRequestEdit", {
 				_id : row._id
@@ -126,13 +126,13 @@ function cancelRe() {
 function approveRe() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "废除待审批" || row.status == "审批中"){
+		if(row.status == "废除待审批"){
 			loadPage("purchasecontract_purchaseRequestEdit", {
 				_id : row._id,
 				pageId: "approve"
 			});
 		}else{
-			alert('只能审批 "废除待审批" 或则  "审批中" 中的状态');
+			alert('只能审批 "废除待审批" 的状态');
 		}
 	}
 }

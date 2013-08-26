@@ -499,7 +499,11 @@ function editDraftSc(data){
 		dataSource : proManagerItems
 	});
 	
-	showTabs("内部立项");
+	if(data && data.projectStatus){		
+		showTabs(data.projectStatus);
+	}else{
+		showTabs("");
+	}
 }
 
 
@@ -658,9 +662,11 @@ function saveSC(){
     	    }
     		
     		if(scType == "弱电工程"){
-    			if($("#projectAbbr").val()=="" || !$("#projectAbbr").val()){}
-    			alert("弱电工程的合同项目缩写必须填写！");
-    			return;
+    			var pAbbr = $("#projectAbbr").val();
+    			if(pAbbr =="" || pAbbr==null || pAbbr==undefined){
+	    			alert("弱电工程的合同项目缩写必须填写！");
+	    			return;
+    			}
     		}
     	}
 		scm.set("eqcostList", eqCostData);
