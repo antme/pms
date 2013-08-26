@@ -32,6 +32,9 @@ public class PurchaseCommonBean extends BaseEntity {
     
     private String requestedDate;
     
+    
+    private String approveComment;
+    
 
     
     //FIX ME
@@ -42,7 +45,15 @@ public class PurchaseCommonBean extends BaseEntity {
     private String pbDepartment;
 
 
-    public String getPbPlanDate() {
+    public String getApproveComment() {
+		return approveComment;
+	}
+
+	public void setApproveComment(String approveComment) {
+		this.approveComment = approveComment;
+	}
+
+	public String getPbPlanDate() {
         return pbPlanDate;
     }
 

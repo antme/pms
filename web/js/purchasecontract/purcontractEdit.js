@@ -717,8 +717,10 @@ function initMergedGrid(){
 		
 		var find = false;
 		var mdata = mergedDataSource.data();
+		var eqcostApplyAmount = 0;
+		var requestedTotalMoney = 0;
 		for(j=0; j<mdata.length; j++){	
-			if(mdata[j].eqcostNo == data[i].eqcostNo && mdata[j].eqcostProductName == data[i].eqcostProductName
+			if(mdata[j].eqcostProductName == data[i].eqcostProductName
 					&& mdata[j].eqcostMaterialCode == data[i].eqcostMaterialCode
 					&& mdata[j].eqcostProductType == data[i].eqcostProductType
 					&& mdata[j].eqcostUnit == data[i].eqcostUnit && mdata[j].eqcostProductUnitPrice == data[i].eqcostProductUnitPrice
@@ -727,9 +729,11 @@ function initMergedGrid(){
 				if(!mdata[j].items){
 					mdata[j].items = new Array();
 				}
+				console.log(data[i]);
+				mdata[j].eqcostApplyAmount = eqcostApplyAmount + data[i].eqcostApplyAmount;
+				mdata[j].requestedTotalMoney = requestedTotalMoney + data[i].requestedTotalMoney;
 				mdata[j].items.push(data[i]);
 				find =true;
-				break;
 			}
 		}
 		
@@ -743,6 +747,12 @@ function initMergedGrid(){
 		$("#merged-grid").kendoGrid({
 			dataSource : mergedDataSource,
 			columns : [ {
+				field : "eqcostApplyAmount",
+				title : "总数"
+			},{
+				field : "requestedTotalMoney",
+				title : "总价"
+			},{
 				field : "eqcostMaterialCode",
 				title : "物料代码"
 			}, {
