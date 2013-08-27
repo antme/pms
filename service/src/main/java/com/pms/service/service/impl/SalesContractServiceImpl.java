@@ -1187,13 +1187,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	@Override
 	public Map<String, Object> importEqCostList(Map<String, Object> params) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> result = new LinkedHashMap<String, Object>();
 		try {
 			InputStream inputStream  = (InputStream)params.get("inputStream");
 			ExcleUtil excleUtil = new ExcleUtil(inputStream);
 			List<String[]> list = excleUtil.getAllData(0);
 			List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
-			Map<String, Integer> keyMap = new HashMap<String, Integer>();
+			Map<String, Integer> keyMap = new LinkedHashMap<String, Integer>();
 			
             if (list.get(0) != null) {
                 
@@ -1207,7 +1207,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             }
 			
 			for (int i=1; i<list.size(); i++){//硬编码从第9行开始读数据
-				Map<String, Object> eq = new HashMap<String, Object>();
+				Map<String, Object> eq = new LinkedHashMap<String, Object>();
 				String amount = list.get(i)[6].trim();
 				if (amount.length() == 0){//读到某一行数量为空时，认为清单数据结束
 					break;
