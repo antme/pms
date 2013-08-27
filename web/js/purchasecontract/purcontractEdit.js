@@ -798,15 +798,15 @@ function initMergedGrid(){
 			}, {
 				field : "eqcostUnit",
 				title : "单位"
-			},{
+			}, {
+				field : "eqcostProductUnitPrice",
+				title : "单价"
+			}, {
 				field : "eqcostApplyAmount",
 				title : "申请总数"
 			},{
 				field : "requestedTotalMoney",
 				title : "总价"
-			}, {
-				field : "eqcostProductUnitPrice",
-				title : "单价"
 			},{
 				field : "eqcostBrand",
 				title : "品牌"
