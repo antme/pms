@@ -134,8 +134,3 @@ function callback(response) {
 	alert("操作成功");
 	dataSource.read();
 }
-
-function openProjectViewWindow(param){
-	var options = { width:"1080px", height: "600px", title:"借货信息"};
-	openRemotePageWindow(options, "execution_addBorrowing", {_id : param});
-}

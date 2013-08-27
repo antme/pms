@@ -192,8 +192,3 @@ function toolbar_view(){
 		openRemotePageWindow(options, "execution_addBorrowing", {_id : rowData._id});
 	}
 }
-
-function openProjectViewWindow(param){
-	var options = { width:"1080px", height: "600px", title:"项目信息"};
-	openRemotePageWindow(options, "project_addProject", {_id : param});
-}

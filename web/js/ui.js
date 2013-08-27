@@ -430,7 +430,7 @@ function back() {
 
 
 
-function openRemotePageWindow(options, page, parameter) {
+function openRemotePageWindow(options, targetPage, parameter) {
 	var window = $("#popup");
 	$("#popup").html("")
 	$("#popup").show();
@@ -455,7 +455,7 @@ function openRemotePageWindow(options, page, parameter) {
 	}
 
 	popupParams = parameter;
-	loadPage(page, null, "popup");
+	loadPage(targetPage, null, "popup");
 
 }
 
