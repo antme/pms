@@ -256,6 +256,9 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String CONTRACT_EXECUTE_CATE_BEIJINGDAICAI = "施耐德北京代采";
     public static final String CONTRACT_EXECUTE_BJ_REPO = "施耐德北京库存";
     public static final String CONTRACT_EXECUTE_BJ_MAKE = "泰康北京生产";
+    public static final String CONTRACT_EXECUTE_TAIKANG_BJ_REPO = "泰康北京库存";
+    public static final String CONTRACT_EXECUTE_ALLOCATE_BJ_REPO = "调拨-北京备货货架";
+    public static final String CONTRACT_EXECUTE_ALLOCATE_BJ_REPO_VALUE = "北京备货货架";
     public static final String CONTRACT_EXECUTE_NORMAL = "正常采购";
     public static final String CONTRACT_EXECUTE_CATE_NORMAL = "正常采购";
 

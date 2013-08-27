@@ -291,7 +291,8 @@ public class InitBean {
 
         if (dao.count(null, DBBean.SHIP_COUNT) == 0) {
             String date = ConfigurationManager.getProperty("ship_count_init_date");
-            String types[] = new String[] { PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI, PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO, PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE };
+            String types[] = new String[] { PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI, PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO, PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE
+            		, PurchaseCommonBean.CONTRACT_EXECUTE_TAIKANG_BJ_REPO, PurchaseCommonBean.CONTRACT_EXECUTE_ALLOCATE_BJ_REPO};
             for (String type : types) {
                 Map<String, Object> shipRecord = new HashMap<String, Object>();
                 shipRecord.put(ShipCountBean.SHIP_COUNT_DATE, date);

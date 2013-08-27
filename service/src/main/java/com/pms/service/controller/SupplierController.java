@@ -10,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.pms.service.annotation.RoleValidConstants;
+import com.pms.service.annotation.RoleValidate;
 import com.pms.service.service.ISupplierService;
 
 @Controller
@@ -27,12 +29,14 @@ public class SupplierController extends AbstractController {
     }
     
     @RequestMapping("/update")
+    @RoleValidate(roleID=RoleValidConstants.SUPPLIER_MANAGEMENT, desc = RoleValidConstants.SUPPLIER_MANAGEMENT_DESC)
     public void update(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(supplierService.update(params), request, response);
     }
 
     @RequestMapping("/destroy")
+    @RoleValidate(roleID=RoleValidConstants.SUPPLIER_MANAGEMENT, desc = RoleValidConstants.SUPPLIER_MANAGEMENT_DESC)
     public void destroy(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         supplierService.destroy(params);
@@ -40,6 +44,7 @@ public class SupplierController extends AbstractController {
     }
     
     @RequestMapping("/create")
+    @RoleValidate(roleID=RoleValidConstants.SUPPLIER_MANAGEMENT, desc = RoleValidConstants.SUPPLIER_MANAGEMENT_DESC)
     public void create(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(supplierService.create(params), request, response);

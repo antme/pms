@@ -10,6 +10,9 @@ public class RoleValidConstants {
 
     public static final String CUSTOMER_MANAGEMENT = "customer_management";
     public static final String CUSTOMER_MANAGEMENT_DESC = "客户管理 ";
+    
+    public static final String SUPPLIER_MANAGEMENT = "supplier_management";
+    public static final String SUPPLIER_MANAGEMENT_DESC = "供应商管理 ";
 
     // 采购申请CRUD
     public static final String PURCHASE_REQUEST_MANAGEMENT = "purchase_request_management";
