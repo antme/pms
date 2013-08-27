@@ -787,12 +787,6 @@ function initMergedGrid(){
 		$("#merged-grid").kendoGrid({
 			dataSource : mergedDataSource,
 			columns : [ {
-				field : "eqcostApplyAmount",
-				title : "申请总数"
-			},{
-				field : "requestedTotalMoney",
-				title : "总价"
-			},{
 				field : "eqcostMaterialCode",
 				title : "物料代码"
 			}, {
@@ -804,6 +798,12 @@ function initMergedGrid(){
 			}, {
 				field : "eqcostUnit",
 				title : "单位"
+			},{
+				field : "eqcostApplyAmount",
+				title : "申请总数"
+			},{
+				field : "requestedTotalMoney",
+				title : "总价"
 			}, {
 				field : "eqcostProductUnitPrice",
 				title : "单价"
