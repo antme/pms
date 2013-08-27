@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.commons.chain.web.MapEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -325,6 +327,26 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		mergeDataRoleQueryWithProjectAndScType(params);
 		mergeMyTaskQuery(params, DBBean.PURCHASE_BACK);
 		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
+		//排除不能再拆分的备货申请
+		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
+		List<Map<String,Object>> list2 = new ArrayList<Map<String,Object>>();
+		for(int i=0;i<list.size();i++){
+			Map<String,Object> item = list.get(i);
+			if(item != null){
+				boolean isZero = true;
+		        Map<String, Integer> restCountMap = countRestEqByBackId(item.get(ApiConstants.MONGO_ID).toString());
+		        for (Entry<String, Integer> entry : restCountMap.entrySet()) {
+		            if(entry.getValue() != 0){
+		            	isZero = false;
+		            	break;
+		            }
+		        }
+				if(!isZero){
+					list2.add(item);
+				}
+			}
+		}
+		map.put(ApiConstants.RESULTS_DATA, list2);
 		mergeSalesContract(map);
 		return map;
 	}

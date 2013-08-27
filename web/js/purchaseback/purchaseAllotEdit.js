@@ -163,7 +163,7 @@ function saveSuccess(){
 }
 function editSuccess(e){
 	if(!e) return;
-	if(e._id) {
+	if(e._id && e.paStatus !="已拒绝") {
 		$("#form-container [name!='tempComment']").attr("disabled",true);
 		$("#form-container-button button").attr("disabled",true);
 	}

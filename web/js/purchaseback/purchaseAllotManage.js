@@ -77,6 +77,17 @@ $(document).ready(function () {
 	
 });
 
+function editPA(){
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else if(row.paStatus == "已拒绝"){	
+		loadPage("purchaseback_purchaseAllotEdit", { _id : row._id });
+	}else{
+		alert("请选择‘已拒绝’的数据");
+	}
+}
+
 function processPA(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
