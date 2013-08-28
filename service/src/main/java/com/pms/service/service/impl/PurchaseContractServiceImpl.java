@@ -310,6 +310,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 eqMap.put("eqcostApplyAmount", prCount);
             }
         }
+        
+        removeEmptyEqList(eqBackMapList, "leftCount");
 
         return lresult;
 

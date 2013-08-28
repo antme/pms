@@ -416,6 +416,12 @@ function edit(data) {
 
 //保存操作
 function saveOrder(status) {
+	
+	if(requestDataItem.eqcostList　&& requestDataItem.eqcostList.length==0){
+		alert("此申请无任何货品");
+		return;
+	}
+	
 	if(!requestDataItem.status){
 		requestDataItem.status = "草稿";
 	}

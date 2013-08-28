@@ -113,7 +113,33 @@ function updateSupplier(){
 		}
 
 	});
+
 }
+
+
+var repFields = {
+		eqcostBrand : {
+			editable : false
+		},
+		salesContractCode : {
+			editable : false
+		},
+		purchaseOrderCode : {
+			editable : false
+		},
+		leftCount: {
+			editable : false
+		}
+
+}
+repFields =  $.extend( commonFileds, repFields);
+
+//编辑页面的model对象
+//抽象model对象， datasource对象必须绑定一个model为了方便解析parameterMap中需要提交的参数
+var reModel = kendo.data.Model.define({
+	id : "_id",
+	fields : repFields
+});
 
 
 var itemDataSource = new kendo.data.DataSource({
@@ -139,7 +165,7 @@ var itemDataSource = new kendo.data.DataSource({
 		}
 	},
 	schema : {
-		model : model
+		model : reModel
 	},
 	batch : true
 });
@@ -148,6 +174,10 @@ var itemDataSource = new kendo.data.DataSource({
 
 function save(status) {
 	
+	if(requestDataItem.eqcostList　&& requestDataItem.eqcostList.length==0){
+		alert("此申请无任何货品");
+		return;
+	}
 	
 	if(!requestDataItem.status && redirectParams && redirectParams.type == "out"){
 		requestDataItem.status = "已提交";
@@ -210,12 +240,15 @@ function selectContracts() {
 }
 
 function loadContracts(data){
-	requestDataItem.eqcostList = data.data;
-	edit();
+	
+	if(data){
+		requestDataItem.eqcostList = data.data;
+
+		edit();
+	}
 }
 
 function edit(data) {
-
 	// 初始化空对象
 	var dataItem = new model();
 	if(data){
@@ -269,23 +302,23 @@ function edit(data) {
 				title : "单位"
 
 			},{
-				field : "eqcostBasePrice",
-				title : "采购单价"
-			},{
 				field : "leftCount",
 				title : "可入库数量"
 			}, {
 				field : "eqcostApplyAmount",
-				title : "入库数量"
-			}, {
-				field : "requestedTotalMoney",
-				title : "金额"
+				title : "入库数量",		
+				template : function(dataItem){
+					return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
+				}
 			}, {
 				field : "salesContractCode",
 				title : "销售合同编号"
 			},{
 				field : "purchaseOrderCode",
 				title : "订单编号"
+			},{
+				field : "remark",
+				title : "备注"
 			}],
 			scrollable : true,
 			editable : true,
@@ -293,8 +326,8 @@ function edit(data) {
 			save: function(e){
 				if (e.values.eqcostApplyAmount) {					
 					if(e.values.eqcostApplyAmount > e.model.leftCount){
-//						alert("最多可以入库" + e.model.leftCount);
-//						e.preventDefault();
+						alert("最多可以入库" + e.model.leftCount);
+						e.preventDefault();
 					}
 				}
 			}

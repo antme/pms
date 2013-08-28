@@ -32,7 +32,9 @@ var scModel = kendo.data.Model.define({
 		contractCode : {},
 		contractPerson : {},
 		contractType : {},
-		contractDate : {},
+		contractDate : {
+			type:"date"
+		},
 		contractDownPayment : { type : "number"},
 		contractDownPaymentMemo:{},
 		progressPayment : {},
@@ -213,9 +215,7 @@ $(document).ready(function() {
 	
 	//合同签订日期控件
 	var ddd = $("#contractDate").kendoDatePicker({
-		format: "yyyy/MM/dd",
-		max: new Date(),
-		parseFormats: ["yyyy/MM/dd"]
+		max: new Date()
 	});
 	//ddd.value("2013/06/06");
 	
@@ -445,6 +445,7 @@ $(document).ready(function() {
 		
 		
 	}else{
+		scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
 		kendo.bind($("#addSalesContract"), scm);
 
 	}
@@ -463,7 +464,7 @@ function editDraftSc(data){
 		scm = new scModel(data);
 		eqCostListDataSource.data(scm.eqcostList);
 	}
-	
+	scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
 	kendo.bind($("#addSalesContract"), scm);
 
 	tabStrip.append({
