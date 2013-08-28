@@ -2,8 +2,6 @@ package com.pms.service.service.impl;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
@@ -49,7 +50,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	private static Logger logger = LogManager.getLogger(SalesContractServiceImpl.class);
 	@Override
 	public Map<String, Object> listSC(Map<String, Object> params) {
 
@@ -147,14 +148,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		eqcostList = (List<Map<String, Object>>)params.get(SalesContractBean.SC_EQ_LIST);
 	
 		Map<String, Object> addedContract = null;
-		if (_id == null || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)){//Add
+		if (ApiUtil.isEmpty(_id) || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)){//Add
 			contract.put(SalesContractBean.SC_MODIFY_TIMES, 0);
 			contract.put(SalesContractBean.SC_LAST_TOTAL_AMOUNT, ApiUtil.getDouble(params, SalesContractBean.SC_AMOUNT));
             String genSCCode = null;
 
 			if(status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)){
-			    //草稿
-			    if(_id !=null){
+			    //继续编辑草稿
+			    if(!ApiUtil.isEmpty(_id)){
 			        contract.put(ApiConstants.MONGO_ID, _id);
 			        addedContract = dao.updateById(contract, DBBean.SALES_CONTRACT);
 			        genSCCode = params.get(SalesContractBean.SC_CODE).toString();
@@ -290,7 +291,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				String scCode = (String) existContract.get(SalesContractBean.SC_CODE);
 				addEqCostListForContract(eqcostList, _id, scCode, scProjectId);
 			}
-			
+			logger.info("***************************** Save contract *****************************");
+			logger.info(contract);
 			return dao.updateById(contract, DBBean.SALES_CONTRACT);
 		}
 	}

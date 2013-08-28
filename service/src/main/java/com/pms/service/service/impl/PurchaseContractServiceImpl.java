@@ -672,7 +672,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     this.dao.updateById(ordeUpdate, DBBean.PURCHASE_ORDER);
 
                     Map<String, Object> order = this.dao.findOne(ApiConstants.MONGO_ID, orderId, new String[] { PurchaseCommonBean.PURCHASE_REQUEST_ID, PurchaseCommonBean.PURCHASE_ORDER_CODE }, DBBean.PURCHASE_ORDER);
-                    if (order != null && order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID) != null) {
+                    if (order != null && !ApiUtil.isEmpty(order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID))) {
                         Map<String, Object> purRequest = new HashMap<String, Object>();
                         purRequest.put(ApiConstants.MONGO_ID, order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID));
                         purRequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
