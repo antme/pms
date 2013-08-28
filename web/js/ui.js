@@ -46,13 +46,17 @@ function init(u){
 	user = u;
 	$("#user_info").html(user.userName);
 	
-	//一级菜单权限验证
-	removeTreeItems(menus);
-	for (i in menus) {
-		if (menus[i].items) {
-			// 二级菜单权限验证
-			removeTreeItems(menus[i].items);
+	if(!user.isAdmin){
+	
+		for (i in menus) {
+			if (menus[i].items) {
+				// 二级菜单权限验证
+				removeTreeItems(menus[i].items);
+			}
 		}
+		
+		//一级菜单权限验证
+		removeTreeItems(menus, true);
 	}
 
 	
@@ -80,25 +84,34 @@ function init(u){
 	
 }
 
-function removeTreeItems(items) {
+function removeTreeItems(items, parent) {
+
 	// 拷贝数据
 	var newItems = items.slice(0);
 	for (i in newItems) {
 		var id = newItems[i].id;
-		var hasAccess = false;
-		for (j in userMenus) {
-			if (id.indexOf(userMenus[j].menuId) >= 0) {
-				hasAccess = true;
-				break;
+		var childItems = newItems[i].items;
+
+		if(parent && childItems && childItems.length>0){
+			//如果一级菜单下面还有二级菜单，显示一级菜单
+		}else{
+			var hasAccess = false;
+			for (j in userMenus) {
+				if (id.indexOf(userMenus[j].menuId) >= 0) {
+					hasAccess = true;
+					break;
+				}
+			}
+			if (!hasAccess) {
+				for (j in items) {
+					if(items[j].id==newItems[i].id){
+						//菜单权限，先注释掉
+						items.splice(j, 1);
+					}
+				}
+		
 			}
 		}
-		if (!hasAccess) {
-			//FIXME IE7不支持此方法
-//			var node = items.indexOf(newItems[i]);
-			//菜单权限，先注释掉
-//			items.splice(node, 1);
-		}
-
 	}
 }
 
@@ -532,10 +545,6 @@ function openShipViewWindow(param){
 	openRemotePageWindow(options, "execution_addShip", {_id : param});	
 }
 
-function openMenuEditWindow(param){
-	var options = { width:"1080px", height: "500px", title:"权限配置"};
-	openRemotePageWindow(options, "user_menuEdit", {_id : param});	
-}
 
 function myTaskQueryParam(options, operation){
 		if(redirectParams){

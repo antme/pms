@@ -8,3 +8,9 @@ $(document).ready(function() {
 });
 
 
+
+function openMenuEditWindow(param){
+	var options = { width:"1080px", height: "500px", title:"权限配置"};
+	openRemotePageWindow(options, "user_menuEdit", {_id : param});	
+}
+

@@ -205,7 +205,7 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         homeData.put(UserBean.USER_NAME, ApiThreadLocal.getCurrentUserName());
         homeData.put(ApiConstants.MONGO_ID, userId);
         homeData.put("mytasks", listMyTasks());
-        
+        homeData.put("isAdmin", isAdmin());
         Map<String, Object> user = this.dao.findOne(ApiConstants.MONGO_ID, userId, new String[]{UserBean.GROUPS}, DBBean.USER);
         Map<String, Object> menuQuery = new HashMap<String, Object>();
         menuQuery.put(MenuBean.GROUPS, new DBQuery(DBQueryOpertion.IN, user.get(UserBean.GROUPS)));
