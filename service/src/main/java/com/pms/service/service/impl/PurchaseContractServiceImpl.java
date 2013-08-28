@@ -46,7 +46,7 @@ import com.pms.service.util.ExcleUtil;
 
 public class PurchaseContractServiceImpl extends AbstractService implements IPurchaseContractService {
 
-    public static final String FROM = "from";
+    public static final String FROM = "fromRuodian";
     private static final String PURCHASE_ORDER_ID = "purchaseOrderId";
     private static final String APPROVED = PurchaseRequest.STATUS_APPROVED;
     private static final Logger logger = LogManager.getLogger(PurchaseContractServiceImpl.class);

@@ -308,13 +308,16 @@ public class CommonDaoMongoImpl implements ICommonDao {
 		oldQuery.put(ApiConstants.MONGO_ID, _id);
 		oldQuery.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		Map<String, Object> oldMap = findOneByQuery(oldQuery, collection);
-		oldMap.remove(ApiConstants.MONGO_ID);
-		oldMap.remove(ApiConstants.CREATED_ON);
-		oldMap.remove(ApiConstants.UPDATED_ON);
-		
-		List<Map<String, Object>> changeFieldList = generateModifiedMaps(_id, oldMap, newMap);
-		for (Map<String, Object> map : changeFieldList){
-			add(map, cName);
+		if (oldMap != null) {
+			oldMap.remove(ApiConstants.MONGO_ID);
+			oldMap.remove(ApiConstants.CREATED_ON);
+			oldMap.remove(ApiConstants.UPDATED_ON);
+
+			List<Map<String, Object>> changeFieldList = generateModifiedMaps(
+					_id, oldMap, newMap);
+			for (Map<String, Object> map : changeFieldList) {
+				add(map, cName);
+			}
 		}
 		
 	}

@@ -71,7 +71,7 @@ $(document).ready(function() {
 			field : "projectName",
 			title : "项目名",
 			template : function(dataItem) {
-				return '<a  onclick="viewProject(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
+				return '<a  onclick="openProjectViewWindow(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
 			}
 		}, {
 			field : "projectManager",
@@ -232,14 +232,6 @@ function openTraceWindow(param){
 	openRemotePageWindow(options, "salescontract_traceSCAmount", {_id : param});
 }
 
-function viewProject(param){
-	var options = { width:"680px", height: "480px", title:"项目信息"};
-	openRemotePageWindow(options, "project_addProject", {_id : param});
-}
 
-
-	
-	
-	
 	
 	

@@ -378,7 +378,7 @@ function addOrderInSCListForRuodian(){
 			}
         	eqCostListDataSource.data(requestDataItem.eqcostList);			
 			requestDataItem.eqcostDeliveryType = "直发现场";
-			requestDataItem.from = "弱电工程";
+			requestDataItem.fromRuodian = "弱电工程";
 			requestDataItem.projectId = redirectParams.projectId;
 			requestDataItem.salesContractId = redirectParams.scId;
 			
@@ -582,7 +582,7 @@ function edit(data) {
 		requestDataItem.executeStatus = requestDataItem.executeStatus.text;
 	}
 	
-	if(requestDataItem.from){
+	if(requestDataItem.fromRuodian){
 		if(!redirectParams.addInSCList){
 			addOrderInSCListForRuodian();
 		}

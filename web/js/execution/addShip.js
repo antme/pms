@@ -330,9 +330,10 @@ function loadEqList(data){
 	rKlist = new Array();
 	alloList = new Array();
 	
-	if(eqList.length ==0){
+	if(eqList && eqList.length ==0){
 		alert("没有清单数据");
 	}
+	
 	for(i=0; i<eqList.length; i++){
 		
 		if(!eqList[i].arrivalAmount || eqList[i].arrivalAmount==0){
@@ -418,20 +419,20 @@ function saveShip() {
 		alert("验证不通过，请检查表单");
 	} else {
 		allShipDataSource.data([]);
-		
+		var data = new Array();
 		if (model.shipType == "库存") {
-			var data = allocatDataSource.data();
+			 data = allocatDataSource.data();
 		} else if (model.shipType == "采购") {
-			var data = eqDataSource.data();
+			 data = eqDataSource.data();
 		} else if (model.shipType == "直发") {
-			var data = supplierShipDataSource.data();
+			 data = supplierShipDataSource.data();
 		}
 		
-		for(i=0; i<data.length; i++){
+		for(i=0; i< data.length; i++){
 			allShipDataSource.add(data[i]);
 		}
 
-		if (allShipDataSource.data().length > 0) {
+		if (allShipDataSource.data() && allShipDataSource.data().length > 0) {
 			model.set("eqcostList", allShipDataSource.data());
 			model.set("deliveryStartDate", kendo.toString(model.deliveryStartDate, 'yyyy-MM-dd'));
 			model.set("deliveryEndDate", kendo.toString(model.deliveryEndDate, 'yyyy-MM-dd'));
