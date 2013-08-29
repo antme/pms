@@ -484,7 +484,7 @@ function editDraftSc(data){
 	});
 	$("#projectType").kendoDropDownList({
 		dataTextField : "text",
-		dataValueField : "text",
+		dataValueField : "value",
 		optionLabel : "选择立项类别...",
 		dataSource : proCategoryItems,
 		select:function(e){
