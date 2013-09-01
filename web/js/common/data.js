@@ -179,3 +179,6 @@ var proManagerItems = new kendo.data.DataSource({
 	    data: "data"
 	}
 });
+
+
+var pbStatus = [{ text: "草稿"}, { text: "已提交"}, { text: "已批准"}, {text:"已拒绝"}]

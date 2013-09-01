@@ -85,7 +85,10 @@ $(document).ready(function() {
 	
 	if (redirectParams && redirectParams._id) {
 		postAjaxRequest(loadUrl, redirectParams, edit);
-	} 
+	}else if(popupParams){
+		postAjaxRequest(loadUrl, popupParams, edit);
+		disableAllInPoppup();
+	}
 	
 });
 

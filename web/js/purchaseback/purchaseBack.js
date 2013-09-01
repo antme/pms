@@ -12,7 +12,9 @@ var requestModel = kendo.data.Model.define({
 		pbType:{},
 		pbStatus:{},
 		pbComment:{},
-		pbMoney:{},
+		pbMoney:{
+			type : "number"
+		},
 		eqcostList:{},
 		projectCode : {},
 		projectName : {},
@@ -57,6 +59,7 @@ $(document).ready(function () {
 	    selectable : "row",
 	    sortable : true,
 	    height: "400px",
+	    filterable : filterable,
 	    columns: [
 	        { 
 	        	field: "pbCode", 
@@ -66,18 +69,38 @@ $(document).ready(function () {
 					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.pbCode + '</a>';
 				}
 	        },
-	        { field:"projectName",title:"项目名"},
-	        { field:"projectManager", title:"PM" },
+	        { field:"projectName",title:"项目名",
+	        	template : function(dataItem) {
+					if(dataItem.projectName){
+						return '<a  onclick="openProjectViewWindow(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
+					}else{
+						return '';
+					}
+				}
+	        },
+	        { field:"projectManager", title:"PM"},
 	        { 
 	        	field:"contractCode", 
 	        	title:"销售合同编号" ,
+	        	filterable : false,
 	        	template : function(dataItem) {
 					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
 	        },
 	        { field: "customer", title:"客户名"},
-	        { field: "pbStatus", title:"申请状态" },
-	        { field: "pbSubmitDate", title:"提交时间" },
+	        { field: "pbStatus", title:"申请状态",
+	        	filterable : {
+					ui: function(e){
+						e.kendoDropDownList({
+							dataSource : pbStatus,
+							optionLabel : "...",
+							dataTextField : "text",
+							dataValueField : "text"
+						});
+					}
+				}
+	        },
+	        { field: "pbSubmitDate", title:"提交时间", filterable : false },
 	        { field: "pbMoney", title:"金额" }
 	    ]
 	});
@@ -119,8 +142,11 @@ function destroyPB() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.pbStatus == "草稿" || row.pbStatus == "已拒绝" || row.pbStatus == "已中止"){	
-		if(confirm("删除表单，确认？"))
-		postAjaxRequest("service/purchase/back/destroy", {_id:row._id}, function(){listDatasource.read();});
+	} else if(row.pbStatus == "草稿" || row.pbStatus == "已拒绝"){	
+		if(confirm("删除表单，确认？")){
+			postAjaxRequest("service/purchase/back/destroy", {_id:row._id}, function(){listDatasource.read();});
+		}
+	}else{
+		alert("只能删除草稿或则已拒绝状态的数据");
 	}
 }

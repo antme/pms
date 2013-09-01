@@ -57,6 +57,7 @@ $(document).ready(function () {
 	    selectable : "row",
 	    sortable : true,
 	    height: "400px",
+	    filterable : filterable,
 	    columns: [
 	        { 
 	        	field: "pbCode", 
@@ -66,7 +67,15 @@ $(document).ready(function () {
 					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.pbCode + '</a>';
 				}
 	        },
-	        { field:"projectName",title:"项目名"},
+	        { field:"projectName",title:"项目名",
+	        	template : function(dataItem) {
+					if(dataItem.projectName){
+						return '<a  onclick="openProjectViewWindow(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
+					}else{
+						return '';
+					}
+				}	
+	        },
 	        { field: "projectManager", title:"PM" },
 	        { 
 	        	field: "contractCode", 
@@ -76,7 +85,18 @@ $(document).ready(function () {
 				}
 	        },
 	        { field: "customer", title:"客户名" },
-	        { field: "pbStatus", title:"申请状态" },
+	        { field: "pbStatus", title:"申请状态",
+	        	filterable : {
+					ui: function(e){
+						e.kendoDropDownList({
+							dataSource : pbStatus,
+							optionLabel : "...",
+							dataTextField : "text",
+							dataValueField : "text"
+						});
+					}
+				}	
+	        },
 	        { field: "pbSubmitDate", title:"提交时间" },
 	        { field: "pbMoney", title:"金额" }
 	    ]

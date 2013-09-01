@@ -48,7 +48,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
      */
 	public Map<String, Object> prepareBack(Map<String, Object> params) {
 		Map<String,Object> request = new LinkedHashMap<String,Object>();
-		request.put(PurchaseBack.pbStatus, PurchaseStatus.unsaved.toString());
+		request.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
 		request.put(PurchaseBack.scId, params.get(PurchaseBack.scId));
 		mergeSalesContract(request);
 		mergeEqcost(request);
@@ -74,8 +74,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		Map<String,Object> request = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
 		mergeSalesContract(request);
 		mergeEqcost(request);
-		/*request.put(SalesContractBean.SC_EQ_LIST, scs.mergeLoadedEqList(request.get(SalesContractBean.SC_EQ_LIST)));
-		mergeRestEqCount(request);*/
 		return request;
 	}
 	
@@ -210,7 +208,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	public Map<String, Object> prepareAllot(Map<String, Object> params) {
 		Map<String,Object> allot = new HashMap<String,Object>();
 		allot.put(PurchaseBack.pbId, params.get(PurchaseBack.pbId));
-		allot.put(PurchaseBack.paStatus, PurchaseStatus.unsaved.toString());
+		allot.put(PurchaseBack.paStatus, PurchaseStatus.saved.toString());
 		mergeEqcostForAllot(allot);//整合scId eqCostList purchaseBack
 		mergeSalesContract(allot);
 		
@@ -409,7 +407,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		}
 		List<Map<String,Object>> eqList = scs.mergeEqListBasicInfo(params.get(PurchaseBack.eqcostList));
 
-        Map<String,Integer> scCountMap = countRestEqByScId(scId);
+        Map<String,Integer> scCountMap = countBackRestEqByScId(scId);
 
 		if(eqList != null){
 			for(Map<String,Object> obj : eqList){		
@@ -474,7 +472,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		
 		//2. 获取合同剩余数量
 		String scId = (String)params.get(PurchaseBack.scId);
-		Map<String,Integer> scCountMap = countRestEqByScId(scId);
+		Map<String,Integer> scCountMap = countBackRestEqByScId(scId);
 		
 		//3. 获取合同下面的设备价格
 		Map<String,Object> query = new HashMap<String,Object>();
@@ -588,12 +586,11 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	
 
 	public enum PurchaseStatus {
-    	unsaved,saved,submited,approved,rejected,interruption,finalApprove,done;
+    	saved,submited,approved,rejected,interruption,finalApprove,done;
 		@Override
 		public String toString() {
 			String value = "undefine";
 			switch(this){
-				case unsaved: value="未保存"; break;
 				case saved: value="草稿"; break;
 				case submited: value="已提交"; break;
 				case approved: value="已批准"; break;
@@ -629,17 +626,17 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
     
     /**查询某合同下面剩余的成本设备数量: 成本数量 - 备货总和**/
-    public Map<String, Integer> countRestEqByScId(String scId) {
+    public Map<String, Integer> countBackRestEqByScId(String scId) {
         // 获取成本设备清单
     	Map<String,Object> eqQuery = new HashMap<String,Object>();
     	eqQuery.put(EqCostListBean.EQ_LIST_SC_ID, scId);
 		Map<String, Object> eqMap = scs.listMergedEqListBySC(eqQuery);
 		List<Map<String,Object>> eqList = (List<Map<String,Object>>)eqMap.get(ApiConstants.RESULTS_DATA);
 		
-		Map<String, Integer> scEqCountMap = new HashMap<String, Integer>();
+		Map<String, Integer> scEqTotalCountMap = new HashMap<String, Integer>();
 		for(Map<String,Object> eq : eqList){
             if (eq.get(ApiConstants.MONGO_ID) != null) {
-            	scEqCountMap.put(eq.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eq,EqCostListBean.EQ_LIST_REAL_AMOUNT, 0));
+            	scEqTotalCountMap.put(eq.get(ApiConstants.MONGO_ID).toString(), ApiUtil.getInteger(eq,EqCostListBean.EQ_LIST_REAL_AMOUNT, 0));
             }
 		}
 		
@@ -647,22 +644,22 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         Map<String, Object> backQuery = new HashMap<String, Object>();
         backQuery.put(PurchaseBack.scId, scId);
         List<String> sl = new ArrayList<String>();
-//        sl.add(PurchaseStatus.submited.toString());
+        sl.add(PurchaseStatus.submited.toString());
         sl.add(PurchaseStatus.approved.toString());
         backQuery.put(PurchaseBack.pbStatus, new DBQuery(DBQueryOpertion.IN, sl)); 
         Map<String, Integer> backEqCountMap = countEqByKey(backQuery, DBBean.PURCHASE_BACK, PurchaseBack.pbTotalCount, null);
         // 计算剩余数量
         Map<String, Integer> restEqCount = new HashMap<String, Integer>();
-        for (String id : scEqCountMap.keySet()) {
-            int eqCount = 0;
-            int pbCount = 0;
-            if (scEqCountMap.get(id) != null) {
-            	eqCount = scEqCountMap.get(id);
+        for (String id : scEqTotalCountMap.keySet()) {
+            int eqTotalCount = 0;
+            int pbTotalCount = 0;
+            if (scEqTotalCountMap.get(id) != null) {
+            	eqTotalCount = scEqTotalCountMap.get(id);
             }
             if (backEqCountMap.get(id) != null) {
-            	pbCount = backEqCountMap.get(id);
+            	pbTotalCount = backEqCountMap.get(id);
             }
-            restEqCount.put(id, eqCount - pbCount);
+            restEqCount.put(id, eqTotalCount - pbTotalCount);
         }
         return restEqCount;
     }
