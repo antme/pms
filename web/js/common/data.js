@@ -182,3 +182,4 @@ var proManagerItems = new kendo.data.DataSource({
 
 
 var pbStatus = [{ text: "草稿"}, { text: "已提交"}, { text: "已批准"}, {text:"已拒绝"}]
+var paStatus = [ { text: "已批准"}, {text:"已拒绝"},{text:"已结束"},{text:"已终审"}]

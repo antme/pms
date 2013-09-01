@@ -51,25 +51,37 @@ $(document).ready(function () {
 	    selectable : "row",
 	    height: "400px",
 	    sortable : true,
+	    filterable : filterable,
 	    columns: [
 	        { 
 	        	field: "paCode", 
-	        	title: "调拨编号" ,
+	        	title: "调拨编号" ,	        	
 	        	template : function(dataItem) {
 					return '<a  onclick="openPurchaseAllotViewWindow(\'' + dataItem._id + '\');">' + dataItem.paCode + '</a>';
 				}
 	        },
-	        { field: "pbCode", title:"备货编号" },
+	        { field: "pbCode", title:"备货编号", filterable : false},
 	        { 
 	        	field: "contractCode", 
-	        	title:"销售合同编号",
+	        	title:"销售合同编号",filterable : false,
 	        	template : function(dataItem) {
 					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
 	        },
-	        { field: "customer", title:"客户名" },
-	        { field: "projectManager", title:"PM" },
-	        { field: "paStatus", title:"调拨状态" },
+	        { field: "customer", title:"客户名" , filterable : false},
+	        { field: "projectManager", title:"PM" , filterable : false},
+	        { field: "paStatus", title:"调拨状态" ,
+	        	filterable : {
+					ui: function(e){
+						e.kendoDropDownList({
+							dataSource : paStatus,
+							optionLabel : "...",
+							dataTextField : "text",
+							dataValueField : "text"
+						});
+					}
+				}	
+	       },
 	        { field: "paSubmitDate", title:"提交时间" },
 	        { field: "paApproveDate", title:"批准时间" }
 	    ]

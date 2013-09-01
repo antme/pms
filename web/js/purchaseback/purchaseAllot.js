@@ -67,7 +67,7 @@ $(document).ready(function () {
 					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.pbCode + '</a>';
 				}
 	        },
-	        { field:"projectName",title:"项目名",
+	        { field:"projectName",title:"项目名",filterable : false,
 	        	template : function(dataItem) {
 					if(dataItem.projectName){
 						return '<a  onclick="openProjectViewWindow(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
@@ -76,27 +76,16 @@ $(document).ready(function () {
 					}
 				}	
 	        },
-	        { field: "projectManager", title:"PM" },
+	        { field: "projectManager", title:"PM", filterable : false},
 	        { 
 	        	field: "contractCode", 
-	        	title:"销售合同编号",
+	        	title:"销售合同编号",filterable : false,
 	        	template : function(dataItem) {
 					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
 	        },
-	        { field: "customer", title:"客户名" },
-	        { field: "pbStatus", title:"申请状态",
-	        	filterable : {
-					ui: function(e){
-						e.kendoDropDownList({
-							dataSource : pbStatus,
-							optionLabel : "...",
-							dataTextField : "text",
-							dataValueField : "text"
-						});
-					}
-				}	
-	        },
+	        { field: "customer", title:"客户名", filterable : false},
+	        { field: "pbStatus", title:"申请状态", filterable : false},
 	        { field: "pbSubmitDate", title:"提交时间" },
 	        { field: "pbMoney", title:"金额" }
 	    ]
