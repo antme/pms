@@ -146,10 +146,10 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.approvePurchaseRequest(parserJsonParameters(request, false)), request, response);
     }
     
-    @RequestMapping("/request/cancel")
+    @RequestMapping("/request/abrogate")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
-    public void cancelPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.cancelPurchaseRequest(parserJsonParameters(request, false)), request, response);
+    public void abrogatePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.abrogatePurchaseRequest(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/request/reject")

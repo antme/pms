@@ -58,7 +58,7 @@ public interface IPurchaseContractService {
 
     public Map<String, Object> approvePurchaseRequest(Map<String, Object> request);
     
-    public Map<String, Object> cancelPurchaseRequest(Map<String, Object> request);
+    public Map<String, Object> abrogatePurchaseRequest(Map<String, Object> request);
     
     public Map<String, Object> rejectPurchaseRequest(Map<String, Object> request);
     

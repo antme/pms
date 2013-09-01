@@ -548,6 +548,12 @@ function openShipViewWindow(param){
 	openRemotePageWindow(options, "execution_addShip", {_id : param});	
 }
 
+function openRepositoryViewWindow(param){
+	var options = { width:"1080px", height: "500px", title:"入库信息"};
+	openRemotePageWindow(options, "repository_repositoryEdit", {_id : param});	
+}
+
+
 
 function myTaskQueryParam(options, operation){
 		if(redirectParams){

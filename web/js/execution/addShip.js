@@ -15,8 +15,12 @@ var ship = kendo.data.Model.define( {
     	deliveryContactWay: {},
     	deliveryUnit: {},
     	deliveryAddress: {},
-    	deliveryStartDate: {},
-    	deliveryEndDate: {},
+    	deliveryStartDate: {
+    		type:"date"
+    	},
+    	deliveryEndDate: {
+    		type:"date"
+    	},
     	deliveryRequirements: {},
     	otherDeliveryRequirements: {},
     	eqcostList: {},
@@ -107,9 +111,11 @@ $(document).ready(function() {
         	model.set("applicationDepartment", dataItem.department);
         	model.set("salesContractId", "");
         	
-        	
         	loadSC();
         	
+        }, 
+        dataBound : function(e){
+        	loadSC();
         }
     }).data("kendoComboBox");
 
@@ -310,6 +316,10 @@ function edit(data) {
 		}
 		
 	}
+	console.log(model.deliveryStartDate);
+	setDate(model, "deliveryStartDate", model.deliveryStartDate);
+	console.log(model.deliveryStartDate);
+
 	kendo.bind($("#addShip"), model);
 	
 	if(model.eqcostList){
@@ -331,7 +341,7 @@ function loadEqList(data){
 	alloList = new Array();
 	
 	if(eqList && eqList.length ==0){
-		alert("没有清单数据");
+		alert("此销售合同没有可发货设备！");
 	}
 	
 	for(i=0; i<eqList.length; i++){
@@ -434,8 +444,7 @@ function saveShip() {
 
 		if (allShipDataSource.data() && allShipDataSource.data().length > 0) {
 			model.set("eqcostList", allShipDataSource.data());
-			model.set("deliveryStartDate", kendo.toString(model.deliveryStartDate, 'yyyy-MM-dd'));
-			model.set("deliveryEndDate", kendo.toString(model.deliveryEndDate, 'yyyy-MM-dd'));
+
 			if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
 				postAjaxRequest("/service/ship/record", {models:kendo.stringify(model)}, checkStatus);
 			}else if(redirectParams && redirectParams.type && redirectParams.type == "submit") {

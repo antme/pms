@@ -38,7 +38,10 @@ $(document).ready(function() {
 			width : "1000px",
 			columns : [ {
 				field : "repositoryCode",
-				title : "申请编号"
+				title : "申请编号",
+				template : function(dataItem) {
+					return '<a  onclick="openRepositoryViewWindow(\'' + dataItem._id + '\');">' + dataItem.repositoryCode + '</a>';
+				}
 			}, {
 				field : "recustomer",
 				title : "需方名称"

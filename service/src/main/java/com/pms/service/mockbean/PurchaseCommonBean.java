@@ -212,13 +212,17 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String STATUS_APPROVED = "审批通过";
     public static final String STATUS_REJECTED = "审批拒绝";
     public static final String MANAGER_APPROVED = "经理审批通过";
-    public static final String STATUS_CANCELLED = "已废除";
+    
+    public static final String STATUS_ABROGATED_NEED_APPROVED = "废除待审批";
+    public static final String STATUS_ABROGATED = "已废除";
+    
+    public static final String STATUS_CANCELLED = "已退回";
+    
     public static final String STATUS_IN_REPOSITORY = "已入库";
     public static final String STATUS_OUT_REPOSITORY = "已出库";
     public static final String STATUS_REPOSITORY_NEW = "入库中";
     public static final String STATUS_IN_OUT_REPOSITORY = "已入/出库";
     public static final String STATUS_ORDERING = "采购中";
-    public static final String STATUS_CANCELL_NEED_APPROVED = "废除待审批";
     
     public static final String STATUS_ORDER_LOCKED = "已锁定";
     public static final String STATUS_ORDER_FINISHED = "采购完毕";

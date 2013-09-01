@@ -462,7 +462,7 @@ public abstract class AbstractService {
         taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
 
         Map<String, Object> statusQuery = new HashMap<String, Object>();
-        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED, ShipBean.SHIP_STATUS_DRAFT }));
+        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_ABROGATED, ShipBean.SHIP_STATUS_DRAFT }));
         statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
 
         // or query

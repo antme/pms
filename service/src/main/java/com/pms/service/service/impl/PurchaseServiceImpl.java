@@ -679,7 +679,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         //FIXME 草稿的数据不算
         Map<String, Object> purchaseRequestQuery = new HashMap<String, Object>();
         purchaseRequestQuery.put(PurchaseRequest.BACK_REQUEST_ID, backId);//TODO: 
-        purchaseRequestQuery.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseRequest.STATUS_CANCELLED));
+        purchaseRequestQuery.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseRequest.STATUS_ABROGATED));
         Map<String, Integer> requestEqCountMap = countEqByKey(purchaseRequestQuery, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.EQCOST_APPLY_AMOUNT, null);
 
         // 获取调拨中的数据总和

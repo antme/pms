@@ -11,7 +11,6 @@
 
 <script type="text/javascript" src="js/common/purchaseCommon.js"></script>
 <script type="text/javascript" src="js/purchaseorder/purchaseOrder.js"></script>
-<script type="text/javascript" src="js/common/process.js"></script>
 </head>
 
 <body>
@@ -22,7 +21,6 @@
 	    <button access="purchase_order_management" class="k-button access" onclick="add();">新增</button>
 	    <button access="purchase_order_management" class="k-button access" onclick="editOr();">编辑</button>
         <button access="purchase_order_management" class="k-button access" onclick="cancelOrder();">退回</button>
-        <button class="k-button " onclick="approveOrder();">审核</button>
 	    <button access="purchase_order_process" class="k-button access" onclick="arrivalNotice();">直发到货通知</button>
 	</div>
 		<div id="grid"></div>
@@ -32,7 +30,7 @@
            <label>备注:</label>
            <textarea rows="8" cols="220" class="k-textbox  foredit" style="width:400px;" id="approve-comment"></textarea>
            <br>
-           <button onclick="approveSubmit();">提交</button>
+           <button onclick="cancelSubmit();">提交</button>
      </div>
 </body>
 </html>

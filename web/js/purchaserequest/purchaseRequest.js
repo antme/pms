@@ -5,7 +5,7 @@ if($("#requestApprove").length>0){
 }
 var approveUrl = "/service/purcontract/request/approve";
 var rejectUrl = "/service/purcontract/request/reject";
-var cancelUrl = "/service/purcontract/request/cancel";
+var cancelUrl = "/service/purcontract/request/abrogate";
 
 var gridOptions = {
 		transport : {
@@ -74,9 +74,6 @@ $(document).ready(function() {
 				field : "status",
 				title : "状态"
 			}, {
-				field : "approvedDate",
-				title : "审批时间"
-			}, {
 				field : "requestedTotalMoney",
 				title : "金额"
 			}, {
@@ -112,13 +109,13 @@ function editRe() {
 	}
 }
 
-function cancelRe() {
+function abrogatePurchaseRequest() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if(row.status == "已提交" || row.status == "草稿" || row.status == "审批拒绝" || row.status == "审批中"){
 			process(cancelUrl);
 		}else {
-			alert("只能中止未发采购订单的数据或则正在提交的数据");
+			alert("只能废除未发采购订单的数据或则已提交的数据");
 		}
 	}
 }

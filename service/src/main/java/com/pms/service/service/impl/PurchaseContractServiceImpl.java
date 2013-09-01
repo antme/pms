@@ -713,12 +713,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public void approvePurchaseOrder(Map<String, Object> order) {
         // 此批准只批准中止申请
-        processRequest(order, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_CANCELLED);
+        processRequest(order, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_ABROGATED);
 
         Map<String, Object> request = this.dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), new String[] { "purchaseRequestId" }, DBBean.PURCHASE_ORDER);
         if (request.get("purchaseRequestId") != null) {
             request.put(ApiConstants.MONGO_ID, request.get("purchaseRequestId"));
-            cancelPurchaseRequest(request);
+            abrogatePurchaseRequest(request);
             approvePurchaseRequest(request);
         }
 
@@ -728,8 +728,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return processRequest(order, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_REJECTED);
     }
     
-    public Map<String, Object> cancelPurchaseOrder(Map<String, Object> request){
-        return processRequest(request, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_CANCELL_NEED_APPROVED);
+    public Map<String, Object> cancelPurchaseOrder(Map<String, Object> parameters){
+        
+        Map<String, Object> order = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), new String[] { PurchaseRequest.PURCHASE_REQUEST_ID }, DBBean.PURCHASE_ORDER);
+        Map<String, Object> request = new HashMap<String, Object>();
+        request.put(ApiConstants.MONGO_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID ));        
+        processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELLED);
+        processRequest(parameters, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_CANCELLED);        
+        return parameters;
     }
 
     /**
@@ -753,7 +759,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         //由页面来觉得现实什么状态的数据，而不是根据角色或则权限
         if (params.get("approvePage") != null) {
             params.remove("approvePage");
-            params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED }));
+            params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED, PurchaseRequest.STATUS_REJECTED }));
         }
         
         mergeMyTaskQuery(params, DBBean.PURCHASE_REQUEST);
@@ -849,8 +855,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> requestMap = this.dao.findOne(ApiConstants.MONGO_ID, request.get(ApiConstants.MONGO_ID), 
                 new String[] { PurchaseCommonBean.PROCESS_STATUS }, DBBean.PURCHASE_REQUEST);      
             
-       if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_CANCELL_NEED_APPROVED)) {
-           Map<String,Object> result = processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELLED); 
+       if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_ABROGATED_NEED_APPROVED)) {
+           Map<String,Object> result = processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_ABROGATED); 
            reduceBackEqCount((String)request.get(ApiConstants.MONGO_ID));
            return result;
         } else {
@@ -881,13 +887,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     	dao.updateById(back, DBBean.PURCHASE_BACK);
     }
     
-    public Map<String, Object> cancelPurchaseRequest(Map<String, Object> request) {
-        return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELL_NEED_APPROVED);
+    public Map<String, Object> abrogatePurchaseRequest(Map<String, Object> parameters) {
+        processRequest(parameters, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_ABROGATED_NEED_APPROVED);
+        return parameters;        
     }
     
 
-    public Map<String, Object> rejectPurchaseRequest(Map<String, Object> request) {
-        return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_REJECTED);
+    public Map<String, Object> rejectPurchaseRequest(Map<String, Object> parameters) {
+        return processRequest(parameters, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_REJECTED);
     }
 
     public Map<String, Object> getPurchaseRequest(Map<String, Object> parameters) {

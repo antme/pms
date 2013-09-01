@@ -113,12 +113,53 @@ function editOr() {
 function cancelOrder() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "草稿" || row.status == "已提交"){
-			process(cancelUrl);
-		}else {
-			alert("不能废除");
+		if (row.status == "草稿" || row.status == "已提交") {
+
+	
+				$("#approve-comment").val("");
+				$("#approve-comment").attr("disabled", false);
+				var options = {
+					width : 500,
+					height : 200,
+					actions : [ "Maximize", "Close" ]
+				};
+				$("#approve-comment").val("");
+				$("#approve").kendoWindow({
+					width : options.width,
+					height : options.height,
+					title : options.title
+				});
+
+				kendoWindow = $("#approve").data("kendoWindow");
+				kendoWindow.open();
+				kendoWindow.center();
+			
+		} else {
+			alert("只能回退未发采购合同的订单");
 		}
 	}
+
+}
+
+function cancelSubmit() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {		
+		if (confirm("退回采购订单，相关的采购申请也会退回，是否确定退回？")) {
+			var param = {
+				"_id" : row._id,
+				"approveComment" : $("#approve-comment").val()
+			};
+			postAjaxRequest(cancelUrl, param, approveStatusCheck);
+			$("#approve-comment").val("");
+		}
+	}
+}
+
+
+function approveStatusCheck(response) {
+	var kendoWindow = $("#approve").data("kendoWindow");
+	kendoWindow.close();
+	listDataSource.read();
 }
 
 function approveOrder(){
