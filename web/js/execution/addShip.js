@@ -316,9 +316,7 @@ function edit(data) {
 		}
 		
 	}
-	console.log(model.deliveryStartDate);
 	setDate(model, "deliveryStartDate", model.deliveryStartDate);
-	console.log(model.deliveryStartDate);
 
 	kendo.bind($("#addShip"), model);
 	
@@ -372,6 +370,7 @@ function loadEqList(data){
 
 	});
 	
+	
 	if(supplierlist.length >0){
 		shipType.add({ text: "直发" });
 		$("#supplier-ship").show();
@@ -411,6 +410,8 @@ function loadEqList(data){
 					$("#repo-ship").show();
 					$("#allocat-ship").hide();
 				}
+	        	
+	        	model.shipType = dataItem.text;
 	        }
 	    });
 		$("#ship-type").show();
@@ -418,6 +419,18 @@ function loadEqList(data){
 		$("#ship-type").hide();
 	}
 
+	var shipDataKendo = $("#shipType").data("kendoDropDownList");
+	
+	if(alloList.length >0 && supplierlist.length==0 && rKlist.length==0){
+		shipDataKendo.value("库存");
+		model.shipType = "库存";
+	}else if(alloList.length == 0 && supplierlist.length>0 && rKlist.length==0){
+		shipDataKendo.value("直发");
+		model.shipType = "直发";
+	}else if(alloList.length ==0 && supplierlist.length==0 && rKlist.length>0){
+		shipDataKendo.value("采购");
+		model.shipType = "采购";
+	}
 	allocatDataSource.data(alloList);
 	supplierShipDataSource.data(supplierlist);
 	eqDataSource.data(rKlist);
@@ -434,8 +447,8 @@ function saveShip() {
 			 data = allocatDataSource.data();
 		} else if (model.shipType == "直发") {
 			 data = supplierShipDataSource.data();
-		} else {
-//			 (model.shipType == "采购") 
+		} else if (model.shipType == "采购")  {
+//			 
 			 data = eqDataSource.data();
 		}
 		
