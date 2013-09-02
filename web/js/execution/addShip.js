@@ -432,10 +432,11 @@ function saveShip() {
 		var data = new Array();
 		if (model.shipType == "库存") {
 			 data = allocatDataSource.data();
-		} else if (model.shipType == "采购") {
-			 data = eqDataSource.data();
 		} else if (model.shipType == "直发") {
 			 data = supplierShipDataSource.data();
+		} else {
+//			 (model.shipType == "采购") 
+			 data = eqDataSource.data();
 		}
 		
 		for(i=0; i< data.length; i++){
