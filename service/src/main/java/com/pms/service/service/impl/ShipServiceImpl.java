@@ -73,11 +73,19 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Object> result = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
         result.put(SalesContractBean.SC_EQ_LIST, scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST)));
         if (result.get(ShipBean.SHIP_DELIVERY_START_DATE) != null) {
-            result.put(ShipBean.SHIP_DELIVERY_START_DATE, DateUtil.getStringByDate((Date) result.get(ShipBean.SHIP_DELIVERY_START_DATE)));
+            if(result.get(ShipBean.SHIP_DELIVERY_START_DATE) instanceof String){
+                
+            }else{
+                result.put(ShipBean.SHIP_DELIVERY_START_DATE, DateUtil.getStringByDate((Date) result.get(ShipBean.SHIP_DELIVERY_START_DATE)));
+            }
         }
 
         if (result.get(ShipBean.SHIP_DELIVERY_TIME) != null) {
-            result.put(ShipBean.SHIP_DELIVERY_TIME, DateUtil.getStringByDate((Date) result.get(ShipBean.SHIP_DELIVERY_TIME)));
+            if(result.get(ShipBean.SHIP_DELIVERY_TIME) instanceof String){
+                
+            }else{
+                result.put(ShipBean.SHIP_DELIVERY_TIME, DateUtil.getStringByDate((Date) result.get(ShipBean.SHIP_DELIVERY_TIME)));
+            }
         }
         return result;
     }
