@@ -192,7 +192,12 @@ function loadPage(page, parameters, popupDiv) {
 		}else{
 			url = url + "?uid=" + uid;
 		}
-
+		
+		if(popupDiv){
+			$("#"+popupDiv).html("");
+		}else{
+			$("#main_right").html("");
+		}
 		$.ajax({
 			url : url,
 			success : function(data) {
@@ -201,7 +206,6 @@ function loadPage(page, parameters, popupDiv) {
 					$("#"+popupDiv).html(data);
 				}else{
 					$("#main_right").html(data);
-
 				}
 			},
 			error : function(){

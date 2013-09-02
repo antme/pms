@@ -244,9 +244,8 @@ function selectContracts() {
 
 function loadContracts(data){
 	
-	if(data){
+	if(data && data.data){
 		requestDataItem.eqcostList = data.data;
-
 		edit();
 	}
 }
@@ -257,10 +256,6 @@ function edit(data) {
 	if(data){
 		$("#purchaserepository-div").hide();
 		requestDataItem = data;
-		
-		for (i in requestDataItem.eqcostList) {			
-//			requestDataItem.eqcostList[i].leftCount = requestDataItem.eqcostList[i].leftCount + requestDataItem.eqcostList[i].eqcostApplyAmount;
-		}
 	    
 	}else{
 		$("#purchaserepository-div").show();
@@ -276,7 +271,9 @@ function edit(data) {
 	kendo.bind($("#purchaserepository-edit-item"), requestDataItem);
 
 	// 渲染成本编辑列表
-	itemDataSource.data(requestDataItem.eqcostList);
+	if(requestDataItem.eqcostList){
+		itemDataSource.data(requestDataItem.eqcostList);
+	}
 
 	$("#purchasecontract-edit-item").show();
 	$("#purchasecontract-select").hide();
@@ -304,15 +301,15 @@ function edit(data) {
 				field : "eqcostProductType",
 				title : "单位"
 
-			},{
-				field : "leftCount",
-				title : "可入库数量"
 			}, {
 				field : "eqcostApplyAmount",
 				title : "入库数量",		
 				template : function(dataItem){
 					return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
 				}
+			},{
+				field : "leftCount",
+				title : "可入库数量"
 			}, {
 				field : "salesContractCode",
 				title : "销售合同编号"

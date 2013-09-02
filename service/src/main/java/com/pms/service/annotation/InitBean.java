@@ -28,6 +28,7 @@ import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.RoleBean;
 import com.pms.service.mockbean.ShipCountBean;
+import com.pms.service.mockbean.SupplierBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.util.DataEncrypt;
 
@@ -53,8 +54,17 @@ public class InitBean {
         createAdminGroup(dao);
         createSystemDefaultGroups(dao);
         createAdminUser(dao);
-        
+        createDefaultSupplier(dao);
         initVirtureContractShipCountData(dao);
+    }
+
+    private static void createDefaultSupplier(ICommonDao dao) {
+        Map<String, Object> supplier = dao.findOne(SupplierBean.SUPPLIER_NAME, "同方北京", DBBean.SUPPLIER);
+        if (supplier == null) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put(SupplierBean.SUPPLIER_NAME, "同方北京");
+            dao.add(map, DBBean.SUPPLIER);
+        }
     }
 
     private static void createSystemDefaultGroups(ICommonDao dao) {

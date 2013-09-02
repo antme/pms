@@ -47,5 +47,8 @@ public interface IPurchaseService {
     //根据备货申请id查询此备货下面可用的采购申请数量和调拨数量
     public Map<String, Integer> countRestEqByBackId(String backId);
     
+    public Map<String, Object> checkEqCountForAllot(Map<String, Object> params);
+    
+    
 
 }

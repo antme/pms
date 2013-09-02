@@ -55,7 +55,7 @@
                             class="k-edit-field ">
                             <input type="text" class="k-input k-textbox"
                                 name="purchaseContractCode" required
-                                data-required-msg="Input 采购合同编号"
+                                data-required-msg="请输入采购合同编号"
                                 data-bind="value: purchaseContractCode">
                         </div>
                         
@@ -101,30 +101,17 @@
 							<label for="supplierName">供应商名称</label>
 						</div>
 						<div data-container-for="supplier" class="k-edit-field supplierSelect">
-							<input type="text" name="supplier" id="supplier"
+							<input type="text" name="supplier" id="supplier" required="required"
 									data-bind="value: supplier">
 						</div>
-	
-                       
-                        
-                        <div class="k-edit-label supplierBJ">
-                            <label for="supplierName">供应商名称</label>
-                        </div>
-                        <div data-container-for="supplierNamebj" class="k-edit-field supplierBJ">
-                 
-                              <input type="text" name="supplierNamebj" id="supplierNamebj"
-                                data-bind="value: supplierNamebj" >
-                        </div>
-    
-                   
-                        
+	                      
 						<div class="k-edit-label ">
 							<label for="supplierNameContact">供应商联系人</label>
 						</div>
 						<div data-container-for="supplierNameContact"
 							class="k-edit-field ">
-							<input type="text" name="supplierNameContact"
-								id="supplierNameContact" required="required"
+							<input type="text" name="supplierNameContact" validationMessage="请输入供应商联系人"
+								id="supplierNameContact" required="required" 
 								data-bind="value: supplierNameContact">
 						</div>
 				
@@ -163,7 +150,7 @@
                         </div>
                         <div data-container-for="contractPaymentType" class="k-edit-field ">
                             <input class="k-input k-textbox" name="contractPaymentType"
-                                id="contractPaymentType" required="required" data-bind="value: contractPaymentType">
+                                id="contractPaymentType" required="required" validationMessage="请输入付款方式"  data-bind="value: contractPaymentType">
                         </div>
                         
 						<div class="k-edit-label ">
@@ -171,7 +158,7 @@
 						</div>
 						<div data-container-for="firstPay" class="k-edit-field ">
 							<input type="number" class="k-input k-textbox" name="firstPay"
-								id="firstPay" required="required" data-bind="value: firstPay">
+								id="firstPay" required="required" validationMessage="请输入首付"  data-bind="value: firstPay">
 						</div>
 
 						<div class="k-edit-label ">
@@ -179,7 +166,7 @@
 						</div>
 						<div data-container-for="moneyProgress" class="k-edit-field ">
 							<input type="number" class="k-input k-textbox"
-								name="moneyProgress" id="moneyProgress" required="required"
+								name="moneyProgress" id="moneyProgress" required="required" validationMessage="请输入进度款"
 								data-bind="value: moneyProgress">
 						</div>
 
@@ -187,7 +174,7 @@
 							<label for="deposit">质保金</label>
 						</div>
 						<div data-container-for="projectAddress" class="k-edit-field ">
-							<input type="number" class="k-input k-textbox" name="deposit"
+							<input type="number" class="k-input k-textbox" name="deposit" validationMessage="请输入质保金"
 								id="deposit" required="required" data-bind="value: deposit">
 						</div>
 
@@ -267,8 +254,8 @@
                 </div>
 			</div>
             <div>
-                <button onclick="save();" class="save">保存</button>
-                <button onclick="save('审批中');" class="save">提交申请</button>
+                <button onclick="savePurchaseContract();" class="save">保存</button>
+                <button onclick="savePurchaseContract('审批中');" class="save">提交申请</button>
                 <button onclick="approvePurCon();" class="approve">批准</button>
                 <button onclick="rejectPurCon();" class="approve">拒绝</button>
                 <button onclick="cancel();">取消</button>

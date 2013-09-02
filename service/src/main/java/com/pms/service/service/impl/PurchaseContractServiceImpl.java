@@ -277,6 +277,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         requery.put(SalesContractBean.SC_PROJECT_ID, projectId);
         requery.put("supplierId", params.get(PurchaseContract.SUPPLIER));
         requery.put("type", params.get("type"));
+        requery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[]{PurchaseCommonBean.STATUS_DRAFT, PurchaseCommonBean.STATUS_CANCELLED}));
+        
         Map<String, Integer> eqCountMap = countEqByKey(requery, DBBean.REPOSITORY, "eqcostApplyAmount", null);
 
         Map<String, Object> lresult = new HashMap<String, Object>();
@@ -832,6 +834,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             pcrequest.putAll(parameters);
         }
         pcrequest.put(SalesContractBean.SC_EQ_LIST, parameters.get(SalesContractBean.SC_EQ_LIST));
+
+        //TODO: 后台检查可申请数据
         
         Map<String, Object> prequest = updatePurchase(pcrequest, DBBean.PURCHASE_REQUEST);
 
@@ -901,7 +905,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
         List<Map<String, Object>> eqList = (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST);
         eqList = scs.mergeEqListBasicInfo(eqList);
-        result.put(SalesContractBean.SC_EQ_LIST, eqList);
         mergeProjectInfo(result);
         Map<String, Object> backQuery = new HashMap<String, Object>();
         backQuery.put(ApiConstants.MONGO_ID, result.get(PurchaseCommonBean.BACK_REQUEST_ID));
@@ -918,11 +921,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 }
             }
         }
-        removeEmptyEqList(result, PurchaseBack.pbTotalCount);
+        removeEmptyEqList(eqList, PurchaseBack.pbTotalCount);
 
         if (result.get(PurchaseRequest.PROCESS_STATUS) != null && !result.get(PurchaseRequest.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseRequest.STATUS_DRAFT)) {
-            removeEmptyEqList(result, PurchaseCommonBean.EQCOST_APPLY_AMOUNT);
+            removeEmptyEqList(eqList, PurchaseCommonBean.EQCOST_APPLY_AMOUNT);
         }
+        
+        result.put(SalesContractBean.SC_EQ_LIST, eqList);
+
         return result;
     }
 
@@ -994,7 +1000,27 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> getRepositoryRequest(Map<String, Object> parameters) {
         Map<String, Object>  result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.REPOSITORY);
-        result.put(SalesContractBean.SC_EQ_LIST, scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST)));
+        List<Map<String, Object>> mergeEqListBasicInfo = scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST));
+        result.put(SalesContractBean.SC_EQ_LIST, mergeEqListBasicInfo);
+        
+//        List<Map<String, Object>> restEqList = (List<Map<String, Object>>)listEqListByProjectAndSupplierForRepository(result).get(ApiConstants.RESULTS_DATA);
+//        
+//        for(Map<String, Object> eqMap: mergeEqListBasicInfo){
+//            
+//            for(Map<String, Object> restMap: restEqList){
+//                
+////                if (eqMap.get(ApiConstants.MONGO_ID) != null && restMap.get(ApiConstants.MONGO_ID) != null && eqMap.get(ApiConstants.MONGO_ID).toString().equals(restMap.get(ApiConstants.MONGO_ID).toString())) {
+////                    logger.info(restMap.get("leftCount"));
+////                    eqMap.put("leftCount", restMap.get("leftCount"));
+////                    eqMap.put("eqcostApplyAmount", restMap.get("eqcostApplyAmount"));
+////                    break;
+////                }
+//            }
+//            
+//        }
+        
+        result.put(SalesContractBean.SC_EQ_LIST, mergeEqListBasicInfo);
+        
         return result;
     }
 

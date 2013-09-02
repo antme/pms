@@ -141,6 +141,7 @@ $(document).ready(function() {
 	$("#supplier").kendoDropDownList({
 		dataTextField : "supplierName",
 		dataValueField : "_id",
+		optionLabel: "选择供应商...",
 		dataSource : {
 			transport : {
 				read : {
@@ -222,38 +223,42 @@ function changeCType(index){
 				requestDataItem.purchaseContractType=="施耐德北京库存" || requestDataItem.purchaseContractType=="泰康北京库存"){
 			requestDataItem.purchaseContractType = "上海代理产品"
 		}
-		
+		requestDataItem.set("contractExecuteCate","正常采购");
 		$("input[name=contractExecuteCate]:eq(0)").attr("checked",true);
 		$("#supplierNameContact").val("");
 		$("#supplierNameContact").attr("disabled", false);
 		$("#contractProperty").attr("disabled", false);
-		
-		$(".supplierBJ").hide();
-		$(".supplierSelect").show();
-		$("#supplierNamebj").val("");
 		
 		$("#firstPay").attr("disabled", false);
 		$("#moneyProgress").attr("disabled", false);
 		$("#deposit").attr("disabled", false);
 		$("#invoiceType").attr("disabled", false);
 		$("#invoiceType").show();
-		
+		var kendoSupp = $("#supplier").data("kendoDropDownList");
+		kendoSupp.enable(true);
 	}else{
 		$("#purchaseContractType").kendoDropDownList({
 			dataTextField : "text",
 			dataValueField : "text",
 			dataSource : purchaseContractTypeVirtual
 		});
-		
+		requestDataItem.set("contractExecuteCate","虚拟合同");
 		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="上海代理产品" || requestDataItem.purchaseContractType=="上海其他"){
 			requestDataItem.purchaseContractType = "施耐德北京代采";
 		}	
 		$("input[name=contractExecuteCate]:eq(1)").attr("checked",true);
 	
-		$("#supplierNamebj").val("同方北京");
-		$("#supplierNamebj").attr("disabled", true);
-		$(".supplierBJ").show();
-		$(".supplierSelect").hide();
+		var kendoSupp = $("#supplier").data("kendoDropDownList");
+		var spData = kendoSupp.dataSource.data();
+		console.log(spData);
+		for(i=0; i<spData.length; i++){
+			if(spData[i].supplierName =="同方北京"){
+				requestDataItem.set("supplier", spData[i]._id);
+				break;
+			}
+		}
+		
+		kendoSupp.enable(false);
 		$("#supplierNameContact").val("同方北京");
 		$("#supplierNameContact").attr("disabled", true);
 		$("#contractProperty").val("闭口合同");
@@ -424,7 +429,7 @@ var itemListDataSource = new kendo.data.DataSource({
 	data: []
 });
 
-function save(status) {
+function savePurchaseContract(status) {
 
 	if(requestDataItem.eqcostList　&& requestDataItem.eqcostList.length==0){
 		alert("此申请无任何货品");
@@ -456,10 +461,7 @@ function save(status) {
 				itemDataSource.at(0).set("uid", kendo.guid());
 			}
 
-			if (!requestDataItem.supplier) {
-				var dl = $("#supplier").data("kendoDropDownList");
-				requestDataItem.supplier = dl.dataSource.at(0)._id;
-			}else if(requestDataItem.supplier._id){
+			if(requestDataItem.supplier && requestDataItem.supplier._id){
 				requestDataItem.supplier = requestDataItem.supplier._id;
 			}
 			

@@ -14,9 +14,18 @@ var scModel = kendo.data.Model.define({
 		customer:{},
 		archiveStatus : {},
 		runningStatus : {},
-		contractAmount : {},
-		equipmentAmount : {},
-		serviceAmount : {},
+		contractAmount : {
+			defaultValue : 0,
+			type : "number" 	
+		},
+		equipmentAmount : {
+			defaultValue : 0,
+			type : "number" 
+		},
+		serviceAmount : {
+			defaultValue : 0,
+			type : "number" 
+		},
 		invoiceType : {},
 		estimateEqCost0 : {},
 		estimateEqCost1 : {},

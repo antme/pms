@@ -360,6 +360,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
             
             orderEq.put("eqcostArrivalAmount", restEqCount.get(orderEq.get(ApiConstants.MONGO_ID).toString()));
         }
+        
+        removeEmptyEqList(prEqList, "orderRequestCount");
 
         return order;
     }

@@ -93,10 +93,10 @@ function editPA(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.paStatus == "已拒绝"){	
+	} else if(row.paStatus == "已提交"){	
 		loadPage("purchaseback_purchaseAllotEdit", { _id : row._id });
 	}else{
-		alert("请选择‘已拒绝’的数据");
+		alert("请选择‘已提交’的数据");
 	}
 }
 

@@ -204,12 +204,7 @@ function edit(data) {
 
 	// 初始化空对象
 	if (data) {
-		requestDataItem = data;	    	
-		// 编辑时候初始化数据
-		for (i in requestDataItem.eqcostList) {			
-			requestDataItem.eqcostList[i].pbLeftCount = requestDataItem.eqcostList[i].pbLeftCount + requestDataItem.eqcostList[i].eqcostApplyAmount;
-		}
-	    
+		requestDataItem = data;	    		    
 	}
 
 	requestDataItem = new model(requestDataItem);
@@ -262,6 +257,8 @@ function edit(data) {
 									return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
 								}
 							},
+							{ field: "pbLeftCount", title: "可申请数量"},
+
 							{ field: "eqcostCategory", title: "类别"},
 							{
 								field : "pbComment",
@@ -432,6 +429,14 @@ function saveRequest(status) {
 	if(itemDataSource.at(0)){		
 		//force set haschanges = true
 		itemDataSource.at(0).set("uid", kendo.guid());
+	}
+	
+	var data = itemDataSource.data();
+	for (i = 0; i < data.length; i++) {
+		if(data[i].pbLeftCount <  data[i].eqcostApplyAmount){
+			alert("请检查设备可申请数量");
+			return;
+		}
 	}
 	
 	if(requestDataItem.pbDepartment && requestDataItem.pbDepartment instanceof Object){

@@ -673,10 +673,9 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         Map<String, Integer> backEqCountMap = countEqByKey(backQuery, DBBean.PURCHASE_BACK, PurchaseBack.pbTotalCount, null);
 
         // 获取已发的采购申请的数据总和
-        //FIXME 草稿的数据不算
         Map<String, Object> purchaseRequestQuery = new HashMap<String, Object>();
-        purchaseRequestQuery.put(PurchaseRequest.BACK_REQUEST_ID, backId);//TODO: 
-        purchaseRequestQuery.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseRequest.STATUS_ABROGATED));
+        purchaseRequestQuery.put(PurchaseRequest.BACK_REQUEST_ID, backId);
+        purchaseRequestQuery.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_ABROGATED, PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED }));
         Map<String, Integer> requestEqCountMap = countEqByKey(purchaseRequestQuery, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.EQCOST_APPLY_AMOUNT, null);
 
         // 获取调拨中的数据总和
