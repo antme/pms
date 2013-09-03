@@ -1,4 +1,4 @@
-listUrl = "/service/purcontract/order/list";
+var listUrl = "/service/purcontract/order/list";
 var approveUrl = "/service/purcontract/order/approve";
 var rejectUrl = "/service/purcontract/order/reject";
 var cancelUrl = "/service/purcontract/order/cancel";

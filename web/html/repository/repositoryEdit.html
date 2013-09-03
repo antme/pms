@@ -45,44 +45,44 @@
                 <label for="batchNumber">批次</label>
             </div>
             <div data-container-for="batchNumber" class="k-edit-field">
-                <input id="batchNumber"  class="k-input k-textbox" name="batchNumber" required="required" data-bind="value:batchNumber">
+                <input id="batchNumber"  class="k-input k-textbox" name="batchNumber" required="required"   validationMessage="请填写批次" data-bind="value:batchNumber">
             </div>
             <div class="k-edit-label">
                 <label for="orderCode">单据编号</label>
             </div>
             <div data-container-for="orderCode" class="k-edit-field">
-                <input type="text" class="k-input k-textbox" name="orderCode" required="required" data-bind="value:orderCode">
+                <input type="text" class="k-input k-textbox" name="orderCode" required="required"  validationMessage="请填写单据编号" data-bind="value:orderCode">
             </div>
 	       <div class="k-edit-label">
                 <label for="operator">制单人</label>
             </div>
             <div data-container-for="operator" class="k-edit-field">
-                <input id="operator" name="operator" required="required" data-bind="value:operator">
+                <input id="operator" name="operator" required="required" validationMessage="请填写制单人" data-bind="value:operator">
             </div>
             <div class="k-edit-label">
                 <label for="inType">入库方式</label>
             </div>
             <div data-container-for="inType" class="k-edit-field">
-                <input type="text" class="k-input k-textbox" name="inType" required="required" data-bind="value:inType">
+                <input type="text" class="k-input k-textbox" name="inType" validationMessage="请填写入库方式" required="required" data-bind="value:inType">
             </div>
             <div class="k-edit-label">
                 <label for="inDate">入库日期</label>
             </div>
             <div data-container-for="inDate" class="k-edit-field">
-                <input id="inDate" name="inDate" required="required" data-bind="value:inDate" data-role="datepicker" >
+                <input id="inDate" name="inDate" required="required" validationMessage="请填写入库日期" data-bind="value:inDate" data-role="datepicker" >
             </div>
            
             <div class="k-edit-label">
                 <label for="storeHouse">库房</label>
             </div>
             <div data-container-for="storeHouse" class="k-edit-field">
-                <input type="text" class="k-input k-textbox" name="storeHouse" id="storeHouse" required="required" data-bind="value:storeHouse">
+                <input type="text" class="k-input k-textbox" name="storeHouse" id="storeHouse" validationMessage="请填写库房" required="required" data-bind="value:storeHouse">
             </div>
             <div class="k-edit-label">
                 <label for="goodsAllocation">货位</label>
             </div>
             <div data-container-for="goodsAllocation" class="k-edit-field">
-                <input type="text" class="k-input k-textbox" name="goodsAllocation" required="required" data-bind="value:goodsAllocation">
+                <input type="text" class="k-input k-textbox" name="goodsAllocation" validationMessage="请填写货位" required="required" data-bind="value:goodsAllocation">
             </div>
 
             <div >
@@ -95,8 +95,8 @@
         </div>
 
 		<div>
-			<button access="repository_management" class="access"  onclick="save();">保存</button>
-			<button access="repository_management" class="access" onclick="save('入库中');">入库申请</button>
+			<button access="repository_management" class="access"  onclick="saveRepos();">保存</button>
+			<button access="repository_management" class="access" onclick="saveRepos('入库中');">入库申请</button>
 			<button access="repository_management_process" class="access"  onclick="confirmRepository();">确认</button>
 			<button onclick="cancel();">取消</button>
 		</div>

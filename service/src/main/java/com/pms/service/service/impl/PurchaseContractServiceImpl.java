@@ -442,7 +442,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         
         //过滤掉申请小于等于0的订单
-        //TODO： 也许需要支持采购合同里面可以编辑每次采购多少
         List<Map<String, Object>> removedList = new ArrayList<Map<String, Object>>();
         
         for (String key : orderEqCountMap.keySet()) {
@@ -648,7 +647,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
                     if(eqCountMap.get(eqOrderMap.get(ApiConstants.MONGO_ID))!=null){
                       //合并货物递送方式和订单等等信息到设备清单
-                        eqOrderMap.put(PurchaseContract.EQCOST_DELIVERY_TYPE, orderMap.get(PurchaseContract.EQCOST_DELIVERY_TYPE));
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_ORDER_ID, orderMap.get(ApiConstants.MONGO_ID));
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_ORDER_CODE, orderMap.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_REQUEST_ID, orderMap.get(PurchaseCommonBean.PURCHASE_REQUEST_ID));
@@ -656,7 +654,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));   
                         eqOrderMap.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, contract.get(PurchaseContract.PURCHASE_CONTRACT_TYPE));  
-                        eqOrderMap.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));  
+                        eqOrderMap.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE)); 
+                        eqOrderMap.put(PurchaseContract.EQCOST_DELIVERY_TYPE, contract.get(PurchaseContract.EQCOST_DELIVERY_TYPE));
                         eqOrderMap.put(PurchaseContract.SUPPLIER, contract.get(PurchaseContract.SUPPLIER));                          
                     }
                 }

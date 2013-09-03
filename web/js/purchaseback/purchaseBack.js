@@ -116,6 +116,8 @@ function editPB(){
 		alert("点击列表可以选中数据");
 	} else if(row.pbStatus == "草稿" || row.pbStatus == "已拒绝"){	
 		loadPage("purchaseback_purchaseBackEdit", { _id : row._id });	
+	}else{
+		alert("只能修改草稿或则已拒绝的数据");
 	}
 }
 function processPB(){
@@ -125,7 +127,7 @@ function processPB(){
 	} else if(row.pbStatus == "已提交"){	
 		loadPage("purchaseback_purchaseBackEdit", { _id : row._id });	
 	}else{
-		alert("此状态不允许审核");
+		alert("只允许审核已提交的数据");
 	}
 }
 function pendingPB() {//TODO:什么状态可以中止
@@ -135,7 +137,10 @@ function pendingPB() {//TODO:什么状态可以中止
 	} else if(row.pbStatus == "已提交"){
 		if(confirm("中止表单，确认？"))
 		postAjaxRequest("service/purchase/back/pending", {_id:row._id}, function(){listDatasource.read();});
+	}else{
+		alert("只允许中止已提交的数据");
 	}
+	
 }
 
 function destroyPB() {

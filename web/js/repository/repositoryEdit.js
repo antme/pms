@@ -175,40 +175,45 @@ var itemDataSource = new kendo.data.DataSource({
 
 
 
-function save(status) {
-	
-	if(requestDataItem.eqcostList　&& requestDataItem.eqcostList.length==0){
-		alert("此申请无任何货品");
-		return;
-	}
-	
-	if(!requestDataItem.status && redirectParams && redirectParams.type == "out"){
-		requestDataItem.status = "已提交";
-	}	
-	if(!requestDataItem.status){
-		requestDataItem.status = "草稿";
-	}
-	if(status){
-		requestDataItem.status = status;
-	}
-	
-	
-	if(itemDataSource.at(0)){
-		// force set haschanges = true
-		itemDataSource.at(0).set("uid", kendo.guid());
-	}
+function saveRepos(status) {
+	var validator = $("#purchaserepository-edit-item").kendoValidator().data("kendoValidator");
+	if (!validator.validate()) {
+		alert("验证不通过，请检查表单");
+	} else {
 
-	if(projectId){
-		requestDataItem.projectId = projectId;		
-	}
+		if(requestDataItem.eqcostList　&& requestDataItem.eqcostList.length==0){
+			alert("此申请无任何货品");
+			return;
+		}
+		
+		if(!requestDataItem.status && redirectParams && redirectParams.type == "out"){
+			requestDataItem.status = "已提交";
+		}	
+		if(!requestDataItem.status){
+			requestDataItem.status = "草稿";
+		}
+		if(status){
+			requestDataItem.status = status;
+		}
+		
+		
+		if(itemDataSource.at(0)){
+			// force set haschanges = true
+			itemDataSource.at(0).set("uid", kendo.guid());
+		}
 	
-	if(supplierId){
-		requestDataItem.supplierId = supplierId;	
-	}
-
-	// 同步数据
-	itemDataSource.sync();
+		if(projectId){
+			requestDataItem.projectId = projectId;		
+		}
+		
+		if(supplierId){
+			requestDataItem.supplierId = supplierId;	
+		}
 	
+		// 同步数据
+		itemDataSource.sync();
+	
+	}
 	
 }
 
@@ -271,67 +276,70 @@ function edit(data) {
 	kendo.bind($("#purchaserepository-edit-item"), requestDataItem);
 
 	// 渲染成本编辑列表
-	if(requestDataItem.eqcostList){
+	if(requestDataItem.eqcostList.length > 0){
 		itemDataSource.data(requestDataItem.eqcostList);
-	}
+	
 
 	$("#purchasecontract-edit-item").show();
 	$("#purchasecontract-select").hide();
 
 
-	if (!$("#purchaserepository-edit-grid").data("kendoGrid")) {
-		$("#purchaserepository-edit-grid").kendoGrid({
-			dataSource : itemDataSource,
-			columns : [ {
-				field : "eqcostNo",
-				title : "序号",
-				width : 80
-			},{
-				field : "eqcostProductType",
-				title : "规格型号"
-
-			}, {
-				field : "eqcostProductName",
-				title : "货品名",
-				width : 80
-			},{
-				field : "eqcostBrand",
-				title : "品牌"
-			}, {
-				field : "eqcostProductType",
-				title : "单位"
-
-			}, {
-				field : "eqcostApplyAmount",
-				title : "入库数量",		
-				template : function(dataItem){
-					return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
-				}
-			},{
-				field : "leftCount",
-				title : "可入库数量"
-			}, {
-				field : "salesContractCode",
-				title : "销售合同编号"
-			},{
-				field : "purchaseOrderCode",
-				title : "订单编号"
-			},{
-				field : "remark",
-				title : "备注"
-			}],
-			scrollable : true,
-			editable : true,
-			width : "800px",
-			save: function(e){
-				if (e.values.eqcostApplyAmount) {					
-					if(e.values.eqcostApplyAmount > e.model.leftCount){
-						alert("最多可以入库" + e.model.leftCount);
-						e.preventDefault();
+		if (!$("#purchaserepository-edit-grid").data("kendoGrid")) {
+			$("#purchaserepository-edit-grid").kendoGrid({
+				dataSource : itemDataSource,
+				columns : [ {
+					field : "eqcostNo",
+					title : "序号",
+					width : 80
+				},{
+					field : "eqcostProductType",
+					title : "规格型号"
+	
+				}, {
+					field : "eqcostProductName",
+					title : "货品名",
+					width : 80
+				},{
+					field : "eqcostBrand",
+					title : "品牌"
+				}, {
+					field : "eqcostProductType",
+					title : "单位"
+	
+				}, {
+					field : "eqcostApplyAmount",
+					title : "入库数量",		
+					template : function(dataItem){
+						return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
+					}
+				},{
+					field : "leftCount",
+					title : "可入库数量"
+				}, {
+					field : "salesContractCode",
+					title : "销售合同编号"
+				},{
+					field : "purchaseOrderCode",
+					title : "订单编号"
+				},{
+					field : "remark",
+					title : "备注"
+				}],
+				scrollable : true,
+				editable : true,
+				width : "800px",
+				save: function(e){
+					if (e.values.eqcostApplyAmount) {					
+						if(e.values.eqcostApplyAmount > e.model.leftCount){
+							alert("最多可以入库" + e.model.leftCount);
+							e.preventDefault();
+						}
 					}
 				}
-			}
-
-		});
+	
+			});
+		}
+	}else{
+		alert("无可入库清单");
 	}
 }

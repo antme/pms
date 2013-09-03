@@ -106,9 +106,9 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 
     public Map<String, Object> create(Map<String, Object> params) {
-        if (params.get(ShipBean.SHIP_STATUS) == null) {
+        if (ApiUtil.isEmpty(params.get(ShipBean.SHIP_STATUS))) {
             params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_DRAFT);
-        } 
+        }
         
         if (params.get(ShipBean.SHIP_DELIVERY_START_DATE) != null) {
             try {
@@ -184,6 +184,13 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	public Map<String, Object> eqlist(Map<String, Object> params) {
 		
 		String saleId = (String) params.get(ShipBean.SHIP_SALES_CONTRACT_ID);
+		
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(SalesContractBean.SC_ID, saleId);
+        query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
+        
+        Map<String, Integer> arrivedCountMap  = countEqByKeyWithMultiKey(query, DBBean.ARRIVAL_NOTICE, ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, null, new String[]{PurchaseCommonBean.PURCHASE_ORDER_ID});
+        
 		// 已到货 的 设备清单，来自于调拨申请,入库和直发到货通知
 		Map<String, Object> map = arrivalService.listEqListByScIDForShip(saleId);
 		List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
@@ -191,18 +198,22 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		
 		//已发货的数量统计
         Map<String, Object> parameters = new HashMap<String, Object>();
-//        parameters.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
+        parameters.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[]{ShipBean.SHIP_STATUS_APPROVE, ShipBean.SHIP_STATUS_CLOSE}));
         parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, saleId);
-        Map<String, Integer> shipedCountMap = countEqByKey(parameters, DBBean.SHIP, ShipBean.EQCOST_SHIP_AMOUNT, null);
+        Map<String, Integer> shipedCountMap = countEqByKeyWithMultiKey(parameters, DBBean.SHIP, ShipBean.EQCOST_SHIP_AMOUNT, null, new String[]{PurchaseCommonBean.PURCHASE_ORDER_ID});
         
         for (Map<String, Object> eqMap : purchaseEqList) {
-            int arriveCount = ApiUtil.getInteger(eqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT), 0);
-            if (shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)) != null) {
-                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arriveCount - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
-                eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arriveCount - shipedCountMap.get(eqMap.get(ApiConstants.MONGO_ID)));
+            String orderId = "";
+            if(eqMap.get(PurchaseCommonBean.PURCHASE_ORDER_ID)!=null){
+                orderId = eqMap.get(PurchaseCommonBean.PURCHASE_ORDER_ID).toString();
+            }
+            Object id = eqMap.get(ApiConstants.MONGO_ID).toString() + orderId;
+            if (shipedCountMap.get(id) != null) {
+                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arrivedCountMap.get(id) - shipedCountMap.get(id));
+                eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivedCountMap.get(id) - shipedCountMap.get(id));
             } else {
-                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arriveCount);
-                eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arriveCount);
+                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arrivedCountMap.get(id));
+                eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivedCountMap.get(id));
             }
         }
 

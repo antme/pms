@@ -339,101 +339,105 @@ function loadEqList(data){
 	alloList = new Array();
 	
 	if(eqList && eqList.length ==0){
-		alert("此销售合同没有可发货设备！");
-	}
+		alert("此销售合同没有可发货设备！");		
+	}else{
 	
-	for(i=0; i<eqList.length; i++){
-		
-		if(!eqList[i].arrivalAmount || eqList[i].arrivalAmount==0){
-			eqList[i].arrivalAmount = eqList[i].eqcostShipAmount;
-		}
-		if(!eqList[i].eqcostDeliveryType){
-			//调拨，仓库取自货架
-//			eqList[i].repositoryName="";
-			alloList.push(eqList[i]);
-		}else{
-			if(eqList[i].eqcostDeliveryType == "直发现场"){
-				eqList[i].repositoryName="";
-				supplierlist.push(eqList[i]);
-			}else if(eqList[i].purchaseContractType == "同方采购"){
-				eqList[i].repositoryName="上海—北京泰德库";
-				rKlist.push(eqList[i]);
-			}else{
-				eqList[i].repositoryName="上海—上海泰德库";
-				rKlist.push(eqList[i]);
+		for(i=0; i<eqList.length; i++){
+			console.log(eqList[i].eqcostDeliveryType);
+			if(!eqList[i].arrivalAmount || eqList[i].arrivalAmount==0){
+				eqList[i].arrivalAmount = eqList[i].eqcostShipAmount;
 			}
+			
+			if(!eqList[i].eqcostDeliveryType){
+				//调拨，仓库取自货架
+	//			eqList[i].repositoryName="";
+				alloList.push(eqList[i]);
+			}else{
+				if(eqList[i].eqcostDeliveryType == "直发现场"){
+					eqList[i].repositoryName="";
+					supplierlist.push(eqList[i]);
+					console.log("..............");
+				}else if(eqList[i].purchaseContractType == "上海代理产品" || eqList[i].purchaseContractType == "上海其他"){
+					eqList[i].repositoryName="上海—上海泰德库";
+					rKlist.push(eqList[i]);
+				}else{
+					eqList[i].repositoryName="上海—北京泰德库";
+					rKlist.push(eqList[i]);
+				}
+			}
+			
 		}
 		
-	}
+		var shipType = new kendo.data.DataSource({
 	
-	var shipType = new kendo.data.DataSource({
-
-	});
+		});
+		
+		
+		if(supplierlist.length >0){
+			shipType.add({ text: "直发" });
+			$("#supplier-ship").show();
+		}else{
+			$("#supplier-ship").hide();
+		}
+		if(rKlist.length >0){
+			shipType.add({ text: "采购" });
+			$("#repo-ship").show();
+		}else{
+			$("#repo-ship").hide();
+		}
+		if(alloList.length >0){
+			shipType.add({ text: "库存" });
+			$("#allocat-ship").show();
+		}else{
+			$("#allocat-ship").hide();
+		}
+		
+		if (shipType.data().length > 0) {
+			$("#shipType").kendoDropDownList({
+		        dataTextField: "text",
+		        dataValueField: "text",
+		        dataSource: shipType,
+		        optionLabel: "选择发货类型...",
+		        change: function(e) {
+		        	var dataItem = this.dataItem();
+		        	if (dataItem.text == "库存") {
+		        		$("#supplier-ship").hide();
+						$("#repo-ship").hide();
+						$("#allocat-ship").show();
+					} else if (dataItem.text == "直发") {
+						$("#supplier-ship").show();
+						$("#repo-ship").hide();
+						$("#allocat-ship").hide();
+					} else if (dataItem.text == "采购") {
+						$("#supplier-ship").hide();
+						$("#repo-ship").show();
+						$("#allocat-ship").hide();
+					}
+		        	
+		        	model.shipType = dataItem.text;
+		        }
+		    });
+			$("#ship-type").show();
+		}else{
+			$("#ship-type").hide();
+		}
 	
-	
-	if(supplierlist.length >0){
-		shipType.add({ text: "直发" });
-		$("#supplier-ship").show();
-	}else{
-		$("#supplier-ship").hide();
+		var shipDataKendo = $("#shipType").data("kendoDropDownList");
+		
+		if(alloList.length >0 && supplierlist.length==0 && rKlist.length==0){
+			shipDataKendo.value("库存");
+			model.shipType = "库存";
+		}else if(alloList.length == 0 && supplierlist.length>0 && rKlist.length==0){
+			shipDataKendo.value("直发");
+			model.shipType = "直发";
+		}else if(alloList.length ==0 && supplierlist.length==0 && rKlist.length>0){
+			shipDataKendo.value("采购");
+			model.shipType = "采购";
+		}
+		allocatDataSource.data(alloList);
+		supplierShipDataSource.data(supplierlist);
+		eqDataSource.data(rKlist);
 	}
-	if(rKlist.length >0){
-		shipType.add({ text: "采购" });
-		$("#repo-ship").show();
-	}else{
-		$("#repo-ship").hide();
-	}
-	if(alloList.length >0){
-		shipType.add({ text: "库存" });
-		$("#allocat-ship").show();
-	}else{
-		$("#allocat-ship").hide();
-	}
-	
-	if (shipType.data().length > 0) {
-		$("#shipType").kendoDropDownList({
-	        dataTextField: "text",
-	        dataValueField: "text",
-	        dataSource: shipType,
-	        change: function(e) {
-	        	var dataItem = this.dataItem();
-	        	if (dataItem.text == "库存") {
-	        		$("#supplier-ship").hide();
-					$("#repo-ship").hide();
-					$("#allocat-ship").show();
-				} else if (dataItem.text == "直发") {
-					$("#supplier-ship").show();
-					$("#repo-ship").hide();
-					$("#allocat-ship").hide();
-				} else if (dataItem.text == "采购") {
-					$("#supplier-ship").hide();
-					$("#repo-ship").show();
-					$("#allocat-ship").hide();
-				}
-	        	
-	        	model.shipType = dataItem.text;
-	        }
-	    });
-		$("#ship-type").show();
-	}else{
-		$("#ship-type").hide();
-	}
-
-	var shipDataKendo = $("#shipType").data("kendoDropDownList");
-	
-	if(alloList.length >0 && supplierlist.length==0 && rKlist.length==0){
-		shipDataKendo.value("库存");
-		model.shipType = "库存";
-	}else if(alloList.length == 0 && supplierlist.length>0 && rKlist.length==0){
-		shipDataKendo.value("直发");
-		model.shipType = "直发";
-	}else if(alloList.length ==0 && supplierlist.length==0 && rKlist.length>0){
-		shipDataKendo.value("采购");
-		model.shipType = "采购";
-	}
-	allocatDataSource.data(alloList);
-	supplierShipDataSource.data(supplierlist);
-	eqDataSource.data(rKlist);
 }
 
 function saveShip() {
@@ -443,32 +447,37 @@ function saveShip() {
 	} else {
 		allShipDataSource.data([]);
 		var data = new Array();
-		if (model.shipType == "库存") {
-			 data = allocatDataSource.data();
-		} else if (model.shipType == "直发") {
-			 data = supplierShipDataSource.data();
-		} else if (model.shipType == "采购")  {
-//			 
-			 data = eqDataSource.data();
-		}
 		
-		for(i=0; i< data.length; i++){
-			allShipDataSource.add(data[i]);
-		}
-
-		if (allShipDataSource.data() && allShipDataSource.data().length > 0) {
-			model.set("eqcostList", allShipDataSource.data());
-
-			if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
-				postAjaxRequest("/service/ship/record", {models:kendo.stringify(model)}, checkStatus);
-			}else if(redirectParams && redirectParams.type && redirectParams.type == "submit") {
-				postAjaxRequest("/service/ship/submit", {models:kendo.stringify(model)}, checkStatus);
-			}else{
-				postAjaxRequest("/service/ship/create", {models:kendo.stringify(model)}, checkStatus);
+		if(!model.shipType){
+			alert("请选择发货类型");
+		}else{
+			if (model.shipType == "库存") {
+				 data = allocatDataSource.data();
+			} else if (model.shipType == "直发") {
+				 data = supplierShipDataSource.data();
+			} else if (model.shipType == "采购")  {
+	//			 
+				 data = eqDataSource.data();
 			}
-
-		} else {
-			alert("无任何设备清单");
+			
+			for(i=0; i< data.length; i++){
+				allShipDataSource.add(data[i]);
+			}
+	
+			if (allShipDataSource.data() && allShipDataSource.data().length > 0) {
+				model.set("eqcostList", allShipDataSource.data());
+	
+				if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
+					postAjaxRequest("/service/ship/record", {models:kendo.stringify(model)}, checkStatus);
+				}else if(redirectParams && redirectParams.type && redirectParams.type == "submit") {
+					postAjaxRequest("/service/ship/submit", {models:kendo.stringify(model)}, checkStatus);
+				}else{
+					postAjaxRequest("/service/ship/create", {models:kendo.stringify(model)}, checkStatus);
+				}
+	
+			} else {
+				alert("无任何设备清单");
+			}
 		}
 
 	}
@@ -480,7 +489,6 @@ function checkStatus(data){
 }
 function submitShip(){
 	model.set("status", "申请中");
-	model.status = "申请中";
 	if(!redirectParams){
 		redirectParams = {};
 	}

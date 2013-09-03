@@ -162,7 +162,16 @@ $(document).ready(function () {
 		} else if(validateModel()){
 			if(confirm("提交表单，确认？")){
 				currentObj.pbPlanDate = kendo.toString(currentObj.pbPlanDate,"yyyy-MM-dd");
-				postAjaxRequest("/service/purchase/back/"+this.id, {models:kendo.stringify(currentObj)} , saveSuccess);
+				
+				if(this.id=="approve" || this.id =="reject"){
+					if(currentObj.pbStatus && currentObj.pbStatus =="已提交"){
+						postAjaxRequest("/service/purchase/back/"+this.id, {models:kendo.stringify(currentObj)} , saveSuccess);
+					}else{
+						alert("非提交状态不允许审核");					
+					}
+				}else{
+					postAjaxRequest("/service/purchase/back/"+this.id, {models:kendo.stringify(currentObj)} , saveSuccess);
+				}
 			}
 		}
 	});

@@ -563,6 +563,48 @@ public abstract class AbstractService {
     }
     
     
+    public Map<String, Integer> countEqByKeyWithMultiKey(Map<String, Object> query, String db, String queryKey, Map<String, Integer> count, String[] keys) {
+        query.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
+        List<Object> list = this.dao.listLimitKeyValues(query, db);
+        Map<String, Integer> eqCountMap = new HashMap<String, Integer>();
+
+        if (count != null) {
+            eqCountMap = count;
+        }
+        if (list != null) {
+            for (Object obj : list) {
+                if (obj != null) {
+                    List<Map<String, Object>> eqlistMap = (List<Map<String, Object>>) obj;
+                    for (Map<String, Object> eqMap : eqlistMap) {
+
+                        String multKey = "";
+                        if (keys != null && keys.length > 0) {
+                            for (String key : keys) {
+                                
+                                if (eqMap.get(key) != null) {
+                                    multKey = multKey + eqMap.get(key).toString();
+                                }
+                            }
+
+                        }
+                        String id = eqMap.get(ApiConstants.MONGO_ID).toString();
+
+                        id = (id + multKey).trim();
+                        if (eqCountMap.get(id) != null) {
+                            eqCountMap.put(id, ApiUtil.getInteger(eqMap.get(queryKey), 0) + ApiUtil.getInteger(eqCountMap.get(id), 0));
+                        } else {
+                            eqCountMap.put(id, ApiUtil.getInteger(eqMap.get(queryKey), 0));
+                        }
+
+                    }
+                }
+            }
+        }
+        return eqCountMap;
+    }
+    
+    
+    
     
     /**
      * 
