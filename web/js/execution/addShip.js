@@ -432,6 +432,9 @@ function loadEqList(data){
 		}else if(alloList.length ==0 && supplierlist.length==0 && rKlist.length>0){
 			shipDataKendo.value("采购");
 			model.shipType = "采购";
+		}else{
+			shipDataKendo.value("");
+			model.shipType = undefined;
 		}
 		allocatDataSource.data(alloList);
 		supplierShipDataSource.data(supplierlist);

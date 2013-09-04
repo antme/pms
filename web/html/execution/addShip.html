@@ -88,18 +88,18 @@
 	    	<div data-container-for="otherDeliveryRequirements" class="k-edit-field">
 	    		<input type="text" class="k-input k-textbox" name="otherDeliveryRequirements" data-bind="value:otherDeliveryRequirements">
 	    	</div>
-	    </div>
 	    
-	    <div id="ship-type" style="display:none;">
-	    	<hr>
-		    <div class="k-edit-label">
-	    		<label for="shipType">发货类型</label>
+	    
+		    <div id="ship-type" style="display:none;">
+		    	<hr>
+			    <div class="k-edit-label">
+		    		<label for="shipType">发货类型</label>
+		    	</div>
+		    	<div data-container-for="shipType" class="k-edit-field">
+		    		<input id="shipType" name="shipType"   required="required"  validationMessage="请选择发货类型" data-bind="value:shipType">
+		    	</div>
 	    	</div>
-	    	<div data-container-for="shipType" class="k-edit-field">
-	    		<input id="shipType" name="shipType"  data-bind="value:shipType">
-	    	</div>
-    	</div>
-	     
+	     </div>
 	    <div id="repo-ship" style="display:none;">
 	       <hr>
 	       <h5>仓库发货清单</h5>
