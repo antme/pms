@@ -68,9 +68,6 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		dao.deleteByIds(ids, DBBean.ARRIVAL_NOTICE);
 	}
 
-	public Map<String, Object> create(Map<String, Object> params) {
-		return null;
-	}
 	
 	public Map<String, Object> listProjectsForSelect(Map<String, Object> params){
 		Map<String, Object> query = new HashMap<String, Object>();
@@ -138,34 +135,28 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
         return listEqlist(query);
     }
     
-    public Map<String, Object> listByScIdForBorrowing(Object scId){
+    public Map<String, Object> listByScIdForBorrowing(Object scId) {
 
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(SalesContractBean.SC_ID, scId);    
-        query.put(ArrivalNoticeBean.SHIP_TYPE, new DBQuery(DBQueryOpertion.NOT_IN, ArrivalNoticeBean.SHIP_TYPE_0));
+        query.put(SalesContractBean.SC_ID, scId);
+        query.put(ArrivalNoticeBean.SHIP_TYPE, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { ArrivalNoticeBean.SHIP_TYPE_0, ArrivalNoticeBean.SHIP_TYPE_0_1 }));
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
         return listEqlist(query);
-    
+
     }
 
     private Map<String, Object> listEqlist(Map<String, Object> query) {
         List<Object> obj = this.dao.listLimitKeyValues(query, DBBean.ARRIVAL_NOTICE);
-
         Map<String, Object> result = new HashMap<String, Object>();
-
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        
-        if (obj.size() == 0) {       
-            result.put(ArrivalNoticeBean.EQ_LIST, new ArrayList<Map<String, Object>>());
-        }else{
-            
-            for(Object ob: obj){
+        if (obj != null) {
+            for (Object ob : obj) {
                 List<Map<String, Object>> eqlistMap = (List<Map<String, Object>>) ob;
                 list.addAll(eqlistMap);
             }
-            result.put(ArrivalNoticeBean.EQ_LIST, list);
-       
         }
+
+        result.put(ArrivalNoticeBean.EQ_LIST, list);
         return result;
     }
     
@@ -250,7 +241,22 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, order.get(ApiConstants.MONGO_ID));
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
 		noticeParams.put(SalesContractBean.SC_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
-		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, order.get(PurchaseContract.EQCOST_DELIVERY_TYPE));
+		
+		Object deliveryType = order.get(PurchaseContract.EQCOST_DELIVERY_TYPE);
+        Object contractType = order.get(PurchaseContract.PURCHASE_CONTRACT_TYPE);
+        
+        String arriveryType = deliveryType.toString();
+        
+        if (deliveryType != null && deliveryType.toString().equalsIgnoreCase(PurchaseContract.EQCOST_DELIVERY_TYPE_REPOSITORY)) {
+            if (contractType != null && contractType.toString().equalsIgnoreCase(PurchaseContract.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
+                arriveryType = ArrivalNoticeBean.SHIP_TYPE_3;
+            } else {
+                arriveryType = ArrivalNoticeBean.SHIP_TYPE_2;
+            }
+        }
+        
+        noticeParams.put(PurchaseContract.EQCOST_DELIVERY_TYPE, deliveryType);
+        noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, arriveryType);
 		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		
 		// 到货设备清单
@@ -264,7 +270,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 				eq.put(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, map.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
 				
 				//如下的信息用来在页面分组展示
-				eq.put(PurchaseContract.EQCOST_DELIVERY_TYPE, map.get(PurchaseContract.EQCOST_DELIVERY_TYPE));
+				eq.put(PurchaseContract.EQCOST_DELIVERY_TYPE, deliveryType);
+				eq.put(ArrivalNoticeBean.SHIP_TYPE, arriveryType);
 				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_ID));
 				eq.put(PurchaseCommonBean.PURCHASE_CONTRACT_CODE, map.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
 				eq.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, map.get(PurchaseContract.PURCHASE_CONTRACT_TYPE));
@@ -293,7 +300,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, allot.get(ApiConstants.MONGO_ID));
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, allot.get(PurchaseBack.paCode));
 		noticeParams.put(SalesContractBean.SC_ID, allot.get(PurchaseBack.scId));
-		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, ArrivalNoticeBean.SHIP_TYPE_0);
+		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, allot.get(PurchaseBack.paShelfCode));
 		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 		
 		// 到货设备清单
@@ -310,7 +317,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 			eq.put(ProjectBean.PROJECT_ID, map.get(ProjectBean.PROJECT_ID));
 			eq.put(ProjectBean.PROJECT_CODE, map.get(ProjectBean.PROJECT_CODE));
 			eq.put(ShipBean.REPOSITORY_NAME, allot.get(PurchaseBack.paShelfCode));
-			
+			eq.put(ArrivalNoticeBean.SHIP_TYPE, allot.get(PurchaseBack.paShelfCode));
 			
 			arrivalEqList.add(eq);
 		}

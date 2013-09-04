@@ -214,8 +214,8 @@ $(document).ready(function() {
 	        { field: "eqcostProductType", title: "规格型号" },
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
-	        { field: "eqcostShipAmount", title: "发货数" },
-	        { field: "leftAmount", title: "可发货数量" },
+	        { field: "eqcostShipAmount", title: "发货数", attributes: { "style": "color:red"}},
+	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
 			{
 				field : "repositoryName",
 				title : "货架"
@@ -224,6 +224,7 @@ $(document).ready(function() {
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	        editable: true,
 		    groupable : true,
+		    sortable : true,
 
 	        save : function(e){
 	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
@@ -343,7 +344,6 @@ function loadEqList(data){
 	}else{
 	
 		for(i=0; i<eqList.length; i++){
-			console.log(eqList[i].eqcostDeliveryType);
 			if(!eqList[i].arrivalAmount || eqList[i].arrivalAmount==0){
 				eqList[i].arrivalAmount = eqList[i].eqcostShipAmount;
 			}
@@ -356,7 +356,6 @@ function loadEqList(data){
 				if(eqList[i].eqcostDeliveryType == "直发现场"){
 					eqList[i].repositoryName="";
 					supplierlist.push(eqList[i]);
-					console.log("..............");
 				}else if(eqList[i].purchaseContractType == "上海代理产品" || eqList[i].purchaseContractType == "上海其他"){
 					eqList[i].repositoryName="上海—上海泰德库";
 					rKlist.push(eqList[i]);
@@ -461,8 +460,14 @@ function saveShip() {
 			}
 			
 			for(i=0; i< data.length; i++){
-				allShipDataSource.add(data[i]);
+				allShipDataSource.add(data[i]);				
+				if(data[i].leftAmount <  data[i].eqcostShipAmount){
+					alert("请检查设备可发货数量");
+					return;
+				}
 			}
+
+			
 	
 			if (allShipDataSource.data() && allShipDataSource.data().length > 0) {
 				model.set("eqcostList", allShipDataSource.data());

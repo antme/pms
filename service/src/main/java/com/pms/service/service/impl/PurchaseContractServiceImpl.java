@@ -582,7 +582,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单,请到系统做入库处理", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     contract.put("titleContent", content);
-                    sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
+                    try{
+                        sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
+                    }catch(Exception e){
+                        logger.error(e);
+                    }
                 } else if (contract.get(PurchaseContract.PURCHASE_CONTRACT_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_REPO)) {
                     createArriveNotice(contract);
                     createAutoShip(contract);
@@ -590,13 +594,21 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单, 系统已经自动生成发货通知,请填写完整信息后发货", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     contract.put("titleContent", content);
-                    sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
+                    try{
+                        sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
+                    }catch(Exception e){
+                        logger.error(e);
+                    }
 
                 } else if (contract.get(PurchaseContract.PURCHASE_CONTRACT_TYPE).equals(PurchaseCommonBean.CONTRACT_EXECUTE_BJ_MAKE)) {
                     String subject = String.format("采购合同 - %s -审批通过", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     String content = String.format("采购合同 - %s -已审批通过, 附件为审批通过的设备清单, 请到系统填写到货通知", contract.get(PurchaseCommonBean.PURCHASE_CONTRACT_CODE));
                     contract.put("titleContent", content);
-                    sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
+                    try{
+                        sendEmailPCApprove(subject, emails, contract, "purchaseContractApprove.vm");
+                    }catch(Exception e){
+                        logger.error(e);
+                    }
                 }
             }
         }

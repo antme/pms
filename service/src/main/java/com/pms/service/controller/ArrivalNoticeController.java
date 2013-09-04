@@ -37,13 +37,7 @@ public class ArrivalNoticeController extends AbstractController {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
     	responseWithData(arrivalNoticeService.list(params), request, response);
     }
-    
-    @RequestMapping("/create")
-    public void create(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(arrivalNoticeService.create(params), request, response);
-    }
-    
+
     @RequestMapping("/canshipeq/list")
     public void eqlist(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);

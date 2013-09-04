@@ -71,7 +71,11 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	
     public Map<String, Object> get(Map<String, Object> params) {
         Map<String, Object> result = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
-        result.put(SalesContractBean.SC_EQ_LIST, scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST)));
+        List<Map<String, Object>> mergeEqListBasicInfo = scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST));
+        
+        List<Map<String, Object>> list =  laodShipRestEqLit(mergeEqListBasicInfo, result.get(ShipBean.SHIP_SALES_CONTRACT_ID).toString(), true);
+        
+        result.put(SalesContractBean.SC_EQ_LIST, list);
         if (result.get(ShipBean.SHIP_DELIVERY_START_DATE) != null) {
             if(result.get(ShipBean.SHIP_DELIVERY_START_DATE) instanceof String){
                 
@@ -182,46 +186,66 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	}
 	
 	public Map<String, Object> eqlist(Map<String, Object> params) {
-		
-		String saleId = (String) params.get(ShipBean.SHIP_SALES_CONTRACT_ID);
-		
+
+       
+        String saleId = (String) params.get(ShipBean.SHIP_SALES_CONTRACT_ID);
+        // 已到货 的 设备清单，来自于调拨申请,入库和直发到货通知
+        Map<String, Object> map = arrivalService.listEqListByScIDForShip(saleId);
+        List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
+        purchaseEqList = scs.mergeEqListBasicInfo(purchaseEqList);
+        		
+        List<Map<String, Object>> shipMergedEqList = laodShipRestEqLit(purchaseEqList, saleId, false);
+              
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put(ApiConstants.RESULTS_DATA, shipMergedEqList);
+		return res;
+	}
+
+    private List<Map<String, Object>> laodShipRestEqLit(List<Map<String, Object>> purchaseEqList, String saleId, boolean loadExists) {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(SalesContractBean.SC_ID, saleId);
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
-        
-        Map<String, Integer> arrivedCountMap  = countEqByKeyWithMultiKey(query, DBBean.ARRIVAL_NOTICE, ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, null, new String[]{PurchaseCommonBean.PURCHASE_ORDER_ID});
-        
-		// 已到货 的 设备清单，来自于调拨申请,入库和直发到货通知
-		Map<String, Object> map = arrivalService.listEqListByScIDForShip(saleId);
-		List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
-		purchaseEqList = scs.mergeEqListBasicInfo(purchaseEqList);
-		
-		//已发货的数量统计
+
+        Map<String, Integer> arrivedCountMap = countEqByKeyWithMultiKey(query, DBBean.ARRIVAL_NOTICE, ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
+
+        // 已发货的数量统计
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[]{ShipBean.SHIP_STATUS_APPROVE, ShipBean.SHIP_STATUS_CLOSE}));
+        parameters.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { ShipBean.SHIP_STATUS_SUBMIT, ShipBean.SHIP_STATUS_APPROVE, ShipBean.SHIP_STATUS_CLOSE }));
         parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, saleId);
-        Map<String, Integer> shipedCountMap = countEqByKeyWithMultiKey(parameters, DBBean.SHIP, ShipBean.EQCOST_SHIP_AMOUNT, null, new String[]{PurchaseCommonBean.PURCHASE_ORDER_ID});
-        
+        Map<String, Integer> shipedCountMap = countEqByKeyWithMultiKey(parameters, DBBean.SHIP, ShipBean.EQCOST_SHIP_AMOUNT, null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
+        List<Map<String, Object>> shipMergedEqList = new ArrayList<Map<String, Object>>();
+        Set<String> shipIds = new HashSet<String>();
+
         for (Map<String, Object> eqMap : purchaseEqList) {
-            String orderId = "";
-            if(eqMap.get(PurchaseCommonBean.PURCHASE_ORDER_ID)!=null){
-                orderId = eqMap.get(PurchaseCommonBean.PURCHASE_ORDER_ID).toString();
+            String shipType = "";
+            if (eqMap.get(ArrivalNoticeBean.SHIP_TYPE) != null) {
+                shipType = eqMap.get(ArrivalNoticeBean.SHIP_TYPE).toString();
             }
-            Object id = eqMap.get(ApiConstants.MONGO_ID).toString() + orderId;
-            if (shipedCountMap.get(id) != null) {
-                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arrivedCountMap.get(id) - shipedCountMap.get(id));
-                eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivedCountMap.get(id) - shipedCountMap.get(id));
-            } else {
-                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arrivedCountMap.get(id));
-                eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivedCountMap.get(id));
+            Object id = eqMap.get(ApiConstants.MONGO_ID).toString() + shipType;
+
+            if (!shipIds.contains(id.toString())) {
+                shipIds.add(id.toString());
+                if (shipedCountMap.get(id) != null) {
+                    eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arrivedCountMap.get(id) - shipedCountMap.get(id));
+                    if (!loadExists) {
+                        eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivedCountMap.get(id) - shipedCountMap.get(id));
+                    }
+                } else {
+                    eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arrivedCountMap.get(id));
+                    if (!loadExists) {
+                        eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivedCountMap.get(id));
+                    }
+                }
+                shipMergedEqList.add(eqMap);
             }
+
         }
 
-        removeEmptyEqList(purchaseEqList, ShipBean.SHIP_LEFT_AMOUNT);
-		Map<String, Object> res = new HashMap<String, Object>();
-		res.put(ApiConstants.RESULTS_DATA, purchaseEqList);
-		return res;
-	}
+        if (!loadExists) {
+            removeEmptyEqList(shipMergedEqList, ShipBean.SHIP_LEFT_AMOUNT);
+        }
+        return shipMergedEqList;
+    }
 	
     public Map<String, Object> submit(Map<String, Object> params) {
         params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));

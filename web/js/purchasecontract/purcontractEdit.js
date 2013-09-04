@@ -135,7 +135,11 @@ $(document).ready(function() {
 	$("#purchaseContractType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "text",
-		dataSource : purchaseContractTypeNormal
+		dataSource : purchaseContractTypeNormal,
+		change: function(e) {
+        	selectCType(this.dataItem());
+        } 
+		
 	});
 	
 	$("#supplier").kendoDropDownList({
@@ -216,7 +220,10 @@ function changeCType(index){
 		$("#purchaseContractType").kendoDropDownList({
 			dataTextField : "text",
 			dataValueField : "text",
-			dataSource : purchaseContractTypeNormal
+			dataSource : purchaseContractTypeNormal,
+			change: function(e) {
+	        	selectCType(this.dataItem());
+	        } 
 		});
 		
 		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="施耐德北京代采" || requestDataItem.purchaseContractType=="泰康北京生产" ||
@@ -240,7 +247,10 @@ function changeCType(index){
 		$("#purchaseContractType").kendoDropDownList({
 			dataTextField : "text",
 			dataValueField : "text",
-			dataSource : purchaseContractTypeVirtual
+			dataSource : purchaseContractTypeVirtual,
+			change: function(e) {
+	        	selectCType(this.dataItem());
+	        } 
 		});
 		requestDataItem.set("contractExecuteCate","虚拟合同");
 		if(!requestDataItem.purchaseContractType || requestDataItem.purchaseContractType=="上海代理产品" || requestDataItem.purchaseContractType=="上海其他"){
@@ -250,7 +260,6 @@ function changeCType(index){
 	
 		var kendoSupp = $("#supplier").data("kendoDropDownList");
 		var spData = kendoSupp.dataSource.data();
-		console.log(spData);
 		for(i=0; i<spData.length; i++){
 			if(spData[i].supplierName =="同方北京"){
 				requestDataItem.set("supplier", spData[i]._id);
@@ -269,6 +278,20 @@ function changeCType(index){
 		$("#invoiceType").attr("disabled", true);
 		$("#invoiceType").hide();
 	}
+	
+
+	
+}
+
+function selectCType(e){	
+	if(e.text=="施耐德北京代采"){
+		requestDataItem.set("eqcostDeliveryType", "入公司库");
+	}
+	
+	if(e.text=="泰康北京生产" || e.text=="施耐德北京库存" || e.text=="泰康北京库存"){
+		requestDataItem.set("eqcostDeliveryType", "直发现场");
+	}
+	
 	
 
 	

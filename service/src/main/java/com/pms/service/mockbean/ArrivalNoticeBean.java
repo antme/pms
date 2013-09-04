@@ -12,13 +12,15 @@ public class ArrivalNoticeBean {
     
     public static final String SHIP_TYPE = "shipType"; // 发货类型 - 0:供应商直发 1:调拨非直发 2:采购非直发
     
-    public static final String SHIP_TYPE_0 = "调拨到货"; // 调拨到货
+    public static final String SHIP_TYPE_0 = "上海备货货架"; // 调拨到货
+    public static final String SHIP_TYPE_0_1 = "北京备货货架"; // 调拨到货
+    
     
     public static final String SHIP_TYPE_1 = "直发现场"; // 供应商直发
     
-    public static final String SHIP_TYPE_2 = "同方采购"; // 同方采购
+    public static final String SHIP_TYPE_2 = "上海—上海泰德库"; // 上海库
     
-    public static final String SHIP_TYPE_3 = "其他采购"; // 其他采购
+    public static final String SHIP_TYPE_3 = "上海—北京泰德库"; // 北京库 北京施耐德代釆
     
     public static final String EQ_LIST = "eqcostList";
     
