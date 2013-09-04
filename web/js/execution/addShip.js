@@ -137,8 +137,8 @@ $(document).ready(function() {
 	        { field: "eqcostProductType", title: "规格型号" },
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
-	        { field: "eqcostShipAmount", title: "发货数" },
-	        { field: "leftAmount", title: "可发货数量" },
+	        { field: "eqcostShipAmount", title: "发货数" , attributes: { "style": "color:red"}},
+	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
 	        { 
 	        	field: "repositoryName", 
 	        	title: "仓库" ,
@@ -176,9 +176,9 @@ $(document).ready(function() {
 	        { field: "eqcostProductType", title: "规格型号" },
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
-	        { field: "eqcostShipAmount", title: "发货数" },
-	        { field: "leftAmount", title: "可发货数量" },
-	        { field: "actureAmount", title: "实际发货数" },
+	        { field: "eqcostShipAmount", title: "发货数" , attributes: { "style": "color:red"}},
+	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
+	        { field: "actureAmount", title: "实际发货数" , attributes: { "style": "color:red"}},
 	       
 			 {
 				field : "eqcostDeliveryType",

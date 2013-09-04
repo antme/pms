@@ -84,12 +84,13 @@ function cancelRepo() {
 function editRepo() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
-	if(row.status == "已入库"){
-		alert("已入库，不能再编辑!");
-	}else{
+	if(row.status == "草稿"){
 		loadPage("repository_repositoryEdit", {
 			_id : row._id
 		});
+
+	}else{
+		alert("只能编辑草稿数据!");
 	}
 }
 

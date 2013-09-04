@@ -207,7 +207,7 @@ function saveRepos(status) {
 		}
 		
 		if(supplierId){
-			requestDataItem.supplierId = supplierId;	
+			requestDataItem.supplier = supplierId;	
 		}
 	
 		// 同步数据
@@ -303,18 +303,17 @@ function edit(data) {
 					field : "eqcostBrand",
 					title : "品牌"
 				}, {
-					field : "eqcostProductType",
+					field : "eqcostUnit",
 					title : "单位"
 	
 				}, {
 					field : "eqcostApplyAmount",
-					title : "入库数量",		
-					template : function(dataItem){
-						return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
-					}
+					title : "入库数量",
+					attributes: { "style": "color:red"}
 				},{
 					field : "leftCount",
-					title : "可入库数量"
+					title : "可入库数量", 
+					attributes: { "style": "color:red"}
 				}, {
 					field : "salesContractCode",
 					title : "销售合同编号"
@@ -328,6 +327,7 @@ function edit(data) {
 				scrollable : true,
 				editable : true,
 				width : "800px",
+				sortable : true,
 				save: function(e){
 					if (e.values.eqcostApplyAmount) {					
 						if(e.values.eqcostApplyAmount > e.model.leftCount){
