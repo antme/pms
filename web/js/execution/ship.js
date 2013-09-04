@@ -89,10 +89,10 @@ function toolbar_add() {
 function toolbar_edit() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-		if (rowData.status == "已批准" || rowData.status == "已关闭"){
-			alert("不允许编辑");
-		} else {
+		if (rowData.status == "草稿" || rowData.status == "已拒绝"){
 			loadPage("execution_addShip",{_id:rowData._id});
+		} else {
+			alert("只允许编辑已拒绝或则草稿数据");
 		}
 	}
 }
@@ -129,7 +129,7 @@ function toolbar_option(op) {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	var url =crudServiceBaseUrl + "/approve";
 	if(op == 2){
-		url = crudServiceBaseUrl + "/approve";
+		url = crudServiceBaseUrl + "/reject";
 	}
 	if (row) {
 		if (row.status == "申请中") {
