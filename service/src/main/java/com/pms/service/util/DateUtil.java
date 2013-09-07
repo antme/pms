@@ -16,13 +16,20 @@ public class DateUtil {
 		return sdf.format(date);
 	}
 	
-	public static Date getDate(String date) throws ParseException{
+	public static Date getDate(String date){
 	    
 	    if(ApiUtil.isEmpty(date)){
 	        return null;
 	    }
 		SimpleDateFormat sdf = new SimpleDateFormat(formatSimple);
-		return sdf.parse(date);
+		try {
+            return sdf.parse(date);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+		
+		return null;
 	}
 	
 	public static String getStringByDate(Date date){

@@ -115,20 +115,10 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         }
         
         if (params.get(ShipBean.SHIP_DELIVERY_START_DATE) != null) {
-            try {
-                params.put(ShipBean.SHIP_DELIVERY_START_DATE, DateUtil.getDate((String) params.get(ShipBean.SHIP_DELIVERY_START_DATE)));
-            } catch (ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+           params.put(ShipBean.SHIP_DELIVERY_START_DATE, DateUtil.getDate((String) params.get(ShipBean.SHIP_DELIVERY_START_DATE)));
         }
         if (params.get(ShipBean.SHIP_DELIVERY_TIME) != null) {
-            try {
-                params.put(ShipBean.SHIP_DELIVERY_TIME, DateUtil.getDate((String) params.get(ShipBean.SHIP_DELIVERY_TIME)));
-            } catch (ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+           params.put(ShipBean.SHIP_DELIVERY_TIME, DateUtil.getDate((String) params.get(ShipBean.SHIP_DELIVERY_TIME)));   
         }
         
 

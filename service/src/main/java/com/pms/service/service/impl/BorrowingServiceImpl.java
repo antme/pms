@@ -297,18 +297,11 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
     	shipParams.put(ShipBean.SHIP_DELIVERY_CONTACTWAY, params.get(ShipBean.SHIP_DELIVERY_CONTACTWAY));
     	shipParams.put(ShipBean.SHIP_DELIVERY_UNIT, params.get(ShipBean.SHIP_DELIVERY_UNIT));
     	shipParams.put(ShipBean.SHIP_DELIVERY_ADDRESS, params.get(ShipBean.SHIP_DELIVERY_ADDRESS));
-    	try {
-            shipParams.put(ShipBean.SHIP_DELIVERY_START_DATE, DateUtil.getDate((String)params.get(ShipBean.SHIP_DELIVERY_START_DATE)));
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    	try {
-             shipParams.put(ShipBean.SHIP_DELIVERY_TIME, DateUtil.getDate((String)params.get(ShipBean.SHIP_DELIVERY_TIME)));
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-         }
+    
+        shipParams.put(ShipBean.SHIP_DELIVERY_START_DATE, DateUtil.getDate((String)params.get(ShipBean.SHIP_DELIVERY_START_DATE)));
+
+        shipParams.put(ShipBean.SHIP_DELIVERY_TIME, DateUtil.getDate((String)params.get(ShipBean.SHIP_DELIVERY_TIME)));
+     
     	
     	shipParams.put(ShipBean.SHIP_DELIVERY_REQUIREMENTS, params.get(ShipBean.SHIP_DELIVERY_REQUIREMENTS));
     	shipParams.put(ShipBean.SHIP_OTHER_DELIVERY_REQUIREMENTS, params.get(ShipBean.SHIP_OTHER_DELIVERY_REQUIREMENTS));

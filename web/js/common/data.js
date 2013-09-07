@@ -46,12 +46,14 @@ var filterable = {
 			neq : "不等于"
 		},
 		number : {
-			lt : "小于",
-			gt : "大于",
-			eq : "等于"
+			lt_n : "小于",
+			gt_n : "大于",
+			eq_n : "等于"
 		},
 		date : {
-			eq : "等于"
+			lt_d : "小于",
+			gt_d : "大于",
+			eq_d : "等于"
 		}
 	},
 	messages : {

@@ -3,7 +3,6 @@ package com.pms.service.controller;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +20,7 @@ import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DateUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
 import com.pms.service.util.status.ResponseStatus;
 
@@ -89,7 +89,15 @@ public abstract class AbstractController {
                 String key = request.getParameter("filter[filters][" + i + "][field]");
                 String operator = request.getParameter("filter[filters][" + i + "][operator]");
                 String value = request.getParameter("filter[filters][" + i + "][value]");
-                parametersMap.put(key, new DBQuery(DBQueryOpertion.getOperation(operator), value));
+                
+                if(operator.endsWith("_n")){
+                    //数字
+                    parametersMap.put(key, new DBQuery(DBQueryOpertion.getOperation(operator), ApiUtil.getDouble(value, 0)));
+                }else if(operator.endsWith("_d")){
+                    //日期
+                    parametersMap.put(key, new DBQuery(DBQueryOpertion.getOperation(operator), DateUtil.getDate(value)));
+
+                }
             }
         }
         if (!emptyParameter && (parametersMap == null || parametersMap.isEmpty())) {
