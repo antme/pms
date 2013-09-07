@@ -23,7 +23,7 @@ $(document).ready(function () {
 		selectable : "row",
         columns: [
             { field: "shipCountDate", title:"统计月份" },
-            { field: "purchaseContractType", title:"虚拟采购类型" },
+            { field: "shipType", title:"虚拟采购类型" },
             { field: "status", title:"状态" },
             { field: "shipTotalAmount", title:"总数量" },
             { field: "shipTotalMoney", title:"总金额" }

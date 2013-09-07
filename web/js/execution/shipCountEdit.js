@@ -62,9 +62,9 @@ function edit(data) {
 	var eqList = [];
 	
 	if(requestDataItem.eqcostList){
-		requestDataItem.eqcostList.toJSON();
+		eqList = requestDataItem.eqcostList;
 	}
-	sdataSource.data(eqList);
+	sdataSource.data(requestDataItem.eqcostList);
 	$("#ship-count-grid").kendoGrid({
 		dataSource : sdataSource,
 		columns : [ {
@@ -93,12 +93,6 @@ function edit(data) {
 		}, {
 			field : "eqcostBasePrice",
 			title : "采购单价"
-		}, {
-			field : "purchaseContractCode",
-			title : "采购合同编号"
-		}, {
-			field : "purchaseOrderCode",
-			title : "订单编号"
 		} ],
 		width : "800px"
 

@@ -250,7 +250,7 @@ public abstract class AbstractController {
             logger.error(String.format(" =========== API Validation failed with tip msg [%s] and log msg [%s] ", apiException.getTipMsg(), apiException.getMessage()));
 
         } else {
-            temp.put("msg", "System Error");
+            temp.put("msg", "获取数据失败!");
         }
         responseMsg(temp, ResponseStatus.FAIL, request, response, null);
 

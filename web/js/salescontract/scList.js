@@ -3,7 +3,8 @@ var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
 			url : "../service/sc/list",
-			dataType : "jsonp"
+			dataType : "jsonp",
+			type : "post"
 		},
 		parameterMap : myTaskQueryParam	
 	},

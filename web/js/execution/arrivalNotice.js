@@ -33,6 +33,7 @@ $(document).ready(function () {
         dataSource: dataSource,
         pageable : true,
 		sortable : true,
+		selectable : "row",
 		filterable : filterable,
         columns: [
             { field: "shipType", title:"到货类型" },
@@ -41,7 +42,7 @@ $(document).ready(function () {
             	field: "foreignCode",
             	title:"相关编号",
 				template : function(dataItem) {
-					if (dataItem.shipType == "调拨到货") {
+					if (dataItem.shipType == "上海备货货架" || dataItem.shipType == "北京备货货架") {
 						return '<a onclick="openPurchaseAllotViewWindow(\'' + dataItem.foreignKey + '\');">' + dataItem.foreignCode + '</a>';
 					} else {
 						return '<a onclick="openPurchaseOrderViewWindow(\'' + dataItem.foreignKey + '\');">' + dataItem.foreignCode + '</a>';

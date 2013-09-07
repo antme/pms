@@ -67,7 +67,7 @@ $(document).ready(function () {
 					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.pbCode + '</a>';
 				}
 	        },
-	        { field:"projectName",title:"项目名",filterable : false,
+	        { field:"projectName",title:"项目名",
 	        	template : function(dataItem) {
 					if(dataItem.projectName){
 						return '<a  onclick="openProjectViewWindow(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
@@ -76,16 +76,16 @@ $(document).ready(function () {
 					}
 				}	
 	        },
-	        { field: "projectManager", title:"PM", filterable : false},
+	        { field: "projectManager", title:"PM"},
 	        { 
 	        	field: "contractCode", 
-	        	title:"销售合同编号",filterable : false,
+	        	title:"销售合同编号",
 	        	template : function(dataItem) {
 					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
 	        },
-	        { field: "customer", title:"客户名", filterable : false},
-	        { field: "pbStatus", title:"申请状态", filterable : false},
+	        { field: "customer", title:"客户名"},
+	        { field: "pbStatus", title:"申请状态"},
 	        { field: "pbSubmitDate", title:"提交时间" },
 	        { field: "pbMoney", title:"金额" }
 	    ]

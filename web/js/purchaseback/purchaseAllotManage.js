@@ -60,7 +60,12 @@ $(document).ready(function () {
 					return '<a  onclick="openPurchaseAllotViewWindow(\'' + dataItem._id + '\');">' + dataItem.paCode + '</a>';
 				}
 	        },
-	        { field: "pbCode", title:"备货编号", filterable : false},
+	        { field: "pbCode", title:"备货编号", filterable : false,
+	        	template : function(dataItem) {
+					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem.pbId + '\');">' + dataItem.pbCode + '</a>';
+				}
+	        
+	        },
 	        { 
 	        	field: "contractCode", 
 	        	title:"销售合同编号",filterable : false,

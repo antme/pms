@@ -356,7 +356,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         }
 
         String date = (String) shipCount.get(ShipCountBean.SHIP_COUNT_DATE);
-        String cate = (String) shipCount.get(PurchaseContract.PURCHASE_CONTRACT_TYPE);
+        String shipType = (String) shipCount.get(ArrivalNoticeBean.SHIP_TYPE);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
         Date countDate = null;
@@ -381,8 +381,14 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         
         Object[] dateQuery = { startDate, endDate };
         shipQuery.put(ShipBean.SHIP_DELIVERY_START_DATE, new DBQuery(DBQueryOpertion.BETWEEN_AND, dateQuery));
-        // 三类虚拟采购合同
-        shipQuery.put(SalesContractBean.SC_EQ_LIST + "." + PurchaseContract.PURCHASE_CONTRACT_TYPE, cate);
+        
+        if(shipType.equalsIgnoreCase(PurchaseCommonBean.CONTRACT_EXECUTE_ALLOCATE_BJ_REPO_VALUE)){
+            // 调拨
+            shipQuery.put(SalesContractBean.SC_EQ_LIST + "." + ArrivalNoticeBean.SHIP_TYPE, shipType);
+        }else{
+            // 三类虚拟采购合同
+            shipQuery.put(SalesContractBean.SC_EQ_LIST + "." + PurchaseContract.PURCHASE_CONTRACT_TYPE, shipType);
+        }
         // 申请状态
         List<String> statusList = new ArrayList<String>();
         statusList.add(ShipBean.SHIP_STATUS_APPROVE);
@@ -396,13 +402,10 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         int totalAmount = 0;
         int totalMonty = 0;
         if (!ApiUtil.isEmpty(shipList)) {
-            // 采购订单id
-            Set<Object> orderIdSet = new HashSet();
             List<Map<String, Object>>  allShipEqList = new ArrayList<Map<String, Object>>();
             for (Map<String, Object> ship : shipList) {
                 List<Map<String, Object>> shipEqList = (List<Map<String, Object>>) ship.get(SalesContractBean.SC_EQ_LIST);
                 for (Map<String, Object> shipEq : shipEqList) {
-                    orderIdSet.add(shipEq.get(PurchaseCommonBean.PURCHASE_ORDER_ID));
                     allShipEqList.add(shipEq);
                     //FIXME: 先取真实发货数
                     totalAmount += ApiUtil.getInteger(shipEq.get(ShipBean.EQCOST_SHIP_AMOUNT), 0);
@@ -412,10 +415,6 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
                 }
             }
 
-            // 获取采购订单中的采购价格
-            Map<String, Object> orderQuery = new HashMap<String, Object>();
-            orderQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(orderIdSet)));
-            Map<String, Object> orderInfoMap = dao.listToOneMapAndIdAsKey(orderQuery, DBBean.PURCHASE_ORDER);
 
 
             shipCount.put(ShipCountBean.SHIP_TOTAL_AMOUNT, totalAmount);
@@ -471,7 +470,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
      
         
         Map<String, Object> nextShipCount = new HashMap<String, Object>();
-        nextShipCount.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, shipCount.get(PurchaseContract.PURCHASE_CONTRACT_TYPE));
+        nextShipCount.put(ArrivalNoticeBean.SHIP_TYPE, shipCount.get(ArrivalNoticeBean.SHIP_TYPE));
         nextShipCount.put(ShipCountBean.SHIP_COUNT_DATE, sdf.format(startDate));
         nextShipCount.put(ShipCountBean.SHIP_TOTAL_AMOUNT, 0);
         nextShipCount.put(ShipCountBean.SHIP_TOTAL_MONEY, 0);

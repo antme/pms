@@ -103,14 +103,12 @@ $(document).ready(function() {
 		}, {
 			field : "projectManager",
 			title : "PM",
-			filterable : false,
 			template : function(dataItem) {
 				return '<a  onclick="openPMViewWindow(\'' + dataItem.pmId + '\');">' + dataItem.projectManager + '</a>';
 			}
 		},{
 			field : "customer",
-			title : "客户名",
-			filterable : false
+			title : "客户名"
 		}]
 	});
 });//end dom ready	

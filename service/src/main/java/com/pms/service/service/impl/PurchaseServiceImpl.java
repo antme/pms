@@ -16,12 +16,15 @@ import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
+import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
+import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseService;
@@ -291,6 +294,13 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		mergeDataRoleQueryWithProjectAndScType(params);
 		mergeMyTaskQuery(params, DBBean.PURCHASE_BACK);
 		
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_CUSTOMER, CustomerBean.NAME,  DBBean.CUSTOMER);
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_MANAGER, UserBean.USER_NAME,  DBBean.USER);
+	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
+	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
+	    mergeRefSearchQuery(params, PurchaseBack.scId, SalesContractBean.SC_CODE, SalesContractBean.SC_CODE, DBBean.SALES_CONTRACT);
+
+		
 		Map<String,Object> queryKeys = new HashMap<String,Object>();
 		queryKeys.put(ApiConstants.LIMIT_KEYS, keys);
 		queryKeys.put(ApiConstants.LIMIT, params.get(ApiConstants.LIMIT));
@@ -324,6 +334,13 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		params.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
 		mergeDataRoleQueryWithProjectAndScType(params);
 		mergeMyTaskQuery(params, DBBean.PURCHASE_BACK);
+		
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_CUSTOMER, CustomerBean.NAME,  DBBean.CUSTOMER);
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_MANAGER, UserBean.USER_NAME,  DBBean.USER);
+	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
+	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
+	    mergeRefSearchQuery(params, PurchaseBack.scId, SalesContractBean.SC_CODE, SalesContractBean.SC_CODE, DBBean.SALES_CONTRACT);
+	        
 		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		//排除不能再拆分的备货申请
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
@@ -350,13 +367,18 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	}
 
 	@Override
-	public Map<String, Object> listAllot(Map<String, Object> params) {
-		mergeDataRoleQueryWithProjectAndScType(params);
-		mergeMyTaskQuery(params, DBBean.PURCHASE_ALLOCATE);
-		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_ALLOCATE);
-		mergeSalesContract(map);
-		return map;		
-	}
+    public Map<String, Object> listAllot(Map<String, Object> params) {
+        mergeDataRoleQueryWithProjectAndScType(params);
+        mergeMyTaskQuery(params, DBBean.PURCHASE_ALLOCATE);
+        mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_CUSTOMER, CustomerBean.NAME, DBBean.CUSTOMER);
+        mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_MANAGER, UserBean.USER_NAME, DBBean.USER);
+        mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
+        mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
+        mergeRefSearchQuery(params, PurchaseBack.scId, SalesContractBean.SC_CODE, SalesContractBean.SC_CODE, DBBean.SALES_CONTRACT);
+        Map<String, Object> map = dao.list(params, DBBean.PURCHASE_ALLOCATE);
+        mergeSalesContract(map);
+        return map;
+    }
 
 
 	@Override
