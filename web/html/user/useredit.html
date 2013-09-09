@@ -38,27 +38,7 @@
         <div data-container-for="department" class="k-edit-field ">
             <input type="text" class="k-input k-textbox" id="department" data-bind="value:department">
         </div>
-		<!-- 
-		<div class="k-edit-label ">
-			<label for="salesContractProcessType">销售合同审批类型</label>
-		</div>
-		<div data-container-for="salesContractProcessType"
-			class="k-edit-field ">
-			<input type="text" class="k-input" style="width:250px;"
-				name="salesContractProcessType" id="salesContractProcessType"
-				data-bind="value:salesContractProcessType">
-		</div>
 		
-		<div class="k-edit-label ">
-			<label for="purchaseContractProcessType">采购合同审批类型</label>
-		</div>
-		<div data-container-for="purchaseContractProcessType"
-			class="k-edit-field ">
-			<input type="text" class="k-input" style="width:250px;"
-				name="purchaseContractProcessType" id="purchaseContractProcessType"
-				data-bind="value:purchaseContractProcessType">
-		</div>
-		 -->
 		<div class="k-edit-label " class="k-edit-field ">
 			<label for="groups">角色</label>
 		</div>
@@ -69,7 +49,7 @@
 			<label for="password">密码</label>
 		</div>
 		<div data-container-for="password" class="k-edit-field ">
-			<input type="text" validationMessage="请输入密码" class="k-input k-textbox" name="password"  data-bind="value: password">
+			<input type="text" validationMessage="请输入密码" class="k-input k-textbox" name="password"  id="password" data-bind="value: password">
 		</div>
 		<button class="k-button" onclick="save();">保存</button><button
 			class="k-button" onclick="cancel();">取消</button>

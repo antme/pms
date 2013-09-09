@@ -141,6 +141,6 @@ function pcDropDownEditor(container, options) {
 }
 
 function myreflush(){
-	loadPage("finance_getMoney");
+	loadPage("finance_gotMoneyList");
 	//location.reload();
 }

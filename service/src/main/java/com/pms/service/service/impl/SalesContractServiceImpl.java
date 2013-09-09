@@ -413,7 +413,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		query.put(ApiConstants.LIMIT_KEYS, new String[]{SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID, "customer"});
 		query.put(SalesContractBean.SC_CODE, new DBQuery(DBQueryOpertion.NOT_NULL));
 		query.put(SalesContractBean.SC_CODE, new DBQuery(DBQueryOpertion.NOT_EQUALS, ""));
-		query.put("status", new DBQuery(DBQueryOpertion.NOT_IN, new String[]{SalesContractBean.SC_STATUS_DRAFT}));    
+		query.put("status", new DBQuery(DBQueryOpertion.NOT_IN, new String[]{SalesContractBean.SC_STATUS_DRAFT})); 
+		
+		//项目经理只能选择属于自己的销售合同
+        if (isPM()) {
+            query.put(ProjectBean.PROJECT_MANAGER, ApiThreadLocal.getCurrentUserId());
+        }
 		
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
 		projectQuery.put(ApiConstants.LIMIT_KEYS,ProjectBean.PROJECT_NAME);

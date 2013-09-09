@@ -108,7 +108,8 @@ public class InitBean {
         });
         groupRoles.put(GroupBean.DEPARTMENT_MANAGER_VALUE, new String[] {
         	RoleValidConstants.SHIP_MANAGEMENT_PROCESS,
-            RoleValidConstants.PURCHASE_BACK_PROCESS
+            RoleValidConstants.PURCHASE_BACK_PROCESS,
+            RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS
         });
         groupRoles.put(GroupBean.PURCHASE_VALUE, new String[] {
         	RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, 

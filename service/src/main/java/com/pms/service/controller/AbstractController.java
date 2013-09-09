@@ -97,7 +97,7 @@ public abstract class AbstractController {
                     //日期
                     parametersMap.put(key, new DBQuery(DBQueryOpertion.getOperation(operator), DateUtil.getDate(value)));
 
-                }else if(operator.equals("like")){
+                }else {
                     //like
                     parametersMap.put(key, new DBQuery(DBQueryOpertion.getOperation(operator), value));
 

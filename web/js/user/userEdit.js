@@ -37,7 +37,7 @@ var groupDataSource = new kendo.data.DataSource({
 var validator;
 
 $(document).ready(function() {
-	
+	groupDataSource.read();
 	$("#groups").kendoMultiSelect({
 		dataTextField : "groupName",
 		dataValueField : "_id",
@@ -77,16 +77,14 @@ function edit(user){
 		user.password = "";
 	}
 	editUser = new userModel(user);
+    $("#groups").data("kendoMultiSelect").value(editUser.groups);
 	kendo.bind($("#user-form"), editUser);
-
 }
 
 function save(){
-	var multiselect = $("#groups").data("kendoMultiSelect");
-	// get the value of the multiselect.
-//	editUser.salesContractProcessType = $("#salesContractProcessType").data("kendoMultiSelect").value();
 	editUser.groups = $("#groups").data("kendoMultiSelect").value();
 	editUser.department = $("#department").data("kendoDropDownList").value();
+	editUser.password = $("#password").val();
 	if(validator.validate()){
 		postAjaxRequest("/service/user/update", {models:kendo.stringify(editUser)} , saveSuccess);
 	}
@@ -100,6 +98,3 @@ function cancel(){
 	loadPage("user_userman");
 }
 
-function del(){
-	
-}
