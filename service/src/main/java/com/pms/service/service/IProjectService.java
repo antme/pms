@@ -12,7 +12,7 @@ public interface IProjectService {
 	
 	public Map<String, Object> updateProject(Map<String, Object> params);
 	
-	public Map<String, Object> listProjectsForSelect(Map<String, Object> params);
+	public Map<String, Object> listProjectsForSelect(Map<String, Object> params, boolean all);
 	
 	public Map<String, Object> listEquipmentsForProject(Map<String, Object> params);
 	

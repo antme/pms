@@ -132,13 +132,15 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	}
 
 	@Override
-	public Map<String, Object> listProjectsForSelect(Map<String, Object> params) {
+	public Map<String, Object> listProjectsForSelect(Map<String, Object> params, boolean all) {
 		// TODO Add logic to filter the projects which in progresss
 		String[] limitKeys = {ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER, 
 				ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_CUSTOMER};
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(ApiConstants.LIMIT_KEYS, limitKeys);
-		query.put(ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS_OFFICIAL);
+		if(!all){
+		    query.put(ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS_OFFICIAL);
+		}
 		Map<String, Object> result = dao.list(query, DBBean.PROJECT);
 		
 		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
