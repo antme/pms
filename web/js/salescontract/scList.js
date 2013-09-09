@@ -95,7 +95,8 @@ $(document).ready(function() {
 		}, {
 			field : "contractDate",
 			title : "签订日期",
-			format: "{0:yyyy/MM/dd}"
+			format: "{0:yyyy/MM/dd}", 
+			filterable : false
 		}, {
 			field : "contractType",
 			title : "合同类型"
