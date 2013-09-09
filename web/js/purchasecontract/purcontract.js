@@ -81,15 +81,13 @@ function editCon() {
 	var row = getSelectedRowDataByGrid("grid");
 
 	if (row) {
-//		if (row.status == "审批通过") {
-//			alert("申请已审批通过，不能编辑");
-//		} else if (row.status == "已锁定") {
-//			alert("数据已锁定，不能编辑");
-//		} else {
+		if (row.status == "草稿" || row.status == "已拒绝") {
 			loadPage("purchasecontract_purchasecontractedit", {
 				_id : row._id
 			});
-//		}
+		} else {
+			alert("不允许编辑");
+		} 
 
 	}
 }

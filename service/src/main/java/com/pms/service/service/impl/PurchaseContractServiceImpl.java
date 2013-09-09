@@ -1505,12 +1505,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
                 Map<String, Object> project = new HashMap<String, Object>();
                 String projectName = item[columnIndexMap.get("销售项目名称")].trim();
+                String salesContractCode = item[columnIndexMap.get("销售合同编号")].trim();
                 if(!ApiUtil.isEmpty(projectName)){
                     project.put(ProjectBean.PROJECT_NAME, projectName);
-                    projectService.importProject(project);
+//                    projectService.importProject(project);
                 }
-        
-
+                contract.put(ProjectBean.PROJECT_NAME, projectName);
+                contract.put(PurchaseCommonBean.SALES_CONTRACT_CODE, salesContractCode);
                 contract.put(PurchaseContract.PURCHASE_CONTRACT_MONEY, ApiUtil.getDouble(item[columnIndexMap.get("合同金额")].trim(), 0));
 
                 contract.put(PurchaseContract.PURCHASE_CONTRACT_PAYMENT_TYPE, item[columnIndexMap.get("付款方式")].trim());

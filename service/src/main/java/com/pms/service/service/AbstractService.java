@@ -657,7 +657,7 @@ public abstract class AbstractService {
         }
         Integer scCodeNo = 0;
 
-        if (re != null) {
+        if (re != null && !ApiUtil.isEmpty(code)) {
             String scCodeNoString = code.substring(code.lastIndexOf("-") + 1, code.length());
             try {
                 scCodeNo = Integer.parseInt(scCodeNoString);
@@ -671,7 +671,13 @@ public abstract class AbstractService {
 
         codeNum = codeNum.substring(codeNum.length() - 4, codeNum.length());
         String genCode = prefix + "-" + year + "-" + codeNum;
-
+        
+        while (this.dao.exist(codeKey, genCode, db)) {
+            scCodeNo = scCodeNo + 1;
+            codeNum = "000" + scCodeNo;
+            codeNum = codeNum.substring(codeNum.length() - 4, codeNum.length());
+            genCode = prefix + "-" + year + "-" + codeNum;
+        }
         return genCode;
     }
 
