@@ -13,6 +13,7 @@ import java.util.Set;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
+import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
@@ -435,13 +436,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         return doCount(params);
     }
 
-    public Map<String, Object> submitShipCount(Map<String, Object> params) {
-        
-        Map<String, Object> shipCount = new HashMap<String, Object>();
-        shipCount.put("status", "已结算");
-        shipCount.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
-        this.dao.updateById(shipCount, DBBean.SHIP_COUNT);
-        
+    public Map<String, Object> submitShipCount(Map<String, Object> params) {        
+        Map<String, Object> shipCount = new HashMap<String, Object>();        
         shipCount = this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID),  DBBean.SHIP_COUNT);
         String date = (String) shipCount.get(ShipCountBean.SHIP_COUNT_DATE);
 
@@ -454,11 +450,19 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
             e.printStackTrace();
         }
         Calendar cal = Calendar.getInstance();
-        cal.setTime(countDate);
+        cal.setTime(countDate);        
         cal.add(Calendar.MONTH, 1);
         Date startDate = cal.getTime();
-     
         
+        if (startDate.getTime() > new Date().getTime()) {
+            throw new ApiResponseException("", "", "结算不能在当月做");
+        }
+        
+        shipCount = new HashMap<String, Object>();
+        shipCount.put("status", "已结算");
+        shipCount.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+        this.dao.updateById(shipCount, DBBean.SHIP_COUNT);
+
         Map<String, Object> nextShipCount = new HashMap<String, Object>();
         nextShipCount.put(ArrivalNoticeBean.SHIP_TYPE, shipCount.get(ArrivalNoticeBean.SHIP_TYPE));
         nextShipCount.put(ShipCountBean.SHIP_COUNT_DATE, sdf.format(startDate));
