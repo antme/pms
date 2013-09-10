@@ -114,7 +114,7 @@ function editPB(){
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else if(row.pbStatus == "草稿" || row.pbStatus == "已拒绝"){	
-		loadPage("purchaseback_purchaseBackEdit", { _id : row._id });	
+		loadPage("purchaseback_purchaseBackEdit", { _id : row._id , pageId : "edit"});	
 	}else{
 		alert("只能修改草稿或则已拒绝的数据");
 	}
@@ -124,7 +124,7 @@ function processPB(){
 	if (!row) {
 		alert("点击列表可以选中数据");
 	} else if(row.pbStatus == "已提交"){	
-		loadPage("purchaseback_purchaseBackEdit", { _id : row._id });	
+		loadPage("purchaseback_purchaseBackEdit", { _id : row._id, pageId : "approve"});	
 	}else{
 		alert("只允许审核已提交的数据");
 	}

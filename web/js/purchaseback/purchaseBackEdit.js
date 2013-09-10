@@ -191,7 +191,7 @@ $(document).ready(function () {
 		disableAllInPoppup();
 	}else if(redirectParams){
 		$("#searchDiv").hide();
-		postAjaxRequest(baseUrl+"/purchase/back/load", redirectParams, editSuccess);
+		postAjaxRequest(baseUrl+"/purchase/back/load", {_id: redirectParams._id}, editSuccess);
 	}
 	kendo.bind($("#form-container"), currentObj);
 });
@@ -248,12 +248,13 @@ function saveSuccess(){
 
 function editSuccess(e){
 	if(!e) return;
-	if(e.pbStatus =="已提交") {
-		$("#form-container [name!='tempComment']").attr("disabled",true);
-	}else if(e.pbStatus =="已批准") {
-		$("#form-container [name!='tempComment']").attr("disabled",true); 
-	}else if(e.pbStatus =="已拒绝") {
-		//nothing
+	if(e.pbStatus =="已提交" && redirectParams && redirectParams.pageId && redirectParams.pageId=="approve") {
+		//审核的时候禁止掉页面一些元素
+		$(":input").attr("disabled",true);
+		var datepicker = $("#pbPlanDate").data("kendoDatePicker");
+		datepicker.enable(false);
+		$("#tempComment").removeAttr("disabled");
+		$(":button").removeAttr("disabled");		
 	}
 	currentObj = new myModel(e);
 	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));

@@ -759,23 +759,15 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			uInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusFinanceManagerApprojve);
 			uInvoice.put(InvoiceBean.payInvoiceManagerId, ApiThreadLocal.getCurrentUserId());
 			comment = recordComment("批准",comment,oldComment);
-		} else if(InvoiceBean.statusFinanceManagerApprojve.equals(oldStatus)){
-			if(payInvoice.containsKey(InvoiceBean.payInvoiceActualMoney) 
-					&& payInvoice.containsKey(InvoiceBean.payInvoiceActualDate)
-					&& payInvoice.containsKey(InvoiceBean.payInvoiceActualInvoiceNum)
-				    && payInvoice.containsKey(InvoiceBean.payInvoiceActualSheetCount)){
-				uInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusDone);
-				comment = recordComment("开票结束",comment,oldComment);
-			}else{
-				uInvoice.put(InvoiceBean.payInvoiceActualMoney, params.get(InvoiceBean.payInvoiceActualMoney));
-				uInvoice.put(InvoiceBean.payInvoiceActualDate, DateUtil.converUIDate(params.get(InvoiceBean.payInvoiceActualDate)));
-				uInvoice.put(InvoiceBean.payInvoiceActualInvoiceNum, params.get(InvoiceBean.payInvoiceActualInvoiceNum));
-				uInvoice.put(InvoiceBean.payInvoiceActualSheetCount, params.get(InvoiceBean.payInvoiceActualSheetCount));
-				comment = recordComment("开票",comment,oldComment);
-			}
-		} else {
-			throw new ApiResponseException("No Permission","No Permission");
-		}
+        } else if (InvoiceBean.statusFinanceManagerApprojve.equals(oldStatus)) {
+            uInvoice.put(InvoiceBean.payInvoiceActualMoney, params.get(InvoiceBean.payInvoiceActualMoney));
+            uInvoice.put(InvoiceBean.payInvoiceActualDate, DateUtil.converUIDate(params.get(InvoiceBean.payInvoiceActualDate)));
+            uInvoice.put(InvoiceBean.payInvoiceActualInvoiceNum, params.get(InvoiceBean.payInvoiceActualInvoiceNum));
+            uInvoice.put(InvoiceBean.payInvoiceActualSheetCount, params.get(InvoiceBean.payInvoiceActualSheetCount));
+            uInvoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusDone);
+            comment = recordComment("开票结束", comment, oldComment);
+        }
+		
 		uInvoice.put(InvoiceBean.payInvoiceComment, comment);
 		return dao.updateById(uInvoice, DBBean.SC_INVOICE);
 	}

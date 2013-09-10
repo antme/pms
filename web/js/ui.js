@@ -485,6 +485,7 @@ function disableAllInPoppup(){
 
 
 
+
 function openPMViewWindow(param){
 	var options = { width:"680px", height: "400px", title:"项目经理信息"};
 	openRemotePageWindow(options, "user_userview", {_id : param});

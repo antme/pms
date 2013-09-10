@@ -161,7 +161,11 @@ function saveSuccess(){
 	loadPage("purchaseback_purchaseAllotManage");
 }
 function editSucess(e){
-	$("#form-container [name!='tempComment']").attr("disabled",true);
+	//审核的时候禁止掉页面一些元素
+	$(":input").attr("disabled",true);
+	$("#tempComment").removeAttr("disabled");
+	$(":button").removeAttr("disabled");	
+	
 	if(e.paStatus == "已提交"){
 		$("#paNumberTd").hide();
 		$("#form-container-button button[value!='approve'][value!='reject'][value!='cancel']").hide();
