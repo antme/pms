@@ -70,7 +70,7 @@ var menus = [
              },
 
              {
-                 text: "项目执行", id: "projectex", imageUrl: "/images/ccontract.png",
+                 text: "项目执行", id: "projectex", expanded : true, imageUrl: "/images/ccontract.png",
                  items: [
                          { text: "备货申请", id: "purchaseback_purchaseBack", imageUrl: "/images/order.png" },
                          { text: "备货拆分", id: "purchaseback_purchaseAllot",imageUrl: "/images/order.png" },
@@ -89,7 +89,7 @@ var menus = [
              
 
              {
-	             text : "采购合同", id : "purchasecontract", expanded : false, imageUrl : "/images/contract.png",
+	             text : "采购合同", id : "purchasecontract", expanded : true, imageUrl : "/images/contract.png",
                  items: [
                      { text: "采购申请", id: "purchasecontract_purchaseRequestApprove", imageUrl: "/images/purchase.png"},
                      { text: "采购订单", id: "purchasecontract_purchaseOrder",  imageUrl: "/images/porder.png"},
@@ -100,7 +100,7 @@ var menus = [
                  ]
              },                                               
              {
-                 text: "财务",  id: "finance",  imageUrl: "/images/finance.png",
+                 text: "财务",  id: "finance",  expanded : true, imageUrl: "/images/finance.png",
                  items: [
                          { text: "开票信息", id: "finance_payInvoice", imageUrl: "/images/calender.png" },
                          { text: "收款信息", id: "finance_gotMoneyList", imageUrl: "/images/invoice.png"},
@@ -110,14 +110,14 @@ var menus = [
              },
                                  
              {
-                 text: "基础信息",  id: "system", imageUrl: "/images/user.png",
+                 text: "基础信息",  id: "system", expanded : true, imageUrl: "/images/user.png",
                  	items: [
                              { text: "客户", id: "customer_customer", imageUrl: "/images/toy.png" },
                              { text: "供应商", id: "supplier_supplier", imageUrl: "/images/ccontract.png" },
                              { text: "数据导入", id: "import_historyDataImport", imageUrl: "/images/ccontract.png" }
                          ]
              } , {
-                 text: "权限管理", id: "user", expanded: false, imageUrl: "/images/friends_group.png",
+                 text: "权限管理", id: "user", expanded: true, imageUrl: "/images/friends_group.png",
                  items: [
                          { text: "用户管理", id: "user_userman", imageUrl: "/images/toy.png" },
                          { text: "角色管理", id: "user_group", imageUrl: "/images/ccontract.png" },

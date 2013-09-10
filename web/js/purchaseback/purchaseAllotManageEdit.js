@@ -90,7 +90,7 @@ var myModel = kendo.data.Model.define({
 		customer: {},
 		scId:{},
 		contractCode: {},
-		contractAmount: {},
+		contractAmount: {}
 	}
 });
 var currentObj = new myModel();
