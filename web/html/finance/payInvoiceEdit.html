@@ -39,12 +39,12 @@
 					<td>建议出票日期: <input name="payInvoicePlanDate" required validationMessage="请选择日期"  data-role="datepicker" data-format="yyyy-MM-dd" data-bind="value: payInvoicePlanDate"/></td>
 				</tr>
 				<tr class="invoicedone">
-					<td>实际金额：<input required validationMessage="请输入"  data-role="numerictextbox" min="0" data-bind="value:payInvoiceActualMoney"/></td>
-					<td>实际日期：<input required validationMessage="请选择"  data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value:payInvoiceActualDate"/></td>
-					<td colspan="3">实际张数：<input required validationMessage="请输入张数"  data-role="numerictextbox" min="0" data-bind="value:payInvoiceActualSheetCount"/></td>
+					<td>实际金额：<input required="true" name="payInvoiceActualMoney" validationMessage="请输入"  data-role="numerictextbox" min="0" data-bind="value: payInvoiceActualMoney"/></td>
+					<td>实际日期：<input required name="payInvoiceActualDate" validationMessage="请选择"  data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: payInvoiceActualDate"/></td>
+					<td colspan="3">实际张数：<input required name="payInvoiceActualSheetCount" validationMessage="请输入张数"  data-role="numerictextbox" min="0" data-bind="value: payInvoiceActualSheetCount"/></td>
 				</tr>
 				<tr class="invoicedone">
-					<td colspan="5">发票编号：<input required validationMessage="请输入发票号"  type="text" data-bind="value:payInvoiceActualInvoiceNum"/></td>
+					<td colspan="5">发票编号：<input required name="payInvoiceActualInvoiceNum" validationMessage="请输入发票号"   data-bind="value:payInvoiceActualInvoiceNum"/></td>
 				</tr>			
 			</table>
 			<hr>

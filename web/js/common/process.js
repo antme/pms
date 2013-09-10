@@ -23,17 +23,7 @@ function process(url) {
 	}
 }
 
-function approveSubmit() {
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	if (row) {
-		var param = {
-			"_id" : row._id,
-			"approveComment" : $("#approve-comment").val()
-		};
-		postAjaxRequest(processUrl, param, approveStatusCheck);
-		$("#approve-comment").val("");
-	}
-}
+
 function approveStatusCheck(response) {
 	var kendoWindow = $("#approve").data("kendoWindow");
 	kendoWindow.close();
@@ -83,6 +73,18 @@ function reject() {
 		}
 	}
 	
+}
+
+function approveSubmit() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		var param = {
+			"_id" : row._id,
+			"approveComment" : $("#approve-comment").val()
+		};
+		postAjaxRequest(processUrl, param, approveStatusCheck);
+		$("#approve-comment").val("");
+	}
 }
 
 

@@ -17,7 +17,6 @@ var userMenus = undefined;
 
 var user = {};
 
-var listUrl;
 
 var commonListOptions = {
 		schema : {

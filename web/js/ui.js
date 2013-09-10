@@ -198,10 +198,6 @@ function loadPage(page, parameters, popupDiv) {
 		}else{
 			$("#main_right").html("");
 		}
-		$.ajaxSetup({
-			cache : true
-		// 关闭AJAX相应的缓存
-		});
 		$.ajax({
 			url : url,
 			success : function(data) {
