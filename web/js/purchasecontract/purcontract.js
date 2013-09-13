@@ -81,12 +81,12 @@ function editCon() {
 	var row = getSelectedRowDataByGrid("grid");
 
 	if (row) {
-		if (row.status == "草稿" || row.status == "已拒绝") {
+		if (row.status == "草稿" || row.status == "审批拒绝") {
 			loadPage("purchasecontract_purchasecontractedit", {
 				_id : row._id
 			});
 		} else {
-			alert("不允许编辑");
+			alert("只允许编辑草稿和审批决绝的采购合同");
 		} 
 
 	}

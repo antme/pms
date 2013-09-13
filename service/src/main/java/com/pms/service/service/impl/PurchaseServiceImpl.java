@@ -469,6 +469,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         for (Map<String, Object> allotEq : allotEqList) {
             for (Map<String, Object> backEq : eqList) {
                 if (allotEq.get(ApiConstants.MONGO_ID).toString().equals(backEq.get(ApiConstants.MONGO_ID).toString())) {
+                	//先覆盖调拨的
+                	backEq.putAll(allotEq);
                 	allotEq.putAll(backEq);
                     break;
                 }

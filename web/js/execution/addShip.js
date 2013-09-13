@@ -442,7 +442,7 @@ function loadEqList(data){
 	}
 }
 
-function saveShip() {
+function saveShip(needCheck) {
 	var validator = $("#addShip").kendoValidator().data("kendoValidator");
 	if (!validator.validate()) {
 		alert("验证不通过，请检查表单");
@@ -464,7 +464,7 @@ function saveShip() {
 			
 			for(i=0; i< data.length; i++){
 				allShipDataSource.add(data[i]);				
-				if(data[i].leftAmount <  data[i].eqcostShipAmount){
+				if(data[i].leftAmount <  data[i].eqcostShipAmount && needCheck){
 					alert("请检查设备可发货数量");
 					return;
 				}
@@ -501,7 +501,7 @@ function submitShip(){
 		redirectParams = {};
 	}
 	redirectParams.type = "submit";
-	saveShip();
+	saveShip(true);
 }
 
 function cancle() {
