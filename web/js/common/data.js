@@ -72,28 +72,28 @@ var menus = [
                  text: "项目执行", id: "projectex", expanded : true, imageUrl: "/images/ccontract.png",
                  items: [
                          { text: "备货申请", id: "purchaseback_purchaseBack", imageUrl: "/images/order.png" },
-                         { text: "备货拆分", id: "purchaseback_purchaseAllot",imageUrl: "/images/order.png" },
-                         { text: "调拨申请", id: "purchaseback_purchaseAllotManage", imageUrl: "/images/allocate.png" },
-                         { text: "采购申请", id: "purchasecontract_purchaseRequest", imageUrl: "/images/purchase.png"},
-                         { text: "开票申请", id: "finance_payInvoice", imageUrl: "/images/involce.png" },
-                         { text: "发货申请", id: "execution_ship", imageUrl: "/images/borrowing.png"},
+                         { text: "备货拆分", id: "purchaseback_purchaseAllot",imageUrl: "/images/screw-driver.png" },
+                         { text: "调拨申请", id: "purchaseback_purchaseAllotManage", imageUrl: "/images/shop.png" },
+                         { text: "采购申请", id: "purchasecontract_purchaseRequest", imageUrl: "/images/shopping_cart.png"},
+                         { text: "开票申请", id: "finance_payInvoice", imageUrl: "/images/ticket.png" },
+                         { text: "发货申请", id: "execution_ship", imageUrl: "/images/shipping.png"},
                          { text: "发货合计", id: "execution_shipCount", imageUrl: "/images/borrowing.png"},
                          { text: "借货申请", id: "execution_borrowing", imageUrl: "/images/sign_in.png"},
                          { text: "还货申请", id: "execution_return", imageUrl: "/images/sign_out.png"}
                      ]
              },
              {
-                 text: "销售合同",  id: "salescontract_scList", imageUrl: "/images/user.png"
+                 text: "销售合同",  id: "salescontract_scList", imageUrl: "/images/target.png"
              },
              
 
              {
 	             text : "采购合同", id : "purchasecontract", expanded : true, imageUrl : "/images/contract.png",
                  items: [
-                     { text: "采购申请", id: "purchasecontract_purchaseRequestApprove", imageUrl: "/images/purchase.png"},
+                     { text: "采购申请", id: "purchasecontract_purchaseRequestApprove", imageUrl: "/images/shopping_cart.png"},
                      { text: "采购订单", id: "purchasecontract_purchaseOrder",  imageUrl: "/images/porder.png"},
                      { text: "采购合同", id: "purchasecontract_purchasecontract", imageUrl: "/images/order.png" },
-                     { text: "入库申请单", id: "repository_repository", imageUrl: "/images/repository.png" },
+                     { text: "入库申请单", id: "repository_repository", imageUrl: "/images/heineken.png" },
                      { text: "到货通知", id: "execution_arrivalNotice", imageUrl: "/images/repository.png" },
                      { text: "直发出入库", id: "repository_repositoryout", imageUrl: "/images/rout.png"}
                  ]
@@ -101,7 +101,7 @@ var menus = [
              {
                  text: "财务",  id: "finance",  expanded : true, imageUrl: "/images/finance.png",
                  items: [
-                         { text: "开票信息", id: "finance_payInvoice", imageUrl: "/images/calender.png" },
+                         { text: "开票信息", id: "finance_payInvoice", imageUrl: "/images/ticket.png" },
                          { text: "收款信息", id: "finance_gotMoneyList", imageUrl: "/images/invoice.png"},
                          { text: "付款信息", id: "finance_payMoney", imageUrl: "/images/license.png"},
                          { text: "收票信息", id: "finance_getInvoice", imageUrl: "/images/milestone.png"}
@@ -109,18 +109,18 @@ var menus = [
              },
                                  
              {
-                 text: "基础信息",  id: "system", expanded : true, imageUrl: "/images/user.png",
+                 text: "基础信息",  id: "system", expanded : true, imageUrl: "/images/address.png",
                  	items: [
                              { text: "客户", id: "customer_customer", imageUrl: "/images/toy.png" },
                              { text: "供应商", id: "supplier_supplier", imageUrl: "/images/ccontract.png" },
-                             { text: "数据导入", id: "import_historyDataImport", imageUrl: "/images/ccontract.png" }
+                             { text: "数据导入", id: "import_historyDataImport", imageUrl: "/images/drive-32.png" }
                          ]
              } , {
                  text: "权限管理", id: "user", expanded: true, imageUrl: "/images/friends_group.png",
                  items: [
-                         { text: "用户管理", id: "user_userman", imageUrl: "/images/toy.png" },
-                         { text: "角色管理", id: "user_group", imageUrl: "/images/ccontract.png" },
-                         { text: "菜单管理", id: "user_menu", imageUrl: "/images/ccontract.png" }
+                         { text: "用户管理", id: "user_userman", imageUrl: "/images/user.png" },
+                         { text: "角色管理", id: "user_group", imageUrl: "/images/12xingzuo_11.png" },
+                         { text: "菜单管理", id: "user_menu", imageUrl: "/images/designs.png" }
                      ]
              }
   ];
