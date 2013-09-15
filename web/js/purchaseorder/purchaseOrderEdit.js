@@ -110,6 +110,7 @@ var itemDataSource = new kendo.data.DataSource({
 			}
 		}
 	},
+	group: { field: "总数", aggregates: [{ field: "总数", aggregate: "count" }]},
 	batch : true,
 	schema : {
 		model : orderModel
@@ -228,7 +229,12 @@ function edit(data) {
 				.kendoGrid(
 						{
 							dataSource : itemDataSource,
-							columns : [ {
+							columns : [  {
+								field : "总数",
+								title : "总数",
+								hidden: true,
+								groupHeaderTemplate: "(总数: #= count#)", 
+							}, {
 								field : "eqcostNo",
 								title : "序号"
 							}, {
