@@ -590,6 +590,7 @@ function edit(data) {
 			$(".approve").show();
 			$("#approve-comment").show();
 		}else{
+			$("#approve-comment").hide();
 			$(".approve").hide();
 			$(".save").show();
 		}
