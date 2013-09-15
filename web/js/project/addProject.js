@@ -176,7 +176,10 @@ function saveProject(){
     		saveProjectInAddSC(pModel.toJSON());
 		}else{
 			var proType = pModel.projectType;
-			var proAbbr = pModel.projectAbbr.trim();
+			var proAbbr = null;
+			if(pModel.projectAbbr){
+				proAbbr = pModel.projectAbbr.trim();
+			}
 			if ("工程"==proType && (proAbbr==null || proAbbr.length==0)){
 				alert("工程类项目缩写不能为空！");
 				return;
