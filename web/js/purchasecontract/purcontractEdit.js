@@ -380,6 +380,7 @@ function addOrderInSCListForRuodian(){
 
 			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
+			sortable : true,
 			scrollable : true
 		});
 	};//成本设备清单

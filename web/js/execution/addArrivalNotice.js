@@ -202,6 +202,7 @@ function edit(data) {
 
 							editable : true,
 							scrollable : true,
+							sortable : true,
 							width : "950px",
 							save : function(e) {
 								if (e.values.eqcostArrivalAmount > e.model.orderRequestCount) {

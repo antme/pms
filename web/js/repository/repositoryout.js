@@ -34,6 +34,7 @@ $(document).ready(function() {
 		$("#grid").kendoGrid({
 			dataSource : listDataSource,
 			pageable : true,
+			sortable : true,
 			selectable : "row",
 			width : "1000px",
 			columns : [ {

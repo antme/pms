@@ -70,7 +70,8 @@ function edit(data){
 				title : "修改时间"
 			
 			} ],
-			scrollable : true
+			scrollable : true,
+			sortable : true
 		});
 	}
 	

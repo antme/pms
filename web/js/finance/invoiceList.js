@@ -91,7 +91,8 @@ $(document).ready(function() {
 				field : "scInvoiceDate",
 				title : "开票日期"
 			}],
-			scrollable : true
+			scrollable : true,
+			sortable : true
 		});
 	}
 });

@@ -155,6 +155,7 @@ $(document).ready(function() {
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	    editable: true,
 	    groupable : true,
+	    sortable : true,
 	    save : function(e){
 	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
 				alert("最多可以申请" + e.model.leftAmount);
@@ -187,6 +188,7 @@ $(document).ready(function() {
 	        { field: "eqcostMemo", title: "备注" },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	    editable: true,
+	    sortable : true,
 	    save : function(e){
 	    	if(e.values.actureAmount && model.status!="已批准"){
 				alert("实际发货数只能在发货审批后填写");

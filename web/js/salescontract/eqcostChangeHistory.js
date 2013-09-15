@@ -156,7 +156,8 @@ function edit(data){
 				field : "eqcostMemo",
 				title : "备注"
 			} ],
-			scrollable : true
+			scrollable : true,
+			sortable : true
 		});
 	}//成本设备清单历史
 	
@@ -216,7 +217,8 @@ function edit(data){
 				field : "eqcostMemo",
 				title : "备注"
 				} ],
-			scrollable : true
+			scrollable : true,
+			sortable : true
 		});
 	}//最新成本设备清单
 }

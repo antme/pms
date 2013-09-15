@@ -21,6 +21,7 @@ $(document).ready(function () {
         dataSource: dataSource,
         height: "450px",
 		selectable : "row",
+		sortable : true,
         columns: [
             { field: "shipCountDate", title:"统计月份" },
             { field: "shipType", title:"虚拟采购类型" },

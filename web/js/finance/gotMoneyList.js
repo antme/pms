@@ -71,6 +71,7 @@ $(document).ready(function() {
 		$("#gotMoneyGrid").kendoGrid({
 			dataSource : gotMoneyDataSource,
 			editable : "popup",
+			sortable : true,
 			pageable : {
 				buttonCount:5,
 				//input:true,

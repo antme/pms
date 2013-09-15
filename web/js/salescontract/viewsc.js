@@ -391,7 +391,7 @@ function edit(data){
 				footerTemplate: "总数: #=count#"
 			} ],
 			scrollable : true,
-			sortable : true,
+			sortable : true
 		});
 	}//成本设备清单_old
 

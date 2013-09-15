@@ -44,6 +44,7 @@ $(document).ready(function () {
 			{ field: "itemMoney", title: "金额",footerTemplate: "总共: #=sum#" }
 	  	],	 
 	  	editable:true,
+	  	sortable : true,
 	  	toolbar: [{text:"新增条目",name:"create"},{text:"计算",name:"save"}]
 	});
 

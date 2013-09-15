@@ -261,7 +261,8 @@ $(document).ready(function() {
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostMemo", title: "备注" },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
-	    editable: true
+	    editable: true,
+	    sortable : true
 	}).data("kendoGrid");
     
 	if(popupParams){
