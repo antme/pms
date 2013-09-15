@@ -120,13 +120,16 @@ function addPOBumber(){
 				height : 200,
 				actions : [ "Maximize", "Close" ]
 			};
-			$("#ponum").kendoWindow({
-				width : options.width,
-				height : options.height,
-				title : options.title
-			});
-
 			kendoWindow = $("#ponum").data("kendoWindow");
+
+			if(!kendoWindow){
+				$("#ponum").kendoWindow({
+					width : options.width,
+					height : options.height,
+					title : options.title
+				});
+			}
+
 			kendoWindow.open();
 			kendoWindow.center();
 			rowId = row._id;
@@ -152,6 +155,8 @@ function submitPo() {
 
 			var kendoWindow = $("#ponum").data("kendoWindow");
 			kendoWindow.close();
+			$("#poNumber").val("");
+			listDataSource.read();
 		});
 
 	}
