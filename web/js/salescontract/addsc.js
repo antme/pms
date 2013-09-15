@@ -410,7 +410,7 @@ $(document).ready(function() {
 					}
 					scm.set("estimateEqCost0",estimateEqCost0);
 		        	scm.set("estimateEqCost1",estimateEqCost1);
-					moneyOnChange();
+					moneyOnChange_ADD();
 					
 					excuSave = true;
 				}
@@ -436,7 +436,7 @@ $(document).ready(function() {
 			}
         	scm.set("estimateEqCost0",estimateEqCost0);
         	scm.set("estimateEqCost1",estimateEqCost1);
-        	moneyOnChange();
+        	moneyOnChange_ADD();
         }
     });	
 	
@@ -447,9 +447,9 @@ $(document).ready(function() {
 		$(".projectId").hide();
 
 		if(redirectParams._id){
-			postAjaxRequest("/service/sc/get", redirectParams, editDraftSc);
+			postAjaxRequest("/service/sc/get", redirectParams, editDraftSc_ADD);
 		}else{
-			editDraftSc();
+			editDraftSc_ADD();
 		}
 		
 		
@@ -461,7 +461,7 @@ $(document).ready(function() {
 	
 });//end dom ready	
 
-function editDraftSc(data){
+function editDraftSc_ADD(data){
 	$("#projectCode").attr("disabled", true);
 	var tabStrip = $("#tabstrip").data("kendoTabStrip");
 	if(!tabStrip){
@@ -517,7 +517,7 @@ function editDraftSc(data){
 }
 
 
-function saveSCDraft(){
+function saveSCDraft_ADD(){
 	if(scm.get("status") == "已提交"){
 		alert("已提交的销售合同不能保存为草稿");
 	}else{		
@@ -559,7 +559,7 @@ function saveSCDraft(){
 	}
     
 }
-function saveSC(){
+function saveSC_ADD(){
 	
 	var validator = $(".addSalesContract").kendoValidator().data("kendoValidator");
 	var validatestatus = $("#validate-status");
@@ -734,7 +734,7 @@ function addAProject(){
 	openRemotePageWindow(options, "project_addProject", {scAddProject:1});
 }
 
-function moneyOnChange(){
+function moneyOnChange_ADD(){
 	var equipmentAmount = 0;
 	if (scm.equipmentAmount) {
 		equipmentAmount = scm.equipmentAmount;

@@ -20,8 +20,8 @@
 	
 	<div id="addSalesContract" class="k-content test">
 		<div>
-			<button class="k-button"  onclick="saveSCDraft();">草稿</button>
-			<button class="k-button"  onclick="saveSC();">保存</button>
+			<button class="k-button"  onclick="saveSCDraft_ADD();">草稿</button>
+			<button class="k-button"  onclick="saveSC_ADD();">保存</button>
 			<button class="k-button"  onclick='loadPage("salescontract_scList");'>取消</button>
 		</div>
 		
@@ -194,14 +194,14 @@
 							<label for="equipmentAmount">设备金额</label>
 						</div>
 						<div data-container-for="equipmentAmount" class="k-edit-field ">
-							<input type="number" min="0" name="equipmentAmount" id="equipmentAmount" data-bind="value: equipmentAmount" onchange="moneyOnChange();" required="required">
+							<input type="number" min="0" name="equipmentAmount" id="equipmentAmount" data-bind="value: equipmentAmount" onchange="moneyOnChange_ADD();" required="required">
 						</div>
 						
 	                    <div class="k-edit-label ">
 							<label for="serviceAmount">服务金额</label>
 						</div>
 						<div data-container-for="serviceAmount" class="k-edit-field ">
-							<input type="number" min="0" name="serviceAmount" id="serviceAmount" onchange="moneyOnChange();"
+							<input type="number" min="0" name="serviceAmount" id="serviceAmount" onchange="moneyOnChange_ADD();"
 								required="required" data-bind="value: serviceAmount">
 						</div>
 						
@@ -209,7 +209,7 @@
 							<label for="estimateEqCost0">预估设备成本（增）</label>
 						</div>
 						<div data-container-for="estimateEqCost0" class="k-edit-field ">
-							<input type="number" min="0" name="estimateEqCost0" id="estimateEqCost0" onchange="moneyOnChange();"
+							<input type="number" min="0" name="estimateEqCost0" id="estimateEqCost0" onchange="moneyOnChange_ADD();"
 								 data-bind="value: estimateEqCost0">
 						</div>
 						
@@ -217,7 +217,7 @@
 							<label for="estimateEqCost1">预估设备成本（非增）</label>
 						</div>
 						<div data-container-for="estimateEqCost1" class="k-edit-field ">
-							<input type="text" name="estimateEqCost1" id="estimateEqCost1" onchange="moneyOnChange();"
+							<input type="text" name="estimateEqCost1" id="estimateEqCost1" onchange="moneyOnChange_ADD();"
 								 data-bind="value: estimateEqCost1">
 						</div>
 						
@@ -225,7 +225,7 @@
 							<label for="estimateSubCost">预估分包成本</label>
 						</div>
 						<div data-container-for="estimateSubCost" class="k-edit-field ">
-							<input type="text" name="estimateSubCost" id="estimateSubCost" onchange="moneyOnChange();"
+							<input type="text" name="estimateSubCost" id="estimateSubCost" onchange="moneyOnChange_ADD();"
 								 data-bind="value: estimateSubCost">
 						</div>
 						
@@ -233,7 +233,7 @@
 							<label for="estimatePMCost">预估项目管理成本</label>
 						</div>
 						<div data-container-for="estimatePMCost" class="k-edit-field ">
-							<input type="text" name="estimatePMCost" id="estimatePMCost" onchange="moneyOnChange();"
+							<input type="text" name="estimatePMCost" id="estimatePMCost" onchange="moneyOnChange_ADD();"
 								 data-bind="value: estimatePMCost">
 						</div>
 						
@@ -241,7 +241,7 @@
 							<label for="estimateDeepDesignCost">预估深化设计成本</label>
 						</div>
 						<div data-container-for="estimateDeepDesignCost" class="k-edit-field ">
-							<input type="text" name="estimateDeepDesignCost" id="estimateDeepDesignCost" onchange="moneyOnChange();"
+							<input type="text" name="estimateDeepDesignCost" id="estimateDeepDesignCost" onchange="moneyOnChange_ADD();"
 								 data-bind="value: estimateDeepDesignCost">
 						</div>
 						
@@ -249,7 +249,7 @@
 							<label for="estimateDebugCost">预估调试费</label>
 						</div>
 						<div data-container-for="estimateDebugCost" class="k-edit-field ">
-							<input type="text" name="estimateDebugCost" id="estimateDebugCost" onchange="moneyOnChange();"
+							<input type="text" name="estimateDebugCost" id="estimateDebugCost" onchange="moneyOnChange_ADD();"
 								 data-bind="value: estimateDebugCost">
 						</div>
 						
@@ -257,7 +257,7 @@
 							<label for="estimateOtherCost">预估其他成本</label>
 						</div>
 						<div data-container-for="estimateOtherCost" class="k-edit-field ">
-							<input type="text" name="estimateOtherCost" id="estimateOtherCost" onchange="moneyOnChange();"
+							<input type="text" name="estimateOtherCost" id="estimateOtherCost" onchange="moneyOnChange_ADD();"
 								 data-bind="value: estimateOtherCost">
 						</div>
 						
@@ -265,7 +265,7 @@
 							<label for="estimateTax">预估税收</label>
 						</div>
 						<div data-container-for="estimateTax" class="k-edit-field ">
-							<input type="text" name="estimateTax" id="estimateTax" onchange="moneyOnChange();"
+							<input type="text" name="estimateTax" id="estimateTax" onchange="moneyOnChange_ADD();"
 							data-bind="value: estimateTax">
 						</div>
 						
