@@ -128,6 +128,7 @@ function addPOBumber(){
 					height : options.height,
 					title : options.title
 				});
+				kendoWindow = $("#ponum").data("kendoWindow");
 			}
 
 			kendoWindow.open();
