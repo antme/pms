@@ -455,7 +455,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	
 	public Map<String,Object> getBaseInfoByIds(List<String> ids){
 		String[] keys = new String[]{SalesContractBean.SC_CODE,SalesContractBean.SC_AMOUNT, SalesContractBean.SC_PROJECT_ID,
-				SalesContractBean.SC_CUSTOMER_ID,SalesContractBean.SC_CUSTOMER,SalesContractBean.SC_BACK_REQUEST_COUNT,SalesContractBean.SC_INVOICE_TYPE};
+				SalesContractBean.SC_CUSTOMER_ID,SalesContractBean.SC_CUSTOMER,SalesContractBean.SC_BACK_REQUEST_COUNT,SalesContractBean.SC_INVOICE_TYPE, SalesContractBean.SC_ESTIMATE_EQ_COST0,
+				SalesContractBean.SC_ESTIMATE_EQ_COST1};
 		Map<String,Object> query = new HashMap<String,Object>();
 		query.put(ApiConstants.LIMIT_KEYS, keys);
 		query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, ids));
@@ -464,6 +465,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
 		Map<String,Object> data = new HashMap<String,Object>();
 		for(Map<String,Object> obj : list){
+		    obj.put("estimateTotal", ApiUtil.getDouble(obj, SalesContractBean.SC_ESTIMATE_EQ_COST0, 0) + ApiUtil.getDouble(obj, SalesContractBean.SC_ESTIMATE_EQ_COST1, 0));
 			data.put((String)obj.get(ApiConstants.MONGO_ID), obj);
 			obj.remove(ApiConstants.MONGO_ID);
 		}
