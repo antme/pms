@@ -85,7 +85,7 @@ var eqCostListDataSource = new kendo.data.DataSource({
             	eqcostAmount: { type: "number" },
             	eqcostUnit: { type: "string" },
             	eqcostBrand: { type: "string" },
-            	eqcostBasePrice: { type: "number" },
+            	eqcostBasePrice: { type: "number"},
             	eqcostSalesBasePrice: { type: "number" },
             	eqcostDiscountRate : {type: "number"},
             	eqcostMemo: { type: "string" },
@@ -330,10 +330,16 @@ $(document).ready(function() {
 			}, 
 			{
 				field : "eqcostBasePrice",
-				title : "标准成本价"
+				title : "标准成本价",			
+				template : function(dataItem){
+					return dataItem.eqcostBasePrice.toFixed(2);
+				}
 			}, {
 				field : "eqcostSalesBasePrice",
-				title : "销售单价"
+				title : "销售单价",	
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostSalesBasePrice);
+				}
 			}, {
 				field : "eqcostDiscountRate",
 				title : "折扣率 %"
@@ -342,13 +348,19 @@ $(document).ready(function() {
 				title : "最终成本价",
 //				format: "{0:n}",
 				groupFooterTemplate: "合计：", 
-				footerTemplate: "总计："
+				footerTemplate: "总计：",			
+				template : function(dataItem){
+					return dataItem.eqcostLastBasePrice.toFixed(2);
+				}
 			}, {
 				field : "eqcostTotalAmount",
 				title : "小计",
 //				format: "{0:n}",
-				groupFooterTemplate: "#= sum#", 
-				footerTemplate: "#=sum#"
+				groupFooterTemplate: "#= sum.toFixed(2)#", 
+				footerTemplate: "#=sum.toFixed(2)#",			
+				template : function(dataItem){
+					return dataItem.eqcostTotalAmount.toFixed(2);
+				}
 			}, {
 				field : "eqcostTaxType",
 				title : "税收类型"
