@@ -63,10 +63,15 @@ $(document).ready(function() {
 		$("#purchaseContractType").attr("disabled", true);
 		
 	}else{
+		$("#approve-comment").hide();
 		$("#save-button").show();
 		$("#submit-button").show();
 		$("#approve-button").hide();
 		$("#reject-button").hide();
+	}
+	
+	if(popupParams){
+		$("#approve-comment").show();
 	}
 
 	$("#purchaseContractType").kendoDropDownList({
