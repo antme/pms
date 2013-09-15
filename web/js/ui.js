@@ -81,6 +81,16 @@ function init(u){
 		openRemotePageWindow(options, "user_changePassword", {_id:user._id});
 	});
 	
+	//连接点击区域扩大
+	$(".k-in").click(function(e){
+		if(e.target && e.target.className && e.target.className =="k-image"){
+			if(e.target.nextElementSibling){
+				e.target.nextElementSibling.click();
+			}
+		}
+
+	});
+	
 }
 
 function removeTreeItems(items, parent) {

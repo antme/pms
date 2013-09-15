@@ -65,6 +65,26 @@ var dataSource = new kendo.data.DataSource({
 });
 $(document).ready(function() {
 
+	$("#group-role-select").kendoMultiSelect({
+		dataTextField : "description",
+		dataValueField : "_id",
+		placeholder : "选择权限...",
+		dataSource : {
+			transport : {
+				read : {
+					dataType : "jsonp",
+					url : "/service/user/role/list"
+				}
+			},
+			schema : {
+				total: "total", // total is returned in the "total" field of the response
+				data: "data"
+			}
+		},
+		height : 300
+	});
+
+	
 	$("#group-grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
@@ -116,25 +136,6 @@ $(document).ready(function() {
 
 		dataSource.sync();
 
-	});
-
-	$("#group-role-select").kendoMultiSelect({
-		dataTextField : "description",
-		dataValueField : "_id",
-		placeholder : "选择权限...",
-		dataSource : {
-			transport : {
-				read : {
-					dataType : "jsonp",
-					url : "/service/user/role/list"
-				}
-			},
-			schema : {
-				total: "total", // total is returned in the "total" field of the response
-				data: "data"
-			}
-		},
-		height : 300
 	});
 
 	$("#group-role").hide();
