@@ -361,12 +361,6 @@ function addOrderInSCListForRuodian(){
 				field : "eqcostBasePrice",
 				title : "标准成本价"
 			}, {
-				field : "eqcostSalesBasePrice",
-				title : "销售单价"
-			}, {
-				field : "eqcostDiscountRate",
-				title : "折扣率"
-			}, {
 				field : "eqcostLastBasePrice",
 				title : "最终成本价"
 			}, {
@@ -665,15 +659,13 @@ function edit(data) {
 				field : "eqcostUnit",
 				title : "单位"
 			}, 					
-			{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
-			{ field: "eqcostDiscountRate",title : "折扣率"},
 			{ field: "eqcostLastBasePrice",title : "最终成本价"},
 			{
 				field : "eqcostApplyAmount",
 				title : "订单数量"
 			}, {
 				field : "eqcostProductUnitPrice",
-				title : "单价"
+				title : "成本单价"
 			}, {
 				field : "requestedTotalMoney",
 				title : "总价"

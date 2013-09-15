@@ -1,34 +1,39 @@
 var validator;
 $(document).ready(function() {
-	validator = $("#form-login").kendoValidator().data("kendoValidator");
-
-	$("#login-button").click(function() {
-		login();
-	});
-
-	$("#logout-button").click(function() {
-		$.ajax({
-			url : "../service/user/logout",
-			success : function(responsetxt) {
-				window.location = "index.html";
-			}
+	var userAgent = window.navigator.userAgent.toLowerCase();	
+	if (userAgent.indexOf("msie 7.0")>0 || userAgent.indexOf("msie 6.0")>0) {
+		$("#error").html("请采用IE8及以上的IE浏览器或则chrome【推荐】, firefox, safari等浏览器");
+	}else{
+		validator = $("#form-login").kendoValidator().data("kendoValidator");
+	
+		$("#login-button").click(function() {
+			login();
 		});
-
-	});
 	
-	$("#userName").focus();
-	$("#userName").keypress(function(event) {
-		if(event.charCode == 13){
-			login();
-		}
-		  
-	});
+		$("#logout-button").click(function() {
+			$.ajax({
+				url : "../service/user/logout",
+				success : function(responsetxt) {
+					window.location = "index.html";
+				}
+			});
 	
-	$("#password").keypress(function(event) {		
-		if(event.charCode == 13){
-			login();
-		}		  
-	});
+		});
+		
+		$("#userName").focus();
+		$("#userName").keypress(function(event) {
+			if(event.charCode == 13){
+				login();
+			}
+			  
+		});
+		
+		$("#password").keypress(function(event) {		
+			if(event.charCode == 13){
+				login();
+			}		  
+		});
+	}
 	
 });
 

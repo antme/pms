@@ -127,10 +127,8 @@ $(document).ready(function () {
 			{ field: "eqcostLeftAmount", title: "合同下剩余可备货数量"},
 			{ field: "eqcostRealAmount", title: "成本中总数"},
 			{ field: "eqcostBasePrice", title: "标准成本价" },
-			{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
-			{ field: "eqcostDiscountRate",title : "折扣率"},
 			{ field: "eqcostLastBasePrice",title : "最终成本价"},
-			{ field: "eqcostCategory", title: "类别",groupHeaderTemplate: kendo.template($("#headerTemplate").html())},
+			{ field: "eqcostCategory", hidden: true, title: "类别",groupHeaderTemplate: kendo.template($("#headerTemplate").html())},
 			{ field: "pbComment", title: "备注" }
 	  	],
 	  	sortable : true,

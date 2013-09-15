@@ -118,8 +118,6 @@ $(document).ready(function () {
 			{ field: "paCount", title: "本次申请数量",width:"90px"},
 			{ field: "pbTotalCount", title: "备货数量"},
 			{ field: "eqcostBasePrice", title: "标准成本价" },
-			{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
-			{ field: "eqcostDiscountRate",title : "折扣率"},
 			{ field: "eqcostLastBasePrice",title : "最终成本价",attributes: { "style": "color:red"},
 				template :  function(dataItem) {
 					if(!dataItem.eqcostLastBasePrice){
@@ -128,7 +126,6 @@ $(document).ready(function () {
 					return dataItem.eqcostLastBasePrice;
 				}
 			},
-			{ field: "eqcostCategory", title: "类别" },
 			{ field: "eqcostProductType", title: "规格型号" }
 	  	],
 	  	sortable : true,

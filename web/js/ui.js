@@ -1,7 +1,6 @@
 
 $(document).ready(function() {
-
-	if (navigator.userAgent.indexOf("MSIE")>0) {
+	if (navigator.userAgent.indexOf("MSIE")>0 || navigator.userAgent.indexOf("msie")>0) {
 		document.onkeydown = function() {
 			if (event.keyCode == 116) {
 				event.keyCode = 0;
@@ -465,6 +464,8 @@ function openRemotePageWindow(options, targetPage, parameter) {
 		});
 		kendoWindow = window.data("kendoWindow");
 		kendoWindow.center();
+		kendoWindow.center();
+
 	} else {
 		kendoWindow.setOptions(options);
 		kendoWindow.open();

@@ -244,13 +244,9 @@ function edit(data) {
 								field : "eqcostUnit",
 								title : "单位"
 							}, {
-								field : "eqcostRealAmount",
-								title : "合同中总数"
-							}, {
 								field : "eqcostBasePrice",
 								title : "成本单价"
 							}, 					
-							{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
 							{ field: "eqcostDiscountRate",title : "折扣率"},
 							{ field: "eqcostLastBasePrice",title : "最终成本价"},
 							{

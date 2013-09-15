@@ -248,7 +248,6 @@ function edit(data) {
 								field : "eqcostBasePrice",
 								title : "标准成本单价"
 							}, 
-							{ field: "eqcostSalesBasePrice", title : "销售单价"}, 
 							{ field: "eqcostDiscountRate",title : "折扣率"},
 							{ field: "eqcostLastBasePrice",title : "最终成本价"}, {
 								field : "eqcostApplyAmount",
@@ -259,7 +258,6 @@ function edit(data) {
 							},
 							{ field: "pbLeftCount", title: "可申请数量"},
 
-							{ field: "eqcostCategory", title: "类别"},
 							{
 								field : "pbComment",
 								title : "备注"
