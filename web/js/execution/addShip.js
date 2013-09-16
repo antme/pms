@@ -358,13 +358,19 @@ function loadEqList(data){
 				if(eqList[i].eqcostDeliveryType == "直发现场"){
 					eqList[i].repositoryName="";
 					supplierlist.push(eqList[i]);
-				}else if(eqList[i].purchaseContractType == "上海代理产品" || eqList[i].purchaseContractType == "上海其他"){
-					eqList[i].repositoryName="上海—上海泰德库";
-					rKlist.push(eqList[i]);
 				}else{
-					eqList[i].repositoryName="上海—北京泰德库";
-					rKlist.push(eqList[i]);
-				}
+					if(!eqList[i].repositoryName){					
+						if(eqList[i].purchaseContractType == "上海代理产品" || eqList[i].purchaseContractType == "上海其他"){
+							eqList[i].repositoryName="上海—上海泰德库";
+							rKlist.push(eqList[i]);
+						}else{
+							eqList[i].repositoryName="上海—北京泰德库";
+							rKlist.push(eqList[i]);
+						}					
+					}else{
+						rKlist.push(eqList[i]);
+					}
+				} 
 			}
 			
 		}
