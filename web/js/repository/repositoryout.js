@@ -74,27 +74,34 @@ $(document).ready(function() {
 });
 
 
-function add(){
+function addReout(){
 	loadPage("repository_repositoryOutEdit", {
 		type : "out"
 	});
 }
 
-function editRepo() {
+function editRepoOut() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
-	loadPage("repository_repositoryOutEdit", {
-		_id : row._id,
-		type : "out"
-	});
+	if (row) {
+		if(row.status == "已提交"){
+			loadPage("repository_repositoryOutEdit", {
+				_id : row._id,
+				type : "out"
+			});
+		}else{
+			alert("不允许修改");
+		}
+	}
+	
 }
 
-function confirmRepository(){
+function confirmRepositoryOut(){
 	
 	
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "已入库"){
+		if(row.status == "已入/出库"){
 			alert("此申请已入库，不需要再次入库");
 		}else{
 			confirmEntity = new confirmModel(row);

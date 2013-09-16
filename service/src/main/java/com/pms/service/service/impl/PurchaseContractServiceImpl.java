@@ -322,7 +322,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         requery.put("type", params.get("type"));
         requery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[]{PurchaseCommonBean.STATUS_DRAFT, PurchaseCommonBean.STATUS_CANCELLED}));        
         Map<String, Integer> repostoryTotalCountMap = countEqByKey(requery, DBBean.REPOSITORY, "eqcostApplyAmount", null);
-        
+        if(repostoryTotalCountMap == null){
+            repostoryTotalCountMap = new HashMap<String, Integer>();
+        }
         List<Map<String, Object>> eqBackMapList = null;
         
         if(loadedEqclist!=null){
@@ -340,12 +342,15 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             Object id = eqMap.get(ApiConstants.MONGO_ID);
             if (!eqIds.contains(id.toString())) {
                 
-                if (repostoryTotalCountMap.get(id) != null) {
+                if (repostoryTotalCountMap.get(id) != null && totalCountMap.get(id)!=null) {
                     eqMap.put("leftCount", totalCountMap.get(id) - repostoryTotalCountMap.get(id));
                     if(!loadExists){
                         eqMap.put("eqcostApplyAmount", totalCountMap.get(id) - repostoryTotalCountMap.get(id));
                     }
                 } else {
+                    if(totalCountMap.get(id) == null){
+                        totalCountMap.put(id.toString(), 0);
+                    }
                     eqMap.put("leftCount", totalCountMap.get(id));
                     if(!loadExists){
                         eqMap.put("eqcostApplyAmount", totalCountMap.get(id));

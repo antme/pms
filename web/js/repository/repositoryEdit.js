@@ -12,6 +12,93 @@ if(redirectParams && redirectParams.type == "out"){
 	listEqUrl = "/service/purcontract/get/byproject_supplier?type=out";
 }
 
+var commonFileds = {
+		eqcostAvailableAmount : {
+			type : "number"
+		},
+		pbPlanDate:{type:"date"},
+		pbDepartment:{
+			
+		},
+		eqcostApplyAmount : {
+			validation : {
+				min : 0
+			},
+			type : "number"
+		},
+		eqcostBasePrice : {
+			type : "number",
+			editable : false
+		},
+		eqcostRealAmount : {
+			editable : false,
+			type : "number"
+		},
+		eqcostProductUnitPrice : {
+			type : "number"
+		},
+		requestedTotalMoney : {
+			editable : false
+		},
+		eqcostContractTotalMoney : {
+			type : "number",
+			editable : false
+		},
+		eqcostSalesBasePrice : {
+			editable : false
+		},
+		eqcostDiscountRate : {
+			editable : false
+		},
+		eqcostLastBasePrice : {
+			editable : false
+		},
+		eqcostProductName : {
+			editable : false
+		},
+		eqcostNo : {
+			editable : false
+		},
+		eqcostMaterialCode : {
+			editable : false
+		},
+		eqcostProductType : {
+			editable : false
+		},
+		eqcostAvailableAmount : {
+			editable : false
+		},
+		eqcostUnit : {
+			editable : false
+		},
+		pbTotalCount :{
+			editable : false
+		},
+		pbLeftCount : {
+			editable : false
+		},
+		orderEqcostName : {
+
+		},
+		eqcostDeliveryType: {
+			defaultValue : "入公司库"
+		},
+		
+		orderEqcostModel : {
+
+		},
+		eqcostProductUnitPrice : {
+			validation : {
+				min : 0
+			},
+			type : "number"
+
+		},
+		comment : {
+
+		},
+		eqcostList: {}
+	};
 var model = kendo.data.Model.define({
 	id : "_id",
 	fields : {
@@ -218,7 +305,12 @@ function saveRepos(status) {
 }
 
 function confirmRepository(){
-
+	if(projectId){
+		requestDataItem.projectId = projectId;		
+	}
+	if(supplierId){
+		requestDataItem.supplier = supplierId;	
+	}
 	postAjaxRequest("/service/purcontract/repository/approve", {models:kendo.stringify(requestDataItem)}, checkStatus);
 }
 
