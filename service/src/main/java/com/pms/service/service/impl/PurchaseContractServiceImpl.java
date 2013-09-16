@@ -408,6 +408,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Object eqList = contract.get(SalesContractBean.SC_EQ_LIST);
 
         List<Map<String, Object>> list = (List<Map<String, Object>>) eqList;
+        updateEqListWithProjectId(list);
+        
+        //FIXME why?
+        if(contract.get(FROM)==null){            
+            contract.put(SalesContractBean.SC_EQ_LIST, eqList);         
+        }
+
+        return updatePurchase(contract, DBBean.PURCHASE_CONTRACT);
+    }
+
+    private void updateEqListWithProjectId(List<Map<String, Object>> list) {
         Map<String, Object> scProjectMap = new HashMap<String, Object>();
             
         for (Map<String, Object> contractEq : list) {
@@ -426,13 +437,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 }
             }
         }
-        
-        //FIXME why?
-        if(contract.get(FROM)==null){            
-            contract.put(SalesContractBean.SC_EQ_LIST, eqList);         
-        }
-
-        return updatePurchase(contract, DBBean.PURCHASE_CONTRACT);
     }
 
     @Override
@@ -902,7 +906,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }else{
             pcrequest.putAll(parameters);
         }
-        pcrequest.put(SalesContractBean.SC_EQ_LIST, parameters.get(SalesContractBean.SC_EQ_LIST));
+        
+        Object eqList = parameters.get(SalesContractBean.SC_EQ_LIST);
+        List<Map<String, Object>> list = (List<Map<String, Object>>) eqList;
+        updateEqListWithProjectId(list);
+        
+        pcrequest.put(SalesContractBean.SC_EQ_LIST, eqList);
 
         //TODO: 后台检查可申请数据
         

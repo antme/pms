@@ -259,10 +259,17 @@ function edit(data) {
 
 							}, {
 								field : "eqcostBasePrice",
-								title : "标准成本单价"
+								title : "标准成本单价",	
+								template : function(dataItem){
+									return percentToFixed(dataItem.eqcostBasePrice);
+								}
 							}, 
 							{ field: "eqcostDiscountRate",title : "折扣率"},
-							{ field: "eqcostLastBasePrice",title : "最终成本价"}, {
+							{ field: "eqcostLastBasePrice",title : "最终成本价",	
+								template : function(dataItem){
+									return percentToFixed(dataItem.eqcostLastBasePrice);
+								}
+							}, {
 								field : "eqcostApplyAmount",
 								title : "本次申请数量",
 								template : function(dataItem){

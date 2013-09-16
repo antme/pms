@@ -69,6 +69,17 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		request.put(PurchaseBack.pbSpecialRequireRadio, new String[]{});
 		return request;
 	}
+	
+	private void mergeSalseStatisInfo(Map<String, Object> params, Object scId){	  
+	    Map<String, Integer> backEqCountMap = getBackTotalCountByScId((String)scId);
+	    int total = 0;
+	    for(String key: backEqCountMap.keySet()){
+	        total = total + backEqCountMap.get(key);
+	    }
+	    params.put("totalBackCount", total);
+	    
+	    
+	}
 
     /**
      * @param params._id
@@ -664,14 +675,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
             }
 		}
 		
-        //获取总备货清单
-        Map<String, Object> backQuery = new HashMap<String, Object>();
-        backQuery.put(PurchaseBack.scId, scId);
-        List<String> sl = new ArrayList<String>();
-        sl.add(PurchaseStatus.submited.toString());
-        sl.add(PurchaseStatus.approved.toString());
-        backQuery.put(PurchaseBack.pbStatus, new DBQuery(DBQueryOpertion.IN, sl)); 
-        Map<String, Integer> backEqCountMap = countEqByKey(backQuery, DBBean.PURCHASE_BACK, PurchaseBack.pbTotalCount, null);
+        Map<String, Integer> backEqCountMap = getBackTotalCountByScId(scId);
         // 计算剩余数量
         Map<String, Integer> restEqCount = new HashMap<String, Integer>();
         for (String id : scEqTotalCountMap.keySet()) {
@@ -686,6 +690,18 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
             restEqCount.put(id, eqTotalCount - pbTotalCount);
         }
         return restEqCount;
+    }
+
+    private Map<String, Integer> getBackTotalCountByScId(String scId) {
+        //获取总备货清单
+        Map<String, Object> backQuery = new HashMap<String, Object>();
+        backQuery.put(PurchaseBack.scId, scId);
+        List<String> sl = new ArrayList<String>();
+        sl.add(PurchaseStatus.submited.toString());
+        sl.add(PurchaseStatus.approved.toString());
+        backQuery.put(PurchaseBack.pbStatus, new DBQuery(DBQueryOpertion.IN, sl)); 
+        Map<String, Integer> backEqCountMap = countEqByKey(backQuery, DBBean.PURCHASE_BACK, PurchaseBack.pbTotalCount, null);
+        return backEqCountMap;
     }
     
     /**根据备货申请id查询此备货下面剩余的数量：备货数量 -已采购申请数量 - 已调拨数量*/

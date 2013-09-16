@@ -251,13 +251,23 @@ function edit(data) {
 								title : "单位"
 							}, {
 								field : "eqcostBasePrice",
-								title : "成本单价"
+								title : "成本单价",	
+								template : function(dataItem){
+									return percentToFixed(dataItem.eqcostBasePrice);
+								}
 							}, 					
 							{ field: "eqcostDiscountRate",title : "折扣率"},
-							{ field: "eqcostLastBasePrice",title : "最终成本价"},
+							{ field: "eqcostLastBasePrice",title : "最终成本价",	
+								template : function(dataItem){
+									return percentToFixed(dataItem.eqcostLastBasePrice);
+								}
+							},
 							{
 								field : "eqcostContractTotalMoney",
-								title : "合同总价"
+								title : "合同总价",	
+								template : function(dataItem){
+									return percentToFixed(dataItem.eqcostContractTotalMoney);
+								}
 							}, {
 								field : "eqcostApplyAmount",
 								title : "采购数量",
@@ -268,7 +278,7 @@ function edit(data) {
 								field : "eqcostProductUnitPrice",
 								title : "采购单价",
 								template : function(dataItem){
-									return '<span class="edit-tip">' + dataItem.eqcostProductUnitPrice + '</span>';
+									return '<span class="edit-tip">' + percentToFixed(dataItem.eqcostProductUnitPrice) + '</span>';
 								}
 							},{
 								field : "eqcostBrand",
@@ -278,7 +288,10 @@ function edit(data) {
 								title : "备注"
 							}, {
 								field : "requestedTotalMoney",
-								title : "采购总价"
+								title : "采购总价",	
+								template : function(dataItem){
+									return percentToFixed(dataItem.requestedTotalMoney);
+								}
 							}],
 
 							editable : true,

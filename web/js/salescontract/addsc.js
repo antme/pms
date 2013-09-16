@@ -595,6 +595,7 @@ function saveSC_ADD(){
 	if(scm.projectManager && scm.projectManager._id){
 		scm.projectManager = scm.projectManager._id;
 	}
+
 	
 	var scType = scm.get("contractType");
 	if ((scType == null || scType == "" || scType =="N/A") && projectStatus=="销售正式立项"){
@@ -719,7 +720,14 @@ function saveSC_ADD(){
 		if(!scm.get("contractAmount")){
 			scm.set("contractAmount", 0);
 		}
-
+				
+		if(scm.estimateEqCost0){
+			scm.estimateEqCost0 = percentToFixed(scm.estimateEqCost0);
+		}
+		if(scm.estimateEqCost1){
+			scm.estimateEqCost1 = percentToFixed(scm.estimateEqCost1);
+		}
+		
 		scm.set("status", "已提交");
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
