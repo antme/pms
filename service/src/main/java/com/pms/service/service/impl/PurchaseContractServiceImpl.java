@@ -407,10 +407,29 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> updatePurchaseContract(Map<String, Object> contract) {
         Object eqList = contract.get(SalesContractBean.SC_EQ_LIST);
 
-        if(contract.get(FROM)==null){
+        List<Map<String, Object>> list = (List<Map<String, Object>>) eqList;
+        Map<String, Object> scProjectMap = new HashMap<String, Object>();
             
-            contract.put(SalesContractBean.SC_EQ_LIST, eqList);
-            
+        for (Map<String, Object> contractEq : list) {
+            if (ApiUtil.isEmpty(contractEq.get(PurchaseCommonBean.PROJECT_ID))) {
+                Object scId = contractEq.get(PurchaseCommonBean.SALES_COUNTRACT_ID);
+                if (scProjectMap.get(scId) != null) {
+                    contractEq.put(PurchaseCommonBean.PROJECT_ID, scProjectMap.get(scId));
+                } else {
+                    Map<String, Object> scQuery = new HashMap<String, Object>();
+                    scQuery.put(ApiConstants.MONGO_ID, scId);
+                    scQuery.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_PROJECT_ID);
+                    Map<String, Object> sc = dao.findOneByQuery(scQuery, DBBean.SALES_CONTRACT);
+                    Object projectId = sc.get(SalesContractBean.SC_PROJECT_ID);
+                    contractEq.put(PurchaseCommonBean.PROJECT_ID, projectId);
+                    scProjectMap.put(scId.toString(),  projectId);
+                }
+            }
+        }
+        
+        //FIXME why?
+        if(contract.get(FROM)==null){            
+            contract.put(SalesContractBean.SC_EQ_LIST, eqList);         
         }
 
         return updatePurchase(contract, DBBean.PURCHASE_CONTRACT);
