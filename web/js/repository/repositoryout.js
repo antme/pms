@@ -112,13 +112,17 @@ function confirmRepositoryOut(){
 				height : 300,
 				actions : [ "Maximize", "Close" ]
 			};
-			$("#confirm-form").kendoWindow({
-				width : options.width,
-				height : options.height,
-				title : options.title
-			});
-
 			var kendoWindow = $("#confirm-form").data("kendoWindow");
+
+			if(!kendoWindow){
+				$("#confirm-form").kendoWindow({
+					width : options.width,
+					height : options.height,
+					title : options.title
+				});
+				kendoWindow = $("#confirm-form").data("kendoWindow");
+			}
+			
 			kendoWindow.open();
 			kendoWindow.center();	
 		}
