@@ -379,15 +379,19 @@ function loadEqList(data){
 		$(".ship-button").hide();
 		alert("此销售合同没有可发货设备！");	
 	}else{
-		$(".ship-button").show();
-		
-		if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
-			$("#save-button").hide();
-			$("#submit-button").hide();
+	
+		if(popupParams){
+			disableAllInPoppup();
 		}else{
-			$("#confirm-button").hide();
+			$(".ship-button").show();
+			
+			if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
+				$("#save-button").hide();
+				$("#submit-button").hide();
+			}else{
+				$("#confirm-button").hide();
+			}
 		}
-		
 
 		for(i=0; i<eqList.length; i++){
 			if(!eqList[i].arrivalAmount || eqList[i].arrivalAmount==0){
