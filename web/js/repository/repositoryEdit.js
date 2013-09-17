@@ -296,6 +296,11 @@ function saveRepos(status) {
 		if(supplierId){
 			requestDataItem.supplier = supplierId;	
 		}
+		
+		if(requestDataItem.operator && requestDataItem.operator._id){
+			requestDataItem.operator = requestDataItem.operator._id;
+		}
+		
 	
 		// 同步数据
 		itemDataSource.sync();

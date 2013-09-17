@@ -317,7 +317,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		boolean close = true;
         for (Map<String, Object> eq : eqlist) {
 
-            if (ApiUtil.isEmpty(eq.get(ShipBean.REPOSITORY_NAME))) {
+            Object shipType = eq.get(ArrivalNoticeBean.SHIP_TYPE);
+            if (!ApiUtil.isEmpty(shipType) && shipType.toString().equalsIgnoreCase(ArrivalNoticeBean.SHIP_TYPE_1)) {
                 //直发才需要检查数量
                 int arrivalAmount = ApiUtil.getInteger(eq.get(ShipBean.SHIP_EQ_ACTURE_AMOUNT), 0);
                 int amount = ApiUtil.getInteger(eq.get(ShipBean.EQCOST_SHIP_AMOUNT), 0);

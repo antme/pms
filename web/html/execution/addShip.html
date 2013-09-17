@@ -100,42 +100,49 @@
 		    	</div>
 	    	</div>
 	     </div>
-	    <div id="repo-ship" style="display:none;">
+	     
+	    <div id="common-ship" style="display:none;">
+         <hr>
+        <h5>发货清单</h5>
+        <div id="common-ship-grid" style="margin-top:20px;"></div>
+        
+        </div>  
+	    <div id="repo-ship" style="display:none;"  class="ship-grid">
 	       <hr>
 	       <h5>仓库发货清单</h5>
 	        <div class="k-edit-label">
                 <label for="outCode">出库单号</label>
             </div>
             <div data-container-for="outCode" class="k-edit-field">
-                <input type="text" class="k-input k-textbox" name="outCode" data-bind="value:outCode">
+                <input type="text" class="k-input k-textbox" name="outCode" id="outCode" data-bind="value:outCode" required="required"  validationMessage="请填写出库单号">
              </div>
-	    <div id="equipments-grid" ></div>
+	       <div id="equipments-grid" ></div>
 	    </div>
 	   
 	    
-	    <div id="supplier-ship" style="display:none;">
+	    <div id="supplier-ship" style="display:none;"  class="ship-grid">
 	     <hr>
 	    <h5>供应商直发清单</h5>
 	    <div id="supplier-ship-grid" style="margin-top:20px;"></div>
 	    
 	    </div>
 	    
-	    <div id="allocat-ship" style="display:none;">
+	    <div id="allocat-ship" style="display:none;"  class="ship-grid">
          <hr>
         <h5>调拨发货</h5>
             <div class="k-edit-label">
                 <label for="allocateOutCode">调拨出库单号</label>
             </div>
             <div data-container-for="allocateOutCode" class="k-edit-field">
-                <input type="text" class="k-input k-textbox" name="allocateOutCode" data-bind="value:allocateOutCode">
+                <input type="text" class="k-input k-textbox" name="allocateOutCode" id="allocateOutCode"  data-bind="value:allocateOutCode" required="required"  validationMessage="请填写调拨出库单号">
              </div>
         <div id="allocat-ship-grid" style="margin-top:20px;"></div>
        </div>
 	    
 	    <div>
-            <button onclick="saveShip()" class="k-button" id="save-button">保存</button>
-            <button onclick="submitShip()" class="k-button" id="submit-button">提交申请</button>
-            <button onclick="saveShip()" class="k-button" id="confirm-button">确认</button>
+            <button onclick="saveShip()" class="k-button ship-button" id="save-button" style="display:none;">保存</button>
+            <button onclick="submitShip()" class="k-button ship-button" id="submit-button" style="display:none;">提交申请</button>
+            <button onclick="saveShip()" class="k-button ship-button" id="confirm-button" style="display:none;">确认</button>
             <button onclick='loadPage("execution_ship");' class="k-button">取消</button>
         </div>
         

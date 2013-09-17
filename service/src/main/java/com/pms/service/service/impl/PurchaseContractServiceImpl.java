@@ -1100,7 +1100,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         double total = 0;
         for(Map<String, Object> eq: mergeSavedEqList){
-//            eq.put("repositoryName", parameters.get("storeHouse"));
             total += ApiUtil.getDouble(eq, "eqcostApplyAmount", 0);           
         }
         
