@@ -382,7 +382,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         }
         // 申请状态
         List<String> statusList = new ArrayList<String>();
-        statusList.add(ShipBean.SHIP_STATUS_APPROVE);
+//        statusList.add(ShipBean.SHIP_STATUS_APPROVE);
         statusList.add(ShipBean.SHIP_STATUS_CLOSE);
         shipQuery.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, statusList));
         String[] limitKeys = { SalesContractBean.SC_EQ_LIST };
