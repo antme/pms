@@ -904,7 +904,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         boolean adding = false;
         Map<String, Object> pcrequest = new HashMap<String, Object>();
         
-        if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
+        Object id = parameters.get(ApiConstants.MONGO_ID);
+		if (ApiUtil.isEmpty(id)) {
             request.setPurchaseRequestCode(generateCode("CGSQ", DBBean.PURCHASE_REQUEST, PurchaseCommonBean.PURCHASE_REQUEST_CODE));
             pcrequest = request.toMap();
             adding = true;

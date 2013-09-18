@@ -62,7 +62,9 @@ public class ApiUtil {
         if ("null".equalsIgnoreCase(parameter)) {
             return true;
         }
-
+        if ("".equalsIgnoreCase(parameter)) {
+            return true;
+        }
         return false;
     }
  

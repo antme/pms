@@ -254,7 +254,7 @@ function edit(data) {
 								title : "规格型号"
 
 							}, {
-								field : "eqcostProductType",
+								field : "eqcostUnit",
 								title : "单位"
 
 							}, {
