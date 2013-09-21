@@ -1,4 +1,4 @@
-var eqDataSource, crudServiceBaseUrl = "../service";
+var bjDataSource, crudServiceBaseUrl = "../service";
 
 var ship = kendo.data.Model.define( {
     id: "_id",
@@ -52,7 +52,7 @@ var eqModel = kendo.data.Model.define( {
 
 var project ;
 var salesContract;
-eqDataSource = new kendo.data.DataSource({
+bjDataSource = new kendo.data.DataSource({
     group: [
     	{field:"shipType"}
     ],
@@ -77,7 +77,7 @@ var commonDataSource = new kendo.data.DataSource({
 	}
 });
 
-var allocatDataSource = new kendo.data.DataSource({
+var shDataSource = new kendo.data.DataSource({
 	  group: [
 	      	{field:"shipType"}
 	      ],
@@ -137,8 +137,8 @@ $(document).ready(function() {
         dataSource: deliveryRequirementsItems
     });
 	
-	$("#equipments-grid").kendoGrid({
-		dataSource : eqDataSource,
+	$("#bj-ship-grid").kendoGrid({
+		dataSource : bjDataSource,
 	    columns: [
 	        { field: "eqcostNo", title: "序号" },
 	        { field: "eqcostMaterialCode", title: "物料代码" },
@@ -150,7 +150,7 @@ $(document).ready(function() {
 	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
 	        { 
 	        	field: "shipType", 
-	        	title: "采购仓库" ,
+	        	title: "仓库" ,
 				groupHeaderTemplate: function(dataItem){														
 					return dataItem.value;
 				}
@@ -170,7 +170,7 @@ $(document).ready(function() {
 				alert("最多可以申请" + e.model.leftAmount);
 				e.preventDefault();
 			}else{
-		    	var grid = $("#equipments-grid").data("kendoGrid");
+		    	var grid = $("#bj-ship-grid").data("kendoGrid");
 		    	grid.refresh();
 			}
 	    }
@@ -216,8 +216,8 @@ $(document).ready(function() {
 	});
 	
 	
-	$("#allocat-ship-grid").kendoGrid({
-		dataSource : allocatDataSource,
+	$("#sh-ship-grid").kendoGrid({
+		dataSource : shDataSource,
 	    columns: [
 	        { field: "eqcostNo", title: "序号" },
 	        { field: "eqcostMaterialCode", title: "物料代码" },
@@ -242,7 +242,7 @@ $(document).ready(function() {
 				alert("最多可以申请" + e.model.leftAmount);
 				e.preventDefault();
 			}else{
-		    	var grid = $("#allocat-ship-grid").data("kendoGrid");
+		    	var grid = $("#sh-ship-grid").data("kendoGrid");
 		    	grid.refresh();
 			}
 	    }
@@ -353,10 +353,8 @@ function edit(data) {
 }
 
 var supplierlist = new Array();
-var rKlistBJ = new Array();
-var rKlistSH = new Array();
-var alloListBJ = new Array();
-var alloListSH = new Array();
+var bjList = new Array();
+var shList = new Array();
 
 function loadEqList(data){
 	var eqList = data;
@@ -364,15 +362,14 @@ function loadEqList(data){
 		 eqList = data.data;
 	}
 	supplierlist = new Array();
-	rKlistBJ = new Array();
-	rKlistSH = new Array();
-	alloListBJ = new Array();
-	alloListSH = new Array();
-    supplierShipDataSource.data(supplierlist);
-    allocatDataSource.data(rKlistBJ);
-    allShipDataSource.data(alloListBJ);
-	commonDataSource.data(alloListSH);
-	eqDataSource.data(alloListSH);
+	bjList = new Array();
+	shList = new Array();
+	var emptyList = new Array();
+    supplierShipDataSource.data(emptyList);
+    shDataSource.data(emptyList);
+    allShipDataSource.data(emptyList);
+	commonDataSource.data(emptyList);
+	bjDataSource.data(emptyList);
 	$(".ship-grid").hide();
 	
 	if(eqList && eqList.length ==0){
@@ -399,16 +396,16 @@ function loadEqList(data){
 			}
 			
 			if(eqList[i].shipType == "北京备货货架"){
-				alloListBJ.push(eqList[i]);
+				bjList.push(eqList[i]);
 			}else if(eqList[i].shipType == "上海备货货架"){
-				alloListSH.push(eqList[i]);
+				shList.push(eqList[i]);
 			}else if(eqList[i].shipType == "直发现场"){
 				supplierlist.push(eqList[i]);
 			}else{									
 				if(eqList[i].shipType == "上海—上海泰德库"){
-					rKlistSH.push(eqList[i]);
+					shList.push(eqList[i]);
 				}else{
-					rKlistBJ.push(eqList[i]);
+					bjList.push(eqList[i]);
 				}									
 			} 
 		
@@ -422,18 +419,13 @@ function loadEqList(data){
 		if(supplierlist.length >0){
 			shipType.add({ text: "直发" });
 		}
-		if(rKlistBJ.length >0){
-			shipType.add({ text: "上海—北京泰德库" });
+		if(bjList.length >0){
+			shipType.add({ text: "上海—北京库" });
 		}
-		if(rKlistSH.length >0){
-			shipType.add({ text: "上海—上海泰德库" });
+		if(shList.length >0){
+			shipType.add({ text: "上海—上海库" });
 		}
-		if(alloListSH.length >0){
-			shipType.add({ text: "上海备货货架" });
-		}
-		if(alloListBJ.length >0){
-			shipType.add({ text: "北京备货货架" });
-		}
+	
 		var shipDataKendo = $("#shipType").data("kendoDropDownList");	
 		
 		if (shipType.data().length > 0) {
@@ -458,18 +450,14 @@ function loadEqList(data){
 
 
 		//COMMON EQ LIST
-		commonDataSource.data(alloListBJ);
-		for(var item in alloListSH){
-			commonDataSource.add(alloListSH[item]);
-		}
+		commonDataSource.data(bjList);
+
 		for(var item in supplierlist){
 			commonDataSource.add(supplierlist[item]);
 		}
-		for(var item in rKlistBJ){
-			commonDataSource.add(rKlistBJ[item]);
-		}
-		for(var item in rKlistSH){
-			commonDataSource.add(rKlistSH[item]);
+	
+		for(var item in shList){
+			commonDataSource.add(shList[item]);
 		}
 		
 		
@@ -485,31 +473,21 @@ function loadEqList(data){
 }
 
 function updateShipGrid(){
-	if(model.shipType == "北京备货货架"){
-		allocatDataSource.data(alloListBJ);	
-		$("#supplier-ship").hide();
-		$("#repo-ship").hide();
-		$("#allocat-ship").show();
-	}else if(model.shipType == "上海备货货架"){
-		allocatDataSource.data(alloListSH);
-		$("#supplier-ship").hide();
-		$("#repo-ship").hide();
-		$("#allocat-ship").show();
-	}else if(model.shipType == "直发"){
+	if(model.shipType == "直发"){
 		supplierShipDataSource.data(supplierlist);
 		$("#supplier-ship").show();
-		$("#repo-ship").hide();
-		$("#allocat-ship").hide();
-	}else if(model.shipType == "上海—上海泰德库"){
-		eqDataSource.data(rKlistSH);
+		$("#bj-ship").hide();
+		$("#sh-ship").hide();
+	}else if(model.shipType == "上海—上海库"){
+		shDataSource.data(shList);
 		$("#supplier-ship").hide();
-		$("#repo-ship").show();
-		$("#allocat-ship").hide();
-	}else if(model.shipType == "上海—北京泰德库"){
-		eqDataSource.data(rKlistBJ);		
+		$("#bj-ship").hide();
+		$("#sh-ship").show();
+	}else if(model.shipType == "上海—北京库"){
+		bjDataSource.data(bjList);		
 		$("#supplier-ship").hide();
-		$("#repo-ship").show();
-		$("#allocat-ship").hide();
+		$("#bj-ship").show();
+		$("#sh-ship").hide();
 	} 
 	$("#common-ship").hide();
 }
@@ -517,37 +495,26 @@ function updateShipGrid(){
 function saveShip(needCheck) {
 	allShipDataSource.data([]);
 	var data = new Array();
-	$("#outCode").attr("disabled",true);
-	$("#allocateOutCode").attr("disabled",true);
+	$("#bjOutCode").attr("disabled",true);
+	$("#shOutCode").attr("disabled",true);
 	
 	if(!model.shipType){
 		alert("请选择发货类型");
 		return;
 	}
-
 	
-	if (model.shipType == "上海备货货架") {
-		if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
-			 $("#allocateOutCode").removeAttr("disabled",true);
-		}
-		 data = allocatDataSource.data();
-	} else if (model.shipType == "直发") {
+    if (model.shipType == "直发") {
 		 data = supplierShipDataSource.data();
-	} else if (model.shipType == "北京备货货架")  {
+	} else if (model.shipType == "上海—上海库")  {
 		if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
-			 $("#allocateOutCode").removeAttr("disabled",true);
+			 $("#shOutCode").removeAttr("disabled",true);
 		}
-		 data = allocatDataSource.data();
-	}else if (model.shipType == "上海—上海泰德库")  {
+		 data = shDataSource.data();
+	}else if (model.shipType == "上海—北京库")  {
 		if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
-			 $("#outCode").removeAttr("disabled",true);
+			 $("#bjOutCode").removeAttr("disabled",true);
 		}
-		 data = eqDataSource.data();
-	}else if (model.shipType == "上海—北京泰德库")  {
-		if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
-			 $("#outCode").removeAttr("disabled",true);
-		}
-		 data = eqDataSource.data();
+		 data = bjDataSource.data();
 	}
 	
 	
