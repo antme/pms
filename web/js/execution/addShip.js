@@ -150,7 +150,7 @@ $(document).ready(function() {
 	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
 	        { 
 	        	field: "shipType", 
-	        	title: "仓库" ,
+	        	title: "发货类型" ,
 				groupHeaderTemplate: function(dataItem){														
 					return dataItem.value;
 				}
@@ -229,7 +229,7 @@ $(document).ready(function() {
 	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
 			{
 				field : "shipType",
-				title : "调拨货架"
+				title : "发货类型"
 			},	        
 	        { field: "eqcostMemo", title: "备注" },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
@@ -311,7 +311,7 @@ function loadSC(){
        
             model.set("contractCode", dataItem.contractCode);
             model.set("contractType", dataItem.contractType);
-            model.shipType ="";
+            model.shipType = undefined;
  
             postAjaxRequest("/service/ship/eqlist", {salesContractId:salesContract.value()}, loadEqList);
 		
@@ -437,7 +437,11 @@ function loadEqList(data){
 		        optionLabel: "选择发货类型...",
 		        change: function(e) {
 		        	var dataItem = this.dataItem();
-		        	model.shipType = dataItem.text;    	
+		        	if(dataItem.text=="选择发货类型..."){
+			        	model.shipType = undefined;    	
+		        	}else{		        	
+		        		model.shipType = dataItem.text;   
+		        	}
 		        	updateShipGrid();
 		        	$("#common-ship").hide();
 		        }
@@ -497,7 +501,6 @@ function saveShip(needCheck) {
 	var data = new Array();
 	$("#bjOutCode").attr("disabled",true);
 	$("#shOutCode").attr("disabled",true);
-	
 	if(!model.shipType){
 		alert("请选择发货类型");
 		return;

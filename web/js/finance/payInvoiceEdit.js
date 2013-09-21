@@ -105,7 +105,6 @@ function editSucess(e){
 		$("#form-container-button button[value!='done'][value!='cancel']").hide();
 		$(".invoicedone").show();
 		$(".invoicedone input").removeAttr("disabled");
-		console.log("dsd");
 	}else if(e.payInvoiceStatus == '开票完毕'){//都不可见
 		$(".invoicedone").show();
 		$("#form-container [name!='tempComment']").attr("disabled",true);
