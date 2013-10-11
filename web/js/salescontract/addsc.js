@@ -666,7 +666,7 @@ function saveSC_ADD(){
 		}
 	}
 	
-	if(projectStatus == "销售正式立项" && !validator.validate()) {
+	if(projectStatus == "销售正式立项" && scType != "弱电工程" &&　!validator.validate()) {
 		validatestatus.text("表单验证不通过！")
         .removeClass("valid")
         .addClass("invalid");
