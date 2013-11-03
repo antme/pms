@@ -146,6 +146,16 @@ $(document).ready(function() {
 	        { field: "eqcostProductType", title: "规格型号" },
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
+	    	{ field: "eqcostBasePrice", title: "标准成本价",	
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostBasePrice);
+				}
+			},
+			{ field: "eqcostLastBasePrice",title : "最终成本价",	
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostLastBasePrice);
+				}
+			},
 	        { field: "eqcostShipAmount", title: "发货数" , attributes: { "style": "color:red"}},
 	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
 	        { 
@@ -186,6 +196,11 @@ $(document).ready(function() {
 	        { field: "eqcostProductType", title: "规格型号" },
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
+	        { field: "eqcostLastBasePrice",title : "最终成本价",	
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostLastBasePrice);
+				}
+			},
 	        { field: "eqcostShipAmount", title: "发货数" , attributes: { "style": "color:red"}},
 	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
 	        { field: "actureAmount", title: "实际发货数" , attributes: { "style": "color:red"}},
@@ -225,6 +240,16 @@ $(document).ready(function() {
 	        { field: "eqcostProductType", title: "规格型号" },
 	        { field: "eqcostBrand", title: "品牌" },
 	        { field: "eqcostUnit", title: "单位" },
+	    	{ field: "eqcostBasePrice", title: "标准成本价",	
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostBasePrice);
+				}
+			},
+			{ field: "eqcostLastBasePrice",title : "最终成本价",	
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostLastBasePrice);
+				}
+			},
 	        { field: "eqcostShipAmount", title: "发货数", attributes: { "style": "color:red"}},
 	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
 			{
@@ -394,6 +419,12 @@ function loadEqList(data){
 			if(!eqList[i].arrivalAmount || eqList[i].arrivalAmount==0){
 				eqList[i].arrivalAmount = eqList[i].eqcostShipAmount;
 			}
+			
+			if(!eqList[i].actureAmount){
+				eqList[i].actureAmount = eqList[i].eqcostShipAmount;
+			}
+			
+			
 			
 			if(eqList[i].shipType == "北京备货货架"){
 				bjList.push(eqList[i]);

@@ -1,4 +1,5 @@
 var crudServiceBaseUrl = "../service";
+var listUrl = "/service/suppliers/list";
 
 var model = kendo.data.Model.define({
 	id : "_id",
@@ -26,34 +27,33 @@ var model = kendo.data.Model.define({
 var dataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
-			url : crudServiceBaseUrl + "/suppliers/list",
-			dataType : "jsonp"
+			url : listUrl,
+			dataType : "jsonp",
+			type : "post"
 		},
 		update : {
 			url : crudServiceBaseUrl + "/suppliers/update",
 			dataType : "jsonp",
 			method: "post"
-		},
-		destroy : {
-			url : crudServiceBaseUrl + "/suppliers/destroy",
-			dataType : "jsonp",
-			method: "post"
-		},
+		},		
 		create : {
 			url : crudServiceBaseUrl + "/suppliers/create",
 			dataType : "jsonp",
 			method: "post"
-		},
-		parameterMap : function(options, operation) {
-			if (operation !== "read" && options.models) {
-				return {
-					models : kendo.stringify(options.models)
-				};
-			}
 		}
 	},
+	parameterMap : function(options, operation) {
+		if (operation !== "read" && options.models) {
+			return {
+				models : kendo.stringify(options.models)
+			};
+		}
+	},
+	pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
 	batch : true,
-	pageSize : 10,
 	schema : {
 		model : model,
 		total: "total", // total is returned in the "total" field of the response
@@ -67,29 +67,49 @@ $(document).ready(function() {
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true,
-		resizable: true,
+		sortable : true,
+		filterable : filterable,
 		selectable : "row",
 		toolbar : [ {
 			template : kendo.template($("#template").html())
 		} ],
 		columns : [
-		    { field : "supplierCode", title : "供应商编号",width:"150px" },
-	        { field : "supplierName", title : "供应商名称",width:"250px" },
-	        { field : "supplierContact", title : "供应商联系人",width:"120px" },
-	        { field : "supplierContactPhone", title : "联系人电话",width:"120px" },
-	        { field : "supplierEmail", title : "联系人邮箱",width:"200px" },
-	        { command : [{name:"edit",text:"编辑"}], title : "&nbsp;",width:"160px" }
-        ],
-		editable : "popup"
+		    { field : "supplierCode", title : "供应商编号",width:"100px" },
+	        { field : "supplierName", title : "公司名称",width:"200px" },
+	        { field : "supplierContact", title : "联系人",width:"100px" },
+	        { field : "supplierContactPhone", title : "电话",width:"100px" },
+	        { field : "supplierContactMobile", title : "手机",width:"100px" },
+	        { field : "supplierAddress", title : "地址",width:"250px" }
+        ]
 	});
 	
 	validator = $("#supplier-form-validate").kendoValidator().data("kendoValidator");
 	
+	
+    $("#files").kendoUpload({
+        async: {
+            saveUrl: "/service/suppliers/upload",
+            autoUpload: true
+        },
+        success:function(e){
+        	loadPage("supplier_supplier");
+        }
+    });	
+	
+	
 });
 
+
+function editSupplier(){
+	var rowData = getSelectedRowDataByGrid("grid");
+	dm = rowData;
+	kendo.bind($("#supplier-edit"), dm);
+	var options = {id:"supplier-edit", width:"700px", height: "400px", title:"编辑供应商"};
+	openWindow(options);
+}
 function addNewSupplier() {
 	kendo.bind($("#supplier-edit"), dm);
-	var options = {id:"supplier-edit", width:"500px", height: "200px", title:"新增供应商"};
+	var options = {id:"supplier-edit", width:"700px", height: "400px", title:"新增供应商"};
 	openWindow(options);
 }
 
@@ -97,19 +117,24 @@ function saveData() {
 	if(!validator.validate()){
 		return false;
 	}
-	dataSource.add(dm);
-	dataSource.sync();
-	var window = $("#supplier-edit");
+	
 
-	if (window.data("kendoWindow")) {
-		window.data("kendoWindow").close();
-	}
+	
+	postAjaxRequest(crudServiceBaseUrl + "/suppliers/create", {json_p: kendo.stringify(dm)}, function(data){
+		var window = $("#supplier-edit");
 
-	var grid = $("#grid");
-	if (window.data("kendoGrid")) {
-		window.data("kendoGrid").refresh();
-	};
-	loadPage("supplier_supplier");
+		if (window.data("kendoWindow")) {
+			window.data("kendoWindow").close();
+		}
+
+		var grid = $("#grid");
+		if (window.data("kendoGrid")) {
+			window.data("kendoGrid").refresh();
+		};
+		loadPage("supplier_supplier");
+	});
+	
+	
 }
 function myreflush(){
 	loadPage("supplier_supplier");

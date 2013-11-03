@@ -1,7 +1,7 @@
 var requestDataItem;
 var approveUrl = "/service/purcontract/approve";
 var rejectUrl = "/service/purcontract/reject";
-
+var supplierNameContact ="";
 var contractModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
@@ -232,7 +232,7 @@ function changeCType(index){
 		}
 		requestDataItem.set("contractExecuteCate","正常采购");
 		$("input[name=contractExecuteCate]:eq(0)").attr("checked",true);
-		$("#supplierNameContact").val("");
+		$("#supplierNameContact").val(supplierNameContact);
 		$("#supplierNameContact").attr("disabled", false);
 		$("#contractProperty").attr("disabled", false);
 		
@@ -583,7 +583,7 @@ function edit(data) {
 	}else{
 		$("#purchasecontractselect").show();
 	}
-	
+	supplierNameContact = requestDataItem.supplierNameContact;
 	if(!popupParams){
 		if(redirectParams && redirectParams.pageId){
 			$(".save").hide();

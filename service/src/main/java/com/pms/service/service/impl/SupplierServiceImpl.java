@@ -1,15 +1,21 @@
 package com.pms.service.service.impl;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.SupplierBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ISupplierService;
+import com.pms.service.util.ApiUtil;
+import com.pms.service.util.ExcleUtil;
 
 public class SupplierServiceImpl extends AbstractService implements ISupplierService {
 
@@ -34,8 +40,20 @@ public class SupplierServiceImpl extends AbstractService implements ISupplierSer
 	}
 
     public Map<String, Object> create(Map<String, Object> params) {
-        params.put(SupplierBean.SUPPLIER_CODE, generateCode("GYS", DBBean.SUPPLIER, SupplierBean.SUPPLIER_CODE));
-        return dao.add(params, DBBean.SUPPLIER);
+
+        if (this.dao.exist(SupplierBean.SUPPLIER_NAME, params.get(SupplierBean.SUPPLIER_NAME), DBBean.SUPPLIER)) {
+            Map<String, Object> old = this.dao.findOne(SupplierBean.SUPPLIER_NAME, params.get(SupplierBean.SUPPLIER_NAME), DBBean.SUPPLIER);
+            params.put(ApiConstants.MONGO_ID, old.get(ApiConstants.MONGO_ID));
+            this.dao.updateById(params, DBBean.SUPPLIER);
+            return params;
+        } else {
+            if(params.get(ApiConstants.MONGO_ID)!=null){
+                return this.dao.updateById(params, DBBean.SUPPLIER);
+            }else{
+                params.put(SupplierBean.SUPPLIER_CODE, generateCode("GYS", DBBean.SUPPLIER, SupplierBean.SUPPLIER_CODE));
+                return dao.add(params, DBBean.SUPPLIER);
+            }
+        }
     }
 	
     public Map<String, Object> importSupplier(String supplierName) {
@@ -79,6 +97,51 @@ public class SupplierServiceImpl extends AbstractService implements ISupplierSer
                 }
             }
         }
+    }
+    
+    public void upload(Map<String, Object> params) {
+
+        try {
+            InputStream inputStream = (InputStream) params.get("inputStream");
+            ExcleUtil excleUtil = new ExcleUtil(inputStream);
+            List<String[]> list = excleUtil.getAllData(0);
+            Map<String, Integer> keyMap = new LinkedHashMap<String, Integer>();
+
+            if (list.get(1) != null) {
+
+                // MAX 15 COLUMN
+                for (int i = 0; i < list.get(1).length; i++) {
+                    String key = list.get(1)[i].trim();
+                    if (!ApiUtil.isEmpty(key)) {
+                        keyMap.put(key, i);
+                    }
+                }
+            }
+
+            for (int i = 2; i < list.size(); i++) {// 硬编码从第9行开始读数据
+                Map<String, Object> eq = new LinkedHashMap<String, Object>();
+                String amount = list.get(i)[6].trim();
+                if (amount.length() == 0) {// 读到某一行数量为空时，认为清单数据结束
+                    break;
+                }
+                eq.put("supplierName", list.get(i)[keyMap.get("公司名称")].trim());
+                eq.put("supplierCate", list.get(i)[keyMap.get("产品类型")].trim());
+                eq.put("supplierAddress", list.get(i)[keyMap.get("地址")].trim());
+                eq.put("supplierContact", list.get(i)[keyMap.get("联系人")].trim());
+                eq.put("supplierContactMobile", list.get(i)[keyMap.get("手机")].trim());
+                eq.put("supplierContactPhone", list.get(i)[keyMap.get("电话")].trim());
+                eq.put("supplierFax", list.get(i)[keyMap.get("传真")].trim());
+                eq.put("supplierReviewTime", list.get(i)[keyMap.get("评审时间")].trim());
+                eq.put("supplierRemark", list.get(i)[keyMap.get("备注")].trim());
+                this.create(eq);
+
+            }
+
+        } catch (Exception e) {
+
+            throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
+        }
+
     }
 
 }

@@ -362,7 +362,13 @@ function edit(data) {
 	}else{
 		$("#purchaserepository-div").show();
 	}
-
+	var eqList = requestDataItem.eqcostList;
+	if(requestDataItem.status == "已提交"){
+		for(i=0; i<eqList.length; i++){
+			eqList[i].leftCount = eqList[i].leftCount + eqList[i].eqcostApplyAmount;
+			
+		}
+	}
 	if (requestDataItem) {
 		requestDataItem = new model(requestDataItem);
 

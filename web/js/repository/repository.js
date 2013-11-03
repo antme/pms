@@ -98,12 +98,12 @@ function confirmRepository(){
 	
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "已入库"){
-			alert("此申请已入库，不需要再次入库");
-		}else{
+		if(row.status == "入库中"){			
 			loadPage("repository_repositoryEdit", {
 				_id : row._id
 			});
+		}else{
+			alert("只能确认入库中的数据");
 		}
 	}
 }

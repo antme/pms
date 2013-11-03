@@ -17,4 +17,6 @@ public interface ISupplierService {
     
     public void mergeSupplierInfo(Map<String, Object> data, String refKey, String[] mergeKeys);
 
+    public void upload(Map<String, Object> map);
+
 }

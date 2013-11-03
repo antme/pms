@@ -13,46 +13,90 @@
 <script src="js/supplier/supplier.js"></script>
 <script type="text/x-kendo-template" id="template">
     <button class="k-button"  onclick="addNewSupplier();">新增</button>
+    <button class="k-button"  onclick="editSupplier();">编辑</button>
 </script>
 
 <body>
 	<div id="supplier" class="k-content">
 	   <h3>供应商列表</h3>
-	
+	       <div>
+                           
+                        <label>导入供应商</label> <a href="/template/supplier.xlsx">导入模版下载</a> <input name="files" id="files" type="file" />              
+             </div>
 		<div id="grid"></div>
 	</div>
 
 	<div class="supplier-edit" id="supplier-edit">
-
+        
 		<div class="k-edit-form-container" id="supplier-form-validate">
+		  <input type="hidden" class="k-input k-textbox" name="id"  data-bind="value:id">
 			<div class="k-edit-label ">
-				<label for="supplierName">供应商名字</label>
+				<label for="supplierName">公司名称</label>
 			</div>
 			<div data-container-for="supplierName" class="k-edit-field ">
 				<input type="text" class="k-input k-textbox" name="supplierName"
 					required="required" validationMessage="请输入" data-bind="value:supplierName">
 			</div>
 			<div class="k-edit-label ">
-				<label for="supplierAddress">供应商地址</label>
+                <label for="supplierCate">产品类型</label>
+            </div>
+            <div data-container-for="supplierCate" class="k-edit-field ">
+                <input type="text" class="k-input k-textbox" name="supplierCate"
+                    required="required" validationMessage="请输入" data-bind="value:supplierCate">
+            </div>
+			<div class="k-edit-label ">
+				<label for="supplierAddress">地址</label>
 			</div>
 			<div data-container-for="supplierAddress" class="k-edit-field ">
 				<input type="text" class="k-input k-textbox" name="supplierAddress"
 					required="required" validationMessage="请输入" min="1" data-bind="value:supplierAddress">
 			</div>
 			<div class="k-edit-label ">
-				<label for="supplierContact">供应商联系人</label>
+				<label for="supplierContact">联系人</label>
 			</div>
 			<div data-container-for="supplierContact" class="k-edit-field ">
 				<input type="text" class="k-input k-textbox" name="supplierContact" required="required" validationMessage="请输入"
 					data-bind="value:supplierContact">
 			</div>
 			<div class="k-edit-label ">
-				<label for="supplierContactPhone">供应商联系人电话</label>
+				<label for="supplierContactPhone">电话</label>
 			</div>
 			<div data-container-for="supplierContactPhone" class="k-edit-field ">
 				<input type="text" class="k-input k-textbox" name="supplierContactPhone" min="0" required="required" validationMessage="请输入"
 					data-bind="value:supplierContactPhone">
 			</div>
+			
+			<div class="k-edit-label ">
+                <label for="supplierContactMobile">手机</label>
+            </div>
+            <div data-container-for="supplierContactMobile" class="k-edit-field ">
+                <input type="text" class="k-input k-textbox" name="supplierContactMobile" min="0" required="required" validationMessage="请输入"
+                    data-bind="value:supplierContactMobile">
+            </div>
+            
+           <div class="k-edit-label ">
+                <label for="supplierFax">传真</label>
+            </div>
+            <div data-container-for="supplierFax" class="k-edit-field ">
+                <input type="text" class="k-input k-textbox" name="supplierFax" min="0" required="required" validationMessage="请输入"
+                    data-bind="value:supplierFax">
+            </div>
+            
+            <div class="k-edit-label ">
+                <label for="supplierReviewTime">评审时间</label>
+            </div>
+            <div data-container-for="supplierReviewTime" class="k-edit-field ">
+                <input type="text" class="k-input k-textbox" name="supplierReviewTime" min="0" required="required" validationMessage="请输入"
+                    data-bind="value:supplierReviewTime">
+            </div>
+            <div class="k-edit-label ">
+                <label for="supplierRemark">备注</label>
+            </div>
+            <div data-container-for="supplierRemark" class="k-edit-field ">
+                <input type="text" class="k-input k-textbox" name="supplierRemark" min="0" required="required" validationMessage="请输入"
+                    data-bind="value:supplierRemark">
+            </div>
+            
 			<button class="k-button k-button-icontext k-grid-update" onclick="saveData()">
 				<span class="k-icon k-update"></span>确认
 			</button>

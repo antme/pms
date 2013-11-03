@@ -74,6 +74,7 @@ $(document).ready(function () {
 				}
             },
             { field: "customer", title:"客户名称" },
+            { field: "shipType", title: "发货类型"},
             {
             	field: "status", title:"状态"
             }
@@ -102,9 +103,21 @@ function toolbar_confirm() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
 		if (rowData.status == "已批准"){
-			loadPage("execution_addShip",{_id:rowData._id, type: "confirm"});
+			if(rowData.shipType == "直发"){
+				if(user.isPurchase){
+					loadPage("execution_addShip",{_id:rowData._id, type: "confirm"});
+				}else{
+					alert("直发类发货确认只能由采购确认");
+				}
+			}else{
+				if(user.isDepotManager){
+					loadPage("execution_addShip",{_id:rowData._id, type: "confirm"});
+				}else{
+					alert("非直发类发货确认只能由库管确认");
+				}
+			}
 		} else {
-			alert("申请还未审批");
+			alert("只能确认已批准后的发货申请");
 		}
 	}
 }

@@ -195,9 +195,23 @@ $(document).ready(function () {
 		$("#searchDiv").hide();
 		postAjaxRequest(baseUrl+"/purchase/back/load", popupParams, editSuccess);
 		disableAllInPoppup();
+		
 	}else if(redirectParams){
 		$("#searchDiv").hide();
 		postAjaxRequest(baseUrl+"/purchase/back/load", {_id: redirectParams._id}, editSuccess);
+		
+		//合同签订日期控件
+		var ddd = $("#pbPlanDate").kendoDatePicker({
+			min: new Date()
+		});
+
+	}else{
+		
+		//合同签订日期控件
+		var ddd = $("#pbPlanDate").kendoDatePicker({
+			min: new Date()
+		});
+
 	}
 	kendo.bind($("#form-container"), currentObj);
 });
