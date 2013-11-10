@@ -939,6 +939,18 @@ function saveSC(){
     				alert("折扣率不能为空！");
     				return;
     			}
+    			
+    			var itemEqcostMaterialCode = item.eqcostMaterialCode;
+//    			if (itemEqcostMaterialCode==null || itemEqcostMaterialCode.length == 0){
+//    				alert("物料代码不能为空！");
+//    				return;
+//    			}
+    			
+    			var itemEqcostBrand = item.eqcostBrand;
+//    			if (itemEqcostBrand==null || itemEqcostBrand.length == 0){
+//    				alert("品牌不能为空！");
+//    				return;
+//    			}
     			//---end : add logic for check can not empty col
     			
     			//---start : add logic for check new record amount is negative number
@@ -948,12 +960,14 @@ function saveSC(){
     				var haveOldAmount = 0;
     				for(i=0; i<oldEqTotal; i++){
     					
-    					var oldItem = eqCostListDataSourceOld.at(i);
+    					var restEqList = scm.purchaseRequestList;
+    					
+    					var oldItem = scm.purchaseRequestList[i];
     					var oldName = oldItem.eqcostProductName;
     					var oldPtype = oldItem.eqcostProductType;
-    					var oldAmount = oldItem.eqcostRealAmount;
+    					var oldAmount = oldItem.eqcostLeftAmount;
     					
-    					if (itemProductType == oldPtype && itemProductName ==oldName){
+    					if (itemProductType == oldPtype && itemProductName ==oldName && itemUnit == oldItem.eqcostUnit && itemEqcostMaterialCode == oldItem.eqcostMaterialCode && itemEqcostBrand == oldItem.eqcostBrand){
     						haveFlag = true;
     						haveOldAmount = oldAmount;
     						break;
@@ -966,7 +980,7 @@ function saveSC(){
     				
     				if (haveFlag){
 						if (itemAmount + haveOldAmount < 0){
-							alert(itemProductName + "原有清单数量不够抵消！");
+							alert(itemProductName + "原有清单数量不够抵消, 请检查已备货数量！");
 							return;
 						}
 					}else{
@@ -985,7 +999,6 @@ function saveSC(){
     			}
     		}
     	}//End 
-    	
 		var _id = scm.get("_id");
 		var data = eqCostListDataSourceNew.data();
 		scm.set("eqcostList", data);
@@ -1026,9 +1039,9 @@ function saveSC(){
 		}
 		
 		scm.set("status", "已提交");
-		postAjaxRequest("/service/sc/add",  {models:kendo.stringify(scm)}, function(data){
-			loadPage("salescontract_scList");
-    	});
+//		postAjaxRequest("/service/sc/add",  {models:kendo.stringify(scm)}, function(data){
+//			loadPage("salescontract_scList");
+//    	});
 
 	}
 };

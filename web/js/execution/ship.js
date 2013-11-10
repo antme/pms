@@ -143,36 +143,37 @@ function toolbar_approve_ship(op) {
 	var url =crudServiceBaseUrl + "/approve";
 	if (row) {
 		if (row.status == "申请中") {
-			var param = {
-				_id : row._id
-			};
-			postAjaxRequest(url, param, function(response){
-				alert("批准成功");
-				dataSource.read();
-			});
+//			var param = {
+//				_id : row._id
+//			};
+//			postAjaxRequest(url, param, function(response){
+//				alert("批准成功");
+//				dataSource.read();
+//			});
+			loadPage("execution_addShip",{_id:row._id, type: "approve"});
 		} else {
 			alert("非申请中状态，不允许审核");
 		}
 	}
 }
-
-function toolbar_reject_ship(op) {
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	var url =crudServiceBaseUrl + "/reject";
-	if (row) {
-		if (row.status == "申请中") {
-			var param = {
-				_id : row._id
-			};
-			postAjaxRequest(url, param, function(response){
-				alert("拒绝成功");
-				dataSource.read();
-			});
-		} else {
-			alert("非申请中状态，不允许审核");
-		}
-	}
-}
+//
+//function toolbar_reject_ship(op) {
+//	var row = getSelectedRowDataByGridWithMsg("grid");
+//	var url =crudServiceBaseUrl + "/reject";
+//	if (row) {
+//		if (row.status == "申请中") {
+//			var param = {
+//				_id : row._id
+//			};
+//			postAjaxRequest(url, param, function(response){
+//				alert("拒绝成功");
+//				dataSource.read();
+//			});
+//		} else {
+//			alert("非申请中状态，不允许审核");
+//		}
+//	}
+//}
 
 
 

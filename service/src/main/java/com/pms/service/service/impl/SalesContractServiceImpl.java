@@ -24,13 +24,16 @@ import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.InvoiceBean;
 import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ICustomerService;
 import com.pms.service.service.IProjectService;
+import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.ISalesContractService;
 import com.pms.service.service.IUserService;
+import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
@@ -44,6 +47,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	private IProjectService projectService;
 	
 	private IUserService userService;
+	
+	private IPurchaseService purchaseService;
+	
 
 	@Override
 	public String geValidatorFileName() {
@@ -75,6 +81,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		mergeProjectInfoForSC(result);
 		return result;
+	}
+	
+	private void validEqList(Map<String, Object> params){
+	       List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
+	        eqcostList = (List<Map<String, Object>>)params.get(SalesContractBean.SC_EQ_LIST);
+	        
+	        String _id = (String) params.get(ApiConstants.MONGO_ID);
 	}
 
 	@Override
@@ -686,6 +699,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		sc.put(SalesContractBean.SC_GOT_MONEY_INFO, gotMoneyData);
 		sc.put(SalesContractBean.SC_MONTH_SHIPMENTS_INFO, monthShipmentsListData);
 		sc.put(SalesContractBean.SC_YEAR_SHIPMENTS_INFO, yearShipmentsListData);
+		
+
+        Map<String, Object> request = new LinkedHashMap<String, Object>();
+        request.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
+        request.put(PurchaseBack.scId, _id);
+	        
+		sc.put("purchaseRequestList", purchaseService.loadEqBackForSC(request).get(PurchaseBack.eqcostList));
 		return sc;
 	}
 
@@ -1586,6 +1606,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public void setUserService(IUserService userService) {
 		this.userService = userService;
 	}
+
+    public IPurchaseService getPurchaseService() {
+        return purchaseService;
+    }
+
+    public void setPurchaseService(IPurchaseService purchaseService) {
+        this.purchaseService = purchaseService;
+    }
+	
+	
+	
 	
 	
 }

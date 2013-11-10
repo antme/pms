@@ -408,11 +408,23 @@ function loadEqList(data){
 			$(".ship-button").show();
 			
 			if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
+				disableAllInPoppup();
 				$("#save-button").hide();
 				$("#submit-button").hide();
+				$("#approve-button").hide();
+				$("#reject-button").hide();
+			}else if(redirectParams && redirectParams.type && redirectParams.type == "approve"){
+				disableAllInPoppup();
+				$("#save-button").hide();
+				$("#submit-button").hide();
+				$("#confirm-button").hide();
 			}else{
 				$("#confirm-button").hide();
+				$("#approve-button").hide();
+				$("#reject-button").hide();
 			}
+			
+			
 		}
 
 		for(i=0; i<eqList.length; i++){
@@ -582,6 +594,31 @@ function saveShip(needCheck) {
 		
 
 	}
+}
+
+
+function approve_ship() {
+	var url =crudServiceBaseUrl + "/ship/approve";
+	var param = {
+			_id : model._id
+		};
+	postAjaxRequest(url, param, function(response) {
+		alert("批准成功");
+		 loadPage("execution_ship");
+	});
+
+}
+
+function reject_ship() {
+	var url =crudServiceBaseUrl + "/ship/reject";
+	var param = {
+		_id : model._id
+	};
+	postAjaxRequest(url, param, function(response) {
+		alert("拒绝成功");
+		 loadPage("execution_ship");
+	});
+
 }
 
 

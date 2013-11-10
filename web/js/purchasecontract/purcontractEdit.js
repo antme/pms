@@ -241,6 +241,7 @@ function changeCType(index){
 		$("#deposit").attr("disabled", false);
 		$("#invoiceType").attr("disabled", false);
 		$("#invoiceType").show();
+		$(".virt").show();
 		var kendoSupp = $("#supplier").data("kendoDropDownList");
 		kendoSupp.enable(true);
 	}else{
@@ -271,12 +272,16 @@ function changeCType(index){
 		$("#supplierNameContact").val("同方北京");
 		$("#supplierNameContact").attr("disabled", true);
 		$("#contractProperty").val("闭口合同");
+		
 		$("#contractProperty").attr("disabled", true);
 		$("#firstPay").attr("disabled", true);
 		$("#moneyProgress").attr("disabled", true);
 		$("#deposit").attr("disabled", true);
 		$("#invoiceType").attr("disabled", true);
-		$("#invoiceType").hide();
+		
+		$(".virt").hide();
+
+		
 	}
 	
 

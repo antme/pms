@@ -145,38 +145,51 @@
 
 						</div>
 
-                        <div class="k-edit-label ">
+                        <div class="k-edit-label virt">
                             <label for="contractPaymentType">付款方式</label>
                         </div>
-                        <div data-container-for="contractPaymentType" class="k-edit-field ">
+                        <div data-container-for="contractPaymentType" class="k-edit-field virt">
                             <input class="k-input k-textbox" name="contractPaymentType"
                                 id="contractPaymentType" required="required" validationMessage="请输入付款方式"  data-bind="value: contractPaymentType">
                         </div>
                         
-						<div class="k-edit-label ">
+						<div class="k-edit-label virt">
 							<label for="firstPay">首付</label>
 						</div>
-						<div data-container-for="firstPay" class="k-edit-field ">
+						<div data-container-for="firstPay" class="k-edit-field virt">
 							<input type="number" class="k-input k-textbox" name="firstPay"
 								id="firstPay" required="required" validationMessage="请输入首付"  data-bind="value: firstPay">
 						</div>
 
-						<div class="k-edit-label ">
+						<div class="k-edit-label virt">
 							<label for="moneyProgress">进度款</label>
 						</div>
-						<div data-container-for="moneyProgress" class="k-edit-field ">
+						<div data-container-for="moneyProgress" class="k-edit-field virt">
 							<input type="number" class="k-input k-textbox"
 								name="moneyProgress" id="moneyProgress" required="required" validationMessage="请输入进度款"
 								data-bind="value: moneyProgress">
 						</div>
 
-						<div class="k-edit-label ">
+						<div class="k-edit-label virt">
 							<label for="deposit">质保金</label>
 						</div>
-						<div data-container-for="projectAddress" class="k-edit-field ">
+						<div data-container-for="projectAddress" class="k-edit-field virt">
 							<input type="number" class="k-input k-textbox" name="deposit" validationMessage="请输入质保金"
 								id="deposit" required="required" data-bind="value: deposit">
 						</div>
+						
+						<div class="k-edit-label virt">
+                            <label for="invoiceType">收票类型</label>
+                        </div>
+                        <div data-container-for="projectAddress" class="k-edit-field virt">
+                            <select name="invoiceType" data-bind="value: invoiceType"
+                                id="invoiceType" required
+                                data-required-msg="Select Contract Type">
+                                <option>增值税专用</option>
+                                <option>建筑业发票</option>
+                                <option>服务业发票</option>
+                            </select>
+                        </div>
 
 						<div class="k-edit-label ">
 							<label for="contractMoney">合同金额</label>
@@ -188,30 +201,17 @@
 								required="required" disabled data-bind="value: contractMoney">
 						</div>
 
-						<div class="k-edit-label ">
-							<label for="invoiceType">收票类型</label>
-						</div>
-						<div data-container-for="projectAddress" class="k-edit-field ">
-							<select name="invoiceType" data-bind="value: invoiceType"
-								id="invoiceType" required
-								data-required-msg="Select Contract Type">
-								<option>增值税专用</option>
-								<option>建筑业发票</option>
-								<option>服务业发票</option>
-							</select>
-						</div>
+			             <hr>
 
                         <div class="k-edit-label ">
                             <label for="poNumber">PO号</label>
                         </div>
+                        
                         <div data-container-for="poNumber" class="k-edit-field ">
                             <input type="text"  name="poNumber"
                                 id="poNumber" disabled data-bind="value: poNumber">
                         </div>
-                      <div class="k-edit-label ">
-                        </div>
-                        <div class="k-edit-field ">                       
-                        </div>
+                        <hr>
 						<div class="k-edit-label ">
 							<label for="description">采购合同描述</label>
 						</div>
@@ -236,7 +236,7 @@
 								data-bind="value: comment"></textarea>
 						</div>
 						
-						  <hr>
+						
 			             <div>
 			                <label>审核备注:</label>
 			                <textarea class="k-textarea  foredit" style="width:400px;" id="approve-comment"  data-bind="value: approveComment"></textarea>

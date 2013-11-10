@@ -50,7 +50,15 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
      * @param scId
      */
 	public Map<String, Object> prepareBack(Map<String, Object> params) {
-		Map<String,Object> request = new LinkedHashMap<String,Object>();
+		return prepareBackList(params, true);
+	}
+	
+	public Map<String,Object> loadEqBackForSC(Map<String,Object> params){
+	    return prepareBackList(params, false);
+	}
+
+    public Map<String, Object> prepareBackList(Map<String, Object> params, boolean removeEmptyEq) {
+        Map<String,Object> request = new LinkedHashMap<String,Object>();
 		request.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
 		request.put(PurchaseBack.scId, params.get(PurchaseBack.scId));
 		mergeSalesContract(request);
@@ -63,12 +71,15 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			    obj.put(PurchaseBack.pbComment, obj.get(EqCostListBean.EQ_LIST_MEMO));
 			}
 		}
-		removeEmptyEqList(eqList, PurchaseBack.eqcostLeftAmount);
+		
+		if(removeEmptyEq){
+		    removeEmptyEqList(eqList, PurchaseBack.eqcostLeftAmount);
+		}
 		request.put(PurchaseBack.pbDepartment, request.get("projectManagerDepartment"));
 		request.remove("projectManagerDepartment");
 		request.put(PurchaseBack.pbSpecialRequireRadio, new String[]{});
 		return request;
-	}
+    }
 	
 	private void mergeSalseStatisInfo(Map<String, Object> params, Object scId){	  
 	    Map<String, Integer> backEqCountMap = getBackTotalCountByScId((String)scId);

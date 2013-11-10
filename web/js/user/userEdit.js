@@ -77,8 +77,12 @@ function edit(user){
 		user.password = "";
 	}
 	editUser = new userModel(user);
-    $("#groups").data("kendoMultiSelect").value(editUser.groups);
 	kendo.bind($("#user-form"), editUser);
+	kendo.bind($("#user-view-form"), editUser);
+	if($("#groups").length > 0){
+		$("#groups").data("kendoMultiSelect").value(editUser.groups);
+    }
+
 }
 
 function save(){

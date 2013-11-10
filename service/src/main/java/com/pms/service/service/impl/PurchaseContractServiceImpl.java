@@ -425,36 +425,38 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     private void updateEqListWithProjectId(Map<String, Object> params, List<Map<String, Object>> list) {
         Map<String, Object> scProjectMap = new HashMap<String, Object>();
-            
-        for (Map<String, Object> contractEq : list) {
-            Object pId = contractEq.get(PurchaseCommonBean.PROJECT_ID);
-			if (ApiUtil.isEmpty(pId)) {
-				Object scId = contractEq.get(PurchaseCommonBean.SALES_COUNTRACT_ID);
 
-				if (ApiUtil.isEmpty(scId)) {
-					// 取父参数的项目id和销售合同id
-					scId = params.get(SalesContractBean.SC_ID);
-					pId = params.get(SalesContractBean.SC_PROJECT_ID);
-					if (!ApiUtil.isEmpty(pId) && !ApiUtil.isEmpty(scId)) {
-						scProjectMap.put(scId.toString(), pId);
-					}
-				}
+        if (list != null) {
+            for (Map<String, Object> contractEq : list) {
+                Object pId = contractEq.get(PurchaseCommonBean.PROJECT_ID);
+                if (ApiUtil.isEmpty(pId)) {
+                    Object scId = contractEq.get(PurchaseCommonBean.SALES_COUNTRACT_ID);
 
-				if (!ApiUtil.isEmpty(scId)) {
-					if (scProjectMap.get(scId.toString()) != null) {
-						contractEq.put(PurchaseCommonBean.PROJECT_ID, scProjectMap.get(scId));
-					} else {
-						Map<String, Object> scQuery = new HashMap<String, Object>();
-						scQuery.put(ApiConstants.MONGO_ID, scId);
-						scQuery.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_PROJECT_ID);
-						Map<String, Object> sc = dao.findOneByQuery(scQuery, DBBean.SALES_CONTRACT);
-						Object projectId = sc.get(SalesContractBean.SC_PROJECT_ID);
-						contractEq.put(PurchaseCommonBean.PROJECT_ID, projectId);
-						contractEq.put(PurchaseCommonBean.SALES_COUNTRACT_ID, scId);
-						scProjectMap.put(scId.toString(), projectId);
-					}
-				}
-			}
+                    if (ApiUtil.isEmpty(scId)) {
+                        // 取父参数的项目id和销售合同id
+                        scId = params.get(SalesContractBean.SC_ID);
+                        pId = params.get(SalesContractBean.SC_PROJECT_ID);
+                        if (!ApiUtil.isEmpty(pId) && !ApiUtil.isEmpty(scId)) {
+                            scProjectMap.put(scId.toString(), pId);
+                        }
+                    }
+
+                    if (!ApiUtil.isEmpty(scId)) {
+                        if (scProjectMap.get(scId.toString()) != null) {
+                            contractEq.put(PurchaseCommonBean.PROJECT_ID, scProjectMap.get(scId));
+                        } else {
+                            Map<String, Object> scQuery = new HashMap<String, Object>();
+                            scQuery.put(ApiConstants.MONGO_ID, scId);
+                            scQuery.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_PROJECT_ID);
+                            Map<String, Object> sc = dao.findOneByQuery(scQuery, DBBean.SALES_CONTRACT);
+                            Object projectId = sc.get(SalesContractBean.SC_PROJECT_ID);
+                            contractEq.put(PurchaseCommonBean.PROJECT_ID, projectId);
+                            contractEq.put(PurchaseCommonBean.SALES_COUNTRACT_ID, scId);
+                            scProjectMap.put(scId.toString(), projectId);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -1525,7 +1527,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 String[] item = list.get(i);
                 String pCode = item[2].trim();
                 if (ApiUtil.isEmpty(pCode)) {
-                    break;
+                    continue;
                 }
 
                 String supplierName = item[columnIndexMap.get("供应商单位名称")].trim();

@@ -7,6 +7,8 @@ public interface IPurchaseService {
 	//--------备货API---------
 	/**初始化备货申请添加页面*/
 	public Map<String,Object> prepareBack(Map<String,Object> params);
+	
+	public Map<String,Object> loadEqBackForSC(Map<String,Object> params);
 	/**加载备货申请详情*/
 	public Map<String,Object> loadBack(Map<String,Object> params);
 	/**保存备货申请*/

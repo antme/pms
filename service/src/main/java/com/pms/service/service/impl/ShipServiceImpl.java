@@ -245,7 +245,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
     }
 	   
     public Map<String, Object> approve(Map<String, Object> params){
-        params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
+        params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_CLOSE);
         this.dao.updateById(params, DBBean.SHIP);
         
         Map<String, Object> eqList = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST },
