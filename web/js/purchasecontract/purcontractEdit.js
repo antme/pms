@@ -236,6 +236,8 @@ function changeCType(index){
 		$("#supplierNameContact").attr("disabled", false);
 		$("#contractProperty").attr("disabled", false);
 		
+		
+		$("#contractPaymentType").attr("disabled", false);
 		$("#firstPay").attr("disabled", false);
 		$("#moneyProgress").attr("disabled", false);
 		$("#deposit").attr("disabled", false);
@@ -273,6 +275,7 @@ function changeCType(index){
 		$("#supplierNameContact").attr("disabled", true);
 		$("#contractProperty").val("闭口合同");
 		
+		$("#contractPaymentType").attr("disabled", true);
 		$("#contractProperty").attr("disabled", true);
 		$("#firstPay").attr("disabled", true);
 		$("#moneyProgress").attr("disabled", true);

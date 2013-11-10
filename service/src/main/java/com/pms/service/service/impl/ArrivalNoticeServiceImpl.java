@@ -278,6 +278,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 				eq.put(PurchaseCommonBean.PURCHASE_ORDER_ID, map.get(PurchaseCommonBean.PURCHASE_ORDER_ID));
 				eq.put(PurchaseCommonBean.PURCHASE_ORDER_CODE, map.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
                 eq.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, map.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));  
+                eq.put(PurchaseCommonBean.PROJECT_ID, map.get(PurchaseCommonBean.PROJECT_ID));  
 				eq.put(PurchaseContract.SUPPLIER, map.get(PurchaseContract.SUPPLIER));
 				
 				arrivalEqList.add(eq);

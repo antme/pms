@@ -236,16 +236,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     private List<Map<String, Object>> loadRepositoryRestEqList(Map<String, Object> params, List<Map<String, Object>> loadedEqclist, boolean loadExists) {
         Map<String, Object> query = new HashMap<String, Object>();
         Object projectId = params.get("projectId");
-        query.put("eqcostList.projectId", projectId);
         boolean isDirect =false;
         boolean isRuoDian = false;
         Map<String, Object> results = new HashMap<String, Object>();
         if (params.get("type") != null && params.get("type").toString().equalsIgnoreCase("out")) {
             query.put("eqcostList.eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
+            query.put("projectId", projectId);
 
             Map<String, Object> map = this.dao.findOne(ApiConstants.MONGO_ID, projectId, new String[] { ProjectBean.PROJECT_TYPE }, DBBean.PROJECT);
 
             if (dao.exist("projectId", projectId, DBBean.PURCHASE_CONTRACT)) {
+                //弱电工程
                 query.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseCommonBean.STATUS_APPROVED }));
                 query.put("eqcostList." + PurchaseContract.SUPPLIER, params.get(PurchaseContract.SUPPLIER));
                 results = this.dao.list(query, DBBean.PURCHASE_CONTRACT);
@@ -257,6 +258,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             }
             isDirect = true;
         }else{
+            query.put("eqcostList.projectId", projectId);
+
             query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
             query.put(PurchaseContract.SUPPLIER, params.get(PurchaseContract.SUPPLIER));
 
@@ -275,7 +278,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             for (Map<String, Object> p : pList) {
 
                 if (isDirect) {
-                    if (p.get("projectId").equals(projectId) && p.get(PurchaseContract.SUPPLIER) != null && p.get(PurchaseContract.SUPPLIER).equals(params.get(PurchaseContract.SUPPLIER)) && 
+                    if (data.get("projectId").equals(projectId) && p.get(PurchaseContract.SUPPLIER) != null && p.get(PurchaseContract.SUPPLIER).equals(params.get(PurchaseContract.SUPPLIER)) && 
                             p.get(PurchaseContract.EQCOST_DELIVERY_TYPE).equals(PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY)) {
                         eqclist.add(p);
                     }
@@ -743,6 +746,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     if(eqCountMap.get(eqOrderMap.get(ApiConstants.MONGO_ID))!=null){
                       //合并货物递送方式和订单等等信息到设备清单
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_ORDER_ID, orderMap.get(ApiConstants.MONGO_ID));
+                        eqOrderMap.put(PurchaseCommonBean.PROJECT_ID, orderMap.get(PurchaseCommonBean.PROJECT_ID));
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_ORDER_CODE, orderMap.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_REQUEST_ID, orderMap.get(PurchaseCommonBean.PURCHASE_REQUEST_ID));
                         eqOrderMap.put(PurchaseCommonBean.PURCHASE_REQUEST_CODE, orderMap.get(PurchaseCommonBean.PURCHASE_REQUEST_CODE));
