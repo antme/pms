@@ -145,6 +145,44 @@ $(document).ready(function() {
 			
 		}
 	});
+	
+	
+	
+	$("#draftGrid").kendoGrid({
+		dataSource : dataSource,
+		pageable : {
+			buttonCount:5
+		},
+		
+		selectable: "row",
+		height: "400px",
+	    sortable : true,
+		filterable : filterable,
+		columns : [ {
+			field : "contractCode",
+			title : "合同编号",
+			width : "160px"
+		}, {
+			field : "projectName",
+			title : "项目名"
+		}, {
+			field : "projectStatus",
+			title : "项目状态"
+		}, {
+			field : "projectType",
+			title : "项目类型"
+		}, {
+			field : "archiveStatus",
+			title : "归档状态"
+		}, {
+			field : "customer",
+			title : "客户名"
+		}, {
+			field : "contractType",
+			title : "合同类型"
+		}]
+	});
+	
 });//end dom ready	
 
 
@@ -170,6 +208,20 @@ function toolbar_addSalesContract(){
 
 function toolbar_modifySalesContract() {
 	var rowData = getSelectedRowDataByGrid("grid");
+	if (rowData == null){
+		alert("请点击选择一条合同记录！");
+		return;
+	}
+	
+	if(rowData.status == "草稿" && !rowData.projectId){
+		loadPage("salescontract_addsc",{_id:rowData._id, pageId:"newProject"});
+	}else{
+		loadPage("salescontract_editsc",{_id:rowData._id,status:rowData.status});
+	}
+};
+
+function toolbar_modifySalesDraftContract() {
+	var rowData = getSelectedRowDataByGrid("draftGrid");
 	if (rowData == null){
 		alert("请点击选择一条合同记录！");
 		return;

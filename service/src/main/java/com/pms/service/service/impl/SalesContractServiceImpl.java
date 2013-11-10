@@ -54,10 +54,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> listSC(Map<String, Object> params) {
 
-		String[] limitKeys = {SalesContractBean.SC_CODE, SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER,
-				SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_RUNNING_STATUS, 
-				SalesContractBean.SC_ARCHIVE_STATUS, SalesContractBean.SC_TYPE, "status"};
-		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
+//		String[] limitKeys = {SalesContractBean.SC_CODE, SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER,
+//				SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_RUNNING_STATUS, 
+//				SalesContractBean.SC_ARCHIVE_STATUS, SalesContractBean.SC_TYPE, "status"};
+//		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 
 		mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_CUSTOMER, CustomerBean.NAME,  DBBean.CUSTOMER);
 	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_MANAGER, UserBean.USER_NAME,  DBBean.USER);

@@ -320,7 +320,7 @@ function initMyDraftTasks(id, data){
 					}
 					
 					if(dataItem.db == "salesContract"){
-						return '<a onclick="loadTreePage(' + "'salescontract_scList'," + param + ')">'+ dataItem.count + '</a>';
+						return '<a onclick="loadTreePage(' + "'salescontract_draftlist'," + param + ')">'+ dataItem.count + '</a>';
 					}
 				
 				}
