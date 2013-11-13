@@ -1040,9 +1040,9 @@ function saveSC(){
 		}
 		
 		scm.set("status", "已提交");
-//		postAjaxRequest("/service/sc/add",  {models:kendo.stringify(scm)}, function(data){
-//			loadPage("salescontract_scList");
-//    	});
+		postAjaxRequest("/service/sc/add",  {models:kendo.stringify(scm)}, function(data){
+			loadPage("salescontract_scList");
+    	});
 
 	}
 };
