@@ -33,6 +33,11 @@
     <button class="k-button"  onclick="addMonthShipments();">新增</button>
 </script>
 
+<script type="text/x-kendo-template" id="copyDataToolbar">
+ <button class="k-button"  onclick="copyOldEqData();">拷贝已有成本数据</button>
+</script>
+
+
 <body>
 	
 	<div id="editSalesContract" class="k-content test">
@@ -340,6 +345,7 @@
 	                        <a href="/template/cbqd.xlsx">数据模版下载</a>           	                   
 							<input name="files" id="files" type="file" />	
 						</div>
+						
                        <div id="scEqCostListNew"></div>
                        <br/>
                        <hr/>

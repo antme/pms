@@ -1337,7 +1337,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		String[] limitKeys = {SalesContractBean.SC_CODE};
 		Map<String, Object> re = dao.getLastRecordByCreatedOn(DBBean.SALES_CONTRACT, queryMap, limitKeys);
-		String scCode = "TDSH-XS-2013-0";
+		String scCode = "TDSH-XS-" + DateUtil.getStringByDate(new Date()) + "-0";
 		if (re != null){
 			scCode = (String)re.get(SalesContractBean.SC_CODE);
 		}

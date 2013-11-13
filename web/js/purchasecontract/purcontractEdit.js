@@ -192,7 +192,7 @@ $(document).ready(function() {
 			dataTextField : "purchaseOrderCode",
 			dataValueField : "_id",
 			placeholder : "选择采购订单...",
-			itemTemplate:  '${ data.purchaseOrderCode }:<strong>${ data.purchaseContractType}</strong>',
+			itemTemplate:  '${ data.purchaseOrderCode }:<strong>${ data.purchaseContractType}</strong>:<strong> - 【项目名称】${ data.projectName}</strong>',
 			dataSource : new kendo.data.DataSource({
 				transport : {
 					read : {

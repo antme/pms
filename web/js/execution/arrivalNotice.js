@@ -36,7 +36,17 @@ $(document).ready(function () {
 		selectable : "row",
 		filterable : filterable,
         columns: [
-            { field: "shipType", title:"到货类型" },
+            { field: "shipType", title:"到货类型",
+            	template : function(dataItem) {
+					if (dataItem.shipType == "上海备货货架") {
+						return '上海—上海泰德库';
+					} else if ( dataItem.shipType == "北京备货货架")	{
+						return '上海—北京泰德库';
+					}
+					return dataItem.shipType;
+				}
+            
+            },
             { field: "arrivalDate", title:"到货日期" },
             {
             	field: "foreignCode",

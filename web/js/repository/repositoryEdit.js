@@ -394,6 +394,10 @@ function edit(data) {
 					field : "eqcostNo",
 					title : "序号",
 					width : 80
+				}, 
+				{
+					field : "eqcostMaterialCode",
+					title : "物料代码"
 				},{
 					field : "eqcostProductType",
 					title : "规格型号"

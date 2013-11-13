@@ -95,7 +95,7 @@ var menus = [
                      { text: "采购合同", id: "purchasecontract_purchasecontract", imageUrl: "/images/order.png" },
                      { text: "入库申请单", id: "repository_repository", imageUrl: "/images/heineken.png" },
                      { text: "到货通知", id: "execution_arrivalNotice", imageUrl: "/images/repository.png" },
-                     { text: "直发出入库", id: "repository_repositoryout", imageUrl: "/images/rout.png"}
+                     { text: "直发出库单", id: "repository_repositoryout", imageUrl: "/images/rout.png"}
                  ]
              },                                               
              {

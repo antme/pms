@@ -245,11 +245,10 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
     }
 	   
     public Map<String, Object> approve(Map<String, Object> params){
-        params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_CLOSE);
+        params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
         this.dao.updateById(params, DBBean.SHIP);
         
-        Map<String, Object> eqList = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST },
-                DBBean.SHIP);  
+        Map<String, Object> eqList = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST }, DBBean.SHIP);  
         
         List<Map<String, Object>> eqMapList = (List<Map<String, Object>>) eqList.get(SalesContractBean.SC_EQ_LIST);
         
@@ -315,20 +314,20 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	public Map<String, Object> record(Map<String, Object> params) {
 		List<Map<String, Object>> eqlist = (List<Map<String, Object>>) params.get(ShipBean.SHIP_EQ_LIST);
 		boolean close = true;
-		for (Map<String, Object> eq : eqlist) {
-
-			Object shipType = eq.get(ArrivalNoticeBean.SHIP_TYPE);
-			if (!ApiUtil.isEmpty(shipType)
-			        && (shipType.toString().equalsIgnoreCase(ArrivalNoticeBean.SHIP_TYPE_1) || shipType.toString().equalsIgnoreCase(ArrivalNoticeBean.SHIP_TYPE_1_0))) {
-				// 直发才需要检查数量
-				int arrivalAmount = ApiUtil.getInteger(eq.get(ShipBean.SHIP_EQ_ACTURE_AMOUNT), 0);
-				int amount = ApiUtil.getInteger(eq.get(ShipBean.EQCOST_SHIP_AMOUNT), 0);
-				if (amount != arrivalAmount) {
-					close = false;
-					break;
-				}
-			}
-		}
+//		for (Map<String, Object> eq : eqlist) {
+//
+//			Object shipType = eq.get(ArrivalNoticeBean.SHIP_TYPE);
+//			if (!ApiUtil.isEmpty(shipType)
+//			        && (shipType.toString().equalsIgnoreCase(ArrivalNoticeBean.SHIP_TYPE_1) || shipType.toString().equalsIgnoreCase(ArrivalNoticeBean.SHIP_TYPE_1_0))) {
+//				// 直发才需要检查数量
+//				int arrivalAmount = ApiUtil.getInteger(eq.get(ShipBean.SHIP_EQ_ACTURE_AMOUNT), 0);
+//				int amount = ApiUtil.getInteger(eq.get(ShipBean.EQCOST_SHIP_AMOUNT), 0);
+//				if (amount != arrivalAmount) {
+//					close = false;
+//					break;
+//				}
+//			}
+//		}
 		
 		if (close) {
 			params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_CLOSE);

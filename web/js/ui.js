@@ -570,6 +570,11 @@ function openRepositoryViewWindow(param){
 }
 
 
+function openRepositoryOutViewWindow(param){
+	var options = { width:"1080px", height: "500px", title:"入库信息"};
+	openRemotePageWindow(options, "repository_repositoryOutEdit", {_id : param});	
+}
+
 
 function myTaskQueryParam(options, operation){
 		if(redirectParams){

@@ -77,6 +77,14 @@ public class PurchaseContractController extends AbstractController {
         pService.deletePurchaseContract(parserJsonParameters(request, false));
         responseWithData(null, request, response);
     }
+    
+    @RequestMapping("/backtoorder")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, desc = RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT_DESC)
+    public void backContractToOrder(HttpServletRequest request, HttpServletResponse response) {
+        pService.backContractToOrder(parserJsonParameters(request, false));
+        responseWithData(null, request, response);
+    }
+    
 
     @RequestMapping("/update")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, desc = RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT_DESC)

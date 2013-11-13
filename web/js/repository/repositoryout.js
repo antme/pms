@@ -41,7 +41,7 @@ $(document).ready(function() {
 				field : "repositoryCode",
 				title : "申请编号",
 				template : function(dataItem) {
-					return '<a  onclick="openRepositoryViewWindow(\'' + dataItem._id + '\');">' + dataItem.repositoryCode + '</a>';
+					return '<a  onclick="openRepositoryOutViewWindow(\'' + dataItem._id + '\');">' + dataItem.repositoryCode + '</a>';
 				}
 			}, {
 				field : "recustomer",

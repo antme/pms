@@ -502,6 +502,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         for (Map<String, Object> data : list) {
             data.put(SalesContractBean.SC_EQ_LIST, scs.mergeEqListBasicInfo(data.get(SalesContractBean.SC_EQ_LIST)));
+            
+            Map<String, Object> projectQuery = new HashMap<String, Object>();
+            projectQuery.put(ApiConstants.MONGO_ID, data.get("projectId"));
+            Map<String, Object> projectMap = dao.findOneByQuery(projectQuery, DBBean.PROJECT);
+            data.put("projectName", projectMap.get(ProjectBean.PROJECT_NAME));
         }
 
         return results;
@@ -521,6 +526,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         
         Map<String, Object> eqQuery = new HashMap<String, Object>();
         eqQuery.put("eqcostList.purchaseOrderId", new DBQuery(DBQueryOpertion.IN, order.get(ApiConstants.MONGO_ID)));
+        eqQuery.put("status", new DBQuery(DBQueryOpertion.NOT_EQUALS, PurchaseRequest.STATUS_BACKED));
+        
         //只统计此订单下的同样的设备清单
         Map<String, Object> compareMap = new HashMap<String, Object>();
         compareMap.put("purchaseOrderId", order.get(ApiConstants.MONGO_ID));
@@ -801,7 +808,20 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, request.get(ApiConstants.MONGO_ID), db);
         request.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
         request.put(PurchaseRequest.PROCESS_STATUS, status);
-        request.put(PurchaseRequest.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+        
+        if(status.equalsIgnoreCase(PurchaseRequest.STATUS_APPROVED)){
+            request.put(PurchaseRequest.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+        }
+        
+        if (status.equalsIgnoreCase(PurchaseRequest.STATUS_BACKED)) {
+            Map<String, Object> order = dao.findOne(PurchaseRequest.PURCHASE_CONTRACT_ID, cc.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
+            if (order != null) {
+                order.put(PurchaseRequest.PURCHASE_CONTRACT_ID, null);
+                order.put(PurchaseRequest.PURCHASE_CONTRACT_CODE, null);
+                dao.updateById(order, DBBean.PURCHASE_ORDER);
+            }
+
+        }
 
         return dao.updateById(request, db);
 
@@ -1595,6 +1615,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         result.put("status", 1);
         return result;
+    }
+    
+    public void backContractToOrder(HashMap<String, Object> parserJsonParameters){
+        
+        processRequest(parserJsonParameters, DBBean.PURCHASE_CONTRACT, PurchaseRequest.STATUS_BACKED);
     }
 
     public IPurchaseService getBackService() {

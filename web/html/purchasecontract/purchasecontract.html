@@ -15,6 +15,7 @@
 	    <button class="k-button access" access="purchase_contract_management" onclick="addCon();">新增</button>
 	    <button class="k-button access" access="purchase_contract_management" onclick="editCon();">编辑</button>
 	    <button class="k-button access" access="purchase_contract_process" onclick="approveCon()">审核</button>
+	    <button class="k-button access" access="purchase_contract_process" onclick="backCon()">退回</button>
 	    <button class="k-button access" access="purchase_contract_management" onclick="addPOBumber()">补填PO</button>
     </div>
 		<div id="grid"></div>
@@ -33,9 +34,10 @@
 			<label for="poNumber">PO号:</label>
 		</div>
 		<div  class="k-edit-field ">
-			<input type="text" name="poNumber" id="poNumber" >
+			<input type="text" name="poNumber" id="poNumber" size="55" >
 		</div>
-		<button onclick="submitPo();">提交</button>
+		<br>
+		<button onclick="submitPo();" style="margin-left:150px;">提交</button>
 	</div>
 </body>
 </html>

@@ -62,6 +62,9 @@ bjDataSource = new kendo.data.DataSource({
 });
 
 var supplierShipDataSource = new kendo.data.DataSource({
+	group : [ {
+		field : "purchaseOrderCode"
+	} ],
 	schema : {
 		model : eqModel
 	}
@@ -210,6 +213,14 @@ $(document).ready(function() {
 				title : "物流类别"
 			},	        
 	        { field: "eqcostMemo", title: "备注" },
+	        { 
+	        	field: "purchaseOrderCode", 
+	        	title: "采购订单" ,
+				groupHeaderTemplate: function(dataItem){														
+					return dataItem.value;
+				}
+	        		
+	        },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	    editable: true,
 	    sortable : true,

@@ -107,7 +107,20 @@ function approveCon() {
 	}
 }
 
-
+function backCon(){
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+//		if(row.status == "已拒绝"){
+			postAjaxRequest("/service/purcontract/backtoorder", {
+				_id : row._id
+			}, function(data) {
+				listDataSource.read();
+			});
+//		}else{
+//			alert("只能退回审核拒绝的采购合同");
+//		}
+	}
+}
 
 var rowId = undefined;
 function addPOBumber(){
@@ -116,7 +129,7 @@ function addPOBumber(){
 		if (row.purchaseContractType == "施耐德北京代采") {
 
 			var options = {
-				width : 500,
+				width : 600,
 				height : 200,
 				actions : [ "Maximize", "Close" ]
 			};

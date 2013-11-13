@@ -536,7 +536,7 @@ $(document).ready(function() {
 				footerTemplate: "总数: #=count#"
 			} ],
 
-			toolbar : [ {name:"create",text:"新增成本项"} ],
+			toolbar : [ {name:"create",text:"新增成本项"},   { template: kendo.template($("#copyDataToolbar").html()) } ],
 			editable : true,
 			scrollable : true,
 			sortable : true,
@@ -735,7 +735,8 @@ function edit(data){
 				footerTemplate: "总数: #=count#"
 			} ],
 			scrollable : true,
-			sortable : true
+			sortable : true,
+			selectable : "row"
 		});
 	}//成本设备清单_old
 
@@ -980,7 +981,7 @@ function saveSC(){
     				
     				if (haveFlag){
 						if (itemAmount + haveOldAmount < 0){
-							alert(itemProductName + "原有清单数量不够抵消, 请检查已备货数量！");
+							alert(itemProductName + "原有清单数量不够抵消, 剩余可备货数量(可扣除数)【" + haveOldAmount + "】！");
 							return;
 						}
 					}else{
@@ -1205,6 +1206,23 @@ function moneyOnChange(){
 		$("#estimateGrossProfit").val(profit);
 		$("#estimateGrossProfitRate").val(profitRate+" %");
 	}
+}
+
+
+function copyOldEqData(){
+	var grid = $("#scEqCostListOld").data("kendoGrid");
+
+	var rowIndex = grid.select();
+	var row = grid.dataItem(rowIndex);
+	
+	if(!row){
+		alert("请从【已有设备成本列表数据】选择需要复制的数据");
+		return ;
+	}
+	
+	console.log(row);
+	var newgrid = $("#scEqCostListNew").data("kendoGrid");
+	newgrid.dataSource.add(row);
 }
 	
 	
