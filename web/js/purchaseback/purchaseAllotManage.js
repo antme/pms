@@ -120,7 +120,7 @@ function finalProcessPA(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.paStatus == "已批准"){	
+	} else if(row.paStatus == "已初审"){	
 		loadPage("purchaseback_purchaseAllotManageEdit", { _id : row._id });
 	}else{
 		alert("请选择‘已批准’的数据");

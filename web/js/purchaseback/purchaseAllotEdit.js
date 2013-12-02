@@ -1,6 +1,6 @@
 intSelectInput();
 var subModel = kendo.data.Model.define({
-	id : "eqcostNo",
+	id : "_id",
 	fields : {
         eqcostNo: {
 			editable : false,
@@ -82,7 +82,14 @@ var myModel = kendo.data.Model.define({
 		contractCode: {},
 		contractAmount: {},
 		eqcostList:{},
-		paShelfCode:{}
+		paShelfCode:{},
+		paCount:{
+	    	   type: "number",
+	           validation: {
+	               min: 0
+	           },
+	           defaultValue:0
+	     }
 	}
 });
 var currentObj = new myModel();
@@ -112,17 +119,8 @@ $(document).ready(function () {
 	  	sortable : true,
 	  	editable:true
 	});
-	
-	$("#form-container-button button").click(function(){
-		if(this.id == "cancel") {
-			loadPage("purchaseback_purchaseAllot");
-		} else if(validateModel()){
-			if(confirm("提交表单，确认？")){
-				postAjaxRequest("/service/purchase/allot/"+this.id, {models:kendo.stringify(currentObj)} , saveSuccess);
-			}
-		}
-	});
-	
+
+
 	if(popupParams){
 		postAjaxRequest("/service/purchase/allot/load", popupParams, editSuccess);
 		disableAllInPoppup();
@@ -136,6 +134,19 @@ $(document).ready(function () {
 	
 });
 
+function cancleAllotEdit(){
+	loadPage("purchaseback_purchaseAllotManage");
+}
+
+function submitEditAllot() {
+	if (validateModel()) {
+		if (confirm("提交表单，确认？")) {
+			postAjaxRequest("/service/purchase/allot/submit" , {
+				models : kendo.stringify(currentObj)
+			}, saveSuccess);
+		}
+	}
+}
 function dataBound(e) {
 	var data = $("#subGrid").data("kendoGrid").dataSource.data();
 	var totalRequestCount=0;
@@ -148,10 +159,23 @@ function dataBound(e) {
 		if (!item.pbLeftCount) {item.pbLeftCount = 0;}
 		if (!item.pbTotalCount) {item.pbTotalCount = 0;}
 		if (!item.eqcostBasePrice) {item.eqcostBasePrice = 0;}
-		// 检测总的申请数量
-		if(item.paCount > item.pbLeftCount){
-			item.paCount=item.pbLeftCount;
+		
+		if(!item.oldPaCount){
+			item.oldPaCount = item.paCount;
 		}
+		
+		if(currentObj.paStatus == "已提交"){
+			// 检测总的申请数量
+			if(item.paCount > (item.pbLeftCount + item.oldPaCount)){
+				item.paCount= (item.pbLeftCount + item.oldPaCount);
+			}
+		}else{
+			// 检测总的申请数量
+			if(item.paCount > item.pbLeftCount){
+				item.paCount= item.pbLeftCount;
+			}
+		}
+	
 	}
 }
 
@@ -160,10 +184,7 @@ function saveSuccess(){
 }
 function editSuccess(e){
 	if(!e) return;
-	if(e._id && e.paStatus !="已拒绝") {
-		$("#form-container [name!='tempComment']").attr("disabled",true);
-		$("#form-container-button button").attr("disabled",true);
-	}
+
 	currentObj = new myModel(e);
 	currentObj.set("pbPlanDate", kendo.toString(currentObj.pbPlanDate, 'd'));
 	kendo.bind($("#form-container"), currentObj);	

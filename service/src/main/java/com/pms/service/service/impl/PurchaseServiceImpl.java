@@ -210,15 +210,19 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		obj.put(PurchaseBack.paSubmitDate, DateUtil.getDateString(new Date()));
 		obj.put(PurchaseBack.paShelfCode, params.get(PurchaseBack.paShelfCode));
 		obj.put(PurchaseBack.paCode, generateCode("DBSQ", DBBean.PURCHASE_ALLOCATE, PurchaseBack.paCode));
-		
+		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
 	    String comment = (String)params.get("tempComment");
 	    comment = recordComment("提交",comment,null);
 	    obj.put(PurchaseBack.paComment, comment);
 		
 		obj.putAll(checkEqCountForAllot(params));
-		
+	    Map<String, Object> result = null;
 		scs.mergeCommonFieldsFromSc(obj, params.get(PurchaseBack.scId));
-		Map<String, Object> result =  dao.add(obj, DBBean.PURCHASE_ALLOCATE);
+		if(params.get(ApiConstants.MONGO_ID)!=null){
+		    result=  dao.updateById(obj, DBBean.PURCHASE_ALLOCATE);
+		}else{
+		    result =  dao.add(obj, DBBean.PURCHASE_ALLOCATE);
+		}
 		//updateEqLeftCountInEqDB(result);
 		return result;
 	}
@@ -260,11 +264,11 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
             status = PurchaseStatus.done.toString();
             comment = recordComment("结束", comment, oldComment);
             allot.put(PurchaseBack.paNumber, params.get(PurchaseBack.paNumber));
-        }else if (PurchaseStatus.approved.toString().equals(dbStatus)) {
+        }else if (PurchaseStatus.firstApprove.toString().equals(dbStatus)) {
             status = PurchaseStatus.finalApprove.toString();
             comment = recordComment("终审", comment, oldComment);
         } else {
-            status = PurchaseStatus.approved.toString();
+            status = PurchaseStatus.firstApprove.toString();
             comment = recordComment("初审", comment, oldComment);
             allot.put(PurchaseBack.eqcostList, params.get(PurchaseBack.eqcostList));
         }
@@ -292,7 +296,18 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		Map<String,Object> allot = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ALLOCATE);
 		Map<String,Object> obj = new HashMap<String,Object>();
 		obj.put(ApiConstants.MONGO_ID, allot.get(ApiConstants.MONGO_ID));
-		obj.put(PurchaseBack.paStatus, PurchaseStatus.rejected.toString());
+		
+		String dbStatus = String.valueOf(allot.get(PurchaseBack.paStatus));
+
+        
+        String status = null;
+        if (PurchaseStatus.firstApprove.toString().equals(dbStatus)) {
+            status = PurchaseStatus.finalRejected.toString();
+        } else {
+            status = PurchaseStatus.firstRejected.toString();
+        }
+
+        obj.put(PurchaseBack.paStatus, status);
 
 	    String oldComment = (String)allot.get(PurchaseBack.paComment);
 	    String comment = (String)params.get("tempComment");
@@ -400,7 +415,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         Map<String, Object> map = dao.list(params, DBBean.PURCHASE_ALLOCATE);
         mergeSalesContract(map);
         return map;
-    }
+	}
 
 
 	@Override
@@ -564,75 +579,45 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	 * 调拨申请申请：验证货物数量，计算申请总额
 	 * @param params.pbId params.eqcostList
 	 * */
-	public Map<String,Object> checkEqCountForAllot(Map<String,Object> params) {
-		
-		//1. 获取上传的调拨设备清单
-		List<Map<String,Object>> allotEqList = (List<Map<String,Object>>)params.get(PurchaseBack.eqcostList);
-		Map<String,Map<String,Object>> allotEqMap = new LinkedHashMap<String,Map<String,Object>>();
-		if(allotEqList != null){
-			for(Map<String,Object> obj : allotEqList){
-				allotEqMap.put(String.valueOf(obj.get(ApiConstants.MONGO_ID)), obj);
-			}
-		}
-		
-		//2. 获取备货剩余数量
-		Map<String,Integer> backLeftCountMap = countRestEqByBackId((String)params.get(PurchaseBack.pbId));
-		
-		//3.1 检验货物有效性 ID 数量
-		List<Map<String,Object>> itemList = new ArrayList<Map<String,Object>>();
-		for(String id : allotEqMap.keySet()){
-			if(backLeftCountMap.containsKey(id)){
-				Integer count = ApiUtil.getInteger(allotEqMap.get(id), PurchaseBack.paCount, 0);
-				String comment =  (String)allotEqMap.get(id).get(PurchaseBack.paComment);
-				
-				if(count == 0){
-					continue;
-				}
-				if(count > backLeftCountMap.get(id)){
-					throw new ApiResponseException(String.format("Save purchase allot error [%s]", allotEqMap.get(id)), ResponseCodeConstants.EQCOST_APPLY_ERROR); 
-				}
-				Map<String,Object> item = new HashMap<String,Object>();
-				item.put(ApiConstants.MONGO_ID, id);
-				item.put(PurchaseBack.paCount, count);
-				item.put(PurchaseBack.paComment, comment);
-				itemList.add(item);
-			}
-		}
-		Map<String,Object> result = new HashMap<String,Object>();
-		result.put(PurchaseBack.eqcostList, itemList);
-		return result;
-	}
+    public Map<String, Object> checkEqCountForAllot(Map<String, Object> params) {
+
+        // 1. 获取上传的调拨设备清单
+        List<Map<String, Object>> allotEqList = (List<Map<String, Object>>) params.get(PurchaseBack.eqcostList);
+        Map<String, Map<String, Object>> allotEqMap = new LinkedHashMap<String, Map<String, Object>>();
+        if (allotEqList != null) {
+            for (Map<String, Object> obj : allotEqList) {
+                allotEqMap.put(String.valueOf(obj.get(ApiConstants.MONGO_ID)), obj);
+            }
+        }
+
+        // 3.1 检验货物有效性 ID 数量
+        List<Map<String, Object>> itemList = new ArrayList<Map<String, Object>>();
+        for (String id : allotEqMap.keySet()) {
+            Integer count = ApiUtil.getInteger(allotEqMap.get(id), PurchaseBack.paCount, 0);
+            String comment = (String) allotEqMap.get(id).get(PurchaseBack.paComment);
+
+            if (count == 0) {
+                continue;
+            }
+
+            Map<String, Object> item = new HashMap<String, Object>();
+            item.put(ApiConstants.MONGO_ID, id);
+            item.put(PurchaseBack.paCount, count);
+            item.put(PurchaseBack.paComment, comment);
+            itemList.add(item);
+
+        }
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put(PurchaseBack.eqcostList, itemList);
+        return result;
+    }
 	
 	
 
-	
-	/**{_id:allotCount}*/
-	public Map<String,Double> getAllotEqCountBySalesContractId(String saleId){
-		Map<String,Double> result = new HashMap<String,Double>(); 
-		Map<String, Object> query = new HashMap<String, Object>();
-		query.put(PurchaseBack.scId, saleId);
-		query.put(PurchaseBack.paStatus, PurchaseStatus.approved.toString());
-		query.put(ApiConstants.LIMIT_KEYS, new String[]{PurchaseBack.eqcostList});
-		Map<String,Object> map = dao.list(query, DBBean.PURCHASE_ALLOCATE);
-		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
-		for(Map<String,Object> obj : list){
-			List<Map<String,Object>> eqList = (List<Map<String,Object>>)obj.get(PurchaseBack.eqcostList);
-			for(Map<String,Object> eq : eqList){
-				String key = (String)eq.get(ApiConstants.MONGO_ID);
-				Double value = ApiUtil.getDouble(eq, PurchaseBack.paCount,0);
-				if(result.containsKey(key)){
-					result.put(key, result.get(key)+value);
-				}else{
-					result.put(key, value);
-				}
-			}
-		}
-		return result;
-	}
-	
+
 
 	public enum PurchaseStatus {
-    	saved,submited,approved,rejected,interruption,finalApprove,done;
+    	saved,submited,approved,rejected,interruption,finalApprove,done, firstApprove, firstRejected, finalRejected;
 		@Override
 		public String toString() {
 			String value = "undefine";
@@ -641,7 +626,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				case submited: value="已提交"; break;
 				case approved: value="已批准"; break;
 				case rejected: value="已拒绝"; break;
+			    case firstRejected: value="初审拒绝"; break;
+			    case finalRejected: value="终审拒绝"; break;
 				case finalApprove: value="已终审"; break;
+				case firstApprove: value="已初审"; break;
 				case done: value="已结束"; break;
 				case interruption: value="已中止"; break;
 				default: break;
@@ -736,6 +724,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         sl.add(PurchaseStatus.submited.toString());
         sl.add(PurchaseStatus.approved.toString());
         sl.add(PurchaseStatus.finalApprove.toString());
+        sl.add(PurchaseStatus.firstApprove.toString());
         sl.add(PurchaseStatus.done.toString());
         allocateQuery.put(PurchaseBack.paStatus, new DBQuery(DBQueryOpertion.IN, sl));
         Map<String, Integer> allocatEqCountMap = countEqByKey(allocateQuery, DBBean.PURCHASE_ALLOCATE, PurchaseBack.paCount, null);

@@ -952,6 +952,9 @@ function saveSC(){
 //    				alert("品牌不能为空！");
 //    				return;
 //    			}
+    			var itemEqcostSalesBasePrice = item.eqcostSalesBasePrice;
+    			var itemEqcostDiscountRate = item.eqcostDiscountRate;
+    			var itemeqcostTaxType = item.eqcostTaxType;
     			//---end : add logic for check can not empty col
     			
     			//---start : add logic for check new record amount is negative number
@@ -967,8 +970,12 @@ function saveSC(){
     					var oldName = oldItem.eqcostProductName;
     					var oldPtype = oldItem.eqcostProductType;
     					var oldAmount = oldItem.eqcostLeftAmount;
+    					var olditemEqcostSalesBasePrice = oldItem.eqcostSalesBasePrice;
+     					var oldeqcostDiscountRate = oldItem.eqcostDiscountRate;
+     					var oldeqcostTaxType = oldItem.eqcostTaxType;
     					
-    					if (itemProductType == oldPtype && itemProductName ==oldName && itemUnit == oldItem.eqcostUnit && itemEqcostMaterialCode == oldItem.eqcostMaterialCode && itemEqcostBrand == oldItem.eqcostBrand){
+    					if (itemProductType == oldPtype && itemProductName ==oldName && itemUnit == oldItem.eqcostUnit && itemEqcostMaterialCode == oldItem.eqcostMaterialCode 
+    							&& itemEqcostBrand == oldItem.eqcostBrand && itemEqcostSalesBasePrice==olditemEqcostSalesBasePrice && itemEqcostDiscountRate == oldeqcostDiscountRate && itemeqcostTaxType == oldeqcostTaxType){
     						haveFlag = true;
     						haveOldAmount = oldAmount;
     						break;
@@ -1219,10 +1226,10 @@ function copyOldEqData(){
 		alert("请从【已有设备成本列表数据】选择需要复制的数据");
 		return ;
 	}
-	
-	console.log(row);
+	var data = 	JSON.parse(kendo.stringify(row));
+
 	var newgrid = $("#scEqCostListNew").data("kendoGrid");
-	newgrid.dataSource.add(row);
+	newgrid.dataSource.add(data);
 }
 	
 	

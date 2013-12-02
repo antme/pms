@@ -272,8 +272,8 @@ public class InitBean {
                         @SuppressWarnings("unchecked")
                         Map<String, Object> role = dao.findOne(RoleBean.ROLE_ID, rv.roleID(), DBBean.ROLE_ITEM);
                         if (role != null) {
-//                            role.put(RoleBean.ROLE_DESC, rv.desc());
-//                            dao.updateById(role, DBBean.ROLE_ITEM);
+                            role.put(RoleBean.ROLE_DESC, rv.desc());
+                            dao.updateById(role, DBBean.ROLE_ITEM);
                         } else {
                             Map<String, Object> roleMap = new HashMap<String, Object>();
                             roleMap.put(RoleBean.ROLE_ID, rv.roleID());

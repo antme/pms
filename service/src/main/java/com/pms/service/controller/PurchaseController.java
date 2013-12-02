@@ -110,7 +110,7 @@ public class PurchaseController extends AbstractController {
     }
 
     @RequestMapping("/allot/finalapprove")
-    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ALLOCATE_FINAL_PROCESS, desc = RoleValidConstants.PURCHASE_ALLOCATE_PROCESS_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ALLOCATE_FINAL_PROCESS, desc = RoleValidConstants.PURCHASE_ALLOCATE_FINAL_PROCESS_DESC)
     public void fianlApproveAllotForBack(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(purchaseService.approveAllot(parserJsonParameters(request,  false)), request, response);
     }

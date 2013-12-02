@@ -360,6 +360,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             realItemQuery.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, item.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE));
             realItemQuery.put(EqCostListBean.EQ_LIST_UNIT, item.get(EqCostListBean.EQ_LIST_UNIT));
             realItemQuery.put(EqCostListBean.EQ_LIST_BRAND, item.get(EqCostListBean.EQ_LIST_BRAND));
+            realItemQuery.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, item.get(EqCostListBean.EQ_LIST_SALES_BASE_PRICE));
+            realItemQuery.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, item.get(EqCostListBean.EQ_LIST_DISCOUNT_RATE));
+            realItemQuery.put(EqCostListBean.EQ_LIST_TAX_TYPE, item.get(EqCostListBean.EQ_LIST_TAX_TYPE));
+            
 
             realItemQuery.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
             realItemQuery.put(ApiConstants.LIMIT_KEYS, EqCostListBean.EQ_LIST_REAL_AMOUNT);
