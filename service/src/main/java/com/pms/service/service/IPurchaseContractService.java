@@ -110,6 +110,8 @@ public interface IPurchaseContractService {
 
     public void backContractToOrder(HashMap<String, Object> parserJsonParameters);
 
+    public void deletePurchaseRepository(HashMap<String, Object> parserJsonParameters);
+
    
 
 }

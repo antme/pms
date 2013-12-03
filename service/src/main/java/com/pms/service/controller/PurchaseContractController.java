@@ -36,6 +36,13 @@ public class PurchaseContractController extends AbstractController {
     public void listProjectsFromApproveContractsForRepositorySelect(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.listProjectsAndSuppliersFromContractsForRepositorySelect(parserJsonParameters(request, true)), request, response);
     }
+    
+    @RequestMapping("/repository/delete")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, desc = RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT_DESC)
+    public void deletePurchaseRepository(HttpServletRequest request, HttpServletResponse response) {
+        pService.deletePurchaseRepository(parserJsonParameters(request, false));
+        responseWithData(null, request, response);
+    }
 
     @RequestMapping("/get/byproject_supplier")
     public void listContractsByProjectAndSupplier(HttpServletRequest request, HttpServletResponse response) {

@@ -143,5 +143,19 @@ function approveStatusCheck(){
 
 
 
+function deleteRepoData(){
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else if(row.status == "草稿" || row.status == "已退回"){	
+		if(confirm("删除表单，确认？")){
+			postAjaxRequest("service/purchase/back/destroy", {_id:row._id}, function(){listDatasource.read();});
+		}
+	}else{
+		alert("只能删除草稿数据");
+	}
+}
+
+
 
 

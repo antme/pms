@@ -137,7 +137,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         Map<String, Object> projectQuery = new HashMap<String, Object>();
         projectQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, projectIds));
-        projectQuery.put(ApiConstants.LIMIT_KEYS, ProjectBean.PROJECT_NAME);
+        projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CODE});
 
         Map<String, Object> projects = this.dao.list(projectQuery, DBBean.PROJECT);
 
@@ -1620,6 +1620,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public void backContractToOrder(HashMap<String, Object> parserJsonParameters){
         
         processRequest(parserJsonParameters, DBBean.PURCHASE_CONTRACT, PurchaseRequest.STATUS_BACKED);
+    }
+    
+    public void deletePurchaseRepository(HashMap<String, Object> parserJsonParameters){
+        List<String> ids = new ArrayList<String>();
+        ids.add(parserJsonParameters.get(ApiConstants.MONGO_ID).toString());
+        dao.deleteByIds(ids, DBBean.REPOSITORY);
     }
 
     public IPurchaseService getBackService() {

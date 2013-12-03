@@ -63,6 +63,19 @@ $(document).ready(function() {
 });
 
 
+function deleteRepoData(){
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row) {
+		alert("点击列表可以选中数据");
+	} else if(row.status == "草稿" || row.status == "已退回"){	
+		if(confirm("删除表单，确认？")){
+			postAjaxRequest("service/purchase/back/destroy", {_id:row._id}, function(){listDatasource.read();});
+		}
+	}else{
+		alert("只能删除草稿或则已退回状态的入库申请数据");
+	}
+}
+
 function add(){
 	loadPage("repository_repositoryEdit");
 }
@@ -71,12 +84,10 @@ function add(){
 function cancelRepo() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "已中止"){
-			alert("此申请已中止，不需要再次中止");
-		}else if(row.status == "已入库"){
-			alert("数据已入库，不能中止");
-		}else{
+		if(row.status == "入库中"){
 			process(cancelUrl);
+		}else{
+			alert("不允许退回");
 		}
 	}
 }

@@ -142,20 +142,22 @@ $(document).ready(function() {
 			change : function(e) {
 				updateSupplier();
 				requestDataItem.projectName = this.dataItem().projectName;
+				requestDataItem.projectCode = this.dataItem().projectCode;
 			},
 			dataBound : function(e){	
 				requestDataItem.projectName = this.dataItem().projectName;
+				requestDataItem.projectCode = this.dataItem().projectCode;
 				updateSupplier();
 			}
 		});
 	
-	$("#operator").kendoDropDownList({
-		dataTextField : "userName",
-		dataValueField : "_id",
-		optionLabel: "选择入库人...",
-		dataSource : proManagerItems
-	});
-	
+//	$("#operator").kendoDropDownList({
+//		dataTextField : "userName",
+//		dataValueField : "_id",
+//		optionLabel: "选择入库人...",
+//		dataSource : proManagerItems
+//	});
+//	
 	$("#inDate").kendoDatePicker({
 	    format: "yyyy/MM/dd",
 	    parseFormats: ["yyyy/MM/dd"]
@@ -353,6 +355,7 @@ function loadContracts(data){
 }
 
 function edit(data) {
+	console.log(user);
 	// 初始化空对象
 	var dataItem = new model();
 	if(data){
@@ -360,6 +363,9 @@ function edit(data) {
 		requestDataItem = data;
 	    
 	}else{
+		requestDataItem.inType="采购入库";
+		requestDataItem.operatorName = user.userName;
+		requestDataItem.operatorId = user.userName;
 		$("#purchaserepository-div").show();
 	}
 	var eqList = requestDataItem.eqcostList;
