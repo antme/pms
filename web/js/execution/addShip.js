@@ -318,6 +318,8 @@ $(document).ready(function() {
 
 
 function loadSC(){
+	model.set("customerName", "");
+	model.set("customerId", "");
 	salesContract = $("#salesContract").kendoComboBox({
 		autoBind: false,
         placeholder: "销售合同编号",
@@ -349,6 +351,10 @@ function loadSC(){
             model.set("contractType", dataItem.contractType);
             model.shipType = undefined;
  
+            postAjaxRequest("/service/sc/getCustomerBySC", {salesContractId:dataItem.customer}, function(data){
+            	model.set("customerName", data.name);
+            	model.set("customerId", data._id);
+            });
             postAjaxRequest("/service/ship/eqlist", {salesContractId:salesContract.value()}, loadEqList);
 		
         }

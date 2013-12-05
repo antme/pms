@@ -355,7 +355,6 @@ function loadContracts(data){
 }
 
 function edit(data) {
-	console.log(user);
 	// 初始化空对象
 	var dataItem = new model();
 	if(data){

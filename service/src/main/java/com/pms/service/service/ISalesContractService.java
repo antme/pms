@@ -69,6 +69,8 @@ public interface ISalesContractService {
 	
     public List<Map<String, Object>> mergeEqListBasicInfo(Object eqList);
     
-    public Map<String, Object> importSCExcleFile(Map<String, Object> params); 
+    public Map<String, Object> importSCExcleFile(Map<String, Object> params);
+
+	public Map<String, Object> getCustomerBySC(Map<String, Object> params); 
 
 }

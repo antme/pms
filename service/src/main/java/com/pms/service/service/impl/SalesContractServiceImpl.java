@@ -1109,7 +1109,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(SalesContractBean.SC_PROJECT_ID, pId);
-		query.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE, SalesContractBean.SC_TYPE});
+		query.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE, SalesContractBean.SC_TYPE, SalesContractBean.SC_CUSTOMER , SalesContractBean.SC_CUSTOMER_ID});
 		Map<String, Object> result = dao.list(query, DBBean.SALES_CONTRACT);
 		
 		return result;
@@ -1295,6 +1295,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		query.put(SalesContractBean.SC_ARCHIVE_STATUS, params.get(SalesContractBean.SC_ARCHIVE_STATUS));
 		
 		return dao.updateById(query, DBBean.SALES_CONTRACT);
+	}
+	
+	public Map<String, Object> getCustomerBySC(Map<String, Object> params){
+		Map<String, Object> customerQuery = new HashMap<String, Object>();
+		customerQuery.put(ApiConstants.MONGO_ID, params.get("salesContractId"));
+		return this.dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
 	}
 	
 	
