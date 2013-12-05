@@ -422,8 +422,34 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         if(contract.get(FROM)==null){            
             contract.put(SalesContractBean.SC_EQ_LIST, eqList);         
         }
+        
 
-        return updatePurchase(contract, DBBean.PURCHASE_CONTRACT);
+        
+
+        Map<String, Object> contra =  updatePurchase(contract, DBBean.PURCHASE_CONTRACT);
+        
+        List<Map<String, Object>> eqListMap = (List<Map<String, Object>>)contract.get(SalesContractBean.SC_EQ_LIST);
+
+        Set<String> orderIds = new HashSet<String>();
+        // 批准后更新订单状态
+        for (Map<String, Object> eqMap : eqListMap) {            
+            if(eqMap.get(PURCHASE_ORDER_ID) !=null){
+                String orderId = eqMap.get(PURCHASE_ORDER_ID).toString();
+                orderIds.add(orderId);     
+            }
+        }
+ 
+        
+		for (String orderId : orderIds) {
+			Map<String, Object> orderMap = new HashMap<String, Object>();
+			orderMap.put(ApiConstants.MONGO_ID, orderId);
+
+			orderMap.put(PurchaseContract.PURCHASE_CONTRACT_ID, contra.get(ApiConstants.MONGO_ID));
+			orderMap.put(PurchaseContract.PURCHASE_CONTRACT_CODE, contra.get(PurchaseContract.PURCHASE_CONTRACT_CODE));
+			this.dao.updateById(orderMap, DBBean.PURCHASE_ORDER);
+		}
+        
+        return contra;
     }
 
     private void updateEqListWithProjectId(Map<String, Object> params, List<Map<String, Object>> list) {

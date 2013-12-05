@@ -41,7 +41,9 @@ public class ApiUtil {
 
     }
 
-    
+    public static boolean isValid(Object param){
+    	return !isEmpty(param);
+    }
     public static boolean isEmpty(Object param) {
 
         if (param == null) {
@@ -241,7 +243,7 @@ public class ApiUtil {
     }
     
     public static Float getFloatParam(Map<String, Object> params, String key){
-    	Float result = null;
+    	Float result = 0f;
     	Object value = params.get(key); 
     	if (!isEmpty(value)){
     		try {

@@ -113,7 +113,7 @@ function editOr() {
 function cancelOrder() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if (row.status == "草稿" || row.status == "已提交") {
+		if (row.status == "草稿" || (row.status == "已提交" && !row.purchaseContractId)) {
 
 	
 				$("#approve-comment").val("");
@@ -135,7 +135,7 @@ function cancelOrder() {
 				kendoWindow.center();
 			
 		} else {
-			alert("只能回退未发采购合同的订单");
+			alert("只能回退未发采购合同的订单, 如果已发采购合同，请从采购合同退回");
 		}
 	}
 

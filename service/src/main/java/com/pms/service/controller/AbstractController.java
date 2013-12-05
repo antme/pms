@@ -1,8 +1,11 @@
 package com.pms.service.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
@@ -209,7 +211,6 @@ public abstract class AbstractController {
         response.addHeader("Accept-Encoding", "gzip, deflate");
 
         String jsonReturn = new Gson().toJson(data);
-        String displayMsg = null;
         String callback = request.getParameter("callback");
         
         
@@ -222,19 +223,12 @@ public abstract class AbstractController {
             if (status == ResponseStatus.FAIL) {
                 jsonReturn = "displayMsg(" + jsonReturn + ");";
             } else {
-
-                if (msgKey != null) {
-                    displayMsg = "displayMsg({\"msg\": \"" + ConfigurationManager.getSystemMessage(msgKey) + "\"});";
-                }
-
+         
                 if (data != null && data instanceof Map) {
-                    Object responseMap = null; //data.get("data");
-                    
-                    //if(responseMap == null){
-                        responseMap = data;
-                    //}
+
+                		updateDataValue(data);
                         //返回
-                        jsonReturn = callback + "(" + new Gson().toJson(responseMap) + ");";
+                        jsonReturn = callback + "(" + new Gson().toJson(data) + ");";
                    
                 } else {
                     //不返回任何数据           
@@ -252,7 +246,59 @@ public abstract class AbstractController {
 
     }
 
-    protected void responseServerError(Throwable throwable, HttpServletRequest request, HttpServletResponse response) {
+    
+
+    
+	private void updateDataValue(Map<String, Object> data) {
+		List<String> floatFields = new ArrayList<String>();
+		floatFields.add("contractDownPayment");
+		floatFields.add("qualityMoney");
+		floatFields.add("contractAmount");
+		floatFields.add("equipmentAmount");
+		floatFields.add("serviceAmount");
+		floatFields.add("estimateEqCost0");
+		floatFields.add("estimateEqCost1");
+		floatFields.add("estimateSubCost");
+		floatFields.add("estimatePMCost");
+		floatFields.add("estimateDeepDesignCost");
+		floatFields.add("estimateDebugCost");
+		floatFields.add("estimateOtherCost");
+		floatFields.add("estimateTax");
+		floatFields.add("totalEstimateCost");
+		floatFields.add("estimateGrossProfit");
+		floatFields.add("eqcostBasePrice");
+		floatFields.add("eqcostSalesBasePrice");
+		floatFields.add("eqcostLastBasePrice");
+		floatFields.add("eqcostTotalAmount");
+
+		if (ApiUtil.isValid(data)) {
+			for (String key : data.keySet()) {
+
+				if (data.get(key) instanceof Map) {
+					updateDataValue((Map<String, Object>) data.get(key));
+				} else if (data.get(key) instanceof List) {
+					List<Object> objects = (List<Object>) data.get(key);
+					for(Object obj: objects){
+						if(obj instanceof Map){
+							updateDataValue((Map<String, Object>)obj);
+						}
+					}
+
+				} else {
+					if (floatFields.contains(key)) {
+						Float f = ApiUtil.getFloatParam(data, key);
+						BigDecimal b = new BigDecimal(f);
+						float f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+						data.put(key, f1);
+					}
+				}
+			}
+
+		}
+
+	}
+
+	protected void responseServerError(Throwable throwable, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> temp = new HashMap<String, Object>();
         temp.put("status", ResponseStatus.FAIL.toString());
 

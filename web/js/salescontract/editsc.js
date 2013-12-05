@@ -648,7 +648,7 @@ function edit(data){
 	if(scm.get("status") == "已提交"){
 		$("#saveDraftBtn").hide();
 	}
-	//进度款
+	//进度款 
 	/*if (!$("#progressPayment").data("kendoGrid")){
 		$("#progressPayment").kendoGrid({
 			dataSource : scm.progressPayment,
@@ -958,6 +958,9 @@ function saveSC(){
     			var itemEqcostSalesBasePrice = item.eqcostSalesBasePrice;
     			var itemEqcostDiscountRate = item.eqcostDiscountRate;
     			var itemeqcostTaxType = item.eqcostTaxType;
+    			var itemeqcostCategory = item.eqcostCategory;
+    			var itemeqcostBasePrice = item.eqcostBasePrice;
+    			
     			//---end : add logic for check can not empty col
     			
     			//---start : add logic for check new record amount is negative number
@@ -976,9 +979,13 @@ function saveSC(){
     					var olditemEqcostSalesBasePrice = oldItem.eqcostSalesBasePrice;
      					var oldeqcostDiscountRate = oldItem.eqcostDiscountRate;
      					var oldeqcostTaxType = oldItem.eqcostTaxType;
+     					var olditemCategory = oldItem.eqcostCategory;
+     					var olditemEqcostBasePrice = oldItem.eqcostBasePrice;
     					
     					if (itemProductType == oldPtype && itemProductName ==oldName && itemUnit == oldItem.eqcostUnit && itemEqcostMaterialCode == oldItem.eqcostMaterialCode 
-    							&& itemEqcostBrand == oldItem.eqcostBrand && itemEqcostSalesBasePrice==olditemEqcostSalesBasePrice && itemEqcostDiscountRate == oldeqcostDiscountRate && itemeqcostTaxType == oldeqcostTaxType){
+    							&& itemEqcostBrand == oldItem.eqcostBrand && itemEqcostSalesBasePrice==olditemEqcostSalesBasePrice 
+    							&& itemEqcostDiscountRate == oldeqcostDiscountRate && itemeqcostTaxType == oldeqcostTaxType
+    							&& olditemEqcostBasePrice == itemeqcostBasePrice && olditemCategory == itemeqcostCategory){
     						haveFlag = true;
     						haveOldAmount = oldAmount;
     						break;
