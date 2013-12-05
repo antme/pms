@@ -483,6 +483,7 @@ function editDraftSc_ADD(data){
 	
 	if(data){
 		scm = new scModel(data);
+		
 		eqCostListDataSource.data(scm.eqcostList);
 	}
 	scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
@@ -834,7 +835,9 @@ function showTabs(projectStatus){
 
 	}else{
 		
-		scm.set("contractType", "N/A");
+		if(!scm.contractType){
+			scm.set("contractType", "N/A");
+		}
 	
 		//虚拟合同，只显示 设备清单Tab	
 		$("#tabDiv").show();
