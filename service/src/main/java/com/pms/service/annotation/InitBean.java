@@ -292,7 +292,7 @@ public class InitBean {
         
         if(roleIds.size() > 0){
         	Map<String, Object> query = new HashMap<String, Object>();      	
-        	query.put(RoleBean.ROLE_ID, new DBQuery(DBQueryOpertion.IN, roleIds));        	
+        	query.put(RoleBean.ROLE_ID, new DBQuery(DBQueryOpertion.NOT_IN, roleIds));        	
         	dao.deleteByQuery(query, DBBean.ROLE_ITEM);
         }
     }
