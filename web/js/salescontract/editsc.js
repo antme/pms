@@ -645,6 +645,9 @@ $(document).ready(function() {
 
 function edit(data){
 	scm = new scModel(data);
+	if(scm.get("status") == "已提交"){
+		$("#saveDraftBtn").hide();
+	}
 	//进度款
 	/*if (!$("#progressPayment").data("kendoGrid")){
 		$("#progressPayment").kendoGrid({

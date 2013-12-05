@@ -254,12 +254,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				
 				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, SalesContractBean.SC_CUSTOMER, customerNew);
 				
-				//单独更新关联项目中 冗余存的  customer (因为项目中没有外键关联到 SC ， 所以要单独更新处理)
-				Map<String, Object> pCustomerUpdate = new HashMap<String, Object>();
-				pCustomerUpdate.put(ApiConstants.MONGO_ID, projectId);
-				pCustomerUpdate.put(ProjectBean.PROJECT_CUSTOMER, customerNew);
-				dao.updateById(pCustomerUpdate, DBBean.PROJECT);
+				
 			}
+			//单独更新关联项目中 冗余存的  customer (因为项目中没有外键关联到 SC ， 所以要单独更新处理)
+			Map<String, Object> pCustomerUpdate = new HashMap<String, Object>();
+			pCustomerUpdate.put(ApiConstants.MONGO_ID, projectId);
+			pCustomerUpdate.put(ProjectBean.PROJECT_CUSTOMER, customerNew);
+			dao.updateById(pCustomerUpdate, DBBean.PROJECT);
+			
 			
 			//销售合同关联项目是否更新 (新的逻辑，销售合同关联项目不允许修改 2013/07/09)
 			/*String scProjectIdOld = (String) existContract.get(SalesContractBean.SC_PROJECT_ID);
