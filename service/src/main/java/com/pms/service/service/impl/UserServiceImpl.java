@@ -242,7 +242,7 @@ public class UserServiceImpl extends AbstractService implements IUserService {
             limitQuery.put(ApiConstants.LIMIT_KEYS, new String[] { RoleBean.ROLE_ID });
             Map<String, Object> role = dao.findOneByQuery(limitQuery, DBBean.ROLE_ITEM);
 
-            if (!roles.contains(role.get(ApiConstants.MONGO_ID))) {
+            if (role==null || !roles.contains(role.get(ApiConstants.MONGO_ID))) {
                 logger.debug("Role requried for path : " + path);
                 throw new ApiResponseException(String.format("No role to for user[%s] and path[%s]", userId, path), "role_required");
             }

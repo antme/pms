@@ -246,20 +246,23 @@ public abstract class AbstractService {
 
         if (ApiThreadLocal.get(UserBean.USER_ID) == null) {
             return false;
-        } else {
-            String userId = ApiThreadLocal.get(UserBean.USER_ID).toString();
+		} else {
+			String userId = ApiThreadLocal.get(UserBean.USER_ID).toString();
 
-            Map<String, Object> query = new HashMap<String, Object>();
-            query.put(RoleBean.ROLE_ID, roleId);
-            query.put(ApiConstants.LIMIT_KEYS, ApiConstants.MONGO_ID);
+			Map<String, Object> query = new HashMap<String, Object>();
+			query.put(RoleBean.ROLE_ID, roleId);
+			query.put(ApiConstants.LIMIT_KEYS, ApiConstants.MONGO_ID);
 
-            Map<String, Object> role = this.dao.findOneByQuery(query, DBBean.ROLE_ITEM);
+			Map<String, Object> role = this.dao.findOneByQuery(query, DBBean.ROLE_ITEM);
 
-            List<String> roles = listUserRoleIds(userId);
+			List<String> roles = listUserRoleIds(userId);
 
-            return roles.contains(role.get(ApiConstants.MONGO_ID).toString());
+			if (role != null && role.get(ApiConstants.MONGO_ID) != null) {
+				return roles.contains(role.get(ApiConstants.MONGO_ID).toString());
+			}
+			return false;
 
-        }
+		}
 
     }
 

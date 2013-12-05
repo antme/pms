@@ -115,15 +115,12 @@ public class InitBean {
             RoleValidConstants.SHIP_ARRIVAL_RECORD,
         	RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, 
             RoleValidConstants.PURCHASE_ORDER_MANAGEMENT,
-            RoleValidConstants.PURCHASE_ORDER_PROCESS,
             RoleValidConstants.REPOSITORY_MANAGEMENT,
             RoleValidConstants.SHIP_ARRIVAL_RECORD
 
         });        
         groupRoles.put(GroupBean.COO_VALUE, new String[] {
                 RoleValidConstants.PURCHASE_CONTRACT_PROCESS, 
-                RoleValidConstants.PURCHASE_ORDER_PROCESS,
-                RoleValidConstants.PURCHASE_REQUEST_PROCESS,
                 RoleValidConstants.PURCHASE_ALLOCATE_FINAL_PROCESS
             });
 
@@ -291,6 +288,12 @@ public class InitBean {
                     }
                 }
             }
+        }
+        
+        if(roleIds.size() > 0){
+        	Map<String, Object> query = new HashMap<String, Object>();      	
+        	query.put(RoleBean.ROLE_ID, new DBQuery(DBQueryOpertion.IN, roleIds));        	
+        	dao.deleteByQuery(query, DBBean.ROLE_ITEM);
         }
     }
     

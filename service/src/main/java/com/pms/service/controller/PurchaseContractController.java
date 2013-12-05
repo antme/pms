@@ -156,7 +156,6 @@ public class PurchaseContractController extends AbstractController {
     }
     
     @RequestMapping("/request/approve")
-    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_PROCESS, desc = RoleValidConstants.PURCHASE_REQUEST_PROCESS_DESC)
     public void approvePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.approvePurchaseRequest(parserJsonParameters(request, false)), request, response);
     }
@@ -168,7 +167,6 @@ public class PurchaseContractController extends AbstractController {
     }
     
     @RequestMapping("/request/reject")
-    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_PROCESS, desc = RoleValidConstants.PURCHASE_REQUEST_PROCESS_DESC)
     public void rejectPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.rejectPurchaseRequest(parserJsonParameters(request, false)), request, response);
     }
@@ -211,7 +209,6 @@ public class PurchaseContractController extends AbstractController {
     }
 
     @RequestMapping("/order/approve")
-    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_PROCESS, desc = RoleValidConstants.PURCHASE_ORDER_PROCESS_DESC)
     public void approvePurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
         pService.approvePurchaseOrder(parserJsonParameters(request, false));
         responseWithData(null, request, response);
@@ -224,7 +221,6 @@ public class PurchaseContractController extends AbstractController {
     }
     
     @RequestMapping("/order/reject")
-    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_PROCESS, desc = RoleValidConstants.PURCHASE_ORDER_PROCESS_DESC)
     public void rejectPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(pService.rejectPurchaseOrder(parserJsonParameters(request, false)), request, response);
     }

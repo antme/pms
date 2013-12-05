@@ -78,7 +78,7 @@ public class RoleValidConstants {
     public static final String REPOSITORY_MANAGEMENT_DESC = "入库管理";
         
     public static final String REPOSITORY_MANAGEMENT_PROCESS = "repository_management_process";
-    public static final String REPOSITORY_MANAGEMENT_PROCESS_DESC = "入库审批";
+    public static final String REPOSITORY_MANAGEMENT_PROCESS_DESC = "入库确认";
     
 
     public static final String SALES_CONTRACT_MANAGEMENT = "salse_contract_management";
