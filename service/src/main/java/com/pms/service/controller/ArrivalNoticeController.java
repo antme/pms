@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pms.service.annotation.LoginRequired;
+import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.annotation.RoleValidate;
 import com.pms.service.service.IArrivalNoticeService;
 
@@ -51,6 +52,7 @@ public class ArrivalNoticeController extends AbstractController {
     }
     
     @RequestMapping("/create/byorder")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_ARRIVAL_NOTICE, desc = RoleValidConstants.PURCHASE_ORDER_ARRIVAL_NOTICE_DESC)
     public void createByOrder(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(arrivalNoticeService.createByOrder(params), request, response);

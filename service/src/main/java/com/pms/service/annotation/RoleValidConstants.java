@@ -29,6 +29,10 @@ public class RoleValidConstants {
 
     public static final String PURCHASE_ORDER_PROCESS = "purchase_order_process";
     public static final String PURCHASE_ORDER_PROCESS_DESC = "采购订单审批 ";
+    
+    public static final String PURCHASE_ORDER_ARRIVAL_NOTICE = "purchase_order_arrival_notice";
+    public static final String PURCHASE_ORDER_ARRIVAL_NOTICE_DESC = "订单直发到货通知";
+    
 
     public static final String PURCHASE_ORDER_MANAGEMENT = "purchase_order_management";
     public static final String PURCHASE_ORDER_MANAGEMENT_DESC = "采购订单管理 ";
