@@ -2,8 +2,8 @@
 var listProjectUrl = "/service/purcontract/repository/contract/list";
 var updateUrl = "/service/purcontract/repository/update?type=in";
 var createUrl = "/service/purcontract/repository/add?type=in";
-var listEqUrl = "/service/purcontract/get/byproject_supplier";
-var loadUrl = "/service/purcontract/repository/get";
+var listEqUrl = "/service/purcontract/get/byproject_supplier?type=in";
+var loadUrl = "/service/purcontract/repository/get?type=in";
 var eqcostApplyAmountLabel = "入库数量";
 var leftCountLabel = "可入库数量";
 
@@ -12,6 +12,7 @@ if(redirectParams && redirectParams.type == "out"){
 	updateUrl = "/service/purcontract/repository/update?type=out";
 	createUrl = "/service/purcontract/repository/add?type=out";
 	listEqUrl = "/service/purcontract/get/byproject_supplier?type=out";
+	loadUrl = "/service/purcontract/repository/get?type=out";
 	eqcostApplyAmountLabel = "出库数量";
 	leftCountLabel = "可出库数量";
 	if(redirectParams.page == "confirm"){
@@ -116,6 +117,9 @@ var model = kendo.data.Model.define({
 			editable : false
 		},
 		inDate: {
+			type:"date"
+		},
+		outDate: {
 			type:"date"
 		},
 		eqcostApplyAmount : {
@@ -328,7 +332,7 @@ function confirmRepository(){
 	if(supplierId){
 		requestDataItem.supplier = supplierId;	
 	}
-	postAjaxRequest("/service/purcontract/repository/approve", {models:kendo.stringify(requestDataItem)}, checkStatus);
+	postAjaxRequest("/service/purcontract/repository/approve?type=in", {models:kendo.stringify(requestDataItem)}, checkStatus);
 }
 
 function cancel(){
@@ -391,6 +395,7 @@ function edit(data) {
 	
 //	requestDataItem.inDate = "10/10/2013";
 	requestDataItem.set("inDate", kendo.toString(requestDataItem.inDate, 'd'));
+	requestDataItem.set("outDate", kendo.toString(requestDataItem.outDate, 'd'));
 	kendo.bind($("#purchaserepository-edit-item"), requestDataItem);
 
 	// 渲染成本编辑列表

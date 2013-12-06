@@ -222,7 +222,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
        
 
         
-        List<Map<String, Object>> mergedEqList = loadRepositoryRestEqList(params, null, false);
+        List<Map<String, Object>> mergedEqList = loadRepositoryRestEqList(params, null, false, null);
         
         Map<String, Object> lresult = new HashMap<String, Object>();
 
@@ -233,13 +233,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     }
 
-    private List<Map<String, Object>> loadRepositoryRestEqList(Map<String, Object> params, List<Map<String, Object>> loadedEqclist, boolean loadExists) {
+    private List<Map<String, Object>> loadRepositoryRestEqList(Map<String, Object> params, List<Map<String, Object>> loadedEqclist, boolean loadExists, String db) {
         Map<String, Object> query = new HashMap<String, Object>();
         Object projectId = params.get("projectId");
         boolean isDirect =false;
         boolean isRuoDian = false;
         Map<String, Object> results = new HashMap<String, Object>();
+        if(db == null){
+        	db = DBBean.REPOSITORY;
+        }
         if (params.get("type") != null && params.get("type").toString().equalsIgnoreCase("out")) {
+        	db = DBBean.REPOSITORY_OUT;
             query.put("eqcostList.eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
             query.put("projectId", projectId);
 
@@ -324,7 +328,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         requery.put(PurchaseContract.SUPPLIER, params.get(PurchaseContract.SUPPLIER));
         requery.put("type", params.get("type"));
         requery.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[]{PurchaseCommonBean.STATUS_DRAFT, PurchaseCommonBean.STATUS_CANCELLED}));        
-        Map<String, Integer> repostoryTotalCountMap = countEqByKey(requery, DBBean.REPOSITORY, "eqcostApplyAmount", null);
+        Map<String, Integer> repostoryTotalCountMap = countEqByKey(requery, db, "eqcostApplyAmount", null);
         if(repostoryTotalCountMap == null){
             repostoryTotalCountMap = new HashMap<String, Integer>();
         }
@@ -1125,8 +1129,13 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> listRepositoryRequests(Map<String, Object> params) {
-        mergeMyTaskQuery(params, DBBean.REPOSITORY);
-        Map<String, Object> results = this.dao.list(params, DBBean.REPOSITORY);
+		String db = DBBean.REPOSITORY;
+		if ("out".equalsIgnoreCase((String) params.get("type"))) {
+			db = DBBean.REPOSITORY_OUT;
+		}
+    	
+    	mergeMyTaskQuery(params,  db);
+		Map<String, Object> results = this.dao.list(params,  db);
         List<Map<String, Object>> list = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
 
         Map<String, Object> query = new HashMap<String, Object>();
@@ -1149,8 +1158,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     @Override
     public Map<String, Object> getRepositoryRequest(Map<String, Object> parameters) {
-        Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.REPOSITORY);
-        List<Map<String, Object>> mergedEqList = loadRepositoryRestEqList(result, (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST), true);
+    	String db = DBBean.REPOSITORY;
+		if ("out".equalsIgnoreCase((String) parameters.get("type"))) {
+			db = DBBean.REPOSITORY_OUT;
+		}
+        Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), db);
+        List<Map<String, Object>> mergedEqList = loadRepositoryRestEqList(result, (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST), true, db);
         result.put(SalesContractBean.SC_EQ_LIST, mergedEqList);
         return result;
     }
@@ -1161,42 +1174,57 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     @Override
-    public Map<String, Object> updateRepositoryRequest(Map<String, Object> parameters) {
-   
-        List<Map<String, Object>> mergeSavedEqList = (List<Map<String, Object>>) parameters.get("eqcostList");
-        
-        double total = 0;
-        for(Map<String, Object> eq: mergeSavedEqList){
-            total += ApiUtil.getDouble(eq, "eqcostApplyAmount", 0);           
-        }
-        
-        if(parameters.get(ApiConstants.MONGO_ID) == null){
-            parameters.put("repositoryCode", generateCode("RKSQ", DBBean.REPOSITORY, "repositoryCode"));
-        }
-        
-        parameters.put("totalIn", (int)total);
-        parameters.put(SalesContractBean.SC_EQ_LIST, mergeSavedEqList);
-        
-        return updatePurchase(parameters, DBBean.REPOSITORY);
+	public Map<String, Object> updateRepositoryRequest(Map<String, Object> parameters) {
+		String db = DBBean.REPOSITORY;
+		if ("out".equalsIgnoreCase((String) parameters.get("type"))) {
+			db = DBBean.REPOSITORY_OUT;
+		}
 
-    }
+		List<Map<String, Object>> mergeSavedEqList = (List<Map<String, Object>>) parameters.get("eqcostList");
+
+		double total = 0;
+		for (Map<String, Object> eq : mergeSavedEqList) {
+			total += ApiUtil.getDouble(eq, "eqcostApplyAmount", 0);
+		}
+
+		if (parameters.get(ApiConstants.MONGO_ID) == null) {
+			if ("out".equalsIgnoreCase((String) parameters.get("type"))) {
+				parameters.put("repositoryCode", generateCode("CKSQ", DBBean.REPOSITORY_OUT, "repositoryCode"));
+			} else {
+				parameters.put("repositoryCode", generateCode("RKSQ", DBBean.REPOSITORY, "repositoryCode"));
+
+			}
+		}
+
+		parameters.put("totalIn", (int) total);
+		parameters.put(SalesContractBean.SC_EQ_LIST, mergeSavedEqList);
+
+		return updatePurchase(parameters, db);
+
+	}
 
     @Override
     public Map<String, Object> approveRepositoryRequest(Map<String, Object> params) {
+    	
+    	String db = DBBean.REPOSITORY;
+		if ("out".equalsIgnoreCase((String) params.get("type"))) {
+			db = DBBean.REPOSITORY_OUT;
+		}
+		
         Map<String, Object> result = null;
         if (params.get("type") != null && params.get("type").toString().equalsIgnoreCase("in")) {
             //入库仓库
-            result = processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_IN_REPOSITORY);                       
+            result = processRequest(params, db, PurchaseRequest.STATUS_IN_REPOSITORY);                       
             Map<String, Object> repo = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST },
-                    DBBean.REPOSITORY);                        
+            		db);                        
             createArriveNotice(repo);                        
         } else {
             //直发入库
-            result = processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_IN_OUT_REPOSITORY);
+            result = processRequest(params, db, PurchaseRequest.STATUS_IN_OUT_REPOSITORY);
         }
         
         Map<String, Object> eqList = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST },
-                DBBean.REPOSITORY);  
+        		db);  
         List<Map<String, Object>> eqMapList = (List<Map<String, Object>>) eqList.get(SalesContractBean.SC_EQ_LIST);
         
         Map<String, Object> contractMap = new HashMap<String, Object>();
@@ -1219,7 +1247,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             Map<String, Object> query = new HashMap<String, Object>();
             query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseRequest.STATUS_IN_REPOSITORY);
             query.put("eqcostList.purchaseContractId", contractId);
-            Map<String, Integer> repCountMap = countEqByKey(query, DBBean.REPOSITORY, "eqcostApplyAmount", null, compareMap);
+            Map<String, Integer> repCountMap = countEqByKey(query, db, "eqcostApplyAmount", null, compareMap);
 
             Map<String, Object> conQuery = new HashMap<String, Object>();
             conQuery.put(ApiConstants.MONGO_ID, contractId);
@@ -1355,7 +1383,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     public Map<String, Object> cancelRepositoryRequest(Map<String, Object> params) {
-        return processRequest(params, DBBean.REPOSITORY, PurchaseRequest.STATUS_CANCELLED);
+    	String db = DBBean.REPOSITORY;
+		if ("out".equalsIgnoreCase((String) params.get("type"))) {
+			db = DBBean.REPOSITORY_OUT;
+		}
+		
+        return processRequest(params, db, PurchaseRequest.STATUS_CANCELLED);
     }
 
     // 采购合同列表为付款
@@ -1651,7 +1684,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public void deletePurchaseRepository(HashMap<String, Object> parserJsonParameters){
         List<String> ids = new ArrayList<String>();
         ids.add(parserJsonParameters.get(ApiConstants.MONGO_ID).toString());
+        //FIXME
         dao.deleteByIds(ids, DBBean.REPOSITORY);
+        dao.deleteByIds(ids, DBBean.REPOSITORY_OUT);
     }
 
     public IPurchaseService getBackService() {
