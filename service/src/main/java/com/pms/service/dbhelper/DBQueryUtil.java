@@ -155,7 +155,7 @@ public class DBQueryUtil {
 
         }
         DBObject query = builder.get();
-        logger.info("Query object: " + query.toMap().toString());
+//        logger.info("Query object: " + query.toMap().toString());
 
         return query;
     

@@ -419,7 +419,6 @@ function edit(data) {
 	$("#purchasecontract-edit-item").show();
 	$("#purchasecontract-select").hide();
 
-
 		if (!$("#purchaserepository-edit-grid").data("kendoGrid")) {
 			$("#purchaserepository-edit-grid").kendoGrid({
 				dataSource : itemDataSource,

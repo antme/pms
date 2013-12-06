@@ -243,6 +243,7 @@ var eqCostListDataSourceOld = new kendo.data.DataSource({
 		aggregates: [
                      { field: "eqcostCategory", aggregate: "count" },
                      { field: "eqcostRealAmount", aggregate: "sum" },
+                     { field: "eqcostAmount", aggregate: "sum" },
                      { field: "eqcostTotalAmount", aggregate: "sum" }
                   ]
 	},
@@ -250,6 +251,7 @@ var eqCostListDataSourceOld = new kendo.data.DataSource({
 	aggregate: [ 
 	             { field: "eqcostCategory", aggregate: "count" },
                  { field: "eqcostRealAmount", aggregate: "sum" },
+                 { field: "eqcostAmount", aggregate: "sum" },
                  { field: "eqcostTotalAmount", aggregate: "sum" }
                ],
 	
@@ -276,6 +278,8 @@ var eqCostListDataSourceOld = new kendo.data.DataSource({
 	}
 });
 var projectItems = undefined;
+var oldEqListLoadRefresh = false;
+
 $(document).ready(function() {
 	if(redirectParams && redirectParams._id){
 		projectItems = new kendo.data.DataSource({
@@ -541,6 +545,7 @@ $(document).ready(function() {
 			scrollable : true,
 			sortable : true,
 			save: function(e) {
+
 				if (excuSave) {
 					excuSave = false;
 					var oldEqcostTaxType = e.model.eqcostTaxType;
@@ -591,7 +596,8 @@ $(document).ready(function() {
 					scm.set("estimateEqCost0",estimateEqCost0);
 		        	scm.set("estimateEqCost1",estimateEqCost1);
 					moneyOnChange();
-					
+					var grid1 = $("#scEqCostListNew").data("kendoGrid");
+					grid1.refresh();
 					excuSave = true;
 				}
 			}
@@ -739,7 +745,23 @@ function edit(data){
 			} ],
 			scrollable : true,
 			sortable : true,
-			selectable : "row"
+			selectable : "row",
+			dataBound : function(e) {
+				var data = eqCostListDataSourceOld.data();
+				var i = 0;
+				for(i=0; i< data.length; i++){
+					var item = data[i];
+					item.eqcostTotalAmount = item.eqcostAmount * item.eqcostBasePrice;					
+				}
+				
+				if(!oldEqListLoadRefresh){
+					oldEqListLoadRefresh = true;
+					var grid1 = $("#scEqCostListNew").data("kendoGrid");
+					grid1.setDataSource(eqCostListDataSourceOld);
+					grid1.refresh();
+				}
+
+			}
 		});
 	}//成本设备清单_old
 

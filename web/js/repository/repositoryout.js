@@ -113,19 +113,6 @@ function confirmRepositoryOut(){
 }
 
 
-function submitConfirm(){
-	 postAjaxRequest(approveUrl, {models:kendo.stringify(confirmEntity)}, approveStatusCheck);
-	
-}
-
-function approveStatusCheck(){
-	var kendoWindow = $("#confirm-form").data("kendoWindow");
-	kendoWindow.close();
-	listDataSource.read();
-}
-
-
-
 function deleteRepoData(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {

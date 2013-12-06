@@ -76,7 +76,7 @@ function deleteRepoData(){
 	}
 }
 
-function add(){
+function addRepository(){
 	loadPage("repository_repositoryEdit");
 }
 
@@ -105,7 +105,7 @@ function editRepo() {
 	}
 }
 
-function confirmRepository(){
+function openConfirmRepositoryPage(){
 	
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {

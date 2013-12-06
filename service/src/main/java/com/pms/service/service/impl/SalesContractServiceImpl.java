@@ -353,8 +353,24 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	
 	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId, String scCode, String proId){
 		int nextVersionNo = this.getEqCostNextVersionNo(cId);
+		
+		
 		for (Map<String, Object> item : eqcostList){
-
+			
+			item.put(SalesContractBean.SC_ID, cId);
+            item.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_AMOUNT));
+            item.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_REAL_AMOUNT));
+            //Make sure the number value type 
+		    item.put(EqCostListBean.EQ_LIST_BASE_PRICE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_BASE_PRICE));
+		    item.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_SALES_BASE_PRICE));
+		    item.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_DISCOUNT_RATE));
+		    item.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_LAST_BASE_PRICE));
+		    item.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_TOTAL_AMOUNT));
+		    
+			item.put(SalesContractBean.SC_PROJECT_ID, proId);
+			item.put(EqCostListBean.EQ_LIST_SC_ID, cId);
+			item.put(EqCostListBean.EQ_LIST_VERSION_NO, nextVersionNo);
+			
             Map<String, Object> realItemQuery = new HashMap<String, Object>();
             realItemQuery.put(SalesContractBean.SC_ID, cId);
             realItemQuery.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, item.get(EqCostListBean.EQ_LIST_MATERIAL_CODE));
@@ -373,37 +389,38 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             realItemQuery.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
             realItemQuery.put(ApiConstants.LIMIT_KEYS, EqCostListBean.EQ_LIST_REAL_AMOUNT);
             Map<String, Object> realItem = dao.findOneByQuery(realItemQuery, DBBean.EQ_COST);
+            
+            for(String key: realItemQuery.keySet()){
+            	Map<String, Object> queryMap = new HashMap<String, Object>();
+            	queryMap.put(key, realItemQuery.get(key));
+            	
+            	logger.info("....................................." + key + ".........................." + dao.count(queryMap, DBBean.EQ_COST)) ;
+            	
+            }
+            
+            
             if (realItem == null) {
-                item.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_AMOUNT));
-                item.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_REAL_AMOUNT));
+            	
+    			
+    			String eqcostCode = genEqcostListCode(scCode, nextVersionNo);
+    			item.put(EqCostListBean.EQ_LIST_CODE, eqcostCode);
+    			
+    			if(item.get(ApiConstants.MONGO_ID)!=null){
+    			    dao.updateById(item,  DBBean.EQ_COST);
+    			}else{
+    			    dao.add(item, DBBean.EQ_COST);
+    			}
+    			
             } else {
                 float applyAmount = ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_AMOUNT);
                 float totalAmount = applyAmount + ApiUtil.getFloatParam(realItem, EqCostListBean.EQ_LIST_REAL_AMOUNT); 
                 //(int)Float.parseFloat(realItem.get(EqCostListBean.EQ_LIST_REAL_AMOUNT).toString());
-
+                realItem.put(EqCostListBean.EQ_LIST_AMOUNT, totalAmount);
                 realItem.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, totalAmount);
                 realItem.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, totalAmount);
                 this.dao.updateById(realItem, DBBean.EQ_COST);
             }
-            //Make sure the number value type 
-		    item.put(EqCostListBean.EQ_LIST_BASE_PRICE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_BASE_PRICE));
-		    item.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_SALES_BASE_PRICE));
-		    item.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_DISCOUNT_RATE));
-		    item.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_LAST_BASE_PRICE));
-		    item.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, ApiUtil.getDouble(item, EqCostListBean.EQ_LIST_TOTAL_AMOUNT));
-		    
-			item.put(SalesContractBean.SC_PROJECT_ID, proId);
-			item.put(EqCostListBean.EQ_LIST_SC_ID, cId);
-			item.put(EqCostListBean.EQ_LIST_VERSION_NO, nextVersionNo);
-			
-			String eqcostCode = genEqcostListCode(scCode, nextVersionNo);
-			item.put(EqCostListBean.EQ_LIST_CODE, eqcostCode);
-			
-			if(item.get(ApiConstants.MONGO_ID)!=null){
-			    dao.updateById(item,  DBBean.EQ_COST);
-			}else{
-			    dao.add(item, DBBean.EQ_COST);
-			}
+  
 		}
 	}
 	
