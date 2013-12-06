@@ -4,12 +4,22 @@ var updateUrl = "/service/purcontract/repository/update?type=in";
 var createUrl = "/service/purcontract/repository/add?type=in";
 var listEqUrl = "/service/purcontract/get/byproject_supplier";
 var loadUrl = "/service/purcontract/repository/get";
+var eqcostApplyAmountLabel = "入库数量";
+var leftCountLabel = "可入库数量";
 
 if(redirectParams && redirectParams.type == "out"){
 	listProjectUrl = "/service/purcontract/repository/contract/list?type=out";
 	updateUrl = "/service/purcontract/repository/update?type=out";
 	createUrl = "/service/purcontract/repository/add?type=out";
 	listEqUrl = "/service/purcontract/get/byproject_supplier?type=out";
+	eqcostApplyAmountLabel = "出库数量";
+	leftCountLabel = "可出库数量";
+	if(redirectParams.page == "confirm"){
+		$("#confirmRepositoryOut").show();
+	}else{
+		$("#saveRepos").show();
+	}
+
 }
 
 var commonFileds = {
@@ -420,11 +430,11 @@ function edit(data) {
 	
 				}, {
 					field : "eqcostApplyAmount",
-					title : "入库数量",
+					title : eqcostApplyAmountLabel,
 					attributes: { "style": "color:red"}
 				},{
 					field : "leftCount",
-					title : "可入库数量", 
+					title : leftCountLabel,
 					attributes: { "style": "color:red"}
 				}, {
 					field : "salesContractCode",
@@ -454,4 +464,10 @@ function edit(data) {
 	}else{
 		alert("无可入库清单");
 	}
+}
+
+function submitConfirmRepositoryOut(){
+	 postAjaxRequest("/service/purcontract/repository/confirm?type=out", {models:kendo.stringify(requestDataItem)}, function(data){
+		 loadPage("repository_repositoryout", null);
+	 });
 }

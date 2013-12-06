@@ -104,27 +104,13 @@ function confirmRepositoryOut(){
 		if(row.status == "已入/出库"){
 			alert("此申请已入库，不需要再次入库");
 		}else{
-			confirmEntity = new confirmModel(row);
-			kendo.bind($("#confirm-form"), confirmEntity);
-			setDate(confirmEntity, "outDate", confirmEntity.outDate);
-			var options = {
-				width : 500,
-				height : 300,
-				actions : [ "Maximize", "Close" ]
-			};
-			var kendoWindow = $("#confirm-form").data("kendoWindow");
-
-			if(!kendoWindow){
-				$("#confirm-form").kendoWindow({
-					width : options.width,
-					height : options.height,
-					title : options.title
-				});
-				kendoWindow = $("#confirm-form").data("kendoWindow");
-			}
 			
-			kendoWindow.open();
-			kendoWindow.center();	
+			loadPage("repository_repositoryOutEdit", {
+				_id : row._id,
+				type : "out",
+				page : "confirm"
+			});
+			
 		}
 	}
 }

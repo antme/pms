@@ -20,7 +20,7 @@
 }
 </style>
 <div id="purchaserepository-edit" class="k-content">
-	<h3>直发入库申请单</h3>
+	<h3>直发出库申请单</h3>
 	<div class="k-edit-field " id="purchaserepository-div"
 		style="width: 1200px;">
 		项目： <input type="text" name="purchasecontractselect"
@@ -51,17 +51,17 @@
             </div>
             
 			<div class="k-edit-label">
-				<label>入库人:</label>
+				<label>出库人:</label>
 			</div>
 			<div class="k-edit-field">
-				<input type="text" data-bind="value: inOperator" id="inOperator" />
+				<input type="text" data-bind="value: outOperator" id="outOperator" />
 			</div>
 			<div class="k-edit-label">
-				<label>入库日期:</label>
+				<label>出库日期:</label>
 			</div>
 			<div class="k-edit-field">
-				<input type="text" data-role="datepicker" data-bind="value: inDate"
-					id="inDate" />
+				<input type="text" data-role="datepicker" data-bind="value: outDate"
+					id="outDate" />
 			</div>
 			<div class="k-edit-label">
 				<label>需方名称:</label>
@@ -90,7 +90,8 @@
 
 
 		<div>
-			<button onclick="saveRepos();">保存</button>
+			<button id="saveRepos" onclick="saveRepos();" style="display:none;">保存</button>
+			<button id="confirmRepositoryOut" onclick="submitConfirmRepositoryOut();" style="display:none;">确认</button>
 		</div>
 	</div>
 
