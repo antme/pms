@@ -81,6 +81,9 @@ var model = kendo.data.Model.define({
 		pbLeftCount : {
 			editable : false
 		},
+		arrivedRequestCount:{
+			editable : false
+		},
 		orderEqcostName : {
 
 		},

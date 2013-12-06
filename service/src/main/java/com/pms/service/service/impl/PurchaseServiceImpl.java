@@ -267,6 +267,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         }else if (PurchaseStatus.firstApprove.toString().equals(dbStatus)) {
             status = PurchaseStatus.finalApprove.toString();
             comment = recordComment("终审", comment, oldComment);
+    		allot.put(PurchaseBack.paApproveDate, DateUtil.getDateString(new Date()));
+
         } else {
             status = PurchaseStatus.firstApprove.toString();
             comment = recordComment("初审", comment, oldComment);
@@ -275,7 +277,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 
 	    allot.put(PurchaseBack.paComment, comment);
 		allot.put(PurchaseBack.paStatus, status);
-		allot.put(PurchaseBack.paApproveDate, DateUtil.getDateString(new Date()));
 		allot = dao.updateById(allot, DBBean.PURCHASE_ALLOCATE);
 		
 		if(PurchaseStatus.done.toString().equals(status)){

@@ -155,7 +155,7 @@ var proStatusItems = [{ text: "内部立项"}, { text: "销售预立项"}, { tex
 var proStatusItemsForAdd = [{ text: "销售预立项"}, { text: "内部立项"}];
 
 
-var departmentItems =  [{ text: "销售部"}, { text: "工程部"}, { text: "产品部"} , { text: "服务部"}];
+var departmentItems =  [{ text: "工程部"}, { text: "产品部"} , { text: "服务部"}];
 
 // 调拨类型
 var allotTypeItems = [{ text: "借货调拨"}, { text: "还货调拨"}, { text: "备货调拨"}];

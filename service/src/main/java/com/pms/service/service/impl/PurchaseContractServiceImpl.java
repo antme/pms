@@ -905,7 +905,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         //由页面来觉得现实什么状态的数据，而不是根据角色或则权限
         if (params.get("approvePage") != null) {
             params.remove("approvePage");
-            params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_CANCELLED, PurchaseRequest.STATUS_REJECTED }));
+            params.put(PurchaseRequest.PROCESS_STATUS, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { PurchaseRequest.STATUS_DRAFT, PurchaseRequest.STATUS_REJECTED }));
         }
         
         mergeMyTaskQuery(params, DBBean.PURCHASE_REQUEST);
@@ -1042,7 +1042,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
     
     public Map<String, Object> abrogatePurchaseRequest(Map<String, Object> parameters) {
-        processRequest(parameters, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_ABROGATED_NEED_APPROVED);
+        processRequest(parameters, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELLED);
         return parameters;        
     }
     

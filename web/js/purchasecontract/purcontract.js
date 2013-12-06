@@ -81,7 +81,7 @@ function editCon() {
 	var row = getSelectedRowDataByGrid("grid");
 
 	if (row) {
-		if (row.status == "草稿" || row.status == "审批拒绝") {
+		if (row.status == "草稿" || row.status == "已提交 ") {
 			loadPage("purchasecontract_purchasecontractedit", {
 				_id : row._id
 			});
@@ -110,15 +110,15 @@ function approveCon() {
 function backCon(){
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-//		if(row.status == "已拒绝"){
+		if(row.status == "审批拒绝"){
 			postAjaxRequest("/service/purcontract/backtoorder", {
 				_id : row._id
 			}, function(data) {
 				listDataSource.read();
 			});
-//		}else{
-//			alert("只能退回审核拒绝的采购合同");
-//		}
+		}else{
+			alert("只能退回审核拒绝的采购合同");
+		}
 	}
 }
 

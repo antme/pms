@@ -113,7 +113,11 @@ function abrogatePurchaseRequest() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if(row.status == "已提交" || row.status == "草稿" || row.status == "审批拒绝" || row.status == "审批中"){
-			process(cancelUrl);
+			postAjaxRequest(cancelUrl, {
+				_id : row._id
+			}, function(data) {
+				listDataSource.read();
+			});
 		}else {
 			alert("只能废除未发采购订单的数据或则已提交的数据");
 		}
