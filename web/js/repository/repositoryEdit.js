@@ -7,21 +7,6 @@ var loadUrl = "/service/purcontract/repository/get?type=in";
 var eqcostApplyAmountLabel = "入库数量";
 var leftCountLabel = "可入库数量";
 
-if(redirectParams && redirectParams.type == "out"){
-	listProjectUrl = "/service/purcontract/repository/contract/list?type=out";
-	updateUrl = "/service/purcontract/repository/update?type=out";
-	createUrl = "/service/purcontract/repository/add?type=out";
-	listEqUrl = "/service/purcontract/get/byproject_supplier?type=out";
-	loadUrl = "/service/purcontract/repository/get?type=out";
-	eqcostApplyAmountLabel = "出库数量";
-	leftCountLabel = "可出库数量";
-	if(redirectParams.page == "confirm"){
-		$("#confirmRepositoryOut").show();
-	}else{
-		$("#saveRepos").show();
-	}
-
-}
 
 var commonFileds = {
 		eqcostAvailableAmount : {
@@ -147,6 +132,22 @@ var projectDataSource = new kendo.data.DataSource({
 	}
 });
 $(document).ready(function() {
+
+	if(redirectParams && redirectParams.type == "out"){
+		listProjectUrl = "/service/purcontract/repository/contract/list?type=out";
+		updateUrl = "/service/purcontract/repository/update?type=out";
+		createUrl = "/service/purcontract/repository/add?type=out";
+		listEqUrl = "/service/purcontract/get/byproject_supplier?type=out";
+		loadUrl = "/service/purcontract/repository/get?type=out";
+		eqcostApplyAmountLabel = "出库数量";
+		leftCountLabel = "可出库数量";
+		if(redirectParams.page == "confirm"){
+			$("#confirmRepositoryOut").show();
+		}else{
+			$("#saveRepos").show();
+		}
+
+	}
 	checkRoles();
 	$("#purchasecontractselect").kendoDropDownList({
 			dataTextField : "projectName",
@@ -189,6 +190,12 @@ $(document).ready(function() {
 	if (redirectParams && redirectParams._id) {
 		postAjaxRequest(loadUrl, redirectParams, edit);
 	}else if(popupParams){
+		
+		if(popupParams.type == "out"){
+			loadUrl = "/service/purcontract/repository/get?type=out";
+			eqcostApplyAmountLabel = "出库数量";
+			leftCountLabel = "可出库数量";
+		}
 		postAjaxRequest(loadUrl, popupParams, edit);
 		disableAllInPoppup();
 	}

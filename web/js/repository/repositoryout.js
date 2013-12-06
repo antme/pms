@@ -48,20 +48,17 @@ $(document).ready(function() {
 				title : "需方名称"
 			}, {
 				field : "status",
-				title : "入库状态"
+				title : "出库状态"
 			}, {
-				field : "inDate",
-				title : "入库时间"
-			}, {
-				field : "approvedDate",
+				field : "outDate",
 				title : "出库时间"
 			}, {
-				field : "totalIn",
-				title : "入库总数"
+				field : "approvedDate",
+				title : "确认时间"
 			}, {
 				field : "totalIn",
 				title : "出库总数"
-			}  ]
+			}]
 
 		});
 
@@ -101,8 +98,8 @@ function confirmRepositoryOut(){
 	
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "已入/出库"){
-			alert("此申请已入库，不需要再次入库");
+		if(row.status == "已出库"){
+			alert("此申请已出库，不需要再次出库");
 		}else{
 			
 			loadPage("repository_repositoryOutEdit", {

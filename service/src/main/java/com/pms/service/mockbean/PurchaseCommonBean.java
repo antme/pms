@@ -222,7 +222,7 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String STATUS_IN_REPOSITORY = "已入库";
     public static final String STATUS_OUT_REPOSITORY = "已出库";
     public static final String STATUS_REPOSITORY_NEW = "入库中";
-    public static final String STATUS_IN_OUT_REPOSITORY = "已入/出库";
+    public static final String STATUS_IN_OUT_REPOSITORY = "已出库";
     public static final String STATUS_ORDERING = "采购中";
     
     public static final String STATUS_ORDER_LOCKED = "已锁定";

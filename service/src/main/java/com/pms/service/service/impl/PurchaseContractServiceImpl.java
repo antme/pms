@@ -1220,7 +1220,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             createArriveNotice(repo);                        
         } else {
             //直发入库
+        	params.put(PurchaseRequest.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+
             result = processRequest(params, db, PurchaseRequest.STATUS_IN_OUT_REPOSITORY);
+
         }
         
         Map<String, Object> eqList = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST },
