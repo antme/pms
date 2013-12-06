@@ -5,7 +5,12 @@ var saveUrl =  "/service/arrivalNotice/create/byorder";
 var requestDataItem = undefined;
 
 $(document).ready(function() {
-	postAjaxRequest(editUrl, popupParams, edit);
+	if(!popupParams.type){
+		postAjaxRequest(editUrl, popupParams, edit);
+	}else{
+		disableAllInPoppup();
+		postAjaxRequest("/service/arrivalNotice/get", popupParams, edit);
+	}
 	
 });
 

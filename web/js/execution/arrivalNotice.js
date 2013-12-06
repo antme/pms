@@ -80,3 +80,14 @@ function toolbar_createShip() {
 		}
 	}
 }
+
+function viewArrivalNotice(){
+	var row = getSelectedRowDataByGridWithMsg("grid");
+
+	if (row) {
+
+			var options = { width:"1080px", height: "600px", title:"编辑到货数量"};
+			openRemotePageWindow(options, "execution_addArrivalNotice", {_id : row._id, type: "view"});
+		
+	}
+}

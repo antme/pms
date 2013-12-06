@@ -1,0 +1,63 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+<head>
+<style>
+#purchaseorder-edit label{
+   margin-left: 5px;
+}
+#purchaseorder-edit-header{
+    margin-bottom: 10px;
+}
+#purchaseorder-edit-header span{
+    font-weight: bold;
+}
+</style>
+
+<script type="text/javascript" src="js/execution/addArrivalNotice.js"></script>
+</head>
+
+<body>
+   
+    <div id="purchaseorder-edit" class="k-content">
+        <div id="purchaseorder-edit-item">
+  
+             <div>
+                <table style="width: 80%">
+                    
+                     <tr>
+                        <td>项目名： <strong><span data-bind="text: projectName"></span></strong></td>   
+                        <td>项目负责人： <strong><span data-bind="text: projectManager"></span></strong></td>
+                        <td>合同编号： <strong><span data-bind="text: salesContractCode"></span></strong></td>
+                        <td>客户名称： <strong><span data-bind="text: customerName"></span></strong></td>                  
+                    </tr>
+                    <tr>
+                        <td>申请部门：<strong><span data-bind="text: pbDepartment" ></span></strong></td>
+                        <td> 到货日期: <input  disabled=true data-role="datepicker" data-format="yyyy/MM/dd" data-bind="value: arrivalDate" class="foredit"  ></input></td>
+                        <td> 采购类别: <span data-bind="text: purchaseContractType" class="foredit"  ></span></td>
+                    </tr>
+                    <tr>
+                       <td> 货物递送方式: <span data-bind="text: eqcostDeliveryType" class="foredit"  ></span></td> 
+                    </tr>
+                </table>
+            </div>
+              <hr>
+            <div>
+                <div style="margin-bottom:5px; margin-top:5px;"><label>提示: 点击单元格可以编辑</label></div>
+                <div id="purchaseorder-edit-grid"></div>        
+            </div>
+           <br><br>
+            <div style="width:400px; margin-top:50px;">
+                <div id="purchaseorder-sum-grid"></div>
+                <div>
+                    <button onclick="submitNotice();">提交</button>
+                    <button onclick="cancelNotice();">取消</button>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+
+
+
+</body>
+</html>

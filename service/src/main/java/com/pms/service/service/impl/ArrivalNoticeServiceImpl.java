@@ -372,5 +372,17 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 
         return order;
     }
+    
+    public Map<String, Object> getArrivalNotice(Map<String, Object> params){
+    	
+    	Map<String, Object> arriveNotice =  this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.ARRIVAL_NOTICE);
+    	
+    	Object eqcostList = arriveNotice.get("eqcostList");
+//    	scs.getSCAndCustomerInfo(params).mergeCommonFieldsFromSc(arriveNotice, arriveNotice.get("scId"));
+//    	scs.
+    	arriveNotice.put("eqcostList", scs.mergeEqListBasicInfo(eqcostList));
+    	
+    	return arriveNotice;
+    }
 
 }
