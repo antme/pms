@@ -174,7 +174,11 @@ $(document).ready(function() {
 				title : "物流类别"
 			},	        
 	        { field: "eqcostMemo", title: "备注" },
-	        { command: "destroy", title: "&nbsp;", width: 90 }],
+	        { command: "destroy", title: "删除", width: 90,
+	        	click: function(e) {
+	                
+	             }	
+	        }],
 	    editable: true,
 	    groupable : true,
 	    sortable : true,
@@ -221,7 +225,11 @@ $(document).ready(function() {
 				}
 	        		
 	        },
-	        { command: "destroy", title: "&nbsp;", width: 90 }],
+	        { command: "destroy", title: "删除", width: 90,
+	        	click: function(e) {
+	                
+	             }	
+	        }],
 	    editable: true,
 	    sortable : true,
 	    save : function(e){
@@ -268,7 +276,11 @@ $(document).ready(function() {
 				title : "发货类型"
 			},	        
 	        { field: "eqcostMemo", title: "备注" },
-	        { command: "destroy", title: "&nbsp;", width: 90 }],
+	        { command: "destroy", title: "删除", width: 90,
+	        	click: function(e) {
+	                
+	             }	
+	        }],
 	        editable: true,
 		    groupable : true,
 		    sortable : true,

@@ -178,6 +178,12 @@ $(document).ready(function() {
 	    parseFormats: ["yyyy/MM/dd"]
 	});
 	
+	$("#outDate").kendoDatePicker({
+	    format: "yyyy/MM/dd",
+	    parseFormats: ["yyyy/MM/dd"]
+	});
+	
+	
 	
 	
 	$("#storeHouse").kendoDropDownList({
@@ -474,7 +480,7 @@ function edit(data) {
 			});
 		}
 	}else{
-		alert("无可入库清单");
+		alert("无设备清单");
 	}
 }
 
