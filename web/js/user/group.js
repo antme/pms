@@ -79,10 +79,18 @@ $(document).ready(function() {
 			schema : {
 				total: "total", // total is returned in the "total" field of the response
 				data: "data"
+			},
+			requestEnd: function(e){
+				initPage();
 			}
 		},
 		height : 300
 	});
+
+
+});
+
+function initPage(){
 
 	
 	$("#group-grid").kendoGrid({
@@ -139,8 +147,7 @@ $(document).ready(function() {
 	});
 
 	$("#group-role").hide();
-
-});
+}
 
 function onActivate(e) {
 	var multiselect = $("#group-role-select").data("kendoMultiSelect");

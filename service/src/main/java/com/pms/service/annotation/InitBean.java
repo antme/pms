@@ -53,7 +53,7 @@ public class InitBean {
         setLoginPathValidation();
 
         createAdminGroup(dao);
-        createSystemDefaultGroups(dao);
+//        createSystemDefaultGroups(dao);
         createAdminUser(dao);
         createDefaultSupplier(dao);
         initVirtureContractShipCountData(dao);
@@ -118,9 +118,11 @@ public class InitBean {
             RoleValidConstants.PURCHASE_ORDER_MANAGEMENT,
             RoleValidConstants.REPOSITORY_MANAGEMENT,
             RoleValidConstants.SHIP_ARRIVAL_RECORD,
-            RoleValidConstants.SHIP_MANAGEMENT_PROCESS
+            RoleValidConstants.SHIP_MANAGEMENT_PROCESS,
+            RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS
 
-        });        
+        });   
+        
         groupRoles.put(GroupBean.COO_VALUE, new String[] {
                 RoleValidConstants.PURCHASE_CONTRACT_PROCESS, 
                 RoleValidConstants.PURCHASE_ALLOCATE_FINAL_PROCESS
