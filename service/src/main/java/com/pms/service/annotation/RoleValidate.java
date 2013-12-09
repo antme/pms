@@ -12,8 +12,6 @@ public @interface RoleValidate {
     String roleID() default "";
 
     String desc() default "";
-    
-    RoleValidate roleIds = null;
-
+   
     String[] value() default {};
 }
