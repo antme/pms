@@ -377,7 +377,7 @@ public abstract class AbstractService {
         Map<String, Object> taskQuery = new HashMap<String, Object>();
         taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
         Map<String, Object> statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseRequest.STATUS_APPROVED, ShipBean.SHIP_STATUS_APPROVE, PurchaseRequest.STATUS_IN_REPOSITORY}));
+        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseRequest.STATUS_APPROVED, ShipBean.SHIP_STATUS_FINAL_APPROVE, PurchaseRequest.STATUS_IN_REPOSITORY}));
         statusQuery.put(PurchaseBack.paStatus, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseStatus.approved.toString(), PurchaseStatus.firstApprove.toString(), PurchaseStatus.finalApprove.toString() }));
         //or query
         taskQuery.put("status", DBQueryUtil.buildQueryObject(statusQuery, false));
@@ -445,7 +445,7 @@ public abstract class AbstractService {
         }
 
         if (db.equalsIgnoreCase(DBBean.SHIP)) {
-            if (inRole(RoleValidConstants.SHIP_MANAGEMENT_PROCESS)) {
+            if (inRole(RoleValidConstants.SHIP_MANAGEMENT_PROCESS) || inRole(RoleValidConstants.SHIP_MANAGEMENT_FINAL_PROCESS)) {
                 ownerQuery.remove(ApiConstants.CREATOR);
             }
         }

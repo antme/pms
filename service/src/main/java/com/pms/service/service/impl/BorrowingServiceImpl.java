@@ -284,7 +284,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		Map<String, Object> shipParams = new HashMap<String, Object>();
     	shipParams.put(ShipBean.SHIP_CODE, params.get(ShipBean.SHIP_CODE));
     	shipParams.put(ShipBean.SHIP_DEPARTMENT, params.get(ShipBean.SHIP_DEPARTMENT));
-    	shipParams.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_APPROVE);
+    	shipParams.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_FINAL_APPROVE);
     	shipParams.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
     	shipParams.put(ShipBean.SHIP_WAREHOUSE, params.get(ShipBean.SHIP_WAREHOUSE));
     	shipParams.put(ShipBean.SHIP_PROJECT_ID, params.get(BorrowingBean.BORROW_IN_PROJECT_ID));

@@ -505,7 +505,9 @@ function editRepository(data) {
 		
 		if(redirectParams && redirectParams.page == "confirm"){
 			var grid = $("#purchaserepository-edit-grid").data("kendoGrid");
-			grid.hideColumn("leftCount");
+			if(grid){
+				grid.hideColumn("leftCount");
+			}
 			
 			$("#orderCode").attr("required", "required");
 		}

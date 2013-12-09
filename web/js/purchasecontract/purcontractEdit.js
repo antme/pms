@@ -874,7 +874,7 @@ function sumOrders(e) {
 
 function categoryDropDownEditor(container, options) {
 	var data = [ {
-		name : "直发"
+		name : "直发现场"
 	}, {
 		name : "上海仓库"
 	} ];

@@ -12,11 +12,12 @@ public class ShipBean {
     
     public static final String SHIP_STATUS_DRAFT = "草稿"; // 草稿
     public static final String SHIP_STATUS_SUBMIT = "申请中"; // 申请中
-    public static final String SHIP_STATUS_APPROVE = "已批准"; // 批准
+    public static final String SHIP_STATUS_FIRST_APPROVE = "已初审"; // 批准
+    public static final String SHIP_STATUS_FINAL_APPROVE = "已终审"; // 批准
     public static final String SHIP_STATUS_CLOSE = "已关闭"; // 关闭
     public static final String SHIP_STATUS_REJECT = "已拒绝"; // 拒绝
     
-    public static final String SHIP_TYPE = "type"; // 申请类型	- 直发 or 非直发
+    public static final String SHIP_TYPE = "shipType"; // 申请类型	- 直发 or 非直发
     
     public static final String SHIP_WAREHOUSE = "warehouse"; // 仓库
     

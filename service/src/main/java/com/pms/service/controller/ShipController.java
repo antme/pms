@@ -79,9 +79,21 @@ public class ShipController extends AbstractController {
         responseWithData(shipService.approve(parserJsonParameters(request, false)), request, response);
     }
     
+    @RequestMapping("/finalapprove")
+    @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT_FINAL_PROCESS, desc = RoleValidConstants.SHIP_MANAGEMENT_FINAL_PROCESS_DESC)
+    public void finalApprove(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(shipService.approve(parserJsonParameters(request, false)), request, response);
+    }
+    
     @RequestMapping("/reject")
     @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT_PROCESS, desc = RoleValidConstants.SHIP_MANAGEMENT_PROCESS_DESC)
     public void reject(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(shipService.reject(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/finalreject")
+    @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT_FINAL_PROCESS, desc = RoleValidConstants.SHIP_MANAGEMENT_FINAL_PROCESS_DESC)
+    public void finalReject(HttpServletRequest request, HttpServletResponse response) {
         responseWithData(shipService.reject(parserJsonParameters(request, false)), request, response);
     }
     

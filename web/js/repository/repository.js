@@ -76,7 +76,7 @@ function deleteRepoData(){
 	}
 }
 
-function addRepository(){
+function openAddRepositoryWindow(){
 	loadPage("repository_repositoryEdit");
 }
 
@@ -102,7 +102,7 @@ function cancelRepo() {
 	
 }
 
-function editRepo() {
+function openEditRepoWindow() {
 	// 如果是从订单列表页点击edit过来的数据
 	var row = getSelectedRowDataByGrid("grid");
 	if(row.status == "草稿"){

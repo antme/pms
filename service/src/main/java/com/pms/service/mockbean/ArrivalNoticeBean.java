@@ -15,7 +15,7 @@ public class ArrivalNoticeBean {
     public static final String SHIP_TYPE_0 = "上海备货货架"; // 调拨到货
     public static final String SHIP_TYPE_0_1 = "北京备货货架"; // 调拨到货
     
-    public static final String SHIP_TYPE_1_0 = "直发"; // 供应商直发
+    public static final String SHIP_TYPE_1_0 = "直发现场"; // 供应商直发
 
     public static final String SHIP_TYPE_1 = "直发现场"; // 供应商直发
     

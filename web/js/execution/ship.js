@@ -102,8 +102,8 @@ function toolbar_edit() {
 function toolbar_confirm() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-		if (rowData.status == "已批准"){
-			if(rowData.shipType == "直发"){
+		if (rowData.status == "已终审"){
+			if(rowData.shipType == "直发现场"){
 				if(user.isPurchase){
 					loadPage("execution_addShip",{_id:rowData._id, type: "confirm"});
 				}else{
@@ -117,7 +117,7 @@ function toolbar_confirm() {
 				}
 			}
 		} else {
-			alert("只能确认已批准后的发货申请");
+			alert("只能确认已终审后的发货申请");
 		}
 	}
 }
@@ -138,21 +138,26 @@ function toolbar_delete() {
 }
 
 
-function toolbar_approve_ship(op) {
+function toolbar_approve_ship() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
-	var url =crudServiceBaseUrl + "/approve";
 	if (row) {
 		if (row.status == "申请中") {
-//			var param = {
-//				_id : row._id
-//			};
-//			postAjaxRequest(url, param, function(response){
-//				alert("批准成功");
-//				dataSource.read();
-//			});
+
 			loadPage("execution_addShip",{_id:row._id, type: "approve"});
 		} else {
 			alert("非申请中状态，不允许审核");
+		}
+	}
+}
+
+function toolbar_final_approve_ship(){
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if (row.status == "已初审") {
+
+			loadPage("execution_addShip",{_id:row._id, type: "approve"});
+		} else {
+			alert("非初审状态，不允许审核");
 		}
 	}
 }

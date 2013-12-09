@@ -104,10 +104,11 @@ public class InitBean {
         	RoleValidConstants.BORROWING_MANAGEMENT_PROCESS,
         	RoleValidConstants.PURCHASE_ALLOCATE_PROCESS,
         	RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS,
-        	RoleValidConstants.PURCHASE_ALLOCATE_DONE
+        	RoleValidConstants.PURCHASE_ALLOCATE_DONE,
+        	RoleValidConstants.SHIP_MANAGEMENT_PROCESS
         });
         groupRoles.put(GroupBean.DEPARTMENT_MANAGER_VALUE, new String[] {
-        	RoleValidConstants.SHIP_MANAGEMENT_PROCESS,
+        	RoleValidConstants.SHIP_MANAGEMENT_FINAL_PROCESS,
             RoleValidConstants.PURCHASE_BACK_PROCESS,
             RoleValidConstants.PAY_INVOICE_MANAGER_PROCESS
         });
@@ -116,7 +117,8 @@ public class InitBean {
         	RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, 
             RoleValidConstants.PURCHASE_ORDER_MANAGEMENT,
             RoleValidConstants.REPOSITORY_MANAGEMENT,
-            RoleValidConstants.SHIP_ARRIVAL_RECORD
+            RoleValidConstants.SHIP_ARRIVAL_RECORD,
+            RoleValidConstants.SHIP_MANAGEMENT_PROCESS
 
         });        
         groupRoles.put(GroupBean.COO_VALUE, new String[] {

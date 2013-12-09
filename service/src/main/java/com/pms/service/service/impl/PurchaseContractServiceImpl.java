@@ -256,7 +256,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 results = this.dao.list(query, DBBean.PURCHASE_CONTRACT);
                 isRuoDian = true;
             } else {
-                query.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { ShipBean.SHIP_STATUS_APPROVE, ShipBean.SHIP_STATUS_CLOSE }));
+                query.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { ShipBean.SHIP_STATUS_CLOSE }));
                 query.put("eqcostList." + PurchaseContract.SUPPLIER, params.get(PurchaseContract.SUPPLIER));
                 results = this.dao.list(query, DBBean.SHIP);
             }

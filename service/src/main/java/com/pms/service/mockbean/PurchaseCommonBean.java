@@ -230,7 +230,6 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String STATUS_COMPLETED = "执行完毕";
     
     //物流类型
-    public static final String LOGISTICS_TYPE_VALUE_DIRECTY = "直发"; 
     public static final String EQCOST_DELIVERY_TYPE_DIRECTY = "直发现场"; 
     public static final String EQCOST_DELIVERY_TYPE_REPOSITORY = "入公司库"; 
     

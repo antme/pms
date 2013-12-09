@@ -477,6 +477,7 @@ function loadEqList(data){
 				shList.push(eqList[i]);
 				eqList[i].shipTypeDisplay = "上海—上海库";
 			}else if(eqList[i].shipType == "直发现场"){
+				eqList[i].shipTypeDisplay = "直发现场";
 				supplierlist.push(eqList[i]);
 			}else{									
 				if(eqList[i].shipType == "上海—上海泰德库"){
@@ -496,7 +497,7 @@ function loadEqList(data){
 		
 		
 		if(supplierlist.length >0){
-			shipType.add({ text: "直发" });
+			shipType.add({ text: "直发现场" });
 		}
 		if(bjList.length >0){
 			shipType.add({ text: "上海—北京库" });
@@ -556,7 +557,7 @@ function loadEqList(data){
 }
 
 function updateShipGrid(){
-	if(model.shipType == "直发"){
+	if(model.shipType == "直发现场"){
 		supplierShipDataSource.data(supplierlist);
 		$("#supplier-ship").show();
 		$("#bj-ship").hide();
@@ -585,7 +586,7 @@ function saveShip(needCheck) {
 		return;
 	}
 	
-    if (model.shipType == "直发") {
+    if (model.shipType == "直发现场") {
 		 data = supplierShipDataSource.data();
 	} else if (model.shipType == "上海—上海库")  {
 		if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
@@ -635,6 +636,9 @@ function saveShip(needCheck) {
 
 function approve_ship() {
 	var url =crudServiceBaseUrl + "/ship/approve";
+	if(model.status == "已初审"){
+		 url =crudServiceBaseUrl + "/ship/finalapprove";
+	}
 	var param = {
 			_id : model._id
 		};
@@ -647,6 +651,9 @@ function approve_ship() {
 
 function reject_ship() {
 	var url =crudServiceBaseUrl + "/ship/reject";
+	if(model.status == "已初审"){
+		 url =crudServiceBaseUrl + "/ship/finalreject";
+	}
 	var param = {
 		_id : model._id
 	};
