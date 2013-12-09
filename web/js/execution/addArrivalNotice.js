@@ -1,18 +1,59 @@
 var editUrl = "/service/arrivalNotice/order/eqlist";
 var saveUrl =  "/service/arrivalNotice/create/byorder";
+var selectOrderUrl = "/service/purcontract/order/selectforarrival";
 
 // 声明一个总的对象用来传递数据
 var requestDataItem = undefined;
+var selectedRequestId = undefined;
 
 $(document).ready(function() {
-	if(!popupParams.type){
-		postAjaxRequest(editUrl, popupParams, edit);
-	}else{
+	
+	if(popupParams){
 		disableAllInPoppup();
-		postAjaxRequest("/service/arrivalNotice/get", popupParams, edit);
+		postAjaxRequest("/service/arrivalNotice/get", popupParams, editArrivalNotice);
+	} else {
+		$("#purchase-order-select").show();
+		$("#purchaseOrderRequest").kendoDropDownList({
+			dataTextField : "purchaseOrderCode",
+			dataValueField : "_id",
+			dataSource : {
+				transport : {
+					read : {
+						dataType : "jsonp",
+						url : selectOrderUrl
+					}
+				},
+				schema : {
+					total: "total", // total is returned in the "total" field of the response
+					data: "data"
+				}
+			},
+
+			dataBound : function(e) {
+				if (this.dataSource.at(0)) {
+					selectedRequestId = this.dataSource.at(0)._id;
+				}else{
+					alert("暂时没有需要可到货的采购订单");
+				}
+			},
+			// 当用户选择不同的采购申请时候赋值给requestDataItem对象
+			select : function(e) {
+				selectedRequestId = this.dataSource.at(e.item.index())._id;
+			}
+		});
+		
+
 	}
 	
 });
+
+function selectPurchaseOrderRequest(){
+	if(selectedRequestId){
+		postAjaxRequest(editUrl, {_id:selectedRequestId}, editArrivalNotice);
+	}else{
+		alert("请选择采购订单");
+	}
+}
 
 var model = kendo.data.Model.define({
 	id : "_id",
@@ -21,7 +62,7 @@ var model = kendo.data.Model.define({
 			type : "number"
 		},
 		pbPlanDate:{type:"date"},
-		pbDepartment:{
+		applicationDepartment:{
 			
 		},
 		eqcostArrivalAmount : {
@@ -114,7 +155,7 @@ var itemDataSource = new kendo.data.DataSource({
 				return {
 					// 解析成json_p模式
 					json_p : kendo.stringify(requestDataItem),
-					mycallback : "closeWindow"
+					mycallback : "checkArrivalNotice"
 				}
 			}
 		}
@@ -127,7 +168,7 @@ var itemDataSource = new kendo.data.DataSource({
 
 
 
-function edit(data) {
+function editArrivalNotice(data) {
 
 	// 初始化空对象
 	if (data) {
@@ -222,25 +263,20 @@ function edit(data) {
 	
 	}else{
 		alert("无设备清单");
-		cancelNotice();
+		cancelArrivalNoticeWindow();
 	}
 }
 
-function closeWindow() {
-	alert("到货通知已生产");
-	var window = $("#popup");
-	window.data("kendoWindow").close();
-	
-	loadPage("purchasecontract_purchaseOrder");
+function checkArrivalNotice() {
+	alert("到货通知已经产生");
+	cancelArrivalNoticeWindow();
 }
 
-function cancelNotice(){
-	var window = $("#popup");
-	window.data("kendoWindow").close();
-	
+function cancelArrivalNoticeWindow(){
+
 	loadPage("purchasecontract_purchaseOrder");
 }
-function submitNotice() {
+function submitArrivalNotice() {
 	if(itemDataSource.at(0)){		
 		//force set haschanges = true
 		itemDataSource.at(0).set("uid", kendo.guid());

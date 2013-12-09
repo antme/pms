@@ -637,7 +637,10 @@ public abstract class AbstractService {
     public void removeEmptyEqList(List<Map<String, Object>> eqCostList, String key) {
         List<Map<String, Object>> removedList = new ArrayList<Map<String, Object>>();
         for (Map<String, Object> data : eqCostList) {
-            if (ApiUtil.getInteger(data.get(key), 0) <= 0) {
+            
+            if(data.get(key) == null || ApiUtil.isEmpty(data.get(key))){
+                removedList.add(data); 
+            }else if (! key.equalsIgnoreCase("eqCostList") && ApiUtil.getInteger(data.get(key), 0) <= 0) {
                 removedList.add(data);
             }
         }

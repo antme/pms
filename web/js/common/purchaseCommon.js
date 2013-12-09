@@ -12,7 +12,7 @@ var commonFileds = {
 			type : "number"
 		},
 		pbPlanDate:{type:"date"},
-		pbDepartment:{
+		applicationDepartment:{
 			
 		},
 		eqcostApplyAmount : {
@@ -118,8 +118,8 @@ function save(status) {
 		itemDataSource.at(0).set("uid", kendo.guid());
 	}
 	
-	if(requestDataItem.pbDepartment && requestDataItem.pbDepartment instanceof Object){
-		requestDataItem.pbDepartment = requestDataItem.pbDepartment.join(",");
+	if(requestDataItem.applicationDepartment && requestDataItem.applicationDepartment instanceof Object){
+		requestDataItem.applicationDepartment = requestDataItem.applicationDepartment.join(",");
 	}
 
 	// 同步数据

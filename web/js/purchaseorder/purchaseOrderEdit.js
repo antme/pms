@@ -451,8 +451,8 @@ function saveOrder(status) {
 		itemDataSource.at(0).set("uid", kendo.guid());
 	}
 	
-	if(requestDataItem.pbDepartment && requestDataItem.pbDepartment instanceof Object){
-		requestDataItem.pbDepartment = requestDataItem.pbDepartment.join(",");
+	if(requestDataItem.applicationDepartment && requestDataItem.applicationDepartment instanceof Object){
+		requestDataItem.applicationDepartment = requestDataItem.applicationDepartment.join(",");
 	}
 	
 	

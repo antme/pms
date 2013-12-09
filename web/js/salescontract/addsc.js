@@ -423,7 +423,8 @@ $(document).ready(function() {
 					scm.set("estimateEqCost0",estimateEqCost0);
 		        	scm.set("estimateEqCost1",estimateEqCost1);
 					moneyOnChange_ADD();
-					
+					var grid1 = $("#scEqCostList").data("kendoGrid");
+					grid1.refresh();
 					excuSave = true;
 				}
 			}

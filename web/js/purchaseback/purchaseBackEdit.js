@@ -58,7 +58,7 @@ var myModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
 		pbCode:{},
-		pbDepartment:{},
+		applicationDepartment:{},
 		pbSubmitDate:{type:"date"},
 		pbPlanDate:{type:"date"},
 		pbType:{},

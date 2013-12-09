@@ -276,7 +276,7 @@ function edit(data) {
 									return '<span class="edit-tip">' + dataItem.eqcostApplyAmount + '</span>';
 								}
 							},
-							{ field: "pbLeftCount", title: "可申请数量"},
+							{ field: "pbLeftCount", title: "备货申请下可申请数量"},
 
 							{
 								field : "pbComment",
@@ -458,8 +458,8 @@ function saveRequest(status) {
 		}
 	}
 	
-	if(requestDataItem.pbDepartment && requestDataItem.pbDepartment instanceof Object){
-		requestDataItem.pbDepartment = requestDataItem.pbDepartment.join(",");
+	if(requestDataItem.applicationDepartment && requestDataItem.applicationDepartment instanceof Object){
+		requestDataItem.applicationDepartment = requestDataItem.applicationDepartment.join(",");
 	}
 	
 

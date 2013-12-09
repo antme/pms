@@ -75,8 +75,6 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		if(removeEmptyEq){
 		    removeEmptyEqList(eqList, PurchaseBack.eqcostLeftAmount);
 		}
-		request.put(PurchaseBack.pbDepartment, request.get("projectManagerDepartment"));
-		request.remove("projectManagerDepartment");
 		request.put(PurchaseBack.pbSpecialRequireRadio, new String[]{});
 		return request;
     }
@@ -147,7 +145,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	
     private Map<String, Object> saveOrUpdate(Map<String, Object> params, Map<String, Object> newObj) {
         newObj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
-        newObj.put(PurchaseBack.pbDepartment, params.get(PurchaseBack.pbDepartment));
+        newObj.put(PurchaseBack.applicationDepartment, params.get(PurchaseBack.applicationDepartment));
         newObj.put(PurchaseBack.pbType, params.get(PurchaseBack.pbType));
         newObj.put(PurchaseBack.pbSpecialRequire, params.get(PurchaseBack.pbSpecialRequire));
         newObj.put(PurchaseBack.pbSpecialRequireRadio, params.get(PurchaseBack.pbSpecialRequireRadio));
@@ -486,7 +484,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		params.put(PurchaseBack.scId, back.get(PurchaseBack.scId));
 		params.put(PurchaseBack.scCode, back.get(PurchaseBack.scCode));
 		params.put(PurchaseBack.pbCode, back.get(PurchaseBack.pbCode));
-		params.put(PurchaseBack.pbDepartment, back.get(PurchaseBack.pbDepartment));
+		params.put(PurchaseBack.applicationDepartment, back.get(PurchaseBack.applicationDepartment));
 		params.put(PurchaseBack.pbPlanDate, back.get(PurchaseBack.pbPlanDate));
 		params.put(PurchaseBack.pbType, back.get(PurchaseBack.pbType));
 		params.put(PurchaseBack.pbSpecialRequire, back.get(PurchaseBack.pbSpecialRequire));

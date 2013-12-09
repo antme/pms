@@ -591,7 +591,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
 				if (pmInfo != null){
 					sc.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
-					sc.put("projectManagerDepartment", pmInfo.get(UserBean.DEPARTMENT));
+					sc.put("applicationDepartment", pmInfo.get(UserBean.DEPARTMENT));
 				}
 			}
 		}

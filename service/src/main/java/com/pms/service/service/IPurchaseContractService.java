@@ -112,6 +112,8 @@ public interface IPurchaseContractService {
 
     public void deletePurchaseRepository(HashMap<String, Object> parserJsonParameters);
 
+    public Map<String, Object> listPurchaseOrderForArrivalSelect();
+
    
 
 }

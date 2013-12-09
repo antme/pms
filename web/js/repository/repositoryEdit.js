@@ -13,7 +13,7 @@ var commonFileds = {
 			type : "number"
 		},
 		pbPlanDate:{type:"date"},
-		pbDepartment:{
+		applicationDepartment:{
 			
 		},
 		eqcostApplyAmount : {
@@ -133,6 +133,7 @@ var projectDataSource = new kendo.data.DataSource({
 });
 $(document).ready(function() {
 
+	checkRoles();
 	if(redirectParams && redirectParams.type == "out"){
 		listProjectUrl = "/service/purcontract/repository/contract/list?type=out";
 		updateUrl = "/service/purcontract/repository/update?type=out";
@@ -148,7 +149,8 @@ $(document).ready(function() {
 		}
 
 	}
-	checkRoles();
+
+
 	$("#purchasecontractselect").kendoDropDownList({
 			dataTextField : "projectName",
 			dataValueField : "_id",
@@ -194,7 +196,17 @@ $(document).ready(function() {
 	});
 	
 	if (redirectParams && redirectParams._id) {
-		postAjaxRequest(loadUrl, redirectParams, edit);
+		postAjaxRequest(loadUrl, redirectParams, editRepository);
+		
+		if(redirectParams && redirectParams.page == "confirm"){
+			$(".repository_management_process").show();
+			$(".repository_management").hide();
+			
+			
+		}else if(redirectParams){
+			$(".repository_management").show();
+			$(".repository_management_process").hide();
+		}
 	}else if(popupParams){
 		
 		if(popupParams.type == "out"){
@@ -202,8 +214,11 @@ $(document).ready(function() {
 			eqcostApplyAmountLabel = "出库数量";
 			leftCountLabel = "可出库数量";
 		}
-		postAjaxRequest(loadUrl, popupParams, edit);
+		postAjaxRequest(loadUrl, popupParams, editRepository);
 		disableAllInPoppup();
+	}else{
+		$(".repository_management").show();
+		$(".repository_management_process").hide();
 	}
 	
 });
@@ -339,17 +354,26 @@ function saveRepos(status) {
 }
 
 function confirmRepository(){
-	if(projectId){
-		requestDataItem.projectId = projectId;		
+	var validator = $("#purchaserepository-edit-item").kendoValidator().data("kendoValidator");
+	if (!validator.validate()) {
+		alert("验证不通过，请检查表单");
+	} else{
+		if(projectId){
+			requestDataItem.projectId = projectId;		
+		}
+		if(supplierId){
+			requestDataItem.supplier = supplierId;	
+		}
+		postAjaxRequest("/service/purcontract/repository/approve?type=in", {models:kendo.stringify(requestDataItem)}, checkStatus);
 	}
-	if(supplierId){
-		requestDataItem.supplier = supplierId;	
-	}
-	postAjaxRequest("/service/purcontract/repository/approve?type=in", {models:kendo.stringify(requestDataItem)}, checkStatus);
 }
 
-function cancel(){
+function cancelRepositoryWindow(){
 	loadPage("repository_repository", null);
+}
+
+function cancelRepositoryOutWindow(){
+	loadPage("repository_repositoryout", null);
 }
 
 function checkStatus() {
@@ -377,11 +401,11 @@ function loadContracts(data){
 	
 	if(data && data.data){
 		requestDataItem.eqcostList = data.data;
-		edit();
+		editRepository();
 	}
 }
 
-function edit(data) {
+function editRepository(data) {
 	// 初始化空对象
 	var dataItem = new model();
 	if(data){
@@ -478,13 +502,25 @@ function edit(data) {
 	
 			});
 		}
+		
+		if(redirectParams && redirectParams.page == "confirm"){
+			var grid = $("#purchaserepository-edit-grid").data("kendoGrid");
+			grid.hideColumn("leftCount");
+			
+			$("#orderCode").attr("required", "required");
+		}
 	}else{
 		alert("无设备清单");
 	}
 }
 
 function submitConfirmRepositoryOut(){
-	 postAjaxRequest("/service/purcontract/repository/confirm?type=out", {models:kendo.stringify(requestDataItem)}, function(data){
-		 loadPage("repository_repositoryout", null);
-	 });
+	var validator = $("#purchaserepository-edit-item").kendoValidator().data("kendoValidator");
+	if (!validator.validate()) {
+		alert("验证不通过，请检查表单");
+	} else{
+		 postAjaxRequest("/service/purcontract/repository/confirm?type=out", {models:kendo.stringify(requestDataItem)}, function(data){
+			 loadPage("repository_repositoryout", null);
+		 });
+	}
 }

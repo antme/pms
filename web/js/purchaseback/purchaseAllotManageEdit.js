@@ -78,7 +78,7 @@ var myModel = kendo.data.Model.define({
 		paStatus:{},
 		paSubmitDate: {},
 		paApproveDate: {},
-		pbDepartment: {},
+		applicationDepartment: {},
 		pbType: {},
 		pbStatus: {},
 		pbSpecialRequire: {},

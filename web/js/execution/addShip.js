@@ -54,7 +54,7 @@ var project ;
 var salesContract;
 bjDataSource = new kendo.data.DataSource({
     group: [
-    	{field:"shipType"}
+    	{field:"shipTypeDisplay"}
     ],
 	schema : {
 		model : eqModel
@@ -73,7 +73,7 @@ var supplierShipDataSource = new kendo.data.DataSource({
 
 var commonDataSource = new kendo.data.DataSource({
 	  group: [
-		      	{field:"shipType"}
+		      	{field:"shipTypeDisplay"}
 		      ],
 	schema : {
 		model : eqModel
@@ -82,7 +82,7 @@ var commonDataSource = new kendo.data.DataSource({
 
 var shDataSource = new kendo.data.DataSource({
 	  group: [
-	      	{field:"shipType"}
+	      	{field:"shipTypeDisplay"}
 	      ],
 	 schema : {
 		model : eqModel
@@ -94,6 +94,17 @@ var allShipDataSource = new kendo.data.DataSource({
 });
 
 $(document).ready(function() {
+	var deleteCommand  = undefined;
+	if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
+		//do nothing
+	}else if(redirectParams && redirectParams.type && redirectParams.type == "approve"){
+		//do nothing
+	}else if(popupParams){
+		//do nothing
+		
+	}else{
+		deleteCommand =  { command: "destroy", text: "删除", width: 90 };
+	}
 	
 	 project = $("#project").kendoComboBox({
         placeholder: "Select project",
@@ -162,7 +173,7 @@ $(document).ready(function() {
 	        { field: "eqcostShipAmount", title: "发货数" , attributes: { "style": "color:red"}},
 	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
 	        { 
-	        	field: "shipType", 
+	        	field: "shipTypeDisplay", 
 	        	title: "发货类型" ,
 				groupHeaderTemplate: function(dataItem){														
 					return dataItem.value;
@@ -174,11 +185,8 @@ $(document).ready(function() {
 				title : "物流类别"
 			},	        
 	        { field: "eqcostMemo", title: "备注" },
-	        { command: "destroy", title: "删除", width: 90,
-	        	click: function(e) {
-	                
-	             }	
-	        }],
+	        deleteCommand
+	        ],
 	    editable: true,
 	    groupable : true,
 	    sortable : true,
@@ -225,11 +233,8 @@ $(document).ready(function() {
 				}
 	        		
 	        },
-	        { command: "destroy", title: "删除", width: 90,
-	        	click: function(e) {
-	                
-	             }	
-	        }],
+	        deleteCommand
+	        ],
 	    editable: true,
 	    sortable : true,
 	    save : function(e){
@@ -272,15 +277,12 @@ $(document).ready(function() {
 	        { field: "eqcostShipAmount", title: "发货数", attributes: { "style": "color:red"}},
 	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
 			{
-				field : "shipType",
+				field : "shipTypeDisplay",
 				title : "发货类型"
 			},	        
 	        { field: "eqcostMemo", title: "备注" },
-	        { command: "destroy", title: "删除", width: 90,
-	        	click: function(e) {
-	                
-	             }	
-	        }],
+	        deleteCommand
+	        ],
 	        editable: true,
 		    groupable : true,
 		    sortable : true,
@@ -296,6 +298,7 @@ $(document).ready(function() {
 	    }
 	});
 	
+
 	$("#common-ship-grid").kendoGrid({
 		dataSource : commonDataSource,
 	    columns: [
@@ -308,7 +311,7 @@ $(document).ready(function() {
 	        { field: "eqcostShipAmount", title: "发货数", attributes: { "style": "color:red"}},
 	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
 			{
-				field : "shipType",
+				field : "shipTypeDisplay",
 				title : "发货类型"
 			},	        
 	        { field: "eqcostMemo", title: "备注" }],
@@ -317,14 +320,14 @@ $(document).ready(function() {
 		    sortable : true
 	    
 	});
-	
+
 	if(popupParams){
-		postAjaxRequest("/service/ship/get", popupParams, edit);
+		postAjaxRequest("/service/ship/get", popupParams, editShip);
 		disableAllInPoppup();
 	} else if (redirectParams && redirectParams._id) {//Edit		
-		postAjaxRequest("/service/ship/get", {_id:redirectParams._id}, edit);
+		postAjaxRequest("/service/ship/get", {_id:redirectParams._id}, editShip);
 	} else {//Add
-		edit();
+		editShip();
 	}
 });
 
@@ -383,7 +386,7 @@ function giveUpDropDownEditor(container, options) {
     });
 }
 
-function edit(data) {
+function editShip(data) {
 
 	if(data){
 		model = new ship(data);
@@ -468,15 +471,19 @@ function loadEqList(data){
 			
 			
 			if(eqList[i].shipType == "北京备货货架"){
+				eqList[i].shipTypeDisplay = "上海—北京库";
 				bjList.push(eqList[i]);
 			}else if(eqList[i].shipType == "上海备货货架"){
 				shList.push(eqList[i]);
+				eqList[i].shipTypeDisplay = "上海—上海库";
 			}else if(eqList[i].shipType == "直发现场"){
 				supplierlist.push(eqList[i]);
 			}else{									
 				if(eqList[i].shipType == "上海—上海泰德库"){
+					eqList[i].shipTypeDisplay = "上海—上海泰德库";
 					shList.push(eqList[i]);
 				}else{
+					eqList[i].shipTypeDisplay = "上海—北京库";
 					bjList.push(eqList[i]);
 				}									
 			} 

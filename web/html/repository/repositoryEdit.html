@@ -49,10 +49,10 @@
             
 	 
             <div class="k-edit-label">
-                <label for="orderCode">单据编号</label>
+                <label for="orderCode">仓库单据编号</label>
             </div>
             <div data-container-for="orderCode" class="k-edit-field">
-                <input type="text" class="k-input k-textbox" name="orderCode" required="required"  validationMessage="请填写单据编号" data-bind="value:orderCode">
+                <input type="text" class="k-input k-textbox" name="orderCode" id="orderCode" validationMessage="请填写单据编号" data-bind="value:orderCode">
             </div>
 	       <div class="k-edit-label">
                 <label for="operator">制单人</label>
@@ -91,10 +91,10 @@
         </div>
 
 		<div>
-			<button access="repository_management" class="access"  onclick="saveRepos();">保存</button>
-			<button access="repository_management" class="access" onclick="saveRepos('入库中');">入库申请</button>
-			<button access="repository_management_process" class="access"  onclick="confirmRepository();">确认</button>
-			<button onclick="cancel();">取消</button>
+			<button access="repository_management" class="access repository_management"   onclick="saveRepos();" style="display:none;">保存</button>
+			<button access="repository_management" class="access repository_management" onclick="saveRepos('入库中');" style="display:none;">入库申请</button>
+			<button access="repository_management_process" class="access repository_management_process"  onclick="confirmRepository();" style="display:none;">确认</button>
+			<button onclick="cancelRepositoryWindow();">取消</button>
 		</div>
 	</div>
 

@@ -177,21 +177,10 @@ function approveOrder(){
 }
 
 // 生成到货通知
-function arrivalNotice() {
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	if (row) {
-		if (row.status == "采购完毕") {
-			
-			if(row.eqcostDeliveryType=="入公司库"){
-				alert("只能针对直发发到货通知，非直发入库时会自动发到货通知");
-			}else{
-				var options = { width:"1080px", height: "600px", title:"编辑到货数量"};
-				openRemotePageWindow(options, "execution_addArrivalNotice", {_id : row._id});
-			}
-		} else {
-			alert("未采购完毕，不能生成到货通知");
-		}
-	}
+function openArrivalNoticePage() {
+
+	loadPage("execution_addArrivalNotice");
+
 }
 
 function callback(response) {

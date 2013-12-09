@@ -968,6 +968,29 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseRequest.PURCHASE_REQUEST_CODE});
         return dao.list(query, DBBean.PURCHASE_REQUEST);
     }
+    
+    public Map<String, Object> listPurchaseOrderForArrivalSelect(){
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_ORDER_FINISHED);
+        query.put("eqcostDeliveryType", PurchaseRequest.EQCOST_DELIVERY_TYPE_DIRECTY);
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseRequest.PURCHASE_ORDER_CODE});
+        Map<String, Object> data = dao.list(query, DBBean.PURCHASE_ORDER);
+        List<Map<String, Object>> orderList = (List<Map<String, Object>>) data.get(ApiConstants.RESULTS_DATA);
+        
+        if(orderList !=null){
+            for(Map<String, Object> order: orderList){
+                
+                Map<String, Object> orderEqMap = arriveService.loadArrivalEqListByOrder(order);
+                
+                if(orderEqMap!=null && orderEqMap.get("eqcostList")!=null){
+                    order.put("eqcostList", orderEqMap.get("eqcostList"));
+                }
+            }
+        }
+        removeEmptyEqList(orderList, "eqcostList");
+        
+        return data;
+    }
 
     public Map<String, Object> updatePurchaseRequest(Map<String, Object> parameters) {
         PurchaseRequest request = (PurchaseRequest) new PurchaseRequest().toEntity(parameters);
@@ -1165,6 +1188,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), db);
         List<Map<String, Object>> mergedEqList = loadRepositoryRestEqList(result, (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST), true, db);
         result.put(SalesContractBean.SC_EQ_LIST, mergedEqList);
+        removeEmptyEqList(result, "eqcostApplyAmount");
         return result;
     }
 

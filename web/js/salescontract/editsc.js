@@ -756,7 +756,7 @@ function edit(data){
 				
 				if(!oldEqListLoadRefresh){
 					oldEqListLoadRefresh = true;
-					var grid1 = $("#scEqCostListNew").data("kendoGrid");
+					var grid1 = $("#scEqCostListOld").data("kendoGrid");
 					grid1.setDataSource(eqCostListDataSourceOld);
 					grid1.refresh();
 				}

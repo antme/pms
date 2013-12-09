@@ -82,14 +82,24 @@ function addRepository(){
 
 
 function cancelRepo() {
+
+	
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "入库中"){
-			process(cancelUrl);
-		}else{
-			alert("不允许退回");
+		if(row.status == "入库中" || row.status == "草稿"){
+			if(confirm("确认退回？")){
+				postAjaxRequest(cancelUrl, {
+					_id : row._id
+				}, function(data) {
+					listDataSource.read();
+				});
+			}
+			
+		}else {
+			alert("只能废除未发采购订单的数据或则已提交的数据");
 		}
 	}
+	
 }
 
 function editRepo() {
@@ -111,7 +121,8 @@ function openConfirmRepositoryPage(){
 	if (row) {
 		if(row.status == "入库中"){			
 			loadPage("repository_repositoryEdit", {
-				_id : row._id
+				_id : row._id,
+				page: "confirm"
 			});
 		}else{
 			alert("只能确认入库中的数据");

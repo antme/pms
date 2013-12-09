@@ -42,7 +42,7 @@ public class PurchaseCommonBean extends BaseEntity {
     
     
     
-    private String pbDepartment;
+    private String applicationDepartment;
     
     private String purchaseContractType;
 
@@ -73,14 +73,14 @@ public class PurchaseCommonBean extends BaseEntity {
     }
 
 
-    public String getPbDepartment() {
-        return pbDepartment;
+
+    public String getApplicationDepartment() {
+        return applicationDepartment;
     }
 
-    public void setPbDepartment(String pbDepartment) {
-        this.pbDepartment = pbDepartment;
+    public void setApplicationDepartment(String applicationDepartment) {
+        this.applicationDepartment = applicationDepartment;
     }
-    
 
     public String getRequestedDate() {
         return requestedDate;

@@ -6,7 +6,7 @@ var requestModel = kendo.data.Model.define({
 			nullable : true
 		},
 		pbCode:{},
-		pbDepartment:{},
+		applicationDepartment:{},
 		pbSubmitDate:{},
 		pbPlanDate:{},
 		pbType:{},
