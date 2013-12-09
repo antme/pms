@@ -154,11 +154,14 @@ function onActivate(e) {
 	var data = dataSource.data();
 	var length = data.length;
 	multiselect.value([]);
+	multiselect.refresh();
+
 	var roles;
 	for (i = 0; i < length; i++) {
 		if (data[i].id == groupId) {
 			var up = data[i];
 			roles = up.roles;
+
 			if (roles) {
 				var upRoles = [];
 				for (j = 0; j < roles.length; j++) {
