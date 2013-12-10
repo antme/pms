@@ -364,7 +364,7 @@ function confirmRepository(){
 		if(supplierId){
 			requestDataItem.supplier = supplierId;	
 		}
-		postAjaxRequest("/service/purcontract/repository/approve?type=in", {models:kendo.stringify(requestDataItem)}, checkStatus);
+		postAjaxRequest("/service/purcontract/repository/confirm?type=in", {models:kendo.stringify(requestDataItem)}, checkStatus);
 	}
 }
 
@@ -521,7 +521,7 @@ function submitConfirmRepositoryOut(){
 	if (!validator.validate()) {
 		alert("验证不通过，请检查表单");
 	} else{
-		 postAjaxRequest("/service/purcontract/repository/confirm?type=out", {models:kendo.stringify(requestDataItem)}, function(data){
+		 postAjaxRequest("/service/purcontract/repositoryout/confirm?type=out", {models:kendo.stringify(requestDataItem)}, function(data){
 			 loadPage("repository_repositoryout", null);
 		 });
 	}

@@ -381,6 +381,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		//排除不能再拆分的备货申请
 		List<Map<String,Object>> list = (List<Map<String,Object>>)map.get(ApiConstants.RESULTS_DATA);
 		List<Map<String,Object>> list2 = new ArrayList<Map<String,Object>>();
+		
+		
 		for(int i=0;i<list.size();i++){
 			Map<String,Object> item = list.get(i);
 			if(item != null){

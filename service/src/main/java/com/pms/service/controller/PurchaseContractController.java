@@ -273,6 +273,13 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(pService.approveRepositoryRequest(parserJsonParameters(request, false)), request, response);
     }
     
+    //直发出入库确认
+    @RequestMapping("/repositoryout/confirm")
+    @RoleValidate(roleID=RoleValidConstants.REPOSITORY_OUT_MANAGEMENT_PROCESS, desc = RoleValidConstants.REPOSITORY_OUT_MANAGEMENT_PROCESS_DESC)
+    public void confirmRepositoryOutRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.approveRepositoryRequest(parserJsonParameters(request, false)), request, response);
+    }
+    
     @RequestMapping("/repository/reject")
     @RoleValidate(roleID=RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS, desc = RoleValidConstants.REPOSITORY_MANAGEMENT_PROCESS_DESC)
     public void rejectRepositoryRequest(HttpServletRequest request, HttpServletResponse response) {

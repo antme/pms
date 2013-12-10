@@ -43,6 +43,12 @@ public class SalesContractController extends AbstractController {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
     	responseWithData(salesContractService.listSCsForSelect(params), request, response);
     }
+    
+    @RequestMapping("/purchaseback/listforselect")
+    public void listSCsForPurchaseBackSelect(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(salesContractService.listSCsForPurchaseBackSelect(params), request, response);
+    }
 
     /**
      * 新建销售合同

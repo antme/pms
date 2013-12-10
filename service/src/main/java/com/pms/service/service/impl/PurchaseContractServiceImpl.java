@@ -893,13 +893,32 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
      * 选择已批准的备货申请，返回_id, pbCode, scCode 字段
      * 
      */
-    public Map<String, Object> listBackRequestForSelect() {
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode, PurchaseBack.scCode });
-        //FIXME: 过滤掉申请数为0的数据
-        return dao.list(query, DBBean.PURCHASE_BACK);
-    }
+	public Map<String, Object> listBackRequestForSelect() {
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
+		query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode, PurchaseBack.scCode });
+		Map<String, Object> data = dao.list(query, DBBean.PURCHASE_BACK);
+		List<Map<String, Object>> eqListData = (List<Map<String, Object>>) data.get(ApiConstants.RESULTS_DATA);
+
+		if (eqListData != null) {
+			for (Map<String, Object> backRequest : eqListData) {
+
+				Map<String, Integer> backEqMap = backService.countRestEqByBackId(backRequest.get(ApiConstants.MONGO_ID).toString());
+
+				for (String key : backEqMap.keySet()) {
+
+					if (backEqMap.get(key) != null && backEqMap.get(key) > 0) {
+						backRequest.put("eqcostList", backEqMap);
+
+						break;
+					}
+				}
+
+			}
+		}
+		removeEmptyEqList(eqListData, "eqcostList");
+		return data;
+	}
 
     public Map<String, Object> listPurchaseRequests(Map<String, Object> params) {
 

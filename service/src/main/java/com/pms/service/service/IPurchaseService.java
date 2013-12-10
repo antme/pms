@@ -45,6 +45,8 @@ public interface IPurchaseService {
 	
 
     public Map<String, Object> mergeBackRestEqCount(Map<String, Object> back);
+    
+    public Map<String, Integer> countBackRestEqByScId(String scId); 
         
     //根据备货申请id查询此备货下面可用的采购申请数量和调拨数量
     public Map<String, Integer> countRestEqByBackId(String backId);

@@ -479,6 +479,58 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}
 		return scResults;
 	}
+	
+	
+	public Map<String, Object> listSCsForPurchaseBackSelect(Map<String, Object> params) {
+
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID, "customer" });
+		query.put(SalesContractBean.SC_CODE, new DBQuery(DBQueryOpertion.NOT_NULL));
+		query.put(SalesContractBean.SC_CODE, new DBQuery(DBQueryOpertion.NOT_EQUALS, ""));
+		query.put("status", new DBQuery(DBQueryOpertion.NOT_IN, new String[] { SalesContractBean.SC_STATUS_DRAFT }));
+
+		// 项目经理只能选择属于自己的销售合同
+		if (isPM()) {
+			query.put(ProjectBean.PROJECT_MANAGER, ApiThreadLocal.getCurrentUserId());
+		}
+
+		Map<String, Object> projectQuery = new HashMap<String, Object>();
+		projectQuery.put(ApiConstants.LIMIT_KEYS, ProjectBean.PROJECT_NAME);
+		Map<String, Object> customers = this.dao.listToOneMapAndIdAsKey(null, DBBean.CUSTOMER);
+		Map<String, Object> projects = this.dao.listToOneMapAndIdAsKey(projectQuery, DBBean.PROJECT);
+		Map<String, Object> scResults = dao.list(query, DBBean.SALES_CONTRACT);
+		List<Map<String, Object>> scList = (List<Map<String, Object>>) scResults.get(ApiConstants.RESULTS_DATA);
+		List<Map<String, Object>> finalScList = new ArrayList<Map<String, Object>>();
+
+		for (Map<String, Object> item : scList) {
+
+			Map<String, Integer> restCountMap = purchaseService.countBackRestEqByScId(item.get(ApiConstants.MONGO_ID).toString());
+
+			for (String key : restCountMap.keySet()) {
+				if (restCountMap.get(key) != null && restCountMap.get(key) > 0) {
+					finalScList.add(item);
+					break;
+				}
+			}
+		}
+		scResults.put(ApiConstants.RESULTS_DATA, finalScList);
+		for (Map<String, Object> item : finalScList) {
+
+			Map<String, Object> project = (Map<String, Object>) projects.get(item.get(SalesContractBean.SC_PROJECT_ID));
+			Map<String, Object> customer = (Map<String, Object>) customers.get(item.get("customer"));
+			if (project != null) {
+				item.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
+			}
+			if (customer != null) {
+				item.put("customerName", customer.get(CustomerBean.NAME));
+				item.put("customerBankName", customer.get(CustomerBean.customerBankName));
+				item.put("customerBankAccount", customer.get(CustomerBean.customerBankAccount));
+			}
+		}
+
+		return scResults;
+
+	}
 
 	@Override
 	public Map<String, Object> listMergedEqListBySC(Map<String, Object> params) {
@@ -1144,6 +1196,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         		SalesContractBean.SC_CUSTOMER});
         
         Map<String, Object> sc = this.dao.findOneByQuery(scQuery, DBBean.SALES_CONTRACT);
+   
         data.put(SalesContractBean.SC_PROJECT_ID, sc.get(SalesContractBean.SC_PROJECT_ID));
         data.put(SalesContractBean.SC_TYPE, sc.get(SalesContractBean.SC_TYPE));
         data.put(SalesContractBean.SC_CUSTOMER, sc.get(SalesContractBean.SC_CUSTOMER));
@@ -1152,7 +1205,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
  
     }
 
-    private void mergeCommonProjectInfo(Map<String, Object> data, Object projectId) {
+    public void mergeCommonProjectInfo(Map<String, Object> data, Object projectId) {
         Map<String, Object> projectQuery = new HashMap<String, Object>();
         projectQuery.put(ApiConstants.MONGO_ID, projectId);
         projectQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_TYPE });
@@ -1161,6 +1214,16 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         if (project != null) {
             data.put(ProjectBean.PROJECT_MANAGER, project.get(ProjectBean.PROJECT_MANAGER));
             data.put(ProjectBean.PROJECT_TYPE, project.get(ProjectBean.PROJECT_TYPE));
+            
+            
+			String ptype = (String) project.get(ProjectBean.PROJECT_TYPE);
+			if (ptype.contains("工程")) {
+				data.put(SalesContractBean.APPLICATION_DEPARTMENT, "工程部");
+			} else if (ptype.contains("产品")) {
+				data.put(SalesContractBean.APPLICATION_DEPARTMENT, "产品部");
+			} else {
+				data.put(SalesContractBean.APPLICATION_DEPARTMENT, "服务部");
+			}
         }
     }
 

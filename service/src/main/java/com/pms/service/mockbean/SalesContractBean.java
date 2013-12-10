@@ -21,6 +21,8 @@ public class SalesContractBean {
 	
 	public static final String SC_CUSTOMER = "customer"; //外键 客户
 	
+	public static final String APPLICATION_DEPARTMENT = "applicationDepartment"; //申请部门
+	
 	//商务信息字段
 	public static final String SC_AMOUNT = "contractAmount"; //合同金额
 	public static final String SC_EQUIPMENT_AMOUNT = "equipmentAmount"; //设备金额
