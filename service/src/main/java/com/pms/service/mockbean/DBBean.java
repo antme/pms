@@ -12,6 +12,7 @@ public class DBBean {
     public static final String SALES_CONTRACT = "salesContract";//销售合同
 
     public static final String EQ_COST = "eqCost";  // 销售合同中的 设备清单 独立表
+    public static final String EQ_COST_HISTORY = "eqCostHistory";  // 销售合同中的 设备清单 独立表
     public static final String SC_INVOICE = "scInvoice"; //销售合同中的 开票信息 独立表
     public static final String SC_GOT_MONEY = "scGotMoney";  // 销售合同中的 收款信息 独立表
     public static final String SC_MONTH_SHIPMENTS = "scMonthShipments"; //销售合同中的 按月发货金额 独立表

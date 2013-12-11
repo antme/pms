@@ -164,14 +164,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		mergeCommonProjectInfo(contract, contract.get(SalesContractBean.SC_PROJECT_ID));
 		List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
 		eqcostList = (List<Map<String, Object>>)params.get(SalesContractBean.SC_EQ_LIST);
-	
+        boolean isdraft = false;
+
 		Map<String, Object> addedContract = null;
 		if (ApiUtil.isEmpty(_id) || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)){//Add
 			contract.put(SalesContractBean.SC_MODIFY_TIMES, 0);
 			contract.put(SalesContractBean.SC_LAST_TOTAL_AMOUNT, ApiUtil.getDouble(params, SalesContractBean.SC_AMOUNT));
             String genSCCode = null;
-
+            
+            
 			if(status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)){
+				isdraft = true;
 			    //继续编辑草稿
 			    if(!ApiUtil.isEmpty(_id)){
 			        contract.put(ApiConstants.MONGO_ID, _id);
@@ -208,7 +211,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
             // 添加成本设备清单记录
             if (eqcostList != null && !eqcostList.isEmpty()) {
-                addEqCostListForContract(eqcostList, (String) addedContract.get(ApiConstants.MONGO_ID), genSCCode, (String) addedContract.get(SalesContractBean.SC_PROJECT_ID));
+                addEqCostListForContract(eqcostList, (String) addedContract.get(ApiConstants.MONGO_ID), genSCCode, (String) addedContract.get(SalesContractBean.SC_PROJECT_ID), isdraft);
             }
             
 			return addedContract;
@@ -309,7 +312,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				updateTheModifyHistoryAndModifyTimesAndscLastAmount(params, eqcostList, contract, existContract);
 				String scProjectId = (String) existContract.get(SalesContractBean.SC_PROJECT_ID);
 				String scCode = (String) existContract.get(SalesContractBean.SC_CODE);
-				addEqCostListForContract(eqcostList, _id, scCode, scProjectId);
+				addEqCostListForContract(eqcostList, _id, scCode, scProjectId, isdraft);
 			}
 			logger.info("***************************** Save contract *****************************");
 			logger.info(contract);
@@ -351,8 +354,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		return amount;
 	}
 	
-	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId, String scCode, String proId){
-		int nextVersionNo = this.getEqCostNextVersionNo(cId);
+	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId, String scCode, String proId, boolean isdraft){
+		int nextVersionNo = 1;
+		if(!isdraft){
+			nextVersionNo = this.getEqCostNextVersionNo(cId);
+		}
 		
 		
 		for (Map<String, Object> item : eqcostList){
@@ -390,13 +396,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             realItemQuery.put(ApiConstants.LIMIT_KEYS, EqCostListBean.EQ_LIST_REAL_AMOUNT);
             Map<String, Object> realItem = dao.findOneByQuery(realItemQuery, DBBean.EQ_COST);
             
-            for(String key: realItemQuery.keySet()){
-            	Map<String, Object> queryMap = new HashMap<String, Object>();
-            	queryMap.put(key, realItemQuery.get(key));
-            	
-            	logger.info("....................................." + key + ".........................." + dao.count(queryMap, DBBean.EQ_COST)) ;
-            	
-            }
+//            for(String key: realItemQuery.keySet()){
+//            	Map<String, Object> queryMap = new HashMap<String, Object>();
+//            	queryMap.put(key, realItemQuery.get(key));
+//            	
+//            	logger.info("....................................." + key + ".........................." + dao.count(queryMap, DBBean.EQ_COST)) ;
+//            	
+//            }
             
             
             if (realItem == null) {
@@ -412,6 +418,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
     			}
     			
             } else {
+            	String eqcostCode = genEqcostListCode(scCode, nextVersionNo);
+            	realItem.put(EqCostListBean.EQ_LIST_CODE, eqcostCode);
+    			
                 float applyAmount = ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_AMOUNT);
                 float totalAmount = applyAmount + ApiUtil.getFloatParam(realItem, EqCostListBean.EQ_LIST_REAL_AMOUNT); 
                 //(int)Float.parseFloat(realItem.get(EqCostListBean.EQ_LIST_REAL_AMOUNT).toString());
@@ -419,6 +428,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
                 realItem.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, totalAmount);
                 realItem.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, totalAmount);
                 this.dao.updateById(realItem, DBBean.EQ_COST);
+            }
+            
+            if(!isdraft){
+            	this.dao.add(item, DBBean.EQ_COST_HISTORY);
             }
   
 		}
@@ -436,7 +449,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         order.put(EqCostListBean.EQ_LIST_VERSION_NO, ApiConstants.DB_QUERY_ORDER_BY_DESC);
         query.put(ApiConstants.DB_QUERY_ORDER_BY, order);
         
-        Map<String, Object> re = dao.list(query, DBBean.EQ_COST);
+        Map<String, Object> re = dao.list(query, DBBean.EQ_COST_HISTORY);
         List<Map<String, Object>> reList = (List<Map<String, Object>>) re.get(ApiConstants.RESULTS_DATA);
         if (!reList.isEmpty()){
         	Map<String, Object> item = (Map<String, Object>) reList.get(0);
@@ -1235,7 +1248,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		Map<String, Object> eqcostQuery = new HashMap<String, Object>();
 		eqcostQuery.put(SalesContractBean.SC_ID, cId);
-		Map<String, Object> eqListData = dao.list(eqcostQuery, DBBean.EQ_COST);
+		Map<String, Object> eqListData = dao.list(eqcostQuery, DBBean.EQ_COST_HISTORY);
 		List<Map<String, Object>> eqListDataList = (List<Map<String, Object>>) eqListData.get(ApiConstants.RESULTS_DATA);
 		result.put("allEqList", eqListDataList);
 		
