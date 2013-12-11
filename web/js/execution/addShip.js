@@ -179,7 +179,10 @@ $(document).ready(function() {
 					return dataItem.value;
 				}
 	        		
-	        },
+	        },{
+				field : "shipType",
+				title : "来源"
+			},
 			 {
 				field : "eqcostDeliveryType",
 				title : "物流类别"
@@ -279,6 +282,9 @@ $(document).ready(function() {
 			{
 				field : "shipTypeDisplay",
 				title : "发货类型"
+			},{
+				field : "shipType",
+				title : "来源"
 			},	        
 	        { field: "eqcostMemo", title: "备注" },
 	        deleteCommand
@@ -313,6 +319,9 @@ $(document).ready(function() {
 			{
 				field : "shipTypeDisplay",
 				title : "发货类型"
+			},{
+				field : "shipType",
+				title : "来源"
 			},	        
 	        { field: "eqcostMemo", title: "备注" }],
 	        editable: false,
@@ -484,7 +493,7 @@ function loadEqList(data){
 					eqList[i].shipTypeDisplay = "上海—上海泰德库";
 					shList.push(eqList[i]);
 				}else{
-					eqList[i].shipTypeDisplay = "上海—北京库";
+					eqList[i].shipTypeDisplay = "上海—北京泰德库";
 					bjList.push(eqList[i]);
 				}									
 			} 
