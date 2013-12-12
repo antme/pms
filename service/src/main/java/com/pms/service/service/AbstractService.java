@@ -672,7 +672,8 @@ public abstract class AbstractService {
         String[] limitKeys = { codeKey };
         Map<String, Object> queryMap = new HashMap<String, Object>();
         int year = DateUtil.getNowYearString();
-        Map<String, Object> re = dao.getLastRecordByCreatedOn(db, queryMap, limitKeys);
+		queryMap.put(codeKey, new DBQuery(DBQueryOpertion.LIKE, year));
+		Map<String, Object> re = dao.getLastRecordByCreatedOn(db, queryMap, limitKeys);
         String code = null;
         if (re != null) {
             code = (String) re.get(codeKey);
