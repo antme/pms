@@ -647,6 +647,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				sc.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
 			}
 			Map<String, Object> pro = (Map<String, Object>) pInfoMap.get(pId);
+			
 			if (pro != null){
 				String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER);
 				
@@ -656,9 +657,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
 				if (pmInfo != null){
 					sc.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
-					sc.put("applicationDepartment", pmInfo.get(UserBean.DEPARTMENT));
+
 				}
-			}
+			}     
+			 
+
 		}
 	}
 
@@ -1221,13 +1224,23 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
     public void mergeCommonProjectInfo(Map<String, Object> data, Object projectId) {
         Map<String, Object> projectQuery = new HashMap<String, Object>();
         projectQuery.put(ApiConstants.MONGO_ID, projectId);
-        projectQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_TYPE });
+		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME });
 
         Map<String, Object> project = this.dao.findOneByQuery(projectQuery, DBBean.PROJECT);
         if (project != null) {
             data.put(ProjectBean.PROJECT_MANAGER, project.get(ProjectBean.PROJECT_MANAGER));
             data.put(ProjectBean.PROJECT_TYPE, project.get(ProjectBean.PROJECT_TYPE));
-            
+
+			data.put(ProjectBean.PROJECT_CODE, project.get(ProjectBean.PROJECT_CODE));
+			data.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
+			
+			
+			Map<String, Object> pmQuery = new HashMap<String, Object>();
+			pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER));
+			pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.USER_NAME });
+
+			Map<String, Object> pmInfo = this.dao.findOneByQuery(pmQuery, DBBean.USER);
+			data.put(ProjectBean.PROJECT_MANAGER_NAME, pmInfo.get(UserBean.USER_NAME));
             
 			String ptype = (String) project.get(ProjectBean.PROJECT_TYPE);
 			if (ptype.contains("工程")) {

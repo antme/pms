@@ -63,7 +63,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		request.put(PurchaseBack.scId, params.get(PurchaseBack.scId));
 		mergeSalesContract(request);
 		mergeEqcost(request);
-		
+		scs.mergeCommonFieldsFromSc(request, request.get(PurchaseBack.scId));
+
 		List<Map<String, Object>> eqList = (List<Map<String, Object>>) request.get(PurchaseBack.eqcostList);
 		if(eqList != null){
 			for(Map<String,Object> obj : eqList){		

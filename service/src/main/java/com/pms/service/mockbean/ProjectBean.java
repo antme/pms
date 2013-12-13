@@ -13,6 +13,8 @@ public class ProjectBean {
 	public static final String PROJECT_ABBR = "projectAbbr";  //项目缩写
 	public static final String PROJECT_NAME = "projectName";  //项目名称
 	public static final String PROJECT_MANAGER = "projectManager";  //项目经理
+	public static final String PROJECT_MANAGER_NAME = "projectManagerName";  //项目经理
+
 	public static final String PROJECT_STATUS = "projectStatus";  //项目状态
 	public static final String PROJECT_TYPE = "projectType";  //项目类型
 	public static final String PROJECT_ADDRESS = "projectAddress";  //项目实施地址
