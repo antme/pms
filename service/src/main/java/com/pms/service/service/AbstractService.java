@@ -460,15 +460,26 @@ public abstract class AbstractService {
         }
         
         
-        if (db.equalsIgnoreCase(DBBean.PURCHASE_ALLOCATE)) {
-            if (inRole(RoleValidConstants.PURCHASE_ALLOCATE_PROCESS)) {
-                statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
-                ownerQuery.remove(ApiConstants.CREATOR);
-            } else if (inRole(RoleValidConstants.PURCHASE_ALLOCATE_FINAL_PROCESS)) {
-                statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.firstApprove.toString());
-                ownerQuery.remove(ApiConstants.CREATOR);
-            }
-        }else{
+		if (db.equalsIgnoreCase(DBBean.PURCHASE_ALLOCATE) || db.equalsIgnoreCase(DBBean.SHIP)) {
+
+			if (db.equalsIgnoreCase(DBBean.PURCHASE_ALLOCATE)) {
+				if (inRole(RoleValidConstants.PURCHASE_ALLOCATE_PROCESS)) {
+					statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.submited.toString());
+					ownerQuery.remove(ApiConstants.CREATOR);
+				} else if (inRole(RoleValidConstants.PURCHASE_ALLOCATE_FINAL_PROCESS)) {
+					statusQuery.put(PurchaseBack.paStatus, PurchaseStatus.firstApprove.toString());
+					ownerQuery.remove(ApiConstants.CREATOR);
+				}
+			} else {
+				if (inRole(RoleValidConstants.SHIP_MANAGEMENT_PROCESS)) {
+					statusQuery.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_SUBMIT);
+					ownerQuery.remove(ApiConstants.CREATOR);
+				} else if (inRole(RoleValidConstants.SHIP_MANAGEMENT_FINAL_PROCESS)) {
+					statusQuery.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_FINAL_APPROVE);
+					ownerQuery.remove(ApiConstants.CREATOR);
+				}
+			}
+		}else{
             statusQuery.put("status", new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseRequest.STATUS_NEW, PurchaseRequest.STATUS_REPOSITORY_NEW, ShipBean.SHIP_STATUS_SUBMIT }));
         }
         // or query

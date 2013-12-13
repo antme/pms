@@ -208,7 +208,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 
         // 已发货的数量统计
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { ShipBean.SHIP_STATUS_SUBMIT, ShipBean.SHIP_STATUS_FIRST_APPROVE, ShipBean.SHIP_STATUS_FIRST_APPROVE, ShipBean.SHIP_STATUS_CLOSE }));
+        parameters.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { ShipBean.SHIP_STATUS_SUBMIT, ShipBean.SHIP_STATUS_FIRST_APPROVE, ShipBean.SHIP_STATUS_FINAL_APPROVE, ShipBean.SHIP_STATUS_CLOSE }));
         parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, saleId);
         Map<String, Integer> shipedCountMap = countEqByKeyWithMultiKey(parameters, DBBean.SHIP, ShipBean.EQCOST_SHIP_AMOUNT, null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
         List<Map<String, Object>> shipMergedEqList = new ArrayList<Map<String, Object>>();
