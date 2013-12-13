@@ -643,8 +643,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			Map<String, Object> cusInfo = (Map<String, Object>) customerData.get(cusId);
 			if (cusInfo != null){
 				sc.put(ProjectBean.PROJECT_CUSTOMER, cusInfo.get(CustomerBean.NAME));
+				sc.put(ProjectBean.PROJECT_CUSTOMER_NAME, cusInfo.get(CustomerBean.NAME));
 			}else{
 				sc.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
+				sc.put(ProjectBean.PROJECT_CUSTOMER_NAME, "N/A");
 			}
 			Map<String, Object> pro = (Map<String, Object>) pInfoMap.get(pId);
 			

@@ -21,6 +21,7 @@ public class ProjectBean {
 	public static final String PROJECT_MEMO = "projectMemo";  //备注
 	
 	public static final String PROJECT_CUSTOMER = "customer"; // 和 销售合同 都存放了该字段
+	public static final String PROJECT_CUSTOMER_NAME = "customerName"; // 和 销售合同 都存放了该字段
 	
 	//项目类型数据
 	public static final String PROJECT_TYPE_PRODUCT = "产品";  //产品
