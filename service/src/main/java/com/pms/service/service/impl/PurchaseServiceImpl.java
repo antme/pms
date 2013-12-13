@@ -98,6 +98,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		Map<String,Object> request = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
 		mergeSalesContract(request);
 		mergeEqcost(request);
+		mergeBackRestEqCount(request);
 		return request;
 	}
 	

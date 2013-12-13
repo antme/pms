@@ -58,6 +58,7 @@ public class EmailUtil {
             email.setAuthentication(ConfigurationManager.getProperty("emailUserName"), ConfigurationManager.getProperty("password"));
             email.setHostName(ConfigurationManager.getProperty("smtp"));// 设置发送主机的服务器地址
             email.setFrom(ConfigurationManager.getProperty("email"), "工程管理系统");// 发件人邮箱
+            email.setSmtpPort(25);
             
             List<InternetAddress> address = new ArrayList<InternetAddress>();
             for (Object mail : toList) {
