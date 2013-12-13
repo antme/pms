@@ -1259,7 +1259,7 @@ function copyOldEqData(){
 		return ;
 	}
 	var data = 	JSON.parse(kendo.stringify(row));
-
+	data._id=undefined;
 	var newgrid = $("#scEqCostListNew").data("kendoGrid");
 	newgrid.dataSource.add(data);
 }

@@ -81,7 +81,7 @@ function editCon() {
 	var row = getSelectedRowDataByGrid("grid");
 
 	if (row) {
-		if (row.status == "草稿" || row.status == "已提交 ") {
+		if (row.status == "草稿" || row.status == "审批拒绝") {
 			loadPage("purchasecontract_purchasecontractedit", {
 				_id : row._id
 			});

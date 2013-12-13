@@ -176,10 +176,11 @@ $(document).ready(function() {
 	if(popupParams){	
 		$("#purchasecontract-edit-item").show();
 		postAjaxRequest("/service/purcontract/get", popupParams, edit);
+		$("#purchasecontractselect").hide();
 		disableAllInPoppup();	
 	}else if (redirectParams) {
 		
-		if (redirectParams.addInSCList && redirectParams.addInSCList == 1){//销售合同列表中直接为 弱电工程 类添加
+		if (redirectParams && redirectParams.addInSCList && redirectParams.addInSCList == 1){//销售合同列表中直接为 弱电工程 类添加
 			addOrderInSCListForRuodian();
 			disableTable();
 		}else{
@@ -612,7 +613,7 @@ function edit(data) {
 	}
 	
 	if(requestDataItem.fromRuodian){
-		if(!redirectParams.addInSCList){
+		if(redirectParams && !redirectParams.addInSCList){
 			addOrderInSCListForRuodian();
 		}
 		disableTable();
