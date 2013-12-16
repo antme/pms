@@ -204,17 +204,20 @@ public abstract class AbstractController {
      */
     private void responseMsg(Map<String, Object> data, ResponseStatus status, HttpServletRequest request, HttpServletResponse response, String msgKey) {
 
-        if(data == null){
+        if (data == null) {
             data = new HashMap<String, Object>();
+        }
+
+        if (data != null && data instanceof Map) {
+            updateDataValue(data);
         }
         response.setContentType("text/plain;charset=UTF-8");
         response.addHeader("Accept-Encoding", "gzip, deflate");
 
         String jsonReturn = new Gson().toJson(data);
         String callback = request.getParameter("callback");
-        
-        
-        if(request.getParameter("mycallback") != null){
+
+        if (request.getParameter("mycallback") != null) {
             callback = request.getParameter("mycallback");
         }
         if (callback != null) {
@@ -223,16 +226,14 @@ public abstract class AbstractController {
             if (status == ResponseStatus.FAIL) {
                 jsonReturn = "displayMsg(" + jsonReturn + ");";
             } else {
-         
-                if (data != null && data instanceof Map) {
 
-                		updateDataValue(data);
-                        //返回
-                        jsonReturn = callback + "(" + new Gson().toJson(data) + ");";
-                   
+                if (data != null && data instanceof Map) {
+                    // 返回
+                    jsonReturn = callback + "(" + new Gson().toJson(data) + ");";
+
                 } else {
-                    //不返回任何数据           
-                        jsonReturn =  callback + "([]);";              
+                    // 不返回任何数据
+                    jsonReturn = callback + "([]);";
                 }
 
             }
@@ -270,7 +271,7 @@ public abstract class AbstractController {
 		floatFields.add("eqcostSalesBasePrice");
 		floatFields.add("eqcostLastBasePrice");
 		floatFields.add("eqcostTotalAmount");
-
+		floatFields.add("pbMoney");
 		if (ApiUtil.isValid(data)) {
 			for (String key : data.keySet()) {
 
