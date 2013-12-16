@@ -38,7 +38,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
     private static Logger logger = LogManager.getLogger(CommonDaoMongoImpl.class);
     
     public Map<String, Object> add(Map<String, Object> data, String collection) {
-  
+        ApiUtil.updateDataValue(data);
 //        logger.debug(String.format("Add data into collection[%s] with parameters [%s]", collection, data));
         Map<String, Object> clone = DBQueryUtil.generateQueryFields(data);
 
@@ -59,6 +59,8 @@ public class CommonDaoMongoImpl implements ICommonDao {
 //        logger.debug(String.format("Add data into collection[%s] with parameters [%s]", collection, data));
         List<DBObject> dataList = new ArrayList<DBObject>();
         for (Map<String, Object> map : data) {
+            ApiUtil.updateDataValue(map);
+
             BasicDBObject doc = new BasicDBObject(map);
             // TODO: add CREATED_ON, UPDATED_ON here
             dataList.add(doc);
@@ -68,6 +70,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
     }
 
     public Map<String, Object> save(Map<String, Object> data, String collection) {
+
     	String id = (String)data.get(ApiConstants.MONGO_ID);
     	if(id == null || id.isEmpty()){
     		return add(data, collection);
@@ -268,6 +271,8 @@ public class CommonDaoMongoImpl implements ICommonDao {
     public Map<String, Object> updateById(Map<String, Object> parameters, String collection) {
         Map<String, Object> clone = DBQueryUtil.generateQueryFields(parameters);
         WriteResult result = null;
+        ApiUtil.updateDataValue(clone);
+
         if (clone.get(ApiConstants.MONGO_ID) != null) {
             String id = clone.get(ApiConstants.MONGO_ID).toString();
             clone.remove(ApiConstants.MONGO_ID);
