@@ -230,7 +230,7 @@ var eqCostListDataSourceNew = new kendo.data.DataSource({
             	eqcostMemo: { type: "string" },
         		eqcostTaxType : {type: "string"},
         		eqcostCategory : {type: "string"},
-        		eqcostLastBasePrice: { type: "number" },
+        		eqcostLastBasePrice: { type: "number"},
         		eqcostTotalAmount : {type: "number"}
             }
         }
@@ -545,9 +545,22 @@ $(document).ready(function() {
 			scrollable : true,
 			resizable: true,
 			sortable : true,
+			dataBound : function(e) {
+				moneyOnChange();
+			},
 			save: function(e) {
-
 				if (excuSave) {
+					var updateCount = false;
+					if(e.values.eqcostLastBasePrice || e.values.eqcostTotalAmount){	
+						excuSave = true;
+						if(updateCount){
+							updateCount = false;
+						}else{
+							e.preventDefault();
+							return false;
+						}
+					}
+			
 					excuSave = false;
 					var oldEqcostTaxType = e.model.eqcostTaxType;
 					var oldTotalAmount = e.model.eqcostTotalAmount;
@@ -573,30 +586,8 @@ $(document).ready(function() {
 					
 					var eqcostTotalAmount = eqcostAmount*eqcostLastBasePrice;
 					e.model.set("eqcostTotalAmount", eqcostTotalAmount);
+					updateCount = true;
 					
-					var estimateEqCost0 = 0;
-					if (scm.estimateEqCost0) {
-						estimateEqCost0 = scm.estimateEqCost0;
-					}
-					var estimateEqCost1 = 0;
-					if (scm.estimateEqCost1) {
-						estimateEqCost1 = scm.estimateEqCost1;
-					}
-					// 商务信息 - 预估设备成本
-					if (oldEqcostTaxType == "增值税") {
-						estimateEqCost0 -= oldTotalAmount;
-					}
-					if (oldEqcostTaxType == "非增值税") {
-						estimateEqCost1 -= oldTotalAmount;
-					}
-					if (e.values.eqcostTaxType == "增值税") {
-						estimateEqCost0 += eqcostTotalAmount;
-					} else if (e.values.eqcostTaxType == "非增值税") {
-						estimateEqCost1 += eqcostTotalAmount;
-					}
-					scm.set("estimateEqCost0",estimateEqCost0);
-		        	scm.set("estimateEqCost1",estimateEqCost1);
-					moneyOnChange();
 					var grid1 = $("#scEqCostListNew").data("kendoGrid");
 					grid1.refresh();
 					excuSave = true;
@@ -612,25 +603,6 @@ $(document).ready(function() {
         },
         success:function(e){
         	eqCostListDataSourceNew.data(e.response.data);
-        	var estimateEqCost0 = 0; // 预估设备成本（增）
-        	var estimateEqCost1 = 0; // 预估设备成本（非增）
-        	for ( var int = 0; int < e.response.data.length; int++) {
-        		if (e.response.data[int].eqcostTaxType == "增值税") {
-        			estimateEqCost0 += e.response.data[int].eqcostTotalAmount;
-				} else if (e.response.data[int].eqcostTaxType == "非增值税") {
-					estimateEqCost1 += e.response.data[int].eqcostTotalAmount;
-				}
-			}
-        	var scmestimateEqCost0 = 0;
-			if (scm.estimateEqCost0) {
-				scmestimateEqCost0 = scm.estimateEqCost0;
-			}
-			var scmestimateEqCost1 = 0;
-			if (scm.estimateEqCost1) {
-				scmestimateEqCost1 = scm.estimateEqCost1;
-			}
-        	scm.set("estimateEqCost0",scmestimateEqCost0+estimateEqCost0);
-        	scm.set("estimateEqCost1",scmestimateEqCost1+estimateEqCost1);
         	moneyOnChange();
         }
     });	
@@ -762,6 +734,8 @@ function edit(data){
 					grid1.setDataSource(eqCostListDataSourceOld);
 					grid1.refresh();
 				}
+				
+				moneyOnChange();
 
 			}
 		});
@@ -1190,6 +1164,34 @@ function closeWindow(windowId){
 }
 	
 function moneyOnChange(){
+	
+	var estimateEqCost0C = 0; // 预估设备成本（增）
+	var estimateEqCost1c = 0; // 预估设备成本（非增）
+	var datalist = eqCostListDataSourceNew.data();
+	for ( var int = 0; int < datalist.length; int++) {
+		if (datalist[int].eqcostTaxType == "增值税") {
+			estimateEqCost0C += datalist[int].eqcostTotalAmount;
+		} else if (datalist[int].eqcostTaxType == "非增值税") {
+			estimateEqCost1c += datalist[int].eqcostTotalAmount;
+		}
+	}
+	
+	datalist = eqCostListDataSourceOld.data();
+	for ( var int = 0; int < datalist.length; int++) {
+		if (datalist[int].eqcostTaxType == "增值税") {
+			estimateEqCost0C += datalist[int].eqcostTotalAmount;
+		} else if (datalist[int].eqcostTaxType == "非增值税") {
+			estimateEqCost1c += datalist[int].eqcostTotalAmount;
+		}
+	}
+
+	scm.set("estimateEqCost0",estimateEqCost0C);
+	scm.set("estimateEqCost1",estimateEqCost1c);
+	
+	
+	
+	
+	
 	var equipmentAmount = 0;
 	if (scm.equipmentAmount) {
 		equipmentAmount = scm.equipmentAmount;

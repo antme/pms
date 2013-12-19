@@ -113,7 +113,7 @@ function toolbar_addProject() {
 function toolbar_editProject(){
 	var rowData = getSelectedRowDataByGrid("grid");
 	if (rowData == null){
-		alert("请点击选择一条项目记录！");
+		alert("请点击列表选择一条项目记录！");
 		return;
 	}
 	
@@ -127,7 +127,7 @@ function toolbar_setupProject() {//1:正式立项；2：预立项；3：内部�
 		return;
 	}
 	if (row.projectStatus != "销售预立项"){
-		alert("请选择一条销售预立项记录！");
+		alert("请选择一条销售预立项项目！");
 		return;
 	}
 	

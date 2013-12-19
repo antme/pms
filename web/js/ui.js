@@ -1,5 +1,14 @@
 
 $(document).ready(function() {
+	initKeyDownEvent();
+	
+	kendo.ui.progress($("#main"), true);
+	
+	postAjaxRequest("/service/user/home", null, init)
+
+});
+
+function initKeyDownEvent(){
 	if (navigator.userAgent.indexOf("MSIE")>0 || navigator.userAgent.indexOf("msie")>0) {
 		document.onkeydown = function() {
 			if (event.keyCode == 116) {
@@ -30,12 +39,7 @@ $(document).ready(function() {
 		});
 	}
 	
-	kendo.ui.progress($("#main"), true);
-	
-	
-	postAjaxRequest("/service/user/home", null, init)
-
-});
+}
 
 
 function init(u){
@@ -214,6 +218,7 @@ function loadPage(page, parameters, popupDiv) {
 				if(popupDiv){
 					$("#"+popupDiv).html(data);
 				}else{
+					initKeyDownEvent();
 					$("#main_right").html(data);
 				}
 			},

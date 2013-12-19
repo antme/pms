@@ -141,15 +141,15 @@
 							<label for="contractDownPaymentMemo">首付备注</label>
 						</div>
 						<div data-container-for="contractDownPaymentMemo" class="k-edit-field ">
-							<textarea id="contractDownPaymentMemo" rows="4" cols="120" class="k-textbox" data-bind="value: contractDownPaymentMemo"></textarea>
+							<textarea rows="4" cols="45"  id="contractDownPaymentMemo" class="k_textarea_small" data-bind="value: contractDownPaymentMemo"></textarea>
 						</div>
 						
 	                   <div class="k-edit-label ">
 							<label for="progressPayment">进度款</label>
 						</div>
 						<div data-container-for="progressPayment" class="k-edit-field ">
-							<input type="text" name="progressPayment" id="progressPayment"
-								required="required" validationMessage="必填" data-bind="value: progressPayment">
+							<textarea rows="4" cols="45"  class="k_textarea_small" name="progressPayment" id="progressPayment"
+								required="required" validationMessage="必填" data-bind="value: progressPayment"></textarea>
 						</div>
 						
 						<!-- <div data-container-for="progressPayment" class="k-edit-field ">
@@ -168,14 +168,14 @@
 							<label for="qualityMoneyMemo">质保金备注</label>
 						</div>
 						<div data-container-for="qualityMoneyMemo" class="k-edit-field ">
-							<textarea id="qualityMoneyMemo" rows="4" cols="120" class="k-textbox" data-bind="value: qualityMoneyMemo"></textarea>
+							<textarea rows="4" cols="45"  class="k_textarea_small"  id="qualityMoneyMemo"  class="k_textarea_small" data-bind="value: qualityMoneyMemo"></textarea>
 						</div>
 						
 	                   <div class="k-edit-label ">
-							<label for="contractMemo">备注</label>
+							<label for="contractMemo">销售合同备注</label>
 						</div>
 						<div data-container-for="contractMemo" class="k-edit-field ">
-							<textarea id="contractMemo" rows="4" cols="120" class="k-textbox" data-bind="value: contractMemo"></textarea>
+							<textarea rows="4" cols="45" id="contractMemo" class="k_textarea_small" data-bind="value: contractMemo"></textarea>
 						</div>
 						
                    </div>
@@ -209,7 +209,7 @@
 							<label for="estimateEqCost0">预估设备成本（增）</label>
 						</div>
 						<div data-container-for="estimateEqCost0" class="k-edit-field ">
-							<input type="number" min="0" name="estimateEqCost0" id="estimateEqCost0" onchange="moneyOnChange_ADD();"
+							<input type="number" min="0" name="estimateEqCost0" readonly id="estimateEqCost0" onchange="moneyOnChange_ADD();"
 								 data-bind="value: estimateEqCost0">
 						</div>
 						
@@ -217,7 +217,7 @@
 							<label for="estimateEqCost1">预估设备成本（非增）</label>
 						</div>
 						<div data-container-for="estimateEqCost1" class="k-edit-field ">
-							<input type="text" name="estimateEqCost1" id="estimateEqCost1" onchange="moneyOnChange_ADD();"
+							<input type="text" name="estimateEqCost1" readonly id="estimateEqCost1" onchange="moneyOnChange_ADD();"
 								 data-bind="value: estimateEqCost1">
 						</div>
 						
@@ -380,15 +380,15 @@
 	                    <label for="projectAddress">实施地址</label>
 	                </div>
 	                <div data-container-for="projectAddress" class="k-edit-field ">
-	                    <input type="text" class="k-input k-textbox" name="projectAddress" id="projectAddress"
-	                        required="required" validationMessage="必填" data-bind="value: projectAddress">
+	                    <textarea rows="4" cols="45"  class="k_textarea_small" name="projectAddress" id="projectAddress"
+	                        required="required" validationMessage="必填" data-bind="value: projectAddress"></textarea>
 	                </div>
 	                
 	                <div class="k-edit-label ">
 	                    <label for="projectMemo">备注</label>
 	                </div>
 	                <div data-container-for="projectMemo" class="k-edit-field ">
-	                    <textarea id="projectMemo" rows="4" cols="120" class="k-textbox" data-bind="value: projectMemo"></textarea>
+	                    <textarea id="projectMemo" rows="4" cols="120" class="k_textarea_large" data-bind="value: projectMemo"></textarea>
 	                </div>
 	            
 	               </div>

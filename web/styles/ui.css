@@ -7,6 +7,15 @@ body {
 	width: 450px;
 }
 
+.k_textarea_large{
+	height: 120px;
+    width: 350px;
+}
+
+.k_textarea_small{
+	height: 80px;
+    width: 350px;
+}
 .k-content h3{
 	margin-top: 0px;
 }
