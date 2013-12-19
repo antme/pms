@@ -28,6 +28,7 @@ $(document).ready(function() {
 		dataSource : projectDataSource,
 		pageable : true,
 		sortable : true,
+		resizable: true,
 		filterable : filterable,
 // pageable : {
 // buttonCount:5,

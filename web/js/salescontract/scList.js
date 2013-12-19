@@ -59,6 +59,7 @@ $(document).ready(function() {
 		selectable: "row",
 		height: "400px",
 	    sortable : true,
+	    resizable: true,
 		filterable : filterable,
 		columns : [ {
 			field : "contractCode",
