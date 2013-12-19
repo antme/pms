@@ -67,7 +67,10 @@ var menus = [
              {
                  text: "项目管理", id: "project_projectList", imageUrl: "/images/product.png"
              },
-
+             {
+                 text: "销售合同",  id: "salescontract_scList", imageUrl: "/images/target.png"
+             },
+             
              {
                  text: "项目执行", id: "projectex", expanded : true, imageUrl: "/images/ccontract.png",
                  items: [
@@ -82,10 +85,7 @@ var menus = [
                          { text: "还货申请", id: "execution_return", imageUrl: "/images/sign_out.png"}
                      ]
              },
-             {
-                 text: "销售合同",  id: "salescontract_scList", imageUrl: "/images/target.png"
-             },
-             
+            
 
              {
 	             text : "采购合同", id : "purchasecontract", expanded : true, imageUrl : "/images/contract.png",
