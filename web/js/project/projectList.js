@@ -1,6 +1,6 @@
 
 
-var dataSource = new kendo.data.DataSource({
+var projectDataSource = new kendo.data.DataSource({
 	transport : {
 		read : {
 			url : "/service/project/list",
@@ -18,28 +18,17 @@ var dataSource = new kendo.data.DataSource({
 	serverPaging: true,
 	serverSorting: true,
 	serverFiltering : true,
-	batch : true,
-	
-	
-	parameterMap : function(options, operation) {
-		if (operation !== "read" && options.models) {
-			return {
-				models : kendo.stringify(options.models)
-//				json_p : kendo.stringify(options.models)
-			};
-		}
-	}
+	batch : true
 
 });
 
 $(document).ready(function() {
 	checkRoles();
 	$("#grid").kendoGrid({
-		dataSource : dataSource,
-		pageable : true, 
+		dataSource : projectDataSource,
+		pageable : true,
 		sortable : true,
 		filterable : filterable,
-		resizable: true,
 // pageable : {
 // buttonCount:5,
 //			//input:true,
@@ -119,11 +108,6 @@ function toolbar_addProject() {
 	
 }
 
-function toolbar_deleteProject() {
-	var rowData = getSelectedRowDataByGrid("grid");
-	alert("Delete the row _id: " + rowData._id);
-  	return false;
-}
 
 function toolbar_editProject(){
 	var rowData = getSelectedRowDataByGrid("grid");
@@ -146,14 +130,17 @@ function toolbar_setupProject() {//1:正式立项；2：预立项；3：内部�
 		return;
 	}
 	
-	var param = {_id : row._id};
-	postAjaxRequest("../service/project/setup", param, setupProjectCallBack);
+	
+	if(confirm("确认正式立项此项目？")){
+		var param = {_id : row._id};
+		postAjaxRequest("../service/project/setup", param, setupProjectCallBack);
+	}
 
 }
 
 function setupProjectCallBack(){
 	alert("正式立项成功");
-	dataSource.read();
+	projectDataSource.read();
 }
 
 

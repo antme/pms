@@ -1,5 +1,7 @@
 var validator;
 $(document).ready(function() {
+
+	
 	var userAgent = window.navigator.userAgent.toLowerCase();	
 	if (userAgent.indexOf("msie 7.0")>0 || userAgent.indexOf("msie 6.0")>0) {
 		$("#error").html("请采用IE8及以上的IE浏览器或则chrome【推荐】, firefox, safari等浏览器");
@@ -21,14 +23,14 @@ $(document).ready(function() {
 		});
 		
 		$("#userName").focus();
-		$("#userName").keypress(function(event) {
+		$("#userName").keydown(function(event) {
 			if(event.charCode == 13){
 				login();
 			}
 			  
 		});
 		
-		$("#password").keypress(function(event) {		
+		$("#password").keydown(function(event) {	
 			if(event.charCode == 13){
 				login();
 			}		  

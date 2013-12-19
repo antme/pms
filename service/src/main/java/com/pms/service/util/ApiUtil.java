@@ -1,5 +1,6 @@
 package com.pms.service.util;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -338,6 +339,57 @@ public class ApiUtil {
     public static String formateDate(Date date, String patten) {
         SimpleDateFormat format = new SimpleDateFormat(patten);
         return format.format(date);
+
+    }
+    
+    
+
+    public static void updateDataValue(Map<String, Object> data) {
+        List<String> floatFields = new ArrayList<String>();
+        floatFields.add("contractDownPayment");
+        floatFields.add("qualityMoney");
+        floatFields.add("contractAmount");
+        floatFields.add("equipmentAmount");
+        floatFields.add("serviceAmount");
+        floatFields.add("estimateEqCost0");
+        floatFields.add("estimateEqCost1");
+        floatFields.add("estimateSubCost");
+        floatFields.add("estimatePMCost");
+        floatFields.add("estimateDeepDesignCost");
+        floatFields.add("estimateDebugCost");
+        floatFields.add("estimateOtherCost");
+        floatFields.add("estimateTax");
+        floatFields.add("totalEstimateCost");
+        floatFields.add("estimateGrossProfit");
+        floatFields.add("eqcostBasePrice");
+        floatFields.add("eqcostSalesBasePrice");
+        floatFields.add("eqcostLastBasePrice");
+        floatFields.add("eqcostTotalAmount");
+        floatFields.add("pbMoney");
+        if (ApiUtil.isValid(data)) {
+            for (String key : data.keySet()) {
+
+                if (data.get(key) instanceof Map) {
+                    updateDataValue((Map<String, Object>) data.get(key));
+                } else if (data.get(key) instanceof List) {
+                    List<Object> objects = (List<Object>) data.get(key);
+                    for(Object obj: objects){
+                        if(obj instanceof Map){
+                            updateDataValue((Map<String, Object>)obj);
+                        }
+                    }
+
+                } else {
+                    if (floatFields.contains(key)) {
+                        Float f = ApiUtil.getFloatParam(data, key);
+                        BigDecimal b = new BigDecimal(f);
+                        float f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+                        data.put(key, f1);
+                    }
+                }
+            }
+
+        }
 
     }
 

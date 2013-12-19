@@ -37,8 +37,6 @@ $(document).ready(function() {
 		pageable : {
 			buttonCount:5
 		},
-		resizable: true,
-		editable : "popup",
 		change : function(e) {
 		    var selectedRows = this.select();
 		    var len = selectedRows.length;
@@ -120,7 +118,7 @@ $(document).ready(function() {
 				return;
 			}else if (confirm("确认修改归档状态？")){
 				var param = {_id : rowData._id,archiveStatus:selStatus};
-				postAjaxRequest("../service/sc/setarchivestatus", param, setXxCallBack);
+				postAjaxRequest("../service/sc/setarchivestatus", param, setStatusCallBack);
 			}
 		}
 	});
@@ -141,7 +139,7 @@ $(document).ready(function() {
 				return;
 			}else if (confirm("确认修改执行状态？")){
 				var param = {_id : rowData._id,runningStatus:selStatus};
-				postAjaxRequest("../service/sc/setrunningstatus", param, setXxCallBack);
+				postAjaxRequest("../service/sc/setrunningstatus", param, setExecuteCallBack);
 			}
 			
 		}
@@ -187,9 +185,9 @@ $(document).ready(function() {
 });//end dom ready	
 
 
-function setXxCallBack(data){
+function setStatusCallBack(data){
 	if (data._id != null && data._id != ""){
-		alert("操作成功！");
+		alert("修改归档状态成功!");
 		dataSource.read();
 	}else{
 		alert("服务器出错，请重新操作！");
@@ -197,12 +195,16 @@ function setXxCallBack(data){
 	
 }
 
-function toolbar_deleteSalesContract() {
-	var rowData = getSelectedRowDataByGrid("grid");
-	alert("Delete the row _id: " + rowData._id);
-  	return false;
-};//end toolbar_delete
+function setExecuteCallBack(data){
+	if (data._id != null && data._id != ""){
+		alert("修改执行状态成功");
+		dataSource.read();
+	}else{
+		alert("服务器出错，请重新操作！");
+	}
 	
+}
+
 function toolbar_addSalesContract(){
 	loadPage("salescontract_addsc");
 }

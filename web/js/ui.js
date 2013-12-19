@@ -389,9 +389,13 @@ function openWindow(options) {
 
 
 function postAjaxRequest(url, parameters, callback) {
+    var pdiv= $("#top_nav");
+    kendo.ui.progress(pdiv, false);
+    kendo.ui.progress(pdiv, true);
 	$.ajax({
 		url : url,
 		success : function(responsetxt) {
+			kendo.ui.progress(pdiv, false);
 			var res;
 			eval("res=" + responsetxt);
 			if (res.status && res.status == "0" && res.msg) {
@@ -402,13 +406,14 @@ function postAjaxRequest(url, parameters, callback) {
 		},
 
 		error : function() {
+			kendo.ui.progress(pdiv, false);
 			alert("连接Service失败");
 		},
 
 		data : parameters,
 		method : "post"
 	});
-
+	
 }
 
 function onWindowDefaultActivate(e) {
