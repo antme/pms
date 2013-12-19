@@ -70,7 +70,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
         mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
 	        
-		mergeDataRoleQueryWithProject(params);
+        mergeDataRoleQueryWithProjectAndScType(params);
 		if(ApiThreadLocal.getMyTask() != null){	    
 		    mergeMyTaskQuery(params, DBBean.SALES_CONTRACT);
 		}else{		    

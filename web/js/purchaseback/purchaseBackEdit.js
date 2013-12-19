@@ -36,6 +36,9 @@ var subModel = kendo.data.Model.define({
         eqcostCategory: {
         	editable : false
         },
+        pbLeftCount: {
+        	editable : false
+        },
         pbTotalCount: {
         	type: "number",
         	 validation: {

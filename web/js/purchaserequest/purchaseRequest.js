@@ -95,17 +95,13 @@ function editRe() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 
 	if (row) {
-		if (row.purchaseOrderId) {
-			alert("不允许编辑!");
-		}else if(row.status == "已废除"){
-			alert("此采购申请已废除，不允许编辑!");
-		} else if(row.status == "已提交"){
-			alert("此采购申请已提交，不允许编辑!");
-		}else {
+		if(row.status == "草稿"){
 			loadPage("purchasecontract_purchaseRequestEdit", {
 				_id : row._id
 			});
-		}
+		}else {
+			alert("只允许编辑草稿数据!");
+		} 
 	}
 }
 
@@ -113,11 +109,13 @@ function abrogatePurchaseRequest() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if(row.status == "已提交" || row.status == "草稿" || row.status == "审批拒绝" || row.status == "审批中"){
-			postAjaxRequest(cancelUrl, {
-				_id : row._id
-			}, function(data) {
-				listDataSource.read();
-			});
+			if(confirm("删除退回此采购申请？")){
+				postAjaxRequest(cancelUrl, {
+					_id : row._id
+				}, function(data) {
+					listDataSource.read();
+				});
+			}
 		}else {
 			alert("只能废除未发采购订单的数据或则已提交的数据");
 		}

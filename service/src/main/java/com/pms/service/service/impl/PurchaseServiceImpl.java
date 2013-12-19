@@ -425,7 +425,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	public void destoryBack(Map<String, Object> params) {
 		Map<String,Object> back = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
 		String dbStatus = (String)back.get(PurchaseBack.pbStatus);
-		if(PurchaseStatus.saved.toString().equals(dbStatus) || PurchaseStatus.rejected.toString().equals(dbStatus)){
+		if(PurchaseStatus.saved.toString().equals(dbStatus) || PurchaseStatus.submited.toString().equals(dbStatus)){
 			List<String> ids = new ArrayList<String>();
 			ids.add(String.valueOf(params.get(ApiConstants.MONGO_ID)));
 			dao.deleteByIds(ids, DBBean.PURCHASE_BACK);

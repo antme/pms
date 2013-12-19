@@ -113,10 +113,10 @@ function editPB(){
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.pbStatus == "草稿" || row.pbStatus == "已拒绝"){	
+	} else if(row.pbStatus == "草稿"){	
 		loadPage("purchaseback_purchaseBackEdit", { _id : row._id , pageId : "edit"});	
 	}else{
-		alert("只能修改草稿或则已拒绝的数据");
+		alert("只能修改草稿的数据");
 	}
 }
 function processPB(){
@@ -146,11 +146,11 @@ function destroyPB() {
 	var row = getSelectedRowDataByGrid("grid");
 	if (!row) {
 		alert("点击列表可以选中数据");
-	} else if(row.pbStatus == "草稿" || row.pbStatus == "已拒绝"){	
+	} else if(row.pbStatus == "草稿" || row.pbStatus == "已提交"){	
 		if(confirm("删除表单，确认？")){
 			postAjaxRequest("service/purchase/back/destroy", {_id:row._id}, function(){listDatasource.read();});
 		}
 	}else{
-		alert("只能删除草稿或则已拒绝状态的数据");
+		alert("只能删除草稿或则已提交的数据");
 	}
 }

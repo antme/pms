@@ -333,8 +333,10 @@ public abstract class AbstractService {
         }
     }
     
-    
-    protected void mergeDataRoleQueryWithProjectAndScType(Map<String, Object> param) {
+    protected void mergeDataRoleQueryWithProjectAndScType(Map<String, Object> param){
+        mergeDataRoleQueryWithProjectAndScType(param, SalesContractBean.SC_TYPE);
+    }
+    protected void mergeDataRoleQueryWithProjectAndScType(Map<String, Object> param, String key) {
         Map<String, Object> pmQuery = new HashMap<String, Object>();
 
         if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() || isDepartmentAssistant()) {
@@ -351,17 +353,21 @@ public abstract class AbstractService {
             if (user.get(UserBean.DEPARTMENT) != null) {
                 String dep = user.get(UserBean.DEPARTMENT).toString();
 
-                // FIXME: put into constants
                 List<String> scTypesIn = new ArrayList<String>();
-                scTypesIn.add("弱电工程");
-                scTypesIn.add("产品集成（灯控/布线）");
-                scTypesIn.add("产品集成（楼控）");
-                scTypesIn.add("产品集成（其他）");
 
+                if (key.equalsIgnoreCase(SalesContractBean.SC_TYPE)) {
+                    // FIXME: put into constants
+                    scTypesIn.add("弱电工程");
+                    scTypesIn.add("产品集成（灯控/布线）");
+                    scTypesIn.add("产品集成（楼控）");
+                    scTypesIn.add("产品集成（其他）");
+                } else if (key.equalsIgnoreCase(ProjectBean.PROJECT_TYPE)) {
+                    scTypesIn.add("工程");
+                }
                 if (dep.equalsIgnoreCase(UserBean.USER_DEPARTMENT_PROJECT)) {
-                    pmQuery.put(SalesContractBean.SC_TYPE, new DBQuery(DBQueryOpertion.IN, scTypesIn));
+                    pmQuery.put(key, new DBQuery(DBQueryOpertion.IN, scTypesIn));
                 } else {
-                    pmQuery.put(SalesContractBean.SC_TYPE, new DBQuery(DBQueryOpertion.NOT_IN, scTypesIn));
+                    pmQuery.put(key, new DBQuery(DBQueryOpertion.NOT_IN, scTypesIn));
                 }
 
             }
