@@ -489,6 +489,7 @@ function editRepository(data) {
 				}],
 				scrollable : true,
 				editable : true,
+				resizable: true,
 				width : "800px",
 				sortable : true,
 				save: function(e){

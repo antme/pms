@@ -99,7 +99,7 @@ $(document).ready(function () {
 			    { field: "getInvoiceActualMoney", aggregate: "sum"}
 			]
 		},
-	    pageable: true,
+	    pageable: true, resizable: true,
 	    sortable : true,
 	    resizable: true,
 		selectable : "row",
@@ -142,7 +142,7 @@ $(document).ready(function () {
 					    { field: "payMoneyActualMoney", aggregate: "sum"}
 			]
         },
-        pageable: true,
+        pageable: true, resizable: true,
         resizable: true,
         sortable : true,
         selectable : "row",

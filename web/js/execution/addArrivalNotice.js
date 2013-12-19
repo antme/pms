@@ -251,6 +251,7 @@ function editArrivalNotice(data) {
 
 							editable : true,
 							scrollable : true,
+							resizable: true,
 							sortable : true,
 							width : "950px",
 							save : function(e) {

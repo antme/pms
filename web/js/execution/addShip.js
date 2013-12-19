@@ -192,6 +192,7 @@ $(document).ready(function() {
 	        ],
 	    editable: true,
 	    groupable : true,
+	    resizable: true,
 	    sortable : true,
 	    save : function(e){
 	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
@@ -240,6 +241,7 @@ $(document).ready(function() {
 	        ],
 	    editable: true,
 	    sortable : true,
+	    resizable: true,
 	    save : function(e){
 	    	if(e.values.actureAmount && model.status!="已批准"){
 				alert("实际发货数只能在发货审批后填写");
@@ -292,7 +294,7 @@ $(document).ready(function() {
 	        editable: true,
 		    groupable : true,
 		    sortable : true,
-
+		    resizable: true,
 	        save : function(e){
 	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
 				alert("最多可以申请" + e.model.leftAmount);
@@ -326,6 +328,7 @@ $(document).ready(function() {
 	        { field: "eqcostMemo", title: "备注" }],
 	        editable: false,
 		    groupable : true,
+		    resizable: true,
 		    sortable : true
 	    
 	});

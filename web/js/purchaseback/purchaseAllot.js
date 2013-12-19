@@ -53,7 +53,7 @@ $(document).ready(function () {
 	
 	$("#grid").kendoGrid({
 	    dataSource: listDatasource,
-	    pageable: true,
+	    pageable: true, resizable: true,
 	    selectable : "row",
 	    sortable : true,
 	    height: "400px",

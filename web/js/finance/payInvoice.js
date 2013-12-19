@@ -110,7 +110,7 @@ $(document).ready(function () {
 			    { field: "payInvoiceActualMoney", aggregate: "sum"}
 			]
 		},
-	    pageable: true,
+	    pageable: true, resizable: true,
 	    sortable : true,
 	    resizable: true,
 		selectable : "row",
@@ -170,7 +170,7 @@ $(document).ready(function () {
 			    { field: "getMoneyActualMoney", aggregate: "sum"}
 			]
         },
-        pageable: true,
+        pageable: true, resizable: true,
 	    sortable : true,
 	    resizable: true,
         detailTemplate: kendo.template($("#template1").html()),

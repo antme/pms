@@ -72,7 +72,7 @@ var datasource = new kendo.data.DataSource({
 $(document).ready(function () {
     $("#grid").kendoGrid({
         dataSource: datasource,
-        pageable: true,
+        pageable: true, resizable: true,
         resizable: true,
         sortable : true,
         selectable : "row",

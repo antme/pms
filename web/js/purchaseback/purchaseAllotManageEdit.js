@@ -129,6 +129,7 @@ $(document).ready(function () {
 			{ field: "eqcostProductType", title: "规格型号" }
 	  	],
 	  	sortable : true,
+	  	resizable: true,
 	  	editable:true
 	});
 

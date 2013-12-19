@@ -543,6 +543,7 @@ $(document).ready(function() {
 			toolbar : [ {name:"create",text:"新增成本项"},   { template: kendo.template($("#copyDataToolbar").html()) } ],
 			editable : true,
 			scrollable : true,
+			resizable: true,
 			sortable : true,
 			save: function(e) {
 
@@ -745,6 +746,7 @@ function edit(data){
 			} ],
 			scrollable : true,
 			sortable : true,
+			resizable: true,
 			selectable : "row",
 			dataBound : function(e) {
 				var data = eqCostListDataSourceOld.data();

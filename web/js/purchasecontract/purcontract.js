@@ -25,7 +25,7 @@ $(document).ready(function() {
 	checkRoles();
 	$("#grid").kendoGrid({
 		dataSource : listDataSource,
-		pageable : true,
+		pageable : true, resizable: true,
 		selectable : "row",
 	    sortable : true,
 		filterable : filterable,

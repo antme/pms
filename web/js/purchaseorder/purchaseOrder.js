@@ -27,7 +27,7 @@ $(document).ready(function() {
 		// 初始化采购订单列表页
 		$("#grid").kendoGrid({
 			dataSource : listDataSource,
-			pageable : true,
+			pageable : true, resizable: true,
 			selectable : "row",
 			sortable : true,
 			width : "1000px",

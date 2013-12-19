@@ -31,7 +31,7 @@ $(document).ready(function () {
 
     $("#grid").kendoGrid({
         dataSource: dataSource,
-        pageable : true,
+        pageable : true, resizable: true,
 		sortable : true,
 		selectable : "row",
 		filterable : filterable,

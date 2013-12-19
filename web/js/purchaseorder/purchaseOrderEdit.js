@@ -297,6 +297,7 @@ function edit(data) {
 							editable : true,
 							scrollable : true,
 							sortable : true,
+							resizable: true,
 							width : "950px",
 							save : sumOrders,
 							dataBound : function(e) {

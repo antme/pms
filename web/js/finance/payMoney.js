@@ -71,7 +71,7 @@ $(document).ready(function () {
 	
     $("#moneyGrid").kendoGrid({
         dataSource: dataSource,
-	    pageable: true,
+	    pageable: true, resizable: true,
 	    resizable: true,
         sortable : true,
 	    detailTemplate: kendo.template($("#template2").html()),

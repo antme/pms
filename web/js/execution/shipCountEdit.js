@@ -68,6 +68,7 @@ function edit(data) {
 	$("#ship-count-grid").kendoGrid({
 		dataSource : sdataSource,
 		sortable : true,
+		resizable: true,
 		columns : [ {
 			field : "eqcostNo",
 			title : "序号",

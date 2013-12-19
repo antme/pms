@@ -390,6 +390,7 @@ function addOrderInSCListForRuodian(){
 			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
 			sortable : true,
+			resizable: true,
 			scrollable : true
 		});
 	};//成本设备清单
@@ -696,6 +697,7 @@ function edit(data) {
 			scrollable : true,
 			sortable : true,
 			editable : true,
+			resizable: true,
 			width : "800px",
 			save : sumOrders,
 			dataBound : function(e) {

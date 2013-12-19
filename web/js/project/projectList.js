@@ -36,9 +36,10 @@ $(document).ready(function() {
 	checkRoles();
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
-		pageable : true,
+		pageable : true, 
 		sortable : true,
 		filterable : filterable,
+		resizable: true,
 // pageable : {
 // buttonCount:5,
 //			//input:true,

@@ -37,7 +37,7 @@ function init(){
 
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
-		pageable : true,
+		pageable : true, resizable: true,
 		resizable: true,
 		selectable : "row",
 		height : "550px",

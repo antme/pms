@@ -141,6 +141,7 @@ $(document).ready(function () {
 			{ field: "pbComment", title: "备注" }
 	  	],
 	  	sortable : true,
+	  	resizable: true,
 	  	editable:true
 	  	
 	});

@@ -95,7 +95,7 @@ function initPage(){
 	
 	$("#group-grid").kendoGrid({
 		dataSource : dataSource,
-		pageable : true,
+		pageable : true, resizable: true,
 		resizable: true,
 		editable : "popup",
 		height : "450px",

@@ -377,6 +377,7 @@ $(document).ready(function() {
 			toolbar : [ {name:"create",text:"新增成本项"} ],
 			editable : true,
 			scrollable : true,
+			resizable: true,
 			sortable : true,
 			save: function(e) {
 				if (excuSave) {

@@ -262,6 +262,7 @@ $(document).ready(function() {
 	        { field: "eqcostMemo", title: "备注" },
 	        { command: "destroy", title: "&nbsp;", width: 90 }],
 	    editable: true,
+	    resizable: true,
 	    sortable : true
 	}).data("kendoGrid");
     

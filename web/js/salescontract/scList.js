@@ -37,6 +37,7 @@ $(document).ready(function() {
 		pageable : {
 			buttonCount:5
 		},
+		resizable: true,
 		editable : "popup",
 		change : function(e) {
 		    var selectedRows = this.select();
