@@ -148,9 +148,12 @@ function loadTreePage(page, parameters){
 
 function loadPage(page, parameters, popupDiv) {
 	kendo.ui.progress($("#right"), true);
-	if($(".k-window").length>0 && $(".k-overlay").length>0){
-		$(".k-window").hide();
-		$(".k-overlay").hide();
+	
+	if(!popupDiv){
+		if($(".k-window").length>0 && $(".k-overlay").length>0){
+			$(".k-window").hide();
+			$(".k-overlay").hide();
+		}
 	}
 	if(!popupDiv){
 		fromPage = redirecPage;
@@ -217,6 +220,7 @@ function loadPage(page, parameters, popupDiv) {
 				kendo.ui.progress($("#right"), false);
 				if(popupDiv){
 					$("#"+popupDiv).html(data);
+
 				}else{
 					initKeyDownEvent();
 					$("#main_right").html(data);

@@ -37,7 +37,7 @@ $(document).ready(function () {
                 	applicationDepartment: {},
                 	applicationDate: {},
                 	contractCode: {},
-                	customer: {},
+                	customerName: {},
                 	status: {}
                 }
             }
@@ -73,7 +73,7 @@ $(document).ready(function () {
 					}
 				}
             },
-            { field: "customer", title:"客户名称" },
+            { field: "customerName", title:"客户名称" },
             { field: "shipType", title: "发货类型"},
             {
             	field: "status", title:"状态"

@@ -76,6 +76,9 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         
         List<Map<String, Object>> list =  laodShipRestEqLit(mergeEqListBasicInfo, result.get(ShipBean.SHIP_SALES_CONTRACT_ID).toString(), true);
         
+		scs.mergeCommonFieldsFromSc(result, result.get(ShipBean.SHIP_SALES_CONTRACT_ID));
+
+        
         result.put(SalesContractBean.SC_EQ_LIST, list);
         if (result.get(ShipBean.SHIP_DELIVERY_START_DATE) != null) {
             if(result.get(ShipBean.SHIP_DELIVERY_START_DATE) instanceof String){
