@@ -53,22 +53,11 @@ public class BaseTestCase extends TestCase {
         assertTrue(true);
 
         List emails = new ArrayList();
-        emails.add("dong_zhengfeng@thtf.com.cn");
+        emails.add("chen_lieping@thtf.com.cn");
         emails.add("251148471@qq.com");
-        
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
 
-        List<Object> results = this.commonDao.listLimitKeyValues(parameters, DBBean.REPOSITORY);
-
-        for (Object obj : results) {
-            if (obj != null) {
-                List<Map<String, Object>> eqlistMap = new ArrayList<Map<String, Object>>();
-                EmailUtil.sendMail("test", emails, "contract approved", null);
-
-            }
-        }
-
+        EmailUtil.sendMail("test", emails, "contract approved", null);
+       
     }
     
     public void testImportPurchaseContract(){

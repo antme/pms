@@ -15,6 +15,13 @@ var listDataSource = new kendo.data.DataSource({
 		total: "total", // total is returned in the "total" field of the response
 		data: "data"
 	},
+	model : {
+		fields : {
+			signDate : {
+				type : "date"
+			}
+		}
+	},
     pageSize: 10,
 	serverPaging: true,
 	serverSorting: true,
@@ -56,7 +63,15 @@ $(document).ready(function() {
 			title : "合同状态"
 		}, {
 			field : "signDate",
-			title : "签署时间"
+			title : "签署时间",
+			template : function(dataItem) {
+				if(dataItem.signDate){
+					return dataItem.signDate.split("T")[0];
+				}
+					
+				return "";
+				
+			}
 		}, {
 			field : "contractMoney",
 			title : "合同金额"

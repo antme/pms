@@ -165,24 +165,6 @@ public class UserController extends AbstractController {
     }
        
 
-    @RequestMapping("/testmail")
-    public void testMail(HttpServletRequest request, HttpServletResponse response) {
-    	Map<String,Object> params = parserJsonParameters(request,  false);
-    	
-		Map model=new HashMap();  
-		model.put("username", "Jack Wang"); 
-		model.put("url", "www.baidu.com");  
-		model.put("email", "admin@test.com");
-		
-		String email = (String) params.get("to");
-    	if(!ApiUtil.isEmpty(email)) {
-    		String subject = "我的邮箱我做主";
-    		List toList = new ArrayList();
-    		toList.add(email);
-    		EmailUtil.sendMail(subject, toList, model, "test.vm", null);
-    	}
-    	responseWithKeyValue("发送成功","请查收", request, response);
-    }
 
     public IUserService getUserService() {
         return userService;

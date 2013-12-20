@@ -130,7 +130,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     if (projectSupplierMap.get(projectId) == null) {
                         projectSupplierMap.put(projectId, new HashSet<String>());
                     }
-                    projectSupplierMap.get(projectId).add(contract.get(PurchaseContract.SUPPLIER).toString());
+                    if(contract.get(PurchaseContract.SUPPLIER)!=null){
+                    	projectSupplierMap.get(projectId).add(contract.get(PurchaseContract.SUPPLIER).toString());
+                    }
                 }
             }
         }
