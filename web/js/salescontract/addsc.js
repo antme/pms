@@ -748,78 +748,80 @@ function addAProject(){
 }
 
 function moneyOnChange_ADD(){
-	
-	var estimateEqCost0C = 0; // 预估设备成本（增）
-	var estimateEqCost1c = 0; // 预估设备成本（非增）
-	var datalist = eqCostListDataSource.data();
-	for ( var int = 0; int < datalist.length; int++) {
-		if (datalist[int].eqcostTaxType == "增值税") {
-			estimateEqCost0C += datalist[int].eqcostTotalAmount;
-		} else if (datalist[int].eqcostTaxType == "非增值税") {
-			estimateEqCost1c += datalist[int].eqcostTotalAmount;
+	if(scm){
+		var estimateEqCost0C = 0; // 预估设备成本（增）
+		var estimateEqCost1c = 0; // 预估设备成本（非增）
+		var datalist = eqCostListDataSource.data();
+		for ( var int = 0; int < datalist.length; int++) {
+			if (datalist[int].eqcostTaxType == "增值税") {
+				estimateEqCost0C += datalist[int].eqcostTotalAmount;
+			} else if (datalist[int].eqcostTaxType == "非增值税") {
+				estimateEqCost1c += datalist[int].eqcostTotalAmount;
+			}
 		}
-	}
-	scm.set("estimateEqCost0",estimateEqCost0C);
-	scm.set("estimateEqCost1",estimateEqCost1c);
+		scm.set("estimateEqCost0",estimateEqCost0C);
+		scm.set("estimateEqCost1",estimateEqCost1c);
+		
+		
+		
+		var equipmentAmount = 0;
+		if (scm.equipmentAmount) {
+			equipmentAmount = scm.equipmentAmount;
+		}
+		var serviceAmount = 0;
+		if (scm.serviceAmount) {
+			serviceAmount = scm.serviceAmount;
+		}
+		var scAmount = serviceAmount + equipmentAmount;
+		scm.set("contractAmount",scAmount);
+		var estimateEqCost0 = $("#estimateEqCost0").val();
+		var estimateEqCost1 = $("#estimateEqCost1").val();
+		var estimateSubCost = $("#estimateSubCost").val();
+		var estimatePMCost = $("#estimatePMCost").val();
+		var estimateDeepDesignCost = $("#estimateDeepDesignCost").val();
+		var estimateDebugCost = $("#estimateDebugCost").val();
+		var estimateOtherCost = $("#estimateOtherCost").val();
+		var estimateTax = $("#estimateTax").val();
 	
+		if (estimateEqCost0==""){
+			estimateEqCost0=0;
+		}
+		if (estimateEqCost1==""){
+			estimateEqCost1=0;
+		}
+		if (estimateSubCost==""){
+			estimateSubCost=0;
+		}
+		if (estimatePMCost==""){
+			estimatePMCost=0;
+		}
+		if (estimateDeepDesignCost==""){
+			estimateDeepDesignCost=0;
+		}
+		if (estimateDebugCost==""){
+			estimateDebugCost=0;
+		}
+		if (estimateOtherCost==""){
+			estimateOtherCost=0;
+		}
+		if (estimateTax==""){
+			estimateTax=0;
+		}
+		
+		var totalCost = estimateEqCost0*1 + estimateEqCost1*1 + estimateSubCost*1 
+			+ estimatePMCost*1 + estimateDeepDesignCost*1 + estimateDebugCost*1
+			+ estimateOtherCost*1 + estimateTax*1;
+	//	console.log("***********totalCost" + totalCost);
+		$("#totalEstimateCost").val(totalCost);
+		if (scAmount != null && scAmount != ""){
+			var profit = scAmount - totalCost;
+			profit = profit.toFixed(2);
+			var profitRate = profit/scAmount * 100;
+			profitRate = profitRate.toFixed(2);
+			$("#estimateGrossProfit").val(profit);
+			$("#estimateGrossProfitRate").val(profitRate+" %");
+		}
 	
-	
-	var equipmentAmount = 0;
-	if (scm.equipmentAmount) {
-		equipmentAmount = scm.equipmentAmount;
-	}
-	var serviceAmount = 0;
-	if (scm.serviceAmount) {
-		serviceAmount = scm.serviceAmount;
-	}
-	var scAmount = serviceAmount + equipmentAmount;
-	scm.set("contractAmount",scAmount);
-	var estimateEqCost0 = $("#estimateEqCost0").val();
-	var estimateEqCost1 = $("#estimateEqCost1").val();
-	var estimateSubCost = $("#estimateSubCost").val();
-	var estimatePMCost = $("#estimatePMCost").val();
-	var estimateDeepDesignCost = $("#estimateDeepDesignCost").val();
-	var estimateDebugCost = $("#estimateDebugCost").val();
-	var estimateOtherCost = $("#estimateOtherCost").val();
-	var estimateTax = $("#estimateTax").val();
-
-	if (estimateEqCost0==""){
-		estimateEqCost0=0;
-	}
-	if (estimateEqCost1==""){
-		estimateEqCost1=0;
-	}
-	if (estimateSubCost==""){
-		estimateSubCost=0;
-	}
-	if (estimatePMCost==""){
-		estimatePMCost=0;
-	}
-	if (estimateDeepDesignCost==""){
-		estimateDeepDesignCost=0;
-	}
-	if (estimateDebugCost==""){
-		estimateDebugCost=0;
-	}
-	if (estimateOtherCost==""){
-		estimateOtherCost=0;
-	}
-	if (estimateTax==""){
-		estimateTax=0;
-	}
-	
-	var totalCost = estimateEqCost0*1 + estimateEqCost1*1 + estimateSubCost*1 
-		+ estimatePMCost*1 + estimateDeepDesignCost*1 + estimateDebugCost*1
-		+ estimateOtherCost*1 + estimateTax*1;
-//	console.log("***********totalCost" + totalCost);
-	$("#totalEstimateCost").val(totalCost);
-	if (scAmount != null && scAmount != ""){
-		var profit = scAmount - totalCost;
-		profit = profit.toFixed(2);
-		var profitRate = profit/scAmount * 100;
-		profitRate = profitRate.toFixed(2);
-		$("#estimateGrossProfit").val(profit);
-		$("#estimateGrossProfitRate").val(profitRate+" %");
 	}
 }
 

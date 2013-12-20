@@ -128,7 +128,6 @@ $(document).ready(function () {
 			{ field: "eqcostUnit", title: "单位" },
 			{ field: "pbTotalCount", title: "本次申请数量", attributes: { "style": "color:red"}},
 			{ field: "eqcostLeftAmount", title: "合同下剩余可备货数量"},
-			{ field: "pbLeftCount", title: "备货申请下可申请数量"},
 			{ field: "eqcostRealAmount", title: "成本中总数"},
 			{ field: "eqcostBasePrice", title: "标准成本价",	
 				template : function(dataItem){
