@@ -102,7 +102,7 @@ function approveCon() {
 				pageId : "approve"
 			});
 		}else{
-			alert("此数据状态不需要审批");
+			alert("只允许审核审批中的数据");
 		}
 	}
 }
