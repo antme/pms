@@ -1587,7 +1587,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         		"eqcostDeliveryType","signDate","invoiceType",PurchaseContract.SUPPLIER};
 		Map<String,Object> pc = dao.findOne(ApiConstants.MONGO_ID, pcId, keys, DBBean.PURCHASE_CONTRACT);
         Map<String,Object> suppier = dao.findOne(ApiConstants.MONGO_ID, pc.get(PurchaseContract.SUPPLIER), DBBean.SUPPLIER);
-        suppier.remove(ApiConstants.MONGO_ID);
+        if(suppier != null){
+        	suppier.remove(ApiConstants.MONGO_ID);
+        }
         pc.putAll(suppier);
 		return pc;
 	}

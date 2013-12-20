@@ -24,14 +24,16 @@ $(document).ready(function() {
 		
 		$("#userName").focus();
 		$("#userName").keydown(function(event) {
-			if(event.charCode == 13){
+			if(event.charCode == 13 || event.keyCode == 13){
+				$("#userName").focus();
 				login();
 			}
 			  
 		});
 		
 		$("#password").keydown(function(event) {	
-			if(event.charCode == 13){
+			if(event.charCode == 13 || event.keyCode == 13){
+				$("#password").focus();
 				login();
 			}		  
 		});
