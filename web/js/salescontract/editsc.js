@@ -1164,7 +1164,7 @@ function closeWindow(windowId){
 }
 	
 function moneyOnChange(){
-	
+	if(scm){
 	var estimateEqCost0C = 0; // 预估设备成本（增）
 	var estimateEqCost1c = 0; // 预估设备成本（非增）
 	var datalist = eqCostListDataSourceNew.data();
@@ -1185,8 +1185,10 @@ function moneyOnChange(){
 		}
 	}
 
-	scm.set("estimateEqCost0",estimateEqCost0C);
-	scm.set("estimateEqCost1",estimateEqCost1c);
+
+		scm.set("estimateEqCost0",estimateEqCost0C);
+		scm.set("estimateEqCost1",estimateEqCost1c);
+	
 	
 	
 	
@@ -1248,6 +1250,7 @@ function moneyOnChange(){
 		profitRate = profitRate.toFixed(2);
 		$("#estimateGrossProfit").val(profit);
 		$("#estimateGrossProfitRate").val(profitRate+" %");
+	}
 	}
 }
 
