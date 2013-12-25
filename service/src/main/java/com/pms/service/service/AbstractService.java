@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.validator.Arg;
 import org.apache.commons.validator.Field;
@@ -22,7 +20,6 @@ import org.apache.commons.validator.ValidatorException;
 import org.apache.commons.validator.ValidatorResources;
 import org.apache.commons.validator.ValidatorResult;
 import org.apache.commons.validator.ValidatorResults;
-import org.apache.poi.hssf.util.HSSFColor.ROYAL_BLUE;
 
 import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.dao.ICommonDao;
@@ -751,6 +748,25 @@ public abstract class AbstractService {
 			Map<String,Object> user = (Map<String,Object>)users.get(id);
 			obj.put("creatorName", user.get(UserBean.USER_NAME));
 		}
+	}
+	
+	
+
+	protected String getRowColumnValue(String[] row, Map<String, Integer> keyMap, String title) {
+
+		if (keyMap.get(title) == null && !title.equalsIgnoreCase("订单来源")) {
+			throw new ApiResponseException("模板的标题不对,请在订单导入页面下载模板");
+		}
+		
+		if(keyMap.get(title) == null){
+			return null;
+		}
+
+		if (keyMap.get(title) >= row.length) {
+			return null;
+		}
+
+		return row[keyMap.get(title)].trim();
 	}
 	
     public ISalesContractService getScs() {

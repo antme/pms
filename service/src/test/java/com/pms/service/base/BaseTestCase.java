@@ -50,13 +50,15 @@ public class BaseTestCase extends TestCase {
 
     public void testEmpty() throws IOException {
 
-        assertTrue(true);
-
-        List emails = new ArrayList();
-        emails.add("chen_lieping@thtf.com.cn");
-        emails.add("251148471@qq.com");
-
-        EmailUtil.sendMail("test", emails, "contract approved", null);
+//        assertTrue(true);
+//
+//        List emails = new ArrayList();
+//        emails.add("chen_lieping@thtf.com.cn");
+//        emails.add("251148471@qq.com");
+//
+//        EmailUtil.sendMail("test", emails, "contract approved", null);
+    	
+//    	  scService.importSCExcleFile(params)
        
     }
     

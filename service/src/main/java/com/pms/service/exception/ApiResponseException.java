@@ -18,6 +18,11 @@ public class ApiResponseException extends RuntimeException {
     private ApiResponseException() {
         super();
     }
+    
+    @SuppressWarnings("unused")
+    public ApiResponseException(String msg) {
+        super(msg);
+    }
 
     /**
      * Constructs an <code>ApiApiIllegalArgumentException</code> with the
