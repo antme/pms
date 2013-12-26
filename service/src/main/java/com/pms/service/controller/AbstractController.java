@@ -255,12 +255,18 @@ public abstract class AbstractController {
         Map<String, Object> temp = new HashMap<String, Object>();
         temp.put("status", ResponseStatus.FAIL.toString());
 
-        if (throwable instanceof ApiResponseException) {
-            ApiResponseException apiException = (ApiResponseException) throwable;
-            temp.put("msg", apiException.getTipMsg());
-            logger.error(String.format(" =========== API Validation failed with tip msg [%s] and log msg [%s] ", apiException.getTipMsg(), apiException.getMessage()));
+		if (throwable instanceof ApiResponseException) {
+			ApiResponseException apiException = (ApiResponseException) throwable;
+			if (ApiUtil.isValid(apiException.getTipMsg())) {
+				temp.put("msg", apiException.getTipMsg());
+				logger.error(String.format(" =========== API Validation failed with tip msg [%s] and log msg [%s] ", apiException.getTipMsg(), apiException.getMessage()));
 
-        } else {
+			} else {
+				temp.put("msg", apiException.getMessage());
+				logger.error(String.format(" =========== API Validation failed with tip msg [%s] and log msg [%s] ", apiException.getMessage(), apiException.getMessage()));
+
+			}
+		} else {
             temp.put("msg", "获取数据失败!");
         }
         responseMsg(temp, ResponseStatus.FAIL, request, response, null);

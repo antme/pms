@@ -8,6 +8,8 @@ $(document).ready(function() {
         success:function(e){
         	if (e.response.status == 1){//import success
         		$("#importStatus").html("数据导入成功！");
+        	}else{
+        		alert(e.response.msg);
         	}
         }
     });	
@@ -21,6 +23,8 @@ $(document).ready(function() {
         success:function(e){
         	if (e.response.status == 1){//import success
         		$("#importStatusPc").html("数据导入成功！");
+        	}else{
+        		alert(e.response.msg);
         	}
         }
     });	

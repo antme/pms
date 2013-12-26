@@ -1769,7 +1769,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 //		}
 		
 		if(msgs.size() > 0){
-			throw new ApiResponseException(String.format("5条纪录未导入【%】：【%s】", msgs.size(), msgs));
+			throw new ApiResponseException(String.format("【%s】条纪录未导入：【%s】", msgs.size(), msgs));
 		}
 
 		result.put("status", 1);
