@@ -91,7 +91,7 @@ public class DateUtil {
 	}
 	
 	public static String getDateStringByLong(Long times){
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	    SimpleDateFormat sdf = new SimpleDateFormat(formatSimple);
 	    return sdf.format(new Date(times));
 	}
 	

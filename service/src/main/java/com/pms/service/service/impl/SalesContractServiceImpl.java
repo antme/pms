@@ -120,7 +120,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		contract.put(SalesContractBean.SC_DATE, params.get(SalesContractBean.SC_DATE));
 		contract.put(SalesContractBean.SC_ESTIMATE_TAX, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_TAX));
 		contract.put(SalesContractBean.SC_TOTAL_ESTIMATE_COST, ApiUtil.getDouble(params, SalesContractBean.SC_TOTAL_ESTIMATE_COST));
-		contract.put(SalesContractBean.SC_DOWN_PAYMENT, ApiUtil.getDouble(params, SalesContractBean.SC_DOWN_PAYMENT));
+		contract.put(SalesContractBean.SC_DOWN_PAYMENT, params.get(SalesContractBean.SC_DOWN_PAYMENT));
 		contract.put(SalesContractBean.SC_PROGRESS_PAYMENT,params.get(SalesContractBean.SC_PROGRESS_PAYMENT));
 		contract.put(SalesContractBean.SC_QUALITY_MONEY, ApiUtil.getDouble(params, SalesContractBean.SC_QUALITY_MONEY));
 		contract.put(SalesContractBean.SC_DOWN_PAYMENT_MEMO, params.get(SalesContractBean.SC_DOWN_PAYMENT_MEMO));
@@ -1538,73 +1538,88 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> importSCExcleFile(Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		try {
+		List<String> msgs = new ArrayList<String>();
+
+//		try {
 			InputStream inputStream = (InputStream) params.get("inputStream");
 			ExcleUtil excleUtil = new ExcleUtil(inputStream);
 			List<String[]> list = excleUtil.getAllData(0);
 
-			if (!list.isEmpty()) {
+		if (!list.isEmpty()) {
 
-				Map<String, Integer> keyMap = new LinkedHashMap<String, Integer>();
+			Map<String, Integer> keyMap = new LinkedHashMap<String, Integer>();
 
-				String[] columnNames = list.get(3);
-				if (columnNames != null) {
-					for (int i = 0; i < columnNames.length; i++) {
-						String key = columnNames[i].trim();
-						if (!ApiUtil.isEmpty(key)) {
-							keyMap.put(key, i);
-						}
+			String[] columnNames = list.get(3);
+			if (columnNames != null) {
+				for (int i = 0; i < columnNames.length; i++) {
+					String key = columnNames[i].trim();
+					System.out.println(key + " ==== " + i);
+					if (!ApiUtil.isEmpty(key)) {
+						keyMap.put(key, i);
 					}
 				}
+			}
 
-				for (int i = 4; i < list.size(); i++) {// 从第5行开始读数据
-					String errorMsg = "";
+			for (int i = 4; i < list.size(); i++) {// 从第5行开始读数据
+				String errorMsg = "";
 
-					String[] row = list.get(i);
-					String scCode = getRowColumnValue(row, keyMap, "销售合同编号");
+				String[] row = list.get(i);
+				String scCode = getRowColumnValue(row, keyMap, "销售合同编号");
 
-					String contractPerson =  getRowColumnValue(row, keyMap, "签订人");
-					String runningStatus =  getRowColumnValue(row, keyMap, "状态");
-					String contractDate =  getRowColumnValue(row, keyMap, "合同签订");
-					String contractDownPayment =  getRowColumnValue(row, keyMap, "首付");
-					String qualityMoney =  getRowColumnValue(row, keyMap, "质保金");
-					String contractMemo =  getRowColumnValue(row, keyMap, "备注");
-					String contractAmount =  getRowColumnValue(row, keyMap, "合同金额");
-					String scLastTotalAmount = getRowColumnValue(row, keyMap, "合同金额");
-					String estimateSubCost = getRowColumnValue(row, keyMap, "预估分包成本");
-					String estimateOtherCost = getRowColumnValue(row, keyMap, "预估其他成本");
-					String estimateGrossProfit = getRowColumnValue(row, keyMap, "预估毛利");
-					String estimateGrossProfitRate = getRowColumnValue(row, keyMap, "预估毛利率");
-					String invoiceType = getRowColumnValue(row, keyMap, "开票种类");
-					String customerName =  getRowColumnValue(row, keyMap, "客户名称");
-					String pmName =  getRowColumnValue(row, keyMap, "项目经理");
-					String projectType = getRowColumnValue(row, keyMap, "项目类型"); 
-
-					String yulixiang = getRowColumnValue(row, keyMap, "预立项"); 
-					String projectCode = getRowColumnValue(row, keyMap, "项目编号"); 
-					String excelSCType = getRowColumnValue(row, keyMap, "合同类型"); 
-					String excelSCType2 =  getRowColumnValue(row, keyMap, "产品分类"); 
-					
-					
-					String estimateEqCost0 = "";
-					
-					String estimateEqCost1 = "";
+				String contractPerson = getRowColumnValue(row, keyMap, "签订人");
+				String runningStatus = getRowColumnValue(row, keyMap, "状态");
+//				String contractDate = getRowColumnValue(row, keyMap, "合同签订\\n日期");
+				String contractDate = null;
+				if (ApiUtil.isValid(row[17])) {
+					contractDate = DateUtil.getDateStringByLong(new Date(row[17]).getTime());
+				}
+			
 				
-					
-					if(ApiUtil.isValid(invoiceType) && invoiceType.equalsIgnoreCase("增值税发票")){
+				String contractDownPayment = getRowColumnValue(row, keyMap, "首付");
+				String qualityMoney = getRowColumnValue(row, keyMap, "质保金");
+				String contractMemo = getRowColumnValue(row, keyMap, "备注");
+				String progressPayment = getRowColumnValue(row, keyMap, "进度款");
+				String estimateDebugCost = getRowColumnValue(row, keyMap, "合同人工调试费");
+				String contractAmount = getRowColumnValue(row, keyMap, "合同金额");
+				String scLastTotalAmount = getRowColumnValue(row, keyMap, "合同金额");
+				String estimateSubCost = getRowColumnValue(row, keyMap, "分包成本");
+				String estimateOtherCost = getRowColumnValue(row, keyMap, "其他成本");
+				String estimateGrossProfit = getRowColumnValue(row, keyMap, "预计毛利");
+				String estimateGrossProfitRate = getRowColumnValue(row, keyMap, "预计毛利率");
+				String invoiceType = getRowColumnValue(row, keyMap, "开票种类");
+				String customerName = getRowColumnValue(row, keyMap, "客户名称");
+				String pmName = getRowColumnValue(row, keyMap, "项目经理");
+				String projectType = getRowColumnValue(row, keyMap, "项目类型");
+				String projectName = getRowColumnValue(row, keyMap, "项目名称");
+				String archiveStatus = getRowColumnValue(row, keyMap, "归档状态");
+
+				String yulixiang = getRowColumnValue(row, keyMap, "预立项");
+				String projectCode = getRowColumnValue(row, keyMap, "项目编号");
+				String excelSCType = getRowColumnValue(row, keyMap, "合同类型");
+				String excelSCType2 = getRowColumnValue(row, keyMap, "产品分类");
+
+				if (ApiUtil.isEmpty(projectName)) {
+					errorMsg = errorMsg.concat("项目名称为空 ");
+				}
+
+				if (ApiUtil.isEmpty(scCode)) {
+					errorMsg = errorMsg.concat("销售合同编号为空 ");
+				}
+
+				if (ApiUtil.isEmpty(errorMsg)) {
+					String estimateEqCost0 = "";
+
+					String estimateEqCost1 = "";
+
+					if (ApiUtil.isValid(invoiceType) && invoiceType.equalsIgnoreCase("增值税发票")) {
 						estimateEqCost0 = getRowColumnValue(row, keyMap, "设备成本");
-					}else{
-//								
-//						if(invoiceType.isEmpty()){
-//							invoiceType = "";
-//						}
-//						estimateEqCost1 = getRowColumnValue(row, keyMap, "设备成本");
-					}
-					
-					
-					
-					if (ApiUtil.isEmpty(scCode)) {						
-						errorMsg = errorMsg.concat("销售合同编号为空 ");
+					} else {
+						//
+						// if(invoiceType.isEmpty()){
+						// invoiceType = "";
+						// }
+						// estimateEqCost1 = getRowColumnValue(row, keyMap,
+						// "设备成本");
 					}
 
 					Map<String, Object> scMap = new HashMap<String, Object>();
@@ -1612,19 +1627,46 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					scMap.put(SalesContractBean.SC_PERSON, contractPerson);// 签订人
 					scMap.put(SalesContractBean.SC_RUNNING_STATUS, runningStatus);// 执行状态
 
+					// Date dd = new Date(contractDate); // excle
+					// 里面此字段一定要正确，不然这一行就挂了
+					// String formatDateString = DateUtil.getd(dd);
+					System.out.println(contractDate);
+					scMap.put(SalesContractBean.SC_DATE, contractDate);// 签订日期
+					if (ApiUtil.isValid(archiveStatus)) {
+						scMap.put(SalesContractBean.SC_ARCHIVE_STATUS, archiveStatus);// 归档状态
+					} else {
+						scMap.put(SalesContractBean.SC_ARCHIVE_STATUS, SalesContractBean.SC_ARCHIVE_STATUS_UN_ARCHIVED);// 归档状态
+					}
 					
-					Date dd = new Date(contractDate); // excle 里面此字段一定要正确，不然这一行就挂了
-					String formatDateString = DateUtil.getStringByDate(dd);
-					scMap.put(SalesContractBean.SC_DATE, formatDateString);// 签订日期
-
-					scMap.put(SalesContractBean.SC_DOWN_PAYMENT, contractDownPayment);// 首付
-					scMap.put(SalesContractBean.SC_QUALITY_MONEY, ApiUtil.getDouble(qualityMoney));// 质保金
+					if(ApiUtil.getDouble(contractDownPayment) < 1){
+						scMap.put(SalesContractBean.SC_DOWN_PAYMENT, 0);// 首付
+						if(ApiUtil.isValid(contractDownPayment)){
+							//如果有值且解析不成功，放到备注
+							scMap.put(SalesContractBean.SC_DOWN_PAYMENT_MEMO, contractDownPayment);// 首付备注
+						}
+					}else{
+						scMap.put(SalesContractBean.SC_DOWN_PAYMENT, ApiUtil.getDouble(contractDownPayment));// 首付
+						scMap.put(SalesContractBean.SC_DOWN_PAYMENT_MEMO, "");// 首付备注
+					}
+					
+					
+					if(ApiUtil.getDouble(qualityMoney) < 1){
+						scMap.put(SalesContractBean.SC_QUALITY_MONEY, 0);// 质保金
+						if(ApiUtil.isValid(qualityMoney)){
+							//如果有值且解析不成功，放到备注
+							scMap.put(SalesContractBean.SC_QUALITY_MONEY_MEMO, qualityMoney);// 质保金备注
+						}
+					}else{
+						scMap.put(SalesContractBean.SC_QUALITY_MONEY, ApiUtil.getDouble(qualityMoney));// 质保金
+						scMap.put(SalesContractBean.SC_QUALITY_MONEY_MEMO, "");// 质保金备注
+					}
+					
 					scMap.put(SalesContractBean.SC_MEMO, contractMemo);// 备注
 					scMap.put(SalesContractBean.SC_AMOUNT, ApiUtil.getDouble(contractAmount));// 合同金额
 					scMap.put(SalesContractBean.SC_LAST_TOTAL_AMOUNT, ApiUtil.getDouble(scLastTotalAmount));// 合同金额
 					scMap.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, ApiUtil.getDouble(estimateEqCost0));// 预估设备成本（增）
 					scMap.put(SalesContractBean.SC_ESTIMATE_EQ_COST1, ApiUtil.getDouble(estimateEqCost1));// 预估设备成本（非增）
-					
+
 					scMap.put(SalesContractBean.SC_ESTIMATE_SUB_COST, ApiUtil.getDouble(estimateSubCost));// 预估分包成本
 					scMap.put(SalesContractBean.SC_ESTIMATE_OTHER_COST, ApiUtil.getDouble(estimateOtherCost));// 预估其他成本
 					scMap.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT, estimateGrossProfit);// 预估毛利
@@ -1646,7 +1688,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					Map<String, Object> pm = userService.importPM(pmQuery);
 					String pmId = (String) pm.get(ApiConstants.MONGO_ID); // 新建PM
 
-		
 					if ("销售".equals(projectType)) {
 						projectType = ProjectBean.PROJECT_TYPE_PRODUCT;
 					}
@@ -1655,45 +1696,45 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					if (yulixiang != null && yulixiang.length() != 0) {
 						lxType = yulixiang;
 					}
-				
-					
+
 					Map<String, Object> importProject = new HashMap<String, Object>();
 					importProject.put(ProjectBean.PROJECT_MANAGER, pmId);
 					importProject.put(ProjectBean.PROJECT_TYPE, projectType);
-					importProject.put(ProjectBean.PROJECT_NAME, list.get(i)[9].trim());
+					importProject.put(ProjectBean.PROJECT_NAME, projectName);
 					importProject.put(ProjectBean.PROJECT_CUSTOMER, customerId);
 
 					importProject.put(ProjectBean.PROJECT_STATUS, lxType);
 					importProject.put(ProjectBean.PROJECT_CODE, projectCode);
-					
 
 					Map<String, Object> pro = projectService.importProject(importProject);
 					String projectId = (String) pro.get(ApiConstants.MONGO_ID);
 					scMap.put(SalesContractBean.SC_PROJECT_ID, projectId);// 关联项目
 
-				
 					if (SalesContractBean.SC_TYPE_FW.equals(excelSCType) || SalesContractBean.SC_TYPE_RD.equals(excelSCType)) {
 						scMap.put(SalesContractBean.SC_TYPE, excelSCType);// 合同类型
 					} else {
-						
+
 						String dbScType = excelSCType + "(" + excelSCType2 + ")";
 						scMap.put(SalesContractBean.SC_TYPE, dbScType);// 合同类型
 					}
 
-					scMap.put(SalesContractBean.SC_ARCHIVE_STATUS, "");
-					scMap.put(SalesContractBean.SC_DOWN_PAYMENT_MEMO, "");// 首付备注
+				
 
-//					String progressPaymentAmount = 
-					double jdk = ApiUtil.getDouble(list.get(i)[20].trim());
-					List<Map<String, Object>> jdkList = new ArrayList<Map<String, Object>>();
-					Map<String, Object> jdkMap = new HashMap<String, Object>();
-					jdkMap.put(SalesContractBean.SC_PROGRESS_PAYMENT_NO, 1);
-					jdkMap.put(SalesContractBean.SC_PROGRESS_PAYMENT_AMOUNT, jdk);
-					jdkMap.put(SalesContractBean.SC_PROGRESS_PAYMENT_MEMO, "");
-					jdkList.add(jdkMap);
-//					scMap.put(SalesContractBean.SC_PROGRESS_PAYMENT, jdkList);// 进度款
+					// String progressPaymentAmount =
+					// double jdk = ApiUtil.getDouble(list.get(i)[20].trim());
+					// List<Map<String, Object>> jdkList = new
+					// ArrayList<Map<String, Object>>();
+					// Map<String, Object> jdkMap = new HashMap<String,
+					// Object>();
+					// jdkMap.put(SalesContractBean.SC_PROGRESS_PAYMENT_NO, 1);
+					// jdkMap.put(SalesContractBean.SC_PROGRESS_PAYMENT_AMOUNT,
+					// jdk);
+					// jdkMap.put(SalesContractBean.SC_PROGRESS_PAYMENT_MEMO,
+					// "");
+					// jdkList.add(jdkMap);
+					scMap.put(SalesContractBean.SC_PROGRESS_PAYMENT, progressPayment);// 进度款
 
-					scMap.put(SalesContractBean.SC_QUALITY_MONEY_MEMO, "");// 质保金备注
+					
 
 					scMap.put(SalesContractBean.SC_ESTIMATE_PM_COST, 0d);// 预估项目管理成本
 					scMap.put(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST, 0d);// 预估深化设计成本
@@ -1702,18 +1743,29 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					scMap.put(SalesContractBean.SC_TOTAL_ESTIMATE_COST, 0d);// 成本总计
 
 					if (dao.exist(SalesContractBean.SC_CODE, scCode, DBBean.SALES_CONTRACT)) {
+
+						Map<String, Object> oldSc = this.dao.findOne(SalesContractBean.SC_CODE, scCode, DBBean.SALES_CONTRACT);
+						scMap.put(ApiConstants.MONGO_ID, oldSc.get(ApiConstants.MONGO_ID));
+						logger.info("update sc for " + scCode + "  " + oldSc.get(ApiConstants.MONGO_ID));
 						dao.updateById(scMap, DBBean.SALES_CONTRACT);
 					} else {
+						logger.info("insert sc for " + scCode);
 						dao.add(scMap, DBBean.SALES_CONTRACT);
 					}
-					importFinInfo(list.get(i));
+					// importFinInfo(list.get(i));
+				}else{
+					msgs.add(errorMsg);
 				}
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			result.put("status", 0);
-			throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
 		}
+		logger.error(msgs);
+//		} catch (Exception e) {
+//			
+//			logger.error(e);
+//			// TODO Auto-generated catch block
+//			result.put("status", 0);
+//			throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
+//		}
 
 		result.put("status", 1);
 		return result;

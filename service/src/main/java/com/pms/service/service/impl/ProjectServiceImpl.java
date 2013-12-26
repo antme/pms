@@ -471,28 +471,25 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
 	@Override
 	public Map<String, Object> importProject(Map<String, Object> params) {
-		Map<String, Object> p = dao.findOne(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME), DBBean.PROJECT);
-		
-		if (p == null){
+
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME));
+		query.put(ProjectBean.PROJECT_CODE, params.get(ProjectBean.PROJECT_CODE));
+
+		Map<String, Object> p = dao.findOneByQuery(query, DBBean.PROJECT);
+
+		if (p == null) {
 			Object pt = params.get(ProjectBean.PROJECT_TYPE);
-			String ptString = pt == null? ProjectBean.PROJECT_TYPE_PROJECT : pt.toString();
+			String ptString = pt == null ? ProjectBean.PROJECT_TYPE_PROJECT : pt.toString();
 			params.put(ProjectBean.PROJECT_CODE, genProjectCode(ptString, ProjectBean.PROJECT_STATUS_OFFICIAL));
 			return dao.add(params, DBBean.PROJECT);
+		} else {
+
+			params.put(ApiConstants.MONGO_ID, p.get(ApiConstants.MONGO_ID));
+			return dao.updateById(params, DBBean.PROJECT);
+
 		}
-		
-		if (p.get(ProjectBean.PROJECT_CODE) == null){
-			Object pt = params.get(ProjectBean.PROJECT_TYPE);
-			String ptString = pt == null? ProjectBean.PROJECT_TYPE_PROJECT : pt.toString();
-			p.put(ProjectBean.PROJECT_CODE, genProjectCode(ptString, ProjectBean.PROJECT_STATUS_OFFICIAL));
-		}
-		
-		if (p.get(ProjectBean.PROJECT_TYPE) == null){
-			p.put(ProjectBean.PROJECT_MANAGER, params.get(ProjectBean.PROJECT_MANAGER));
-			p.put(ProjectBean.PROJECT_TYPE, params.get(ProjectBean.PROJECT_TYPE));
-			return dao.updateById(p, DBBean.PROJECT);
-		}
-		
-		return p;
+
 	}
 
 }

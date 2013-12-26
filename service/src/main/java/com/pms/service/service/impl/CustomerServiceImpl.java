@@ -23,31 +23,30 @@ import com.pms.service.util.status.ResponseCodeConstants;
 
 public class CustomerServiceImpl extends AbstractService implements ICustomerService {
 
-    private static final Logger logger = LogManager.getLogger(CustomerServiceImpl.class);
-    
+	private static final Logger logger = LogManager.getLogger(CustomerServiceImpl.class);
+
 	@Override
 	public String geValidatorFileName() {
 		return "customer";
 	}
 
 	@Override
-	public Map<String,Object> create(Map<String, Object> params) {
-        params.put(CustomerBean.CODE, generateCode("KH", DBBean.CUSTOMER, CustomerBean.CODE));
+	public Map<String, Object> create(Map<String, Object> params) {
+		params.put(CustomerBean.CODE, generateCode("KH", DBBean.CUSTOMER, CustomerBean.CODE));
 
 		return dao.add(params, DBBean.CUSTOMER);
 	}
-	
-	
-	public Map<String,Object> get(Map<String,Object> params){
-	    
-	    return this.dao.findOneByQuery(params, DBBean.CUSTOMER);
+
+	public Map<String, Object> get(Map<String, Object> params) {
+
+		return this.dao.findOneByQuery(params, DBBean.CUSTOMER);
 	}
 
 	@Override
-	public Map<String,Object> update(Map<String, Object> params) {
+	public Map<String, Object> update(Map<String, Object> params) {
 		return dao.updateById(params, DBBean.CUSTOMER);
 	}
-	
+
 	@Override
 	public void destroy(Map<String, Object> params) {
 		List<String> ids = new ArrayList<String>();
@@ -59,13 +58,14 @@ public class CustomerServiceImpl extends AbstractService implements ICustomerSer
 	public Map<String, Object> list(Map<String, Object> params) {
 		return dao.list(params, DBBean.CUSTOMER);
 	}
-	
-    public Map<String, Object> importCustomer(Map<String, Object> params) {
-        Map<String, Object> customer = dao.findOne(CustomerBean.NAME, params.get(CustomerBean.NAME), DBBean.CUSTOMER);
-        if (customer == null) {
-            customer = dao.add(params, DBBean.CUSTOMER);
-        }
-        return customer;
-    }
-	    
+
+	public Map<String, Object> importCustomer(Map<String, Object> params) {
+
+		Map<String, Object> customer = dao.findOne(CustomerBean.NAME, params.get(CustomerBean.NAME), DBBean.CUSTOMER);
+		if (customer == null) {
+			customer = create(params);
+		}
+		return customer;
+	}
+
 }

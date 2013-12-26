@@ -754,9 +754,6 @@ public abstract class AbstractService {
 
 	protected String getRowColumnValue(String[] row, Map<String, Integer> keyMap, String title) {
 
-		if (keyMap.get(title) == null && !title.equalsIgnoreCase("订单来源")) {
-			throw new ApiResponseException("模板的标题不对,请在订单导入页面下载模板");
-		}
 		
 		if(keyMap.get(title) == null){
 			return null;

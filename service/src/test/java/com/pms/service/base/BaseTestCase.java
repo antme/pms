@@ -1,7 +1,9 @@
 package com.pms.service.base;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,10 +47,15 @@ public class BaseTestCase extends TestCase {
         projectService = (ProjectServiceImpl) ac.getBean("projectService");
         reportService = (ReportServiceImpl) ac.getBean("reportService");
         scService = (ISalesContractService) ac.getBean("salesContractService");
-        ConfigurationManager.setProperties(ConfigurationManager.DB_NAME, "pms");
+        ConfigurationManager.setProperties(ConfigurationManager.DB_NAME, "pms_dev");
     }
 
     public void testEmpty() throws IOException {
+    	
+    	InputStream inputStream = new FileInputStream(new File("/Users/ymzhou/Documents/sc.xlsx"));
+    	Map<String,Object> map = new HashMap<String,Object>();
+		map.put("inputStream", inputStream);
+		scService.importSCExcleFile(map);
 
 //        assertTrue(true);
 //

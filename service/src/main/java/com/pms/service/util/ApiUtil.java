@@ -16,12 +16,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.service.impl.SalesContractServiceImpl;
 import com.pms.service.util.status.ResponseCodeConstants;
 
 public class ApiUtil {
-	
+	private static Logger logger = LogManager.getLogger(SalesContractServiceImpl.class);
+
 	public static void main(String[] arg){
 		System.out.println(isEmpty(1));
 	}
@@ -107,8 +112,7 @@ public class ApiUtil {
             	in = Double.valueOf(value);
             	in = Double.valueOf(df.format(in));
             } catch (Exception e) {
-                throw new ApiResponseException(String.format("Double parameter illegal [%s]", value),
-                        ResponseCodeConstants.NUMBER_PARAMETER_ILLEGAL);
+               logger.error(String.format("Double parameter illegal [%s]", value));
             }
         }        
         return in;
@@ -250,8 +254,7 @@ public class ApiUtil {
     		try {
 				result = Float.parseFloat(String.valueOf(params.get(key)));
 			} catch (NumberFormatException e) {
-				throw new ApiResponseException(String.format("Float type parameter illegal [%s]", params), 
-						ResponseCodeConstants.NUMBER_PARAMETER_ILLEGAL);
+				logger.error(String.format("Float type parameter illegal [%s][%s]", key, params.get(key)));
 			}
     	}
     	
@@ -346,7 +349,6 @@ public class ApiUtil {
 
     public static void updateDataValue(Map<String, Object> data) {
         List<String> floatFields = new ArrayList<String>();
-        floatFields.add("contractDownPayment");
         floatFields.add("qualityMoney");
         floatFields.add("contractAmount");
         floatFields.add("equipmentAmount");
