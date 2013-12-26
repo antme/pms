@@ -1754,6 +1754,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					}
 					// importFinInfo(list.get(i));
 				}else{
+					errorMsg = String.format("第%s行：",  i + 1).concat(errorMsg);
 					msgs.add(errorMsg);
 				}
 			}
@@ -1766,6 +1767,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 //			result.put("status", 0);
 //			throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
 //		}
+		
+		if(msgs.size() > 0){
+			throw new ApiResponseException(String.format("5条纪录未导入【%】：【%s】", msgs.size(), msgs));
+		}
 
 		result.put("status", 1);
 		return result;
