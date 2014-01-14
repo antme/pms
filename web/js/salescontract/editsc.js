@@ -824,6 +824,21 @@ function edit(data){
 	}else{
 		customer.enable(true);
 	}
+	
+	if(scm.get("contractType") == "弱电工程"){
+		var tabStrip = $("#tabstrip").data("kendoTabStrip");
+		if(!tabStrip){
+			$("#tabstrip").kendoTabStrip();
+			
+			tabStrip = $("#tabstrip").data("kendoTabStrip");
+		}
+		
+		var tab0 = tabStrip.tabGroup.children("li").eq(0);
+		var tab1 = tabStrip.tabGroup.children("li").eq(1);
+		var tab2 = tabStrip.tabGroup.children("li").eq(2);
+		tabStrip.enable(tab2, false);
+//		tabStrip.deactivateTab(tab2);
+	}
 
 }
 	
