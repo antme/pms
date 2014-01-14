@@ -889,8 +889,8 @@ function scTypeShowTabs(scType){
 	var tab3 = tabStrip.tabGroup.children("li").eq(3);
 //	console.log("***"+scType);
 	if (scType == "弱电工程"){
-		tabStrip.enable(tab0, false);
-		tabStrip.enable(tab1, false);
+		tabStrip.enable(tab0, true);
+		tabStrip.enable(tab1, true);
 		tabStrip.enable(tab2, false);
 		tabStrip.deactivateTab(tab2);
 		if(tab3.length>0){
