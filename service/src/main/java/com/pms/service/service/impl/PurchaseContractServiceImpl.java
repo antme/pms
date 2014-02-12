@@ -1644,17 +1644,33 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
             Map<String, Integer> columnIndexMap = new HashMap<String, Integer>();
 
-            String[] titles = list.get(3);
-            if (titles != null) {
-                for (int i = 0; i < titles.length; i++) {
-                    String key = titles[i].trim();
-                    if (!ApiUtil.isEmpty(key)) {
-                        columnIndexMap.put(key, i);
-                    }
-                }
-            }
+            int n = 2;
+            String[] titles = list.get(n);
+            
+            
+			if (titles != null) {
+				boolean find = false;
+				for (int i = 0; i < titles.length; i++) {
+					String key = titles[i].trim();
+					if (key.contains("采购合同编号")) {
+						find = true;
+					}
 
-            for (int i = 4; i < list.size(); i++) {// 从第5行开始读数据
+				}
+
+				n = 3;
+				if (!find) {
+					titles = list.get(n);
+				}
+				for (int i = 0; i < titles.length; i++) {
+					String key = titles[i].trim();
+					if (!ApiUtil.isEmpty(key)) {
+						columnIndexMap.put(key, i);
+					}
+				}
+			}
+
+            for (int i = n + 1; i < list.size(); i++) {// 从第5行开始读数据
                 Map<String, Object> contract = new HashMap<String, Object>();
 
                 String[] item = list.get(i);
@@ -1671,6 +1687,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 }
 
                 String code = item[columnIndexMap.get("采购合同编号")].trim();
+                
+                code = code.replace("(", "_");
+                code = code.replace(")", "_");
+                
                 contract.put(PurchaseContract.PURCHASE_CONTRACT_CODE, code);
                 contract.put(PurchaseContract.DESCRIPTION, item[columnIndexMap.get("合同描述")].trim());
                 contract.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, item[columnIndexMap.get("合同类别")].trim());
@@ -1706,14 +1726,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 } else {
                     contract.put(PurchaseContract.PROCESS_STATUS, PurchaseContract.STATUS_APPROVED);
                 }
-                
+
                 Map<String, Object> con = this.dao.findOne(PurchaseContract.PURCHASE_CONTRACT_CODE, code, DBBean.PURCHASE_CONTRACT);
                 
                 if (!ApiUtil.isEmpty(con)) {
                     contract.put(ApiConstants.MONGO_ID, con.get(ApiConstants.MONGO_ID));
                 }
                 
-                this.updatePurchaseContract(contract);
+                this.updatePurchase(contract, DBBean.PURCHASE_CONTRACT);
 
             }
         } catch (Exception e) {
