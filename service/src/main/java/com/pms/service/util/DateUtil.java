@@ -16,19 +16,33 @@ public class DateUtil {
 		return sdf.format(date);
 	}
 	
-	public static Date getDate(String date){
-	    
-	    if(ApiUtil.isEmpty(date)){
-	        return null;
-	    }
-		SimpleDateFormat sdf = new SimpleDateFormat(formatSimple);
+	public static Date getDate(String date) {
+
+		if (ApiUtil.isEmpty(date)) {
+			return null;
+		}
 		try {
-            return sdf.parse(date);
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-		
+			SimpleDateFormat sdf = new SimpleDateFormat(formatSimple);
+
+			return sdf.parse(date);
+		} catch (ParseException e) {
+			try {
+				SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
+
+				return sdf.parse(date);
+			} catch (ParseException e1) {
+
+				try {
+
+					SimpleDateFormat sdf = new SimpleDateFormat(formatSimple);
+					return sdf.parse(DateUtil.getDateStringByLong(new Date(date).getTime()));
+				} catch (ParseException e2) {
+
+				}
+
+			}
+		}
+
 		return null;
 	}
 	

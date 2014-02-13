@@ -50,6 +50,7 @@ $(document).ready(function() {
 			field : "supplierName",
 			title : "供应商",
 			template : function(dataItem) {
+				
 				if(dataItem.contractExecuteCate == "正常采购"){
 					return dataItem.supplierName;
 				}
