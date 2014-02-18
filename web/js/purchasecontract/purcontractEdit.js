@@ -624,7 +624,7 @@ function edit(data) {
 	setDate(requestDataItem, "signDate", requestDataItem.signDate);
 	kendo.bind($("#purchasecontract-edit"), requestDataItem);
 	
-	if(requestDataItem.purchaseContractType =="上海代理产品" || requestDataItem.purchaseContractType =="上海其他"){
+	if(requestDataItem.purchaseContractType =="上海代理产品" || requestDataItem.purchaseContractType =="上海其他" || requestDataItem.contractExecuteCate=="正常采购"){
 		requestDataItem.contractExecuteCate =="正常采购";
 		changeCType(0);
 	}else{

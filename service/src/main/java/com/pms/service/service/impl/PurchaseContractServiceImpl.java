@@ -1688,6 +1688,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
                 String code = item[columnIndexMap.get("采购合同编号")].trim();
                 String contractDate = item[columnIndexMap.get("签订日期")].trim();
+                String signBy = item[columnIndexMap.get("联系人")].trim();
+                if(ApiUtil.isEmpty(signBy)){
+                	signBy = item[columnIndexMap.get("签订人")].trim();
+                }
                 
                 
                 code = code.replace("(", "_");
@@ -1696,10 +1700,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 contract.put(PurchaseContract.PURCHASE_CONTRACT_CODE, code);
                 contract.put(PurchaseContract.DESCRIPTION, item[columnIndexMap.get("合同描述")].trim());
                 contract.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, item[columnIndexMap.get("合同类别")].trim());
+                contract.put("signBy", signBy);
                 
                 contractDate = DateUtil.getDateStringByLong(new Date(contractDate).getTime());
                 contract.put("signDate", contractDate);
                 contract.put("contractExecuteCate", "正常采购");
+                contract.put("eqcostDeliveryType", "直发现场");
                 String contractProperty = item[columnIndexMap.get("开口/闭口")].trim();
 
                 if (ApiUtil.isEmpty(contractProperty)) {
