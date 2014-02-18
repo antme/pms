@@ -1597,6 +1597,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				String projectCode = getRowColumnValue(row, keyMap, "项目编号");
 				String excelSCType = getRowColumnValue(row, keyMap, "合同类型");
 				String excelSCType2 = getRowColumnValue(row, keyMap, "产品分类");
+				String projectAbbr = getRowColumnValue(row, keyMap, "项目缩写");
 
 				if (ApiUtil.isEmpty(projectName)) {
 					errorMsg = errorMsg.concat("项目名称为空 ");
@@ -1694,7 +1695,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 					String lxType = ProjectBean.PROJECT_STATUS_OFFICIAL;
 					if (yulixiang != null && yulixiang.length() != 0) {
-						lxType = yulixiang;
+						lxType = ProjectBean.PROJECT_STATUS_PRE;
 					}
 
 					Map<String, Object> importProject = new HashMap<String, Object>();
@@ -1705,7 +1706,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 					importProject.put(ProjectBean.PROJECT_STATUS, lxType);
 					importProject.put(ProjectBean.PROJECT_CODE, projectCode);
-
+					importProject.put(ProjectBean.PROJECT_ABBR, projectAbbr);
+					
 					Map<String, Object> pro = projectService.importProject(importProject);
 					String projectId = (String) pro.get(ApiConstants.MONGO_ID);
 					scMap.put(SalesContractBean.SC_PROJECT_ID, projectId);// 关联项目

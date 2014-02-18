@@ -67,7 +67,8 @@ $(document).ready(function() {
 			width : "160px"
 		},{
 			field : "projectCode",
-			title : "项目编号"
+			title : "项目编号",
+			width: 170
 		}, {
 			field : "projectName",
 			title : "项目名",
@@ -75,14 +76,18 @@ $(document).ready(function() {
 				return '<a  onclick="openProjectViewWindow(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
 			}
 		}, {
-			field : "projectManager",
-			title : "PM"
+			field : "contractPerson",
+			title : "签订人",
+			width: 80
 		}, {
 			field : "runningStatus",
-			title : "执行状态"
+			title : "执行状态",
+			width: 90
+				
 		}, {
 			field : "archiveStatus",
-			title : "归档状态"
+			title : "归档状态",
+			width: 90
 		}, {
 			field : "customer",
 			title : "客户名"
@@ -92,11 +97,6 @@ $(document).ready(function() {
 			template : function(dataItem) {
 				return '<a  onclick="openTraceWindow(\'' + dataItem._id + '\');">' + dataItem.contractAmount + '</a>';
 			}
-		}, {
-			field : "contractDate",
-			title : "签订日期",
-			format: "{0:yyyy/MM/dd}", 
-			filterable : false
 		}, {
 			field : "contractType",
 			title : "合同类型"

@@ -45,6 +45,7 @@ $(document).ready(function() {
 		columns : [ {
 			field : "projectCode",
 			title : "项目编号",
+			width: 170,
 			template : function(dataItem) {
 				if(dataItem.projectCode){
 					return '<a  onclick="openProjectViewWindow(\'' + dataItem._id + '\');">' + dataItem.projectCode + '</a>';
@@ -55,6 +56,7 @@ $(document).ready(function() {
 		}, {
 			field : "projectName",
 			title : "项目名",
+			width: 250,
 			template : function(dataItem) {
 				if(dataItem.projectName){
 					return '<a  onclick="openProjectViewWindow(\'' + dataItem._id + '\');">' + dataItem.projectName + '</a>';
@@ -64,10 +66,13 @@ $(document).ready(function() {
 			}
 		}, {
 			field : "projectAbbr",
-			title : "项目缩写"
+			title : "缩写",
+			width: 80,
+				
 		}, {
 			field : "projectStatus",
 			title : "项目状态",
+			width: 100,
 			filterable : {
 				ui: function(e){
 					e.kendoDropDownList({

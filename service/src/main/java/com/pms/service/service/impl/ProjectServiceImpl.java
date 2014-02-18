@@ -481,7 +481,11 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		if (p == null) {
 			Object pt = params.get(ProjectBean.PROJECT_TYPE);
 			String ptString = pt == null ? ProjectBean.PROJECT_TYPE_PROJECT : pt.toString();
-			params.put(ProjectBean.PROJECT_CODE, genProjectCode(ptString, ProjectBean.PROJECT_STATUS_OFFICIAL));
+
+			if (ApiUtil.isEmpty(params.get(ProjectBean.PROJECT_CODE))) {
+				params.put(ProjectBean.PROJECT_CODE, genProjectCode(ptString, ProjectBean.PROJECT_STATUS_OFFICIAL));
+			}
+
 			return dao.add(params, DBBean.PROJECT);
 		} else {
 
