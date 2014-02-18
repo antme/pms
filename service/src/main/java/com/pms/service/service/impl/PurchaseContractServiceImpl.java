@@ -1690,7 +1690,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 String contractDate = item[columnIndexMap.get("签订日期")].trim();
                 String signBy = item[columnIndexMap.get("联系人")].trim();
                 if(ApiUtil.isEmpty(signBy)){
-                	signBy = item[columnIndexMap.get("签订人")].trim();
+                	if(ApiUtil.isValid(item[columnIndexMap.get("签订人")])){
+                		signBy = item[columnIndexMap.get("签订人")].trim();
+                	}
                 }
                 
                 
