@@ -61,6 +61,8 @@ public interface ISalesContractService {
 	public Map<String, Object> listCommerceInfoHistory(Map<String, Object> params);
 	
 	public Map<String, Object> importEqCostList(Map<String, Object> params);
+	
+	public Map<String, Object> importEqHistoryExcleFile(Map<String, Object> params);
 	///
 	public Map<String, Object> saveGetMoneyForSC(Map<String, Object> params);
 	
@@ -76,6 +78,7 @@ public interface ISalesContractService {
     
     public Map<String, Object> importSCExcleFile(Map<String, Object> params);
 
+    
 	public Map<String, Object> getCustomerBySC(Map<String, Object> params); 
 
 }

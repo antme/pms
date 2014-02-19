@@ -1396,6 +1396,68 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}
 		return result;
 	}
+	
+	
+	public Map<String, Object> importEqHistoryExcleFile(Map<String, Object> params){
+
+		Map<String, Object> result = new LinkedHashMap<String, Object>();
+		try {
+			InputStream inputStream  = (InputStream)params.get("inputStream");
+			ExcleUtil excleUtil = new ExcleUtil(inputStream);
+			List<String[]> list = excleUtil.getAllData(0);
+			List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
+			Map<String, Integer> keyMap = new LinkedHashMap<String, Integer>();
+			
+            if (list.get(0) != null) {
+                
+                //MAX 15 COLUMN
+                for (int i = 0; i < list.get(0).length; i++) {
+                    String key = list.get(0)[i].trim();
+                    if (!ApiUtil.isEmpty(key)) {
+                        keyMap.put(key, i);
+                    }
+                }
+            }
+			
+			for (int i=2; i<list.size(); i++){//硬编码从第9行开始读数据
+				Map<String, Object> eq = new LinkedHashMap<String, Object>();
+				String amount = list.get(i)[6].trim();
+
+				String[] row = list.get(i);
+				eq.put(EqCostListBean.EQ_LIST_NO, getRowColumnValue(row, keyMap, "No."));
+				eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, getRowColumnValue(row, keyMap, "物料代码"));
+				eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME,  getRowColumnValue(row, keyMap, "产品名称"));
+				eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE,  getRowColumnValue(row, keyMap, "规格型号"));
+				eq.put(EqCostListBean.EQ_LIST_BRAND, getRowColumnValue(row, keyMap, "品牌"));
+				eq.put(EqCostListBean.EQ_LIST_UNIT, getRowColumnValue(row, keyMap, "单位"));
+				eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE,  getRowColumnValue(row, keyMap, "销售单价"));
+				
+//				float dr = Float.parseFloat(String.valueOf(list.get(i)[keyMap.get("折扣率")].trim()));
+				float basePrice = Float.parseFloat(String.valueOf(getRowColumnValue(row, keyMap, "标准成本价")));
+				Double eqcostAmount = ApiUtil.getDouble(getRowColumnValue(row, keyMap, "最终数量"));
+				float lastBasePrice = 1*basePrice;
+				
+				eq.put(EqCostListBean.EQ_LIST_AMOUNT, eqcostAmount);
+				eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, basePrice);
+				eq.put(EqCostListBean.EQ_LIST_DISCOUNT_RATE, 100);
+				eq.put(EqCostListBean.EQ_LIST_LAST_BASE_PRICE, lastBasePrice);
+				eq.put(EqCostListBean.EQ_LIST_CATEGORY,  getRowColumnValue(row, keyMap, "物料类别"));
+				eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, getRowColumnValue(row, keyMap, "税收类型"));
+				eq.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, lastBasePrice*eqcostAmount);
+				eq.put(EqCostListBean.EQ_LIST_MEMO, getRowColumnValue(row, keyMap, "备注"));
+				System.out.println(eq);
+				eqList.add(eq);
+			}
+			
+			result.put(ApiConstants.RESULTS_DATA, eqList);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			result.put("status", 0);
+			throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
+		}
+		return result;
+	
+	}
 
 	@Override
 	public Map<String, Object> setSCRunningStatus(Map<String, Object> params) {
@@ -1570,7 +1632,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				String runningStatus = getRowColumnValue(row, keyMap, "状态");
 //				String contractDate = getRowColumnValue(row, keyMap, "合同签订\\n日期");
 				String contractDate = null;
-				if (ApiUtil.isValid(row[17])) {
+				
+				if (row.length >17 && ApiUtil.isValid(row[17])) {
 					contractDate = DateUtil.getDateStringByLong(new Date(row[17]).getTime());
 				}
 			

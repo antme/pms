@@ -291,4 +291,23 @@ public class SalesContractController extends AbstractController {
     	responseWithData(result, request, response);
     }  
     
+    
+    @RequestMapping("/importeq")
+    //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
+    public void importEqExcle(HttpServletRequest request, HttpServletResponse response){
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;   
+        MultipartFile uploadFile = multipartRequest.getFile("eqFile");        
+        Map<String,Object> result = new HashMap<String,Object>();
+        try {
+			InputStream inputStream = uploadFile.getInputStream();
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("inputStream", inputStream);
+			result = salesContractService.importEqHistoryExcleFile(map);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+    	responseWithData(result, request, response);
+    }  
+    
 }
