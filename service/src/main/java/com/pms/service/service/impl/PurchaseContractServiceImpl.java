@@ -1658,9 +1658,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
 				}
 
-				n = 3;
+	
 				if (!find) {
+					n = 3;
 					titles = list.get(n);
+					
 				}
 				for (int i = 0; i < titles.length; i++) {
 					String key = titles[i].trim();

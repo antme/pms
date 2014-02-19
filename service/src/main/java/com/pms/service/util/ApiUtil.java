@@ -261,6 +261,19 @@ public class ApiUtil {
     	return result;
     }
     
+    public static Float getFloatParam(Object value){
+    	Float result = 0f;
+    	if (!isEmpty(value)){
+    		try {
+				result = Float.parseFloat(String.valueOf(value));
+			} catch (NumberFormatException e) {
+				logger.error(String.format("Float type parameter illegal [%s]", value));
+			}
+    	}
+    	
+    	return result;
+    }
+    
     public static Integer getRandomIntByCap(int cap){
     	Random random = new Random();
     	int num = random.nextInt(cap);
