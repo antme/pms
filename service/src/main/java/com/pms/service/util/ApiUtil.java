@@ -188,8 +188,8 @@ public class ApiUtil {
                 try {
                     result = Integer.parseInt(String.valueOf(value));
                 } catch (NumberFormatException e1) {
-                    throw new ApiResponseException(String.format("Integer parameter illegal [%s]", value),
-                            ResponseCodeConstants.NUMBER_PARAMETER_ILLEGAL);
+
+                    logger.error(String.format("Integer parameter illegal [%s]", value));
                 }
             }
 

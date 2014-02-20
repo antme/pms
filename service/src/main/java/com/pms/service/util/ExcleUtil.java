@@ -36,7 +36,6 @@ public class ExcleUtil {
 	OutputStream fos = null;
 	private String path = null;
 	private File file = null;
-	List<String[]> dataList = new ArrayList<String[]>(100);
 
 	public ExcleUtil(){}
 	
@@ -82,9 +81,20 @@ public class ExcleUtil {
 
 	}
 
+	public int getNumberOfSheets() {
+		return wb.getNumberOfSheets();
+	}
+	
+	
+	public String getSheetName(int index) {
+		return wb.getSheetAt(index).getSheetName();
+	}
+	
     public List<String[]> getAllData(int sheetIndex) {
         Sheet sheet = wb.getSheetAt(sheetIndex);
-
+     
+        
+        List<String[]> dataList = new ArrayList<String[]>( sheet.getLastRowNum());
         for (Row row : sheet) {
 
             if (row.getLastCellNum() > 0) {
@@ -154,22 +164,26 @@ public class ExcleUtil {
 	}
 
 	public String[] getRowData(int sheetIndex, int rowIndex) {
+		List<String[]> dataList = new ArrayList<String[]>(100);
 		String[] dataArray = null;
 		if (rowIndex > this.getRowNum(sheetIndex)) {
 			return dataArray;
 		} else {
 			dataArray = new String[this.getColumnNum(sheetIndex)];
-			return this.dataList.get(rowIndex);
+			return dataList.get(rowIndex);
 		}
 
 	}
 
 	public String[] getColumnData(int sheetIndex, int colIndex) {
+		List<String[]> dataList = new ArrayList<String[]>(100);
+
+		
 		String[] dataArray = null;
 		if (colIndex > this.getColumnNum(sheetIndex)) {
 			return dataArray;
 		} else {
-			if (this.dataList != null && this.dataList.size() > 0) {
+			if (dataList != null && dataList.size() > 0) {
 				dataArray = new String[this.getRowNum(sheetIndex) + 1];
 				int index = 0;
 				for (String[] rowData : dataList) {

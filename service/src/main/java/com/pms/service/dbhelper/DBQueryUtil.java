@@ -140,9 +140,10 @@ public class DBQueryUtil {
             } else if (value instanceof DBObject) {
                 object = (DBObject) value;
             } else if (value instanceof String) {
-                String matchString = "^" + value + "$";
-                Pattern pattern = Pattern.compile(matchString, Pattern.CASE_INSENSITIVE);
-                object = new BasicDBObject(key, pattern);
+//                String matchString = "^" + value + "$";
+//                Pattern pattern = Pattern.compile(matchString, Pattern.CASE_INSENSITIVE);
+//                object = new BasicDBObject(key, pattern);
+                object.put(key, value);
             } else {
                 object.put(key, value);
             }

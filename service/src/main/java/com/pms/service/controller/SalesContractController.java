@@ -304,10 +304,19 @@ public class SalesContractController extends AbstractController {
 			map.put("inputStream", inputStream);
 			result = salesContractService.importEqHistoryExcleFile(map);
 		} catch (IOException e) {
+			responseServerError(e, request, response);
 			e.printStackTrace();
 		}
         
-    	responseWithData(result, request, response);
+    	responseWithData(null, request, response);
+    }  
+    
+    @RequestMapping("/clear")
+    //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
+    public void clearEqCost(HttpServletRequest request, HttpServletResponse response){
+       
+    	salesContractService.clearEqCost();	
+    	responseWithData(null, request, response);
     }  
     
 }

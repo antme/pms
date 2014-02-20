@@ -18,7 +18,11 @@
 			
 			<hr>
 			<h4>成本清单数据导入：</h4>  
-			销售合同编号<input name="sccode" id="sccode" type="text" /> <input name="eqFile" id="eqFile" type="file" />	<span id="importStatusEq"></span>
+			<h4 style="color:red;">每批次导数据之前请先清除以前的数据</h4>  
+			
+			<button onclick="clearEqCost();">清除数据</button>
+			<br>
+			<input name="eqFile" id="eqFile" type="file" />	<span id="importStatusEq"></span>
 		</div>
 		<hr/>
 	</div>

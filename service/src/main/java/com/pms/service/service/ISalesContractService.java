@@ -79,6 +79,8 @@ public interface ISalesContractService {
     public Map<String, Object> importSCExcleFile(Map<String, Object> params);
 
     
-	public Map<String, Object> getCustomerBySC(Map<String, Object> params); 
+	public Map<String, Object> getCustomerBySC(Map<String, Object> params);
+
+	public void clearEqCost(); 
 
 }

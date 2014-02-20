@@ -37,20 +37,29 @@ $(document).ready(function() {
         },
         upload: onUpload,
         success:function(e){
-        	if (e.response.status == 1){//import success
-        		$("#importStatusEq").html("数据导入成功！");
-        	}else{
+        	if (e.response && e.response.status === 0){//import success
+        		
         		alert(e.response.msg);
+        	}else{
+        		$("#importStatusEq").html("数据导入成功！");
         	}
         }
     });	
     
+    
+    
+    
 	
 });//end dom ready	
 
+function clearEqCost(){
+	postAjaxRequest("/service/sc/clear", redirectParams, function(data){
+		alert("清除成功，可以导数据了");
+	});
+}
 
 function onUpload(e) {
     e.data = {
-        scCode: $("#sccode").val()
+//        scCode: $("#sccode").val()
     };
 }
