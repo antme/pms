@@ -1434,6 +1434,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 						String key = titles[i].trim();
 						if (key.contains("物料代码")) {
 							find = true;
+							break;
 						}
 
 					}
@@ -1509,7 +1510,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, "增值税");
 					eq.put("eqcostCategory", "北京代采");
 
-					if (ApiUtil.isValid(eqCode)) {
+					if (ApiUtil.isValid(productName)) {
 						// System.out.println(eq);
 
 						eqList.add(eq);
