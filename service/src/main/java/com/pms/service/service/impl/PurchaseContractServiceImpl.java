@@ -1710,6 +1710,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 contract.put("signDate", contractDate);
                 contract.put("contractExecuteCate", "正常采购");
                 contract.put("eqcostDeliveryType", "直发现场");
+                
+                
+                
                 String contractProperty = item[columnIndexMap.get("开口/闭口")].trim();
 
                 if (ApiUtil.isEmpty(contractProperty)) {

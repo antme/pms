@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
+import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.CustomerBean;
@@ -448,11 +449,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				realItem.put(EqCostListBean.EQ_LIST_AMOUNT, totalAmount);
 				realItem.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, totalAmount);
 				realItem.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, totalAmount);
+				item.put(ApiConstants.MONGO_ID, realItem.get(ApiConstants.MONGO_ID));
 				this.dao.updateById(realItem, DBBean.EQ_COST);
 			}
 
 			if (!isdraft) {
-				this.dao.add(item, DBBean.EQ_COST_HISTORY);
+		        Map<String, Object> clone = DBQueryUtil.generateQueryFields(item);
+				this.dao.add(clone, DBBean.EQ_COST_HISTORY);
 			}
 
 		}
@@ -1412,7 +1415,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 
 	public Map<String, Object> importEqHistoryExcleFile(Map<String, Object> params) {
-
+		clearEqCost();
 		Map<String, Object> result = new LinkedHashMap<String, Object>();
 		try {
 			InputStream inputStream = (InputStream) params.get("inputStream");
@@ -1450,6 +1453,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 						}
 					}
 				}
+				
+				
+				
 
 				for (int i = n + 1; i < list.size(); i++) {// 硬编码从第9行开始读数据
 					Map<String, Object> eq = new LinkedHashMap<String, Object>();
@@ -1468,15 +1474,26 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					if (ApiUtil.isEmpty(productName)) {
 						continue;
 					}
+					
+
+					int eqcostAmount = ApiUtil.getInteger(getRowColumnValue(row, keyMap, "最终数量"));
+
+					
+					int remainCount = 0;
+					if(row.length > 24 && ApiUtil.isValid(row[24])){
+						remainCount = ApiUtil.getInteger(row[24]);
+					}
+					
+					eq.put(EqCostListBean.EQ_LIST_REST_COUNT, remainCount);
+					
+
+					
 					eq.put(EqCostListBean.EQ_LIST_NO,  ApiUtil.getInteger(getRowColumnValue(row, keyMap, "No.")));
 					eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, eqCode);
 					eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, productName);
 					eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, getRowColumnValue(row, keyMap, "规格型号"));
 					eq.put(EqCostListBean.EQ_LIST_BRAND, getRowColumnValue(row, keyMap, "品牌"));
 					eq.put(EqCostListBean.EQ_LIST_UNIT, getRowColumnValue(row, keyMap, "单位"));
-					
-					
-					
 
 					Integer salesPrice = ApiUtil.getInteger(getRowColumnValue(row, keyMap, "销售单价"));
 					
@@ -1493,9 +1510,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 						basePrice = salesPrice;
 					}
 
-					Integer eqcostAmount = ApiUtil.getInteger(getRowColumnValue(row, keyMap, "最终数量"));
 					float lastBasePrice = 1 * basePrice;
-
 
 					
 					eq.put(EqCostListBean.EQ_LIST_AMOUNT, eqcostAmount);
@@ -1509,7 +1524,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 					eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, "增值税");
 					eq.put("eqcostCategory", "北京代采");
-
 					if (ApiUtil.isValid(productName)) {
 						// System.out.println(eq);
 
@@ -1522,10 +1536,37 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				Map<String, Object> contract = this.dao.findOneByQuery(query, DBBean.SALES_CONTRACT);
 				if (ApiUtil.isValid(contract)) {
 					addEqCostListForContract(eqList, contract.get(ApiConstants.MONGO_ID).toString(), contractCode, contract.get(SalesContractBean.SC_PROJECT_ID).toString(), false);
-//				    logger.info("create eqlist for contract: " + contractCode);
+					// logger.info("create eqlist for contract: " +
+					// contractCode);
+
+					Map<String, Object> newObj = new HashMap<String, Object>();
+					newObj.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
+					newObj.put(PurchaseBack.pbCode, "BHSQ-" + contractCode);
+					newObj.put(PurchaseBack.scId, contract.get(ApiConstants.MONGO_ID).toString());
+
+					newObj.put(PurchaseBack.scCode, contract.get(SalesContractBean.SC_CODE));
+					newObj.put(PurchaseBack.pbComment, "历史数据导入");
+					
+					
+					for (Map<String, Object> eqMap : eqList) {
+						eqMap.put(PurchaseBack.pbTotalCount,
+						        ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+					}
+
+					removeEmptyEqList(eqList, PurchaseBack.pbTotalCount);
+
+					if (eqList.size() > 0) {
+						newObj.put(PurchaseBack.eqcostList, eqList);
+
+						purchaseService.saveOrUpdate(newObj, newObj);
+					}
+
 				} else {
 					logger.error("can not find " + contractCode);
 				}
+				
+				
+	
 
 			}
 
@@ -1567,6 +1608,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.EQ_COST);
 		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.EQ_COST_HISTORY);
 		dao.deleteByQuery(new HashMap<String, Object>(), "eqCost_history");
+		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.PURCHASE_BACK);
 	}
 
 	public List<Map<String, Object>> mergeEqListBasicInfo(Object eqList) {

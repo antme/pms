@@ -30,4 +30,6 @@ public class EqCostListBean {
 	public static final String EQ_LIST_CODE_PREFIX = "HTCB-"; //每批次成本清单对应一个编号 eg.HTCB-1301-1
 	public static final String EQ_LIST_CODE = "eqcostCode"; //每批次成本清单对应一个编号
 	
+	public static final String EQ_LIST_REST_COUNT = "eqcostRestCount";//单位
+	
 }

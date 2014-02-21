@@ -52,6 +52,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
         doc.put(ApiConstants.SERIAL_NUMBER, this.count(null, collection) + 1);
         WriteResult result = this.getConnection(ConfigurationManager.getDbName(), collection).insert(doc);
         doc.put(ApiConstants.MONGO_ID, id.toString());
+        data.put(ApiConstants.MONGO_ID, id.toString());
         return result.getError() == null ? doc : null;
     }
 

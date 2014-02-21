@@ -145,7 +145,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         return dao.updateById(newObj, DBBean.PURCHASE_BACK);
     }
 	
-    private Map<String, Object> saveOrUpdate(Map<String, Object> params, Map<String, Object> newObj) {
+    public Map<String, Object> saveOrUpdate(Map<String, Object> params, Map<String, Object> newObj) {
         newObj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
         newObj.put(PurchaseBack.applicationDepartment, params.get(PurchaseBack.applicationDepartment));
         newObj.put(PurchaseBack.pbType, params.get(PurchaseBack.pbType));
@@ -167,7 +167,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    	comment = recordComment("保存",comment,oldComment);
 	    	newObj.putAll(checkEqCountForBack(params,false));
 	    }
-	    newObj.put(PurchaseBack.pbComment, comment);
+	    
+	    if(ApiUtil.isValid(comment)){
+	    	newObj.put(PurchaseBack.pbComment, comment);
+	    }
 	    
         Map<String, Object> sc = dao.findOne(ApiConstants.MONGO_ID, params.get(PurchaseBack.scId), new String[] { SalesContractBean.SC_CODE,SalesContractBean.SC_PROJECT_ID }, DBBean.SALES_CONTRACT);
         newObj.put(PurchaseBack.scCode, sc.get(SalesContractBean.SC_CODE));
