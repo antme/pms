@@ -606,13 +606,16 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         PurchaseRequest request = (PurchaseRequest) new PurchaseRequest().toEntity(parameters);
         Object eqList = parameters.get(SalesContractBean.SC_EQ_LIST);
 
-        if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
-            if (request.getStatus() == null) {
-                request.setStatus(PurchaseRequest.STATUS_DRAFT);
-            }
-            request.setApprovedDate(null);
+        if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID)) && ApiUtil.isEmpty(parameters.get(PurchaseOrder.PURCHASE_ORDER_CODE))) {
             String purchaseRequestCode = parameters.get(PurchaseRequest.PURCHASE_REQUEST_CODE).toString();
             request.setPurchaseOrderCode(purchaseRequestCode.replaceAll("CGSQ", "CGDD"));
+        }
+        if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
+           
+        	if (request.getStatus() == null) {
+                request.setStatus(PurchaseRequest.STATUS_DRAFT);
+            }
+            request.setApprovedDate(null);      
             parameters = request.toMap();
 
         }
@@ -1019,7 +1022,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> pcrequest = new HashMap<String, Object>();
         
         Object id = parameters.get(ApiConstants.MONGO_ID);
-		if (ApiUtil.isEmpty(id)) {
+		if (ApiUtil.isEmpty(id) && ApiUtil.isEmpty(parameters.get(PurchaseCommonBean.PURCHASE_REQUEST_CODE))) {
             request.setPurchaseRequestCode(generateCode("CGSQ", DBBean.PURCHASE_REQUEST, PurchaseCommonBean.PURCHASE_REQUEST_CODE));
             pcrequest = request.toMap();
             adding = true;
@@ -1785,5 +1788,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public void setBackService(IPurchaseService backService) {
         this.backService = backService;
     }
+    
+    
 
 }

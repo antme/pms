@@ -97,7 +97,7 @@
 		<property name="projectService" ref="projectService"></property>
 		<property name="userService" ref="userService"></property>
 		<property name="purchaseService" ref="purchaseService"></property>
-		
+		<property name="purchaseContractService" ref="purchaseContractService"></property>
 	</bean>
 	
     <bean name="shipService" class="com.pms.service.service.impl.ShipServiceImpl"

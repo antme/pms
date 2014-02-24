@@ -249,7 +249,7 @@ public class PurchaseCommonBean extends BaseEntity {
     
     public static final String SALES_COUNTRACT_ID = "salesContractId";
     
-    
+    public static final String BACK_REQUEST_CODE = "backRequestCode";
     public static final String BACK_REQUEST_ID = "backRequestId";
     
     public static final String EQCOST_APPLY_AMOUNT = "eqcostApplyAmount";
