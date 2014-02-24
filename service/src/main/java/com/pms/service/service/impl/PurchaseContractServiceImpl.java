@@ -1512,7 +1512,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> savePaymoney(Map<String, Object> params) {
         Map<String, Object> obj = new HashMap<String, Object>();
         obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
-        obj.put(MoneyBean.payMoneyActualMoney, ApiUtil.getDouble(params, MoneyBean.payMoneyActualMoney));
+        obj.put(MoneyBean.payMoneyActualMoney, ApiUtil.getFloatParam(params, MoneyBean.payMoneyActualMoney));
         obj.put(MoneyBean.payMoneyActualDate, DateUtil.converUIDate(params.get(MoneyBean.payMoneyActualDate)));
         obj.put(MoneyBean.payMoneyComment, params.get(MoneyBean.payMoneyComment));
         obj.put(MoneyBean.supplierBankAccount, params.get(MoneyBean.supplierBankAccount));

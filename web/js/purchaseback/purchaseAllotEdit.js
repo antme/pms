@@ -104,7 +104,7 @@ $(document).ready(function () {
 			change: dataBound
 		},
 	    columns: [
-			{ field: "eqcostNo", title: "序号"},
+			
 			{ field: "eqcostMaterialCode", title: "物料代码" },
 			{ field: "eqcostProductName", title: "产品名称" },
 			{ field: "eqcostProductType", title: "规格型号" },

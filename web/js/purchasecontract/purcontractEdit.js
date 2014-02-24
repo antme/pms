@@ -341,10 +341,7 @@ function addOrderInSCListForRuodian(){
 		$("#scEqCostList").kendoGrid({
 			dataSource : eqCostListDataSource,
 			columns : [ 
-			            {
-				field : "eqcostNo",
-				title : "序号"
-			}, 
+			            
 			{
 				field : "eqcostMaterialCode",
 				title : "物料代码"
@@ -656,9 +653,6 @@ function edit(data) {
 				    }
 			 },
 			columns : [ {
-				field : "eqcostNo",
-				title : "序号"
-			}, {
 				field : "eqcostMaterialCode",
 				title : "物料代码"
 			}, {

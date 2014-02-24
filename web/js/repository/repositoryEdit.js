@@ -446,11 +446,7 @@ function editRepository(data) {
 		if (!$("#purchaserepository-edit-grid").data("kendoGrid")) {
 			$("#purchaserepository-edit-grid").kendoGrid({
 				dataSource : itemDataSource,
-				columns : [ {
-					field : "eqcostNo",
-					title : "序号",
-					width : 80
-				}, 
+				columns : [  
 				{
 					field : "eqcostMaterialCode",
 					title : "物料代码"

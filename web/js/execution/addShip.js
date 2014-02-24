@@ -154,7 +154,7 @@ $(document).ready(function() {
 	$("#bj-ship-grid").kendoGrid({
 		dataSource : bjDataSource,
 	    columns: [
-	        { field: "eqcostNo", title: "序号" },
+	       
 	        { field: "eqcostMaterialCode", title: "物料代码" },
 	        { field: "eqcostProductName", title: "产品名称" },
 	        { field: "eqcostProductType", title: "规格型号" },
@@ -209,7 +209,7 @@ $(document).ready(function() {
 	$("#supplier-ship-grid").kendoGrid({
 		dataSource : supplierShipDataSource,
 	    columns: [
-	        { field: "eqcostNo", title: "序号" },
+	       
 	        { field: "eqcostMaterialCode", title: "物料代码" },
 	        { field: "eqcostProductName", title: "产品名称" },
 	        { field: "eqcostProductType", title: "规格型号" },
@@ -263,7 +263,7 @@ $(document).ready(function() {
 	$("#sh-ship-grid").kendoGrid({
 		dataSource : shDataSource,
 	    columns: [
-	        { field: "eqcostNo", title: "序号" },
+	        
 	        { field: "eqcostMaterialCode", title: "物料代码" },
 	        { field: "eqcostProductName", title: "产品名称" },
 	        { field: "eqcostProductType", title: "规格型号" },
@@ -310,7 +310,7 @@ $(document).ready(function() {
 	$("#common-ship-grid").kendoGrid({
 		dataSource : commonDataSource,
 	    columns: [
-	        { field: "eqcostNo", title: "序号" },
+	       
 	        { field: "eqcostMaterialCode", title: "物料代码" },
 	        { field: "eqcostProductName", title: "产品名称" },
 	        { field: "eqcostProductType", title: "规格型号" },

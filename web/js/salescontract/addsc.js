@@ -597,7 +597,7 @@ function saveSC_ADD(){
 	}else if (scType != "弱电工程"){//弱点工程 类型 无设备清单数据
 		var eqTotal = eqCostListDataSource.total();
 		if (eqTotal == 0){
-			alert("成本设备清单为空！");
+			alert("请先在成本设备清单选项卡里面导入清单！");
 			return;
 		}
 		var map = new Map();

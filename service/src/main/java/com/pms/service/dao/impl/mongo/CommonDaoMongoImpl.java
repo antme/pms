@@ -726,7 +726,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
         query.put(ApiConstants.LIMIT_KEYS, new String[] { updateKey });
         Map<String, Object> obj = this.findOneByQuery(query, collection);
         if (obj != null && !obj.isEmpty()) {
-            Double old = ApiUtil.getDouble(obj, updateKey, 0);
+            Float old = ApiUtil.getFloatParam(obj, updateKey);
             number = number + old;
             obj.put(updateKey, number);
             this.updateById(obj, collection);

@@ -251,7 +251,7 @@ $(document).ready(function() {
 	grid = $("#equipments-grid").kendoGrid({
 	    toolbar: [ { name: "cancel", text: "撤销编辑" } ],
 	    columns: [
-	        { field: "eqcostNo", title: "序号" },
+	        
 	        { field: "eqcostMaterialCode", title: "物料代码" },
 	        { field: "eqcostProductName", title: "产品名称" },
 	        { field: "eqcostProductType", title: "规格型号" },

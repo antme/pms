@@ -192,10 +192,7 @@ function editArrivalNotice(data) {
 						{
 							dataSource : itemDataSource,
 							columns : [
-									{
-										field : "eqcostNo",
-										title : "序号"
-									},
+									
 									{
 										field : "eqcostMaterialCode",
 										title : "物料代码"

@@ -69,11 +69,7 @@ function edit(data) {
 		dataSource : sdataSource,
 		sortable : true,
 		resizable: true,
-		columns : [ {
-			field : "eqcostNo",
-			title : "序号",
-			width : 80
-		}, {
+		columns : [{
 			field : "eqcostProductType",
 			title : "规格型号"
 

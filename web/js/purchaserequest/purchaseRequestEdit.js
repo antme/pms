@@ -240,9 +240,6 @@ function edit(data) {
 								hidden: true,
 								groupHeaderTemplate: "(总数: #= count#)", 
 							}, {
-								field : "eqcostNo",
-								title : "序号"
-							}, {
 								field : "eqcostMaterialCode",
 								title : "物料代码",								
 								footerTemplate: "Total Count: #=count#"
