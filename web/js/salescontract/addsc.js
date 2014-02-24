@@ -566,7 +566,8 @@ function saveSCDraft_ADD(){
 }
 function saveSC_ADD(){
 	
-	var validator = $(".addSalesContract").kendoValidator().data("kendoValidator");
+	var validator = $("#scbasicinfotab").kendoValidator().data("kendoValidator");
+	var validator1 = $("#scbasicinfotab1").kendoValidator().data("kendoValidator");
 	var validatestatus = $("#validate-status");
 	var eqCostData = eqCostListDataSource.data();
 //	var progressPaymentData = scProgressPaymentDatasource.data();
@@ -659,11 +660,11 @@ function saveSC_ADD(){
 		}
 	}
 	
-	if(projectStatus == "销售正式立项" && scType != "弱电工程" &&　!validator.validate()) {
-		validatestatus.text("表单验证不通过！")
+	if(projectStatus == "销售正式立项" && scType != "弱电工程" &&　!validator.validate() &&!validator1.validate()) {
+		validatestatus.text("请检查必填的合同基础信息和商务信息")
         .removeClass("valid")
         .addClass("invalid");
-		alert("表单验证不通过！");
+		alert("请检查必填的合同基础信息和商务信息！");
 		return;
     } else {
     	
@@ -673,7 +674,7 @@ function saveSC_ADD(){
     			validatestatus.text("请填写项目信息！")
     	        .removeClass("valid")
     	        .addClass("invalid");
-    			alert("项目表单验证不通过！");
+    			alert("请点击项目信息选项卡填写项目基本信息！");
     			return;
     	    }
     		

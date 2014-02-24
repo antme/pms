@@ -72,7 +72,7 @@
 						</div> -->
 						
 	                   <div class="k-edit-label ">
-							<label for="contractPerson">签订人</label>
+							<label for="contractPerson">签订人<span class="input_required_star">*</span></label>
 						</div>
 						<div data-container-for="contractPerson" class="k-edit-field ">
 							<input type="text" class="k-input k-textbox" name="contractPerson" id="contractPerson"
@@ -80,7 +80,7 @@
 						</div>
 						
 						<div class="k-edit-label ">
-							<label for="customer">客户名称</label>
+							<label for="customer">客户名称<span class="input_required_star">*</span></label>
 						</div>
 						<div data-container-for="customer" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="customer" id="customer"
@@ -106,7 +106,7 @@
 						</div> -->
 						
 	                   <div class="k-edit-label ">
-							<label for="archiveStatus">归档状态</label>
+							<label for="archiveStatus">归档状态<span class="input_required_star">*</span></label>
 						</div>
 						<div data-container-for="archiveStatus" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="archiveStatus" id="archiveStatus"
@@ -149,7 +149,7 @@
 						</div>
 						<div data-container-for="progressPayment" class="k-edit-field ">
 							<textarea rows="4" cols="45"  class="k_textarea_small" name="progressPayment" id="progressPayment"
-								required="required" validationMessage="必填" data-bind="value: progressPayment"></textarea>
+								 validationMessage="必填" data-bind="value: progressPayment"></textarea>
 						</div>
 						
 						<!-- <div data-container-for="progressPayment" class="k-edit-field ">
@@ -162,7 +162,7 @@
 						</div>
 						<div data-container-for="qualityMoney" class="k-edit-field ">
 							<input type="text" name="qualityMoney" id="qualityMoney"
-								required="required" validationMessage="必填" data-bind="value: qualityMoney">
+								 validationMessage="必填" data-bind="value: qualityMoney">
 						</div>
 						<div class="k-edit-label ">
 							<label for="qualityMoneyMemo">质保金备注</label>
@@ -182,7 +182,7 @@
                </div>
                
                <div class="addSalesContract"><!-- 第2个Tab -->
-                   <div class="k-edit-form-container"><!-- 商务信息-->
+                   <div id="scbasicinfotab1" class="k-edit-form-container"><!-- 商务信息-->
                    		<div class="k-edit-label ">
 							<label for="contractAmount">合同金额</label>
 						</div>
@@ -202,7 +202,7 @@
 						</div>
 						<div data-container-for="serviceAmount" class="k-edit-field ">
 							<input type="number" min="0" name="serviceAmount" id="serviceAmount" onchange="moneyOnChange_ADD();"
-								required="required" data-bind="value: serviceAmount">
+								required data-bind="value: serviceAmount">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -295,7 +295,7 @@
 						</div>
 						<div data-container-for="invoiceType" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="invoiceType" id="invoiceType"
-								required="required" validationMessage="必填" data-bind="value: invoiceType">
+								required validationMessage="必填" data-bind="value: invoiceType">
 						</div>
 						
 	                   <!-- <div class="k-edit-label ">
@@ -334,10 +334,11 @@
 	                <div data-container-for="projectCode" class="k-edit-field ">
 	                    <input type="text" class="k-input k-textbox" name="projectCode" id="projectCode"
 	                        data-bind="value: projectCode">
+	                         <span  >（编号由系统自动生成）</span>
 	                </div>
 	                
 	                <div class="k-edit-label ">
-	                    <label for="projectName">项目名称</label>
+	                    <label for="projectName">项目名称<span class="input_required_star">*</span></label>
 	                </div>
 	                <div data-container-for="projectName" class="k-edit-field ">
 	                    <input type="text" class="k-input k-textbox" name="projectName" id="projectName"
@@ -353,7 +354,7 @@
 	
 	                
 	                <div class="k-edit-label ">
-	                    <label for="projectManager">项目经理</label>
+	                    <label for="projectManager">项目经理<span class="input_required_star">*</span></label>
 	                </div>
 	                <div data-container-for="projectManager" class="k-edit-field ">
 	                    <input type="text" class="pro-dropdownlist" name="projectManager" id="projectManager"
@@ -361,7 +362,7 @@
 	                </div>
 	                
 	                <div class="k-edit-label ">
-	                    <label for="projectStatus">立项类别</label>
+	                    <label for="projectStatus">立项类别<span class="input_required_star">*</span></label>
 	                </div>
 	                <div data-container-for="projectStatus" class="k-edit-field ">
 	                    <input type="text" name="projectStatus" id="projectStatus"
@@ -369,7 +370,7 @@
 	                </div>
 	                
 	                <div class="k-edit-label ">
-	                    <label for="projectType">项目类型</label>
+	                    <label for="projectType">项目类型<span class="input_required_star">*</span></label>
 	                </div>
 	                <div data-container-for="projectType" class="k-edit-field ">
 	                    <input type="text"  name="projectType" id="projectType"
@@ -381,7 +382,7 @@
 	                </div>
 	                <div data-container-for="projectAddress" class="k-edit-field ">
 	                    <textarea rows="4" cols="45"  class="k_textarea_small" name="projectAddress" id="projectAddress"
-	                        required="required" validationMessage="必填" data-bind="value: projectAddress"></textarea>
+	                       validationMessage="必填" data-bind="value: projectAddress"></textarea>
 	                </div>
 	                
 	                <div class="k-edit-label ">

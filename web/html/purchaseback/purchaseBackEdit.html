@@ -33,9 +33,10 @@
 					<td>项目名： <span data-bind="text: projectName"></span></td>	
 					<td>项目编号： <span data-bind="text: projectCode"></span></td>
 					<td>客户名称： <span data-bind="text: customerName"></span></td>
+					<td>申请部门: <span data-bind="text: applicationDepartment"></span></td>
 				</tr>
 				<tr>
-					<td>申请部门: <span data-bind="text: applicationDepartment"></span></td>
+					
 					<td>申请编号：<span data-bind="text: pbCode" ></span></td>
 					<td>状态：<span data-bind="text: pbStatus" ></span></td>
 					<td>到货要求日期: <input id="pbPlanDate" name="pbPlanDate"  required validationMessage="请选择日期" data-role="datepicker"  data-format="yyyy-MM-dd" data-bind="value: pbPlanDate"/></td>
@@ -67,10 +68,10 @@
 			</div>
 		</div>
         <div id="form-container-button">
-        	<button access="purchase_back_management" class="k-button access" id="save">保存草稿</button>
-        	<button access="purchase_back_management" class="k-button access" id="submit">提交</button>
-        	<button access="purchase_back_process" class="k-button access" id="approve">批准</button>
-        	<button access="purchase_back_process" class="k-button access" id="reject">拒绝</button>            	
+        	<button access="purchase_back_management" class="k-button access button-submit" id="save">保存草稿</button>
+        	<button access="purchase_back_management" class="k-button access button-submit" id="submit">提交</button>
+        	<button access="purchase_back_process" class="k-button access button-approve" id="approve">批准</button>
+        	<button access="purchase_back_process" class="k-button access button-approve" id="reject">拒绝</button>            	
         	<button class="k-button" id="cancel">取消</button>
         </div>		
 	</div>		

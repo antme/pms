@@ -209,8 +209,19 @@ $(document).ready(function () {
 			min: new Date()
 		});
 
+		if(redirectParams && redirectParams.pageId && redirectParams.pageId=="approve") {
+			   $(".button-submit").hide();
+			   $(".button-approve").show();
+		}  else{
+			   $(".button-submit").show();
+			   $(".button-approve").hide();
+		}
+	
 	}else{
 		
+	   $(".button-submit").show();
+	   $(".button-approve").hide();
+	   
 		//合同签订日期控件
 		var ddd = $("#pbPlanDate").kendoDatePicker({
 			min: new Date()
@@ -301,13 +312,13 @@ function validateModel(){
 		if(!category){
 			category = eqList[i].eqcostCategory;
 		} else if(category != eqList[i].eqcostCategory){
-			alert("请审核设备清单,只可为同一类别！");
+			alert("请审核设备清单, 只可为同一类别！");
 			return false;
 		}
 		eqTotalCount+=eqList[i].pbTotalCount;
 	}
 	if(eqTotalCount== 0){
-		alert("请审核设备清单");
+		alert("无可备货设备清单");
 		return false;
 	}
 	return true;

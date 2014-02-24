@@ -1,6 +1,11 @@
 body {
 	/* background-color: #f6f6f6; */
 }
+.input_required_star {
+	margin-left: 5px;
+	color: red;
+}
+
 
 .k-textarea {
 	height: 50px;
