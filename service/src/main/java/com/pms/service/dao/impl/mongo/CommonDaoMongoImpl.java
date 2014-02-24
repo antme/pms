@@ -214,12 +214,6 @@ public class CommonDaoMongoImpl implements ICommonDao {
         }
     }
 
-    private String concatUrl(String url, Object value){
-        if(value.toString().indexOf(url) !=-1){
-            return value.toString();
-        }
-        return url.concat(value.toString());
-    }
 
 
 

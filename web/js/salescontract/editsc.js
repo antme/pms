@@ -703,7 +703,10 @@ function edit(data){
 				title : "小计",
 //				format: "{0:c}",
 				groupFooterTemplate: "#= sum#", 
-				footerTemplate: "#=sum#"
+				footerTemplate: "#=sum#",
+				template : function(dataItem){
+					return dataItem.eqcostTotalAmount.toFixed(2);
+				}
 			}, {
 				field : "eqcostTaxType",
 				title : "税收类型"

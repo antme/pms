@@ -381,6 +381,11 @@ public class ApiUtil {
         floatFields.add("eqcostLastBasePrice");
         floatFields.add("eqcostTotalAmount");
         floatFields.add("pbMoney");
+        floatFields.add("addNewEqCostMoney");
+        floatFields.add("estimateGrossProfit");
+        
+        
+        
         if (ApiUtil.isValid(data)) {
             for (String key : data.keySet()) {
 
