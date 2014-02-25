@@ -242,7 +242,7 @@ function edit(data) {
 							}, {
 								field : "eqcostMaterialCode",
 								title : "物料代码",								
-								footerTemplate: "Total Count: #=count#"
+								footerTemplate: "总数: #=count#"
 							}, {
 								field : "eqcostProductName",
 								title : "产品名称"

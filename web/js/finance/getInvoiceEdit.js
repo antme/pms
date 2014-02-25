@@ -41,7 +41,7 @@ $(document).ready(function () {
 			{ field: "itemMonth", title: "所属月份" },
 			{ field: "itemContent", title: "内容" },
 			{ field: "itemComment", title: "备注" },
-			{ field: "itemMoney", title: "金额",footerTemplate: "总共: #=sum#" }
+			{ field: "itemMoney", title: "金额",footerTemplate: "总共: #=sum.toFixed(2)#" }
 	  	],	 
 	  	editable:true,
 	  	sortable : true,

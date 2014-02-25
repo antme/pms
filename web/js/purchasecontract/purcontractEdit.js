@@ -77,11 +77,16 @@ var eqCostListDataSource = new kendo.data.DataSource({
 	group: {
 		field:"eqcostCategory",
 		aggregates: [
-                     { field: "eqcostCategory", aggregate: "count" }
+                     { field: "eqcostCategory", aggregate: "count" },
+                     { field: "requestedTotalMoney", aggregate: "sum" }
                   ]
 	},
 	
-	aggregate: [ { field: "eqcostCategory", aggregate: "count" }],
+	aggregate: [ 	          
+	          { field: "eqcostCategory", aggregate: "count" },
+	          { field: "requestedTotalMoney", aggregate: "sum" }
+	],
+
 	
 	schema : {
 		model : {
@@ -365,13 +370,22 @@ function addOrderInSCListForRuodian(){
 //			}, 
 			{
 				field : "eqcostBasePrice",
-				title : "标准成本价"
+				title : "标准成本价",
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostBasePrice);
+				}
 			}, {
 				field : "eqcostLastBasePrice",
-				title : "最终成本价"
+				title : "最终成本价",
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostLastBasePrice);
+				}
 			}, {
 				field : "eqcostTotalAmount",
-				title : "小计"
+				title : "小计",
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostTotalAmount);
+				}
 			}, {
 				field : "eqcostTaxType",
 				title : "税收类型"
@@ -446,7 +460,20 @@ var itemDataSource = new kendo.data.DataSource({
 		model : contractModel
 	},
 	batch : true,
-	group: { field: "purchaseOrderCode" }
+
+	
+	group: {
+		field:"purchaseOrderCode",
+		aggregates: [
+                     { field: "eqcostCategory", aggregate: "count" },
+                     { field: "requestedTotalMoney", aggregate: "sum" }
+                  ]
+	},
+	
+	aggregate: [ 	          
+	          { field: "eqcostCategory", aggregate: "count" },
+	          { field: "requestedTotalMoney", aggregate: "sum" }
+	]
 });
 
 
@@ -671,10 +698,19 @@ function edit(data) {
 				title : "订单数量"
 			}, {
 				field : "eqcostProductUnitPrice",
-				title : "采购单价"
+				title : "采购单价",
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostProductUnitPrice);
+				}
 			}, {
 				field : "requestedTotalMoney",
-				title : "总价"
+				title : "总价",
+				template : function(dataItem){
+					return percentToFixed(dataItem.requestedTotalMoney);
+				},
+				footerTemplate: function(dataItem){
+					return percentToFixed(dataItem.requestedTotalMoney.sum);
+				}
 			},{
 				field : "eqcostBrand",
 				title : "品牌"
@@ -746,7 +782,11 @@ function edit(data) {
 
 
 var mergedDataSource = new kendo.data.DataSource({
-	 data : []
+	   data : [],
+	   aggregate: [ 	          
+		          { field: "eqcostCategory", aggregate: "count" },
+		          { field: "requestedTotalMoney", aggregate: "sum" }
+		]
 });
 
 function initMergedGrid(){
@@ -807,7 +847,7 @@ function initMergedGrid(){
 	}
 
 	
-	if (!$("#merged-grid").data("kendoGrid")) {
+//	if (!$("#merged-grid").data("kendoGrid")) {
 		$("#merged-grid").kendoGrid({
 			dataSource : mergedDataSource,
 			columns : [ {
@@ -824,13 +864,22 @@ function initMergedGrid(){
 				title : "单位"
 			}, {
 				field : "eqcostProductUnitPrice",
-				title : "采购单价"
+				title : "采购单价",
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostProductUnitPrice);
+				}
 			}, {
 				field : "eqcostApplyAmount",
 				title : "申请总数"
 			},{
 				field : "requestedTotalMoney",
-				title : "总价"
+				title : "总价",
+				template : function(dataItem){
+					return percentToFixed(dataItem.requestedTotalMoney);
+				},
+				footerTemplate: function(dataItem){
+					return percentToFixed(dataItem.requestedTotalMoney.sum);
+				}
 			},{
 				field : "eqcostBrand",
 				title : "品牌"
@@ -838,7 +887,7 @@ function initMergedGrid(){
 			sortable: true
 			
 		});
-	}
+//	}
 	}
 }
 

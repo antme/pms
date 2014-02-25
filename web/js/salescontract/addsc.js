@@ -318,8 +318,8 @@ $(document).ready(function() {
 			}, {
 				field : "eqcostAmount",
 				title : "数量",
-				groupFooterTemplate: "#= sum#", 
-				footerTemplate: "#=sum#"
+				groupFooterTemplate: "#= sum.toFixed(2)#", 
+				footerTemplate: "#=sum.toFixed(2)#"
 			}, {
 				field : "eqcostUnit",
 				title : "单位"

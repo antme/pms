@@ -110,7 +110,15 @@ var itemDataSource = new kendo.data.DataSource({
 			}
 		}
 	},
-	group: { field: "总数", aggregates: [{ field: "总数", aggregate: "count" }]},
+	group: { field: "总数", aggregates: [
+	                                   { field: "总数", aggregate: "count" },
+	                	               { field: "requestedTotalMoney", aggregate: "sum" }
+	                                   ]},
+	aggregate: [   { field: "eqcostMaterialCode", aggregate: "count" },
+	               { field: "requestedTotalMoney", aggregate: "sum" }
+	             	  
+        ],
+
 	batch : true,
 	schema : {
 		model : orderModel
@@ -282,13 +290,18 @@ function edit(data) {
 								title : "品牌"
 							}, {
 								field : "remark",
-								title : "备注"
+								title : "备注",
+								footerTemplate: "小计："
 							}, {
 								field : "requestedTotalMoney",
 								title : "采购总价",	
 								template : function(dataItem){
 									return percentToFixed(dataItem.requestedTotalMoney);
-								}
+								},
+								
+								footerTemplate: function(dataItem){
+									return percentToFixed(dataItem.requestedTotalMoney.sum);
+								}	
 							}],
 
 							editable : true,

@@ -385,7 +385,6 @@ public class ApiUtil {
         floatFields.add("estimateGrossProfit");
         
         
-        
         if (ApiUtil.isValid(data)) {
             for (String key : data.keySet()) {
 

@@ -485,8 +485,8 @@ $(document).ready(function() {
 			}, {
 				field : "eqcostAmount",
 				title : "数量",
-				groupFooterTemplate: "#= sum#", 
-				footerTemplate: "#=sum#"
+				groupFooterTemplate: "#= sum.toFixed(2)#", 
+				footerTemplate: "#=sum.toFixed(2)#"
 			}, {
 				field : "eqcostUnit",
 				title : "单位"
@@ -674,8 +674,8 @@ function edit(data){
 			}, {
 				field : "eqcostRealAmount",
 				title : "数量",
-				groupFooterTemplate: "#= sum#", 
-				footerTemplate: "#=sum#"
+				groupFooterTemplate: "#= sum.toFixed(2)#", 
+				footerTemplate: "#=sum.toFixed(2)#"
 			}, {
 				field : "eqcostUnit",
 				title : "单位"
@@ -702,8 +702,8 @@ function edit(data){
 				field : "eqcostTotalAmount",
 				title : "小计",
 //				format: "{0:c}",
-				groupFooterTemplate: "#= sum#", 
-				footerTemplate: "#=sum#",
+				groupFooterTemplate: "#= sum.toFixed(2)#", 
+				footerTemplate: "#=sum.toFixed(2)#",
 				template : function(dataItem){
 					return dataItem.eqcostTotalAmount.toFixed(2);
 				}
