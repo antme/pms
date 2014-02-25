@@ -53,6 +53,8 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> listPurchaseRequests(Map<String, Object> parameters);
     
+    public void mergeProjectInfo(Map<String, Object> params);
+    
     public Map<String, Object> updatePurchaseRequest(Map<String, Object> request);
 
 

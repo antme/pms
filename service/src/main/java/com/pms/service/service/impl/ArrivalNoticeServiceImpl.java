@@ -382,6 +382,9 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 //    	scs.
     	arriveNotice.put("eqcostList", scs.mergeEqListBasicInfo(eqcostList));
     	
+    	
+    	pService.mergeProjectInfo(arriveNotice);
+    	
     	return arriveNotice;
     }
 

@@ -174,6 +174,11 @@ function editArrivalNotice(data) {
 	if (data) {
 		requestDataItem = data;
 	}
+	
+	
+	if(data.projectManagerName){
+		data.projectManager = data.projectManagerName;
+	}
 
 	requestDataItem = new model(requestDataItem);
 
@@ -219,25 +224,10 @@ function editArrivalNotice(data) {
 										title : "成本单价"
 									},
 									{
-										field : "eqcostContractTotalMoney",
-										title : "合同总价"
-									},
-									{
-										field : "eqcostApplyAmount",
-										title : "本次采购数量"
-									},
-									{
 										field : "arrivedRequestCount",
 										title : "已到货"
 									},
-									{
-										field : "eqcostProductUnitPrice",
-										title : "采购单价"
-									},
-									{
-										field : "requestedTotalMoney",
-										title : "采购总价"
-									},
+									
 									{
 										field : "eqcostArrivalAmount",
 										title : "本次到货",
