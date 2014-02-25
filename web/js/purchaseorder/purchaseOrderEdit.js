@@ -145,7 +145,7 @@ function loadRequest(data){
 	requestDataItem._id="";
 	var eqcostList = requestDataItem.eqcostList;
 	for (listIndex in eqcostList) {
-		eqcostList[listIndex].eqcostProductUnitPrice = eqcostList[listIndex].eqcostBasePrice;
+		eqcostList[listIndex].eqcostProductUnitPrice = eqcostList[listIndex].eqcostLastBasePrice;
 	}
 	
 	edit();
