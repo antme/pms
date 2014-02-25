@@ -26,6 +26,7 @@ import com.pms.service.mockbean.InvoiceBean;
 import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
+import com.pms.service.mockbean.PurchaseOrder;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.UserBean;
@@ -1628,17 +1629,49 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, "CGDD-" + contractCode);
 		newObj.put(PurchaseRequest.SALES_COUNTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
 		newObj.put(PurchaseRequest.SALES_CONTRACT_CODE, contractCode);
-		newObj.put(PurchaseRequest.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));		
+		newObj.put(PurchaseRequest.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_CODE, request.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
-		
+
 		for (Map<String, Object> eqMap : eqList) {
 			eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT,
 			        ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
 		}
 
 		newObj.put(SalesContractBean.SC_EQ_LIST, eqList);
-		
+
 		Map<String, Object> order = purchaseContractService.updatePurchaseOrder(newObj);
+
+		request.put(PurchaseOrder.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));
+		request.put(PurchaseOrder.PURCHASE_REQUEST_CODE, request.get(PurchaseOrder.PURCHASE_REQUEST_CODE));
+		this.dao.updateById(request, DBBean.PURCHASE_REQUEST);
+		
+//		addPurchaseContract(contractCode, eqList, contract, order);
+
+	}
+	
+	
+	public void addPurchaseContract(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> order) {
+		Map<String, Object> newObj = new HashMap<String, Object>();
+		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_APPROVED);
+		newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, "CGDD-" + contractCode);
+		newObj.put(PurchaseRequest.SALES_COUNTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
+		newObj.put(PurchaseRequest.SALES_CONTRACT_CODE, contractCode);
+		newObj.put(PurchaseRequest.PURCHASE_REQUEST_ID, order.get(ApiConstants.MONGO_ID));
+		newObj.put(PurchaseRequest.PURCHASE_REQUEST_CODE, order.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
+
+		for (Map<String, Object> eqMap : eqList) {
+			eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT,
+			        ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+		}
+
+		newObj.put(SalesContractBean.SC_EQ_LIST, eqList);
+
+		Map<String, Object> purchaseContract = purchaseContractService.updatePurchaseOrder(newObj);
+
+		order.put(PurchaseOrder.PURCHASE_REQUEST_ID, order.get(ApiConstants.MONGO_ID));
+		order.put(PurchaseOrder.PURCHASE_REQUEST_CODE, order.get(PurchaseOrder.PURCHASE_REQUEST_CODE));
+		this.dao.updateById(order, DBBean.PURCHASE_ORDER);
+
 	}
 
 	@Override

@@ -671,7 +671,7 @@ function edit(data) {
 				title : "订单数量"
 			}, {
 				field : "eqcostProductUnitPrice",
-				title : "成本单价"
+				title : "采购单价"
 			}, {
 				field : "requestedTotalMoney",
 				title : "总价"
@@ -824,7 +824,7 @@ function initMergedGrid(){
 				title : "单位"
 			}, {
 				field : "eqcostProductUnitPrice",
-				title : "单价"
+				title : "采购单价"
 			}, {
 				field : "eqcostApplyAmount",
 				title : "申请总数"
