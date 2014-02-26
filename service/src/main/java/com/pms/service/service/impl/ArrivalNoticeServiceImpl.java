@@ -257,7 +257,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
         
         noticeParams.put(PurchaseContract.EQCOST_DELIVERY_TYPE, deliveryType);
         noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, arriveryType);
-		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, order.get(PurchaseBack.pbPlanDate));
 		
 		// 到货设备清单
 		List<Map<String, Object>> eqList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
@@ -302,7 +302,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, allot.get(PurchaseBack.paCode));
 		noticeParams.put(SalesContractBean.SC_ID, allot.get(PurchaseBack.scId));
 		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, allot.get(PurchaseBack.paShelfCode));
-		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, allot.get(PurchaseBack.pbPlanDate));
 		
 		// 到货设备清单
 		List<Map<String, Object>> eqList = (List<Map<String, Object>>) allot.get(SalesContractBean.SC_EQ_LIST);
@@ -382,6 +382,11 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 //    	scs.
     	arriveNotice.put("eqcostList", scs.mergeEqListBasicInfo(eqcostList));
     	
+//    	Map<String, Object> orderMap = new HashMap<String, Object>();
+//    	orderMap.put(ArrivalNoticeBean.FOREIGN_CODE, value)
+//    	
+//    	Map<String, Object> order = pService.getPurchaseOrder(arriveNotice);
+
     	
     	pService.mergeProjectInfo(arriveNotice);
     	

@@ -78,13 +78,15 @@ var eqCostListDataSource = new kendo.data.DataSource({
 		field:"eqcostCategory",
 		aggregates: [
                      { field: "eqcostCategory", aggregate: "count" },
-                     { field: "requestedTotalMoney", aggregate: "sum" }
+                     { field: "requestedTotalMoney", aggregate: "sum" },
+                     { field: "eqcostTotalMoney", aggregate: "sum" }
                   ]
 	},
 	
 	aggregate: [ 	          
 	          { field: "eqcostCategory", aggregate: "count" },
-	          { field: "requestedTotalMoney", aggregate: "sum" }
+	          { field: "requestedTotalMoney", aggregate: "sum" },
+	          { field: "eqcostTotalMoney", aggregate: "sum" }
 	],
 
 	
@@ -466,13 +468,15 @@ var itemDataSource = new kendo.data.DataSource({
 		field:"purchaseOrderCode",
 		aggregates: [
                      { field: "eqcostCategory", aggregate: "count" },
-                     { field: "requestedTotalMoney", aggregate: "sum" }
+                     { field: "requestedTotalMoney", aggregate: "sum" },
+                     { field: "eqcostTotalMoney", aggregate: "sum" }
                   ]
 	},
 	
 	aggregate: [ 	          
 	          { field: "eqcostCategory", aggregate: "count" },
-	          { field: "requestedTotalMoney", aggregate: "sum" }
+	          { field: "requestedTotalMoney", aggregate: "sum" },
+	          { field: "eqcostTotalMoney", aggregate: "sum" }
 	]
 });
 
@@ -663,8 +667,15 @@ function edit(data) {
 		
 	}else{
 		
+		
+	for (i in requestDataItem.eqcostList) {
+		requestDataItem.eqcostList[i].eqcostTotalMoney = requestDataItem.eqcostList[i].eqcostApplyAmount *  requestDataItem.eqcostList[i].eqcostLastBasePrice;
+	}
+		
 	// 渲染成本编辑列表
 	itemDataSource.data(requestDataItem.eqcostList);
+	
+
 
 
 	$("#purchasecontract-edit-item").show();
@@ -692,19 +703,30 @@ function edit(data) {
 				field : "eqcostUnit",
 				title : "单位"
 			}, 					
-			{ field: "eqcostLastBasePrice",title : "最终成本价"},
+			
 			{
 				field : "eqcostApplyAmount",
 				title : "订单数量"
-			}, {
+			}, 
+			{ field: "eqcostLastBasePrice",title : "最终成本价"},
+			{
 				field : "eqcostProductUnitPrice",
 				title : "采购单价",
 				template : function(dataItem){
 					return percentToFixed(dataItem.eqcostProductUnitPrice);
 				}
+			},{
+				field : "eqcostTotalMoney",
+				title : "最终成本总价",
+				template : function(dataItem){
+					return percentToFixed(dataItem.eqcostTotalMoney);
+				},
+				footerTemplate: function(dataItem){
+					return percentToFixed(dataItem.eqcostTotalMoney.sum);
+				}
 			}, {
 				field : "requestedTotalMoney",
-				title : "总价",
+				title : "采购总价",
 				template : function(dataItem){
 					return percentToFixed(dataItem.requestedTotalMoney);
 				},
@@ -751,6 +773,20 @@ function edit(data) {
 						item.requestedTotalMoney = 0;
 					}
 					
+					if (!item.eqcostTotalMoney) {
+						item.eqcostTotalMoney = 0;
+					}
+					
+					if (!item.eqcostLastBasePrice) {
+						item.eqcostLastBasePrice = 0;
+					}
+					
+					
+					var eqcostTotalMoney = item.eqcostTotalMoney;
+					
+					item.eqcostTotalMoney =  item.eqcostApplyAmount * item.eqcostLastBasePrice;
+
+					
 					var requestedTotalMoney = item.requestedTotalMoney;
 					requestActureMoney = requestActureMoney
 							+ item.eqcostApplyAmount
@@ -762,10 +798,15 @@ function edit(data) {
 					if ( requestedTotalMoney != item.requestedTotalMoney) {
 						refresh = true;
 					}
+					
+					if ( eqcostTotalMoney != item.eqcostTotalMoney) {
+						refresh = true;
+					}
 				}
 
 				if (refresh) {
 					var grid1 = $("#purchasecontract-edit-grid").data("kendoGrid");
+					
 					grid1.refresh();
 				}else{
 
@@ -785,7 +826,8 @@ var mergedDataSource = new kendo.data.DataSource({
 	   data : [],
 	   aggregate: [ 	          
 		          { field: "eqcostCategory", aggregate: "count" },
-		          { field: "requestedTotalMoney", aggregate: "sum" }
+		          { field: "requestedTotalMoney", aggregate: "sum" },
+		          { field: "eqcostTotalMoney", aggregate: "sum" }
 		]
 });
 
@@ -819,6 +861,7 @@ function initMergedGrid(){
 		if(!find){
 			data[i].eqcostApplyAmount=0;
 			data[i].requestedTotalMoney=0;
+			data[i].eqcostTotalMoney=0;
 			mergedDataSource.add(data[i]);
 		}
 	}
@@ -836,6 +879,7 @@ function initMergedGrid(){
 			{			
 				mdata[j].eqcostApplyAmount = mdata[j].eqcostApplyAmount + sumData[i].eqcostApplyAmount;
 				mdata[j].requestedTotalMoney = mdata[j].requestedTotalMoney + sumData[i].requestedTotalMoney;
+				mdata[j].eqcostTotalMoney = mdata[j].eqcostTotalMoney + sumData[i].eqcostTotalMoney;
 			}
 		}
 
@@ -913,7 +957,12 @@ function sumOrders(e) {
 	var grid1 = $("#purchasecontract-edit-grid").data("kendoGrid");
 	// will trigger dataBound event
 	e.model.set("requestedTotalMoney", eqcostProductUnitPrice * eqcostApplyAmount);
+	
+	
+	var eqcostLastBasePrice = e.model.eqcostLastBasePrice;
+	e.model.set("eqcostTotalMoney", eqcostLastBasePrice * eqcostApplyAmount);
 
+	console.log(e.model);
 	grid1.refresh();
 
 }
