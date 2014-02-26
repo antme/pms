@@ -222,7 +222,6 @@ $(document).ready(function() {
 			},
 	        { field: "eqcostShipAmount", title: "发货数" , attributes: { "style": "color:red"}},
 	        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}},
-	        { field: "actureAmount", title: "实际发货数" , attributes: { "style": "color:red"}},
 	       
 			 {
 				field : "eqcostDeliveryType",

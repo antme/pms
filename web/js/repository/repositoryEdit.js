@@ -2,7 +2,7 @@
 var listProjectUrl = "/service/purcontract/repository/contract/list";
 var updateUrl = "/service/purcontract/repository/update?type=in";
 var createUrl = "/service/purcontract/repository/add?type=in";
-var listEqUrl = "/service/purcontract/get/byproject_supplier?type=in";
+var listEqUrl = "/service/purcontract/get/countract_order?type=in";
 var loadUrl = "/service/purcontract/repository/get?type=in";
 var eqcostApplyAmountLabel = "入库数量";
 var leftCountLabel = "可入库数量";
@@ -152,18 +152,16 @@ $(document).ready(function() {
 
 
 	$("#purchasecontractselect").kendoDropDownList({
-			dataTextField : "projectName",
+			dataTextField : "purchaseContractCode",
 			dataValueField : "_id",
-			placeholder : "选择项目...",
+			placeholder : "选择采购合同...",
 			dataSource : projectDataSource,
 			change : function(e) {
 				updateSupplier();
-				requestDataItem.projectName = this.dataItem().projectName;
-				requestDataItem.projectCode = this.dataItem().projectCode;
+				requestDataItem.purchaseContractCode = this.dataItem().purchaseContractCode;
 			},
 			dataBound : function(e){	
-				requestDataItem.projectName = this.dataItem().projectName;
-				requestDataItem.projectCode = this.dataItem().projectCode;
+				requestDataItem.purchaseContractCode = this.dataItem().purchaseContractCode;
 				updateSupplier();
 			}
 		});
@@ -225,25 +223,25 @@ $(document).ready(function() {
 
 
 function updateSupplier(){
-	var supplier = undefined;
+	var orders = undefined;
 	var data = projectDataSource.data();
 	for(i=0; i<data.length; i++){
 		if(data[i]._id == $("#purchasecontractselect").data("kendoDropDownList").value()){
-			supplier = data[i].suppliers;
+			orders = data[i].orders;
 			break;
 		}
 	}
 	$("#supplierName").kendoDropDownList({
-		dataTextField : "supplierName",
+		dataTextField : "purchaseOrderCode",
 		dataValueField : "_id",
 		dataSource :{
-			data : supplier			
+			data : orders			
 		},
 		change : function(e) {
-			requestDataItem.supplierName = this.dataItem().supplierName;
+			requestDataItem.purchaseOrderCode = this.dataItem().purchaseOrderCode;
 		},
 		dataBound : function(e){	
-			requestDataItem.supplierName = this.dataItem().supplierName;
+			requestDataItem.purchaseOrderCode = this.dataItem().purchaseOrderCode;
 		}
 
 	});
@@ -392,7 +390,7 @@ function selectContracts() {
 	 projectId = $("#purchasecontractselect").data("kendoDropDownList").value();
 	 supplierId = $("#supplierName").data("kendoDropDownList").value();
 	
-	var param = {"projectId": projectId, "supplier" : supplierId};
+	var param = {"purchaseContractId": projectId, "purchaseOrderCode" : supplierId};
 	
 	postAjaxRequest(listEqUrl, param, loadContracts);
 }

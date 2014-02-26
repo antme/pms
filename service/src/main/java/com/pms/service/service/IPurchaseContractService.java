@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IPurchaseContractService {
 
@@ -14,8 +15,14 @@ public interface IPurchaseContractService {
     public Map<String, Object> listPurchaseContracts(Map<String, Object> parameters);
     
     public Map<String, Object> listProjectsAndSuppliersFromContractsForRepositorySelect(Map<String, Object> parameters);
+    
+    public  Map<String, Object>  listContractsForRepositorySelect(Map<String, Object> parameters);
+
             
     public Map<String, Object> listEqListByProjectAndSupplierForRepository(Map<String, Object> params);
+    
+    public Map<String, Object> listContractsByContractAndOrder(Map<String, Object> params);
+
     
     public Map<String, Object> listSalesContractsForShipSelect(Map<String, Object> params);  
         
