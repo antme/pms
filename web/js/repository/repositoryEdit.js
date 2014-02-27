@@ -8,6 +8,7 @@ var eqcostApplyAmountLabel = "入库数量";
 var leftCountLabel = "可入库数量";
 
 
+
 var commonFileds = {
 		eqcostAvailableAmount : {
 			type : "number"
@@ -159,9 +160,16 @@ $(document).ready(function() {
 			change : function(e) {
 				updateSupplier();
 				requestDataItem.purchaseContractCode = this.dataItem().purchaseContractCode;
+				requestDataItem.purchaseContractId = this.dataItem()._id;
+				requestDataItem.supplierId = this.dataItem().supplier;
+				requestDataItem.supplierName = this.dataItem().supplierName;
 			},
 			dataBound : function(e){	
 				requestDataItem.purchaseContractCode = this.dataItem().purchaseContractCode;
+				requestDataItem.purchaseContractId = this.dataItem()._id;
+				requestDataItem.supplierId = this.dataItem().supplier;
+				requestDataItem.supplierName = this.dataItem().supplierName;
+				
 				updateSupplier();
 			}
 		});
@@ -238,9 +246,23 @@ function updateSupplier(){
 			data : orders			
 		},
 		change : function(e) {
+			requestDataItem.projectId = this.dataItem().projectId;
+			requestDataItem.projectCode = this.dataItem().projectCode;
+			requestDataItem.projectName = this.dataItem().projectName;
+
+			requestDataItem.purchaseOrderId = this.dataItem().purchaseOrderId;
+			requestDataItem.salesContractId = this.dataItem().salesContractId;
+			requestDataItem.salesContractCode = this.dataItem().salesContractCode;
 			requestDataItem.purchaseOrderCode = this.dataItem().purchaseOrderCode;
 		},
 		dataBound : function(e){	
+			requestDataItem.projectId = this.dataItem().projectId;
+			requestDataItem.projectCode = this.dataItem().projectCode;
+			requestDataItem.projectName = this.dataItem().projectName;
+
+			requestDataItem.purchaseOrderId = this.dataItem().purchaseOrderId;
+			requestDataItem.salesContractId = this.dataItem().salesContractId;
+			requestDataItem.salesContractCode = this.dataItem().salesContractCode;
 			requestDataItem.purchaseOrderCode = this.dataItem().purchaseOrderCode;
 		}
 
@@ -342,7 +364,7 @@ function saveRepos(status) {
 		if(requestDataItem.operator && requestDataItem.operator._id){
 			requestDataItem.operator = requestDataItem.operator._id;
 		}
-		
+
 	
 		// 同步数据
 		itemDataSource.sync();
@@ -408,26 +430,31 @@ function editRepository(data) {
 	var dataItem = new model();
 	if(data){
 		$("#purchaserepository-div").hide();
-		requestDataItem = data;
-	    
+//		if(data.eqcostList){
+//			requestDataItem.eqcostList = data.eqcostList;
+//		}
+		requestDataItem = new model(data);
 	}else{
 		requestDataItem.inType="采购入库";
 		requestDataItem.operatorName = user.userName;
 		requestDataItem.operatorId = user.userName;
 		$("#purchaserepository-div").show();
 	}
-	var eqList = requestDataItem.eqcostList;
-	if(requestDataItem.status == "已提交"){
-		for(i=0; i<eqList.length; i++){
-			eqList[i].leftCount = eqList[i].leftCount + eqList[i].eqcostApplyAmount;
-			
+
+	
+	if(requestDataItem.eqcostList){
+		var eqList = requestDataItem.eqcostList;
+		if(requestDataItem.status == "已提交"){
+			for(i=0; i<eqList.length; i++){
+				eqList[i].leftCount = eqList[i].leftCount + eqList[i].eqcostApplyAmount;
+				
+			}
 		}
 	}
 	if (requestDataItem) {
 		requestDataItem = new model(requestDataItem);
-
 	}
-	
+//	requestDataItem.eqcostList = eqList;
 //	requestDataItem.inDate = "10/10/2013";
 	requestDataItem.set("inDate", kendo.toString(requestDataItem.inDate, 'd'));
 	requestDataItem.set("outDate", kendo.toString(requestDataItem.outDate, 'd'));

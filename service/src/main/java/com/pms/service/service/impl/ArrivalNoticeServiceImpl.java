@@ -240,19 +240,23 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		noticeParams.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, order.get(ApiConstants.MONGO_ID));
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
-		noticeParams.put(SalesContractBean.SC_ID, order.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
+		noticeParams.put(SalesContractBean.SC_ID, order.get(PurchaseCommonBean.SALES_CONTRACT_ID));
 		
 		Object deliveryType = order.get(PurchaseContract.EQCOST_DELIVERY_TYPE);
         Object contractType = order.get(PurchaseContract.PURCHASE_CONTRACT_TYPE);
         
         String arriveryType = deliveryType.toString();
         
-        if (deliveryType != null && deliveryType.toString().equalsIgnoreCase(PurchaseContract.EQCOST_DELIVERY_TYPE_REPOSITORY)) {
-            if (contractType != null && contractType.toString().equalsIgnoreCase(PurchaseContract.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
-                arriveryType = ArrivalNoticeBean.SHIP_TYPE_3;
-            } else {
-                arriveryType = ArrivalNoticeBean.SHIP_TYPE_2;
-            }
+        if(ApiUtil.isValid(params.get("storeHouse"))){
+        	arriveryType = params.get("storeHouse").toString();
+        }else{
+	        if (deliveryType != null && deliveryType.toString().equalsIgnoreCase(PurchaseContract.EQCOST_DELIVERY_TYPE_REPOSITORY)) {
+	            if (contractType != null && contractType.toString().equalsIgnoreCase(PurchaseContract.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
+	                arriveryType = ArrivalNoticeBean.SHIP_TYPE_3;
+	            } else {
+	                arriveryType = ArrivalNoticeBean.SHIP_TYPE_2;
+	            }
+	        }
         }
         
         noticeParams.put(PurchaseContract.EQCOST_DELIVERY_TYPE, deliveryType);

@@ -196,6 +196,16 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 						Map<String, Object> order = new HashMap<String, Object>();
 						order.put(PurchaseOrder.PURCHASE_ORDER_CODE, projectId);
 						order.put(PurchaseOrder.PURCHASE_ORDER_ID, p.get(PurchaseOrder.PURCHASE_ORDER_ID));
+						
+						Map<String, Object> orderEntity = this.dao.findOne(ApiConstants.MONGO_ID,  p.get(PurchaseOrder.PURCHASE_ORDER_ID), DBBean.PURCHASE_ORDER);
+						
+						order.put(PurchaseOrder.PROJECT_ID, orderEntity.get(PurchaseOrder.PROJECT_ID));
+						order.put(ProjectBean.PROJECT_CODE, orderEntity.get(ProjectBean.PROJECT_CODE));
+						order.put(PurchaseOrder.SALES_CONTRACT_ID, orderEntity.get(PurchaseOrder.SALES_CONTRACT_ID));
+						order.put(PurchaseOrder.SALES_CONTRACT_CODE, orderEntity.get(PurchaseOrder.SALES_CONTRACT_CODE));
+						order.put(ProjectBean.PROJECT_NAME, orderEntity.get(ProjectBean.PROJECT_NAME));
+						
+						scs.mergeCommonProjectInfo(order, orderEntity.get(PurchaseOrder.PROJECT_ID));
 						projectIds.add(order);
 						orderIds.add(projectId);
 					}
@@ -425,17 +435,19 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             if (!eqIds.contains(id.toString())) {
                 
                 if (repostoryTotalCountMap.get(id) != null && totalCountMap.get(id)!=null) {
-                    eqMap.put("leftCount", totalCountMap.get(id) - repostoryTotalCountMap.get(id));
+                	int leftCount =  totalCountMap.get(id) - repostoryTotalCountMap.get(id);
+                    eqMap.put("leftCount", leftCount);
                     if(!loadExists){
-                        eqMap.put("eqcostApplyAmount", totalCountMap.get(id) - repostoryTotalCountMap.get(id));
+                        eqMap.put("eqcostApplyAmount", leftCount);
                     }
                 } else {
                     if(totalCountMap.get(id) == null){
                         totalCountMap.put(id.toString(), 0);
                     }
-                    eqMap.put("leftCount", totalCountMap.get(id));
+                    int leftCount = totalCountMap.get(id);
+                    eqMap.put("leftCount", leftCount);
                     if(!loadExists){
-                        eqMap.put("eqcostApplyAmount", totalCountMap.get(id));
+                        eqMap.put("eqcostApplyAmount", leftCount);
                     }
                 }
                 mergedEqList.add(eqMap);
@@ -675,7 +687,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             for (Map<String, Object> contractEq : list) {
                 Object pId = contractEq.get(PurchaseCommonBean.PROJECT_ID);
                 if (ApiUtil.isEmpty(pId)) {
-                    Object scId = contractEq.get(PurchaseCommonBean.SALES_COUNTRACT_ID);
+                    Object scId = contractEq.get(PurchaseCommonBean.SALES_CONTRACT_ID);
 
                     if (ApiUtil.isEmpty(scId)) {
                         // 取父参数的项目id和销售合同id
@@ -696,7 +708,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                             Map<String, Object> sc = dao.findOneByQuery(scQuery, DBBean.SALES_CONTRACT);
                             Object projectId = sc.get(SalesContractBean.SC_PROJECT_ID);
                             contractEq.put(PurchaseCommonBean.PROJECT_ID, projectId);
-                            contractEq.put(PurchaseCommonBean.SALES_COUNTRACT_ID, scId);
+                            contractEq.put(PurchaseCommonBean.SALES_CONTRACT_ID, scId);
                             scProjectMap.put(scId.toString(), projectId);
                         }
                     }
@@ -1352,8 +1364,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         if (parameters.get(PurchaseCommonBean.PROCESS_STATUS) == null) {
             parameters.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseRequest.STATUS_DRAFT);
         }
-        if (parameters.get(PurchaseCommonBean.SALES_COUNTRACT_ID) != null) {
-            scs.mergeCommonFieldsFromSc(parameters, parameters.get(PurchaseCommonBean.SALES_COUNTRACT_ID));
+        if (parameters.get(PurchaseCommonBean.SALES_CONTRACT_ID) != null) {
+            scs.mergeCommonFieldsFromSc(parameters, parameters.get(PurchaseCommonBean.SALES_CONTRACT_ID));
         }
         if (ApiUtil.isEmpty(parameters.get("requestedDate")) && parameters.get(PurchaseCommonBean.PROCESS_STATUS) != null
                 && parameters.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_NEW)) {
@@ -1473,7 +1485,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         if (params.get("type") != null && params.get("type").toString().equalsIgnoreCase("in")) {
             //入库仓库
             result = processRequest(params, db, PurchaseRequest.STATUS_IN_REPOSITORY);                       
-            Map<String, Object> repo = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST },
+            Map<String, Object> repo = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST, "storeHouse" },
             		db);                        
             createArriveNotice(repo);                        
         } else {
@@ -1570,6 +1582,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             Map<String, Object> arriveMap = new HashMap<String, Object>();
             arriveMap.put(ApiConstants.MONGO_ID, orderId);
             arriveMap.put(ArrivalNoticeBean.EQ_LIST, eqOrderListMap.get(orderId));
+            arriveMap.put("storeHouse", repo.get("storeHouse"));
             arriveService.createByOrder(arriveMap);
         }
     }

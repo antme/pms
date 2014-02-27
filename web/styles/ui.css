@@ -1,5 +1,6 @@
 body {
 	/* background-color: #f6f6f6; */
+	margin:0px;
 }
 .input_required_star {
 	margin-left: 5px;
@@ -131,7 +132,7 @@ body {
 }
 
 .left {
-	width: 200px;
+	width: 135px;
 	float: left;
 	background: rgb(190, 192, 179);
 	min-height: 800px;

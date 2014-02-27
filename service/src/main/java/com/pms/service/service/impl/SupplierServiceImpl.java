@@ -91,7 +91,7 @@ public class SupplierServiceImpl extends AbstractService implements ISupplierSer
             for (String mergeKey : mergeKeys) {
                 if (supplier != null) {
                     Map<String, Object> s = (Map<String, Object>) supplier;
-                    data.put(mergeKey, mergeKey);
+                    data.put(mergeKey, s.get(mergeKey));
                 } else {
                     data.put(mergeKey, "");
                 }

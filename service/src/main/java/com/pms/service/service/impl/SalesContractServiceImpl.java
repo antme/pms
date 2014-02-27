@@ -1604,7 +1604,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> newObj = new HashMap<String, Object>();
 		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_APPROVED);
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_CODE, "CGSQ-" + contractCode);
-		newObj.put(PurchaseRequest.SALES_COUNTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
+		newObj.put(PurchaseRequest.SALES_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
 		newObj.put(PurchaseRequest.SALES_CONTRACT_CODE, contractCode);
 		newObj.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));		
 		newObj.put(PurchaseRequest.BACK_REQUEST_CODE, back.get(PurchaseBack.pbCode));
@@ -1627,7 +1627,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> newObj = new HashMap<String, Object>();
 		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_APPROVED);
 		newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, "CGDD-" + contractCode);
-		newObj.put(PurchaseRequest.SALES_COUNTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
+		newObj.put(PurchaseRequest.SALES_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
 		newObj.put(PurchaseRequest.SALES_CONTRACT_CODE, contractCode);
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_CODE, request.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
@@ -1654,7 +1654,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> newObj = new HashMap<String, Object>();
 		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_APPROVED);
 		newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, "CGDD-" + contractCode);
-		newObj.put(PurchaseRequest.SALES_COUNTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
+		newObj.put(PurchaseRequest.SALES_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
 		newObj.put(PurchaseRequest.SALES_CONTRACT_CODE, contractCode);
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_ID, order.get(ApiConstants.MONGO_ID));
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_CODE, order.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
