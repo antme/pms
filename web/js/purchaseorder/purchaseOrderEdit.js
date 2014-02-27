@@ -266,13 +266,6 @@ function edit(data) {
 								template : function(dataItem){
 									return percentToFixed(dataItem.eqcostLastBasePrice);
 								}
-							},
-							{
-								field : "eqcostContractTotalMoney",
-								title : "合同总价",	
-								template : function(dataItem){
-									return percentToFixed(dataItem.eqcostContractTotalMoney);
-								}
 							}, {
 								field : "eqcostApplyAmount",
 								title : "采购数量",
@@ -386,8 +379,11 @@ function edit(data) {
 									eqcostContractTotalMoney = eqcostContractTotalMoney
 											+ item.eqcostRealAmount
 											* item.eqcostBasePrice;
+									
+									
 									item.eqcostContractTotalMoney = item.eqcostRealAmount
 											* item.eqcostBasePrice;
+									
 
 
 									if ( requestedTotalMoney != item.requestedTotalMoney) {

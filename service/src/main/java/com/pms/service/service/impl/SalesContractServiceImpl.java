@@ -1498,6 +1498,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 						remainCount = ApiUtil.getInteger(row[24]);
 					}
 					
+					if(remainCount < 0){
+						logger.error(contractCode+ "中有成本清单可申请数小于0");
+						remainCount = 0;
+					}
 					eq.put(EqCostListBean.EQ_LIST_REST_COUNT, remainCount);
 					
 
