@@ -13,7 +13,7 @@ public class PurchaseContract extends PurchaseCommonBean {
     }
     public static final String EQCOST_DELIVERY_TYPE =  "eqcostDeliveryType";
 
-    public static final String SUPPLIER = "supplier";
+    public static final String SUPPLIER_ID = "supplierId";
         
     public static final String PURCHASE_CONTRACT_TYPE = "purchaseContractType";
 

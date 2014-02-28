@@ -273,7 +273,7 @@ function changeCType(index){
 		var spData = kendoSupp.dataSource.data();
 		for(i=0; i<spData.length; i++){
 			if(spData[i].supplierName =="同方北京"){
-				requestDataItem.set("supplier", spData[i]._id);
+				requestDataItem.set("supplierId", spData[i]._id);
 				break;
 			}
 		}
@@ -518,7 +518,7 @@ function savePurchaseContract(status) {
 			}
 
 			if(requestDataItem.supplier && requestDataItem.supplier._id){
-				requestDataItem.supplier = requestDataItem.supplier._id;
+				requestDataItem.supplierId = requestDataItem.supplier._id;
 			}
 			
 			if(!requestDataItem.contractExecuteCate){

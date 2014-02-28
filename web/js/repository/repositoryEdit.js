@@ -358,7 +358,7 @@ function saveRepos(status) {
 		}
 		
 		if(supplierId){
-			requestDataItem.supplier = supplierId;	
+			requestDataItem.supplierId = supplierId;	
 		}
 		
 		if(requestDataItem.operator && requestDataItem.operator._id){
@@ -382,7 +382,7 @@ function confirmRepository(){
 			requestDataItem.projectId = projectId;		
 		}
 		if(supplierId){
-			requestDataItem.supplier = supplierId;	
+			requestDataItem.supplierId = supplierId;	
 		}
 		postAjaxRequest("/service/purcontract/repository/confirm?type=in", {models:kendo.stringify(requestDataItem)}, checkStatus);
 	}

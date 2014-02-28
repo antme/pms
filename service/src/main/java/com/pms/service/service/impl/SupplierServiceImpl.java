@@ -22,7 +22,7 @@ public class SupplierServiceImpl extends AbstractService implements ISupplierSer
 
     @Override
 	public String geValidatorFileName() {
-		return "supplier";
+		return "supplierId";
 	}
 
 	public Map<String, Object> list(Map<String, Object> params) {

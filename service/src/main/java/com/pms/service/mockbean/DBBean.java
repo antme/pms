@@ -19,7 +19,7 @@ public class DBBean {
     public static final String SC_YEAR_SHIPMENTS = "scYearShipments"; //销售合同中的 按年发货金额 独立表
     public static final String CUSTOMER = "customer";
     
-    public static final String SUPPLIER = "supplier";
+    public static final String SUPPLIER = "supplierId";
  
     public static final String PURCHASE_REQUEST = "purchaseRequest";
     
