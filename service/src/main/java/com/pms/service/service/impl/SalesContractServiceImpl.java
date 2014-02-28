@@ -76,8 +76,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		// "status"};
 		// params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 
-		mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_CUSTOMER, CustomerBean.NAME, DBBean.CUSTOMER);
-		mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_MANAGER, UserBean.USER_NAME, DBBean.USER);
+		mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_CUSTOMER_ID, CustomerBean.NAME, DBBean.CUSTOMER);
+		mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME, DBBean.USER);
 		mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
 		mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
 
@@ -151,7 +151,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		projectInfo.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
 		projectInfo.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
-		projectInfo.put(ProjectBean.PROJECT_MANAGER, params.get(ProjectBean.PROJECT_MANAGER));
+		projectInfo.put(ProjectBean.PROJECT_MANAGER_ID, params.get(ProjectBean.PROJECT_MANAGER_ID));
 		projectInfo.put(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME));
 		projectInfo.put(ProjectBean.PROJECT_STATUS, params.get(ProjectBean.PROJECT_STATUS));
 		projectInfo.put(ProjectBean.PROJECT_TYPE, params.get(ProjectBean.PROJECT_TYPE));
@@ -214,7 +214,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					// 更新关联项目customer(新的需求，添加 SC时 选择客户)
 					Map<String, Object> updateProjectCustomer = new HashMap<String, Object>();
 					updateProjectCustomer.put(ApiConstants.MONGO_ID, projectId);
-					updateProjectCustomer.put(ProjectBean.PROJECT_CUSTOMER, params.get(SalesContractBean.SC_CUSTOMER));
+					updateProjectCustomer.put(ProjectBean.PROJECT_CUSTOMER_ID, params.get(SalesContractBean.SC_CUSTOMER));
 					dao.updateById(updateProjectCustomer, DBBean.PROJECT);
 				}
 
@@ -284,7 +284,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			// 单独更新关联项目中 冗余存的 customer (因为项目中没有外键关联到 SC ， 所以要单独更新处理)
 			Map<String, Object> pCustomerUpdate = new HashMap<String, Object>();
 			pCustomerUpdate.put(ApiConstants.MONGO_ID, projectId);
-			pCustomerUpdate.put(ProjectBean.PROJECT_CUSTOMER, customerNew);
+			pCustomerUpdate.put(ProjectBean.PROJECT_CUSTOMER_ID, customerNew);
 			dao.updateById(pCustomerUpdate, DBBean.PROJECT);
 
 			// 销售合同关联项目是否更新 (新的逻辑，销售合同关联项目不允许修改 2013/07/09)
@@ -306,32 +306,32 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			 * //销售合同 关联项目改变同时相关collection中冗余存放的 ： 项目PM,项目Type等也要更新 Map<String,
 			 * Object> newProMap = dao.findOne(ApiConstants.MONGO_ID,
 			 * scProjectIdNew, DBBean.PROJECT); String pCustomer = (String)
-			 * newProMap.get(ProjectBean.PROJECT_CUSTOMER); String pPM =
-			 * (String) newProMap.get(ProjectBean.PROJECT_MANAGER); String pType
+			 * newProMap.get(ProjectBean.PROJECT_CUSTOMER_ID); String pPM =
+			 * (String) newProMap.get(ProjectBean.PROJECT_MANAGER_ID); String pType
 			 * = (String) newProMap.get(ProjectBean.PROJECT_TYPE); // String[]
 			 * pCustomerCollections = {};//外键关联到 SC 又冗余存 项目Customer String[]
 			 * pPMCollections = {}; //外键关联到 SC 又冗余存 项目 PM String[]
 			 * pTypeCollections = {}; //外键关联到 SC 又冗余存 项目 Type
 			 * 
 			 * // updateRelatedCollectionForTheSameField(pCustomerCollections,
-			 * relatedCQuery, ProjectBean.PROJECT_CUSTOMER, pCustomer);
+			 * relatedCQuery, ProjectBean.PROJECT_CUSTOMER_ID, pCustomer);
 			 * updateRelatedCollectionForTheSameField(pPMCollections,
-			 * relatedCQuery, ProjectBean.PROJECT_MANAGER, pPM);
+			 * relatedCQuery, ProjectBean.PROJECT_MANAGER_ID, pPM);
 			 * updateRelatedCollectionForTheSameField(pTypeCollections,
 			 * relatedCQuery, ProjectBean.PROJECT_TYPE, pType);
 			 * 
-			 * //更新SC 自己的冗余项目字段 // contract.put(ProjectBean.PROJECT_CUSTOMER,
-			 * pCustomer); contract.put(ProjectBean.PROJECT_MANAGER, pPM);
+			 * //更新SC 自己的冗余项目字段 // contract.put(ProjectBean.PROJECT_CUSTOMER_ID,
+			 * pCustomer); contract.put(ProjectBean.PROJECT_MANAGER_ID, pPM);
 			 * contract.put(ProjectBean.PROJECT_TYPE, pType);
 			 * 
 			 * //更新scProjectIdOld 和 scProjectIdNew 的customer Map<String, Object>
 			 * scProjectIdOldUpdate = new HashMap<String, Object>();
 			 * scProjectIdOldUpdate.put(ApiConstants.MONGO_ID, scProjectIdOld);
-			 * scProjectIdOldUpdate.put(ProjectBean.PROJECT_CUSTOMER, null);
+			 * scProjectIdOldUpdate.put(ProjectBean.PROJECT_CUSTOMER_ID, null);
 			 * dao.updateById(scProjectIdOldUpdate, DBBean.PROJECT); Map<String,
 			 * Object> scProjectIdNewUpdate = new HashMap<String, Object>();
 			 * scProjectIdNewUpdate.put(ApiConstants.MONGO_ID, scProjectIdNew);
-			 * scProjectIdNewUpdate.put(ProjectBean.PROJECT_CUSTOMER,
+			 * scProjectIdNewUpdate.put(ProjectBean.PROJECT_CUSTOMER_ID,
 			 * params.get(SalesContractBean.SC_CUSTOMER));
 			 * dao.updateById(scProjectIdNewUpdate, DBBean.PROJECT); }
 			 */
@@ -503,7 +503,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		// 项目经理只能选择属于自己的销售合同
 		if (isPM()) {
-			query.put(ProjectBean.PROJECT_MANAGER, ApiThreadLocal.getCurrentUserId());
+			query.put(ProjectBean.PROJECT_MANAGER_ID, ApiThreadLocal.getCurrentUserId());
 		}
 
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
@@ -537,7 +537,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		// 项目经理只能选择属于自己的销售合同
 		if (isPM()) {
-			query.put(ProjectBean.PROJECT_MANAGER, ApiThreadLocal.getCurrentUserId());
+			query.put(ProjectBean.PROJECT_MANAGER_ID, ApiThreadLocal.getCurrentUserId());
 		}
 
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
@@ -646,16 +646,16 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		Map<String, Object> queryProject = new HashMap<String, Object>();
 		queryProject.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pIdList));
-		queryProject.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_CODE });
+		queryProject.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_CODE });
 		Map<String, Object> pInfoMap = dao.listToOneMapAndIdAsKey(queryProject, DBBean.PROJECT);
 
 		pInfoMap.remove(ApiConstants.RESULTS_DATA);
 		pInfoMap.remove(ApiConstants.PAGENATION);
 		for (Entry<String, Object> pro : pInfoMap.entrySet()) {
 			Map<String, Object> value = (Map<String, Object>) pro.getValue();
-			String pm = (String) value.get(ProjectBean.PROJECT_MANAGER);
+			String pm = (String) value.get(ProjectBean.PROJECT_MANAGER_ID);
 			if (!ApiUtil.isEmpty(pm)) {
-				pmIds.add((String) value.get(ProjectBean.PROJECT_MANAGER));
+				pmIds.add((String) value.get(ProjectBean.PROJECT_MANAGER_ID));
 			}
 
 		}
@@ -675,23 +675,23 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			String cusId = (String) sc.get(SalesContractBean.SC_CUSTOMER);
 			Map<String, Object> cusInfo = (Map<String, Object>) customerData.get(cusId);
 			if (cusInfo != null) {
-				sc.put(ProjectBean.PROJECT_CUSTOMER, cusInfo.get(CustomerBean.NAME));
+				sc.put(ProjectBean.PROJECT_CUSTOMER_ID, cusInfo.get(CustomerBean.NAME));
 				sc.put(ProjectBean.PROJECT_CUSTOMER_NAME, cusInfo.get(CustomerBean.NAME));
 			} else {
-				sc.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
+				sc.put(ProjectBean.PROJECT_CUSTOMER_ID, "N/A");
 				sc.put(ProjectBean.PROJECT_CUSTOMER_NAME, "N/A");
 			}
 			Map<String, Object> pro = (Map<String, Object>) pInfoMap.get(pId);
 
 			if (pro != null) {
-				String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER);
+				String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER_ID);
 
 				sc.put(ProjectBean.PROJECT_CODE, pro.get(ProjectBean.PROJECT_CODE));
 				sc.put(ProjectBean.PROJECT_NAME, pro.get(ProjectBean.PROJECT_NAME));
 
 				Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
 				if (pmInfo != null) {
-					sc.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+					sc.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(UserBean.USER_NAME));
 
 				}
 			}
@@ -1172,7 +1172,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}
 		Map<String, Object> pQuery = new HashMap<String, Object>();
 		pQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pids));
-		pQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_CUSTOMER });
+		pQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_CUSTOMER_ID });
 		Map<String, Object> pResult = dao.listToOneMapAndIdAsKey(pQuery, DBBean.PROJECT);
 		// List<Map<String, Object>> pResultListData = (List<Map<String,
 		// Object>>) pResult.get(ApiConstants.RESULTS_DATA);
@@ -1182,7 +1182,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		List<String> cids = new ArrayList<String>();
 		for (Entry<String, Object> en : pResult.entrySet()) {
 			Map<String, Object> p = (Map<String, Object>) en.getValue();
-			String cId = (String) p.get(ProjectBean.PROJECT_CUSTOMER);
+			String cId = (String) p.get(ProjectBean.PROJECT_CUSTOMER_ID);
 			if (!ApiUtil.isEmpty(cId)) {
 				cids.add(cId);
 			}
@@ -1195,14 +1195,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		for (Entry<String, Object> en : pResult.entrySet()) {
 			Map<String, Object> p = (Map<String, Object>) en.getValue();
-			Map<String, Object> c = (Map<String, Object>) cResult.get(p.get(ProjectBean.PROJECT_CUSTOMER));
-			p.put(ProjectBean.PROJECT_CUSTOMER, c.get(CustomerBean.NAME));
+			Map<String, Object> c = (Map<String, Object>) cResult.get(p.get(ProjectBean.PROJECT_CUSTOMER_ID));
+			p.put(ProjectBean.PROJECT_CUSTOMER_ID, c.get(CustomerBean.NAME));
 		}
 
 		for (Map<String, Object> sc : resultListData) {
 			String pId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
 			Map<String, Object> p = (Map<String, Object>) pResult.get(pId);
-			sc.put(ProjectBean.PROJECT_CUSTOMER, p.get(ProjectBean.PROJECT_CUSTOMER));
+			sc.put(ProjectBean.PROJECT_CUSTOMER_ID, p.get(ProjectBean.PROJECT_CUSTOMER_ID));
 		}
 
 		return result;
@@ -1264,18 +1264,18 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public void mergeCommonProjectInfo(Map<String, Object> data, Object projectId) {
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
 		projectQuery.put(ApiConstants.MONGO_ID, projectId);
-		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME });
+		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME });
 
 		Map<String, Object> project = this.dao.findOneByQuery(projectQuery, DBBean.PROJECT);
 		if (project != null) {
-			data.put(ProjectBean.PROJECT_MANAGER, project.get(ProjectBean.PROJECT_MANAGER));
+			data.put(ProjectBean.PROJECT_MANAGER_ID, project.get(ProjectBean.PROJECT_MANAGER_ID));
 			data.put(ProjectBean.PROJECT_TYPE, project.get(ProjectBean.PROJECT_TYPE));
 
 			data.put(ProjectBean.PROJECT_CODE, project.get(ProjectBean.PROJECT_CODE));
 			data.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
 
 			Map<String, Object> pmQuery = new HashMap<String, Object>();
-			pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER));
+			pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER_ID));
 			pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.USER_NAME });
 
 			Map<String, Object> pmInfo = this.dao.findOneByQuery(pmQuery, DBBean.USER);
@@ -1987,10 +1987,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					}
 
 					Map<String, Object> importProject = new HashMap<String, Object>();
-					importProject.put(ProjectBean.PROJECT_MANAGER, pmId);
+					importProject.put(ProjectBean.PROJECT_MANAGER_ID, pmId);
 					importProject.put(ProjectBean.PROJECT_TYPE, projectType);
 					importProject.put(ProjectBean.PROJECT_NAME, projectName);
-					importProject.put(ProjectBean.PROJECT_CUSTOMER, customerId);
+					importProject.put(ProjectBean.PROJECT_CUSTOMER_ID, customerId);
 
 					importProject.put(ProjectBean.PROJECT_STATUS, lxType);
 					importProject.put(ProjectBean.PROJECT_CODE, projectCode);

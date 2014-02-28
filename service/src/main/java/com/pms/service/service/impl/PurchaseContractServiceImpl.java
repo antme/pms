@@ -274,9 +274,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             scMap.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
             scMap.put(SalesContractBean.SC_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
 
-            Map<String, Object> customer = (Map<String, Object>) customers.get(project.get(ProjectBean.PROJECT_CUSTOMER));
+            Map<String, Object> customer = (Map<String, Object>) customers.get(project.get(ProjectBean.PROJECT_CUSTOMER_ID));
             scMap.put("customerName", customer.get(CustomerBean.NAME));
-            scMap.put(SalesContractBean.SC_CUSTOMER_ID, project.get(ProjectBean.PROJECT_CUSTOMER));
+            scMap.put(SalesContractBean.SC_CUSTOMER_ID, project.get(ProjectBean.PROJECT_CUSTOMER_ID));
 
         }
 
@@ -419,7 +419,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         
         Map<String, Object> requery = new HashMap<String, Object>();
-        requery.put(PurchaseContract.PURCHASE_CONTRACT_ID, purchaseContractId);
+        requery.put(PurchaseContract.SALES_CONTRACT_ID, params.get(PurchaseContract.SALES_CONTRACT_ID));
         requery.put(PurchaseContract.PURCHASE_ORDER_CODE, params.get(PurchaseContract.PURCHASE_ORDER_CODE));
         
         requery.put("type", params.get("type"));
@@ -1193,14 +1193,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         if (project != null) {
             Map<String, Object> pmQuery = new HashMap<String, Object>();
             pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.USER_NAME });
-            pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER));
+            pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER_ID));
 
             Map<String, Object> pmData = dao.findOneByQuery(pmQuery, DBBean.USER);
             if(pmData!=null){
-                project.put(ProjectBean.PROJECT_MANAGER, pmData.get(UserBean.USER_NAME));
+                project.put(ProjectBean.PROJECT_MANAGER_ID, pmData.get(UserBean.USER_NAME));
             }
 
-            String cId = (String) project.get(ProjectBean.PROJECT_CUSTOMER);
+            String cId = (String) project.get(ProjectBean.PROJECT_CUSTOMER_ID);
 
             Map<String, Object> customerQuery = new HashMap<String, Object>();
             customerQuery.put(ApiConstants.LIMIT_KEYS, new String[] { CustomerBean.NAME });
@@ -1208,10 +1208,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             Map<String, Object> customerData = dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
 
             if(customerData!=null){
-            project.put(ProjectBean.PROJECT_CUSTOMER, customerData.get(CustomerBean.NAME));
+            project.put(ProjectBean.PROJECT_CUSTOMER_ID, customerData.get(CustomerBean.NAME));
             }
 
-            params.put("customerName", project.get(ProjectBean.PROJECT_CUSTOMER));
+            params.put("customerName", project.get(ProjectBean.PROJECT_CUSTOMER_ID));
             params.put("projectName", project.get("projectName"));
             params.put("projectManager", project.get("projectManager"));
             params.put("projectCode", project.get(ProjectBean.PROJECT_CODE));

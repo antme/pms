@@ -149,7 +149,7 @@ $(document).ready(function() {
 		
 	});
 	
-	$("#supplier").kendoDropDownList({
+	$("#supplierId").kendoDropDownList({
 		dataTextField : "supplierName",
 		dataValueField : "_id",
 		optionLabel: "选择供应商...",
@@ -252,7 +252,7 @@ function changeCType(index){
 		$("#invoiceType").attr("disabled", false);
 		$("#invoiceType").show();
 		$(".virt").show();
-		var kendoSupp = $("#supplier").data("kendoDropDownList");
+		var kendoSupp = $("#supplierId").data("kendoDropDownList");
 		kendoSupp.enable(true);
 	}else{
 		$("#purchaseContractType").kendoDropDownList({
@@ -269,7 +269,7 @@ function changeCType(index){
 		}	
 		$("input[name=contractExecuteCate]:eq(1)").attr("checked",true);
 	
-		var kendoSupp = $("#supplier").data("kendoDropDownList");
+		var kendoSupp = $("#supplierId").data("kendoDropDownList");
 		var spData = kendoSupp.dataSource.data();
 		for(i=0; i<spData.length; i++){
 			if(spData[i].supplierName =="同方北京"){

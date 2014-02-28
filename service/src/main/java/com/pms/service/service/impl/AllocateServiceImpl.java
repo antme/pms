@@ -43,7 +43,7 @@ public class AllocateServiceImpl extends AbstractService implements IAllocateSer
 			if (inProjectMap != null) {
 				p.put(AllocateBean.IN_PROJECT_CODE, inProjectMap.get(ProjectBean.PROJECT_CODE));
 				p.put(AllocateBean.IN_PROJECT_NAME, inProjectMap.get(ProjectBean.PROJECT_NAME));
-				p.put(AllocateBean.IN_PROJECT_MANAGER, inProjectMap.get(ProjectBean.PROJECT_MANAGER));
+				p.put(AllocateBean.IN_PROJECT_MANAGER, inProjectMap.get(ProjectBean.PROJECT_MANAGER_ID));
 			}
 			
 			String outProjectId = p.get(AllocateBean.OUT_PROJECT_ID).toString();
@@ -51,7 +51,7 @@ public class AllocateServiceImpl extends AbstractService implements IAllocateSer
 			if (outProjectMap != null) {
 				p.put(AllocateBean.OUT_PROJECT_CODE, outProjectMap.get(ProjectBean.PROJECT_CODE));
 				p.put(AllocateBean.OUT_PROJECT_NAME, outProjectMap.get(ProjectBean.PROJECT_NAME));
-				p.put(AllocateBean.OUT_PROJECT_MANAGER, outProjectMap.get(ProjectBean.PROJECT_MANAGER));
+				p.put(AllocateBean.OUT_PROJECT_MANAGER, outProjectMap.get(ProjectBean.PROJECT_MANAGER_ID));
 			}
 		}
 		

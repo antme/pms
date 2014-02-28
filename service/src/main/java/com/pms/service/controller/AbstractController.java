@@ -1,8 +1,6 @@
 package com.pms.service.controller;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.pms.service.bean.BaseEntity;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
@@ -23,12 +22,30 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
+import com.pms.service.util.EcUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
 import com.pms.service.util.status.ResponseStatus;
 
 public abstract class AbstractController {
     private static Logger logger = LogManager.getLogger(AbstractController.class);
 
+    protected <T extends BaseEntity> BaseEntity parserJsonParameters(HttpServletRequest request, boolean emptyParameter, Class<T> claszz) {
+		HashMap<String, Object> parametersMap = parserJsonParameters(request, emptyParameter);
+		EcUtil.updateJsonFieldWithType(parametersMap, claszz);
+		logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getServletPath(), parametersMap));
+
+		return EcUtil.toEntity(parametersMap, claszz);
+
+	}
+
+	protected <T extends BaseEntity> List<T> parserListJsonParameters(HttpServletRequest request, boolean emptyParameter, Class<T> claszz) {
+		Map<String, Object> params = this.parserJsonParameters(request, false);
+		List<T> list = EcUtil.toJsonList(params, claszz);
+
+		return list;
+	}
+	
+	
     @SuppressWarnings("unchecked")
     protected HashMap<String, Object> parserJsonParameters(HttpServletRequest request, boolean emptyParameter) {
         HashMap<String, Object> parametersMap = parserParameters(request, emptyParameter);

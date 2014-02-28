@@ -36,12 +36,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	@Override
 	public Map<String, Object> listProjects(Map<String, Object> params) {
 
-		String[] limitKeys = new String[] {ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CUSTOMER,
-				ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_ABBR};
+		String[] limitKeys = new String[] {ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CUSTOMER_ID,
+				ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_ABBR};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		
-	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_CUSTOMER, CustomerBean.NAME,  DBBean.CUSTOMER);
-	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_MANAGER, UserBean.USER_NAME,  DBBean.USER);
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_CUSTOMER_ID, CustomerBean.NAME,  DBBean.CUSTOMER);
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME,  DBBean.USER);
 	    mergeDataRoleQueryWithProjectAndScType(params, ProjectBean.PROJECT_TYPE);
 		Map<String, Object> result = this.dao.list(params, DBBean.PROJECT);
 		
@@ -58,12 +58,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		String projectType = (String)params.get(ProjectBean.PROJECT_TYPE);
 		String projectStatus = (String)params.get(ProjectBean.PROJECT_STATUS);
 		projectBean.put(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME));
-		projectBean.put(ProjectBean.PROJECT_MANAGER, params.get(ProjectBean.PROJECT_MANAGER));
+		projectBean.put(ProjectBean.PROJECT_MANAGER_ID, params.get(ProjectBean.PROJECT_MANAGER_ID));
 		projectBean.put(ProjectBean.PROJECT_STATUS, projectStatus);
 		projectBean.put(ProjectBean.PROJECT_TYPE, projectType);
 		projectBean.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
 		projectBean.put(ProjectBean.PROJECT_MEMO, params.get(ProjectBean.PROJECT_MEMO));
-		projectBean.put(ProjectBean.PROJECT_CUSTOMER, params.get(ProjectBean.PROJECT_CUSTOMER));
+		projectBean.put(ProjectBean.PROJECT_CUSTOMER_ID, params.get(ProjectBean.PROJECT_CUSTOMER_ID));
 		projectBean.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
 		
 		if (_id == null){//Add
@@ -78,8 +78,8 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			Map<String, Object> existProject = dao.findOneByQuery(existProjectQuery, DBBean.PROJECT);
 
 			//项目 PM 发生改变
-			String pmOld = (String) existProject.get(ProjectBean.PROJECT_MANAGER);
-			String pmNew = (String) projectBean.get(ProjectBean.PROJECT_MANAGER);
+			String pmOld = (String) existProject.get(ProjectBean.PROJECT_MANAGER_ID);
+			String pmNew = (String) projectBean.get(ProjectBean.PROJECT_MANAGER_ID);
 			if (!pmOld.equals(pmNew)){
 				//1.冗余存放 项目 PM 且存有 projectId 的相关集合，均需同步更新 项目 PM 字段
 				//符合1.中的  集合添加到下一行 relatedCollections 数组中
@@ -87,33 +87,9 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 				Map<String, Object> relatedCQuery = new HashMap<String, Object>();
 				relatedCQuery.put(ProjectBean.PROJECT_ID, _id);
 				
-				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_MANAGER, pmNew);
+				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_MANAGER_ID, pmNew);
 			}
-			//项目 customer 发生改变  (新的逻辑，客户信息源头在 销售合同中了)
-			/*String customerOld = (String) existProject.get(ProjectBean.PROJECT_CUSTOMER);
-			String customerNew = (String) projectBean.get(ProjectBean.PROJECT_CUSTOMER);
-			if (!customerOld.equals(customerNew)){
-				//1.冗余存放 项目 customer 且存有 projectId 的相关集合，均需同步更新 项目 customer 字段
-				//符合1.中的  集合添加到下一行 relatedCollections 数组中
-				String[] relatedCollections = {DBBean.SALES_CONTRACT};//外键关联到project,又冗余存有 项目customer
-				Map<String, Object> relatedCQuery = new HashMap<String, Object>();
-				relatedCQuery.put(ProjectBean.PROJECT_ID, _id);
-				
-				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_CUSTOMER, customerNew);
-			}*/
 			
-			//项目 type 发生改变 comment by shihua 20130716. New logic can not update the project type
-			/*String typeOld = (String) existProject.get(ProjectBean.PROJECT_TYPE);
-			String typeNew = (String) projectBean.get(ProjectBean.PROJECT_TYPE);
-			if (!typeOld.equals(typeNew)){
-				//1.冗余存放 项目 type 且存有 projectId 的相关集合，均需同步更新 项目 type 字段
-				//符合1.中的  集合添加到下一行 relatedCollections 数组中
-				String[] relatedCollections = {};//外键关联到project,又冗余存有 项目type
-				Map<String, Object> relatedCQuery = new HashMap<String, Object>();
-				relatedCQuery.put(ProjectBean.PROJECT_ID, _id);
-				
-				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_TYPE, typeNew);
-			}*/
 			
 			return dao.updateById(projectBean, DBBean.PROJECT);
 		}
@@ -134,8 +110,8 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	@Override
 	public Map<String, Object> listProjectsForSelect(Map<String, Object> params, boolean all) {
 		// TODO Add logic to filter the projects which in progresss
-		String[] limitKeys = {ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER, 
-				ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_CUSTOMER};
+		String[] limitKeys = {ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER_ID, 
+				ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_CUSTOMER_ID};
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		if(!all){
@@ -148,8 +124,8 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		List<String> cIds = new ArrayList<String>();
 		List<String> proIds = new ArrayList<String>();
 		for(Map<String, Object> p : resultList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
-			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
+			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
 			String proid = (String)p.get(ApiConstants.MONGO_ID);
 			proIds.add(proid);
 			if (!ApiUtil.isEmpty(pmid)){
@@ -170,24 +146,24 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		Map<String, Object> cusData = dao.listToOneMapAndIdAsKey(cusQuery, DBBean.USER);
 		
 		for (Map<String, Object> p : resultList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
 			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmid);
 			if(ApiUtil.isEmpty(pmInfo)){
-				p.put(ProjectBean.PROJECT_MANAGER, "N/A");
+				p.put(ProjectBean.PROJECT_MANAGER_ID, "N/A");
 				p.put(UserBean.DEPARTMENT, "N/A");
 			}else{
-				p.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+				p.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(UserBean.USER_NAME));
 				p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
 			}
 			
 			
-			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
 			p.put("cId", customerId);
 			Map<String, Object> customerInfo = (Map<String, Object>) cusData.get(customerId);
 			if(ApiUtil.isEmpty(pmInfo)){
-				p.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
+				p.put(ProjectBean.PROJECT_CUSTOMER_ID, "N/A");
 			}else{
-				p.put(ProjectBean.PROJECT_CUSTOMER, pmInfo.get(UserBean.USER_NAME));
+				p.put(ProjectBean.PROJECT_CUSTOMER_ID, pmInfo.get(UserBean.USER_NAME));
 			}
 			
 		}
@@ -251,11 +227,11 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		List<String> customerIds = new ArrayList<String>();
 		
 		for (Map<String, Object> pro : resultListData){
-			String pPM = (String) pro.get(ProjectBean.PROJECT_MANAGER);
+			String pPM = (String) pro.get(ProjectBean.PROJECT_MANAGER_ID);
 			if (pPM != null && pPM.length() > 0){
 				pmIds.add(pPM);
 			}
-			String pC = (String) pro.get(ProjectBean.PROJECT_CUSTOMER);
+			String pC = (String) pro.get(ProjectBean.PROJECT_CUSTOMER_ID);
 			if (pC != null && pC.length() > 0){
 				customerIds.add(pC);
 			}
@@ -273,20 +249,20 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		Map<String, Object> customerData = dao.listToOneMapAndIdAsKey(customerQuery, DBBean.CUSTOMER);
 		
 		for (Map<String, Object> pro : resultListData){
-			String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER);
+			String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER_ID);
 			pro.put("pmId", pmId);
 			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
 			if (pmInfo != null){
-				pro.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+				pro.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(UserBean.USER_NAME));
 			}
 
-			String cId = (String) pro.get(ProjectBean.PROJECT_CUSTOMER);
+			String cId = (String) pro.get(ProjectBean.PROJECT_CUSTOMER_ID);
 			pro.put("cId", cId);
 			Map<String, Object> cInfo = (Map<String, Object>) customerData.get(cId);
 			if (cInfo != null){
-				pro.put(ProjectBean.PROJECT_CUSTOMER, cInfo.get(CustomerBean.NAME));
+				pro.put(ProjectBean.PROJECT_CUSTOMER_ID, cInfo.get(CustomerBean.NAME));
 			}else{
-				pro.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
+				pro.put(ProjectBean.PROJECT_CUSTOMER_ID, "N/A");
 			}
 			
 		}
@@ -296,18 +272,18 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	public String getCustomerIdByProId(String pId) {
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(ApiConstants.MONGO_ID, pId);
-		query.put(ApiConstants.LIMIT_KEYS, new String[] {ProjectBean.PROJECT_CUSTOMER});
+		query.put(ApiConstants.LIMIT_KEYS, new String[] {ProjectBean.PROJECT_CUSTOMER_ID});
 		Map<String, Object> p = dao.findOneByQuery(query, DBBean.PROJECT);
-		return (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+		return (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
 	}
 
 	@Override
 	public String getCustomerNameByProId(String pId) {
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(ApiConstants.MONGO_ID, pId);
-		query.put(ApiConstants.LIMIT_KEYS, new String[] {ProjectBean.PROJECT_CUSTOMER});
+		query.put(ApiConstants.LIMIT_KEYS, new String[] {ProjectBean.PROJECT_CUSTOMER_ID});
 		Map<String, Object> p = dao.findOneByQuery(query, DBBean.PROJECT);
-		String cId = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+		String cId = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
 		
 		Map<String, Object> cQuery = new HashMap<String, Object>();
 		cQuery.put(ApiConstants.MONGO_ID, cId);
@@ -327,8 +303,8 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 				Map<String, Object> row = new HashMap<String, Object>();
 				row.put(ProjectBean.PROJECT_NAME, list.get(i)[9].trim());
 				row.put(ProjectBean.PROJECT_ABBR, list.get(i)[4].trim());
-				row.put(ProjectBean.PROJECT_CUSTOMER, list.get(i)[8].trim());
-				row.put(ProjectBean.PROJECT_MANAGER, list.get(i)[5].trim());
+				row.put(ProjectBean.PROJECT_CUSTOMER_ID, list.get(i)[8].trim());
+				row.put(ProjectBean.PROJECT_MANAGER_ID, list.get(i)[5].trim());
 				row.put(ProjectBean.PROJECT_TYPE, list.get(i)[12].trim());
 				
 				row.put(SalesContractBean.SC_CODE, list.get(i)[2].trim());
@@ -344,12 +320,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		
 		for(Map<String, Object> row : rows){
 			Map<String, Object> customerQuery = new HashMap<String, Object>();
-			customerQuery.put(CustomerBean.NAME, row.get(ProjectBean.PROJECT_CUSTOMER));
+			customerQuery.put(CustomerBean.NAME, row.get(ProjectBean.PROJECT_CUSTOMER_ID));
 			Map<String, Object> customerMap = customerService.importCustomer(customerQuery);
 			String customerId = (String) customerMap.get(ApiConstants.MONGO_ID);
 			
 			Map<String, Object> pmQuery = new HashMap<String, Object>();
-			pmQuery.put(UserBean.USER_NAME, row.get(ProjectBean.PROJECT_MANAGER));
+			pmQuery.put(UserBean.USER_NAME, row.get(ProjectBean.PROJECT_MANAGER_ID));
 			Map<String, Object> pmMap = userService.importUser(pmQuery);
 			String pmId = (String) pmMap.get(ApiConstants.MONGO_ID);
 			
@@ -357,8 +333,8 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
 			project.put(ProjectBean.PROJECT_NAME, row.get(ProjectBean.PROJECT_NAME));
 			project.put(ProjectBean.PROJECT_ABBR, row.get(ProjectBean.PROJECT_ABBR));
-			project.put(ProjectBean.PROJECT_CUSTOMER, customerId);
-			project.put(ProjectBean.PROJECT_MANAGER, pmId);
+			project.put(ProjectBean.PROJECT_CUSTOMER_ID, customerId);
+			project.put(ProjectBean.PROJECT_MANAGER_ID, pmId);
 			project.put(ProjectBean.PROJECT_TYPE, row.get(ProjectBean.PROJECT_TYPE));
 			Map<String, Object> projectMap = addProject(project);
 			String proId = (String) projectMap.get(ApiConstants.MONGO_ID);

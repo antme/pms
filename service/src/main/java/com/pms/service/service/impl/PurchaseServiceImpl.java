@@ -338,8 +338,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		mergeDataRoleQueryWithProjectAndScType(params);
 		mergeMyTaskQuery(params, DBBean.PURCHASE_BACK);
 		
-	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_CUSTOMER, CustomerBean.NAME,  DBBean.CUSTOMER);
-	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_MANAGER, UserBean.USER_NAME,  DBBean.USER);
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_CUSTOMER_ID, CustomerBean.NAME,  DBBean.CUSTOMER);
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME,  DBBean.USER);
 	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
 	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
 	    mergeRefSearchQuery(params, PurchaseBack.scId, SalesContractBean.SC_CODE, SalesContractBean.SC_CODE, DBBean.SALES_CONTRACT);
@@ -379,8 +379,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		mergeDataRoleQueryWithProjectAndScType(params);
 		mergeMyTaskQuery(params, DBBean.PURCHASE_BACK);
 		
-	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_CUSTOMER, CustomerBean.NAME,  DBBean.CUSTOMER);
-	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_MANAGER, UserBean.USER_NAME,  DBBean.USER);
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_CUSTOMER_ID, CustomerBean.NAME,  DBBean.CUSTOMER);
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME,  DBBean.USER);
 	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
 	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
 	    mergeRefSearchQuery(params, PurchaseBack.scId, SalesContractBean.SC_CODE, SalesContractBean.SC_CODE, DBBean.SALES_CONTRACT);
@@ -416,8 +416,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
     public Map<String, Object> listAllot(Map<String, Object> params) {
         mergeDataRoleQueryWithProjectAndScType(params);
         mergeMyTaskQuery(params, DBBean.PURCHASE_ALLOCATE);
-        mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER, ProjectBean.PROJECT_CUSTOMER, CustomerBean.NAME, DBBean.CUSTOMER);
-        mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_MANAGER, UserBean.USER_NAME, DBBean.USER);
+        mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_CUSTOMER_ID, CustomerBean.NAME, DBBean.CUSTOMER);
+        mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME, DBBean.USER);
         mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
         mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
         mergeRefSearchQuery(params, PurchaseBack.scId, SalesContractBean.SC_CODE, SalesContractBean.SC_CODE, DBBean.SALES_CONTRACT);

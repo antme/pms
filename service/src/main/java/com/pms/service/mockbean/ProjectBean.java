@@ -12,7 +12,7 @@ public class ProjectBean {
 	public static final String PROJECT_CODE = "projectCode";  //项目编号
 	public static final String PROJECT_ABBR = "projectAbbr";  //项目缩写
 	public static final String PROJECT_NAME = "projectName";  //项目名称
-	public static final String PROJECT_MANAGER = "projectManager";  //项目经理
+	public static final String PROJECT_MANAGER_ID = "projectManagerId";  //项目经理
 	public static final String PROJECT_MANAGER_NAME = "projectManagerName";  //项目经理
 
 	public static final String PROJECT_STATUS = "projectStatus";  //项目状态
@@ -20,7 +20,7 @@ public class ProjectBean {
 	public static final String PROJECT_ADDRESS = "projectAddress";  //项目实施地址
 	public static final String PROJECT_MEMO = "projectMemo";  //备注
 	
-	public static final String PROJECT_CUSTOMER = "customer"; // 和 销售合同 都存放了该字段
+	public static final String PROJECT_CUSTOMER_ID = "customerId"; // 和 销售合同 都存放了该字段
 	public static final String PROJECT_CUSTOMER_NAME = "customerName"; // 和 销售合同 都存放了该字段
 	
 	//项目类型数据

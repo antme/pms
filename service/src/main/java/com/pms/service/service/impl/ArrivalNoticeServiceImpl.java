@@ -76,8 +76,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
 		projectQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, projectIds));
-		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER, 
-				ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_CUSTOMER});
+		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER_ID, 
+				ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_CUSTOMER_ID});
      
 		Map<String, Object> result = dao.list(projectQuery, DBBean.PROJECT);
 		
@@ -85,8 +85,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		List<String> pmIds = new ArrayList<String>(); 
 		List<String> cIds = new ArrayList<String>();
 		for(Map<String, Object> p : resultList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
-			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
+			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
 			if (!ApiUtil.isEmpty(pmid)){
 				pmIds.add(pmid);
 			}
@@ -105,23 +105,23 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		Map<String, Object> cusData = dao.listToOneMapAndIdAsKey(cusQuery, DBBean.USER);
 		
 		for (Map<String, Object> p : resultList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
 			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmid);
 			if(ApiUtil.isEmpty(pmInfo)){
-				p.put(ProjectBean.PROJECT_MANAGER, "N/A");
+				p.put(ProjectBean.PROJECT_MANAGER_ID, "N/A");
 				p.put(UserBean.DEPARTMENT, "N/A");
 			}else{
-				p.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+				p.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(UserBean.USER_NAME));
 				p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
 			}
 			
 			
-			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
 			Map<String, Object> customerInfo = (Map<String, Object>) cusData.get(customerId);
 			if(ApiUtil.isEmpty(customerInfo)){
-				p.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
+				p.put(ProjectBean.PROJECT_CUSTOMER_ID, "N/A");
 			}else{
-				p.put(ProjectBean.PROJECT_CUSTOMER, customerInfo.get(UserBean.USER_NAME));
+				p.put(ProjectBean.PROJECT_CUSTOMER_ID, customerInfo.get(UserBean.USER_NAME));
 			}
 		}
 		

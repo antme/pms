@@ -129,8 +129,8 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 				if (inProjectMap != null) {
 					p.put(BorrowingBean.BORROW_IN_PROJECT_CODE, inProjectMap.get(ProjectBean.PROJECT_CODE));
 					p.put(BorrowingBean.BORROW_IN_PROJECT_NAME, inProjectMap.get(ProjectBean.PROJECT_NAME));
-					p.put(BorrowingBean.BORROW_IN_PROJECT_MANAGER, inProjectMap.get(ProjectBean.PROJECT_MANAGER));
-					pmId.add(inProjectMap.get(ProjectBean.PROJECT_MANAGER).toString());
+					p.put(BorrowingBean.BORROW_IN_PROJECT_MANAGER, inProjectMap.get(ProjectBean.PROJECT_MANAGER_ID));
+					pmId.add(inProjectMap.get(ProjectBean.PROJECT_MANAGER_ID).toString());
 				}
 				
 				String outProjectId = p.get(BorrowingBean.BORROW_OUT_PROJECT_ID).toString();
@@ -138,8 +138,8 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 				if (outProjectMap != null) {
 					p.put(BorrowingBean.BORROW_OUT_PROJECT_CODE, outProjectMap.get(ProjectBean.PROJECT_CODE));
 					p.put(BorrowingBean.BORROW_OUT_PROJECT_NAME, outProjectMap.get(ProjectBean.PROJECT_NAME));
-					p.put(BorrowingBean.BORROW_OUT_PROJECT_MANAGER, outProjectMap.get(ProjectBean.PROJECT_MANAGER));
-					pmId.add(outProjectMap.get(ProjectBean.PROJECT_MANAGER).toString());
+					p.put(BorrowingBean.BORROW_OUT_PROJECT_MANAGER, outProjectMap.get(ProjectBean.PROJECT_MANAGER_ID));
+					pmId.add(outProjectMap.get(ProjectBean.PROJECT_MANAGER_ID).toString());
 				}
 			}
 			
@@ -383,12 +383,12 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 			}
 		}
         
-        String[] limitKeys = { ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER, ProjectBean.PROJECT_CUSTOMER };
+        String[] limitKeys = { ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_CUSTOMER_ID };
 		Map<String, Object> pQuery = new HashMap<String, Object>();
 		pQuery.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		// 选择调入项目
 		if ("in".equals(params.get("type"))) {
-			pQuery.put(ProjectBean.PROJECT_MANAGER, ApiThreadLocal.getCurrentUserId());
+			pQuery.put(ProjectBean.PROJECT_MANAGER_ID, ApiThreadLocal.getCurrentUserId());
 		}
 		pQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(projectIdsList)));
 		Map<String, Object> result = dao.list(pQuery, DBBean.PROJECT);
@@ -396,8 +396,8 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
 		Set<String> uids = new HashSet<String>();
 		for(Map<String, Object> p : resultList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
-			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
+			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
 			if (!ApiUtil.isEmpty(pmid)){
 				uids.add(pmid);
 			}
@@ -412,23 +412,23 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
 		
 		for (Map<String, Object> p : resultList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER);
+			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
 			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmid);
 			if(ApiUtil.isEmpty(pmInfo)){
-				p.put(ProjectBean.PROJECT_MANAGER, "N/A");
+				p.put(ProjectBean.PROJECT_MANAGER_ID, "N/A");
 				p.put(UserBean.DEPARTMENT, "N/A");
 			}else{
-				p.put(ProjectBean.PROJECT_MANAGER, pmInfo.get(UserBean.USER_NAME));
+				p.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(UserBean.USER_NAME));
 				p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
 			}
 			
 			
-			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER);
+			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
 			Map<String, Object> customerInfo = (Map<String, Object>) pmData.get(customerId);
 			if(ApiUtil.isEmpty(pmInfo)){
-				p.put(ProjectBean.PROJECT_CUSTOMER, "N/A");
+				p.put(ProjectBean.PROJECT_CUSTOMER_ID, "N/A");
 			}else{
-				p.put(ProjectBean.PROJECT_CUSTOMER, pmInfo.get(UserBean.USER_NAME));
+				p.put(ProjectBean.PROJECT_CUSTOMER_ID, pmInfo.get(UserBean.USER_NAME));
 			}
 		}
 		

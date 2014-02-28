@@ -323,10 +323,10 @@ public abstract class AbstractService {
         if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() || isDepartmentAssistant()) {
             // query all data
         } else {
-            pmQuery.put(ProjectBean.PROJECT_MANAGER, getCurrentUserId());
+            pmQuery.put(ProjectBean.PROJECT_MANAGER_ID, getCurrentUserId());
             pmQuery.put(ApiConstants.CREATOR, getCurrentUserId());
             // list creator or manager's data
-            param.put(ProjectBean.PROJECT_MANAGER, DBQueryUtil.buildQueryObject(pmQuery, false));
+            param.put(ProjectBean.PROJECT_MANAGER_ID, DBQueryUtil.buildQueryObject(pmQuery, false));
         }
     }
     
@@ -339,7 +339,7 @@ public abstract class AbstractService {
         if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() || isDepartmentAssistant()) {
             // query all data
         } else {
-            pmQuery.put(ProjectBean.PROJECT_MANAGER, getCurrentUserId());
+            pmQuery.put(ProjectBean.PROJECT_MANAGER_ID, getCurrentUserId());
             pmQuery.put(ApiConstants.CREATOR, getCurrentUserId());
 
             Map<String, Object> userQuery = new HashMap<String, Object>();
@@ -370,7 +370,7 @@ public abstract class AbstractService {
             }
 
             // list creator or manager's data
-            param.put(ProjectBean.PROJECT_MANAGER, DBQueryUtil.buildQueryObject(pmQuery, false));
+            param.put(ProjectBean.PROJECT_MANAGER_ID, DBQueryUtil.buildQueryObject(pmQuery, false));
         }
     }
     

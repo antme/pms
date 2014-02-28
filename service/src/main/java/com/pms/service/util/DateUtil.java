@@ -186,6 +186,41 @@ public class DateUtil {
 		return c.get(Calendar.YEAR);
 	}
 	
+	
+
+	public static Date getDateTime(String date) {
+
+		if (EcUtil.isEmpty(date)) {
+			return null;
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		if (EcUtil.isEmpty(date)) {
+			return null;
+		}
+		try {
+			return sdf.parse(date);
+		} catch (ParseException e) {
+			sdf = new SimpleDateFormat(formatSimple);
+			try {
+				return sdf.parse(date);
+			} catch (ParseException e1) {
+				sdf = new SimpleDateFormat("MM/dd/yyyy");
+				try {
+					return sdf.parse(date);
+				} catch (ParseException e2) {
+					sdf = new SimpleDateFormat("yyyy年MM月dd日");
+					try {
+						return sdf.parse(date);
+					} catch (ParseException e3) {
+						 e2.printStackTrace();
+//						logger.error(e3);
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
 	public static void main(String[] args) throws ParseException{
 	    getAgeByBirthDay(null);
 //	    getJustYearNow();
