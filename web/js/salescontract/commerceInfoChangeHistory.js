@@ -39,8 +39,8 @@ function edit(data){
 				         	{ text: "合同金额", value: "contractAmount" },
 				         	{ text: "服务金额", value: "serviceAmount" },
 				         	{ text: "设备金额", value: "equipmentAmount" },
-				         	{ text: "预估设备成本（增值税）", value: "estimateEqCost0" },
-				         	{ text: "预估设备成本（非增值税）", value: "estimateEqCost1" },
+				         	{ text: "预估设备成本（增值税）", value: "estimateEqCostAddedTax" },
+				         	{ text: "预估设备成本（非增值税）", value: "estimateEqCostTax" },
 				         	{ text: "预估分包成本", value: "estimateSubCost" },
 				         	{ text: "预估项目管理成本", value: "estimatePMCost" },
 				         	{ text: "预估深化设计成本", value: "estimateDeepDesignCost" },
@@ -83,9 +83,9 @@ function genChineseName(data){
 		return "服务金额";
 	} else if (data == "equipmentAmount"){
 		return "设备金额";
-	} else if (data == "estimateEqCost0"){
+	} else if (data == "estimateEqCostAddedTax"){
 		return "预估设备成本（增值税）";
-	} else if (data == "estimateEqCost1"){
+	} else if (data == "estimateEqCostTax"){
 		return "预估设备成本（非增值税）";
 	} else if (data == "estimateSubCost"){
 		return "预估分包成本";

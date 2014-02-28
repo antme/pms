@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.pms.service.annotation.LoginRequired;
 import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.annotation.RoleValidate;
+import com.pms.service.bean.EqCost;
 import com.pms.service.bean.Project;
+import com.pms.service.bean.SalesContract;
+import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.ISalesContractService;
 
 @Controller
@@ -58,15 +62,19 @@ public class SalesContractController extends AbstractController {
      */
     @RequestMapping("/add")
     @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
-    public void addSC(HttpServletRequest request, HttpServletResponse response) {
-    	
-    	Project project = (Project) parserJsonParameters(request, false, Project.class);
-    	
-    	System.out.println(project);
-    	
-        Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(salesContractService.addSC(params), request, response);
-    }
+	public void addSC(HttpServletRequest request, HttpServletResponse response) {
+
+		Map<String, Object> params = parserJsonParameters(request, false);
+
+		Project project = (Project) parserParametersToEntity(request, false, Project.class);
+
+		SalesContract contract = (SalesContract) parserParametersToEntity(request, false, SalesContract.class);
+		List<EqCost> costList = parserListJsonParameters(request, false, EqCost.class, SalesContractBean.SC_EQ_LIST);
+
+		System.out.println(costList);
+
+		responseWithData(salesContractService.addSC(params), request, response);
+	}
     
     /**
      * 编辑修改

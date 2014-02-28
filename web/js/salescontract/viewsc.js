@@ -18,8 +18,8 @@ var scModel = kendo.data.Model.define({
 		equipmentAmount : {},
 		serviceAmount : {},
 		invoiceType : {},
-		estimateEqCost0 : {},
-		estimateEqCost1 : {},
+		estimateEqCostAddedTax : {},
+		estimateEqCostTax : {},
 		estimateSubCost : {},
 		estimatePMCost : {},
 		estimateDeepDesignCost:{},
@@ -208,10 +208,10 @@ $(document).ready(function() {
 		min:0
 	});
 	
-	$("#estimateEqCost0").kendoNumericTextBox({
+	$("#estimateEqCostAddedTax").kendoNumericTextBox({
 		min:0
 	});
-	$("#estimateEqCost1").kendoNumericTextBox({
+	$("#estimateEqCostTax").kendoNumericTextBox({
 		min:0
 	});
 	$("#estimateSubCost").kendoNumericTextBox({

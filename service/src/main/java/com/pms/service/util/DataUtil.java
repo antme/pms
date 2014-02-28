@@ -223,18 +223,28 @@ public class DataUtil {
 
 	}
 
-	public static <T extends BaseEntity> List<T> toJsonList(Map<String, Object> params, Class<T> clz) {
+	public static <T extends BaseEntity> List<T> toJsonList(Object params, Class<T> clz, String key) {
 		List<T> results = new ArrayList<T>();
 
-		if (!DataUtil.isEmpty(params.get("rows"))) {
+		if (params instanceof Map) {
+			Map<String, Object> result = (Map<String, Object>) params;
+			if (!DataUtil.isEmpty(result.get(key))) {
 
-			List<Map<String, Object>> list = (List<Map<String, Object>>) new Gson().fromJson((String) params.get("rows"), List.class);
+				List<Map<String, Object>> list = (List<Map<String, Object>>) result.get(key);
+
+				for (Map<String, Object> obj : list) {
+					updateJsonFieldWithType(obj, clz);
+					results.add((T) DataUtil.toEntity(obj, clz));
+				}
+
+			}
+		}else if(params instanceof List){
+			List<Map<String, Object>> list = (List<Map<String, Object>>) new Gson().fromJson((String) params, List.class);
 
 			for (Map<String, Object> obj : list) {
 				updateJsonFieldWithType(obj, clz);
 				results.add((T) DataUtil.toEntity(obj, clz));
 			}
-
 		}
 		return results;
 

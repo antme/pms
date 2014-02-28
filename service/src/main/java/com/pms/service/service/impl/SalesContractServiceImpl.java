@@ -69,7 +69,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public Map<String, Object> listSC(Map<String, Object> params) {
 
 		// String[] limitKeys = {SalesContractBean.SC_CODE,
-		// SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER,
+		// SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER_ID,
 		// SalesContractBean.SC_DATE, SalesContractBean.SC_PROJECT_ID,
 		// SalesContractBean.SC_RUNNING_STATUS,
 		// SalesContractBean.SC_ARCHIVE_STATUS, SalesContractBean.SC_TYPE,
@@ -125,7 +125,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		// contract.put(SalesContractBean.SC_CODE,
 		// params.get(SalesContractBean.SC_CODE));
 		contract.put(SalesContractBean.SC_PERSON, params.get(SalesContractBean.SC_PERSON));
-		contract.put(SalesContractBean.SC_CUSTOMER, params.get(SalesContractBean.SC_CUSTOMER));
+		contract.put(SalesContractBean.SC_CUSTOMER_ID, params.get(SalesContractBean.SC_CUSTOMER_ID));
 		contract.put(SalesContractBean.SC_TYPE, params.get(SalesContractBean.SC_TYPE));
 		contract.put(SalesContractBean.SC_ARCHIVE_STATUS, params.get(SalesContractBean.SC_ARCHIVE_STATUS));
 		contract.put(SalesContractBean.SC_RUNNING_STATUS, params.get(SalesContractBean.SC_RUNNING_STATUS));
@@ -210,11 +210,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 				addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
 
-				if (!ApiUtil.isEmpty(projectId) && !ApiUtil.isEmpty(params.get(SalesContractBean.SC_CUSTOMER))) {
+				if (!ApiUtil.isEmpty(projectId) && !ApiUtil.isEmpty(params.get(SalesContractBean.SC_CUSTOMER_ID))) {
 					// 更新关联项目customer(新的需求，添加 SC时 选择客户)
 					Map<String, Object> updateProjectCustomer = new HashMap<String, Object>();
 					updateProjectCustomer.put(ApiConstants.MONGO_ID, projectId);
-					updateProjectCustomer.put(ProjectBean.PROJECT_CUSTOMER_ID, params.get(SalesContractBean.SC_CUSTOMER));
+					updateProjectCustomer.put(ProjectBean.PROJECT_CUSTOMER_ID, params.get(SalesContractBean.SC_CUSTOMER_ID));
 					dao.updateById(updateProjectCustomer, DBBean.PROJECT);
 				}
 
@@ -234,7 +234,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			Map<String, Object> existContractQuery = new HashMap<String, Object>();
 			existContractQuery.put(ApiConstants.MONGO_ID, _id);
 			existContractQuery.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE, SalesContractBean.SC_MODIFY_TIMES,
-			        SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER, SalesContractBean.SC_MODIFY_HISTORY, SalesContractBean.SC_LAST_TOTAL_AMOUNT,
+			        SalesContractBean.SC_AMOUNT, SalesContractBean.SC_CUSTOMER_ID, SalesContractBean.SC_MODIFY_HISTORY, SalesContractBean.SC_LAST_TOTAL_AMOUNT,
 			        SalesContractBean.SC_CODE });
 			Map<String, Object> existContract = dao.findOneByQuery(existContractQuery, DBBean.SALES_CONTRACT);
 
@@ -270,15 +270,15 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			 */
 
 			// 客户改变
-			String customerOld = (String) existContract.get(SalesContractBean.SC_CUSTOMER);
-			String customerNew = (String) contract.get(SalesContractBean.SC_CUSTOMER);
+			String customerOld = (String) existContract.get(SalesContractBean.SC_CUSTOMER_ID);
+			String customerNew = (String) contract.get(SalesContractBean.SC_CUSTOMER_ID);
 			if (!customerOld.equals(customerNew)) {
 				String[] relatedCollections = { DBBean.SC_GOT_MONEY };// 外键关联到SC,又冗余存有
 																	  // customer
 				Map<String, Object> relatedCQuery = new HashMap<String, Object>();
 				relatedCQuery.put(SalesContractBean.SC_ID, _id);
 
-				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, SalesContractBean.SC_CUSTOMER, customerNew);
+				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, SalesContractBean.SC_CUSTOMER_ID, customerNew);
 
 			}
 			// 单独更新关联项目中 冗余存的 customer (因为项目中没有外键关联到 SC ， 所以要单独更新处理)
@@ -332,7 +332,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			 * Object> scProjectIdNewUpdate = new HashMap<String, Object>();
 			 * scProjectIdNewUpdate.put(ApiConstants.MONGO_ID, scProjectIdNew);
 			 * scProjectIdNewUpdate.put(ProjectBean.PROJECT_CUSTOMER_ID,
-			 * params.get(SalesContractBean.SC_CUSTOMER));
+			 * params.get(SalesContractBean.SC_CUSTOMER_ID));
 			 * dao.updateById(scProjectIdNewUpdate, DBBean.PROJECT); }
 			 */
 
@@ -592,7 +592,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	public Map<String, Object> getBaseInfoByIds(List<String> ids) {
 		String[] keys = new String[] { SalesContractBean.SC_CODE, SalesContractBean.SC_AMOUNT, SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_CUSTOMER_ID,
-		        SalesContractBean.SC_CUSTOMER, SalesContractBean.SC_BACK_REQUEST_COUNT, SalesContractBean.SC_INVOICE_TYPE, SalesContractBean.SC_ESTIMATE_EQ_COST0,
+		        SalesContractBean.SC_CUSTOMER_ID, SalesContractBean.SC_BACK_REQUEST_COUNT, SalesContractBean.SC_INVOICE_TYPE, SalesContractBean.SC_ESTIMATE_EQ_COST0,
 		        SalesContractBean.SC_ESTIMATE_EQ_COST1 };
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(ApiConstants.LIMIT_KEYS, keys);
@@ -638,7 +638,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			if (proId != null && proId.length() > 0) {
 				pIdList.add(proId);
 			}
-			String custId = (String) sc.get(SalesContractBean.SC_CUSTOMER);
+			String custId = (String) sc.get(SalesContractBean.SC_CUSTOMER_ID);
 			if (!ApiUtil.isEmpty(custId)) {
 				custIds.add(custId);
 			}
@@ -672,7 +672,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		for (Map<String, Object> sc : list) {
 			String pId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
-			String cusId = (String) sc.get(SalesContractBean.SC_CUSTOMER);
+			String cusId = (String) sc.get(SalesContractBean.SC_CUSTOMER_ID);
 			Map<String, Object> cusInfo = (Map<String, Object>) customerData.get(cusId);
 			if (cusInfo != null) {
 				sc.put(ProjectBean.PROJECT_CUSTOMER_ID, cusInfo.get(CustomerBean.NAME));
@@ -966,7 +966,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public Map<String, Object> viewSC(Map<String, Object> params) {
 		String scId = (String) params.get(SalesContractBean.SC_ID);
 		Map<String, Object> sc = dao.findOne(ApiConstants.MONGO_ID, scId, DBBean.SALES_CONTRACT);
-		Map<String, Object> customer = dao.findOne(ApiConstants.MONGO_ID, sc.get(SalesContractBean.SC_CUSTOMER), DBBean.CUSTOMER);
+		Map<String, Object> customer = dao.findOne(ApiConstants.MONGO_ID, sc.get(SalesContractBean.SC_CUSTOMER_ID), DBBean.CUSTOMER);
 		mergeProjectInfoForSC(sc);
 		sc.put(CustomerBean.customerBankAccount, customer.get(CustomerBean.customerBankAccount));
 		sc.put(CustomerBean.customerBankName, customer.get(CustomerBean.customerBankName));
@@ -1231,7 +1231,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(SalesContractBean.SC_PROJECT_ID, pId);
-		query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_CODE, SalesContractBean.SC_TYPE, SalesContractBean.SC_CUSTOMER, SalesContractBean.SC_CUSTOMER_ID });
+		query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_CODE, SalesContractBean.SC_TYPE, SalesContractBean.SC_CUSTOMER_ID, SalesContractBean.SC_CUSTOMER_ID });
 		Map<String, Object> result = dao.list(query, DBBean.SALES_CONTRACT);
 
 		return result;
@@ -1240,16 +1240,16 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public void mergeCommonFieldsFromSc(Map<String, Object> data, Object scId) {
 		Map<String, Object> scQuery = new HashMap<String, Object>();
 		scQuery.put(ApiConstants.MONGO_ID, scId);
-		scQuery.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE, SalesContractBean.SC_CUSTOMER });
+		scQuery.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE, SalesContractBean.SC_CUSTOMER_ID });
 
 		Map<String, Object> sc = this.dao.findOneByQuery(scQuery, DBBean.SALES_CONTRACT);
 
 		data.put(SalesContractBean.SC_PROJECT_ID, sc.get(SalesContractBean.SC_PROJECT_ID));
 		data.put(SalesContractBean.SC_TYPE, sc.get(SalesContractBean.SC_TYPE));
-		data.put(SalesContractBean.SC_CUSTOMER, sc.get(SalesContractBean.SC_CUSTOMER));
+		data.put(SalesContractBean.SC_CUSTOMER_ID, sc.get(SalesContractBean.SC_CUSTOMER_ID));
 
 		Map<String, Object> customerQuery = new HashMap<String, Object>();
-		customerQuery.put(ApiConstants.MONGO_ID, sc.get(SalesContractBean.SC_CUSTOMER));
+		customerQuery.put(ApiConstants.MONGO_ID, sc.get(SalesContractBean.SC_CUSTOMER_ID));
 		customerQuery.put(ApiConstants.LIMIT_KEYS, new String[] { CustomerBean.NAME });
 
 		Map<String, Object> customer = this.dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
@@ -1897,18 +1897,18 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				}
 
 				if (ApiUtil.isEmpty(errorMsg)) {
-					String estimateEqCost0 = "";
+					String estimateEqCostAddedTax = "";
 
-					String estimateEqCost1 = "";
+					String estimateEqCostTax = "";
 
 					if (ApiUtil.isValid(invoiceType) && invoiceType.equalsIgnoreCase("增值税发票")) {
-						estimateEqCost0 = getRowColumnValue(row, keyMap, "设备成本");
+						estimateEqCostAddedTax = getRowColumnValue(row, keyMap, "设备成本");
 					} else {
 						//
 						// if(invoiceType.isEmpty()){
 						// invoiceType = "";
 						// }
-						// estimateEqCost1 = getRowColumnValue(row, keyMap,
+						// estimateEqCostTax = getRowColumnValue(row, keyMap,
 						// "设备成本");
 					}
 
@@ -1953,8 +1953,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					scMap.put(SalesContractBean.SC_MEMO, contractMemo);// 备注
 					scMap.put(SalesContractBean.SC_AMOUNT, ApiUtil.getDouble(contractAmount));// 合同金额
 					scMap.put(SalesContractBean.SC_LAST_TOTAL_AMOUNT, ApiUtil.getDouble(scLastTotalAmount));// 合同金额
-					scMap.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, ApiUtil.getDouble(estimateEqCost0));// 预估设备成本（增）
-					scMap.put(SalesContractBean.SC_ESTIMATE_EQ_COST1, ApiUtil.getDouble(estimateEqCost1));// 预估设备成本（非增）
+					scMap.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, ApiUtil.getDouble(estimateEqCostAddedTax));// 预估设备成本（增）
+					scMap.put(SalesContractBean.SC_ESTIMATE_EQ_COST1, ApiUtil.getDouble(estimateEqCostTax));// 预估设备成本（非增）
 
 					scMap.put(SalesContractBean.SC_ESTIMATE_SUB_COST, ApiUtil.getDouble(estimateSubCost));// 预估分包成本
 					scMap.put(SalesContractBean.SC_ESTIMATE_OTHER_COST, ApiUtil.getDouble(estimateOtherCost));// 预估其他成本
@@ -1970,7 +1970,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					customerQuery.put(CustomerBean.NAME, customerName); // 客户名称
 					Map<String, Object> customerMap = customerService.importCustomer(customerQuery);
 					String customerId = (String) customerMap.get(ApiConstants.MONGO_ID);
-					scMap.put(SalesContractBean.SC_CUSTOMER, customerId);// 客户
+					scMap.put(SalesContractBean.SC_CUSTOMER_ID, customerId);// 客户
 
 					Map<String, Object> pmQuery = new HashMap<String, Object>();
 					pmQuery.put(UserBean.USER_NAME, pmName);

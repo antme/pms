@@ -29,18 +29,18 @@ import com.pms.service.util.status.ResponseStatus;
 public abstract class AbstractController {
     private static Logger logger = LogManager.getLogger(AbstractController.class);
 
-    protected <T extends BaseEntity> BaseEntity parserJsonParameters(HttpServletRequest request, boolean emptyParameter, Class<T> claszz) {
+    protected <T extends BaseEntity> BaseEntity parserParametersToEntity(HttpServletRequest request, boolean emptyParameter, Class<T> claszz) {
 		HashMap<String, Object> parametersMap = parserJsonParameters(request, emptyParameter);
 		DataUtil.updateJsonFieldWithType(parametersMap, claszz);
-		logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getServletPath(), parametersMap));
+//		logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getServletPath(), parametersMap));
 
 		return DataUtil.toEntity(parametersMap, claszz);
 
 	}
 
-	protected <T extends BaseEntity> List<T> parserListJsonParameters(HttpServletRequest request, boolean emptyParameter, Class<T> claszz) {
+	protected <T extends BaseEntity> List<T> parserListJsonParameters(HttpServletRequest request, boolean emptyParameter, Class<T> claszz, String key) {
 		Map<String, Object> params = this.parserJsonParameters(request, false);
-		List<T> list = DataUtil.toJsonList(params, claszz);
+		List<T> list = DataUtil.toJsonList(params, claszz, key);
 
 		return list;
 	}
@@ -68,7 +68,7 @@ public abstract class AbstractController {
                 parametersMap.remove("_id");
             }
         }
-        logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
+//        logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getPathInfo(), parametersMap));
         parametersMap.remove("_defaultId");
         parametersMap.remove("defaults");
         parametersMap.remove("fields");

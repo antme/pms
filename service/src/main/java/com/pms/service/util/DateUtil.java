@@ -1,5 +1,6 @@
 package com.pms.service.util;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -192,6 +193,23 @@ public class DateUtil {
 
 		if (DataUtil.isEmpty(date)) {
 			return null;
+		}
+		
+		
+		
+		if (date.indexOf("E") != -1) {
+			try {
+				BigDecimal bd = new BigDecimal(date);
+				date = bd.toPlainString();
+			} catch (Exception e) {
+//				logger.error("读取订单号错误: " + code);
+				// do nothing
+			}
+		}
+		
+		if(DataUtil.getLong(date) !=null){
+			
+			date = getDateStringByLong(DataUtil.getLong(date));
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		if (DataUtil.isEmpty(date)) {

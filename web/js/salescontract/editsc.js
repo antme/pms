@@ -18,8 +18,8 @@ var scModel = kendo.data.Model.define({
 		equipmentAmount : {},
 		serviceAmount : {},
 		invoiceType : {},
-		estimateEqCost0 : {},
-		estimateEqCost1 : {},
+		estimateEqCostAddedTax : {},
+		estimateEqCostTax : {},
 		estimateSubCost : {},
 		estimatePMCost : {},
 		estimateDeepDesignCost:{},
@@ -427,10 +427,10 @@ $(document).ready(function() {
 		min:0
 	});
 	
-	$("#estimateEqCost0").kendoNumericTextBox({
+	$("#estimateEqCostAddedTax").kendoNumericTextBox({
 		min:0
 	});
-	$("#estimateEqCost1").kendoNumericTextBox({
+	$("#estimateEqCostTax").kendoNumericTextBox({
 		min:0
 	});
 	$("#estimateSubCost").kendoNumericTextBox({
@@ -1065,11 +1065,11 @@ function saveSC(){
 			scm.set("contractAmount", 0);
 		}
 		
-		if(scm.estimateEqCost0){
-			scm.estimateEqCost0 = percentToFixed(scm.estimateEqCost0);
+		if(scm.estimateEqCostAddedTax){
+			scm.estimateEqCostAddedTax = percentToFixed(scm.estimateEqCostAddedTax);
 		}
-		if(scm.estimateEqCost1){
-			scm.estimateEqCost1 = percentToFixed(scm.estimateEqCost1);
+		if(scm.estimateEqCostTax){
+			scm.estimateEqCostTax = percentToFixed(scm.estimateEqCostTax);
 		}
 		
 		scm.set("status", "已提交");
@@ -1183,29 +1183,29 @@ function closeWindow(windowId){
 	
 function moneyOnChange(){
 	if(scm){
-		var estimateEqCost0C = 0; // 预估设备成本（增）
-		var estimateEqCost1c = 0; // 预估设备成本（非增）
+		var estimateEqCostAddedTaxC = 0; // 预估设备成本（增）
+		var estimateEqCostTaxc = 0; // 预估设备成本（非增）
 		var datalist = eqCostListDataSourceNew.data();
 		for ( var int = 0; int < datalist.length; int++) {
 			if (datalist[int].eqcostTaxType == "增值税") {
-				estimateEqCost0C += datalist[int].eqcostTotalAmount;
+				estimateEqCostAddedTaxC += datalist[int].eqcostTotalAmount;
 			} else if (datalist[int].eqcostTaxType == "非增值税") {
-				estimateEqCost1c += datalist[int].eqcostTotalAmount;
+				estimateEqCostTaxc += datalist[int].eqcostTotalAmount;
 			}
 		}
 		
 		datalist = eqCostListDataSourceOld.data();
 		for ( var int = 0; int < datalist.length; int++) {
 			if (datalist[int].eqcostTaxType == "增值税") {
-				estimateEqCost0C += datalist[int].eqcostTotalAmount;
+				estimateEqCostAddedTaxC += datalist[int].eqcostTotalAmount;
 			} else if (datalist[int].eqcostTaxType == "非增值税") {
-				estimateEqCost1c += datalist[int].eqcostTotalAmount;
+				estimateEqCostTaxc += datalist[int].eqcostTotalAmount;
 			}
 		}
 	
 	
-		scm.set("estimateEqCost0",estimateEqCost0C);
-		scm.set("estimateEqCost1",estimateEqCost1c);
+		scm.set("estimateEqCostAddedTax",estimateEqCostAddedTaxC);
+		scm.set("estimateEqCostTax",estimateEqCostTaxc);
 	
 	
 	
@@ -1222,8 +1222,8 @@ function moneyOnChange(){
 		}
 		var scAmount = serviceAmount + equipmentAmount;
 		scm.set("contractAmount",scAmount);
-		var estimateEqCost0 = $("#estimateEqCost0").val();
-		var estimateEqCost1 = $("#estimateEqCost1").val();
+		var estimateEqCostAddedTax = $("#estimateEqCostAddedTax").val();
+		var estimateEqCostTax = $("#estimateEqCostTax").val();
 		var estimateSubCost = $("#estimateSubCost").val();
 		var estimatePMCost = $("#estimatePMCost").val();
 		var estimateDeepDesignCost = $("#estimateDeepDesignCost").val();
@@ -1231,11 +1231,11 @@ function moneyOnChange(){
 		var estimateOtherCost = $("#estimateOtherCost").val();
 		var estimateTax = $("#estimateTax").val();
 	
-		if (estimateEqCost0==""){
-			estimateEqCost0=0;
+		if (estimateEqCostAddedTax==""){
+			estimateEqCostAddedTax=0;
 		}
-		if (estimateEqCost1==""){
-			estimateEqCost1=0;
+		if (estimateEqCostTax==""){
+			estimateEqCostTax=0;
 		}
 		if (estimateSubCost==""){
 			estimateSubCost=0;
@@ -1256,7 +1256,7 @@ function moneyOnChange(){
 			estimateTax=0;
 		}
 		
-		var totalCost = estimateEqCost0*1 + estimateEqCost1*1 + estimateSubCost*1 
+		var totalCost = estimateEqCostAddedTax*1 + estimateEqCostTax*1 + estimateSubCost*1 
 			+ estimatePMCost*1 + estimateDeepDesignCost*1 + estimateDebugCost*1
 			+ estimateOtherCost*1 + estimateTax*1;
 	//	console.log("***********totalCost" + totalCost);

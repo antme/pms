@@ -378,12 +378,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		Map<String, Object> scQuery = new HashMap<String, Object>();
 		scQuery.put(ProjectBean.PROJECT_ID, p.get(ApiConstants.MONGO_ID));
 		scQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE, SalesContractBean.SC_PERSON, SalesContractBean.SC_DATE,
-				SalesContractBean.SC_CUSTOMER, SalesContractBean.SC_TYPE, SalesContractBean.SC_RUNNING_STATUS, SalesContractBean.SC_AMOUNT});
+				SalesContractBean.SC_CUSTOMER_ID, SalesContractBean.SC_TYPE, SalesContractBean.SC_RUNNING_STATUS, SalesContractBean.SC_AMOUNT});
 		Map<String, Object> scList = dao.list(scQuery, DBBean.SALES_CONTRACT);
 		List<Map<String, Object>> scListData = (List<Map<String, Object>>) scList.get(ApiConstants.RESULTS_DATA);
 		List<String> cIds = new ArrayList<String>();
 		for (Map<String, Object> sc : scListData){
-			String cid = (String) sc.get(SalesContractBean.SC_CUSTOMER);
+			String cid = (String) sc.get(SalesContractBean.SC_CUSTOMER_ID);
 			if (!ApiUtil.isEmpty(cid)){
 				cIds.add(cid);
 			}
@@ -393,10 +393,10 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		query.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
 		Map<String, Object> cMap = dao.listToOneMapAndIdAsKey(query, DBBean.CUSTOMER);
 		for(Map<String, Object> sc : scListData){
-			String cid = (String) sc.get(SalesContractBean.SC_CUSTOMER);
+			String cid = (String) sc.get(SalesContractBean.SC_CUSTOMER_ID);
 			if (!ApiUtil.isEmpty(cid)){
 				Map<String, Object> cData = (Map<String, Object>) cMap.get(cid);
-				sc.put(SalesContractBean.SC_CUSTOMER, cData.get(CustomerBean.NAME));
+				sc.put(SalesContractBean.SC_CUSTOMER_ID, cData.get(CustomerBean.NAME));
 			}
 		}
 		p.put("scs", scList.get(ApiConstants.RESULTS_DATA));

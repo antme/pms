@@ -46,8 +46,8 @@ public class CommonDaoMongoImpl implements ICommonDao {
         clone.put(ApiConstants.MONGO_ID, id);
         BasicDBObject doc = new BasicDBObject(clone);
         Date date = new Date();
-        doc.put(ApiConstants.CREATED_ON, date.getTime());
-        doc.put(ApiConstants.UPDATED_ON, date.getTime());
+        doc.put(ApiConstants.CREATED_ON, date);
+        doc.put(ApiConstants.UPDATED_ON, date);
         doc.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());
         doc.put(ApiConstants.SERIAL_NUMBER, this.count(null, collection) + 1);
         WriteResult result = this.getConnection(ConfigurationManager.getDbName(), collection).insert(doc);
@@ -194,10 +194,10 @@ public class CommonDaoMongoImpl implements ICommonDao {
         if (map.get(ApiConstants.CREATED_ON) != null) {
             if (map.get(ApiConstants.CREATED_ON) instanceof Date) {
                 Date date = (Date) map.get(ApiConstants.CREATED_ON);
-                map.put(ApiConstants.CREATED_ON, date.getTime());
+                map.put(ApiConstants.CREATED_ON, date);
                 Map<String, Object> temp = new HashMap<String, Object>();
                 temp.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID));
-                temp.put(ApiConstants.CREATED_ON, date.getTime());
+                temp.put(ApiConstants.CREATED_ON, date);
                 this.updateById(temp, collection);
             }
         }
@@ -205,10 +205,10 @@ public class CommonDaoMongoImpl implements ICommonDao {
         if (map.get(ApiConstants.UPDATED_ON) != null) {
             if (map.get(ApiConstants.UPDATED_ON) instanceof Date) {
                 Date date = (Date) map.get(ApiConstants.UPDATED_ON);
-                map.put(ApiConstants.UPDATED_ON, date.getTime());
+                map.put(ApiConstants.UPDATED_ON, date);
                 Map<String, Object> temp = new HashMap<String, Object>();
                 temp.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID));
-                temp.put(ApiConstants.UPDATED_ON, date.getTime());
+                temp.put(ApiConstants.UPDATED_ON, date);
                 this.updateById(temp, collection);
             }
         }
@@ -279,7 +279,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
             } catch (Exception e) {
                 logger.error("Create history log failed ::::: " + parameters, e);
             }
-            clone.put(ApiConstants.UPDATED_ON, new Date().getTime());
+            clone.put(ApiConstants.UPDATED_ON, new Date());
             BasicDBObject doc = new BasicDBObject(clone);
             result = this.getConnection(ConfigurationManager.getDbName(), collection).update(new BasicDBObject(ApiConstants.MONGO_ID, new ObjectId(id)),
                     new BasicDBObject("$set", doc));

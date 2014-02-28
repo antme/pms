@@ -366,8 +366,8 @@ public class ApiUtil {
         floatFields.add("contractAmount");
         floatFields.add("equipmentAmount");
         floatFields.add("serviceAmount");
-        floatFields.add("estimateEqCost0");
-        floatFields.add("estimateEqCost1");
+        floatFields.add("estimateEqCostAddedTax");
+        floatFields.add("estimateEqCostTax");
         floatFields.add("estimateSubCost");
         floatFields.add("estimatePMCost");
         floatFields.add("estimateDeepDesignCost");

@@ -19,7 +19,6 @@ public class SalesContractBean {
 	public static final String SC_RUNNING_STATUS = "runningStatus"; //执行状态*********
 	public static final String SC_MEMO = "contractMemo"; //备注
 	
-	public static final String SC_CUSTOMER = "customer"; //外键 客户
 	
 	public static final String APPLICATION_DEPARTMENT = "applicationDepartment"; //申请部门
 	
@@ -30,8 +29,8 @@ public class SalesContractBean {
 	public static final String SC_INVOICE_TYPE = "invoiceType"; //发票类型*********
 	public static final String SC_EXTIMATE_GROSS_PROFIT_RATE = "estimateGrossProfitRate";//==预计毛利率
 	public static final String SC_EXTIMATE_GROSS_PROFIT ="estimateGrossProfit";//==预计毛利
-	public static final String SC_ESTIMATE_EQ_COST0 = "estimateEqCost0"; //预估设备成本（增值税）
-	public static final String SC_ESTIMATE_EQ_COST1 = "estimateEqCost1"; //预估设备成本（非增值税）
+	public static final String SC_ESTIMATE_EQ_COST0 = "estimateEqCostAddedTax"; //预估设备成本（增值税）
+	public static final String SC_ESTIMATE_EQ_COST1 = "estimateEqCostTax"; //预估设备成本（非增值税）
 	public static final String SC_ESTIMATE_SUB_COST = "estimateSubCost"; //预估分包成本
 	public static final String SC_ESTIMATE_PM_COST = "estimatePMCost"; //预估项目管理成本
 	public static final String SC_ESTIMATE_DEEP_DESIGN_COST = "estimateDeepDesignCost"; //预估深化设计成本
