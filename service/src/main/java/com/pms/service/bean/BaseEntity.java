@@ -1,6 +1,9 @@
 package com.pms.service.bean;
 
 import java.util.Date;
+import java.util.Map;
+
+import com.pms.service.util.DataUtil;
 
 public class BaseEntity {
 
@@ -48,5 +51,21 @@ public class BaseEntity {
 	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
 	}
+	
+	
+	/**
+	 * 打印类字段信息
+	 */
+	@Override
+	public String toString() {
+		
+		return DataUtil.toJson(this);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> toMap() {
+		return DataUtil.toMap(this);
+	}
+
 
 }

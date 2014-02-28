@@ -190,11 +190,11 @@ public class DateUtil {
 
 	public static Date getDateTime(String date) {
 
-		if (EcUtil.isEmpty(date)) {
+		if (DataUtil.isEmpty(date)) {
 			return null;
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
-		if (EcUtil.isEmpty(date)) {
+		if (DataUtil.isEmpty(date)) {
 			return null;
 		}
 		try {

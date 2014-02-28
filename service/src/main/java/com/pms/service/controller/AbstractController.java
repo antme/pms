@@ -22,7 +22,7 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
-import com.pms.service.util.EcUtil;
+import com.pms.service.util.DataUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
 import com.pms.service.util.status.ResponseStatus;
 
@@ -31,16 +31,16 @@ public abstract class AbstractController {
 
     protected <T extends BaseEntity> BaseEntity parserJsonParameters(HttpServletRequest request, boolean emptyParameter, Class<T> claszz) {
 		HashMap<String, Object> parametersMap = parserJsonParameters(request, emptyParameter);
-		EcUtil.updateJsonFieldWithType(parametersMap, claszz);
+		DataUtil.updateJsonFieldWithType(parametersMap, claszz);
 		logger.debug(String.format("--------------Client post parameters for path [%s] is [%s]", request.getServletPath(), parametersMap));
 
-		return EcUtil.toEntity(parametersMap, claszz);
+		return DataUtil.toEntity(parametersMap, claszz);
 
 	}
 
 	protected <T extends BaseEntity> List<T> parserListJsonParameters(HttpServletRequest request, boolean emptyParameter, Class<T> claszz) {
 		Map<String, Object> params = this.parserJsonParameters(request, false);
-		List<T> list = EcUtil.toJsonList(params, claszz);
+		List<T> list = DataUtil.toJsonList(params, claszz);
 
 		return list;
 	}

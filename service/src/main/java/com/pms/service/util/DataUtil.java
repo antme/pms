@@ -31,9 +31,9 @@ import com.pms.service.annotation.FloatColumn;
 import com.pms.service.annotation.IntegerColumn;
 import com.pms.service.bean.BaseEntity;
 
-public class EcUtil {
+public class DataUtil {
 
-	private static Logger logger = LogManager.getLogger(EcUtil.class);
+	private static Logger logger = LogManager.getLogger(DataUtil.class);
 
 	public static boolean isEmpty(Object param) {
 
@@ -226,13 +226,13 @@ public class EcUtil {
 	public static <T extends BaseEntity> List<T> toJsonList(Map<String, Object> params, Class<T> clz) {
 		List<T> results = new ArrayList<T>();
 
-		if (!EcUtil.isEmpty(params.get("rows"))) {
+		if (!DataUtil.isEmpty(params.get("rows"))) {
 
 			List<Map<String, Object>> list = (List<Map<String, Object>>) new Gson().fromJson((String) params.get("rows"), List.class);
 
 			for (Map<String, Object> obj : list) {
 				updateJsonFieldWithType(obj, clz);
-				results.add((T) EcUtil.toEntity(obj, clz));
+				results.add((T) DataUtil.toEntity(obj, clz));
 			}
 
 		}

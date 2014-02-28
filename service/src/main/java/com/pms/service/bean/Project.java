@@ -1,29 +1,42 @@
 package com.pms.service.bean;
 
+import com.google.gson.annotations.Expose;
+
 public class Project extends BaseEntity {
 
 	// 项目编号
+	@Expose
 	private String projectCode;
 	// 项目缩写
+	@Expose
 	private String projectAbbr;
-
+	
+	@Expose
 	private String projectName;
-
+	
+	@Expose
 	private String projectManagerId;
-
+	
+	@Expose
 	private String projectManagerName;
-
+	
+	@Expose
 	private String projectStatus;
-
+	
+	@Expose
 	private String projectType;
 	// 项目实施地址
+	@Expose
 	private String projectAddress;
 
 	// 备注
+	@Expose
 	private String projectMemo;
-
+	
+	@Expose
 	private String customerId;
-
+	
+	@Expose
 	private String customerName;
 
 	public String getProjectCode() {
