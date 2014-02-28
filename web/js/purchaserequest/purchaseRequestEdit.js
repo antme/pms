@@ -196,7 +196,7 @@ function loadBackRequest(data) {
 		
 		requestDataItem.backRequestId = requestDataItem._id;
 		requestDataItem.backRequestCode = requestDataItem.pbCode;
-		requestDataItem.salesContractId = requestDataItem.scId;
+		requestDataItem.scId = requestDataItem.scId;
 		requestDataItem.salesContractCode = requestDataItem.scCode;
 		requestDataItem.comment = "";
 		

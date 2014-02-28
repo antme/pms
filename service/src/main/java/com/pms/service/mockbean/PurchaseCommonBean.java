@@ -13,7 +13,7 @@ public class PurchaseCommonBean extends BaseEntity {
 
     private String backRequestId;
 
-    private String salesContractId;
+    private String scId;
     
     private String salesContractCode;
 
@@ -157,12 +157,12 @@ public class PurchaseCommonBean extends BaseEntity {
         this.purchaseRequestCode = purchaseRequestCode;
     }
 
-    public String getSalesContractId() {
-        return salesContractId;
+    public String getScId() {
+        return scId;
     }
 
-    public void setSalesContractId(String salesContractId) {
-        this.salesContractId = salesContractId;
+    public void setScId(String scId) {
+        this.scId = scId;
     }
 
     public String getSalesContractCode() {
@@ -247,7 +247,7 @@ public class PurchaseCommonBean extends BaseEntity {
     
     public static final String PROJECT_ID = "projectId";
     
-    public static final String SALES_CONTRACT_ID = "salesContractId";
+    public static final String SALES_CONTRACT_ID = "scId";
     
     public static final String BACK_REQUEST_CODE = "backRequestCode";
     public static final String BACK_REQUEST_ID = "backRequestId";

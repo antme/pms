@@ -30,7 +30,7 @@ var myModel = kendo.data.Model.define({
 		payInvoiceActualSheetCount:{},
 		payInvoiceComment:{defaultValue:""},
 		invoiceType:{},
-		salesContractId:{},
+		scId:{},
 		contractCode:{},
 		projectId:{},
 		operateType:{}

@@ -53,7 +53,7 @@ $(document).ready(function() {
 				field : "salesContractCode",
 				title : "销售合同编号",
 				template : function(dataItem) {
-					return '<a  onclick="openSCViewWindow(\'' + dataItem.salesContractId + '\');">' + dataItem.salesContractCode + '</a>';
+					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.salesContractCode + '</a>';
 				}
 			},  {
 				field : "purchaseOrderCode",

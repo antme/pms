@@ -10,12 +10,12 @@ var borrowing = kendo.data.Model.define( {
     	inProjectCode: {},
     	inProjectName: {},
     	inProjectManager: {},
-    	inSalesContractId: {},
+    	inScId: {},
     	inSalesContractCode: {},
     	inSalesContractType: {},
     	inProjectCustomer: {},
     	outProjectId: {},
-    	outSalesContractId: {},
+    	outScId: {},
     	eqcostList: {},
     	// 发货信息
     	shipCode: {},
@@ -160,7 +160,7 @@ $(document).ready(function() {
 	        	model.set("inSalesContractCode", dataItem.contractCode);
 	        	model.set("inSalesContractType", dataItem.contractType);
 	        	
-	        	var salesContractId = this.value();
+	        	var scId = this.value();
 	        	
 	        	eqDataSource = new kendo.data.DataSource({
 	        	    transport: {
@@ -168,7 +168,7 @@ $(document).ready(function() {
 	        	            url: crudServiceBaseUrl + "/borrowing/eqlist",
 	        	            dataType: "jsonp",
 	        	            data: {
-	        	            	inSalesContractId: salesContractId,
+	        	            	inScId: scId,
 	        	            	type: 1
 	        	            }
 	        	        }

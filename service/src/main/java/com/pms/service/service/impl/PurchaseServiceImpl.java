@@ -283,6 +283,9 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		allot = dao.updateById(allot, DBBean.PURCHASE_ALLOCATE);
 		
 		if(PurchaseStatus.done.toString().equals(status)){
+			
+			
+			allot = loadAllot(allot);
 			// 批准调拨申请时生成到货通知
 			createArrivalNotice(allot);
 		}

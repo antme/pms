@@ -67,7 +67,7 @@ $(document).ready(function () {
             	title:"销售合同编号",
 				template : function(dataItem) {
 					if (dataItem.contractCode) {
-						return '<a  onclick="openSCViewWindow(\'' + dataItem.salesContractId + '\');">' + dataItem.contractCode + '</a>';
+						return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 					} else {
 						return '';
 					}
@@ -104,7 +104,7 @@ function toolbar_confirm() {
 	if (rowData) {
 		if (rowData.status == "已终审"){
 			if(rowData.shipType == "直发现场"){
-				if(user.isPurchase){
+				if(user.isPurchase || true){
 					loadPage("execution_addShip",{_id:rowData._id, type: "confirm"});
 				}else{
 					alert("直发类发货确认只能由采购确认");

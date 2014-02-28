@@ -17,7 +17,7 @@ var subMoneyModel = kendo.data.Model.define({
        getMoneyActualDate: { type:"date",validation: {required: true }},
    	   getMoneyComment:{},
    	   creatorName:{editable : false},
-       salesContractId: {},
+       scId: {},
        salesContractCode: {},
        customerBankName:{},
        customerBankAccount:{}
@@ -38,7 +38,7 @@ var myModel = kendo.data.Model.define({
 		payInvoiceActualInvoiceNum:{},
 		payInvoiceActualSheetCount:{},
 		invoiceType:{},
-		salesContractId:{},
+		scId:{},
 		contractCode:{},
 		projectId:{},
 		operateType:{}
@@ -106,7 +106,7 @@ $(document).ready(function () {
 	  	]
 	});
 
-	if(redirectParams && redirectParams.salesContractId){
+	if(redirectParams && redirectParams.scId){
 		postAjaxRequest(baseUrl+"/sc/invoice/view", redirectParams, editSucess);
 	}
 	kendo.bind($("#form-container"), currentObj);

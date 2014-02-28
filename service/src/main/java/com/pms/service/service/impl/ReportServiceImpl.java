@@ -56,7 +56,7 @@ public class ReportServiceImpl extends AbstractService implements IReportService
 			item.put(PurchaseContract.SUPPLIER, getSupplierId(row[5], row[6]));
 	
 			item.put("salesContractCode", row[7]);// 销售合同编号
-			item.put("salesContractId", getSalesContactId(row[7]));
+			item.put("scId", getSalesContactId(row[7]));
 	
 			item.put("projectName", row[8]);// 项目名称
 			String projectId = getProjectId(row[8]);

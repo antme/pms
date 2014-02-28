@@ -53,7 +53,7 @@ public interface IPurchaseContractService {
     public Map<String, Object> getPurchaseOrder(Map<String, Object> parameters);
     
     
-    public List<Map<String,Object>> listApprovedPurchaseContractCosts(String salesContractId);
+    public List<Map<String,Object>> listApprovedPurchaseContractCosts(String scId);
     
     public Map<String, Object> listApprovedPurchaseOrderForSelect();
     

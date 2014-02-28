@@ -251,7 +251,7 @@ function updateSupplier(){
 			requestDataItem.projectName = this.dataItem().projectName;
 
 			requestDataItem.purchaseOrderId = this.dataItem().purchaseOrderId;
-			requestDataItem.salesContractId = this.dataItem().salesContractId;
+			requestDataItem.scId = this.dataItem().scId;
 			requestDataItem.salesContractCode = this.dataItem().salesContractCode;
 			requestDataItem.purchaseOrderCode = this.dataItem().purchaseOrderCode;
 		},
@@ -261,7 +261,7 @@ function updateSupplier(){
 			requestDataItem.projectName = this.dataItem().projectName;
 
 			requestDataItem.purchaseOrderId = this.dataItem().purchaseOrderId;
-			requestDataItem.salesContractId = this.dataItem().salesContractId;
+			requestDataItem.scId = this.dataItem().scId;
 			requestDataItem.salesContractCode = this.dataItem().salesContractCode;
 			requestDataItem.purchaseOrderCode = this.dataItem().purchaseOrderCode;
 		}

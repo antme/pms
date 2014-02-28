@@ -419,14 +419,14 @@ function addOrderInSCListForRuodian(){
         	
         	for (listIndex in requestDataItem.eqcostList) {
 				requestDataItem.eqcostList[listIndex].projectId = redirectParams.projectId;
-				requestDataItem.eqcostList[listIndex].salesContractId = redirectParams.scId;
+				requestDataItem.eqcostList[listIndex].scId = redirectParams.scId;
 				requestDataItem.eqcostList[listIndex].salesContractCode = redirectParams.contractCode;				
 			}
         	eqCostListDataSource.data(requestDataItem.eqcostList);			
 			requestDataItem.eqcostDeliveryType = "直发现场";
 			requestDataItem.fromRuodian = "弱电工程";
 			requestDataItem.projectId = redirectParams.projectId;
-			requestDataItem.salesContractId = redirectParams.scId;
+			requestDataItem.scId = redirectParams.scId;
 			
 
 			edit();
@@ -587,7 +587,7 @@ function showOrderWindow() {
 					for (listIndex in eqcostList) {
 						if(eqcostList[listIndex].uid){
 							eqcostList[listIndex].projectId = dataItems[index].projectId;
-							eqcostList[listIndex].salesContractId = dataItems[index].salesContractId;
+							eqcostList[listIndex].scId = dataItems[index].scId;
 							eqcostList[listIndex].salesContractCode = dataItems[index].salesContractCode;
 							eqcostList[listIndex].purchaseOrderId = dataItems[index]._id;
 							eqcostList[listIndex].purchaseOrderCode = dataItems[index].purchaseOrderCode;

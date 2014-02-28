@@ -42,7 +42,7 @@ public interface ISalesContractService {
 	
 	public Map<String,Object> getBaseInfoByIds(List<String> ids);
 	
-	public Map<String,Object> getEqBaseInfoBySalesContractIds(String id);
+	public Map<String,Object> getEqBaseInfoByScIds(String id);
 	
 	public Map<String,Object> getEqBaseInfoByIds(String ids);
 	

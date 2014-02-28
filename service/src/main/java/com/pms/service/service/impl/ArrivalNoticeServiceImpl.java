@@ -241,6 +241,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, order.get(ApiConstants.MONGO_ID));
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
 		noticeParams.put(SalesContractBean.SC_ID, order.get(PurchaseCommonBean.SALES_CONTRACT_ID));
+		noticeParams.put(SalesContractBean.SC_CODE, order.get(PurchaseCommonBean.SALES_CONTRACT_CODE));
 		
 		Object deliveryType = order.get(PurchaseContract.EQCOST_DELIVERY_TYPE);
         Object contractType = order.get(PurchaseContract.PURCHASE_CONTRACT_TYPE);
@@ -249,6 +250,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
         
         if(ApiUtil.isValid(params.get("storeHouse"))){
         	arriveryType = params.get("storeHouse").toString();
+    		noticeParams.put(ArrivalNoticeBean.ARRIVAL_TYPE, "入库到货");
+
         }else{
 	        if (deliveryType != null && deliveryType.toString().equalsIgnoreCase(PurchaseContract.EQCOST_DELIVERY_TYPE_REPOSITORY)) {
 	            if (contractType != null && contractType.toString().equalsIgnoreCase(PurchaseContract.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI)) {
@@ -257,6 +260,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 	                arriveryType = ArrivalNoticeBean.SHIP_TYPE_2;
 	            }
 	        }
+	        noticeParams.put(ArrivalNoticeBean.ARRIVAL_TYPE, "直发到货");
         }
         
         noticeParams.put(PurchaseContract.EQCOST_DELIVERY_TYPE, deliveryType);
@@ -305,8 +309,11 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_KEY, allot.get(ApiConstants.MONGO_ID));
 		noticeParams.put(ArrivalNoticeBean.FOREIGN_CODE, allot.get(PurchaseBack.paCode));
 		noticeParams.put(SalesContractBean.SC_ID, allot.get(PurchaseBack.scId));
+		noticeParams.put(SalesContractBean.SC_CODE, allot.get(SalesContractBean.SC_CODE));
 		noticeParams.put(ArrivalNoticeBean.SHIP_TYPE, allot.get(PurchaseBack.paShelfCode));
 		noticeParams.put(ArrivalNoticeBean.ARRIVAL_DATE, allot.get(PurchaseBack.pbPlanDate));
+		noticeParams.put(ArrivalNoticeBean.ARRIVAL_TYPE, "调拨到货");
+		
 		
 		// 到货设备清单
 		List<Map<String, Object>> eqList = (List<Map<String, Object>>) allot.get(SalesContractBean.SC_EQ_LIST);

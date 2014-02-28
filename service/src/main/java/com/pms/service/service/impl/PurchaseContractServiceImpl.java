@@ -316,7 +316,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
 
     private List<Map<String, Object>> loadRepositoryRestEqListNew(Map<String, Object> params, List<Map<String, Object>> loadedEqclist, boolean loadExists, String db) {
-        Map<String, Object> query = new HashMap<String, Object>();
         Object purchaseContractId = params.get("purchaseContractId");
         boolean isDirect =false;
         boolean isRuoDian = false;
@@ -326,24 +325,36 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         }
         if (params.get("type") != null && params.get("type").toString().equalsIgnoreCase("out")) {
         	db = DBBean.REPOSITORY_OUT;
-            query.put("eqcostList.eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
-            query.put("projectId", purchaseContractId);
+        
 
-            Map<String, Object> map = this.dao.findOne(ApiConstants.MONGO_ID, purchaseContractId, new String[] { ProjectBean.PROJECT_TYPE }, DBBean.PROJECT);
+//            Map<String, Object> map = this.dao.findOne(ApiConstants.MONGO_ID, purchaseContractId, new String[] { ProjectBean.PROJECT_TYPE }, DBBean.PROJECT);
 
-            if (dao.exist("projectId", purchaseContractId, DBBean.PURCHASE_CONTRACT)) {
+            if (dao.exist("projectId", params.get("projectId"), DBBean.PURCHASE_CONTRACT)) {
                 //弱电工程
+                Map<String, Object> query = new HashMap<String, Object>();
+
+                query.put("eqcostList.eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
+                query.put(SalesContractBean.SC_ID, purchaseContractId);
                 query.put(PurchaseCommonBean.PROCESS_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseCommonBean.STATUS_APPROVED }));
                 query.put("eqcostList." + PurchaseContract.SUPPLIER, params.get(PurchaseContract.SUPPLIER));
                 results = this.dao.list(query, DBBean.PURCHASE_CONTRACT);
                 isRuoDian = true;
-            } else {
-                query.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { ShipBean.SHIP_STATUS_CLOSE }));
-                query.put("eqcostList." + PurchaseContract.SUPPLIER, params.get(PurchaseContract.SUPPLIER));
-                results = this.dao.list(query, DBBean.SHIP);
-            }
+			} else {
+				Map<String, Object> query = new HashMap<String, Object>();
+
+				query.put("eqcostList.eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY);
+				if (ApiUtil.isValid(params.get(PurchaseRequest.SALES_CONTRACT_ID))) {
+					query.put(PurchaseRequest.SALES_CONTRACT_ID, params.get(PurchaseRequest.SALES_CONTRACT_ID));
+				}
+				query.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { ShipBean.SHIP_STATUS_CLOSE }));
+				// query.put("eqcostList." + PurchaseContract.SUPPLIER,
+				// params.get(PurchaseContract.SUPPLIER));
+				results = this.dao.list(query, DBBean.SHIP);
+			}
             isDirect = true;
         }else{
+            Map<String, Object> query = new HashMap<String, Object>();
+
             query.put(ApiConstants.MONGO_ID, purchaseContractId);
 
             query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
@@ -366,7 +377,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             for (Map<String, Object> eq : eqCostList) {
 
                 if (isDirect) {
-                    if (data.get("projectId").equals(purchaseContractId) && eq.get(PurchaseContract.SUPPLIER) != null && eq.get(PurchaseContract.SUPPLIER).equals(params.get(PurchaseContract.SUPPLIER)) && 
+                    if (eq.get(PurchaseRequest.SALES_CONTRACT_ID) != null && eq.get(PurchaseRequest.SALES_CONTRACT_ID).equals(params.get(PurchaseRequest.SALES_CONTRACT_ID)) && 
                             eq.get(PurchaseContract.EQCOST_DELIVERY_TYPE).equals(PurchaseCommonBean.EQCOST_DELIVERY_TYPE_DIRECTY)) {
                         eqclist.add(eq);
                     }
@@ -457,6 +468,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         return mergedEqList;
     }
 
+    @Deprecated
     private List<Map<String, Object>> loadRepositoryRestEqList(Map<String, Object> params, List<Map<String, Object>> loadedEqclist, boolean loadExists, String db) {
         Map<String, Object> query = new HashMap<String, Object>();
         Object projectId = params.get("projectId");
@@ -595,10 +607,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
 
-    public List<Map<String, Object>> listApprovedPurchaseContractCosts(String salesContractId) {
+    public List<Map<String, Object>> listApprovedPurchaseContractCosts(String scId) {
 
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put("eqcostList.scId", salesContractId);
+        query.put("eqcostList.scId", scId);
         query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
         query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_EQ_LIST });
 
@@ -612,7 +624,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 List<Map<String, Object>> pList = (List<Map<String, Object>>) data.get("eqcostList");
 
                 for (Map<String, Object> p : pList) {
-                    if (p.get("scId").equals(salesContractId)) {
+                    if (p.get("scId").equals(scId)) {
                         eqclist.add(p);
                     }
                 }
@@ -1432,7 +1444,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 			db = DBBean.REPOSITORY_OUT;
 		}
         Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), db);
-        List<Map<String, Object>> mergedEqList = loadRepositoryRestEqList(result, (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST), true, db);
+        List<Map<String, Object>> mergedEqList = loadRepositoryRestEqListNew(result, (List<Map<String, Object>>) result.get(SalesContractBean.SC_EQ_LIST), true, db);
         result.put(SalesContractBean.SC_EQ_LIST, mergedEqList);
         removeEmptyEqList(result, "eqcostApplyAmount");
         return result;

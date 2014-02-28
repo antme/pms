@@ -18,6 +18,7 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.GroupBean;
+import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.SalesContractBean;
@@ -226,7 +227,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 
             if (!shipIds.contains(id.toString())) {
                 shipIds.add(id.toString());
-                if (shipedCountMap.get(id) != null) {
+                if (shipedCountMap.get(id) != null && arrivedCountMap.get(id) != null) {
                     eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arrivedCountMap.get(id) - shipedCountMap.get(id));
                     if (!loadExists) {
                         eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivedCountMap.get(id) - shipedCountMap.get(id));
@@ -346,6 +347,21 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		
 		if (close) {
 			params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_CLOSE);
+			
+			  
+            Map<String, Object> ship = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
+
+            Map<String, Object> repositoryOut = new HashMap<String, Object>();
+            repositoryOut.put(ShipBean.SHIP_PROJECT_ID, ship.get(ShipBean.SHIP_PROJECT_ID));
+            repositoryOut.put(ShipBean.SHIP_PROJECT_NAME, ship.get(ShipBean.SHIP_PROJECT_NAME));
+            repositoryOut.put(ProjectBean.PROJECT_CODE, ship.get(ProjectBean.PROJECT_CODE));
+            repositoryOut.put(ShipBean.SHIP_SALES_CONTRACT_ID, ship.get(ShipBean.SHIP_SALES_CONTRACT_ID));
+            repositoryOut.put(ShipBean.SHIP_SALES_CONTRACT_CODE, ship.get(ShipBean.SHIP_SALES_CONTRACT_CODE));
+            repositoryOut.put("type", "out");
+            
+            repositoryOut.put("eqcostList", ship.get("eqcostList"));
+            pService.updateRepositoryRequest(repositoryOut);
+            
 		}
 		
 		return dao.updateById(params, DBBean.SHIP);

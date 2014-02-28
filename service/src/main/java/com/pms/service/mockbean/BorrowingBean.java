@@ -24,7 +24,7 @@ public class BorrowingBean {
 	
     public static final String BORROW_IN_PROJECT_MANAGER = "inProjectManager"; //调入项目负责人
 
-    public static final String BORROW_IN_SALES_CONTRACT_ID = "inSalesContractId"; // 调入销售合同数据库_id-外键
+    public static final String BORROW_IN_SALES_CONTRACT_ID = "inScId"; // 调入销售合同数据库_id-外键
     
     public static final String BORROW_IN_SALES_CONTRACT_CODE = "inSalesContractCode"; // 调入销售合同数据库_id-外键
     
@@ -40,7 +40,7 @@ public class BorrowingBean {
 	
     public static final String BORROW_OUT_PROJECT_MANAGER = "outProjectManager"; //调出项目负责人
 
-    public static final String BORROW_OUT_SALES_CONTRACT_ID = "outSalesContractId"; // 调出销售合同数据库_id-外键
+    public static final String BORROW_OUT_SALES_CONTRACT_ID = "outScId"; // 调出销售合同数据库_id-外键
     
     public static final String EQCOST_BORROW_AMOUNT = "eqcostBorrowAmount"; // 借货数量
     

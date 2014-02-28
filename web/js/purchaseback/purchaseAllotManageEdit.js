@@ -167,7 +167,7 @@ function editSucess(e){
 	if(e.paStatus == "已提交"){
 		$("#paNumberTd").hide();
 		$("#form-container-button button[value!='approve'][value!='reject'][value!='cancel']").hide();
-	}else if(e.paStatus == "已批准"){
+	}else if(e.paStatus == "已初审"){
 		$("#paNumberTd").hide();
 		$("#form-container-button button[value!='finalapprove'][value!='finalreject'][value!='cancel']").hide();
 	}else if(e.paStatus == "已终审"){

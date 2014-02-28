@@ -5,7 +5,7 @@ var ship = kendo.data.Model.define( {
     fields: {
     	shipCode: {},
     	applicationDepartment: {},
-    	salesContractId: {},
+    	scId: {},
     	contractCode: {},
     	contractType: {},
     	projectId: {},
@@ -132,7 +132,7 @@ $(document).ready(function() {
         	model.set("projectName", dataItem.projectName);
         	model.set("customer", dataItem.customer);
         	model.set("applicationDepartment", dataItem.department);
-        	model.set("salesContractId", "");
+        	model.set("scId", "");
         	
         	loadSC();
         	
@@ -377,11 +377,11 @@ function loadSC(){
             model.set("contractType", dataItem.contractType);
             model.shipType = undefined;
  
-            postAjaxRequest("/service/sc/getCustomerBySC", {salesContractId:dataItem.customer}, function(data){
+            postAjaxRequest("/service/sc/getCustomerBySC", {scId:dataItem.customer}, function(data){
             	model.set("customerName", data.name);
             	model.set("customerId", data._id);
             });
-            postAjaxRequest("/service/ship/eqlist", {salesContractId:salesContract.value()}, loadEqList);
+            postAjaxRequest("/service/ship/eqlist", {scId:salesContract.value()}, loadEqList);
 		
         }
     }).data("kendoComboBox");

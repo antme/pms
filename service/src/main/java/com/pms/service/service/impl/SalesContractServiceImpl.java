@@ -610,7 +610,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 
 	/** id:map */
-	public Map<String, Object> getEqBaseInfoBySalesContractIds(String id) {
+	public Map<String, Object> getEqBaseInfoByScIds(String id) {
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(EqCostListBean.EQ_LIST_SC_ID, id);
 		return dao.listToOneMapAndIdAsKey(query, DBBean.EQ_COST);
@@ -1698,7 +1698,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	public Map<String, Object> getCustomerBySC(Map<String, Object> params) {
 		Map<String, Object> customerQuery = new HashMap<String, Object>();
-		customerQuery.put(ApiConstants.MONGO_ID, params.get("salesContractId"));
+		customerQuery.put(ApiConstants.MONGO_ID, params.get("scId"));
 		return this.dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
 	}
 	

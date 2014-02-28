@@ -25,7 +25,7 @@ public class ShipBean {
     
     public static final String SHIP_PROJECT_NAME = "projectName"; // 项目名称
 
-    public static final String SHIP_SALES_CONTRACT_ID = "salesContractId"; // 销售合同数据库id-外键
+    public static final String SHIP_SALES_CONTRACT_ID = "scId"; // 销售合同数据库id-外键
     
     public static final String SHIP_SALES_CONTRACT_CODE = "contractCode"; // 销售合同编号
     

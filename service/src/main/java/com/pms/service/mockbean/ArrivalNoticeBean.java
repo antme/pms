@@ -6,6 +6,8 @@ public class ArrivalNoticeBean {
 	
     public static final String ARRIVAL_DATE = "arrivalDate";
     
+    public static final String ARRIVAL_TYPE = "arrivalType";
+       
     public static final String FOREIGN_KEY = "foreignKey"; // 采购订单id or 调拨申请id
     
     public static final String FOREIGN_CODE = "foreignCode"; // 采购订单code or 调拨申请code
