@@ -197,7 +197,7 @@ function loadBackRequest(data) {
 		requestDataItem.backRequestId = requestDataItem._id;
 		requestDataItem.backRequestCode = requestDataItem.pbCode;
 		requestDataItem.scId = requestDataItem.scId;
-		requestDataItem.salesContractCode = requestDataItem.scCode;
+		requestDataItem.contractCode = requestDataItem.scCode;
 		requestDataItem.comment = "";
 		
 		// // 新增，所以设置_id为空

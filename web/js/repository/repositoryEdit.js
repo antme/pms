@@ -252,7 +252,7 @@ function updateSupplier(){
 
 			requestDataItem.purchaseOrderId = this.dataItem().purchaseOrderId;
 			requestDataItem.scId = this.dataItem().scId;
-			requestDataItem.salesContractCode = this.dataItem().salesContractCode;
+			requestDataItem.contractCode = this.dataItem().contractCode;
 			requestDataItem.purchaseOrderCode = this.dataItem().purchaseOrderCode;
 		},
 		dataBound : function(e){	
@@ -262,7 +262,7 @@ function updateSupplier(){
 
 			requestDataItem.purchaseOrderId = this.dataItem().purchaseOrderId;
 			requestDataItem.scId = this.dataItem().scId;
-			requestDataItem.salesContractCode = this.dataItem().salesContractCode;
+			requestDataItem.contractCode = this.dataItem().contractCode;
 			requestDataItem.purchaseOrderCode = this.dataItem().purchaseOrderCode;
 		}
 
@@ -275,7 +275,7 @@ var repFields = {
 		eqcostBrand : {
 			editable : false
 		},
-		salesContractCode : {
+		contractCode : {
 			editable : false
 		},
 		purchaseOrderCode : {
@@ -499,7 +499,7 @@ function editRepository(data) {
 					title : leftCountLabel,
 					attributes: { "style": "color:red"}
 				}, {
-					field : "salesContractCode",
+					field : "contractCode",
 					title : "销售合同编号"
 				},{
 					field : "purchaseOrderCode",

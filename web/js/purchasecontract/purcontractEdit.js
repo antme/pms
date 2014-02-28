@@ -5,7 +5,7 @@ var supplierNameContact ="";
 var contractModel = kendo.data.Model.define({
 	id : "_id",
 	fields : {
-		salesContractCode : {
+		contractCode : {
 			editable : false
 		},
 		
@@ -420,7 +420,7 @@ function addOrderInSCListForRuodian(){
         	for (listIndex in requestDataItem.eqcostList) {
 				requestDataItem.eqcostList[listIndex].projectId = redirectParams.projectId;
 				requestDataItem.eqcostList[listIndex].scId = redirectParams.scId;
-				requestDataItem.eqcostList[listIndex].salesContractCode = redirectParams.contractCode;				
+				requestDataItem.eqcostList[listIndex].contractCode = redirectParams.contractCode;				
 			}
         	eqCostListDataSource.data(requestDataItem.eqcostList);			
 			requestDataItem.eqcostDeliveryType = "直发现场";
@@ -588,7 +588,7 @@ function showOrderWindow() {
 						if(eqcostList[listIndex].uid){
 							eqcostList[listIndex].projectId = dataItems[index].projectId;
 							eqcostList[listIndex].scId = dataItems[index].scId;
-							eqcostList[listIndex].salesContractCode = dataItems[index].salesContractCode;
+							eqcostList[listIndex].contractCode = dataItems[index].contractCode;
 							eqcostList[listIndex].purchaseOrderId = dataItems[index]._id;
 							eqcostList[listIndex].purchaseOrderCode = dataItems[index].purchaseOrderCode;
 							eqcostList[listIndex].purchaseRequestId = dataItems[index].purchaseRequestId;
@@ -740,7 +740,7 @@ function edit(data) {
 				field : "remark",
 				title : "备注"
 			}, {
-				field : "salesContractCode",
+				field : "contractCode",
 				title : "销售合同编号"
 			},{
 				field : "purchaseOrderCode",

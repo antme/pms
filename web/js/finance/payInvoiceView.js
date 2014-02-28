@@ -18,7 +18,7 @@ var subMoneyModel = kendo.data.Model.define({
    	   getMoneyComment:{},
    	   creatorName:{editable : false},
        scId: {},
-       salesContractCode: {},
+       contractCode: {},
        customerBankName:{},
        customerBankAccount:{}
     }

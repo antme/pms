@@ -53,10 +53,10 @@ $(document).ready(function() {
 					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem.backRequestId + '\');">' + dataItem.backRequestCode + '</a>';
 				}
 			}, {
-				field : "salesContractCode",
+				field : "contractCode",
 				title : "销售合同编号",
 				template : function(dataItem) {
-					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.salesContractCode + '</a>';
+					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
 			}, {
 				field : "customerName",

@@ -15,7 +15,7 @@ public class PurchaseCommonBean extends BaseEntity {
 
     private String scId;
     
-    private String salesContractCode;
+    private String contractCode;
 
     private String purchaseOrderCode;
     
@@ -165,12 +165,12 @@ public class PurchaseCommonBean extends BaseEntity {
         this.scId = scId;
     }
 
-    public String getSalesContractCode() {
-        return salesContractCode;
+    public String getContractCode() {
+        return contractCode;
     }
 
-    public void setSalesContractCode(String salesContractCode) {
-        this.salesContractCode = salesContractCode;
+    public void setContractCode(String contractCode) {
+        this.contractCode = contractCode;
     }
 
 
@@ -204,7 +204,7 @@ public class PurchaseCommonBean extends BaseEntity {
 
     public static final String PROCESS_STATUS = "status";
     public static final String APPROVED_DATE = "approvedDate";
-    public static final String SALES_CONTRACT_CODE = "salesContractCode";
+    public static final String SALES_CONTRACT_CODE = "contractCode";
 
     public static final String STATUS_DRAFT = "草稿";
     public static final String STATUS_SUBMITED = "已提交";

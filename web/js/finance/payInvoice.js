@@ -42,7 +42,7 @@ var moneyModel = kendo.data.Model.define({
        getMoneyActualDate: { type:"date",validation: {required: true }},
    	   getMoneyComment:{},
        scId: {},
-       salesContractCode: {},
+       contractCode: {},
        customerBankName:{},
        customerBankAccount:{}
     }
