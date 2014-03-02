@@ -393,7 +393,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		}
 		
 		if (!ProjectBean.PROJECT_STATUS_OFFICIAL.equals(pStatus)){
-			prefix = ProjectBean.PROJECT_YULIXIANG_PREFIX+prefix;
+			prefix = ProjectBean.PROJECT_YULIXIANG_PREFIX + prefix;
 		}
 		
 		int year = DateUtil.getNowYearString();

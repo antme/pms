@@ -28,10 +28,16 @@ public class ProjectBean {
 	public static final String PROJECT_TYPE_PROJECT = "工程";  //工程
 	public static final String PROJECT_TYPE_SERVICE = "服务";  //服务
 	
-	public static final String PROJECT_CODE_PREFIX_PRODUCT = "TDSH-XMXS-";  //产品类 前缀
-	public static final String PROJECT_CODE_PREFIX_PROJECT = "TDSH-XMGC-";  //工程类 前缀
-	public static final String PROJECT_CODE_PREFIX_SERVICE = "TDSH-XMFW-";  //服务类 前缀
+	//public static final String PROJECT_CODE_PREFIX_PRODUCT = "TDSH-XMXS-";  //产品类 前缀
+	//public static final String PROJECT_CODE_PREFIX_PROJECT = "TDSH-XMGC-";  //工程类 前缀
+	//public static final String PROJECT_CODE_PREFIX_SERVICE = "TDSH-XMFW-";  //服务类 前缀
 	
+	
+	public static final String PROJECT_CODE_PREFIX_PRODUCT = "TDSH-";  //产品类 前缀
+	public static final String PROJECT_CODE_PREFIX_PROJECT = "TDSH-";  //工程类 前缀
+	public static final String PROJECT_CODE_PREFIX_SERVICE = "TDSH-";  //服务类 前缀
+	    
+	    
 	public static final String PROJECT_YULIXIANG_PREFIX = "Y-";  //预立项前缀
 	
 	//项目状态数据
