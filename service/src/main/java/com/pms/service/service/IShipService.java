@@ -22,7 +22,7 @@ public interface IShipService {
 	
 	public Map<String, Object> reject(Map<String, Object> params);
 	
-	public Map<String, Object> record(Map<String, Object> params);
+	public Map<String, Object> confirmShipData(Map<String, Object> params);
 	
 	public Map<String, Object> listShipCount(Map<String, Object> params);
 	

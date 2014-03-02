@@ -21,6 +21,7 @@ import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.PurchaseContract;
+import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.ShipCountBean;
@@ -327,7 +328,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         return this.dao.updateById(params, DBBean.SHIP); 
     }
 	
-	public Map<String, Object> record(Map<String, Object> params) {
+	public Map<String, Object> confirmShipData(Map<String, Object> params) {
 		List<Map<String, Object>> eqlist = (List<Map<String, Object>>) params.get(ShipBean.SHIP_EQ_LIST);
 		boolean close = true;
 //		for (Map<String, Object> eq : eqlist) {
@@ -357,7 +358,20 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
             repositoryOut.put(ProjectBean.PROJECT_CODE, ship.get(ProjectBean.PROJECT_CODE));
             repositoryOut.put(ShipBean.SHIP_SALES_CONTRACT_ID, ship.get(ShipBean.SHIP_SALES_CONTRACT_ID));
             repositoryOut.put(ShipBean.SHIP_SALES_CONTRACT_CODE, ship.get(ShipBean.SHIP_SALES_CONTRACT_CODE));
+            
             repositoryOut.put("type", "out");
+            repositoryOut.put("status", PurchaseRequest.STATUS_APPROVED);
+
+            if(ship.get("eqcostList")!=null){
+                
+                List<Map<String, Object>> eqList = (List<Map<String, Object>>) ship.get("eqcostList");
+                
+                for(Map<String, Object> eq: eqList){
+                    
+                    eq.put("eqcostApplyAmount", eq.get(ShipBean.SHIP_EQ_ACTURE_AMOUNT));
+
+                }
+            }
             
             repositoryOut.put("eqcostList", ship.get("eqcostList"));
             pService.updateRepositoryRequest(repositoryOut);

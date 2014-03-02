@@ -107,7 +107,7 @@ public class ShipController extends AbstractController {
     @RoleValidate(roleID=RoleValidConstants.SHIP_ARRIVAL_RECORD, desc = RoleValidConstants.SHIP_ARRIVAL_RECORD_DESC)
     public void record(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(shipService.record(params), request, response);
+        responseWithData(shipService.confirmShipData(params), request, response);
     }
     
     @RequestMapping("/count/list")

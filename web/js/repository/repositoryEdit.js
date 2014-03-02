@@ -133,9 +133,9 @@ var projectDataSource = new kendo.data.DataSource({
 	}
 });
 $(document).ready(function() {
-
+	
 	checkRoles();
-	if(redirectParams && redirectParams.type == "out"){
+	if((redirectParams && redirectParams.type == "out") || (popupParams && popupParams.type == "out")){
 		listProjectUrl = "/service/purcontract/repository/contract/list?type=out";
 		updateUrl = "/service/purcontract/repository/update?type=out";
 		createUrl = "/service/purcontract/repository/add?type=out";
@@ -143,16 +143,15 @@ $(document).ready(function() {
 		loadUrl = "/service/purcontract/repository/get?type=out";
 		eqcostApplyAmountLabel = "出库数量";
 		leftCountLabel = "可出库数量";
-		if(redirectParams.page == "confirm"){
+		if(redirectParams && redirectParams.page && redirectParams.page == "confirm"){
 			$("#confirmRepositoryOut").show();
 		}else{
 			$("#saveRepos").show();
 		}
 
-	}
+	}else{
 
-
-	$("#purchasecontractselect").kendoDropDownList({
+		$("#purchasecontractselect").kendoDropDownList({
 			dataTextField : "purchaseContractCode",
 			dataValueField : "_id",
 			placeholder : "选择采购合同...",
@@ -173,7 +172,8 @@ $(document).ready(function() {
 				updateSupplier();
 			}
 		});
-	
+	}
+
 //	$("#operator").kendoDropDownList({
 //		dataTextField : "userName",
 //		dataValueField : "_id",
