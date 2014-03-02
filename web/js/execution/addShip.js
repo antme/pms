@@ -373,11 +373,12 @@ function loadSC(){
         change: function(e) {
         	var dataItem = this.dataItem();
        
+        	console.log(dataItem);
             model.set("contractCode", dataItem.contractCode);
             model.set("contractType", dataItem.contractType);
             model.shipType = undefined;
  
-            postAjaxRequest("/service/sc/getCustomerBySC", {scId:dataItem.customer}, function(data){
+            postAjaxRequest("/service/sc/getCustomerBySC", {scId:dataItem.customerId}, function(data){
             	model.set("customerName", data.name);
             	model.set("customerId", data._id);
             });
