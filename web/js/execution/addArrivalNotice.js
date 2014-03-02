@@ -180,6 +180,11 @@ function editArrivalNotice(data) {
 		data.projectManager = data.projectManagerName;
 	}
 
+	if(data.arrivalDate){
+		
+	    data.pbPlanDate = data.arrivalDate;
+	}
+	
 	requestDataItem = new model(requestDataItem);
 
 	if(requestDataItem.eqcostList.length >0 ){

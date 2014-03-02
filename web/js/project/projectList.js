@@ -103,7 +103,7 @@ $(document).ready(function() {
 				return '<a  onclick="openPMViewWindow(\'' + dataItem.projectManagerId + '\');">' + dataItem.projectManagerName + '</a>';
 			}
 		},{
-			field : "customer",
+			field : "customerName",
 			title : "客户名"
 		}]
 	});

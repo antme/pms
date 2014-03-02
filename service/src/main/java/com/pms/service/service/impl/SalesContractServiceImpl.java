@@ -1177,7 +1177,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(SalesContractBean.SC_PROJECT_ID, pId);
-		query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_CODE, SalesContractBean.SC_TYPE, SalesContractBean.SC_CUSTOMER_ID});
+		query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_CODE, SalesContractBean.SC_TYPE, SalesContractBean.SC_CUSTOMER_ID, SalesContractBean.APPLICATION_DEPARTMENT});
 		Map<String, Object> result = dao.list(query, DBBean.SALES_CONTRACT);
 
 		return result;

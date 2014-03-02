@@ -25,7 +25,7 @@ var projectModel = kendo.data.Model.define({
 				required : true
 			}
 		},*/
-		projectManager : {
+		projectManagerId : {
 			validation : {
 				required : true
 			}
@@ -81,7 +81,7 @@ $(document).ready(function() {
 	});
 	
 
-	$("#projectManager").kendoDropDownList({
+	$("#projectManagerId").kendoDropDownList({
 		dataTextField : "userName",
 		dataValueField : "_id",
         optionLabel: "选择项目经理...",
@@ -160,7 +160,7 @@ function edit(data){
 	$("#projectAbbr").attr("disabled",true);
 	var pTypeList = $("#projectType").data("kendoDropDownList");
 	pTypeList.enable(false);
-	var pManager = $("#projectManager").data("kendoDropDownList");
+	var pManager = $("#projectManagerId").data("kendoDropDownList");
 	pManager.enable(false);
 	pStatus.enable(false);
 	

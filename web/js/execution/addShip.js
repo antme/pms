@@ -376,6 +376,7 @@ function loadSC(){
         	console.log(dataItem);
             model.set("contractCode", dataItem.contractCode);
             model.set("contractType", dataItem.contractType);
+            model.set("applicationDepartment", dataItem.applicationDepartment);
             model.shipType = undefined;
  
             postAjaxRequest("/service/sc/getCustomerBySC", {scId:dataItem.customerId}, function(data){
