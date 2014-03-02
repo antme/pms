@@ -99,7 +99,7 @@ function confirmRepositoryOut(){
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if(row.status == "已出库"){
-			alert("此申请已出库，不需要再次出库");
+			alert("此申请已出库确认，不需要再次确认");
 		}else{
 			
 			loadPage("repository_repositoryOutEdit", {

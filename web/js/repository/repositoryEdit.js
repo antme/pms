@@ -5,6 +5,7 @@ var createUrl = "/service/purcontract/repository/add?type=in";
 var listEqUrl = "/service/purcontract/get/countract_order?type=in";
 var loadUrl = "/service/purcontract/repository/get?type=in";
 var eqcostApplyAmountLabel = "入库数量";
+var eqcostConfirmApplyAmountLabel = "入库数量确认"
 var leftCountLabel = "可入库数量";
 
 
@@ -142,6 +143,7 @@ $(document).ready(function() {
 		listEqUrl = "/service/purcontract/get/byproject_supplier?type=out";
 		loadUrl = "/service/purcontract/repository/get?type=out";
 		eqcostApplyAmountLabel = "出库数量";
+		eqcostConfirmApplyAmountLabel = "出库数量确认"
 		leftCountLabel = "可出库数量";
 		if(redirectParams && redirectParams.page && redirectParams.page == "confirm"){
 			$("#confirmRepositoryOut").show();
@@ -219,6 +221,7 @@ $(document).ready(function() {
 			loadUrl = "/service/purcontract/repository/get?type=out";
 			eqcostApplyAmountLabel = "出库数量";
 			leftCountLabel = "可出库数量";
+			eqcostConfirmApplyAmountLabel = "出库数量确认";
 		}
 		postAjaxRequest(loadUrl, popupParams, editRepository);
 		disableAllInPoppup();
@@ -446,9 +449,16 @@ function editRepository(data) {
 		var eqList = requestDataItem.eqcostList;
 		if(requestDataItem.status == "已提交"){
 			for(i=0; i<eqList.length; i++){
-				eqList[i].leftCount = eqList[i].leftCount + eqList[i].eqcostApplyAmount;
-				
+				eqList[i].leftCount = eqList[i].leftCount + eqList[i].eqcostApplyAmount;				
 			}
+		}
+		
+		for(i=0; i<eqList.length; i++){
+			
+			if(!eqList[i].eqcostConfirmApplyAmount){
+				eqList[i].eqcostConfirmApplyAmount = eqList[i].eqcostApplyAmount;
+			}
+			
 		}
 	}
 	if (requestDataItem) {
@@ -493,6 +503,10 @@ function editRepository(data) {
 				}, {
 					field : "eqcostApplyAmount",
 					title : eqcostApplyAmountLabel,
+					attributes: { "style": "color:red"}
+				},{
+					field : "eqcostConfirmApplyAmount",
+					title : eqcostConfirmApplyAmountLabel,
 					attributes: { "style": "color:red"}
 				},{
 					field : "leftCount",
