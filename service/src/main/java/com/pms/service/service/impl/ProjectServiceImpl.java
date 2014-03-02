@@ -59,7 +59,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
             //Add
             project.setProjectCode(genProjectCode(project.getProjectType(), project.getProjectStatus()));
             
-            dao.add(project, DBBean.PROJECT, Project.class);
+             dao.add(project, DBBean.PROJECT, Project.class);
             
         }else{//Update
             
@@ -79,7 +79,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
                 relatedCQuery.put(ProjectBean.PROJECT_ID, project.get_id());                
                 updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_MANAGER_ID, pmNew);
             }                   
-            dao.updateById(project.toMap(), DBBean.PROJECT);
+            dao.updateById(project, DBBean.PROJECT, Project.class);
         }
     
     }
@@ -229,19 +229,19 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		
 		for (Map<String, Object> pro : resultListData){
 			String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER_ID);
-			pro.put("pmId", pmId);
+			pro.put(ProjectBean.PROJECT_MANAGER_ID, pmId);
 			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
 			if (pmInfo != null){
-				pro.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(UserBean.USER_NAME));
+				pro.put(ProjectBean.PROJECT_MANAGER_NAME, pmInfo.get(UserBean.USER_NAME));
 			}
 
 			String cId = (String) pro.get(ProjectBean.PROJECT_CUSTOMER_ID);
-			pro.put("cId", cId);
+			pro.put(ProjectBean.PROJECT_CUSTOMER_NAME, cId);
 			Map<String, Object> cInfo = (Map<String, Object>) customerData.get(cId);
 			if (cInfo != null){
-				pro.put(ProjectBean.PROJECT_CUSTOMER_ID, cInfo.get(CustomerBean.NAME));
+				pro.put(ProjectBean.PROJECT_CUSTOMER_NAME, cInfo.get(CustomerBean.NAME));
 			}else{
-				pro.put(ProjectBean.PROJECT_CUSTOMER_ID, "N/A");
+				pro.put(ProjectBean.PROJECT_CUSTOMER_NAME, "N/A");
 			}
 			
 		}

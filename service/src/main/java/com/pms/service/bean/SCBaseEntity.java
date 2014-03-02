@@ -24,6 +24,10 @@ public class SCBaseEntity extends BaseEntity {
 
     @Expose
     private String customerName;
+    
+    @Expose
+    private String projectName;
+
 
     public String getProjectCode() {
         return projectCode;

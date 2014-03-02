@@ -43,6 +43,7 @@ import com.pms.service.service.IUserService;
 import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DataUtil;
 import com.pms.service.util.DateUtil;
 import com.pms.service.util.ExcleUtil;
 import com.pms.service.util.status.ResponseCodeConstants;
@@ -108,14 +109,70 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public Map<String, Object> addSC(Map<String, Object> params) {
 		String _id = (String) params.get(ApiConstants.MONGO_ID);
 
-		// 构造合同信息
 		Map<String, Object> contract = new HashMap<String, Object>();
+        contract.put(SalesContractBean.SC_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT));
+        contract.put(SalesContractBean.SC_EQUIPMENT_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_EQUIPMENT_AMOUNT));
+        contract.put(SalesContractBean.SC_SERVICE_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_SERVICE_AMOUNT));
+        contract.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
+        contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_EQ_COST0));
+        contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST1, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_EQ_COST1));
+        contract.put(SalesContractBean.SC_ESTIMATE_SUB_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_SUB_COST));
+        contract.put(SalesContractBean.SC_ESTIMATE_PM_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_PM_COST));
+        contract.put(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST));
+        contract.put(SalesContractBean.SC_ESTIMATE_DEBUG_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_DEBUG_COST));
+        contract.put(SalesContractBean.SC_ESTIMATE_OTHER_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_OTHER_COST));
 
-		String status = SalesContractBean.SC_STATUS_SUBMITED;
-		Map<String, Object> projectInfo = new HashMap<String, Object>();
-	
-		
-		Object projectId = params.get(SalesContractBean.SC_PROJECT_ID);
+        contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT, ApiUtil.getFloatParam(params, SalesContractBean.SC_EXTIMATE_GROSS_PROFIT));
+        contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE, params.get(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE));
+
+        // contract.put(SalesContractBean.SC_CODE,
+        // params.get(SalesContractBean.SC_CODE));
+        contract.put(SalesContractBean.SC_PERSON, params.get(SalesContractBean.SC_PERSON));
+        contract.put(SalesContractBean.SC_CUSTOMER_ID, params.get(SalesContractBean.SC_CUSTOMER_ID));
+        contract.put(SalesContractBean.SC_TYPE, params.get(SalesContractBean.SC_TYPE));
+        contract.put(SalesContractBean.SC_ARCHIVE_STATUS, params.get(SalesContractBean.SC_ARCHIVE_STATUS));
+        contract.put(SalesContractBean.SC_RUNNING_STATUS, params.get(SalesContractBean.SC_RUNNING_STATUS));
+        contract.put(SalesContractBean.SC_DATE, params.get(SalesContractBean.SC_DATE));
+        contract.put(SalesContractBean.SC_ESTIMATE_TAX, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_TAX));
+        contract.put(SalesContractBean.SC_TOTAL_ESTIMATE_COST, ApiUtil.getDouble(params, SalesContractBean.SC_TOTAL_ESTIMATE_COST));
+        contract.put(SalesContractBean.SC_DOWN_PAYMENT, params.get(SalesContractBean.SC_DOWN_PAYMENT));
+        contract.put(SalesContractBean.SC_PROGRESS_PAYMENT, params.get(SalesContractBean.SC_PROGRESS_PAYMENT));
+        contract.put(SalesContractBean.SC_QUALITY_MONEY, ApiUtil.getDouble(params, SalesContractBean.SC_QUALITY_MONEY));
+        contract.put(SalesContractBean.SC_DOWN_PAYMENT_MEMO, params.get(SalesContractBean.SC_DOWN_PAYMENT_MEMO));
+        contract.put(SalesContractBean.SC_QUALITY_MONEY_MEMO, params.get(SalesContractBean.SC_QUALITY_MONEY_MEMO));
+        contract.put(SalesContractBean.SC_MEMO, params.get(SalesContractBean.SC_MEMO));
+
+        contract.put("status", params.get("status"));
+
+        String status = SalesContractBean.SC_STATUS_SUBMITED;
+
+        if (contract.get("status") != null) {
+            status = contract.get("status").toString();
+        }
+
+        Map<String, Object> projectInfo = new HashMap<String, Object>();
+
+        projectInfo.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
+        projectInfo.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
+        projectInfo.put(ProjectBean.PROJECT_MANAGER_ID, params.get(ProjectBean.PROJECT_MANAGER_ID));
+        projectInfo.put(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME));
+        projectInfo.put(ProjectBean.PROJECT_STATUS, params.get(ProjectBean.PROJECT_STATUS));
+        projectInfo.put(ProjectBean.PROJECT_TYPE, params.get(ProjectBean.PROJECT_TYPE));
+        projectInfo.put(ProjectBean.PROJECT_MEMO, params.get(ProjectBean.PROJECT_MEMO));
+        contract.putAll(projectInfo);
+
+        Object projectId = params.get(SalesContractBean.SC_PROJECT_ID);
+
+        if (status.equalsIgnoreCase(SalesContractBean.SC_STATUS_SUBMITED) && ApiUtil.isEmpty(projectId)) {
+            
+            // 如果提交的数据没包含项目，创建项目
+            Project project = (Project) DataUtil.toEntity(projectInfo, Project.class);
+            projectService.addProject(project);
+            contract.put(SalesContractBean.SC_PROJECT_ID, project.get_id());
+            projectId = project.get_id();
+        }
+
+        contract.put(SalesContractBean.SC_PROJECT_ID, projectId);
 
 
 		String scPId = (String) contract.get(SalesContractBean.SC_PROJECT_ID);
@@ -191,7 +248,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			// 客户改变
 			String customerOld = (String) existContract.get(SalesContractBean.SC_CUSTOMER_ID);
 			String customerNew = (String) contract.get(SalesContractBean.SC_CUSTOMER_ID);
-			if (!customerOld.equals(customerNew)) {
+			if (customerOld==null || !customerOld.equals(customerNew)) {
 				String[] relatedCollections = { DBBean.SC_GOT_MONEY };// 外键关联到SC,又冗余存有
 																	  // customer
 				Map<String, Object> relatedCQuery = new HashMap<String, Object>();
@@ -230,7 +287,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             // 如果提交的数据没包含项目，创建项目
             projectService.addProject(project);
         }
-        contract.setProjectId(project.get_id());
+//        contract.setProjectId(project.get_id());
 
 
         
@@ -580,7 +637,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 				Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
 				if (pmInfo != null) {
-					sc.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(UserBean.USER_NAME));
+					sc.put(ProjectBean.PROJECT_MANAGER_NAME, pmInfo.get(UserBean.USER_NAME));
 
 				}
 			}

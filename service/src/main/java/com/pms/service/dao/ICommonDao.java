@@ -69,6 +69,9 @@ public interface ICommonDao {
 
     public Map<String, Object> updateById(Map<String, Object> parameters, String collection);
     
+    public <T extends BaseEntity> BaseEntity updateById(BaseEntity entity, String collection, Class<T> classzz);
+
+    
     public Map<String, Object> updateNoDateById(Map<String, Object> parameters, String collection);
     
 

@@ -97,10 +97,10 @@ $(document).ready(function() {
 				}
 			}
 		}, {
-			field : "projectManager",
+			field : "projectManagerId",
 			title : "PM",
 			template : function(dataItem) {
-				return '<a  onclick="openPMViewWindow(\'' + dataItem.pmId + '\');">' + dataItem.projectManager + '</a>';
+				return '<a  onclick="openPMViewWindow(\'' + dataItem.projectManagerId + '\');">' + dataItem.projectManagerName + '</a>';
 			}
 		},{
 			field : "customer",

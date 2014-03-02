@@ -13,8 +13,8 @@ var requestModel = kendo.data.Model.define({
 		eqcostList:{},
 		projectCode : {},
 		projectName : {},
-		projectManager : {},
-		customer : {},
+		projectManagerName : {},
+		customerName : {},
 		contractCode : {},
 		contractAmount:{}
 	}
@@ -73,8 +73,8 @@ $(document).ready(function () {
 					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
 	        },
-	        { field: "customer", title:"客户名" , filterable : false},
-	        { field: "projectManager", title:"PM" , filterable : false},
+	        { field: "customerName", title:"客户名" , filterable : false},
+	        { field: "projectManagerName", title:"PM" , filterable : false},
 	        { field: "paStatus", title:"调拨状态" ,
 	        	filterable : {
 					ui: function(e){

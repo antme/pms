@@ -66,12 +66,12 @@ public class SalesContractController extends AbstractController {
 
 		Map<String, Object> params = parserJsonParameters(request, false);
 
-		Project project = (Project) parserParametersToEntity(request, false, Project.class);
+//		Project project = (Project) parserParametersToEntity(request, false, Project.class);
+//
+//		SalesContract contract = (SalesContract) parserParametersToEntity(request, false, SalesContract.class);
+//		List<EqCost> costList = parserListJsonParameters(request, false, EqCost.class, SalesContractBean.SC_EQ_LIST);
 
-		SalesContract contract = (SalesContract) parserParametersToEntity(request, false, SalesContract.class);
-		List<EqCost> costList = parserListJsonParameters(request, false, EqCost.class, SalesContractBean.SC_EQ_LIST);
-
-		System.out.println(costList);
+//		System.out.println(costList);
 
 		responseWithData(salesContractService.addSC(params), request, response);
 	}

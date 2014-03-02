@@ -61,7 +61,12 @@ public class CommonDaoMongoImpl implements ICommonDao {
     
     public <T extends BaseEntity> BaseEntity add(BaseEntity entity, String collection , Class<T> classzz){
         Map<String, Object> data = add(entity.toMap(), collection);
-        entity =  DataUtil.toEntity(data, classzz);
+        BaseEntity result =  DataUtil.toEntity(data, classzz);
+        
+        entity.setCreatedOn(result.getCreatedOn());
+        entity.setUpdatedOn(result.getUpdatedOn());
+        entity.set_id(result.get_id());
+        
         return entity;
     }
 
@@ -311,6 +316,19 @@ public class CommonDaoMongoImpl implements ICommonDao {
         
         return null;
 
+    }
+    
+    public <T extends BaseEntity> BaseEntity updateById(BaseEntity entity, String collection, Class<T> classzz){
+        Map<String, Object> rr = updateById(entity.toMap(), collection);
+        
+        BaseEntity result =  DataUtil.toEntity(rr, classzz);
+        
+        entity.setCreatedOn(result.getCreatedOn());
+        entity.setUpdatedOn(result.getUpdatedOn());
+        entity.set_id(result.get_id());
+        
+        return entity;
+        
     }
     
     public void addUpdateHistoryLog(Map<String, Object> newMap, String _id, String collection) {

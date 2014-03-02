@@ -11,7 +11,7 @@ var scModel = kendo.data.Model.define({
 				required : true
 			}
 		},
-		customer:{},
+		customerId:{},
 		archiveStatus : {},
 		runningStatus : {},
 		contractAmount : {
@@ -159,7 +159,7 @@ $(document).ready(function() {
 		    data: "data"
 		}
 	});
-	$("#customer").kendoDropDownList({
+	$("#customerId").kendoDropDownList({
 		dataTextField : "name",
 		dataValueField : "_id",
         optionLabel: "选择客户...",
@@ -212,11 +212,11 @@ $(document).ready(function() {
           
           //start: add for customer info
           var haveCustomer = dataItem.cId;
-          var cusList = $("#customer").data("kendoDropDownList");
+          var cusList = $("#customerId").data("kendoDropDownList");
           if (haveCustomer != null){
 	    	  cusList.value(haveCustomer);
 	    	  cusList.enable(false);
-	    	  scm.set("customer",haveCustomer)
+	    	  scm.set("customerId",haveCustomer)
          }
           //end: add for customer info 
 		}
@@ -507,7 +507,7 @@ function editDraftSc_ADD(data){
 	});
 	
 
-	$("#projectManager").kendoDropDownList({
+	$("#projectManagerId").kendoDropDownList({
 		dataTextField : "userName",
 		dataValueField : "_id",
         optionLabel: "选择项目经理...",
@@ -558,6 +558,11 @@ function saveSCDraft_ADD(){
 		scm.set("totalEstimateCost", totalEstimate);
 	
 		scm.set("status", "草稿");
+		
+		if(scm.projectManagerId && scm.projectManagerId._id){
+			scm.projectManagerId = scm.projectManagerId._id;
+		}
+		
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
 		});
@@ -586,8 +591,8 @@ function saveSC_ADD(){
 		scm.projectType = scm.projectType.text;
 	}
 	
-	if(scm.projectManager && scm.projectManager._id){
-		scm.projectManager = scm.projectManager._id;
+	if(scm.projectManagerId && scm.projectManagerId._id){
+		scm.projectManagerId = scm.projectManagerId._id;
 	}
 
 	

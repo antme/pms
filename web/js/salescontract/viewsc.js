@@ -11,7 +11,7 @@ var scModel = kendo.data.Model.define({
 				required : true
 			}
 		},
-		customer:{},
+		customerId:{},
 		archiveStatus : {},
 		runningStatus : {},
 		contractAmount : {},
@@ -143,7 +143,7 @@ $(document).ready(function() {
 		    data: "data"
 		}
 	});
-	$("#customer").kendoDropDownList({
+	$("#customerId").kendoDropDownList({
 		dataTextField : "name",
 		dataValueField : "_id",
         optionLabel: "选择客户...",

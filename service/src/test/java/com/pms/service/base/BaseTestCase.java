@@ -14,6 +14,7 @@ import junit.framework.TestCase;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import com.pms.service.bean.Project;
 import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dao.ICommonDao;
 import com.pms.service.dao.impl.mongo.CommonDaoMongoImpl;
@@ -51,12 +52,17 @@ public class BaseTestCase extends TestCase {
     }
 
     public void testEmpty() throws IOException {
-    	
-    	InputStream inputStream = new FileInputStream(new File("/Users/ymzhou/Documents/sc.xlsx"));
-    	Map<String,Object> map = new HashMap<String,Object>();
-		map.put("inputStream", inputStream);
-		scService.importSCExcleFile(map);
+//    	
+//    	InputStream inputStream = new FileInputStream(new File("/Users/ymzhou/Documents/sc.xlsx"));
+//    	Map<String,Object> map = new HashMap<String,Object>();
+//		map.put("inputStream", inputStream);
+//		scService.importSCExcleFile(map);
 
+		
+		Project project = new Project();
+		projectService.addProject(project);
+		assertNotNull(project);
+		
 //        assertTrue(true);
 //
 //        List emails = new ArrayList();

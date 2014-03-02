@@ -8,8 +8,6 @@ public class Project extends SCBaseEntity {
     @Expose
     private String projectAbbr;
 
-    @Expose
-    private String projectName;
 
     @Expose
     private String projectStatus;
@@ -30,13 +28,7 @@ public class Project extends SCBaseEntity {
         this.projectAbbr = projectAbbr;
     }
 
-    public String getProjectName() {
-        return projectName;
-    }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
 
     public String getProjectStatus() {
         return projectStatus;

@@ -89,7 +89,7 @@ $(document).ready(function() {
 			title : "归档状态",
 			width: 90
 		}, {
-			field : "customer",
+			field : "customerName",
 			title : "客户名"
 		}, {
 			field : "contractAmount",
@@ -175,7 +175,7 @@ $(document).ready(function() {
 			field : "archiveStatus",
 			title : "归档状态"
 		}, {
-			field : "customer",
+			field : "customerName",
 			title : "客户名"
 		}, {
 			field : "contractType",

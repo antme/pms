@@ -17,7 +17,7 @@ var requestModel = kendo.data.Model.define({
 		projectCode : {},
 		projectName : {},
 		projectManager : {},
-		customer : {},
+		customerName : {},
 		contractCode : {},
 		contractAmount:{},
 		backRequestCount:{},
@@ -76,7 +76,7 @@ $(document).ready(function () {
 					}
 				}	
 	        },
-	        { field: "projectManager", title:"PM"},
+	        { field: "projectManagerName", title:"PM"},
 	        { 
 	        	field: "contractCode", 
 	        	title:"销售合同编号",
@@ -84,7 +84,7 @@ $(document).ready(function () {
 					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
 	        },
-	        { field: "customer", title:"客户名"},
+	        { field: "customerName", title:"客户名"},
 	        { field: "pbStatus", title:"申请状态"},
 	        { field: "pbSubmitDate", title:"提交时间" },
 	        { field: "pbMoney", title:"金额" }

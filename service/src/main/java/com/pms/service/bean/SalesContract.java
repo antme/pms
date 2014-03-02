@@ -1,10 +1,8 @@
 package com.pms.service.bean;
 
 
-public class SalesContract extends Project {
+public class SalesContract extends SCBaseEntity {
 
-	private String projectId;
-	private String customerId;
 
 	private String contractCode;
 	private String contractPerson;
@@ -27,7 +25,6 @@ public class SalesContract extends Project {
 
 	private String archiveStatus;
 	private String runningStatus;
-	private String applicationDepartment;
 	private String contractAmount;
 	private String equipmentAmount;
 	private String serviceAmount;
@@ -50,21 +47,6 @@ public class SalesContract extends Project {
 	private String status;
 	
 
-	public String getProjectId() {
-		return projectId;
-	}
-
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
-	}
-
-	public String getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
 
 	public String getContractCode() {
 		return contractCode;
@@ -152,14 +134,6 @@ public class SalesContract extends Project {
 
 	public void setRunningStatus(String runningStatus) {
 		this.runningStatus = runningStatus;
-	}
-
-	public String getApplicationDepartment() {
-		return applicationDepartment;
-	}
-
-	public void setApplicationDepartment(String applicationDepartment) {
-		this.applicationDepartment = applicationDepartment;
 	}
 
 	public String getContractAmount() {

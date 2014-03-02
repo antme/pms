@@ -62,7 +62,7 @@ $(document).ready(function() {
 				field : "customerName",
 				title : "客户名"
 			}, {
-				field : "projectManager",
+				field : "projectManagerName",
 				title : "PM"
 			}, {
 				field : "status",
