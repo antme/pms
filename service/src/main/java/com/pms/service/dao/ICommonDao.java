@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.pms.service.bean.BaseEntity;
 
 public interface ICommonDao {
 
@@ -19,6 +20,9 @@ public interface ICommonDao {
      * @return return the id of the document
      */
     public Map<String, Object> add(Map<String, Object> map, String collection);
+    
+    
+    public <T extends BaseEntity> BaseEntity add(BaseEntity entity, String collection, Class<T> classzz);
 
     /**
      * Add batch data into Mongo collection
@@ -72,9 +76,15 @@ public interface ICommonDao {
 
     @SuppressWarnings("rawtypes")
     public Map<String,Object> findOneByQuery(Map<String, Object> parameters, String collection);
+    
+    @SuppressWarnings("rawtypes")
+    public <T extends BaseEntity> BaseEntity findOneByQuery(Map<String, Object> parameters, String collection, Class<T> classzz);
 
     @SuppressWarnings("rawtypes")
     public Map findOne(String key, Object value, String collection);
+    
+    @SuppressWarnings("rawtypes")
+    public <T extends BaseEntity> BaseEntity findOne(String key, Object value, String collection, Class<T> classzz);
     
     public Map findOne(String key, Object value, String[] limitKeys, String collection);
 

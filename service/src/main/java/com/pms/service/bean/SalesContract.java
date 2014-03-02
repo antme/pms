@@ -1,8 +1,7 @@
 package com.pms.service.bean;
 
-import com.pms.service.annotation.FloatColumn;
 
-public class SalesContract extends BaseEntity {
+public class SalesContract extends Project {
 
 	private String projectId;
 	private String customerId;
@@ -47,6 +46,9 @@ public class SalesContract extends BaseEntity {
 
 	private String estimateOtherCost;
 	private String totalEstimateCost;
+	
+	private String status;
+	
 
 	public String getProjectId() {
 		return projectId;
@@ -295,5 +297,15 @@ public class SalesContract extends BaseEntity {
 	public void setTotalEstimateCost(String totalEstimateCost) {
 		this.totalEstimateCost = totalEstimateCost;
 	}
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+	
+	
 
 }

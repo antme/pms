@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.pms.service.bean.Project;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.mockbean.ApiConstants;
@@ -18,6 +19,7 @@ import com.pms.service.service.ICustomerService;
 import com.pms.service.service.IProjectService;
 import com.pms.service.service.IUserService;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DataUtil;
 import com.pms.service.util.DateUtil;
 import com.pms.service.util.ExcleUtil;
 
@@ -49,63 +51,40 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		return result;
 	}
 
-	@Override
-	public Map<String, Object> addProject(Map<String, Object> params) {
-		String _id = (String) params.get(ApiConstants.MONGO_ID);
-		
-		Map<String, Object> projectBean = new HashMap<String, Object>();
-//		projectBean.put(ProjectBean.PROJECT_CODE, params.get(ProjectBean.PROJECT_CODE));
-		String projectType = (String)params.get(ProjectBean.PROJECT_TYPE);
-		String projectStatus = (String)params.get(ProjectBean.PROJECT_STATUS);
-		projectBean.put(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME));
-		projectBean.put(ProjectBean.PROJECT_MANAGER_ID, params.get(ProjectBean.PROJECT_MANAGER_ID));
-		projectBean.put(ProjectBean.PROJECT_STATUS, projectStatus);
-		projectBean.put(ProjectBean.PROJECT_TYPE, projectType);
-		projectBean.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
-		projectBean.put(ProjectBean.PROJECT_MEMO, params.get(ProjectBean.PROJECT_MEMO));
-		projectBean.put(ProjectBean.PROJECT_CUSTOMER_ID, params.get(ProjectBean.PROJECT_CUSTOMER_ID));
-		projectBean.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
-		
-		if (_id == null){//Add
-			projectBean.put(ProjectBean.PROJECT_CODE, genProjectCode(projectType, projectStatus));
-			return dao.add(projectBean, DBBean.PROJECT);
-		}else{//Update
-			projectBean.put(ApiConstants.MONGO_ID, _id);
-			projectBean.put(ProjectBean.PROJECT_CODE, params.get(ProjectBean.PROJECT_CODE));
-			
-			Map<String, Object> existProjectQuery = new HashMap<String, Object>();
-			existProjectQuery.put(ApiConstants.MONGO_ID, _id);
-			Map<String, Object> existProject = dao.findOneByQuery(existProjectQuery, DBBean.PROJECT);
+	
+    public void addProject(Project project) {
 
-			//项目 PM 发生改变
-			String pmOld = (String) existProject.get(ProjectBean.PROJECT_MANAGER_ID);
-			String pmNew = (String) projectBean.get(ProjectBean.PROJECT_MANAGER_ID);
-			if (!pmOld.equals(pmNew)){
-				//1.冗余存放 项目 PM 且存有 projectId 的相关集合，均需同步更新 项目 PM 字段
-				//符合1.中的  集合添加到下一行 relatedCollections 数组中
-				String[] relatedCollections = {DBBean.SALES_CONTRACT};//外键关联到project,又冗余存有 项目PM
-				Map<String, Object> relatedCQuery = new HashMap<String, Object>();
-				relatedCQuery.put(ProjectBean.PROJECT_ID, _id);
-				
-				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_MANAGER_ID, pmNew);
-			}
-			
-			
-			return dao.updateById(projectBean, DBBean.PROJECT);
-		}
-	}
 
-	@Override
-	public void deleteProject(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		
-	}
+        if (ApiUtil.isEmpty(project.get_id())){
+            //Add
+            project.setProjectCode(genProjectCode(project.getProjectType(), project.getProjectStatus()));
+            
+            dao.add(project, DBBean.PROJECT, Project.class);
+            
+        }else{//Update
+            
+            Map<String, Object> existProjectQuery = new HashMap<String, Object>();
+            existProjectQuery.put(ApiConstants.MONGO_ID, project.get_id());
+            Project oldProject = (Project) dao.findOneByQuery(existProjectQuery, DBBean.PROJECT, Project.class);
 
-	@Override
-	public Map<String, Object> updateProject(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+            //项目 PM 发生改变
+            String pmOld = oldProject.getProjectManagerId();
+            String pmNew = project.getProjectManagerId();
+            
+            if (!pmOld.equals(pmNew)){
+                //1.冗余存放 项目 PM 且存有 projectId 的相关集合，均需同步更新 项目 PM 字段
+                //符合1.中的  集合添加到下一行 relatedCollections 数组中
+                String[] relatedCollections = {DBBean.SALES_CONTRACT};//外键关联到project,又冗余存有 项目PM
+                Map<String, Object> relatedCQuery = new HashMap<String, Object>();
+                relatedCQuery.put(ProjectBean.PROJECT_ID, project.get_id());                
+                updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_MANAGER_ID, pmNew);
+            }                   
+            dao.updateById(project.toMap(), DBBean.PROJECT);
+        }
+    
+    }
+
+
 
 	@Override
 	public Map<String, Object> listProjectsForSelect(Map<String, Object> params, boolean all) {
@@ -196,10 +175,10 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		return null;
 	}
 
-	@Override
-	public Map<String, Object> getProjectById(String id) {
-		return dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
-	}
+    @Override
+    public Map<String, Object> getProjectById(String id) {
+        return dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
+    }
 
 	/**
 	 * 预立项 转 正式立项：
@@ -336,8 +315,10 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			project.put(ProjectBean.PROJECT_CUSTOMER_ID, customerId);
 			project.put(ProjectBean.PROJECT_MANAGER_ID, pmId);
 			project.put(ProjectBean.PROJECT_TYPE, row.get(ProjectBean.PROJECT_TYPE));
-			Map<String, Object> projectMap = addProject(project);
-			String proId = (String) projectMap.get(ApiConstants.MONGO_ID);
+			
+			Project projectEntity = (Project) DataUtil.toEntity(project, Project.class);
+			addProject(projectEntity);
+			String proId = projectEntity.get_id();
 			
 			Map<String, Object> sc = new HashMap<String, Object>();
 			sc.put(SalesContractBean.SC_CODE, row.get(SalesContractBean.SC_CODE));

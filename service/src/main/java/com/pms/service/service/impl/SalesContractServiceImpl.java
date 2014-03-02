@@ -14,6 +14,9 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pms.service.bean.EqCost;
+import com.pms.service.bean.Project;
+import com.pms.service.bean.SalesContract;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.dbhelper.DBQueryUtil;
@@ -107,67 +110,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		// 构造合同信息
 		Map<String, Object> contract = new HashMap<String, Object>();
-		contract.put(SalesContractBean.SC_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT));
-		contract.put(SalesContractBean.SC_EQUIPMENT_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_EQUIPMENT_AMOUNT));
-		contract.put(SalesContractBean.SC_SERVICE_AMOUNT, ApiUtil.getFloatParam(params, SalesContractBean.SC_SERVICE_AMOUNT));
-		contract.put(SalesContractBean.SC_INVOICE_TYPE, params.get(SalesContractBean.SC_INVOICE_TYPE));
-		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST0, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_EQ_COST0));
-		contract.put(SalesContractBean.SC_ESTIMATE_EQ_COST1, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_EQ_COST1));
-		contract.put(SalesContractBean.SC_ESTIMATE_SUB_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_SUB_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_PM_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_PM_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_DEEP_DESIGN_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_DEBUG_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_DEBUG_COST));
-		contract.put(SalesContractBean.SC_ESTIMATE_OTHER_COST, ApiUtil.getFloatParam(params, SalesContractBean.SC_ESTIMATE_OTHER_COST));
-
-		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT, ApiUtil.getFloatParam(params, SalesContractBean.SC_EXTIMATE_GROSS_PROFIT));
-		contract.put(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE, params.get(SalesContractBean.SC_EXTIMATE_GROSS_PROFIT_RATE));
-
-		// contract.put(SalesContractBean.SC_CODE,
-		// params.get(SalesContractBean.SC_CODE));
-		contract.put(SalesContractBean.SC_PERSON, params.get(SalesContractBean.SC_PERSON));
-		contract.put(SalesContractBean.SC_CUSTOMER_ID, params.get(SalesContractBean.SC_CUSTOMER_ID));
-		contract.put(SalesContractBean.SC_TYPE, params.get(SalesContractBean.SC_TYPE));
-		contract.put(SalesContractBean.SC_ARCHIVE_STATUS, params.get(SalesContractBean.SC_ARCHIVE_STATUS));
-		contract.put(SalesContractBean.SC_RUNNING_STATUS, params.get(SalesContractBean.SC_RUNNING_STATUS));
-		contract.put(SalesContractBean.SC_DATE, params.get(SalesContractBean.SC_DATE));
-		contract.put(SalesContractBean.SC_ESTIMATE_TAX, ApiUtil.getDouble(params, SalesContractBean.SC_ESTIMATE_TAX));
-		contract.put(SalesContractBean.SC_TOTAL_ESTIMATE_COST, ApiUtil.getDouble(params, SalesContractBean.SC_TOTAL_ESTIMATE_COST));
-		contract.put(SalesContractBean.SC_DOWN_PAYMENT, params.get(SalesContractBean.SC_DOWN_PAYMENT));
-		contract.put(SalesContractBean.SC_PROGRESS_PAYMENT, params.get(SalesContractBean.SC_PROGRESS_PAYMENT));
-		contract.put(SalesContractBean.SC_QUALITY_MONEY, ApiUtil.getDouble(params, SalesContractBean.SC_QUALITY_MONEY));
-		contract.put(SalesContractBean.SC_DOWN_PAYMENT_MEMO, params.get(SalesContractBean.SC_DOWN_PAYMENT_MEMO));
-		contract.put(SalesContractBean.SC_QUALITY_MONEY_MEMO, params.get(SalesContractBean.SC_QUALITY_MONEY_MEMO));
-		contract.put(SalesContractBean.SC_MEMO, params.get(SalesContractBean.SC_MEMO));
-
-		contract.put("status", params.get("status"));
 
 		String status = SalesContractBean.SC_STATUS_SUBMITED;
-
-		if (contract.get("status") != null) {
-			status = contract.get("status").toString();
-		}
-
 		Map<String, Object> projectInfo = new HashMap<String, Object>();
-
-		projectInfo.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
-		projectInfo.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
-		projectInfo.put(ProjectBean.PROJECT_MANAGER_ID, params.get(ProjectBean.PROJECT_MANAGER_ID));
-		projectInfo.put(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME));
-		projectInfo.put(ProjectBean.PROJECT_STATUS, params.get(ProjectBean.PROJECT_STATUS));
-		projectInfo.put(ProjectBean.PROJECT_TYPE, params.get(ProjectBean.PROJECT_TYPE));
-		projectInfo.put(ProjectBean.PROJECT_MEMO, params.get(ProjectBean.PROJECT_MEMO));
-		contract.putAll(projectInfo);
-
+	
+		
 		Object projectId = params.get(SalesContractBean.SC_PROJECT_ID);
 
-		if (status.equalsIgnoreCase(SalesContractBean.SC_STATUS_SUBMITED) && ApiUtil.isEmpty(projectId)) {
-			// 如果提交的数据没包含项目，创建项目
-			Map<String, Object> project = projectService.addProject(projectInfo);
-			contract.put(SalesContractBean.SC_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
-			projectId = project.get(ApiConstants.MONGO_ID);
-		}
-
-		contract.put(SalesContractBean.SC_PROJECT_ID, projectId);
 
 		String scPId = (String) contract.get(SalesContractBean.SC_PROJECT_ID);
 
@@ -238,36 +187,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			        SalesContractBean.SC_CODE });
 			Map<String, Object> existContract = dao.findOneByQuery(existContractQuery, DBBean.SALES_CONTRACT);
 
-			// 更新销售合同变更次数 comment by danny in 20130704. New logic is update the
-			// modify times when add new eqcostList
-			/*
-			 * float oldAmount = ApiUtil.getFloatParam(existContract,
-			 * SalesContractBean
-			 * .SC_AMOUNT)==null?0:ApiUtil.getFloatParam(existContract,
-			 * SalesContractBean.SC_AMOUNT); float newAmount =
-			 * ApiUtil.getFloatParam(params,
-			 * SalesContractBean.SC_AMOUNT)==null?0
-			 * :ApiUtil.getFloatParam(params, SalesContractBean.SC_AMOUNT); if
-			 * (oldAmount != newAmount){ int newVersion =
-			 * ApiUtil.getIntegerParam(existContract,
-			 * SalesContractBean.SC_MODIFY_TIMES);
-			 * contract.put(SalesContractBean.SC_MODIFY_TIMES, ++newVersion); }
-			 */
-
-			// 销售合同类型是否更新 (新的逻辑， 销售合同类型不允许更新2013/07/09)
-			/*
-			 * String scTypeOld = (String)
-			 * existContract.get(SalesContractBean.SC_TYPE); String scTypeNew =
-			 * (String) contract.get(SalesContractBean.SC_TYPE); if
-			 * (!scTypeOld.equals(scTypeNew)){ //1.冗余存放 SC_TYPE 且存有 SC_ID
-			 * 的相关集合，均需同步更新 SC_TYPE 字段 //符合1.中的 集合添加到下一行 relatedCollections 数组中
-			 * String[] relatedCollections = {};//外键关联到 SC 又冗余存了 SC_TYPE
-			 * Map<String, Object> relatedCQuery = new HashMap<String,
-			 * Object>(); relatedCQuery.put(SalesContractBean.SC_ID, _id);
-			 * 
-			 * updateRelatedCollectionForTheSameField(relatedCollections,
-			 * relatedCQuery, SalesContractBean.SC_TYPE, scTypeNew); }
-			 */
 
 			// 客户改变
 			String customerOld = (String) existContract.get(SalesContractBean.SC_CUSTOMER_ID);
@@ -287,54 +206,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			pCustomerUpdate.put(ProjectBean.PROJECT_CUSTOMER_ID, customerNew);
 			dao.updateById(pCustomerUpdate, DBBean.PROJECT);
 
-			// 销售合同关联项目是否更新 (新的逻辑，销售合同关联项目不允许修改 2013/07/09)
-			/*
-			 * String scProjectIdOld = (String)
-			 * existContract.get(SalesContractBean.SC_PROJECT_ID); String
-			 * scProjectIdNew = (String)
-			 * contract.get(SalesContractBean.SC_PROJECT_ID); if
-			 * (!scProjectIdOld.equals(scProjectIdNew)){ //1.冗余存放 SC_PROJECT_ID
-			 * 且存有 SC_ID 的相关集合，均需同步更新 SC_PROJECT_ID 字段 //符合1.中的 集合添加到下一行
-			 * relatedCollections 数组中 String[] relatedCollections = {};//存有 SC
-			 * 外键 和 projectId Map<String, Object> relatedCQuery = new
-			 * HashMap<String, Object>();
-			 * relatedCQuery.put(SalesContractBean.SC_ID, _id);
-			 * 
-			 * updateRelatedCollectionForTheSameField(relatedCollections,
-			 * relatedCQuery, ProjectBean.PROJECT_ID, scProjectIdNew);
-			 * 
-			 * //销售合同 关联项目改变同时相关collection中冗余存放的 ： 项目PM,项目Type等也要更新 Map<String,
-			 * Object> newProMap = dao.findOne(ApiConstants.MONGO_ID,
-			 * scProjectIdNew, DBBean.PROJECT); String pCustomer = (String)
-			 * newProMap.get(ProjectBean.PROJECT_CUSTOMER_ID); String pPM =
-			 * (String) newProMap.get(ProjectBean.PROJECT_MANAGER_ID); String pType
-			 * = (String) newProMap.get(ProjectBean.PROJECT_TYPE); // String[]
-			 * pCustomerCollections = {};//外键关联到 SC 又冗余存 项目Customer String[]
-			 * pPMCollections = {}; //外键关联到 SC 又冗余存 项目 PM String[]
-			 * pTypeCollections = {}; //外键关联到 SC 又冗余存 项目 Type
-			 * 
-			 * // updateRelatedCollectionForTheSameField(pCustomerCollections,
-			 * relatedCQuery, ProjectBean.PROJECT_CUSTOMER_ID, pCustomer);
-			 * updateRelatedCollectionForTheSameField(pPMCollections,
-			 * relatedCQuery, ProjectBean.PROJECT_MANAGER_ID, pPM);
-			 * updateRelatedCollectionForTheSameField(pTypeCollections,
-			 * relatedCQuery, ProjectBean.PROJECT_TYPE, pType);
-			 * 
-			 * //更新SC 自己的冗余项目字段 // contract.put(ProjectBean.PROJECT_CUSTOMER_ID,
-			 * pCustomer); contract.put(ProjectBean.PROJECT_MANAGER_ID, pPM);
-			 * contract.put(ProjectBean.PROJECT_TYPE, pType);
-			 * 
-			 * //更新scProjectIdOld 和 scProjectIdNew 的customer Map<String, Object>
-			 * scProjectIdOldUpdate = new HashMap<String, Object>();
-			 * scProjectIdOldUpdate.put(ApiConstants.MONGO_ID, scProjectIdOld);
-			 * scProjectIdOldUpdate.put(ProjectBean.PROJECT_CUSTOMER_ID, null);
-			 * dao.updateById(scProjectIdOldUpdate, DBBean.PROJECT); Map<String,
-			 * Object> scProjectIdNewUpdate = new HashMap<String, Object>();
-			 * scProjectIdNewUpdate.put(ApiConstants.MONGO_ID, scProjectIdNew);
-			 * scProjectIdNewUpdate.put(ProjectBean.PROJECT_CUSTOMER_ID,
-			 * params.get(SalesContractBean.SC_CUSTOMER_ID));
-			 * dao.updateById(scProjectIdNewUpdate, DBBean.PROJECT); }
-			 */
+			
 
 			// 添加成本设备清单记录
 			if (!eqcostList.isEmpty()) {
@@ -348,6 +220,23 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			return dao.updateById(contract, DBBean.SALES_CONTRACT);
 		}
 	}
+	
+	public Map<String, Object> addSCAndProject(Project project, SalesContract contract, List<EqCost> costList){
+ 
+        if(ApiUtil.isEmpty(contract.getStatus())){
+            contract.setStatus( SalesContractBean.SC_STATUS_SUBMITED);
+        }
+        if (contract.getStatus().equalsIgnoreCase(SalesContractBean.SC_STATUS_SUBMITED) && ApiUtil.isEmpty(project.get_id())) {
+            // 如果提交的数据没包含项目，创建项目
+            projectService.addProject(project);
+        }
+        contract.setProjectId(project.get_id());
+
+
+        
+        
+	    return null;
+	 }
 
 	private void updateTheModifyHistoryAndModifyTimesAndscLastAmount(Map<String, Object> params, List<Map<String, Object>> eqcostList, Map<String, Object> contract,
 	        Map<String, Object> existContract) {

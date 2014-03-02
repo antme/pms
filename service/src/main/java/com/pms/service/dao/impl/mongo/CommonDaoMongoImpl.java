@@ -23,6 +23,7 @@ import com.mongodb.Mongo;
 import com.mongodb.QueryBuilder;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
+import com.pms.service.bean.BaseEntity;
 import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dao.ICommonDao;
 import com.pms.service.dbhelper.DBQueryUtil;
@@ -30,6 +31,7 @@ import com.pms.service.dbhelper.Pagnation;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.util.ApiThreadLocal;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.DataUtil;
 
 public class CommonDaoMongoImpl implements ICommonDao {
     
@@ -54,6 +56,13 @@ public class CommonDaoMongoImpl implements ICommonDao {
         doc.put(ApiConstants.MONGO_ID, id.toString());
         data.put(ApiConstants.MONGO_ID, id.toString());
         return result.getError() == null ? doc : null;
+    }
+    
+    
+    public <T extends BaseEntity> BaseEntity add(BaseEntity entity, String collection , Class<T> classzz){
+        Map<String, Object> data = add(entity.toMap(), collection);
+        entity =  DataUtil.toEntity(data, classzz);
+        return entity;
     }
 
     public boolean addBatch(List<Map<String, Object>> data, String collection) {
@@ -186,6 +195,12 @@ public class CommonDaoMongoImpl implements ICommonDao {
         mergeDefaultValue(parameters, collection, map);
         return map;
     }
+    
+    
+    public <T extends BaseEntity> BaseEntity findOneByQuery(Map<String, Object> parameters, String collection, Class<T> classzz){
+        Map<String, Object> entity = findOneByQuery(parameters, collection);
+        return DataUtil.toEntity(entity, classzz);
+    }
 
     private void mergeDefaultValue(Map<String, Object> parameters, String collection, Map<String, Object> map) {
         map.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID).toString());
@@ -225,6 +240,12 @@ public class CommonDaoMongoImpl implements ICommonDao {
         Map<String, Object> query = new  HashMap<String, Object>();
         query.put(key, value);    
         return this.findOneByQuery(query, collection);
+    }
+    
+    
+    public <T extends BaseEntity> BaseEntity findOne(String key, Object value, String collection, Class<T> classzz){
+        Map<String, Object> entity = findOne(key, value, collection);
+        return DataUtil.toEntity(entity, classzz);
     }
     
     public Map findOne(String key, Object value, String[] limitKeys, String collection){

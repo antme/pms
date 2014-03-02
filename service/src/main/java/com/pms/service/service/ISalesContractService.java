@@ -3,10 +3,16 @@ package com.pms.service.service;
 import java.util.List;
 import java.util.Map;
 
+import com.pms.service.bean.EqCost;
+import com.pms.service.bean.Project;
+import com.pms.service.bean.SalesContract;
+
 public interface ISalesContractService {
 	public Map<String, Object> listSC(Map<String, Object> params);
 	
 	public Map<String, Object> addSC(Map<String, Object> params);
+	
+	public Map<String, Object> addSCAndProject(Project project, SalesContract contract, List<EqCost> costList);
 	
 	public Map<String, Object> listSCsForSelect(Map<String, Object> params);
 	

@@ -1,7 +1,6 @@
 package com.pms.service.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,10 +11,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.google.gson.Gson;
 import com.pms.service.annotation.LoginRequired;
 import com.pms.service.annotation.RoleValidConstants;
 import com.pms.service.annotation.RoleValidate;
+import com.pms.service.bean.Project;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.service.IProjectService;
 
@@ -79,8 +78,7 @@ public class ProjectController extends AbstractController {
     @RequestMapping("/add")
     @RoleValidate(roleID=RoleValidConstants.PROJECT_ADD, desc = RoleValidConstants.PROJECT_ADD_DESC)
     public void addProject(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(projectService.addProject(params), request, response);
+        updateProject(request, response);
     }
     
     /**
@@ -91,8 +89,9 @@ public class ProjectController extends AbstractController {
     @RequestMapping("/update")
     @RoleValidate(roleID=RoleValidConstants.PROJECT_UPDATE, desc = RoleValidConstants.PROJECT_UPDATE_DESC)
     public void updateProject(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(projectService.addProject(params), request, response);
+        Project params = (Project) parserParametersToEntity(request, false, Project.class);
+        projectService.addProject(params);
+        responseWithData(null, request, response);
     }
     
     @RequestMapping("/get")

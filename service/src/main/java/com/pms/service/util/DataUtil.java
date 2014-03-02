@@ -33,8 +33,9 @@ import com.pms.service.bean.BaseEntity;
 
 public class DataUtil {
 
+    
 	private static Logger logger = LogManager.getLogger(DataUtil.class);
-
+ 
 	public static boolean isEmpty(Object param) {
 
 		if (param == null) {
