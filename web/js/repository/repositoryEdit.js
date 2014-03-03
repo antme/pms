@@ -24,6 +24,18 @@ var commonFileds = {
 			},
 			type : "number"
 		},
+		eqcostConfirmApplyAmount : {
+			validation : {
+				min : 0
+			},
+			type : "number"
+		},
+		eqcostConfirmedAmount : {
+			validation : {
+				min : 0
+			},
+			type : "number"
+		},
 		eqcostBasePrice : {
 			type : "number",
 			editable : false
@@ -150,11 +162,13 @@ $(document).ready(function() {
 		listEqUrl = "/service/purcontract/get/byproject_supplier?type=out";
 		loadUrl = "/service/purcontract/repository/get?type=out";
 		eqcostApplyAmountLabel = "出库数量";
-		eqcostConfirmApplyAmountLabel = "签收数量确认"
+		eqcostConfirmApplyAmountLabel = "本次签收数量"
 		leftCountLabel = "可出库数量";
 		if(redirectParams && redirectParams.page && redirectParams.page == "confirm"){
 			$("#confirmRepositoryOut").show();
-			eqcostConfirmApplyAmountHidden = false;
+			eqcostConfirmApplyAmountHidden = false;			
+			commonFileds.eqcostApplyAmount.editable=false;
+			commonFileds.eqcostConfirmedAmount.editable=false;
 		}else{
 			$("#saveRepos").show();
 		}
@@ -230,8 +244,9 @@ $(document).ready(function() {
 			loadUrl = "/service/purcontract/repository/get?type=out";
 			eqcostApplyAmountLabel = "出库数量";
 			leftCountLabel = "可出库数量";
-			eqcostConfirmApplyAmountLabel = "出库数量确认";
+			eqcostConfirmApplyAmountLabel = "本次签收数量";
 			eqcostConfirmApplyAmountHidden = true;
+			
 		}
 		postAjaxRequest(loadUrl, popupParams, editRepository);
 		disableAllInPoppup();
@@ -469,6 +484,10 @@ function editRepository(data) {
 				eqList[i].eqcostConfirmApplyAmount = eqList[i].eqcostApplyAmount;
 			}
 			
+			if(!eqList[i].eqcostConfirmedAmount){
+				eqList[i].eqcostConfirmedAmount = 0;
+			}
+			
 		}
 	}
 	if (requestDataItem) {
@@ -520,16 +539,16 @@ function editRepository(data) {
 					attributes: { "style": "color:red"},
 					hidden: eqcostConfirmApplyAmountHidden
 				},{
+					field : "eqcostConfirmedAmount",
+					title : "已签收数量",
+					attributes: { "style": "color:red"},
+					hidden: eqcostConfirmApplyAmountHidden,
+					disable : false
+				},{
 					field : "leftCount",
 					title : leftCountLabel,
 					attributes: { "style": "color:red"},
 					hidden : leftCountHidden
-				}, {
-					field : "contractCode",
-					title : "销售合同编号"
-				},{
-					field : "purchaseOrderCode",
-					title : "订单编号"
 				},{
 					field : "remark",
 					title : "备注"
@@ -540,9 +559,9 @@ function editRepository(data) {
 				width : "800px",
 				sortable : true,
 				save: function(e){
-					if (e.values.eqcostApplyAmount) {					
-						if(e.values.eqcostApplyAmount > e.model.leftCount){
-							alert("最多可以入库" + e.model.leftCount);
+					if (e.values.eqcostConfirmApplyAmount) {					
+						if(e.values.eqcostConfirmApplyAmount > (e.model.eqcostApplyAmount - e.model.eqcostConfirmedAmount)){
+							alert("最多可以签收" + (e.model.eqcostApplyAmount - e.model.eqcostConfirmedAmount));
 							e.preventDefault();
 						}
 					}
