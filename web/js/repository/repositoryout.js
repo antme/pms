@@ -51,10 +51,10 @@ $(document).ready(function() {
 				title : "出库状态"
 			}, {
 				field : "outDate",
-				title : "出库时间"
+				title : "发货时间"
 			}, {
 				field : "approvedDate",
-				title : "确认时间"
+				title : "签收时间"
 			}, {
 				field : "totalIn",
 				title : "出库总数"
@@ -98,9 +98,9 @@ function confirmRepositoryOut(){
 	
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "已出库"){
-			alert("此申请已出库确认，不需要再次确认");
-		}else{
+		if(row.status != "签收"){
+//			alert("此申请已经签收完毕，不需要再次签收");
+//		}else{
 			
 			loadPage("repository_repositoryOutEdit", {
 				_id : row._id,

@@ -7,8 +7,8 @@ var loadUrl = "/service/purcontract/repository/get?type=in";
 var eqcostApplyAmountLabel = "入库数量";
 var eqcostConfirmApplyAmountLabel = "入库数量确认"
 var leftCountLabel = "可入库数量";
-
-
+var eqcostConfirmApplyAmountHidden = true;
+var leftCountHidden = false;
 
 var commonFileds = {
 		eqcostAvailableAmount : {
@@ -135,6 +135,13 @@ var projectDataSource = new kendo.data.DataSource({
 });
 $(document).ready(function() {
 	
+	
+	if(popupParams){
+		
+		leftCountHidden = true;
+	}
+	
+	
 	checkRoles();
 	if((redirectParams && redirectParams.type == "out") || (popupParams && popupParams.type == "out")){
 		listProjectUrl = "/service/purcontract/repository/contract/list?type=out";
@@ -143,10 +150,11 @@ $(document).ready(function() {
 		listEqUrl = "/service/purcontract/get/byproject_supplier?type=out";
 		loadUrl = "/service/purcontract/repository/get?type=out";
 		eqcostApplyAmountLabel = "出库数量";
-		eqcostConfirmApplyAmountLabel = "出库数量确认"
+		eqcostConfirmApplyAmountLabel = "签收数量确认"
 		leftCountLabel = "可出库数量";
 		if(redirectParams && redirectParams.page && redirectParams.page == "confirm"){
 			$("#confirmRepositoryOut").show();
+			eqcostConfirmApplyAmountHidden = false;
 		}else{
 			$("#saveRepos").show();
 		}
@@ -164,13 +172,14 @@ $(document).ready(function() {
 				requestDataItem.purchaseContractId = this.dataItem()._id;
 				requestDataItem.supplierId = this.dataItem().supplier;
 				requestDataItem.supplierName = this.dataItem().supplierName;
+				requestDataItem.poNumber = this.dataItem().poNumber;
 			},
 			dataBound : function(e){	
 				requestDataItem.purchaseContractCode = this.dataItem().purchaseContractCode;
 				requestDataItem.purchaseContractId = this.dataItem()._id;
 				requestDataItem.supplierId = this.dataItem().supplier;
 				requestDataItem.supplierName = this.dataItem().supplierName;
-				
+				requestDataItem.poNumber = this.dataItem().poNumber;
 				updateSupplier();
 			}
 		});
@@ -222,6 +231,7 @@ $(document).ready(function() {
 			eqcostApplyAmountLabel = "出库数量";
 			leftCountLabel = "可出库数量";
 			eqcostConfirmApplyAmountLabel = "出库数量确认";
+			eqcostConfirmApplyAmountHidden = true;
 		}
 		postAjaxRequest(loadUrl, popupParams, editRepository);
 		disableAllInPoppup();
@@ -507,11 +517,13 @@ function editRepository(data) {
 				},{
 					field : "eqcostConfirmApplyAmount",
 					title : eqcostConfirmApplyAmountLabel,
-					attributes: { "style": "color:red"}
+					attributes: { "style": "color:red"},
+					hidden: eqcostConfirmApplyAmountHidden
 				},{
 					field : "leftCount",
 					title : leftCountLabel,
-					attributes: { "style": "color:red"}
+					attributes: { "style": "color:red"},
+					hidden : leftCountHidden
 				}, {
 					field : "contractCode",
 					title : "销售合同编号"

@@ -358,9 +358,11 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
             repositoryOut.put(ProjectBean.PROJECT_CODE, ship.get(ProjectBean.PROJECT_CODE));
             repositoryOut.put(ShipBean.SHIP_SALES_CONTRACT_ID, ship.get(ShipBean.SHIP_SALES_CONTRACT_ID));
             repositoryOut.put(ShipBean.SHIP_SALES_CONTRACT_CODE, ship.get(ShipBean.SHIP_SALES_CONTRACT_CODE));
+            repositoryOut.put("outDate",  ship.get(ShipBean.SHIP_DATE));
+            
             
             repositoryOut.put("type", "out");
-            repositoryOut.put("status", PurchaseRequest.STATUS_APPROVED);
+            repositoryOut.put("status", PurchaseRequest.STATUS_OUT_REPOSITORY_NEED_CONFIRM);
 
             if(ship.get("eqcostList")!=null){
                 
@@ -374,6 +376,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
             }
             
             repositoryOut.put("eqcostList", ship.get("eqcostList"));
+            scs.mergeCommonFieldsFromSc(repositoryOut,  ship.get(ShipBean.SHIP_SALES_CONTRACT_ID));
+
             pService.updateRepositoryRequest(repositoryOut);
             
 		}
