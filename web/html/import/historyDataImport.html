@@ -11,18 +11,28 @@
 	   <h3>历史数据导入.</h3>
 	   <hr/>
 	   <div>
+	        <div style="color:red"> <h1>请按如下顺序导入数据： 销售合同-》成本清单=》采购合同, 导入完毕后请排查是否正确</h1></div>
 	   		<h4>销售合同历史数据导入：</h4><a href="/template/XSMB.xlsx">销售合同模版下载</a>   
 			<input name="scFile" id="scFile" type="file" />	<span id="importStatus"></span>		
-			<h4>采购合同历史数据导入：</h4><a href="/template/CGMB.xlsx">采购合同模版下载</a>   
-			<input name="pcFile" id="pcFile" type="file" />	<span id="importStatusPc"></span>
 			
 			<hr>
 			<h4>成本清单数据导入：</h4>  
-			<h4 style="color:red;">每批次导数据之前请先清除以前的数据</h4>  
+			<h4 style="color:red;">不支持多批次导入，请一次性导入所有清单,成本清单导入会自动补齐备货申请，采购申请，采购订单</h4>  
 			
-			<button onclick="clearEqCost();">清除数据</button>
 			<br>
 			<input name="eqFile" id="eqFile" type="file" />	<span id="importStatusEq"></span>
+			
+			<hr>
+			<h4>采购合同历史数据导入：</h4><a href="/template/CGMB.xlsx">采购合同模版下载</a>   
+			<h4 style="color:red;">采购合同会更具销售合同找对应的已采购的成本清单, 会自动补齐入库申请，到货通知</h4>  
+            <input name="pcFile" id="pcFile" type="file" /> <span id="importStatusPc"></span>
+            
+            <hr>
+            <h4>发货数据导入：</h4> 
+            <h4 style="color:red;">导入未发货的清单，自动生成已发货的清单</h4>  
+            <input name="shipFile" id="shipFile" type="file" /> <span id="importStatusShip"></span>
+            
+            
 		</div>
 		<hr/>
 	</div>

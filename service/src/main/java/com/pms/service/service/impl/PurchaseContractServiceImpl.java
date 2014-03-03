@@ -19,6 +19,7 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.InvoiceBean;
 import com.pms.service.mockbean.MoneyBean;
@@ -1425,9 +1426,15 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> listRepositoryRequests(Map<String, Object> params) {
 		String db = DBBean.REPOSITORY;
-		if ("out".equalsIgnoreCase((String) params.get("type"))) {
-			db = DBBean.REPOSITORY_OUT;
-		}
+        if ("out".equalsIgnoreCase((String) params.get("type"))) {
+            db = DBBean.REPOSITORY_OUT;
+            
+            if (!ApiUtil.isValid(params.get("isVirtualRequest"))) {
+                params.put("isVirtualRequest", null);
+            }else{
+                params.put("isVirtualRequest", true);
+            }
+        }
     	
     	mergeMyTaskQuery(params,  db);
 		Map<String, Object> results = this.dao.list(params,  db);
@@ -1580,6 +1587,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 			List<Map<String, Object>> eqMapList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
 			boolean confirmed = true;
 			String status = PurchaseRequest.STATUS_IN_OUT_REPOSITORY;
+			int totalConfirmedAmount = 0 ;
 			for (Map<String, Object> eqMap : eqMapList) {
 				int eqAmount = ApiUtil.getInteger(eqMap.get(PurchaseRequest.EQCOST_APPLY_AMOUNT));
 				int confirmAmount = ApiUtil.getInteger(eqMap.get("eqcostConfirmApplyAmount"));
@@ -1594,19 +1602,26 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 				
 				eqMap.put("eqcostConfirmedAmount", confirmedAmount + confirmAmount);
 				
+				totalConfirmedAmount = totalConfirmedAmount + confirmAmount;
 				if (confirmAmount != eqAmount) {
 					confirmed = false;
 				}
-
-				if (!confirmed) {
-					status = PurchaseRequest.STATUS_OUT_REPOSITORY_NEED_CONFIRM;
-					params.put(PurchaseRequest.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
-
-					break;
-				}
+		
 			}
+	        if (confirmed) {
+                status = PurchaseRequest.STATUS_OUT_REPOSITORY_NEED_CONFIRM;
+                params.put(PurchaseRequest.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
 
+            }
 			result = processRequest(params, db, status);
+			
+			
+			//每次确认的数据生成一条虚拟出入库记录
+			params.put("isVirtualRequest", true);
+			params.put(ApiConstants.MONGO_ID, "");
+			params.put("totalConfirmedAmount", totalConfirmedAmount);
+			
+			this.dao.add(params, db);
 
 		}
         
@@ -1991,7 +2006,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 contract.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, item[columnIndexMap.get("合同类别")].trim());
                 contract.put("signBy", signBy);
                 
-                contractDate = DateUtil.getDateStringByLong(new Date(contractDate).getTime());
+                try {
+                    contractDate = DateUtil.getDateStringByLong(new Date(contractDate).getTime());
+                } catch (Exception e) {
+                    logger.error("获取签订时间错误:" + contractDate);
+                }
+                
                 contract.put("signDate", contractDate);
                 contract.put("contractExecuteCate", "正常采购");
                 contract.put("eqcostDeliveryType", "直发现场");
@@ -2037,7 +2057,34 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     contract.put(ApiConstants.MONGO_ID, con.get(ApiConstants.MONGO_ID));
                 }
                 
+                Map<String, Object> query = new HashMap<String, Object>();
+                query.put(PurchaseOrder.SALES_CONTRACT_CODE, contractCode);
+                Map<String, Object> order = this.dao.findOneByQuery(query, DBBean.PURCHASE_ORDER);
+                if (order != null) {
+                    
+                    List<Map<String, Object>> eqList = (List<Map<String, Object>>) order.get(SalesContractBean.SC_EQ_LIST);
+                    
+                    for (Map<String, Object> eqMap : eqList) {
+                        eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT,
+                                ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+                        eqMap.put(PurchaseRequest.EQCOST_PRODUCT_UNIT_PRICE, ApiUtil.getFloatParam(eqMap.get(SalesContractBean.SC_EQ_LIST_BASE_PRICE)));
+                        eqMap.put(PurchaseRequest.PURCHASE_REQUEST_ID, order.get(ApiConstants.MONGO_ID));
+                        eqMap.put(PurchaseRequest.PURCHASE_REQUEST_CODE, order.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
+                        eqMap.put(PurchaseRequest.BACK_REQUEST_ID, order.get(ApiConstants.MONGO_ID));       
+                        eqMap.put(PurchaseRequest.BACK_REQUEST_CODE, order.get(PurchaseBack.pbCode));
+                        eqMap.put(PurchaseRequest.PURCHASE_ORDER_ID, order.get(ApiConstants.MONGO_ID));       
+                        eqMap.put(PurchaseRequest.PURCHASE_ORDER_CODE, order.get(PurchaseRequest.PURCHASE_ORDER_CODE));
+                        eqMap.put(PurchaseRequest.SALES_CONTRACT_ID, order.get(PurchaseRequest.SALES_CONTRACT_ID));       
+                        eqMap.put(PurchaseRequest.SALES_CONTRACT_CODE, order.get(PurchaseRequest.SALES_CONTRACT_CODE));
+                    }
+
+                    contract.put(SalesContractBean.SC_EQ_LIST, eqList);
+                    
+                }
+                
                 this.updatePurchase(contract, DBBean.PURCHASE_CONTRACT);
+                
+                
 
             }
         } catch (Exception e) {

@@ -1543,9 +1543,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	    if (eqList.size() > 0) {
 	    	newObj.put(PurchaseBack.eqcostList, eqList);
 
-	    	  Map<String, Object> res = purchaseService.saveOrUpdate(newObj, newObj);
+	    	Map<String, Object> back = purchaseService.saveOrUpdate(newObj, newObj);
 	    	
-			addPurchaseRequest(contractCode, eqList, contract, res);
+			addPurchaseRequest(contractCode, eqList, contract, back);
 
 	    }
     }
@@ -1559,21 +1559,28 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		newObj.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));		
 		newObj.put(PurchaseRequest.BACK_REQUEST_CODE, back.get(PurchaseBack.pbCode));
 		
-		for (Map<String, Object> eqMap : eqList) {
-			eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT,
-			        ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
-		}
+
+		
+        for (Map<String, Object> eqMap : eqList) {
+            eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT, ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+            eqMap.put(PurchaseRequest.EQCOST_PRODUCT_UNIT_PRICE, eqMap.get(SalesContractBean.SC_EQ_LIST_BASE_PRICE));
+            eqMap.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));
+            eqMap.put(PurchaseRequest.BACK_REQUEST_CODE, back.get(PurchaseBack.pbCode));
+            eqMap.put(PurchaseRequest.SALES_CONTRACT_ID, back.get(PurchaseRequest.SALES_CONTRACT_ID));       
+            eqMap.put(PurchaseRequest.SALES_CONTRACT_CODE, back.get(PurchaseRequest.SALES_CONTRACT_CODE));
+            
+        }
 
 		newObj.put(SalesContractBean.SC_EQ_LIST, eqList);
 		
 		Map<String, Object> request = purchaseContractService.updatePurchaseRequest(newObj);
 
 		
-		addPurchaseOrder(contractCode, eqList, contract, request);
+		addPurchaseOrder(contractCode, eqList, contract, request, back);
 	}
 	
 	
-	public void addPurchaseOrder(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> request) {
+	public void addPurchaseOrder(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> request, Map<String, Object> back) {
 		Map<String, Object> newObj = new HashMap<String, Object>();
 		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_APPROVED);
 		newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, "CGDD-" + contractCode);
@@ -1581,10 +1588,20 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		newObj.put(PurchaseRequest.SALES_CONTRACT_CODE, contractCode);
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_CODE, request.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
+        newObj.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));       
+        newObj.put(PurchaseRequest.BACK_REQUEST_CODE, back.get(PurchaseBack.pbCode));
+        
 
 		for (Map<String, Object> eqMap : eqList) {
 			eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT,
 			        ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+            eqMap.put(PurchaseRequest.EQCOST_PRODUCT_UNIT_PRICE, ApiUtil.getFloatParam(eqMap.get(SalesContractBean.SC_EQ_LIST_BASE_PRICE)));
+            eqMap.put(PurchaseRequest.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));
+            eqMap.put(PurchaseRequest.PURCHASE_REQUEST_CODE, request.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
+            eqMap.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));       
+            eqMap.put(PurchaseRequest.BACK_REQUEST_CODE, back.get(PurchaseBack.pbCode));
+            eqMap.put(PurchaseRequest.SALES_CONTRACT_ID, back.get(PurchaseRequest.SALES_CONTRACT_ID));       
+            eqMap.put(PurchaseRequest.SALES_CONTRACT_CODE, back.get(PurchaseRequest.SALES_CONTRACT_CODE));
 		}
 
 		newObj.put(SalesContractBean.SC_EQ_LIST, eqList);
@@ -1594,8 +1611,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		request.put(PurchaseOrder.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));
 		request.put(PurchaseOrder.PURCHASE_REQUEST_CODE, request.get(PurchaseOrder.PURCHASE_REQUEST_CODE));
 		this.dao.updateById(request, DBBean.PURCHASE_REQUEST);
-		
-//		addPurchaseContract(contractCode, eqList, contract, order);
+
 
 	}
 	
@@ -1806,9 +1822,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				// "合同签订\\n日期");
 				String contractDate = null;
 
-				if (row.length > 17 && ApiUtil.isValid(row[17])) {
-					contractDate = DateUtil.getDateStringByLong(new Date(row[17]).getTime());
-				}
+                if (row.length > 17 && ApiUtil.isValid(row[17])) {
+                    try {
+                        contractDate = DateUtil.getDateStringByLong(new Date(row[17]).getTime());
+                    } catch (Exception e) {
+                        logger.error("签订日期解析错误" + row[17]);
+                    }
+
+                }
 
 				String contractDownPayment = getRowColumnValue(row, keyMap, "首付");
 				String qualityMoney = getRowColumnValue(row, keyMap, "质保金");

@@ -586,10 +586,16 @@ function openRepositoryViewWindow(param){
 
 
 function openRepositoryOutViewWindow(param){
-	var options = { width:"1080px", height: "500px", title:"入库信息"};
+	var options = { width:"1080px", height: "500px", title:"直发签收单信息"};
 	openRemotePageWindow(options, "repository_repositoryOutEdit", {_id : param, type : "out"});	
 }
 
+function openVirtualRepositoryOutViewWindow(param){
+	var options = { width:"1080px", height: "500px", title:"虚拟出入库签收信息"};
+	openRemotePageWindow(options, "repository_repositoryOutEdit", {_id : param, type : "out", isVirtualRequest: true});	
+}
+
+openVirtualRepositoryOutViewWindow
 
 function myTaskQueryParam(options, operation){
 		if(redirectParams){

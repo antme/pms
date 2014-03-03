@@ -47,7 +47,21 @@ $(document).ready(function() {
     });	
     
     
-    
+    $("#shipFile").kendoUpload({
+        async: {
+            saveUrl: "/service/sc/importship",
+            autoUpload: true
+        },
+        upload: onUpload,
+        success:function(e){
+        	if (e.response && e.response.status === 0){//import success
+        		
+        		alert(e.response.msg);
+        	}else{
+        		$("#importStatusEq").html("数据导入成功！");
+        	}
+        }
+    });	
     
 	
 });//end dom ready	

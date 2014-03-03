@@ -10,6 +10,8 @@ var leftCountLabel = "可入库数量";
 var eqcostConfirmApplyAmountHidden = true;
 var leftCountHidden = false;
 
+var eqcostConfirmVirtualApplyAmountHidden = true;
+
 var commonFileds = {
 		eqcostAvailableAmount : {
 			type : "number"
@@ -246,6 +248,10 @@ $(document).ready(function() {
 			leftCountLabel = "可出库数量";
 			eqcostConfirmApplyAmountLabel = "本次签收数量";
 			eqcostConfirmApplyAmountHidden = true;
+			
+			if(popupParams.isVirtualRequest){
+				eqcostConfirmVirtualApplyAmountHidden = false;
+			}
 			
 		}
 		postAjaxRequest(loadUrl, popupParams, editRepository);
@@ -488,6 +494,17 @@ function editRepository(data) {
 				eqList[i].eqcostConfirmedAmount = 0;
 			}
 			
+			
+			if(	popupParams && popupParams.isVirtualRequest){
+				
+			}else{
+				eqList[i].eqcostConfirmApplyAmount = eqList[i].eqcostApplyAmount - eqList[i].eqcostConfirmedAmount;
+			}
+			
+			if(eqList[i].eqcostConfirmApplyAmount < 0){
+				eqList[i].eqcostConfirmApplyAmount = 0;
+			}
+			
 		}
 	}
 	if (requestDataItem) {
@@ -538,6 +555,11 @@ function editRepository(data) {
 					title : eqcostConfirmApplyAmountLabel,
 					attributes: { "style": "color:red"},
 					hidden: eqcostConfirmApplyAmountHidden
+				},{
+					field : "eqcostConfirmApplyAmount",
+					title : "本次签收数量",
+					attributes: { "style": "color:red"},
+					hidden: eqcostConfirmVirtualApplyAmountHidden
 				},{
 					field : "eqcostConfirmedAmount",
 					title : "已签收数量",

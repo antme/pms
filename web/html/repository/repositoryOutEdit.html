@@ -50,29 +50,29 @@
             </div>
 		  
 			<div class="k-edit-label">
-				<label>签收人:</label>
+				<label>签收人:<span class="input_required_star">*</span></label>
 			</div>
 			<div class="k-edit-field">
-				<input type="text" data-bind="value: outOperator" id="outOperator" />
+				<input type="text" data-bind="value: outOperator" id="outOperator" validationMessage="请填写签收人"  required="required" />
 			</div>
 			<div class="k-edit-label">
 				<label>签收日期:</label>
 			</div>
 			<div class="k-edit-field">
-				<input type="text" data-role="datepicker" data-bind="value: outDate"
-					id="outDate" />
+				<input type="text" data-role="datepicker" data-bind="value: outDate" id="outDate" />
 			</div>
 			<div class="k-edit-label">
-				<label>需方名称:</label>
+				<label>需方名称:<span class="input_required_star">*</span></label>
 			</div>
-			<div class="k-edit-field">
-				<input type="text" data-bind="value: recustomer" id="recustomer" />
+			<div class="k-edit-field" data-container-for="recustomer">
+				<input type="text" class="k-input k-textbox" data-bind="value: recustomer" id="recustomer"  validationMessage="请填写需方名称"  required="required" />
 			</div>
+			
 			<div class="k-edit-label">
-				<label>签收单据编号:</label>
+				<label>签收单据编号:<span class="input_required_star">*</span></label>
 			</div>
-			<div class="k-edit-field">
-				<input type="text" data-bind="value: code" id="code" />
+			<div class="k-edit-field" data-container-for="code">
+				<input type="text" class="k-input k-textbox" data-bind="value: code" id="code" validationMessage="请填写签收单据编号"  required="required" />
 			</div>
 
 	

@@ -1,4 +1,4 @@
-var listUrl = "/service/purcontract/repository/list?type=out";
+var listUrl = "/service/purcontract/repository/list?type=out&isVirtualRequest=true";
 
 
 // 外面列表页的datasource对象
@@ -29,25 +29,19 @@ $(document).ready(function() {
 			width : "1000px",
 			columns : [ {
 				field : "repositoryCode",
-				title : "申请编号",
+				title : "签收单编号",
 				template : function(dataItem) {
-					return '<a  onclick="openRepositoryOutViewWindow(\'' + dataItem._id + '\');">' + dataItem.repositoryCode + '</a>';
+					return '<a  onclick="openVirtualRepositoryOutViewWindow(\'' + dataItem._id + '\');">' + dataItem.repositoryCode + '</a>';
 				}
 			}, {
 				field : "recustomer",
 				title : "需方名称"
 			}, {
-				field : "status",
-				title : "出库状态"
-			}, {
-				field : "outDate",
-				title : "发货时间"
-			}, {
 				field : "approvedDate",
 				title : "签收时间"
 			}, {
-				field : "totalIn",
-				title : "出库总数"
+				field : "totalConfirmedAmount",
+				title : "签收总数"
 			}]
 
 		});
