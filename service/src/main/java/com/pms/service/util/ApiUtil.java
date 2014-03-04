@@ -179,7 +179,7 @@ public class ApiUtil {
     }
 
     public  static Integer getInteger(Object value) {
-        Integer result = null;
+        Integer result = 0;
 
         if (value != null) {
             try {
@@ -199,7 +199,7 @@ public class ApiUtil {
     }
 
     public  static Integer getInteger(Object value,int defaultValue) {
-        Integer result = null;
+        Integer result = 0;
 
         if (value != null) {
             try {

@@ -1614,9 +1614,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 			int totalConfirmedAmount = 0 ;
 			int alreadyTotalConfirmedAmount = 0;
 			for (Map<String, Object> eqMap : eqMapList) {
-				int eqAmount = ApiUtil.getInteger(eqMap.get(PurchaseRequest.EQCOST_APPLY_AMOUNT));
-				int confirmAmount = ApiUtil.getInteger(eqMap.get("eqcostConfirmApplyAmount"));
-				int confirmedAmount = ApiUtil.getInteger(eqMap.get("eqcostConfirmedAmount"));
+				int eqAmount = ApiUtil.getInteger(eqMap.get(PurchaseRequest.EQCOST_APPLY_AMOUNT), 0);
+				int confirmAmount = ApiUtil.getInteger(eqMap.get("eqcostConfirmApplyAmount"), 0);
+				int confirmedAmount = ApiUtil.getInteger(eqMap.get("eqcostConfirmedAmount"), 0);
 
 				if (confirmAmount > eqAmount) {
 					confirmAmount = eqAmount;
