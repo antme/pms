@@ -70,12 +70,6 @@ $(document).ready(function() {
 			}, {
 				field : "requestedTotalMoney",
 				title : "金额"
-			}, {
-				field : "numbersPercentOfContract",
-				title : "货品占合同%"
-			}, {
-				field : "moneyPercentOfContract",
-				title : "金额占合同%"
 			},{
 				field : "eqcostDeliveryType",
 				title : "货物递送方式"
