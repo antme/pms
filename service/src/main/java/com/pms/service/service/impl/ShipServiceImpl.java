@@ -370,12 +370,19 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
                 
                 for(Map<String, Object> eq: eqList){
                     
-                    eq.put("eqcostApplyAmount", eq.get(ShipBean.SHIP_EQ_ACTURE_AMOUNT));
+                	if(ApiUtil.isValid(eq.get("eqcostShipAmount"))){
+                		
+                		eq.put("eqcostApplyAmount", eq.get("eqcostShipAmount"));
+                	}else{
+                		eq.put("eqcostApplyAmount", 0);
+                	}
 
                 }
+                removeEmptyEqList(eqList, "eqcostApplyAmount");
+                repositoryOut.put("eqcostList", eqList);
+
             }
             
-            repositoryOut.put("eqcostList", ship.get("eqcostList"));
             scs.mergeCommonFieldsFromSc(repositoryOut,  ship.get(ShipBean.SHIP_SALES_CONTRACT_ID));
 
             pService.updateRepositoryRequest(repositoryOut);
