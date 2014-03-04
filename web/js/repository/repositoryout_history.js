@@ -27,11 +27,20 @@ $(document).ready(function() {
 			sortable : true,
 			selectable : "row",
 			width : "1000px",
-			columns : [ {
+			columns : [ 
+			            
+			{
+				field : "virtualCode",
+				title : "虚拟单编号",
+				template : function(dataItem) {
+					return '<a  onclick="openVirtualRepositoryOutViewWindow(\'' + dataItem._id + '\');">' + dataItem.virtualCode + '</a>';
+				}
+			},
+			{
 				field : "repositoryCode",
 				title : "签收单编号",
 				template : function(dataItem) {
-					return '<a  onclick="openVirtualRepositoryOutViewWindow(\'' + dataItem._id + '\');">' + dataItem.repositoryCode + '</a>';
+					return '<a  onclick="openRepositoryOutViewWindow(\'' + dataItem.repositoryOutId + '\');">' + dataItem.repositoryCode + '</a>';
 				}
 			}, {
 				field : "recustomer",

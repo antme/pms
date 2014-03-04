@@ -853,7 +853,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     @Override
     public Map<String, Object> updatePurchaseOrder(Map<String, Object> parameters) {
         PurchaseRequest request = (PurchaseRequest) new PurchaseRequest().toEntity(parameters);
-        Object eqList = parameters.get(SalesContractBean.SC_EQ_LIST);
+        List<Map<String, Object>> eqList = (List<Map<String, Object>>) parameters.get(SalesContractBean.SC_EQ_LIST);
 
         if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID)) && ApiUtil.isEmpty(parameters.get(PurchaseOrder.PURCHASE_ORDER_CODE))) {
             String purchaseRequestCode = parameters.get(PurchaseRequest.PURCHASE_REQUEST_CODE).toString();
@@ -869,10 +869,22 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
         }
         
-        removeEmptyEqList((List<Map<String, Object>>) eqList, PurchaseOrder.EQCOST_APPLY_AMOUNT);
+        removeEmptyEqList( eqList, PurchaseOrder.EQCOST_APPLY_AMOUNT);
 
+
+        float requestedTotalMoney = 0;
+        for(Map<String, Object> eqMap: eqList){
+        	
+        	float price = ApiUtil.getFloatParam(eqMap.get("eqcostProductUnitPrice"));
+        	int amount = ApiUtil.getInteger(eqMap.get("eqcostApplyAmount"), 0);
+        	
+        	requestedTotalMoney = requestedTotalMoney + price*amount;
+        	
+        }
+        
         parameters.put(SalesContractBean.SC_EQ_LIST, eqList);
-
+        parameters.put("requestedTotalMoney", requestedTotalMoney);
+        
 
         Map<String, Object> order = updatePurchase(parameters, DBBean.PURCHASE_ORDER);
 
@@ -1283,6 +1295,18 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         List<Map<String, Object>> list = (List<Map<String, Object>>) eqList;
         updateEqListWithProjectId(parameters, list);
         
+        float requestedTotalMoney = 0;
+        for(Map<String, Object> eqMap: list){
+        	
+        	float price = ApiUtil.getFloatParam(eqMap.get("eqcostLastBasePrice"));
+        	int amount = ApiUtil.getInteger(eqMap.get("eqcostApplyAmount"), 0);
+        	
+        	requestedTotalMoney = requestedTotalMoney + price*amount;
+        	
+        }
+        
+        pcrequest.put("requestedTotalMoney", requestedTotalMoney);
+
         pcrequest.put(SalesContractBean.SC_EQ_LIST, eqList);
 
         //TODO: 后台检查可申请数据
@@ -1588,6 +1612,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 			boolean confirmed = true;
 			String status = PurchaseRequest.STATUS_IN_OUT_REPOSITORY;
 			int totalConfirmedAmount = 0 ;
+			int alreadyTotalConfirmedAmount = 0;
 			for (Map<String, Object> eqMap : eqMapList) {
 				int eqAmount = ApiUtil.getInteger(eqMap.get(PurchaseRequest.EQCOST_APPLY_AMOUNT));
 				int confirmAmount = ApiUtil.getInteger(eqMap.get("eqcostConfirmApplyAmount"));
@@ -1601,26 +1626,29 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 				
 				
 				eqMap.put("eqcostConfirmedAmount", confirmedAmount + confirmAmount);
-				
+				alreadyTotalConfirmedAmount = alreadyTotalConfirmedAmount + confirmedAmount + confirmAmount;
 				totalConfirmedAmount = totalConfirmedAmount + confirmAmount;
 				if (confirmAmount != eqAmount) {
 					confirmed = false;
 				}
 		
 			}
+            params.put("alreadyTotalConfirmedAmount", alreadyTotalConfirmedAmount);
+            params.put(PurchaseRequest.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+
 	        if (confirmed) {
                 status = PurchaseRequest.STATUS_OUT_REPOSITORY_NEED_CONFIRM;
-                params.put(PurchaseRequest.APPROVED_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
-
             }
 			result = processRequest(params, db, status);
 			
 			
 			//每次确认的数据生成一条虚拟出入库记录
 			params.put("isVirtualRequest", true);
-			params.put(ApiConstants.MONGO_ID, "");
 			params.put("totalConfirmedAmount", totalConfirmedAmount);
-			
+			params.put("virtualCode", generateCode("VTSQ", DBBean.REPOSITORY_OUT, "virtualCode"));
+			params.put("repositoryOutId", params.get(ApiConstants.MONGO_ID));
+			params.put(ApiConstants.MONGO_ID, "");
+
 			this.dao.add(params, db);
 
 		}

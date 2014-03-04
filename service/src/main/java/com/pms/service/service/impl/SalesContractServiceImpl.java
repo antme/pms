@@ -1590,6 +1590,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_CODE, request.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
         newObj.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));       
         newObj.put(PurchaseRequest.BACK_REQUEST_CODE, back.get(PurchaseBack.pbCode));
+        newObj.put("eqcostDeliveryType", PurchaseRequest.EQCOST_DELIVERY_TYPE_REPOSITORY);
+
         
 
 		for (Map<String, Object> eqMap : eqList) {

@@ -51,17 +51,23 @@ $(document).ready(function() {
 				title : "出库状态"
 			}, {
 				field : "outDate",
-				title : "发货时间"
+				title : "发货时间",
+				template : function(dataItem) {
+					return kendo.toString(dataItem.outDate, 'd').split("T")[0];
+				}
 			}, {
 				field : "approvedDate",
-				title : "签收时间"
+				title : "最后签收时间"
 			}, {
 				field : "totalIn",
 				title : "出库总数"
+			}, {
+				field : "alreadyTotalConfirmedAmount",
+				title : "已签收总数"
 			}]
 
 		});
-
+		
 	}
 	
 	
