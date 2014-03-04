@@ -207,6 +207,8 @@ function loadBackRequest(data) {
 	}
 }
 
+
+var gridRefresh = true;
 function edit(data) {
 
 	// 初始化空对象
@@ -373,8 +375,9 @@ function edit(data) {
 
 								}
 
-								if (refresh) {
+								if (refresh || gridRefresh) {
 									var grid1 = $("#purchase-request-edit-grid").data("kendoGrid");
+									gridRefresh = false;
 									grid1.refresh();
 								}
 

@@ -195,14 +195,22 @@ function sumOrders(e) {
 		// will trigger dataBound event
 		e.model.set("eqcostContractTotalMoney", eqcostBasePrice * eqcostApplyAmount);
 		e.model.set("requestedTotalMoney", eqcostProductUnitPrice * eqcostApplyAmount);
-	
-		grid1.refresh();
+		for (listIndex in data) {
+			
+			if(data[listIndex]._id == e.model.get("_id")){
+				data[listIndex].requestedTotalMoney = eqcostProductUnitPrice * eqcostApplyAmount;
+				break;
+			}
+		}
+		itemDataSource.data(data);
+		grid1.setDataSource(itemDataSource);
+
 	}
 
 }
-
+var gridRefresh = true;
 function edit(data) {
-
+	gridRefresh = true;
 	// 初始化空对象
 	if (data) {
 		$("#purchase-request-select").hide();
@@ -224,7 +232,7 @@ function edit(data) {
 
 	// 渲染成本编辑列表
 	itemDataSource.data(requestDataItem.eqcostList);
-
+	initData();
 	requestDataItem.set("pbPlanDate", kendo.toString(requestDataItem.pbPlanDate, 'd'));
 	setDate(requestDataItem, "requestedDate", requestDataItem.requestedDate);
 
@@ -292,9 +300,8 @@ function edit(data) {
 									return percentToFixed(dataItem.requestedTotalMoney);
 								},
 								
-								footerTemplate: function(dataItem){
-									return percentToFixed(dataItem.requestedTotalMoney.sum);
-								}	
+								groupFooterTemplate: "#= sum.toFixed(2)#", 
+								footerTemplate: "#=sum.toFixed(2)#"	
 							}],
 
 							editable : true,
@@ -392,9 +399,11 @@ function edit(data) {
 
 								}
 
-								if (refresh) {
+								if (refresh || gridRefresh) {
 									var grid1 = $("#purchaseorder-edit-grid").data("kendoGrid");
+									gridRefresh = false;
 									grid1.refresh();
+									
 								}
 
 								requestDataItem.requestedNumbers = total;
@@ -435,6 +444,68 @@ function edit(data) {
 
 }
 
+
+function initData(){
+	var data = itemDataSource.data();
+	var total = 0;
+	// 采购申请总价格
+	var eqcostContractTotalMoney = 0;
+
+	// 合同中总数
+	var eqcostRealAmount = 0;
+	// 订单实际总价格
+	var requestActureMoney = 0;
+
+
+	for (i = 0; i < data.length; i++) {
+		var item = data[i];
+		if (!item.eqcostContractTotalMoney) {
+			item.eqcostContractTotalMoney = 0;
+		}
+		if (!item.requestedTotalMoney) {
+			item.requestedTotalMoney = 0;
+		}
+		
+		if (!item.eqcostRealAmount) {
+			item.eqcostRealAmount = 0;
+		}
+
+		if (!item.eqcostApplyAmount) {
+			item.eqcostApplyAmount = 0;
+		}
+
+		if (!item.eqcostProductUnitPrice) {
+			item.eqcostProductUnitPrice = 0;
+		}
+
+
+		if (!item.eqcostBasePrice) {
+			item.eqcostBasePrice = 0;
+		}
+		
+		var requestedTotalMoney = item.requestedTotalMoney;
+
+		// 计算总的申请数量
+		total = total + item.eqcostApplyAmount;
+		eqcostRealAmount = eqcostRealAmount
+				+ item.eqcostRealAmount;
+
+		requestActureMoney = requestActureMoney
+				+ item.eqcostApplyAmount
+				* item.eqcostProductUnitPrice;
+		item.requestedTotalMoney = item.eqcostApplyAmount
+				* item.eqcostProductUnitPrice;
+
+		eqcostContractTotalMoney = eqcostContractTotalMoney
+				+ item.eqcostRealAmount
+				* item.eqcostBasePrice;
+		
+		
+		item.eqcostContractTotalMoney = item.eqcostRealAmount
+				* item.eqcostBasePrice;
+
+	}
+}
 
 
 //保存操作

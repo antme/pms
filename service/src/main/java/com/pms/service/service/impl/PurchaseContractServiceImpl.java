@@ -2111,6 +2111,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
                     contract.put(SalesContractBean.SC_EQ_LIST, eqList);
                     
+                    logger.info("获取成本清单给采购合同" + code);
+                    
                 }
                 
                 this.updatePurchase(contract, DBBean.PURCHASE_CONTRACT);

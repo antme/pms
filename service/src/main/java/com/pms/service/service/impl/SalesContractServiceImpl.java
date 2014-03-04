@@ -1381,6 +1381,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			InputStream inputStream = (InputStream) params.get("inputStream");
 			ExcleUtil excleUtil = new ExcleUtil(inputStream);
 			int numberOfSheet = excleUtil.getNumberOfSheets();
+			
+			System.out.println("系统将导入"+ numberOfSheet + "个销售合同清单");
 	
 			for (int ns = 0; ns < numberOfSheet; ns++) {
 				String contractCode = excleUtil.getSheetName(ns);
