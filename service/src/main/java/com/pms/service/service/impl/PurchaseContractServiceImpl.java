@@ -1642,14 +1642,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 			result = processRequest(params, db, status);
 			
 			
-			//每次确认的数据生成一条虚拟出入库记录
-			params.put("isVirtualRequest", true);
-			params.put("totalConfirmedAmount", totalConfirmedAmount);
-			params.put("virtualCode", generateCode("VTSQ", DBBean.REPOSITORY_OUT, "virtualCode"));
-			params.put("repositoryOutId", params.get(ApiConstants.MONGO_ID));
-			params.put(ApiConstants.MONGO_ID, "");
-
-			this.dao.add(params, db);
+			if(totalConfirmedAmount > 0){
+			
+				//每次确认的数据生成一条虚拟出入库记录
+				params.put("isVirtualRequest", true);
+				params.put("totalConfirmedAmount", totalConfirmedAmount);
+				params.put("virtualCode", generateCode("VTSQ", DBBean.REPOSITORY_OUT, "virtualCode"));
+				params.put("repositoryOutId", params.get(ApiConstants.MONGO_ID));
+				params.put(ApiConstants.MONGO_ID, "");
+	
+				this.dao.add(params, db);
+			}
 
 		}
         
