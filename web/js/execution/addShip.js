@@ -633,6 +633,7 @@ function saveShip(needCheck) {
 		}
 
 		model.set("eqcostList", allShipDataSource.data());
+		
 		if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
 			postAjaxRequest("/service/ship/record", {models:kendo.stringify(model)}, checkStatus);
 		}else if(redirectParams && redirectParams.type && redirectParams.type == "submit") {

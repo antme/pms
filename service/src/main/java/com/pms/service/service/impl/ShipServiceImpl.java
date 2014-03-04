@@ -136,6 +136,17 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         
 
         
+        List<Map<String, Object>> eqList = (List<Map<String, Object>>) params.get("eqcostList");
+        
+        for(Map<String, Object> eq: eqList){
+            
+        	if(!ApiUtil.isValid(eq.get("eqcostShipAmount"))){        		
+        		eq.put("eqcostShipAmount", 0);
+        	}
+
+        }
+        
+        
         if (params.get(ApiConstants.MONGO_ID) != null) {
             return update(params);
         } else {
