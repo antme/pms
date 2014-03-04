@@ -485,11 +485,7 @@ function editRepository(data) {
 		}
 		
 		for(i=0; i<eqList.length; i++){
-			
-			if(!eqList[i].eqcostConfirmApplyAmount){
-				eqList[i].eqcostConfirmApplyAmount = eqList[i].eqcostApplyAmount;
-			}
-			
+	
 			if(!eqList[i].eqcostConfirmedAmount){
 				eqList[i].eqcostConfirmedAmount = 0;
 			}
