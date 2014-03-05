@@ -1171,10 +1171,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 		query.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
 		query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode, PurchaseBack.scCode });
 		Map<String, Object> data = dao.list(query, DBBean.PURCHASE_BACK);
-		List<Map<String, Object>> eqListData = (List<Map<String, Object>>) data.get(ApiConstants.RESULTS_DATA);
+		List<Map<String, Object>> backRequestList = (List<Map<String, Object>>) data.get(ApiConstants.RESULTS_DATA);
 
-		if (eqListData != null) {
-			for (Map<String, Object> backRequest : eqListData) {
+		if (backRequestList != null) {
+			for (Map<String, Object> backRequest : backRequestList) {
 
 				Map<String, Integer> backEqMap = backService.countRestEqByBackId(backRequest.get(ApiConstants.MONGO_ID).toString());
 
@@ -1182,14 +1182,15 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
 					if (backEqMap.get(key) != null && backEqMap.get(key) > 0) {
 						backRequest.put("eqcostList", backEqMap);
-
 						break;
 					}
 				}
 
 			}
+			
 		}
-		removeEmptyEqList(eqListData, "eqcostList");
+				
+		removeEmptyEqList(backRequestList, "eqcostList");
 		return data;
 	}
 
@@ -1339,14 +1340,17 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> approvePurchaseRequest(Map<String, Object> request) {
         Map<String, Object> requestMap = this.dao.findOne(ApiConstants.MONGO_ID, request.get(ApiConstants.MONGO_ID), 
                 new String[] { PurchaseCommonBean.PROCESS_STATUS }, DBBean.PURCHASE_REQUEST);      
-            
+        Map<String,Object> result = null;
        if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_ABROGATED_NEED_APPROVED)) {
-           Map<String,Object> result = processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_ABROGATED); 
+           result = processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_ABROGATED); 
            reduceBackEqCount((String)request.get(ApiConstants.MONGO_ID));
-           return result;
         } else {
-            return processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.STATUS_APPROVED);
+            result = processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.STATUS_APPROVED);
         }
+       
+       backService.updatePurchaseBackStatus();
+       return result;
+
     }
 
     private void reduceBackEqCount(String id){

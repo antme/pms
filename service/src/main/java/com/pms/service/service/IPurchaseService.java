@@ -57,5 +57,8 @@ public interface IPurchaseService {
     public Map<String, Object> checkEqCountForAllot(Map<String, Object> params);
     
     
+    public void updatePurchaseBackStatus();
+    
+    
 
 }

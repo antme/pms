@@ -205,7 +205,7 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String PROCESS_STATUS = "status";
     public static final String APPROVED_DATE = "approvedDate";
     public static final String SALES_CONTRACT_CODE = "contractCode";
-
+    public static final String STATUS_CLOSED = "已结束";
     public static final String STATUS_DRAFT = "草稿";
     public static final String STATUS_SUBMITED = "已提交";
     public static final String STATUS_NEW = "审批中";

@@ -79,17 +79,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		request.put(PurchaseBack.pbSpecialRequireRadio, new String[]{});
 		return request;
     }
-	
-	private void mergeSalseStatisInfo(Map<String, Object> params, Object scId){	  
-	    Map<String, Integer> backEqCountMap = getBackTotalCountByScId((String)scId);
-	    int total = 0;
-	    for(String key: backEqCountMap.keySet()){
-	        total = total + backEqCountMap.get(key);
-	    }
-	    params.put("totalBackCount", total);
-	    
-	    
-	}
+
 
     /**
      * @param params._id
@@ -129,7 +119,10 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    String comment = (String)params.get("tempComment");
 	    comment = recordComment("批准",comment,oldComment);
 	    newObj.put(PurchaseBack.pbComment, comment);
-        return dao.updateById(newObj, DBBean.PURCHASE_BACK);
+        Map<String, Object> result =  dao.updateById(newObj, DBBean.PURCHASE_BACK);
+        
+        updatePurchaseBackStatus();
+        return result;
     }
 	
 	@Override
@@ -623,7 +616,35 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	
 	
 
+    public void updatePurchaseBackStatus(){
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode, PurchaseBack.scCode });
+        Map<String, Object> data = dao.list(query, DBBean.PURCHASE_BACK);
+        List<Map<String, Object>> backRequestList = (List<Map<String, Object>>) data.get(ApiConstants.RESULTS_DATA);
 
+        if (backRequestList != null) {
+            for (Map<String, Object> backRequest : backRequestList) {
+                boolean needUpdate = true;
+
+                Map<String, Integer> backEqMap = countRestEqByBackId(backRequest.get(ApiConstants.MONGO_ID).toString());
+
+                for (String key : backEqMap.keySet()) {
+
+                    if (backEqMap.get(key) != null && backEqMap.get(key) > 0) {
+                        needUpdate = false;
+                        break;
+                    }
+                }
+                
+                if(needUpdate){
+                    backRequest.put(PurchaseBack.paStatus, PurchaseCommonBean.STATUS_CLOSED);
+                }
+
+            }
+            
+        }
+    }
 
 	public enum PurchaseStatus {
     	saved,submited,approved,rejected,interruption,finalApprove,done, firstApprove, firstRejected, finalRejected;
