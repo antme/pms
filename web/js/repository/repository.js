@@ -40,7 +40,7 @@ $(document).ready(function() {
 					return '<a  onclick="openRepositoryViewWindow(\'' + dataItem._id + '\');">' + dataItem.repositoryCode + '</a>';
 				}
 			} , {
-				field : "orderCode",
+				field : "offlineRepositoryCode",
 				title : "单据编号"
 			},{
 				field : "supplierName",

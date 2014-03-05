@@ -1,5 +1,7 @@
 package com.pms.service.controller;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.pms.service.annotation.LoginRequired;
 import com.pms.service.annotation.RoleValidConstants;
@@ -133,4 +137,21 @@ public class ShipController extends AbstractController {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(shipService.getShipCount(params), request, response);
     }
+    
+    
+    @RequestMapping("/importship")
+    //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
+    public void importShipHistoryData(HttpServletRequest request, HttpServletResponse response){
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;   
+        MultipartFile uploadFile = multipartRequest.getFile("shipFile");        
+        Map<String,Object> result = new HashMap<String,Object>();
+        try {
+			result = shipService.importShipHistoryData(uploadFile.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+    	responseWithData(result, request, response);
+    }  
+    
 }

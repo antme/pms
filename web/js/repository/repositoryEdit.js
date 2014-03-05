@@ -177,28 +177,31 @@ $(document).ready(function() {
 
 	}else{
 
-		$("#purchasecontractselect").kendoDropDownList({
-			dataTextField : "purchaseContractCode",
-			dataValueField : "_id",
-			placeholder : "选择采购合同...",
-			dataSource : projectDataSource,
-			change : function(e) {
-				updateSupplier();
-				requestDataItem.purchaseContractCode = this.dataItem().purchaseContractCode;
-				requestDataItem.purchaseContractId = this.dataItem()._id;
-				requestDataItem.supplierId = this.dataItem().supplier;
-				requestDataItem.supplierName = this.dataItem().supplierName;
-				requestDataItem.poNumber = this.dataItem().poNumber;
-			},
-			dataBound : function(e){	
-				requestDataItem.purchaseContractCode = this.dataItem().purchaseContractCode;
-				requestDataItem.purchaseContractId = this.dataItem()._id;
-				requestDataItem.supplierId = this.dataItem().supplier;
-				requestDataItem.supplierName = this.dataItem().supplierName;
-				requestDataItem.poNumber = this.dataItem().poNumber;
-				updateSupplier();
-			}
-		});
+		
+		if(!popupParams){
+			$("#purchasecontractselect").kendoDropDownList({
+				dataTextField : "purchaseContractCode",
+				dataValueField : "_id",
+				placeholder : "选择采购合同...",
+				dataSource : projectDataSource,
+				change : function(e) {
+					updateSupplier();
+					requestDataItem.purchaseContractCode = this.dataItem().purchaseContractCode;
+					requestDataItem.purchaseContractId = this.dataItem()._id;
+					requestDataItem.supplierId = this.dataItem().supplier;
+					requestDataItem.supplierName = this.dataItem().supplierName;
+					requestDataItem.poNumber = this.dataItem().poNumber;
+				},
+				dataBound : function(e){	
+					requestDataItem.purchaseContractCode = this.dataItem().purchaseContractCode;
+					requestDataItem.purchaseContractId = this.dataItem()._id;
+					requestDataItem.supplierId = this.dataItem().supplier;
+					requestDataItem.supplierName = this.dataItem().supplierName;
+					requestDataItem.poNumber = this.dataItem().poNumber;
+					updateSupplier();
+				}
+			});
+		}
 	}
 
 //	$("#operator").kendoDropDownList({
@@ -594,7 +597,7 @@ function editRepository(data) {
 				grid.hideColumn("leftCount");
 			}
 			
-			$("#orderCode").attr("required", "required");
+			$("#offlineRepositoryCode").attr("required", "required");
 		}
 	}else{
 		alert("无设备清单");

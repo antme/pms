@@ -228,8 +228,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 			// 添加成本设备清单记录
 			if (eqcostList != null && !eqcostList.isEmpty()) {
-				addEqCostListForContract(eqcostList, (String) addedContract.get(ApiConstants.MONGO_ID), genSCCode, (String) addedContract.get(SalesContractBean.SC_PROJECT_ID),
-				        isdraft);
+				addEqCostListForContract(eqcostList,  addedContract, isdraft);
 			}
 
 			return addedContract;
@@ -263,18 +262,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			pCustomerUpdate.put(ProjectBean.PROJECT_CUSTOMER_ID, customerNew);
 			dao.updateById(pCustomerUpdate, DBBean.PROJECT);
 
-			
+			dao.updateById(contract, DBBean.SALES_CONTRACT);
 
 			// 添加成本设备清单记录
 			if (!eqcostList.isEmpty()) {
 				updateTheModifyHistoryAndModifyTimesAndscLastAmount(params, eqcostList, contract, existContract);
 				String scProjectId = (String) existContract.get(SalesContractBean.SC_PROJECT_ID);
 				String scCode = (String) existContract.get(SalesContractBean.SC_CODE);
-				addEqCostListForContract(eqcostList, _id, scCode, scProjectId, isdraft);
+				addEqCostListForContract(eqcostList, contract, isdraft);
 			}
 			logger.info("***************************** Save contract *****************************");
-			logger.info(contract);
-			return dao.updateById(contract, DBBean.SALES_CONTRACT);
+			return contract;
 		}
 	}
 	
@@ -330,8 +328,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		return amount;
 	}
 
-	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, String cId, String scCode, String proId, boolean isdraft) {
+	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, Map<String, Object> contract, boolean isdraft) {
 		int nextVersionNo = 1;
+		String cId = contract.get(ApiConstants.MONGO_ID).toString();	
+		String proId = contract.get(SalesContractBean.SC_PROJECT_ID).toString();
+		String scCode = contract.get(SalesContractBean.SC_CODE).toString();
+		
 		if (!isdraft) {
 			nextVersionNo = this.getEqCostNextVersionNo(cId);
 		}
@@ -349,8 +351,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			item.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT, ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_TOTAL_AMOUNT));
 
 			item.put(SalesContractBean.SC_PROJECT_ID, proId);
-			item.put(EqCostListBean.EQ_LIST_SC_ID, cId);
+			item.put(SalesContractBean.SC_CODE, scCode);
 			item.put(EqCostListBean.EQ_LIST_VERSION_NO, nextVersionNo);
+			
+			mergeCommonFieldsFromSc(item, cId);
 
 			Map<String, Object> realItemQuery = new HashMap<String, Object>();
 			realItemQuery.put(SalesContractBean.SC_ID, cId);
@@ -1186,10 +1190,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public void mergeCommonFieldsFromSc(Map<String, Object> data, Object scId) {
 		Map<String, Object> scQuery = new HashMap<String, Object>();
 		scQuery.put(ApiConstants.MONGO_ID, scId);
-		scQuery.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE, SalesContractBean.SC_CUSTOMER_ID });
+		scQuery.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_CODE, SalesContractBean.SC_PROJECT_ID, SalesContractBean.SC_TYPE, SalesContractBean.SC_CUSTOMER_ID });
 
 		Map<String, Object> sc = this.dao.findOneByQuery(scQuery, DBBean.SALES_CONTRACT);
 
+		data.put(SalesContractBean.SC_ID, scId);
+		data.put(SalesContractBean.SC_CODE, sc.get(SalesContractBean.SC_CODE));
 		data.put(SalesContractBean.SC_PROJECT_ID, sc.get(SalesContractBean.SC_PROJECT_ID));
 		data.put(SalesContractBean.SC_TYPE, sc.get(SalesContractBean.SC_TYPE));
 		data.put(SalesContractBean.SC_CUSTOMER_ID, sc.get(SalesContractBean.SC_CUSTOMER_ID));
@@ -1501,7 +1507,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				query.put(SalesContractBean.SC_CODE, new DBQuery(DBQueryOpertion.EQUAILS, contractCode));
 				Map<String, Object> contract = this.dao.findOneByQuery(query, DBBean.SALES_CONTRACT);
 				if (ApiUtil.isValid(contract)) {
-					addEqCostListForContract(eqList, contract.get(ApiConstants.MONGO_ID).toString(), contractCode, contract.get(SalesContractBean.SC_PROJECT_ID).toString(), false);
+					addEqCostListForContract(eqList, contract, false);
 					// logger.info("create eqlist for contract: " +
 					// contractCode);
 
@@ -1853,6 +1859,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				String projectName = getRowColumnValue(row, keyMap, "项目名称");
 				String archiveStatus = getRowColumnValue(row, keyMap, "归档状态");
 
+				
+				if(ApiUtil.isEmpty(pmName)){
+					pmName = "吴立嵘";
+				}
 				String yulixiang = getRowColumnValue(row, keyMap, "预立项");
 				String projectCode = getRowColumnValue(row, keyMap, "项目编号");
 				String excelSCType = getRowColumnValue(row, keyMap, "合同类型");

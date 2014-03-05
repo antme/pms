@@ -1,5 +1,6 @@
 package com.pms.service.service;
 
+import java.io.InputStream;
 import java.util.Map;
 
 public interface IShipService {
@@ -33,4 +34,6 @@ public interface IShipService {
     public Map<String, Object> getShipCount(Map<String, Object> params);
 
     public Map<String, Object> submitShipCount(Map<String, Object> params);
+
+	public Map<String, Object> importShipHistoryData(InputStream inputStream);
 }

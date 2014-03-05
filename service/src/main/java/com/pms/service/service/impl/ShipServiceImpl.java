@@ -1,5 +1,6 @@
 package com.pms.service.service.impl;
 
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,9 +8,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
@@ -17,8 +22,10 @@ import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.DBBean;
+import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.GroupBean;
 import com.pms.service.mockbean.ProjectBean;
+import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.PurchaseRequest;
@@ -31,11 +38,16 @@ import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.IShipService;
+import com.pms.service.service.impl.PurchaseServiceImpl.PurchaseStatus;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DateUtil;
 import com.pms.service.util.EmailUtil;
+import com.pms.service.util.ExcleUtil;
 
 public class ShipServiceImpl extends AbstractService implements IShipService {
+	
+	private static Logger logger = LogManager.getLogger(ShipServiceImpl.class);
+
 	
 	private IPurchaseContractService pService;
 	
@@ -544,6 +556,150 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         return null;
     }
 
+    public Map<String, Object> importShipHistoryData(InputStream inputStream){
+    	
+    	Map<String, Object> result = new LinkedHashMap<String, Object>();
+		try {
+			ExcleUtil excleUtil = new ExcleUtil(inputStream);
+			
 	
+			for (int ns = 0; ns < 1; ns++) {
+				List<String[]> list = excleUtil.getAllData(ns);
+				Map<String, Integer> keyMap = new LinkedHashMap<String, Integer>();
+
+				int n = 1;
+				String[] titles = list.get(n);
+
+				if (titles != null) {
+					boolean find = false;
+					for (int i = 0; i < titles.length; i++) {
+						String key = titles[i].trim();
+						if (key.contains("库房代码")) {
+							find = true;
+							break;
+						}
+
+					}
+
+					if (!find) {
+						n = 2;
+						titles = list.get(n);
+					}
+					for (int i = 0; i < titles.length; i++) {
+						String key = titles[i].trim();
+						if (!ApiUtil.isEmpty(key)) {
+							keyMap.put(key, i);
+						}
+					}
+				}
+
+				Map<String, List<Map<String, Object>>> eqListMap = new HashMap<String, List<Map<String, Object>>>();
+
+				for (int i = n + 1; i < list.size(); i++) {
+					Map<String, Object> eq = new LinkedHashMap<String, Object>();
+
+					String[] row = list.get(i);
+					String productName = getRowColumnValue(row, keyMap, "名称");
+
+					// if (eqCode.equalsIgnoreCase("物料代码")) {
+					// continue;
+					// }
+					// FIXME
+					// productName = productName.replaceAll("_", "");
+
+					if (ApiUtil.isEmpty(productName)) {
+						continue;
+					}
+
+					int eqcostAmount = ApiUtil.getInteger(getRowColumnValue(row, keyMap, "数量"));
+
+					String productType1 = getRowColumnValue(row, keyMap, "型号1");
+					String productType2 = getRowColumnValue(row, keyMap, "型号2");
+
+					eq.put(EqCostListBean.EQ_LIST_UNIT, getRowColumnValue(row, keyMap, "单位"));
+
+					if (eqcostAmount < 0) {
+						eqcostAmount = 0;
+					}
+					eq.put(PurchaseContract.EQCOST_APPLY_AMOUNT, eqcostAmount);
+
+					String scCode = getRowColumnValue(row, keyMap, "合同编号");
+
+					if (eqListMap.get(scCode) != null) {
+						List<Map<String, Object>> eqList = eqListMap.get(scCode);
+						eqList.add(eq);
+						eqListMap.put(scCode, eqList);
+
+					} else {
+						List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
+						eqList.add(eq);
+						eqListMap.put(scCode, eqList);
+					}
+
+				}
+				List<Map<String, Object>> arrivalMap = (List<Map<String, Object>>) this.dao.list(new HashMap<String, Object>(), DBBean.ARRIVAL_NOTICE).get(
+				        ApiConstants.RESULTS_DATA);
+
+				for (Map<String, Object> arrival : arrivalMap) {
+
+					for (String scCode : eqListMap.keySet()) {
+
+						if (arrival.get(SalesContractBean.SC_CODE).equals(scCode)) {
+
+							List<Map<String, Object>> arrivalEqlist = (List<Map<String, Object>>) arrival.get(SalesContractBean.SC_EQ_LIST);
+							List<Map<String, Object>> eqList = eqListMap.get(scCode);
+
+							for (Map<String, Object> eqMap : eqList) {
+
+								for (Map<String, Object> arrivalEqMap : arrivalEqlist) {
+
+									if (arrivalEqMap.get(EqCostListBean.EQ_LIST_PRODUCT_NAME).equals(eqMap.get(EqCostListBean.EQ_LIST_PRODUCT_NAME))) {
+
+										if (arrivalEqMap.get(EqCostListBean.EQ_LIST_UNIT).equals(eqMap.get(EqCostListBean.EQ_LIST_UNIT))) {
+											int restAmount = ApiUtil.getInteger(eqMap.get(PurchaseContract.EQCOST_APPLY_AMOUNT));
+											int arrivalAmount = ApiUtil.getInteger(arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
+											int shipAmount = arrivalAmount - restAmount;
+											if (shipAmount < 0) {
+												shipAmount = 0;
+											} else {
+												arrivalEqMap.put(PurchaseContract.EQCOST_APPLY_AMOUNT, shipAmount);
+											}
+										} else {
+											arrivalEqMap.put(PurchaseContract.EQCOST_APPLY_AMOUNT, arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
+										}
+
+									} else {
+										arrivalEqMap.put(PurchaseContract.EQCOST_APPLY_AMOUNT, arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
+									}
+
+								}
+
+							}
+
+						}
+					}
+
+					Map<String, Object> newObj = new HashMap<String, Object>();
+					newObj.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_CLOSE);
+					newObj.put(ShipBean.SHIP_TYPE, "上海—北京泰德库");
+					newObj.put(SalesContractBean.SC_ID, arrival.get(SalesContractBean.SC_ID));
+					newObj.put(SalesContractBean.SC_CODE, arrival.get(SalesContractBean.SC_CODE));
+					scs.mergeCommonFieldsFromSc(newObj, arrival.get(SalesContractBean.SC_ID));
+
+					newObj.put(ShipBean.SHIP_CODE, "FHSQ-" + arrival.get(SalesContractBean.SC_CODE));
+					newObj.put("comments", "历史数据导入");
+					newObj.put(SalesContractBean.SC_EQ_LIST, arrival.get(SalesContractBean.SC_EQ_LIST));
+					this.dao.add(newObj, DBBean.SHIP);
+
+				}
+			}
+
+		} catch (Exception e) {
+			logger.error("", e);
+			result.put("status", 0);
+			throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
+		}
+		return result;
+    }
 
 }

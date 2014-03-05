@@ -6,7 +6,7 @@ $(document).ready(function() {
             autoUpload: true
         },
         success:function(e){
-        	if (e.response.status == 1){//import success
+        	if (e.response.status == 1 || e.response.status == "1"){//import success
         		$("#importStatus").html("数据导入成功！");
         	}else{
         		alert(e.response.msg);
@@ -21,7 +21,7 @@ $(document).ready(function() {
             autoUpload: true
         },
         success:function(e){
-        	if (e.response.status == 1){//import success
+        	if (e.response.status == 1 || e.response.status == "1"){//import success
         		$("#importStatusPc").html("数据导入成功！");
         	}else{
         		alert(e.response.msg);
@@ -37,7 +37,7 @@ $(document).ready(function() {
         },
         upload: onUpload,
         success:function(e){
-        	if (e.response && e.response.status === 0){//import success
+        	if (e.response && (e.response.status === 0 || e.response.status == "0")){//import success
         		
         		alert(e.response.msg);
         	}else{
@@ -49,16 +49,16 @@ $(document).ready(function() {
     
     $("#shipFile").kendoUpload({
         async: {
-            saveUrl: "/service/sc/importship",
+            saveUrl: "/service/ship/importship",
             autoUpload: true
         },
         upload: onUpload,
         success:function(e){
-        	if (e.response && e.response.status === 0){//import success
+        	if (e.response && (e.response.status === 0 || e.response.status == "0")){//import success
         		
         		alert(e.response.msg);
         	}else{
-        		$("#importStatusEq").html("数据导入成功！");
+        		$("#importStatusShip").html("数据导入成功！");
         	}
         }
     });	

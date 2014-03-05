@@ -246,7 +246,11 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		Object deliveryType = order.get(PurchaseContract.EQCOST_DELIVERY_TYPE);
         Object contractType = order.get(PurchaseContract.PURCHASE_CONTRACT_TYPE);
         
-        String arriveryType = deliveryType.toString();
+        String arriveryType = "";
+
+        if(deliveryType !=null){
+        	arriveryType = deliveryType.toString();
+        }
         
         if(ApiUtil.isValid(params.get("storeHouse"))){
         	arriveryType = params.get("storeHouse").toString();
