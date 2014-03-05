@@ -200,12 +200,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					// genSCCode =
 					// generateCode(SalesContractBean.SC_CODE_PREFIX_DRAFT,
 					// DBBean.SALES_CONTRACT, SalesContractBean.SC_CODE);
-					genSCCode = genSCCode(scPId);
+					genSCCode = genNewSCCode(scPId);
 					contract.put(SalesContractBean.SC_CODE, genSCCode);
 					addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
 				}
 			} else {
-				genSCCode = genSCCode(scPId);
+				genSCCode = genNewSCCode(scPId);
 				contract.put(SalesContractBean.SC_CODE, genSCCode);
 
 				// 第一次提交的值
@@ -1722,6 +1722,40 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		return needMergeList;
 	}
 
+	private String genNewSCCode(String pId){
+	    Map<String, Object> query = new HashMap<String, Object>();
+	    query.put(ApiConstants.MONGO_ID, pId);
+	    query.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_TYPE});
+	    
+	    Map<String, Object> project = this.dao.findOneByQuery(query, DBBean.PROJECT);
+	    
+	    String projectType  = (String)project.get(ProjectBean.PROJECT_TYPE);
+	    String projectCode  = (String)project.get(ProjectBean.PROJECT_CODE);
+	    String prefix = "QT";
+	    if(projectType.contains("服务")){
+	        prefix = "FW";
+	    }else if(projectType.contains("产品")){
+	        prefix = "XS";
+        }else if(projectType.contains("工程")){
+            prefix = "GC";
+        }
+        
+        // 草稿的销售合同项目编号可能为空
+        Map<String, Object> scQuery = new HashMap<String, Object>();
+        scQuery.put(SalesContractBean.SC_PROJECT_ID, pId);
+        int sameSCCount = dao.count(scQuery, DBBean.SALES_CONTRACT);
+        
+        String scCode = projectCode + "-" + prefix;
+        if(sameSCCount > 0){
+            scCode = scCode + "ADD" + sameSCCount;
+        }
+        
+        return scCode;
+        
+        
+	}
+	
+	@Deprecated
 	private String genSCCode(String pId) {
 		String prefix = SalesContractBean.SC_CODE_PREFIX;
 

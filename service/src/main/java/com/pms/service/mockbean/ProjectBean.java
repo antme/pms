@@ -33,12 +33,12 @@ public class ProjectBean {
 	//public static final String PROJECT_CODE_PREFIX_SERVICE = "TDSH-XMFW-";  //服务类 前缀
 	
 	
-	public static final String PROJECT_CODE_PREFIX_PRODUCT = "TDSH-";  //产品类 前缀
-	public static final String PROJECT_CODE_PREFIX_PROJECT = "TDSH-";  //工程类 前缀
-	public static final String PROJECT_CODE_PREFIX_SERVICE = "TDSH-";  //服务类 前缀
+	public static final String PROJECT_CODE_PREFIX_PRODUCT = "TDSH--";  //产品类 前缀
+	public static final String PROJECT_CODE_PREFIX_PROJECT = "TDSH--";  //工程类 前缀
+	public static final String PROJECT_CODE_PREFIX_SERVICE = "TDSH--";  //服务类 前缀
 	    
 	    
-	public static final String PROJECT_YULIXIANG_PREFIX = "Y-";  //预立项前缀
+	public static final String PROJECT_YULIXIANG_PREFIX = "Y--";  //预立项前缀
 	
 	//项目状态数据
 	public static final String PROJECT_STATUS_OFFICIAL = "销售正式立项";  //销售正式立项

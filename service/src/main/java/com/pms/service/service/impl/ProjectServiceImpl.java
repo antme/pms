@@ -423,7 +423,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
         codeNum = codeNum.substring(codeNum.length() - 4, codeNum.length());
         
-		return prefix+year+"-"+codeNum;
+		return prefix+year+"--"+codeNum;
 	}
 
 	@Override
