@@ -558,6 +558,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 
     public Map<String, Object> importShipHistoryData(InputStream inputStream){
     	
+        this.dao.deleteByQuery(new HashMap<String, Object>(), DBBean.SHIP);
+        
     	Map<String, Object> result = new LinkedHashMap<String, Object>();
 		try {
 			ExcleUtil excleUtil = new ExcleUtil(inputStream);

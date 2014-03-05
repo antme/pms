@@ -575,12 +575,12 @@ function updateShipGrid(){
 		$("#supplier-ship").show();
 		$("#bj-ship").hide();
 		$("#sh-ship").hide();
-	}else if(model.shipType == "上海—上海库"){
+	}else if(model.shipType == "上海—上海库" || model.shipType == "上海—上海泰德库"){
 		shDataSource.data(shList);
 		$("#supplier-ship").hide();
 		$("#bj-ship").hide();
 		$("#sh-ship").show();
-	}else if(model.shipType == "上海—北京库"){
+	}else if(model.shipType == "上海—北京库" || model.shipType == "上海—北京泰德库"){
 		bjDataSource.data(bjList);		
 		$("#supplier-ship").hide();
 		$("#bj-ship").show();

@@ -673,7 +673,11 @@ function edit(data) {
 	}
 		
 	// 渲染成本编辑列表
-	itemDataSource.data(requestDataItem.eqcostList);
+	if(requestDataItem.eqcostList){
+		itemDataSource.data(requestDataItem.eqcostList);
+	}else{
+		itemDataSource.data([]);
+	}
 	
 
 
@@ -682,7 +686,9 @@ function edit(data) {
 	$("#purchasecontract-select").hide();
 
 
-	if (!$("#purchasecontract-edit-grid").data("kendoGrid")) {
+	var grid = $("#purchasecontract-edit-grid").data("kendoGrid");
+	
+	if (!grid) {
 		$("#purchasecontract-edit-grid").kendoGrid({
 			dataSource : itemDataSource,
 			 groupable: {
@@ -753,13 +759,13 @@ function edit(data) {
 			width : "800px",
 			save : sumOrders,
 			dataBound : function(e) {
-				var data = itemDataSource.data();			
+				var dataList = itemDataSource.data();	
 				// 订单实际总价格
 				var requestActureMoney = 0;
 				var refresh = false;
 
-				for (i = 0; i < data.length; i++) {
-					var item = data[i];
+				for (i = 0; i < dataList.length; i++) {
+					var item = dataList[i];
 					
 					if (!item.eqcostProductUnitPrice) {
 						item.eqcostProductUnitPrice = 0;
@@ -818,7 +824,8 @@ function edit(data) {
 
 		});
 	}
-	}
+}
+
 }
 
 

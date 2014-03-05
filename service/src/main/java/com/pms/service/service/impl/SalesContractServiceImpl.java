@@ -1580,7 +1580,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         }
 
 		newObj.put(SalesContractBean.SC_EQ_LIST, eqList);
-		
+		this.dao.add(newObj, DBBean.PURCHASE_REQUEST);
 		Map<String, Object> request = purchaseContractService.updatePurchaseRequest(newObj);
 
 		
@@ -1599,6 +1599,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         newObj.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));       
         newObj.put(PurchaseRequest.BACK_REQUEST_CODE, back.get(PurchaseBack.pbCode));
         newObj.put("eqcostDeliveryType", PurchaseRequest.EQCOST_DELIVERY_TYPE_REPOSITORY);
+        
 
         
 
@@ -1615,7 +1616,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}
 
 		newObj.put(SalesContractBean.SC_EQ_LIST, eqList);
-
+		this.dao.add(newObj, DBBean.PURCHASE_ORDER);
 		Map<String, Object> order = purchaseContractService.updatePurchaseOrder(newObj);
 
 		request.put(PurchaseOrder.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));
@@ -1901,7 +1902,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					// Date dd = new Date(contractDate); // excle
 					// 里面此字段一定要正确，不然这一行就挂了
 					// String formatDateString = DateUtil.getd(dd);
-					System.out.println(contractDate);
 					scMap.put(SalesContractBean.SC_DATE, contractDate);// 签订日期
 					if (ApiUtil.isValid(archiveStatus)) {
 						scMap.put(SalesContractBean.SC_ARCHIVE_STATUS, archiveStatus);// 归档状态
@@ -1960,6 +1960,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 					if ("销售".equals(projectType)) {
 						projectType = ProjectBean.PROJECT_TYPE_PRODUCT;
+					}
+					
+					if(ApiUtil.isEmpty(projectType)){
+//					    projectType = "产品";
 					}
 
 					String lxType = ProjectBean.PROJECT_STATUS_OFFICIAL;

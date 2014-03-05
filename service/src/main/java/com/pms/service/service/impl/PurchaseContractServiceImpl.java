@@ -177,25 +177,28 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 		} else {
 			query.put("eqcostDeliveryType", PurchaseCommonBean.EQCOST_DELIVERY_TYPE_REPOSITORY);
 		}
+		query.put("eqcostList", new DBQuery(DBQueryOpertion.NOT_NULL));
+		
 		query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.projectId", "eqcostList.purchaseOrderId", "eqcostList.purchaseOrderCode", PurchaseContract.PURCHASE_CONTRACT_CODE, "poNumber", PurchaseContract.SUPPLIER_ID });
 		Map<String, Object> results = dao.list(query, DBBean.PURCHASE_CONTRACT);
 
 		List<Map<String, Object>> contractList = (List<Map<String, Object>>) results.get(ApiConstants.RESULTS_DATA);
+        List<Map<String, Object>> finalContractList = new ArrayList<Map<String, Object>>();
 
 		for (Map<String, Object> contract : contractList) {
 			List<Map<String, Object>> eqCostList = (List<Map<String, Object>>) contract.get("eqcostList");
-			Set<Map<String, Object>> projectIds = new HashSet<Map<String, Object>>();
+			Set<Map<String, Object>> ordersMap = new HashSet<Map<String, Object>>();
 			Map<String, Object> projectSupplierMap = new HashMap<String, Object>();
 
-			Set<String> orderIds = new HashSet<String>();
+			Set<String> orderCodeSet = new HashSet<String>();
 			if(eqCostList!=null){
 				for (Map<String, Object> p : eqCostList) {
 					if (p.get("purchaseOrderCode") != null) {
-						String projectId = p.get("purchaseOrderCode").toString();
+						String orderCode = p.get("purchaseOrderCode").toString();
 	
-						if (!orderIds.contains(projectId)) {
+						if (!orderCodeSet.contains(orderCode)) {
 							Map<String, Object> order = new HashMap<String, Object>();
-							order.put(PurchaseOrder.PURCHASE_ORDER_CODE, projectId);
+							order.put(PurchaseOrder.PURCHASE_ORDER_CODE, orderCode);
 							order.put(PurchaseOrder.PURCHASE_ORDER_ID, p.get(PurchaseOrder.PURCHASE_ORDER_ID));
 							
 							Map<String, Object> orderEntity = this.dao.findOne(ApiConstants.MONGO_ID,  p.get(PurchaseOrder.PURCHASE_ORDER_ID), DBBean.PURCHASE_ORDER);
@@ -207,25 +210,29 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 							order.put(ProjectBean.PROJECT_NAME, orderEntity.get(ProjectBean.PROJECT_NAME));
 							
 							scs.mergeCommonProjectInfo(order, orderEntity.get(PurchaseOrder.PROJECT_ID));
-							projectIds.add(order);
-							orderIds.add(projectId);
+							ordersMap.add(order);
+							orderCodeSet.add(orderCode);
 						}
 	
 					}
 				}
 			}
-			
-			contract.put("orders", projectIds);
-			
-			contract.put("eqcostList", "");
-			
+	        contract.put("eqcostList", null);
             supplierService.mergeSupplierInfo(contract, PurchaseContract.SUPPLIER_ID, new String[] { SupplierBean.SUPPLIER_NAME });
 
-
+            if(ordersMap.isEmpty()){
+                contract.put("orders", null);  
+            }else{
+                contract.put("orders", ordersMap);     
+                finalContractList.add(contract);
+            }
+            
 		}
+		
+//		removeEmptyEqList(contractList, "orders");
+		
 		Map<String, Object> returnResults = new HashMap<String, Object>();
-
-		returnResults.put(ApiConstants.RESULTS_DATA, contractList);
+		returnResults.put(ApiConstants.RESULTS_DATA, finalContractList);
 
 		return returnResults;
 
