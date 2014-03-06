@@ -1565,7 +1565,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	    if (eqList.size() > 0) {
 	    	newObj.put(PurchaseBack.eqcostList, eqList);
 
-	    	Map<String, Object> back = purchaseService.saveOrUpdate(newObj, newObj);
+	    	Map<String, Object> back = purchaseService.saveOrUpdateBack(newObj, newObj);
 	    	
 			addPurchaseRequest(contractCode, eqList, contract, back);
 
@@ -1724,6 +1724,14 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.PURCHASE_REQUEST);
 		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.PURCHASE_ORDER);
 		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.PURCHASE_CONTRACT);
+	}
+	
+	
+	public void updateContractStatus(String scId) {
+
+		Map<String, Integer> restCountMap = purchaseService.countBackRestEqByScId(scId);
+		updateDataStatus(scId, DBBean.SALES_CONTRACT, SalesContractBean.SC_STATUS_CLOSED, SalesContractBean.SC_STATUS_SUBMITED, "status", restCountMap);
+
 	}
 
 	public List<Map<String, Object>> mergeEqListBasicInfo(Object eqList) {

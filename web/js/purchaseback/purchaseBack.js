@@ -129,18 +129,6 @@ function processPB(){
 		alert("只允许审核已提交的数据");
 	}
 }
-function pendingPB() {//TODO:什么状态可以中止
-	var row = getSelectedRowDataByGrid("grid");
-	if (!row) {
-		alert("点击列表可以选中数据");
-	} else if(row.pbStatus == "已提交"){
-		if(confirm("中止表单，确认？"))
-		postAjaxRequest("service/purchase/back/pending", {_id:row._id}, function(){listDatasource.read();});
-	}else{
-		alert("只允许中止已提交的数据");
-	}
-	
-}
 
 function destroyPB() {
 	var row = getSelectedRowDataByGrid("grid");

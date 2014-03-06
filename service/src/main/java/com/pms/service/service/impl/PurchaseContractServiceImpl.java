@@ -1350,7 +1350,10 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             result = processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.STATUS_APPROVED);
         }
        
-       backService.updatePurchaseBackStatus();
+       Map<String, Object> pprequest = this.dao.findOne(ApiConstants.MONGO_ID, request.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
+       backService.updatePurchaseBackStatus(pprequest.get(PurchaseContract.BACK_REQUEST_ID).toString());
+       
+       
        return result;
 
     }

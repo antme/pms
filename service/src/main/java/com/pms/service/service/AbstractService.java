@@ -753,6 +753,36 @@ public abstract class AbstractService {
 	}
 	
 	
+	protected void updateDataStatus(String id, String db, String finalStatus, String backStatus, String statusKey, Map<String, Integer> restCountMap) {
+
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.MONGO_ID, id);
+
+		query.put(ApiConstants.LIMIT_KEYS, new String[] { statusKey });
+		Map<String, Object> contract = dao.findOneByQuery(query, db);
+
+		boolean needUpdate = true;
+
+		for (String key : restCountMap.keySet()) {
+			if (restCountMap.get(key) != null && restCountMap.get(key) > 0) {
+				needUpdate = false;
+				break;
+			}
+		}
+
+		if (needUpdate) {
+			contract.put(statusKey, finalStatus);
+			this.dao.updateById(contract, db);
+		} else {
+
+			if (contract.get(statusKey).equals(finalStatus)) {
+				contract.put(statusKey, backStatus);
+				this.dao.updateById(contract, db);
+			}
+		}
+
+	}
+	
 
 	protected String getRowColumnValue(String[] row, Map<String, Integer> keyMap, String title) {
 

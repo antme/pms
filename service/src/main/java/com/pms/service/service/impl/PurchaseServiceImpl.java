@@ -98,7 +98,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	public Map<String, Object> saveBack(Map<String, Object> params) {
 		Map<String,Object> newObj = new HashMap<String,Object>();
 	    newObj.put(PurchaseBack.pbStatus, PurchaseStatus.saved.toString());
-		return saveOrUpdate(params, newObj);
+		return saveOrUpdateBack(params, newObj);
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         Map<String, Object> newObj = new HashMap<String, Object>();
         newObj.put(PurchaseBack.pbStatus, PurchaseStatus.submited.toString());
         newObj.put(PurchaseBack.pbSubmitDate, DateUtil.getDateString(new Date()));
-        return saveOrUpdate(params, newObj);
+        return saveOrUpdateBack(params, newObj);
     }
 
 	@Override
@@ -121,6 +121,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    newObj.put(PurchaseBack.pbComment, comment);
         Map<String, Object> result =  dao.updateById(newObj, DBBean.PURCHASE_BACK);
    
+		Map<String, Object> back = this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { PurchaseBack.scId }, DBBean.PURCHASE_BACK);
+		scs.updateContractStatus(back.get(PurchaseBack.scId).toString());
         return result;
     }
 	
@@ -134,10 +136,15 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    String comment = (String)params.get("tempComment");
 	    comment = recordComment("拒绝",comment,oldComment);
 	    newObj.put(PurchaseBack.pbComment, comment);
-        return dao.updateById(newObj, DBBean.PURCHASE_BACK);
+
+		Map<String, Object> result =  dao.updateById(newObj, DBBean.PURCHASE_BACK);
+		
+		Map<String, Object> back = this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { PurchaseBack.scId }, DBBean.PURCHASE_BACK);
+		scs.updateContractStatus(back.get(PurchaseBack.scId).toString());
+		  return result;
     }
 	
-    public Map<String, Object> saveOrUpdate(Map<String, Object> params, Map<String, Object> newObj) {
+    public Map<String, Object> saveOrUpdateBack(Map<String, Object> params, Map<String, Object> newObj) {
         newObj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
         newObj.put(PurchaseBack.applicationDepartment, params.get(PurchaseBack.applicationDepartment));
         newObj.put(PurchaseBack.pbType, params.get(PurchaseBack.pbType));
@@ -173,26 +180,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         return res;
     }
 
-	@Override
-	public Map<String, Object> pendingBack(Map<String, Object> params) {
-		Map<String,Object> obj = new HashMap<String,Object>();
-		obj.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
-		obj.put(PurchaseBack.pbStatus, PurchaseStatus.interruption.toString());
-		
-	    String oldComment = (String)dao.querySingleKeyById(PurchaseBack.pbComment, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_BACK);
-	    String comment = (String)params.get("tempComment");
-	    comment = recordComment("中止",comment,oldComment);
-	    obj.put(PurchaseBack.pbComment, comment);
-		
-		
-		//TODO: 中止了备货，调拨和采购怎么办？
-		Map<String,Object> res = dao.updateById(obj, DBBean.PURCHASE_BACK);
-	      
-/*        Map<String, Object> resqeury = this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[]{EqCostListBean.EQ_LIST_SC_ID}, DBBean.PURCHASE_BACK);     
-        updateEqLeftCountInEqDB(resqeury); */
-        
-        return res;
-	}
+
 
 	///////////////////////////allot 调拨///////////
 	@Override
@@ -282,7 +270,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			
 			allot = loadAllot(allot);
 			// 批准调拨申请时生成到货通知
-			createArrivalNotice(allot);
+			arrivalNoticeService.createByAllocate(allot);
 		}
 		
 		 updatePurchaseBackStatus(allot.get(PurchaseBack.pbId).toString());
@@ -291,10 +279,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    return allot;
 	}
 	
-	private void createArrivalNotice(Map<String, Object> params) {
-		arrivalNoticeService.createByAllocate(params);
-	}
-	
+
 	@Override
 	public Map<String, Object> rejectAllot(Map<String, Object> params) {
 		Map<String,Object> allot = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ALLOCATE);
@@ -344,30 +329,11 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    mergeRefSearchQuery(params, PurchaseBack.scId, SalesContractBean.SC_CODE, SalesContractBean.SC_CODE, DBBean.SALES_CONTRACT);
 
 		
-		Map<String,Object> queryKeys = new HashMap<String,Object>();
-		queryKeys.put(ApiConstants.LIMIT_KEYS, keys);
-		queryKeys.put(ApiConstants.LIMIT, params.get(ApiConstants.LIMIT));
-		queryKeys.put(ApiConstants.LIMIT_START, params.get(ApiConstants.LIMIT_START));
-		
 		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
 		mergeSalesContract(map);
 		return map;
 	}
 	
-	@Override
-	public Map<String, Object> listAllBack(Map<String, Object> params) {
-		String[] keys = new String[]{
-				ApiConstants.CREATOR,PurchaseBack.pbCode,PurchaseBack.pbType,
-				PurchaseBack.pbStatus,PurchaseBack.pbMoney,PurchaseBack.scId,
-				PurchaseBack.pbSubmitDate, PurchaseBack.prId,PurchaseBack.poId
-		};
-		params.put(ApiConstants.LIMIT_KEYS, keys);
-		mergeDataRoleQueryWithProjectAndScType(params);
-		mergeMyTaskQuery(params, DBBean.PURCHASE_BACK);
-		Map<String,Object> map = dao.list(params, DBBean.PURCHASE_BACK);
-		mergeSalesContract(map);
-		return map;
-	}
 	
 	@Override
 	public Map<String, Object> listCheckedBack(Map<String, Object> params) {
@@ -623,34 +589,9 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	
 
 	public void updatePurchaseBackStatus(String pbId) {
-		Map<String, Object> query = new HashMap<String, Object>();
-		query.put(ApiConstants.MONGO_ID, pbId);
 
-		query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbStatus });
-		Map<String, Object> backRequest = dao.list(query, DBBean.PURCHASE_BACK);
-
-		boolean needUpdate = true;
-
-		Map<String, Integer> backEqMap = countRestEqByBackId(pbId.toString());
-
-		for (String key : backEqMap.keySet()) {
-
-			if (backEqMap.get(key) != null && backEqMap.get(key) > 0) {
-				needUpdate = false;
-				break;
-			}
-		}
-
-		if (needUpdate) {
-			backRequest.put(PurchaseBack.pbStatus, PurchaseStatus.closed.toString());
-			this.dao.updateById(backRequest, DBBean.PURCHASE_BACK);
-		} else {
-
-			if (backRequest.get(PurchaseBack.pbStatus).equals(PurchaseStatus.closed.toString())) {
-				backRequest.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
-				this.dao.updateById(backRequest, DBBean.PURCHASE_BACK);
-			}
-		}
+		Map<String, Integer> restCountMap = countRestEqByBackId(pbId.toString());
+		updateDataStatus(pbId, DBBean.PURCHASE_BACK, PurchaseStatus.closed.toString(), PurchaseStatus.approved.toString(), PurchaseBack.pbStatus, restCountMap);
 
 	}
 
@@ -737,6 +678,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         List<String> sl = new ArrayList<String>();
         sl.add(PurchaseStatus.submited.toString());
         sl.add(PurchaseStatus.approved.toString());
+        sl.add(PurchaseStatus.closed.toString());
         backQuery.put(PurchaseBack.pbStatus, new DBQuery(DBQueryOpertion.IN, sl)); 
         Map<String, Integer> backEqCountMap = countEqByKey(backQuery, DBBean.PURCHASE_BACK, PurchaseBack.pbTotalCount, null);
         return backEqCountMap;

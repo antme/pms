@@ -19,17 +19,15 @@ public interface IPurchaseService {
 	public Map<String, Object> approveBack(Map<String, Object> params);
 	/**初审退回备货申请*/
 	
-	 public Map<String, Object> saveOrUpdate(Map<String, Object> params, Map<String, Object> newObj); 
+	 public Map<String, Object> saveOrUpdateBack(Map<String, Object> params, Map<String, Object> newObj); 
 	 
 	public Map<String, Object> rejectBack(Map<String, Object> params);
-	/**中止备货申请*/
-	public Map<String,Object> pendingBack(Map<String,Object> params);
+
 	/**删除*/
 	public void destoryBack(Map<String,Object> params);
 	/**列出备货申请，依据角色*/
 	public Map<String,Object> listBack(Map<String,Object> params);	
-	/**列出所有备货申请*/
-	public Map<String,Object> listAllBack(Map<String,Object> params);
+
 	/**列出已审核的备货申请 (包括已审核，调拨中，已调拨，已采购申请)*/
 	public Map<String,Object> listCheckedBack(Map<String,Object> params);
 	/**列出已调拨的备货申请*/

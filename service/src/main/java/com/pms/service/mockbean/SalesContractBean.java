@@ -136,6 +136,7 @@ public class SalesContractBean {
 	public static final String SC_CODE_PREFIX_DRAFT = "TDSH-XS-DRAFT";
 	
 	public static final String SC_STATUS_DRAFT = "草稿";
+	public static final String SC_STATUS_CLOSED = "已结束";
 	public static final String SC_STATUS_SUBMITED = "已提交";
 	
 	// 第一次提交的值
