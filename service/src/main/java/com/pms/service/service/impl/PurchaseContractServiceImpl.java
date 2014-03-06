@@ -1324,6 +1324,8 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         if (adding) {
             updateRequestIdForBack(prequest);
         }
+        
+        backService.updatePurchaseBackStatus(prequest.get(PurchaseContract.BACK_REQUEST_ID).toString());
         return prequest;
     }
     
@@ -1383,7 +1385,12 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
 
     public Map<String, Object> rejectPurchaseRequest(Map<String, Object> parameters) {
-        return processRequest(parameters, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_REJECTED);
+        processRequest(parameters, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_REJECTED);
+        Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
+
+        backService.updatePurchaseBackStatus(result.get(PurchaseContract.BACK_REQUEST_ID).toString());
+        return result;
+
     }
 
     public Map<String, Object> getPurchaseRequest(Map<String, Object> parameters) {

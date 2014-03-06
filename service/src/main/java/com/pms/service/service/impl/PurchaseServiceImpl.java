@@ -120,8 +120,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	    comment = recordComment("批准",comment,oldComment);
 	    newObj.put(PurchaseBack.pbComment, comment);
         Map<String, Object> result =  dao.updateById(newObj, DBBean.PURCHASE_BACK);
-        
-        updatePurchaseBackStatus();
+   
         return result;
     }
 	
@@ -219,6 +218,9 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 		}else{
 		    result =  dao.add(obj, DBBean.PURCHASE_ALLOCATE);
 		}
+		
+	     
+        updatePurchaseBackStatus(params.get(PurchaseBack.pbId).toString());
 		//updateEqLeftCountInEqDB(result);
 		return result;
 	}
@@ -282,6 +284,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 			// 批准调拨申请时生成到货通知
 			createArrivalNotice(allot);
 		}
+		
+		 updatePurchaseBackStatus(allot.get(PurchaseBack.pbId).toString());
 	    //Map<String, Object> resqeury = this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[]{EqCostListBean.EQ_LIST_SC_ID}, DBBean.PURCHASE_ALLOCATE);     
 	    //updateEqLeftCountInEqDB(resqeury); 
 	    return allot;
@@ -318,6 +322,8 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 /*        Map<String, Object> resqeury = this.dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { EqCostListBean.EQ_LIST_SC_ID },
                 DBBean.PURCHASE_ALLOCATE);
         updateEqLeftCountInEqDB(resqeury);*/
+		updatePurchaseBackStatus(allot.get(PurchaseBack.pbId).toString());
+
         return res;
 	}
 
@@ -616,35 +622,37 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 	
 	
 
-    public void updatePurchaseBackStatus(){
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbCode, PurchaseBack.scCode });
-        Map<String, Object> data = dao.list(query, DBBean.PURCHASE_BACK);
-        List<Map<String, Object>> backRequestList = (List<Map<String, Object>>) data.get(ApiConstants.RESULTS_DATA);
+	public void updatePurchaseBackStatus(String pbId) {
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ApiConstants.MONGO_ID, pbId);
 
-        if (backRequestList != null) {
-            for (Map<String, Object> backRequest : backRequestList) {
-                boolean needUpdate = true;
+		query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseBack.pbStatus });
+		Map<String, Object> backRequest = dao.list(query, DBBean.PURCHASE_BACK);
 
-                Map<String, Integer> backEqMap = countRestEqByBackId(backRequest.get(ApiConstants.MONGO_ID).toString());
+		boolean needUpdate = true;
 
-                for (String key : backEqMap.keySet()) {
+		Map<String, Integer> backEqMap = countRestEqByBackId(pbId.toString());
 
-                    if (backEqMap.get(key) != null && backEqMap.get(key) > 0) {
-                        needUpdate = false;
-                        break;
-                    }
-                }
-                
-                if(needUpdate){
-                    backRequest.put(PurchaseBack.paStatus, PurchaseCommonBean.STATUS_CLOSED);
-                }
+		for (String key : backEqMap.keySet()) {
 
-            }
-            
-        }
-    }
+			if (backEqMap.get(key) != null && backEqMap.get(key) > 0) {
+				needUpdate = false;
+				break;
+			}
+		}
+
+		if (needUpdate) {
+			backRequest.put(PurchaseBack.pbStatus, PurchaseStatus.closed.toString());
+			this.dao.updateById(backRequest, DBBean.PURCHASE_BACK);
+		} else {
+
+			if (backRequest.get(PurchaseBack.pbStatus).equals(PurchaseStatus.closed.toString())) {
+				backRequest.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
+				this.dao.updateById(backRequest, DBBean.PURCHASE_BACK);
+			}
+		}
+
+	}
 
 	public enum PurchaseStatus {
     	saved,submited,approved,rejected,interruption,finalApprove,done, firstApprove, firstRejected, finalRejected, closed;
