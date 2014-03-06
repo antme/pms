@@ -51,11 +51,6 @@
 	</bean>
 
 
-	<bean name="reportService" class="com.pms.service.service.impl.ReportServiceImpl"
-		id="reportService">
-		<property name="dao" ref="commonDao"></property>
-	</bean>
-
 	
 	<bean name="customerService" class="com.pms.service.service.impl.CustomerServiceImpl"
 		id="customerService">
@@ -83,12 +78,7 @@
         <property name="arriveService" ref="arrivalNoticeService"></property>
         <property name="projectService" ref="projectService"></property>
     </bean>
-    
-    <bean name="allocateService" class="com.pms.service.service.impl.AllocateServiceImpl"
-		id="allocateService">
-		<property name="dao" ref="commonDao"></property>
-        <property name="scs" ref="salesContractService"></property>
-	</bean>
+
     
     <bean name="salesContractService" class="com.pms.service.service.impl.SalesContractServiceImpl"
 		id="salesContractService">
