@@ -383,6 +383,8 @@ public class ApiUtil {
         floatFields.add("pbMoney");
         floatFields.add("addNewEqCostMoney");
         floatFields.add("estimateGrossProfit");
+        floatFields.add("requestedTotalMoney");
+        
         
         
         if (ApiUtil.isValid(data)) {

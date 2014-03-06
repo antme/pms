@@ -1465,6 +1465,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					
 
 					
+					
 					eq.put(EqCostListBean.EQ_LIST_NO,  ApiUtil.getInteger(getRowColumnValue(row, keyMap, "No.")));
 					eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, eqCode);
 					eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, productName);
@@ -1485,16 +1486,20 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					float basePrice = 0;
 					if (ApiUtil.isValid(basePriceStr)) {
 						basePrice = Float.parseFloat(basePriceStr);
+						logger.info(basePrice);
+						
+						
+						if(productPrice <= 0){
+							productPrice = basePrice;
+						}
+						
 					} else {
 						basePrice = salesPrice;
 					}
 
 					float lastBasePrice = 1 * basePrice;
 
-					
-					if(productPrice <= 0){
-						productPrice = lastBasePrice;
-					}
+				
 					eq.put(PurchaseContract.EQCOST_PRODUCT_UNIT_PRICE, productPrice);
 
 					
@@ -1510,10 +1515,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 					eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, "增值税");
 					eq.put("eqcostCategory", "北京代采");
+					
+					
+					 logger.info(ApiUtil.getInteger(eq.get(EqCostListBean.EQ_LIST_AMOUNT)) + "::::::" + ApiUtil.getInteger(eq.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+							 
+							 
 					if (ApiUtil.isValid(productName)) {
 						// System.out.println(eq);
 
 						eqList.add(eq);
+					}else{
+						logger.error("产品名称为空: " + contractCode);
 					}
 				}
 
@@ -1521,11 +1533,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				query.put(SalesContractBean.SC_CODE, new DBQuery(DBQueryOpertion.EQUAILS, contractCode));
 				Map<String, Object> contract = this.dao.findOneByQuery(query, DBBean.SALES_CONTRACT);
 				if (ApiUtil.isValid(contract)) {
-					addEqCostListForContract(eqList, contract, false);
-					// logger.info("create eqlist for contract: " +
-					// contractCode);
 
-					addPurchaseBack(contractCode, eqList, contract);
+					if (eqList.size() > 0) {
+						addEqCostListForContract(eqList, contract, false);
+
+						
+						addPurchaseBack(contractCode, eqList, contract);
+						
+					} else {
+
+						logger.error("成本清单为空: " + contractCode);
+					}
 				} else {
 					logger.error("can not find " + contractCode);
 				}
@@ -1644,7 +1662,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public void addPurchaseContract(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> order) {
 		Map<String, Object> newObj = new HashMap<String, Object>();
 		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_CLOSED);
-		newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, "CGHT-" + contractCode);
+		newObj.put(PurchaseRequest.PURCHASE_CONTRACT_CODE, "CGHT-" + contractCode);
 		newObj.put(PurchaseRequest.SALES_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
 		newObj.put(PurchaseRequest.SALES_CONTRACT_CODE, contractCode);
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID));
@@ -1655,6 +1673,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		newObj.put(PurchaseRequest.BACK_REQUEST_CODE, order.get(PurchaseRequest.BACK_REQUEST_CODE));
 		newObj.put(PurchaseContract.EQCOST_DELIVERY_TYPE, PurchaseRequest.EQCOST_DELIVERY_TYPE_REPOSITORY);
 		newObj.put(PurchaseContract.CONTRACT_EXECUTE_CATE, PurchaseContract.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI);
+		newObj.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, PurchaseContract.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI);
+
 		newObj.put("signBy", "系统导入");
 		newObj.put("supplierName", "同方北京");		
 		newObj.put("supplierNameContact", "同方北京");
@@ -1662,8 +1682,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		float totalMoney = 0;
 		for (Map<String, Object> eqMap : eqList) {
-			eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT,
-			        ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+			eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT, ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
 			eqMap.put(PurchaseRequest.PURCHASE_REQUEST_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID));
 			eqMap.put(PurchaseRequest.PURCHASE_REQUEST_CODE, order.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
 			eqMap.put(PurchaseRequest.BACK_REQUEST_ID, order.get(PurchaseRequest.BACK_REQUEST_ID));
@@ -1674,11 +1693,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, order.get(PurchaseRequest.PURCHASE_ORDER_CODE));
 			
 			int applyAmout = ApiUtil.getInteger(newObj.get(PurchaseContract.EQCOST_APPLY_AMOUNT));
+			
 			float prodcutPrice =  ApiUtil.getFloatParam(newObj.get(PurchaseContract.EQCOST_PRODUCT_UNIT_PRICE));
 			totalMoney = totalMoney + applyAmout * prodcutPrice;
 			
 		}
-		newObj.put("contractMoney", totalMoney);
+
+		newObj.put(PurchaseContract.PURCHASE_CONTRACT_MONEY, totalMoney);
 		newObj.put(SalesContractBean.SC_EQ_LIST, eqList);
 		this.dao.add(newObj, DBBean.PURCHASE_CONTRACT);
 		Map<String, Object> pc = purchaseContractService.updatePurchaseContract(newObj);
