@@ -647,7 +647,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
     }
 
 	public enum PurchaseStatus {
-    	saved,submited,approved,rejected,interruption,finalApprove,done, firstApprove, firstRejected, finalRejected;
+    	saved,submited,approved,rejected,interruption,finalApprove,done, firstApprove, firstRejected, finalRejected, closed;
 		@Override
 		public String toString() {
 			String value = "undefine";
@@ -662,6 +662,7 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
 				case firstApprove: value="已初审"; break;
 				case done: value="已结束"; break;
 				case interruption: value="已中止"; break;
+				case closed: value="已结束"; break;
 				default: break;
 			}
 			return value;

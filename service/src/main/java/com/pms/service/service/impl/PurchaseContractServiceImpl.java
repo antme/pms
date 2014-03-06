@@ -2108,8 +2108,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 Map<String, Object> query = new HashMap<String, Object>();
                 query.put(PurchaseOrder.SALES_CONTRACT_CODE, contractCode);
                 Map<String, Object> order = this.dao.findOneByQuery(query, DBBean.PURCHASE_ORDER);
-                if (order != null) {
+                if (order != null && false) {
                     
+                	//暂时不导入关联
                     List<Map<String, Object>> eqList = (List<Map<String, Object>>) order.get(SalesContractBean.SC_EQ_LIST);
                     
                     for (Map<String, Object> eqMap : eqList) {

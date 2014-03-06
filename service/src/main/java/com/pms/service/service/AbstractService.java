@@ -44,6 +44,8 @@ import com.pms.service.util.DateUtil;
 import com.pms.service.validators.ValidatorUtil;
 
 public abstract class AbstractService {
+	
+	public static String IS_HISTORY_DATA_IMMPORTED = "isHistoryDataImported";
 
     protected ICommonDao dao = null;
     

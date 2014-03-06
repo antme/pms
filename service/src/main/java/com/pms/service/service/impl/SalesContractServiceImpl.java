@@ -29,6 +29,7 @@ import com.pms.service.mockbean.InvoiceBean;
 import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
+import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.PurchaseOrder;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
@@ -1427,7 +1428,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 				for (int i = n + 1; i < list.size(); i++) {// 硬编码从第9行开始读数据
 					Map<String, Object> eq = new LinkedHashMap<String, Object>();
-					String amount = list.get(i)[6].trim();
 
 					String[] row = list.get(i);
 					String eqCode = getRowColumnValue(row, keyMap, "物料代码");
@@ -1445,6 +1445,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					
 
 					int eqcostAmount = ApiUtil.getInteger(getRowColumnValue(row, keyMap, "最终数量"));
+					
+					if(eqcostAmount == 0){
+						
+						continue;
+					}
 
 					
 					int remainCount = 0;
@@ -1467,10 +1472,16 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					eq.put(EqCostListBean.EQ_LIST_BRAND, getRowColumnValue(row, keyMap, "品牌"));
 					eq.put(EqCostListBean.EQ_LIST_UNIT, getRowColumnValue(row, keyMap, "单位"));
 
-					Integer salesPrice = ApiUtil.getInteger(getRowColumnValue(row, keyMap, "销售单价"));
+					float salesPrice = ApiUtil.getFloatParam(getRowColumnValue(row, keyMap, "销售单价"));
+					
+					float productPrice = ApiUtil.getFloatParam(getRowColumnValue(row, keyMap, "采购单价"));
 					
 					
-					eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, salesPrice);
+					if(productPrice <=0){
+						productPrice = salesPrice;
+					}
+					eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, salesPrice);					
+					eq.put(PurchaseContract.EQCOST_PRODUCT_UNIT_PRICE, productPrice);
 
 					// float dr =
 					// Float.parseFloat(String.valueOf(list.get(i)[keyMap.get("折扣率")].trim()));
@@ -1533,7 +1544,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	public void addPurchaseBack(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract) {
 	    Map<String, Object> newObj = new HashMap<String, Object>();
-	    newObj.put(PurchaseBack.pbStatus, PurchaseStatus.approved.toString());
+	    newObj.put(PurchaseBack.pbStatus, PurchaseStatus.closed.toString());
 	    newObj.put(PurchaseBack.pbCode, "BHSQ-" + contractCode);
 	    newObj.put(PurchaseBack.scId, contract.get(ApiConstants.MONGO_ID).toString());
 
@@ -1560,7 +1571,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	
 	public void addPurchaseRequest(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> back) {
 		Map<String, Object> newObj = new HashMap<String, Object>();
-		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_APPROVED);
+		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_CLOSED);
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_CODE, "CGSQ-" + contractCode);
 		newObj.put(PurchaseRequest.SALES_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
 		newObj.put(PurchaseRequest.SALES_CONTRACT_CODE, contractCode);
@@ -1571,7 +1582,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
         for (Map<String, Object> eqMap : eqList) {
             eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT, ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
-            eqMap.put(PurchaseRequest.EQCOST_PRODUCT_UNIT_PRICE, eqMap.get(SalesContractBean.SC_EQ_LIST_BASE_PRICE));
             eqMap.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));
             eqMap.put(PurchaseRequest.BACK_REQUEST_CODE, back.get(PurchaseBack.pbCode));
             eqMap.put(PurchaseRequest.SALES_CONTRACT_ID, back.get(PurchaseRequest.SALES_CONTRACT_ID));       
@@ -1582,7 +1592,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		newObj.put(SalesContractBean.SC_EQ_LIST, eqList);
 		this.dao.add(newObj, DBBean.PURCHASE_REQUEST);
 		Map<String, Object> request = purchaseContractService.updatePurchaseRequest(newObj);
-
+		back.put(PurchaseRequest.PURCHASE_REQUEST_ID, newObj.get(ApiConstants.MONGO_ID));
+		back.put(PurchaseRequest.PURCHASE_REQUEST_CODE, newObj.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
+		this.dao.updateById(back, DBBean.PURCHASE_BACK);
 		
 		addPurchaseOrder(contractCode, eqList, contract, request, back);
 	}
@@ -1590,7 +1602,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	
 	public void addPurchaseOrder(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> request, Map<String, Object> back) {
 		Map<String, Object> newObj = new HashMap<String, Object>();
-		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_APPROVED);
+		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_CLOSED);
 		newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, "CGDD-" + contractCode);
 		newObj.put(PurchaseRequest.SALES_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
 		newObj.put(PurchaseRequest.SALES_CONTRACT_CODE, contractCode);
@@ -1606,7 +1618,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		for (Map<String, Object> eqMap : eqList) {
 			eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT,
 			        ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
-            eqMap.put(PurchaseRequest.EQCOST_PRODUCT_UNIT_PRICE, ApiUtil.getFloatParam(eqMap.get(SalesContractBean.SC_EQ_LIST_BASE_PRICE)));
             eqMap.put(PurchaseRequest.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));
             eqMap.put(PurchaseRequest.PURCHASE_REQUEST_CODE, request.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
             eqMap.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));       
@@ -1622,34 +1633,60 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		request.put(PurchaseOrder.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));
 		request.put(PurchaseOrder.PURCHASE_REQUEST_CODE, request.get(PurchaseOrder.PURCHASE_REQUEST_CODE));
 		this.dao.updateById(request, DBBean.PURCHASE_REQUEST);
-
+		
+		addPurchaseContract(contractCode, eqList, contract, order);
 
 	}
-	
 	
 	public void addPurchaseContract(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> order) {
 		Map<String, Object> newObj = new HashMap<String, Object>();
-		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_APPROVED);
-		newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, "CGDD-" + contractCode);
+		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_CLOSED);
+		newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, "CGHT-" + contractCode);
 		newObj.put(PurchaseRequest.SALES_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID).toString());
 		newObj.put(PurchaseRequest.SALES_CONTRACT_CODE, contractCode);
-		newObj.put(PurchaseRequest.PURCHASE_REQUEST_ID, order.get(ApiConstants.MONGO_ID));
+		newObj.put(PurchaseRequest.PURCHASE_REQUEST_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID));
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_CODE, order.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
-
+		newObj.put(PurchaseRequest.PURCHASE_ORDER_ID, order.get(ApiConstants.MONGO_ID));
+		newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, order.get(PurchaseRequest.PURCHASE_ORDER_CODE));
+		newObj.put(PurchaseRequest.BACK_REQUEST_ID, order.get(PurchaseRequest.BACK_REQUEST_ID));
+		newObj.put(PurchaseRequest.BACK_REQUEST_CODE, order.get(PurchaseRequest.BACK_REQUEST_CODE));
+		newObj.put(PurchaseContract.EQCOST_DELIVERY_TYPE, PurchaseRequest.EQCOST_DELIVERY_TYPE_REPOSITORY);
+		newObj.put(PurchaseContract.CONTRACT_EXECUTE_CATE, PurchaseContract.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI);
+		newObj.put("signBy", "系统导入");
+		newObj.put("supplierName", "同方北京");		
+		newObj.put("supplierNameContact", "同方北京");
+		newObj.put("executeStatus", "结束");
+		
+		float totalMoney = 0;
 		for (Map<String, Object> eqMap : eqList) {
 			eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT,
 			        ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+			eqMap.put(PurchaseRequest.PURCHASE_REQUEST_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID));
+			eqMap.put(PurchaseRequest.PURCHASE_REQUEST_CODE, order.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
+			eqMap.put(PurchaseRequest.BACK_REQUEST_ID, order.get(PurchaseRequest.BACK_REQUEST_ID));
+			eqMap.put(PurchaseRequest.BACK_REQUEST_CODE, order.get(PurchaseRequest.BACK_REQUEST_CODE));
+			eqMap.put(PurchaseRequest.SALES_CONTRACT_ID, order.get(PurchaseRequest.SALES_CONTRACT_ID));
+			eqMap.put(PurchaseRequest.SALES_CONTRACT_CODE, order.get(PurchaseRequest.SALES_CONTRACT_CODE));
+			newObj.put(PurchaseRequest.PURCHASE_ORDER_ID, order.get(ApiConstants.MONGO_ID));
+			newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, order.get(PurchaseRequest.PURCHASE_ORDER_CODE));
+			
+			int applyAmout = ApiUtil.getInteger(newObj.get(PurchaseContract.EQCOST_APPLY_AMOUNT));
+			float prodcutPrice =  ApiUtil.getFloatParam(newObj.get(PurchaseContract.EQCOST_PRODUCT_UNIT_PRICE));
+			totalMoney = totalMoney + applyAmout * prodcutPrice;
+			
 		}
-
+		newObj.put("contractMoney", totalMoney);
 		newObj.put(SalesContractBean.SC_EQ_LIST, eqList);
+		this.dao.add(newObj, DBBean.PURCHASE_CONTRACT);
+		Map<String, Object> pc = purchaseContractService.updatePurchaseContract(newObj);
 
-		Map<String, Object> purchaseContract = purchaseContractService.updatePurchaseOrder(newObj);
-
-		order.put(PurchaseOrder.PURCHASE_REQUEST_ID, order.get(ApiConstants.MONGO_ID));
-		order.put(PurchaseOrder.PURCHASE_REQUEST_CODE, order.get(PurchaseOrder.PURCHASE_REQUEST_CODE));
+		order.put(PurchaseOrder.PURCHASE_CONTRACT_ID, pc.get(ApiConstants.MONGO_ID));
+		order.put(PurchaseOrder.PURCHASE_CONTRACT_CODE, pc.get(PurchaseOrder.PURCHASE_CONTRACT_CODE));
 		this.dao.updateById(order, DBBean.PURCHASE_ORDER);
 
 	}
+	
+	
 
 	@Override
 	public Map<String, Object> setSCRunningStatus(Map<String, Object> params) {
