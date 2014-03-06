@@ -1476,12 +1476,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					
 					float productPrice = ApiUtil.getFloatParam(getRowColumnValue(row, keyMap, "采购单价"));
 					
-					
-					if(productPrice <=0){
-						productPrice = salesPrice;
-					}
+			
 					eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, salesPrice);					
-					eq.put(PurchaseContract.EQCOST_PRODUCT_UNIT_PRICE, productPrice);
 
 					// float dr =
 					// Float.parseFloat(String.valueOf(list.get(i)[keyMap.get("折扣率")].trim()));
@@ -1495,6 +1491,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 					float lastBasePrice = 1 * basePrice;
 
+					
+					if(productPrice <= 0){
+						productPrice = lastBasePrice;
+					}
+					eq.put(PurchaseContract.EQCOST_PRODUCT_UNIT_PRICE, productPrice);
+
+					
 					
 					eq.put(EqCostListBean.EQ_LIST_AMOUNT, eqcostAmount);
 					eq.put(EqCostListBean.EQ_LIST_BASE_PRICE, basePrice);
