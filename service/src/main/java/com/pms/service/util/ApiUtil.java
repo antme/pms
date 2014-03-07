@@ -181,7 +181,7 @@ public class ApiUtil {
     public  static Integer getInteger(Object value) {
         Integer result = 0;
 
-        if (value != null) {
+        if (ApiUtil.isValid(value)) {
             try {
                 result = (int) Float.parseFloat(String.valueOf(value));
             } catch (NumberFormatException e) {
