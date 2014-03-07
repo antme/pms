@@ -1989,8 +1989,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> importContractHistoryData(InputStream inputStream) {
 
-    	this.dao.deleteByQuery(new HashMap<String, Object>(), DBBean.REPOSITORY);
-    	this.dao.deleteByQuery(new HashMap<String, Object>(), DBBean.ARRIVAL_NOTICE);
+
     	
         Map<String, Object> result = new HashMap<String, Object>();
         try {
@@ -2154,9 +2153,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 
                 this.updatePurchase(contract, DBBean.PURCHASE_CONTRACT);
                 
-                if(ApiUtil.isValid(contract.get(SalesContractBean.SC_EQ_LIST))){
-                	createRepositoryIn(contract);
-                }
+       
 
             }
         } catch (Exception e) {
@@ -2170,46 +2167,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
     
     
-	private void createRepositoryIn(Map<String, Object> contract) {
-		Map<String, Object> newObj = new HashMap<String, Object>();
-		String rkCode = "RKSQ-" + contract.get(PurchaseContract.PURCHASE_CONTRACT_CODE);
-
-		if(this.dao.exist("repositoryCode", rkCode, DBBean.REPOSITORY)){
-			newObj = this.dao.findOne("repositoryCode", rkCode, DBBean.REPOSITORY);
-		}
-		
-		newObj.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseRequest.STATUS_IN_REPOSITORY);
-		newObj.put("inDate", "");
-
-		newObj.put(PurchaseContract.SUPPLIER_ID, contract.get(PurchaseContract.SUPPLIER_ID));
-		newObj.put(PurchaseContract.SUPPLIER_NAME, contract.get(PurchaseContract.SUPPLIER_NAME));
-		newObj.put("repositoryCode", rkCode);
-		newObj.put(PurchaseContract.PURCHASE_CONTRACT_CODE, contract.get(PurchaseContract.PURCHASE_CONTRACT_CODE));
-		newObj.put(PurchaseContract.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
-
-		List<Map<String, Object>> eqList = (List<Map<String, Object>>) contract.get(SalesContractBean.SC_EQ_LIST);
-		Map<String, Object> eqMap = eqList.get(0);
-
-		newObj.put(ProjectBean.PROJECT_ID, eqMap.get(ProjectBean.PROJECT_ID));
-		newObj.put(ProjectBean.PROJECT_NAME, eqMap.get(ProjectBean.PROJECT_NAME));
-
-		newObj.put(PurchaseContract.PURCHASE_ORDER_CODE, eqMap.get(PurchaseContract.PURCHASE_ORDER_CODE));
-		newObj.put(PurchaseContract.PURCHASE_ORDER_ID, eqMap.get(PurchaseContract.PURCHASE_ORDER_ID));
-		newObj.put(PurchaseContract.SALES_CONTRACT_CODE, eqMap.get(PurchaseContract.SALES_CONTRACT_CODE));
-		newObj.put(PurchaseContract.SALES_CONTRACT_ID, eqMap.get(PurchaseContract.SALES_CONTRACT_ID));
-		newObj.put("storeHouse", "上海—北京泰德库");
-		
-		
-		removeEmptyEqList(eqList, "eqcostApplyAmount");
-
-		if (eqList.size() > 0) {
-			newObj.put(PurchaseBack.eqcostList, eqList);
-			updateRepositoryRequest(newObj);
-			newObj.put("type", "in");
-			approveRepositoryRequest(newObj);
-		}
-
-	}
     
     public void backContractToOrder(HashMap<String, Object> parserJsonParameters){
         

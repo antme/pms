@@ -384,7 +384,7 @@ public class ApiUtil {
         floatFields.add("addNewEqCostMoney");
         floatFields.add("estimateGrossProfit");
         floatFields.add("requestedTotalMoney");
-        
+        floatFields.add("contractMoney");
         
         
         if (ApiUtil.isValid(data)) {

@@ -29,6 +29,7 @@ import com.pms.service.mockbean.InvoiceBean;
 import com.pms.service.mockbean.MoneyBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
+import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.PurchaseOrder;
 import com.pms.service.mockbean.PurchaseRequest;
@@ -1486,11 +1487,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					float basePrice = 0;
 					if (ApiUtil.isValid(basePriceStr)) {
 						basePrice = Float.parseFloat(basePriceStr);
-						logger.info(basePrice);
-						
-						
+				
 						if(productPrice <= 0){
 							productPrice = basePrice;
+							
 						}
 						
 					} else {
@@ -1515,10 +1515,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 					eq.put(EqCostListBean.EQ_LIST_TAX_TYPE, "增值税");
 					eq.put("eqcostCategory", "北京代采");
-					
-					
-					 logger.info(ApiUtil.getInteger(eq.get(EqCostListBean.EQ_LIST_AMOUNT)) + "::::::" + ApiUtil.getInteger(eq.get(EqCostListBean.EQ_LIST_REST_COUNT)));
-							 
+				 
 							 
 					if (ApiUtil.isValid(productName)) {
 						// System.out.println(eq);
@@ -1632,10 +1629,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         newObj.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));       
         newObj.put(PurchaseRequest.BACK_REQUEST_CODE, back.get(PurchaseBack.pbCode));
         newObj.put("eqcostDeliveryType", PurchaseRequest.EQCOST_DELIVERY_TYPE_REPOSITORY);
-        
-
-        
-
+     
 		for (Map<String, Object> eqMap : eqList) {
 			eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT,
 			        ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
@@ -1689,13 +1683,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			eqMap.put(PurchaseRequest.BACK_REQUEST_CODE, order.get(PurchaseRequest.BACK_REQUEST_CODE));
 			eqMap.put(PurchaseRequest.SALES_CONTRACT_ID, order.get(PurchaseRequest.SALES_CONTRACT_ID));
 			eqMap.put(PurchaseRequest.SALES_CONTRACT_CODE, order.get(PurchaseRequest.SALES_CONTRACT_CODE));
-			newObj.put(PurchaseRequest.PURCHASE_ORDER_ID, order.get(ApiConstants.MONGO_ID));
-			newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, order.get(PurchaseRequest.PURCHASE_ORDER_CODE));
+			eqMap.put(PurchaseRequest.PURCHASE_ORDER_ID, order.get(ApiConstants.MONGO_ID));
+			eqMap.put(PurchaseRequest.PURCHASE_ORDER_CODE, order.get(PurchaseRequest.PURCHASE_ORDER_CODE));
 			
-			int applyAmout = ApiUtil.getInteger(newObj.get(PurchaseContract.EQCOST_APPLY_AMOUNT));
+			int applyAmout = ApiUtil.getInteger(eqMap.get(PurchaseContract.EQCOST_APPLY_AMOUNT));
 			
-			float prodcutPrice =  ApiUtil.getFloatParam(newObj.get(PurchaseContract.EQCOST_PRODUCT_UNIT_PRICE));
-			totalMoney = totalMoney + applyAmout * prodcutPrice;
+			float prodcutPrice =  ApiUtil.getFloatParam(eqMap.get(PurchaseContract.EQCOST_PRODUCT_UNIT_PRICE));
+			totalMoney = totalMoney + (applyAmout * prodcutPrice);
 			
 		}
 
@@ -1707,10 +1701,55 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		order.put(PurchaseOrder.PURCHASE_CONTRACT_ID, pc.get(ApiConstants.MONGO_ID));
 		order.put(PurchaseOrder.PURCHASE_CONTRACT_CODE, pc.get(PurchaseOrder.PURCHASE_CONTRACT_CODE));
 		this.dao.updateById(order, DBBean.PURCHASE_ORDER);
+		
+        if(ApiUtil.isValid(newObj.get(SalesContractBean.SC_EQ_LIST))){
+        	createRepositoryIn(newObj);
+        }
 
 	}
 	
 	
+
+	private void createRepositoryIn(Map<String, Object> contract) {
+		Map<String, Object> newObj = new HashMap<String, Object>();
+		String rkCode = "RKSQ-" + contract.get(PurchaseContract.PURCHASE_CONTRACT_CODE);
+
+		if(this.dao.exist("repositoryCode", rkCode, DBBean.REPOSITORY)){
+			newObj = this.dao.findOne("repositoryCode", rkCode, DBBean.REPOSITORY);
+		}
+		
+		newObj.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseRequest.STATUS_IN_REPOSITORY);
+		newObj.put("inDate", "");
+
+		newObj.put(PurchaseContract.SUPPLIER_ID, contract.get(PurchaseContract.SUPPLIER_ID));
+		newObj.put(PurchaseContract.SUPPLIER_NAME, contract.get(PurchaseContract.SUPPLIER_NAME));
+		newObj.put("repositoryCode", rkCode);
+		newObj.put(PurchaseContract.PURCHASE_CONTRACT_CODE, contract.get(PurchaseContract.PURCHASE_CONTRACT_CODE));
+		newObj.put(PurchaseContract.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
+
+		List<Map<String, Object>> eqList = (List<Map<String, Object>>) contract.get(SalesContractBean.SC_EQ_LIST);
+		Map<String, Object> eqMap = eqList.get(0);
+
+		newObj.put(ProjectBean.PROJECT_ID, eqMap.get(ProjectBean.PROJECT_ID));
+		newObj.put(ProjectBean.PROJECT_NAME, eqMap.get(ProjectBean.PROJECT_NAME));
+
+		newObj.put(PurchaseContract.PURCHASE_ORDER_CODE, eqMap.get(PurchaseContract.PURCHASE_ORDER_CODE));
+		newObj.put(PurchaseContract.PURCHASE_ORDER_ID, eqMap.get(PurchaseContract.PURCHASE_ORDER_ID));
+		newObj.put(PurchaseContract.SALES_CONTRACT_CODE, eqMap.get(PurchaseContract.SALES_CONTRACT_CODE));
+		newObj.put(PurchaseContract.SALES_CONTRACT_ID, eqMap.get(PurchaseContract.SALES_CONTRACT_ID));
+		newObj.put("storeHouse", "上海—北京泰德库");
+		
+		
+		removeEmptyEqList(eqList, "eqcostApplyAmount");
+
+		if (eqList.size() > 0) {
+			newObj.put(PurchaseBack.eqcostList, eqList);
+			purchaseContractService.updateRepositoryRequest(newObj);
+			newObj.put("type", "in");
+			purchaseContractService.approveRepositoryRequest(newObj);
+		}
+
+	}
 
 	@Override
 	public Map<String, Object> setSCRunningStatus(Map<String, Object> params) {
@@ -1745,6 +1784,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.PURCHASE_REQUEST);
 		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.PURCHASE_ORDER);
 		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.PURCHASE_CONTRACT);
+		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.REPOSITORY);
+    	this.dao.deleteByQuery(new HashMap<String, Object>(), DBBean.ARRIVAL_NOTICE);
 	}
 	
 	
