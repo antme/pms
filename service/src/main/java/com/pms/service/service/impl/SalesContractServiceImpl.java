@@ -1434,7 +1434,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					String eqCode = getRowColumnValue(row, keyMap, "物料代码");
 					String productName = getRowColumnValue(row, keyMap, "产品名称");
 					
-					if(eqCode.equalsIgnoreCase("物料代码")){
+					if(eqCode!=null && eqCode.equalsIgnoreCase("物料代码")){
 						continue;
 					}
 					//FIXME
