@@ -1,13 +1,6 @@
 package com.pms.service.base;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -18,18 +11,11 @@ import com.pms.service.bean.Project;
 import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dao.ICommonDao;
 import com.pms.service.dao.impl.mongo.CommonDaoMongoImpl;
-import com.pms.service.mockbean.ApiConstants;
-import com.pms.service.mockbean.DBBean;
-import com.pms.service.mockbean.SalesContractBean;
 import com.pms.service.service.IProjectService;
-import com.pms.service.service.IReportService;
 import com.pms.service.service.ISalesContractService;
 import com.pms.service.service.IUserService;
 import com.pms.service.service.impl.ProjectServiceImpl;
-import com.pms.service.service.impl.ReportServiceImpl;
 import com.pms.service.service.impl.UserServiceImpl;
-import com.pms.service.util.EmailUtil;
-import com.pms.service.util.ExcleUtil;
 
 public class BaseTestCase extends TestCase {
 
@@ -37,7 +23,6 @@ public class BaseTestCase extends TestCase {
     protected static ICommonDao commonDao;
     protected static IUserService userService;
     protected static IProjectService projectService;
-    protected static IReportService reportService;
     protected static ISalesContractService scService;
     public static final String TEST_ID = "123456789012345678901234";
 
@@ -46,7 +31,6 @@ public class BaseTestCase extends TestCase {
         commonDao = (CommonDaoMongoImpl) ac.getBean("commonDao");
         userService = (UserServiceImpl) ac.getBean("userService");
         projectService = (ProjectServiceImpl) ac.getBean("projectService");
-        reportService = (ReportServiceImpl) ac.getBean("reportService");
         scService = (ISalesContractService) ac.getBean("salesContractService");
         ConfigurationManager.setProperties(ConfigurationManager.DB_NAME, "pms_dev");
     }

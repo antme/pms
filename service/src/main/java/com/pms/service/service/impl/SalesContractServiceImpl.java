@@ -1398,32 +1398,20 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
 				Map<String, Integer> keyMap = new LinkedHashMap<String, Integer>();
 
-				int n = 2;
+				int n = 0;
 				String[] titles = list.get(n);
-	
-				if (titles != null) {
-					boolean find = false;
-					for (int i = 0; i < titles.length; i++) {
-						String key = titles[i].trim();
-						if (key.contains("物料代码")) {
-							find = true;
-							break;
-						}
 
-					}
-
-					if (!find) {
-						n = 3;
-						titles = list.get(n);
-					}
-					for (int i = 0; i < titles.length; i++) {
-						String key = titles[i].trim();
-						if (!ApiUtil.isEmpty(key)) {
-							keyMap.put(key, i);
-						}
+				while (!checkEqFindTitiles(titles)) {
+					n = n + 1;
+					titles = list.get(n);
+				}
+			
+				for (int i = 0; i < titles.length; i++) {
+					String key = titles[i].trim();
+					if (!ApiUtil.isEmpty(key)) {
+						keyMap.put(key, i);
 					}
 				}
-				
 				
 				
 
@@ -1435,6 +1423,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					String productName = getRowColumnValue(row, keyMap, "产品名称");
 					
 					if(eqCode!=null && eqCode.equalsIgnoreCase("物料代码")){
+						logger.error(contractCode+"中有设备清单的产品名称为空");
 						continue;
 					}
 					//FIXME
@@ -1560,6 +1549,19 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		return result;
 
 	}
+
+	public boolean checkEqFindTitiles(String[] titles) {
+		boolean find = false;
+	    for (int i = 0; i < titles.length; i++) {
+	    	String key = titles[i].trim();
+	    	if (key.contains("物料代码")) {
+	    		find = true;
+	    		break;
+	    	}
+
+	    }
+	    return find;
+    }
 
 
 	public void addPurchaseBack(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract) {
