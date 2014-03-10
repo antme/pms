@@ -98,7 +98,7 @@ public class ProjectController extends AbstractController {
     public void getProjectById(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         String id = (String) params.get(ApiConstants.MONGO_ID);
-        responseWithData(projectService.getProjectById(id), request, response);
+        responseWithData(projectService.getProjectById(params), request, response);
     }
     
     @RequestMapping("/getandmergescinfo")

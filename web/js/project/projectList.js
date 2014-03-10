@@ -100,7 +100,11 @@ $(document).ready(function() {
 			field : "projectManagerId",
 			title : "PM",
 			template : function(dataItem) {
-				return '<a  onclick="openPMViewWindow(\'' + dataItem.projectManagerId + '\');">' + dataItem.projectManagerName + '</a>';
+				if(dataItem.projectManagerName){
+					return '<a  onclick="openPMViewWindow(\'' + dataItem.projectManagerId + '\');">' + dataItem.projectManagerName + '</a>';
+				}else{
+					return "N/A";
+				}
 			}
 		},{
 			field : "customerName",
@@ -110,7 +114,7 @@ $(document).ready(function() {
 });//end dom ready	
 	
 function toolbar_addProject() {
-	loadPage("salescontract_addsc",{pageId:"newProject"});
+	loadPage("project_addProject");
 	
 }
 
@@ -122,7 +126,12 @@ function toolbar_editProject(){
 		return;
 	}
 	
-	loadPage("project_addProject",{_id:rowData._id});
+	if(rowData.projectManagerName){
+		loadPage("project_editProject",{_id:rowData._id});
+	}else{
+		loadPage("project_addProject",{_id:rowData._id});
+	}
+	
 }
 	
 function toolbar_setupProject() {//1:正式立项；2：预立项；3：内部立项
@@ -131,16 +140,42 @@ function toolbar_setupProject() {//1:正式立项；2：预立项；3：内部�
 		alert("请点击选择一条项目记录！");
 		return;
 	}
-	if (row.projectStatus != "销售预立项"){
-		alert("请选择一条销售预立项项目！");
+	
+	
+	if(row.projectManagerName){
+		alert("此项目已经立项过，如果需要变更和增补，请在销售合同里操作");
+	}else{
+		loadPage("salescontract_addsc",{pageId:"newProject", projectId: row._id});
+	}
+
+}
+
+
+
+function toolbar_setupProjectForOfficial() {//1:正式立项；2：预立项；3：内部立项
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row){
+		alert("请点击选择一条项目记录！");
 		return;
 	}
-	
-	
-	if(confirm("确认正式立项此项目？")){
-		var param = {_id : row._id};
-		postAjaxRequest("../service/project/setup", param, setupProjectCallBack);
+
+	if(row.projectManagerName){
+
+		if(confirm("确认正式立项此项目？")){
+			var param = {_id : row._id};
+			postAjaxRequest("../service/project/setup", param, setupProjectCallBack);
+		}
+		
+	}else{
+		
+		if (row.projectStatus != "销售预立项"){
+			alert("请选择一条销售预立项项目！");
+			return;
+		}
+		
+		loadPage("salescontract_addsc",{pageId:"newProject", projectId: row._id});
 	}
+	
 
 }
 

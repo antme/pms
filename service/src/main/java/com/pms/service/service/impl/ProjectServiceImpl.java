@@ -57,9 +57,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
         if (ApiUtil.isEmpty(project.get_id())){
             //Add
-            project.setProjectCode(genProjectCode(project.getProjectType(), project.getProjectStatus()));
+             project.setProjectCode(genProjectCode(project.getProjectType(), project.getProjectStatus()));
             
-             dao.add(project, DBBean.PROJECT, Project.class);
+			if (ApiUtil.isEmpty(project.getProjectStatus())) {
+				project.setProjectStatus(ProjectBean.PROJECT_STATUS_PRE);
+			}
+            dao.add(project, DBBean.PROJECT, Project.class);
             
         }else{//Update
             
@@ -176,9 +179,26 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	}
 
     @Override
-    public Map<String, Object> getProjectById(String id) {
-        return dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
-    }
+	public Map<String, Object> getProjectById(Map<String, Object> params) {
+
+		Map<String, Object> project = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PROJECT);
+
+		if (params.get("isScDraft") != null) {
+			Map<String, Object> query = new HashMap<String, Object>();
+			query.put("status", SalesContractBean.SC_STATUS_DRAFT);
+			query.put(SalesContractBean.SC_PROJECT_ID, params.get(ApiConstants.MONGO_ID));
+			Map<String, Object> result = this.dao.findOneByQuery(query, DBBean.SALES_CONTRACT);
+
+			if (result != null) {
+				result = scs.getSC(result);
+
+				project.putAll(result);
+			}
+		}
+
+		return project;
+
+	}
 
 	/**
 	 * 预立项 转 正式立项：
@@ -191,11 +211,11 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		Map<String, Object> pro = dao.findOne(ApiConstants.MONGO_ID, _id, DBBean.PROJECT);
 		String pCode = (String)pro.get(ProjectBean.PROJECT_CODE);
 		pro.put(ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS_OFFICIAL);
-		int prefixIndex = pCode.indexOf(ProjectBean.PROJECT_YULIXIANG_PREFIX);
-		if (prefixIndex != -1){//考虑到老数据编号字段格式没有 Y-前缀
-			pro.put(ProjectBean.PROJECT_CODE, pCode.substring(prefixIndex+2, pCode.length()));
-		}
-		
+//		int prefixIndex = pCode.indexOf(ProjectBean.PROJECT_YULIXIANG_PREFIX);
+//		if (prefixIndex != -1){//考虑到老数据编号字段格式没有 Y-前缀
+//			pro.put(ProjectBean.PROJECT_CODE, pCode.substring(prefixIndex+2, pCode.length()));
+//		}
+//		
 		return dao.updateById(pro, DBBean.PROJECT);
 	}
 	
@@ -423,7 +443,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
         codeNum = codeNum.substring(codeNum.length() - 4, codeNum.length());
         
-		return prefix+year+"--"+codeNum;
+		return prefix+year+"-"+codeNum;
 	}
 
 	@Override

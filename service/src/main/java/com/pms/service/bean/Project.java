@@ -11,6 +11,9 @@ public class Project extends SCBaseEntity {
 
     @Expose
     private String projectStatus;
+    
+    @Expose
+    private String signBy;
 
     // 项目实施地址
     @Expose
@@ -53,5 +56,15 @@ public class Project extends SCBaseEntity {
     public void setProjectMemo(String projectMemo) {
         this.projectMemo = projectMemo;
     }
+
+	public String getSignBy() {
+		return signBy;
+	}
+
+	public void setSignBy(String signBy) {
+		this.signBy = signBy;
+	}
+    
+    
 
 }

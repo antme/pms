@@ -50,7 +50,7 @@ var projectModel = kendo.data.Model.define({
 				required : true
 			}
 		},projectStatus: {
-			 defaultValue: "销售立项"
+			 defaultValue: "销售预立项"
 		},scs:{}
 	}
 
@@ -67,26 +67,56 @@ var pSCInfoDatasource = new kendo.data.DataSource({
 
 $(document).ready(function() {
 	//表单中的各种控件
-	$("#projectStatus").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
-		optionLabel : "选择项目状态...",
-		dataSource : proStatusItems
-	});
-	$("#projectType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "text",
-		optionLabel : "选择立项类别...",
-		dataSource : proCategoryItems
-	});
-	
+	if($("#projectStatus").length > 0){
+		$("#projectStatus").kendoDropDownList({
+			dataTextField : "text",
+			dataValueField : "value",
+			optionLabel : "选择项目状态...",
+			dataSource : proStatusItems,
+			change: function(e){
+				var projectStatusDl = 	$("#projectStatus").data("kendoDropDownList");
+				console.log(projectStatusDl.value());
+			}
+		});
+	}
+	if($("#projectType").length > 0){
+		$("#projectType").kendoDropDownList({
+			dataTextField : "text",
+			dataValueField : "text",
+			optionLabel : "选择立项类别...",
+			dataSource : proCategoryItems
+		});
+	}
 
-	$("#projectManagerId").kendoDropDownList({
-		dataTextField : "userName",
-		dataValueField : "_id",
-        optionLabel: "选择项目经理...",
-		dataSource : proManagerItems
-	});
+	if($("#projectManagerId").length > 0){
+		$("#projectManagerId").kendoDropDownList({
+			dataTextField : "userName",
+			dataValueField : "_id",
+	        optionLabel: "选择项目经理...",
+			dataSource : proManagerItems
+		});
+	}
+
+	if($("#customerId").length>0){
+		var customerItems = new kendo.data.DataSource({
+			transport : {
+				read : {
+					url : "/service/customer/list",
+					dataType : "jsonp"
+				}
+			},
+			schema: {
+			    data: "data"
+			}
+		});
+		
+		$("#customerId").kendoDropDownList({
+			dataTextField : "name",
+			dataValueField : "_id",
+	        optionLabel: "选择客户...",
+			dataSource : customerItems
+		});
+	}
 
 	if(popupParams){
 		if (popupParams.scAddProject == 1){//销售合同中进入添加
@@ -150,21 +180,50 @@ function edit(data){
 
 	if(data){
 		//立项类别不可修改， 所以编辑时候切换到包含 销售正式立项的datasource
-		pStatus.setDataSource(proStatusItems);
+		if(pStatus){
+			pStatus.setDataSource(proStatusItems);
+		}
 	}
 	pModel = new projectModel(data);
 	kendo.bind($("#addProject"), pModel);
 
+	disableForm();
+	
+	
+	
+	//$("#projectCode").attr("disabled",true);
+}
+
+function addRequiredField(){
+	
+}
+
+function disableForm(){
+	
 	$("#projectCode").attr("disabled",true);
 	$("#projectName").attr("disabled",true);
 	$("#projectAbbr").attr("disabled",true);
-	var pTypeList = $("#projectType").data("kendoDropDownList");
-	pTypeList.enable(false);
-	var pManager = $("#projectManagerId").data("kendoDropDownList");
-	pManager.enable(false);
-	pStatus.enable(false);
 	
-	//$("#projectCode").attr("disabled",true);
+	var pTypeList = $("#projectType").data("kendoDropDownList");
+	if(pTypeList){
+		pTypeList.enable(false);
+	}
+	var pManager = $("#projectManagerId").data("kendoDropDownList");
+	
+	if(pManager){
+		pManager.enable(false);
+	}
+	var pStatus = $("#projectStatus").data("kendoDropDownList");
+
+	if(pStatus){
+		pStatus.enable(false);
+	}
+	
+	var customer = $("#customerId").data("kendoDropDownList");
+
+	if(customer){
+		customer.enable(false);
+	}
 }
 
 function saveProject(){

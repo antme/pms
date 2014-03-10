@@ -39,14 +39,53 @@
 						required="required" validationMessage="必填" data-bind="value: projectName" style="width:350px;">
 				</div>
 				<div class="k-edit-label ">
-					<label for="signBy">签订人</label>
+					<label for="projectAbbr">项目缩写</label>
 				</div>
-				<div data-container-for="signBy" class="k-edit-field ">
-					<input type="text" class="k-input k-textbox" name="signBy" id="signBy"
-						 data-bind="value: signBy">
+				<div data-container-for="projectAbbr" class="k-edit-field ">
+					<input type="text" class="k-input k-textbox" name="projectAbbr" id="projectAbbr"
+						 data-bind="value: projectAbbr">
 				</div>
 
-	
+				
+				<div class="k-edit-label ">
+					<label for="projectManagerId">项目经理<span class="input_required_star">*</span></label>
+				</div>
+				<div data-container-for="projectManagerId" class="k-edit-field ">
+					<input type="text" class="pro-dropdownlist" name="projectManagerId" id="projectManagerId"
+						required="required" validationMessage="必填" data-bind="value: projectManagerId">
+				</div>
+				
+				<div class="k-edit-label ">
+							<label for="customerId">客户名称<span class="input_required_star">*</span></label>
+						</div>
+						<div data-container-for="customerId" class="k-edit-field ">
+							<input type="text" class="pro-dropdownlist" name="customerId" id="customerId"
+								required="required" validationMessage="必填" data-bind="value: customerId">
+			</div>
+						
+				<div class="k-edit-label ">
+					<label for="projectStatus">立项类别<span class="input_required_star">*</span></label>
+				</div>
+				<div data-container-for="projectStatus" class="k-edit-field ">
+					<input type="text" name="projectStatus" id="projectStatus"
+						required="required" validationMessage="必填" data-bind="value: projectStatus">
+				</div>
+				
+				<div class="k-edit-label ">
+					<label for="projectType">项目类型<span class="input_required_star">*</span></label>
+				</div>
+				<div data-container-for="projectType" class="k-edit-field ">
+					<input type="text" class="pro-dropdownlist" name="projectType" id="projectType"
+						required="required" validationMessage="必填" data-bind="value: projectType">
+				</div>
+				
+				<div class="k-edit-label ">
+					<label for="projectAddress">实施地址<span class="input_required_star">*</span></label>
+				</div>
+				<div data-container-for="projectAddress" class="k-edit-field ">
+					<input type="text" class="k-input k-textbox" name="projectAddress" id="projectAddress"  style="width:350px;"
+						required="required" validationMessage="必填" data-bind="value: projectAddress">
+				</div>
 				
 				<div class="k-edit-label ">
 					<label for="projectMemo">备注</label>

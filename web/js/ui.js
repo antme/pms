@@ -526,7 +526,7 @@ function openCustomerViewWindow(param){
 function openProjectViewWindow(param){
 	if(param && param!=""){
 		var options = { width:"1080px", height: "600px", title:"项目信息"};
-		openRemotePageWindow(options, "project_addProject", {_id : param});
+		openRemotePageWindow(options, "project_editProject", {_id : param});
 	}else{
 		alert("此项目还没保存");
 	}

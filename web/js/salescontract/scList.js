@@ -231,7 +231,7 @@ function toolbar_modifySalesDraftContract() {
 		return;
 	}
 	
-	if(rowData.status == "草稿" && !rowData.projectId){
+	if(rowData.status == "草稿"){
 		loadPage("salescontract_addsc",{_id:rowData._id, pageId:"newProject"});
 	}else{
 		loadPage("salescontract_editsc",{_id:rowData._id,status:rowData.status});

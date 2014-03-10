@@ -452,6 +452,15 @@ $(document).ready(function() {
 
 		if(redirectParams._id){
 			postAjaxRequest("/service/sc/get", redirectParams, editDraftSc_ADD);
+		}else if(redirectParams.projectId){
+			postAjaxRequest("/service/project/get", {_id:redirectParams.projectId, isScDraft:true}, function(data){				
+				if(!data.projectId){
+					//数据从项目而来, 否则数据从销售合同来
+					data.projectId = data._id;
+					data._id="";
+				}
+				editDraftSc_ADD(data);
+			});
 		}else{
 			editDraftSc_ADD();
 		}
@@ -523,6 +532,7 @@ function editDraftSc_ADD(data){
 
 
 function saveSCDraft_ADD(){
+
 	if(scm.get("status") == "已提交"){
 		alert("已提交的销售合同不能保存为草稿");
 	}else{		
@@ -563,6 +573,10 @@ function saveSCDraft_ADD(){
 			scm.projectManagerId = scm.projectManagerId._id;
 		}
 		
+		if(scm.customerId && scm.customerId._id){
+			scm.customerId = scm.customerId._id;
+		}
+		
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
 		});
@@ -578,14 +592,12 @@ function saveSC_ADD(){
 //	var progressPaymentData = scProgressPaymentDatasource.data();
 	var projectId = scm.get("projectId");
 	var projectStatus = undefined;	
-	if(projectId){
-		projectStatus = projectItems.get(projectId).get("projectStatus");
-	}else{		
-		var pStatus = $("#projectStatus").data("kendoDropDownList");
-		if(pStatus){
-			projectStatus = pStatus.value();
-		}
+	
+	var pStatus = $("#projectStatus").data("kendoDropDownList");
+	if(pStatus){
+		projectStatus = pStatus.value();
 	}
+	
 	
 	if(scm.projectType && scm.projectType.text){
 		scm.projectType = scm.projectType.text;
@@ -672,8 +684,9 @@ function saveSC_ADD(){
 		alert("请检查必填的合同基础信息和商务信息！");
 		return;
     } else {
+    	var status = scm.get("status");
     	
-    	if(!projectId){    		
+    	if(status == "草稿"){    		
     		var proValidator = $("#projectInfo").kendoValidator().data("kendoValidator");
     		if(!proValidator.validate()) {
     			validatestatus.text("请填写项目信息！")
@@ -728,6 +741,16 @@ function saveSC_ADD(){
 		}
 		
 		scm.set("status", "已提交");
+		
+		
+		if(scm.projectManagerId && scm.projectManagerId._id){
+			scm.projectManagerId = scm.projectManagerId._id;
+		}
+		
+		if(scm.customerId && scm.customerId._id){
+			scm.customerId = scm.customerId._id;
+		}
+		
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
     	});
