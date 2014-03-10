@@ -1414,8 +1414,16 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					}
 
 					
+					int index = row.length-1;
+					for(String key: keyMap.keySet()){
+						
+						if(key.contains( "未申请") && key.contains("数量")){
+							index = keyMap.get(key);
+							break;
+						}
+					}
 					int remainCount = 0;
-                    remainCount = ApiUtil.getInteger(row[row.length-1]);
+                    remainCount = ApiUtil.getInteger(row[index].trim());
                      
 					
 					if(remainCount < 0){
