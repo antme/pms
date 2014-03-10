@@ -902,7 +902,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         if (prequest != null) {
             prequest.put(PurchaseCommonBean.PURCHASE_ORDER_ID, order.get(ApiConstants.MONGO_ID));
             prequest.put(PurchaseCommonBean.PURCHASE_ORDER_CODE, order.get(PurchaseCommonBean.PURCHASE_ORDER_CODE));
-            prequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDERING);                   
+            prequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_CLOSED);                   
             this.dao.updateById(prequest, DBBean.PURCHASE_REQUEST);
         }
 
@@ -1075,7 +1075,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                 if (count == orderEqlistMap.size()) {
                     Map<String, Object> ordeUpdate = new HashMap<String, Object>();
                     ordeUpdate.put(ApiConstants.MONGO_ID, orderId);
-                    ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
+                    ordeUpdate.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_CLOSED);
                     ordeUpdate.put(PurchaseContract.EQCOST_DELIVERY_TYPE, contract.get(PurchaseContract.EQCOST_DELIVERY_TYPE));
                     ordeUpdate.put(PurchaseCommonBean.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
                     ordeUpdate.put(PurchaseCommonBean.CONTRACT_EXECUTE_CATE, contract.get(PurchaseCommonBean.CONTRACT_EXECUTE_CATE));
@@ -1085,7 +1085,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
                     if (order != null && !ApiUtil.isEmpty(order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID))) {
                         Map<String, Object> purRequest = new HashMap<String, Object>();
                         purRequest.put(ApiConstants.MONGO_ID, order.get(PurchaseCommonBean.PURCHASE_REQUEST_ID));
-                        purRequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_ORDER_FINISHED);
+                        purRequest.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_CLOSED);
                         this.dao.updateById(ordeUpdate, DBBean.PURCHASE_REQUEST);
 
                     }
