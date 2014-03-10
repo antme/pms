@@ -1414,12 +1414,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					}
 
 					
-					 int remainCount = 0;
-                     if(row.length > 25 && ApiUtil.isValid(row[25])){
-                             remainCount = ApiUtil.getInteger(row[25]);
-                     }else if(row.length > 24 && ApiUtil.isValid(row[24])){
-                             remainCount = ApiUtil.getInteger(row[24]);
-                     }
+					int remainCount = 0;
+                    remainCount = ApiUtil.getInteger(row[row.length-1]);
+                     
 					
 					if(remainCount < 0){
 						logger.error(contractCode+ "中有成本清单可申请数小于0");
