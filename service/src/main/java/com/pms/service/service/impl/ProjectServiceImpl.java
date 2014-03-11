@@ -397,7 +397,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			String cid = (String) sc.get(SalesContractBean.SC_CUSTOMER_ID);
 			if (!ApiUtil.isEmpty(cid)){
 				Map<String, Object> cData = (Map<String, Object>) cMap.get(cid);
-				sc.put(SalesContractBean.SC_CUSTOMER_ID, cData.get(CustomerBean.NAME));
+				sc.put(ProjectBean.PROJECT_CUSTOMER_NAME, cData.get(CustomerBean.NAME));
 			}
 		}
 		p.put("scs", scList.get(ApiConstants.RESULTS_DATA));

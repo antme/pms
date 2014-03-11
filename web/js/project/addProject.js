@@ -280,7 +280,7 @@ function viewSC(id){
 	$("#scInfo_scCode").html(data.contractCode);
 	$("#scInfo_scPerson").html(data.contractPerson);
 	$("#scInfo_scDate").html(kendo.toString(data.contractDate, 'd'));
-	$("#scInfo_scCustomer").html(data.customer);
+	$("#scInfo_scCustomer").html(data.customerName);
 	$("#scInfo_scType").html(data.contractType);
 	$("#scInfo_scRunningStatus").html(data.runningStatus);
 	$("#scInfo_scAmount").html(data.contractAmount);
