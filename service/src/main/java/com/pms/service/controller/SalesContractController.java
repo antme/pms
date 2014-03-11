@@ -316,7 +316,7 @@ public class SalesContractController extends AbstractController {
 			InputStream inputStream = uploadFile.getInputStream();
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("inputStream", inputStream);
-			result = salesContractService.importEqHistoryExcleFile(map);
+//			result = salesContractService.importEqHistoryExcleFile(map);
 		} catch (IOException e) {
 			responseServerError(e, request, response);
 			e.printStackTrace();
