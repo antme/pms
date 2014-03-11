@@ -111,6 +111,7 @@ var projectItems = new kendo.data.DataSource({
 });
 
 var tabs;
+var validateProject = false;
 $(document).ready(function() {
 	projectItems.read();
 	scm = new scModel();
@@ -448,6 +449,7 @@ $(document).ready(function() {
 	
 	
 	if(redirectParams && redirectParams.pageId && redirectParams.pageId=="newProject"){
+		validateProject = true;
 		$(".projectId").hide();
 
 		if(redirectParams._id){
@@ -576,7 +578,13 @@ function saveSCDraft_ADD(){
 		if(scm.customerId && scm.customerId._id){
 			scm.customerId = scm.customerId._id;
 		}
+		if(scm.runningStatus && scm.runningStatus.value){
+			scm.runningStatus = scm.runningStatus.value;
+		}
 		
+		if(scm.archiveStatus && scm.archiveStatus.value){
+			scm.archiveStatus = scm.archiveStatus.value;
+		}
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
 		});
@@ -686,7 +694,7 @@ function saveSC_ADD(){
     } else {
     	var status = scm.get("status");
 	
-    		
+    	if(validateProject){
     		var proValidator = $("#projectInfo").kendoValidator().data("kendoValidator");
     		if(!proValidator.validate()) {
     			validatestatus.text("请填写项目信息！")
@@ -695,7 +703,7 @@ function saveSC_ADD(){
     			alert("请点击项目信息选项卡填写项目基本信息！");
     			return;
     	    }
-    		
+    	}
     		if(scType == "弱电工程"){
     			var pAbbr = $("#projectAbbr").val();
     			if(pAbbr =="" || pAbbr==null || pAbbr==undefined){
@@ -749,6 +757,14 @@ function saveSC_ADD(){
 		
 		if(scm.customerId && scm.customerId._id){
 			scm.customerId = scm.customerId._id;
+		}
+		
+		if(scm.runningStatus && scm.runningStatus.value){
+			scm.runningStatus = scm.runningStatus.value;
+		}
+		
+		if(scm.archiveStatus && scm.archiveStatus.value){
+			scm.archiveStatus = scm.archiveStatus.value;
 		}
 		
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){

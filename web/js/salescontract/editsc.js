@@ -828,6 +828,15 @@ function edit(data){
 		customer.enable(true);
 	}
 	
+	
+
+	var contractType = $("#contractType").data("kendoDropDownList");
+	if (scm.contractType == "N/A") {
+		contractType.enable(true);
+	} else {
+		contractType.enable(false);
+	}
+	
 	if(scm.get("contractType") == "弱电工程"){
 		var tabStrip = $("#tabstrip").data("kendoTabStrip");
 		if(!tabStrip){
@@ -877,6 +886,13 @@ function saveSCDraft(){
 			scm.set("contractAmount", 0);
 		}
 		
+		if(scm.runningStatus && scm.runningStatus.value){
+			scm.runningStatus = scm.runningStatus.value;
+		}
+		
+		if(scm.archiveStatus && scm.archiveStatus.value){
+			scm.archiveStatus = scm.archiveStatus.value;
+		}
 		scm.set("status", "草稿");
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
@@ -1070,6 +1086,13 @@ function saveSC(){
 		}
 		if(scm.estimateEqCostTax){
 			scm.estimateEqCostTax = percentToFixed(scm.estimateEqCostTax);
+		}
+		if(scm.runningStatus && scm.runningStatus.value){
+			scm.runningStatus = scm.runningStatus.value;
+		}
+		
+		if(scm.archiveStatus && scm.archiveStatus.value){
+			scm.archiveStatus = scm.archiveStatus.value;
 		}
 		
 		scm.set("status", "已提交");
