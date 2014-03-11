@@ -1801,6 +1801,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		for (Map<String, Object> savedEq : needMergeList) {
 			for (Object obj : scEqList) {
 				Map<String, Object> scEq = (Map<String, Object>) obj;
+				scEq.remove("eqcostApplyAmount");
+				scEq.remove("eqcostProductUnitPrice");
+				scEq.remove("requestedTotalMoney");
+				
 
 				if (savedEq.get(ApiConstants.MONGO_ID).toString().equalsIgnoreCase(scEq.get(ApiConstants.MONGO_ID).toString())) {
 					savedEq.putAll(scEq);

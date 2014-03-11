@@ -91,14 +91,14 @@ function editOr() {
 	var row = getSelectedRowDataByGrid("grid");
 	
 	if (row) {
-		if (row.status == "草稿" || row.status == "废除待审批" || row.status == "审批拒绝") {
+//		if (row.status == "草稿" || row.status == "废除待审批" || row.status == "审批拒绝") {
 			loadPage("purchasecontract_purchaseOrderEdit", {
 				_id : row._id
 			});
-		} else {
-			alert("只能编辑草稿数据");
-	
-		}
+//		} else {
+//			alert("只能编辑草稿数据");
+//	
+//		}
 
 	}
 
