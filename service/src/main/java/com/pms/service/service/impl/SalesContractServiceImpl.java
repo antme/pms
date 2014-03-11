@@ -191,7 +191,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 			// 添加成本设备清单记录
 			if (eqcostList != null && !eqcostList.isEmpty()) {
-				addEqCostListForContract(eqcostList,  addedContract, isdraft);
+				addEqCostListForContract(eqcostList,  addedContract, isdraft, true);
 			}
 
 			return addedContract;
@@ -230,7 +230,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			// 添加成本设备清单记录
 			if (!eqcostList.isEmpty()) {
 				updateTheModifyHistoryAndModifyTimesAndscLastAmount(params, eqcostList, contract, existContract);
-				addEqCostListForContract(eqcostList, contract, isdraft);
+				addEqCostListForContract(eqcostList, contract, isdraft, true);
 			}
 			logger.info("***************************** Save contract *****************************");
 			return contract;
@@ -289,7 +289,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		return amount;
 	}
 
-	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, Map<String, Object> contract, boolean isdraft) {
+	private void addEqCostListForContract(List<Map<String, Object>> eqcostList, Map<String, Object> contract, boolean isdraft, boolean needMerge) {
 		int nextVersionNo = 1;
 		String cId = contract.get(ApiConstants.MONGO_ID).toString();	
 		String proId = contract.get(SalesContractBean.SC_PROJECT_ID).toString();
@@ -349,7 +349,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			//
 			// }
 
-			if (realItem == null) {
+			if (realItem == null || !needMerge) {
 
 				String eqcostCode = genEqcostListCode(scCode, nextVersionNo);
 				item.put(EqCostListBean.EQ_LIST_CODE, eqcostCode);
@@ -1417,7 +1417,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					int index = row.length-1;
 					for(String key: keyMap.keySet()){
 						
-						if(key.contains( "未申请") && key.contains("数量")){
+						if(key.contains("未申请") && key.contains("数量")){
 							index = keyMap.get(key);
 							break;
 						}
@@ -1500,7 +1500,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				if (ApiUtil.isValid(contract)) {
 
 					if (eqList.size() > 0) {
-						addEqCostListForContract(eqList, contract, false);
+						addEqCostListForContract(eqList, contract, false, false);
 
 						
 						addPurchaseBack(contractCode, eqList, contract);

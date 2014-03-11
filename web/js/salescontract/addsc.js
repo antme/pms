@@ -685,8 +685,8 @@ function saveSC_ADD(){
 		return;
     } else {
     	var status = scm.get("status");
-    	
-    	if(status == "草稿"){    		
+	
+    		
     		var proValidator = $("#projectInfo").kendoValidator().data("kendoValidator");
     		if(!proValidator.validate()) {
     			validatestatus.text("请填写项目信息！")
@@ -703,7 +703,7 @@ function saveSC_ADD(){
 	    			return;
     			}
     		}
-    	}
+    	
 		scm.set("eqcostList", eqCostData);
 //		scm.set("progressPayment", progressPaymentData);
 

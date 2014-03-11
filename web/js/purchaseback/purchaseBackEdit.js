@@ -268,7 +268,7 @@ function dataBound(e) {
 	sumDataSource
 			.add({
 				requestedNumbers : totalRequestCount,
-				requestedTotalMoney : totalRequestMoney,
+				requestedTotalMoney : totalRequestMoney.toFixed(2),
 				numbersPercentOfContract : totalPercent,
 				moneyPercentOfContract : requestActureMoneyPercent
 			});
