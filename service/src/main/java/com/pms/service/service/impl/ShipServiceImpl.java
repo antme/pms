@@ -617,7 +617,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 
 					String productType1 = getRowColumnValue(row, keyMap, "型号1");
 					String productType2 = getRowColumnValue(row, keyMap, "型号2");
-
+					eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, productType1);
 					eq.put(EqCostListBean.EQ_LIST_UNIT, getRowColumnValue(row, keyMap, "单位"));
 
 					if (eqcostAmount < 0) {
@@ -625,7 +625,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 					}
 					eq.put(PurchaseContract.EQCOST_APPLY_AMOUNT, eqcostAmount);
 
-					String scCode = getRowColumnValue(row, keyMap, "合同编号");
+					String scCode = getRowColumnValue(row, keyMap, "货位代码");
 
 					if (eqListMap.get(scCode) != null) {
 						List<Map<String, Object>> eqList = eqListMap.get(scCode);
@@ -655,7 +655,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 
 								for (Map<String, Object> arrivalEqMap : arrivalEqlist) {
 
-									if (arrivalEqMap.get(EqCostListBean.EQ_LIST_PRODUCT_NAME).equals(eqMap.get(EqCostListBean.EQ_LIST_PRODUCT_NAME))) {
+									if (arrivalEqMap.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE).equals(eqMap.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE))) {
 
 										if (arrivalEqMap.get(EqCostListBean.EQ_LIST_UNIT).equals(eqMap.get(EqCostListBean.EQ_LIST_UNIT))) {
 											int restAmount = ApiUtil.getInteger(eqMap.get(PurchaseContract.EQCOST_APPLY_AMOUNT));
