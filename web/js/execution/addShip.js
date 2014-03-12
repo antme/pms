@@ -206,8 +206,8 @@ $(document).ready(function() {
 	    sortable : true,
 	    save : function(e){
 	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
-//				alert("最多可以申请" + e.model.leftAmount);
-//				e.preventDefault();
+				alert("最多可以申请" + e.model.leftAmount);
+				e.preventDefault();
 			}else{
 		    	var grid = $("#bj-ship-grid").data("kendoGrid");
 		    	grid.refresh();
@@ -259,8 +259,8 @@ $(document).ready(function() {
 				alert("实际发货数不能大于发货数");
 				e.preventDefault();
 			}else if(e.values.eqcostShipAmount > e.model.leftAmount){
-//				alert("最多可以申请" + e.model.leftAmount);
-//				e.preventDefault();
+				alert("最多可以申请" + e.model.leftAmount);
+				e.preventDefault();
 			}else{
 		    	var grid = $("#supplier-ship-grid").data("kendoGrid");
 		    	grid.refresh();
@@ -306,8 +306,8 @@ $(document).ready(function() {
 		    resizable: true,
 	        save : function(e){
 	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
-//				alert("最多可以申请" + e.model.leftAmount);
-//				e.preventDefault();
+				alert("最多可以申请" + e.model.leftAmount);
+				e.preventDefault();
 			}else{
 		    	var grid = $("#sh-ship-grid").data("kendoGrid");
 		    	grid.refresh();

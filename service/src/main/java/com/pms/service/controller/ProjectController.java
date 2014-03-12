@@ -57,6 +57,14 @@ public class ProjectController extends AbstractController {
     	responseWithData(projectService.listProjectsForSelect(params, false), request, response);
     }
     
+    
+    @RequestMapping("/forscselect")
+    public void getProjectsForScSelect(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = this.parserJsonParameters(request, true);
+        responseWithData(projectService.getProjectForAddSc(params), request, response);
+    }
+
+    
     @RequestMapping("/listAllForselect")
     public void listAllForselect(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = this.parserJsonParameters(request, true);

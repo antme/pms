@@ -82,12 +82,32 @@ $(document).ready(function() {
 		}, {
 			field : "runningStatus",
 			title : "执行状态",
-			width: 90
+			width: 90,
+			filterable : {
+				ui: function(e){
+					e.kendoDropDownList({
+						dataSource : runningStatusItems,
+						optionLabel : "...",
+						dataTextField : "text",
+						dataValueField : "text"
+					});
+				}
+			}
 				
 		}, {
 			field : "archiveStatus",
 			title : "归档状态",
-			width: 90
+			width: 90,
+			filterable : {
+				ui: function(e){
+					e.kendoDropDownList({
+						dataSource : archiveStatusItems,
+						optionLabel : "...",
+						dataTextField : "text",
+						dataValueField : "text"
+					});
+				}
+			}
 		}, {
 			field : "customerName",
 			title : "客户名"

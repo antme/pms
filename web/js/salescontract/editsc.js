@@ -281,36 +281,7 @@ var projectItems = undefined;
 var oldEqListLoadRefresh = false;
 
 $(document).ready(function() {
-	if(redirectParams && redirectParams._id){
-		projectItems = new kendo.data.DataSource({
-			transport : {
-				read : {
-					url : "../service/project/listAllForselect",
-					dataType : "jsonp"
-				}
-			},
-			schema: {
-			    data: "data",
-			    model: { id: "_id" }
-			}
-		});
- 
-	}else{
-		projectItems = new kendo.data.DataSource({
-			transport : {
-				read : {
-					url : "../service/project/listforselect",
-					dataType : "jsonp"
-				}
-			},
-			schema: {
-			    data: "data",
-			    model: { id: "_id" }
-			}
-		});
-	}
 	
-	projectItems.read();
 	//选项卡
 	if (!$("#tabstrip").data("kendoTabStrip")){
 		$("#tabstrip").kendoTabStrip({
@@ -404,13 +375,7 @@ $(document).ready(function() {
 	});
 	
 	
-	$("#projectId").kendoDropDownList({
-		dataTextField : "projectCode",
-		dataValueField : "_id",
-        optionLabel: "选择项目...",
-		dataSource : projectItems,
-		enable:false
-	});
+
 	
 	//合同签订日期控件
 	$("#contractDate").kendoDatePicker({

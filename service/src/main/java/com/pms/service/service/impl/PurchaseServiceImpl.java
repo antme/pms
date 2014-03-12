@@ -382,9 +382,12 @@ public class PurchaseServiceImpl extends AbstractService implements IPurchaseSer
         mergeDataRoleQueryWithProjectAndScType(params);
         mergeMyTaskQuery(params, DBBean.PURCHASE_ALLOCATE);
         mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_CUSTOMER_ID, CustomerBean.NAME, DBBean.CUSTOMER);
+        mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_NAME, ProjectBean.PROJECT_CUSTOMER_NAME, CustomerBean.NAME, DBBean.CUSTOMER);
+
         mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME, DBBean.USER);
         mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
         mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
+        mergeRefSearchQuery(params, PurchaseBack.pbCode, PurchaseBack.pbCode, PurchaseBack.pbCode, DBBean.PURCHASE_BACK);
         mergeRefSearchQuery(params, PurchaseBack.scId, SalesContractBean.SC_CODE, SalesContractBean.SC_CODE, DBBean.SALES_CONTRACT);
         Map<String, Object> map = dao.list(params, DBBean.PURCHASE_ALLOCATE);
         mergeSalesContract(map);

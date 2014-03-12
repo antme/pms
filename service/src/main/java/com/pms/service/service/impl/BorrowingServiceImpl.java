@@ -195,22 +195,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
     	params.put(BorrowingBean.BORROW_APPLICANT, user.get(UserBean.USER_NAME));
     	// 借货调拨编号
     	String[] limitKeys = { BorrowingBean.BORROW_CODE };
-    	Map<String, Object> lastRecord = dao.getLastRecordByCreatedOn(DBBean.BORROWING, null, limitKeys);
-    	String code = "JHDB-" + ApiUtil.formateDate(new Date(), "yyyy") + "-";
-    	if (ApiUtil.isEmpty(lastRecord)) {
-    		code += "0001";
-		} else {
-			String borrowCode = (String) lastRecord.get(BorrowingBean.BORROW_CODE);
-	    	String[] codeArr = borrowCode.split("-");
-	    	int i = 0;
-	    	if (codeArr.length > 2) {
-	    		i = Integer.parseInt(codeArr[2]);
-			}
-	    	
-	    	i++;
-	    	String str = String.format("%04d", i);
-	    	code += str;
-		}
+    	String code = generateCode("JHDB-", DBBean.BORROWING, BorrowingBean.BORROW_CODE);    	
     	params.put(BorrowingBean.BORROW_CODE, code);
 		
     	return dao.add(params, DBBean.BORROWING);

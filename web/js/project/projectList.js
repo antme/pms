@@ -185,6 +185,22 @@ function setupProjectCallBack(){
 }
 
 
+function toolbar_add_projectSalesContract(){
+	var row = getSelectedRowDataByGrid("grid");
+	if (!row){
+		alert("请选择项目！");
+		return;
+	}
+
+	if(row.projectStatus == "销售正式立项"){
+		loadPage("salescontract_addsc",{projectId: row._id});
+	}else{
+		alert("请选择一条销售正式立项项目！");
+	}
+	
+}
+
+
 	
 	
 	

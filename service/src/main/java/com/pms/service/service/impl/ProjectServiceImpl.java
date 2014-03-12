@@ -20,7 +20,6 @@ import com.pms.service.service.IProjectService;
 import com.pms.service.service.IUserService;
 import com.pms.service.util.ApiUtil;
 import com.pms.service.util.DataUtil;
-import com.pms.service.util.DateUtil;
 import com.pms.service.util.ExcleUtil;
 
 public class ProjectServiceImpl extends AbstractService implements IProjectService {
@@ -42,7 +41,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 				ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_ABBR};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		
-	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_CUSTOMER_ID, CustomerBean.NAME,  DBBean.CUSTOMER);
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_CUSTOMER_NAME, CustomerBean.NAME,  DBBean.CUSTOMER);
 	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME,  DBBean.USER);
 	    mergeDataRoleQueryWithProjectAndScType(params, ProjectBean.PROJECT_TYPE);
 		Map<String, Object> result = this.dao.list(params, DBBean.PROJECT);
@@ -87,7 +86,20 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
     
     }
 
-
+    public Map<String, Object> getProjectForAddSc(Map<String, Object> params){
+        
+        String[] limitKeys = {ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER_ID, 
+                ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_CUSTOMER_ID};
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ApiConstants.LIMIT_KEYS, limitKeys);
+        query.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+        Map<String, Object> result = dao.list(query, DBBean.PROJECT);
+        
+        Map<String, Object> projectList = mergeProjectForSc(result);
+        
+        List<Map<String, Object>> pList = (List<Map<String, Object>>) projectList.get(ApiConstants.RESULTS_DATA);
+        return pList.get(0);
+    }
 
 	@Override
 	public Map<String, Object> listProjectsForSelect(Map<String, Object> params, boolean all) {
@@ -101,7 +113,11 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		}
 		Map<String, Object> result = dao.list(query, DBBean.PROJECT);
 		
-		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
+		return mergeProjectForSc(result);
+	}
+
+    public Map<String, Object> mergeProjectForSc(Map<String, Object> result) {
+        List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
 		List<String> pmIds = new ArrayList<String>(); 
 		List<String> cIds = new ArrayList<String>();
 		List<String> proIds = new ArrayList<String>();
@@ -153,7 +169,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		mergeScTypeInfo(proIds, result);
 		
 		return result;
-	}
+    }
 	
 	private void mergeScTypeInfo(List<String> proIds, Map<String, Object> result){
 		Map<String, Object> scQuery = new HashMap<String, Object>();
@@ -416,34 +432,10 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			prefix = ProjectBean.PROJECT_YULIXIANG_PREFIX + prefix;
 		}
 		
-		int year = DateUtil.getNowYearString();
 		
-		Integer pCodeNo = 0;
-		Map<String, Object> queryMap = new HashMap<String, Object>();
-		String[] limitKeys = {ProjectBean.PROJECT_CODE};
-		Map<String, Object> p = dao.getLastRecordByCreatedOn(DBBean.PROJECT, queryMap, limitKeys);
-		if(p != null){
-			String pCode = (String)p.get(ProjectBean.PROJECT_CODE);
-			String pCodeNoString = "1";
-			if (pCode != null){
-				pCodeNoString = pCode.substring(pCode.lastIndexOf("-")+1, pCode.length());
-			}
-			
-			try {
-				pCodeNo = Integer.parseInt(pCodeNoString);
-			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-//				e.printStackTrace();  旧数据会出异常，就pCodeNo=1 开始
-			}
-		}
 		
-		pCodeNo = pCodeNo + 1;
+		return generateCode(prefix, DBBean.PROJECT, ProjectBean.PROJECT_CODE);
 		
-        String codeNum = "000" + pCodeNo;
-
-        codeNum = codeNum.substring(codeNum.length() - 4, codeNum.length());
-        
-		return prefix+year+"-"+codeNum;
 	}
 
 	@Override

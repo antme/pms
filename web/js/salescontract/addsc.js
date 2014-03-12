@@ -31,8 +31,12 @@ var scModel = kendo.data.Model.define({
 		estimateEqCostTax : {},
 		estimateSubCost : {},
 		estimatePMCost : {},
-		estimateDeepDesignCost:{},
-		estimateDebugCost:{},
+		estimateDeepDesignCost:{
+			defaultValue : 0			
+		},
+		estimateDebugCost:{
+			defaultValue : 0
+		},
 		estimateTax:{},
 		totalEstimateCost:{},
 		estimateOtherCost:{},
@@ -44,7 +48,9 @@ var scModel = kendo.data.Model.define({
 		contractDate : {
 			type:"date"
 		},
-		contractDownPayment : { type : "number"},
+		contractDownPayment : { 
+			type : "number"
+		},
 		contractDownPaymentMemo:{},
 		progressPayment : {},
 		qualityMoney : {},
@@ -187,41 +193,7 @@ $(document).ready(function() {
 		dataSource : runningStatusItems
 	});
 	
-	$("#projectId").kendoDropDownList({
-		dataTextField : "projectCode",
-		dataValueField : "_id",
-        optionLabel: "选择项目...",
-		dataSource : projectItems,
-		select:function(e){
-			var dataItem = this.dataItem(e.item.index());
-//            console.log("*******dataItem"+dataItem.projectName+"****projectType"+dataItem.projectType);
-            $("#selProjectName").html(dataItem.projectName);
-            showTabs(dataItem.projectStatus);
-            
-          var relatedScType = dataItem.contractType;
-          var sctypelist = $("#contractType").data("kendoDropDownList");
-                    
-          if (relatedScType != null && sctypelist!=null){
-          	sctypelist.value(relatedScType);
-          	sctypelist.enable(false);
-          	scm.set("contractType",relatedScType)
-          }
-          
-          if(dataItem.projectStatus == "销售正式立项" && relatedScType=="N/A"){
-        		sctypelist.enable(true);
-          }
-          
-          //start: add for customer info
-          var haveCustomer = dataItem.cId;
-          var cusList = $("#customerId").data("kendoDropDownList");
-          if (haveCustomer != null){
-	    	  cusList.value(haveCustomer);
-	    	  cusList.enable(false);
-	    	  scm.set("customerId",haveCustomer)
-         }
-          //end: add for customer info 
-		}
-	});
+	
 	
 	//合同签订日期控件
 	var ddd = $("#contractDate").kendoDatePicker({
@@ -450,7 +422,6 @@ $(document).ready(function() {
 	
 	if(redirectParams && redirectParams.pageId && redirectParams.pageId=="newProject"){
 		validateProject = true;
-		$(".projectId").hide();
 
 		if(redirectParams._id){
 			postAjaxRequest("/service/sc/get", redirectParams, editDraftSc_ADD);
@@ -469,8 +440,43 @@ $(document).ready(function() {
 		
 		
 	}else{
-		scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
-		kendo.bind($("#addSalesContract"), scm);
+		
+		 if(redirectParams && redirectParams.projectId){
+				postAjaxRequest("/service/project/forscselect", {_id:redirectParams.projectId}, function(data){				
+					if(!data.projectId){
+						//数据从项目而来, 否则数据从销售合同来
+						data.projectId = data._id;
+						data._id="";
+					}
+				  scm = new scModel(data);	
+		          showTabs(data.projectStatus);
+		          var relatedScType = data.contractType;
+		          var sctypelist = $("#contractType").data("kendoDropDownList");
+		                    
+		          if (relatedScType != null && sctypelist!=null){
+			          	sctypelist.value(relatedScType);
+			          	sctypelist.enable(false);
+			          	scm.set("contractType",relatedScType)
+		          }
+		          
+		          if(data.projectStatus == "销售正式立项" && relatedScType=="N/A"){
+		        		sctypelist.enable(true);
+		          }
+		          //start: add for customer info
+		          var haveCustomer = data.cId;
+		          var cusList = $("#customerId").data("kendoDropDownList");
+		          if (haveCustomer != null){
+			    	  cusList.value(haveCustomer);
+			    	  cusList.enable(false);
+			    	  scm.set("customerId",haveCustomer)
+		         }
+		          kendo.bind($("#addSalesContract"), scm);
+		          
+			    });
+		 }else{
+			scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
+			kendo.bind($("#addSalesContract"), scm);
+		 }
 
 	}
 	

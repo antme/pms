@@ -82,8 +82,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		// "status"};
 		// params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 
-		mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_CUSTOMER_ID, CustomerBean.NAME, DBBean.CUSTOMER);
-		mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME, DBBean.USER);
+		mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_NAME, ProjectBean.PROJECT_CUSTOMER_ID, CustomerBean.NAME, DBBean.CUSTOMER);
+		mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_NAME, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME, DBBean.USER);
 		mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
 		mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
 

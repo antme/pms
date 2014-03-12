@@ -85,7 +85,6 @@ $(document).ready(function () {
 				}
 	        },
 	        { field: "customerName", title:"客户名"},
-	        { field: "pbStatus", title:"申请状态"},
 	        { field: "pbSubmitDate", title:"提交时间" },
 	        { field: "pbMoney", title:"金额" }
 	    ]

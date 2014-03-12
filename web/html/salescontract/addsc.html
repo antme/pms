@@ -28,14 +28,7 @@
 		<div id="validate-status"></div>
 	
 		<div>
-			<div class="k-edit-label projectId" >
-				<label for="projectId">关联项目</label>
-			</div>
-			<div data-container-for="projectId" class="k-edit-field projectId" >
-				<input type="text" class="pro-dropdownlist" name="projectId" id="projectId"
-					   validationMessage="必填" data-bind="value: projectId">
-				<span id="selProjectName"></span>
-			</div>
+			
 			
 			<div class="k-edit-label ">
 				<label for="contractType">合同类型</label>
@@ -63,13 +56,7 @@
                <div id="tab0div" class="addSalesContract"><!-- 第一个Tab -->
                    <div id="scbasicinfotab" class="k-edit-form-container"><!-- 基础信息-->
                    
-	                   <!-- <div class="k-edit-label ">
-							<label for="contractCode">合同编号</label>
-						</div>
-						<div data-container-for="contractCode" class="k-edit-field ">
-							<input type="text" class="k-input k-textbox" name="contractCode" id="contractCode"
-								required="required" validationMessage="必填" data-bind="value: contractCode">
-						</div> -->
+	            
 						
 	                   <div class="k-edit-label ">
 							<label for="contractPerson">签订人<span class="input_required_star">*</span></label>
@@ -79,24 +66,21 @@
 								required="required" validationMessage="必填" data-bind="value: contractPerson">
 						</div>
 				
-						
-	                   <!-- <div class="k-edit-label ">
-							<label for="projectId">关联项目</label>
-						</div>
-						<div data-container-for="projectId" class="k-edit-field ">
-							<input type="text" class="pro-dropdownlist" name="projectId" id="projectId"
-								required="required" validationMessage="必填" data-bind="value: projectId"><span id="selProjectName"></span>
-							<button class="k-button"  onclick="addAProject();">新建项目</button>
-							
-						</div> -->
-						
-	                   <!-- <div class="k-edit-label ">
-							<label for="contractType">合同类型</label>
-						</div>
-						<div data-container-for="contractType" class="k-edit-field ">
-							<input type="text" class="pro-dropdownlist" name="contractType" id="contractType"
-								required="required" validationMessage="必填" data-bind="value: contractType">
-						</div> -->
+						<div class="k-edit-label ">
+                            <label for="projectName">关联项目</label>
+                        </div>
+                        <div data-container-for="projectName" class="k-edit-field ">
+                            <input type="text" name="projectName" id="projectName"
+                                required="required" readonly validationMessage="必填" data-bind="value: projectName" style="width:250px;">
+                        </div>
+	                   <div class="k-edit-label ">
+                            <label for="projectCode">项目编号</label>
+                        </div>
+                        <div data-container-for="projectCode" class="k-edit-field ">
+                            <input type="text" name="projectCode" id="projectCode"
+                                required="required" readonly validationMessage="必填" data-bind="value: projectCode" style="width:250px;">
+                        </div>
+                    
 						
 	                   <div class="k-edit-label ">
 							<label for="archiveStatus">归档状态<span class="input_required_star">*</span></label>
@@ -107,15 +91,15 @@
 						</div>
 						
 	                   <div class="k-edit-label ">
-							<label for="runningStatus">执行状态</label>
+							<label for="runningStatus">执行状态<span class="input_required_star">*</span></label>
 						</div>
 						<div data-container-for="runningStatus" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="runningStatus" id="runningStatus"
-								data-bind="value: runningStatus">
+								data-bind="value: runningStatus" required="required" validationMessage="必填">
 						</div>
 						
 	                   <div class="k-edit-label ">
-							<label for="contractDate">签订日期</label>
+							<label for="contractDate">签订日期<span class="input_required_star">*</span></label>
 						</div>
 						<div data-container-for="contractDate" class="k-edit-field ">
 						
@@ -123,7 +107,7 @@
 						</div>
 						
 	                   <div class="k-edit-label ">
-							<label for="contractDownPayment">首付</label>
+							<label for="contractDownPayment">首付<span class="input_required_star">*</span></label>
 						</div>
 						<div data-container-for="contractDownPayment" class="k-edit-field ">
 							<input type="text" name="contractDownPayment" id="contractDownPayment"
@@ -184,18 +168,18 @@
 						</div>
 						
 						<div class="k-edit-label ">
-							<label for="equipmentAmount">设备金额</label>
+							<label for="equipmentAmount">设备金额<span class="input_required_star">*</span></label>
 						</div>
 						<div data-container-for="equipmentAmount" class="k-edit-field ">
-							<input type="number" min="0" name="equipmentAmount" id="equipmentAmount" data-bind="value: equipmentAmount" onchange="moneyOnChange_ADD();" required="required">
+							<input type="number" min="0" name="equipmentAmount" id="equipmentAmount" data-bind="value: equipmentAmount" onchange="moneyOnChange_ADD();" required="required" validationMessage="必填">
 						</div>
 						
 	                    <div class="k-edit-label ">
-							<label for="serviceAmount">服务金额</label>
+							<label for="serviceAmount">服务金额<span class="input_required_star">*</span></label>
 						</div>
 						<div data-container-for="serviceAmount" class="k-edit-field ">
 							<input type="number" min="0" name="serviceAmount" id="serviceAmount" onchange="moneyOnChange_ADD();"
-								required data-bind="value: serviceAmount">
+								required="required" validationMessage="必填" data-bind="value: serviceAmount">
 						</div>
 						
 	                   <div class="k-edit-label ">
@@ -284,7 +268,7 @@
 						</div>
 						
 	                   <div class="k-edit-label ">
-							<label for="invoiceType">发票类型</label>
+							<label for="invoiceType">发票类型<span class="input_required_star">*</span></label>
 						</div>
 						<div data-container-for="invoiceType" class="k-edit-field ">
 							<input type="text" class="pro-dropdownlist" name="invoiceType" id="invoiceType"

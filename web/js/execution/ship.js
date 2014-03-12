@@ -90,11 +90,11 @@ function toolbar_add() {
 function toolbar_edit() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-//		if (rowData.status == "草稿" || rowData.status == "已拒绝"){
+		if (rowData.status == "草稿" || rowData.status == "已拒绝"){
 			loadPage("execution_addShip",{_id:rowData._id});
-//		} else {
-//			alert("只允许编辑已拒绝或则草稿数据");
-//		}
+		} else {
+			alert("只允许编辑已拒绝或则草稿数据");
+		}
 	}
 }
 

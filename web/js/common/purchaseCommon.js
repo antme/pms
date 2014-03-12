@@ -33,7 +33,8 @@ var commonFileds = {
 			type : "number"
 		},
 		requestedTotalMoney : {
-			editable : false
+			editable : false,
+			type : "number"
 		},
 		eqcostContractTotalMoney : {
 			type : "number",

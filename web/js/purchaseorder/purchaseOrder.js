@@ -32,6 +32,7 @@ $(document).ready(function() {
 			sortable : true,
 			width : "1000px",
 			height: "400px",
+			filterable : filterable,
 			columns : [ {
 				field : "purchaseOrderCode",
 				title : "订单编号",

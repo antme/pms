@@ -60,7 +60,7 @@ $(document).ready(function () {
 					return '<a  onclick="openPurchaseAllotViewWindow(\'' + dataItem._id + '\');">' + dataItem.paCode + '</a>';
 				}
 	        },
-	        { field: "pbCode", title:"备货编号", filterable : false,
+	        { field: "pbCode", title:"备货编号",
 	        	template : function(dataItem) {
 					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem.pbId + '\');">' + dataItem.pbCode + '</a>';
 				}
@@ -68,13 +68,13 @@ $(document).ready(function () {
 	        },
 	        { 
 	        	field: "contractCode", 
-	        	title:"销售合同编号",filterable : false,
+	        	title:"销售合同编号",
 	        	template : function(dataItem) {
 					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
 	        },
-	        { field: "customerName", title:"客户名" , filterable : false},
-	        { field: "projectManagerName", title:"PM" , filterable : false},
+	        { field: "customerName", title:"客户名" },
+	        { field: "projectManagerName", title:"PM"},
 	        { field: "paStatus", title:"调拨状态" ,
 	        	filterable : {
 					ui: function(e){

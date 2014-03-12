@@ -145,11 +145,11 @@ public class ShipController extends AbstractController {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;   
         MultipartFile uploadFile = multipartRequest.getFile("shipFile");        
         Map<String,Object> result = new HashMap<String,Object>();
-        try {
-			result = shipService.importShipHistoryData(uploadFile.getInputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//        try {
+//			result = shipService.importShipHistoryData(uploadFile.getInputStream());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
         
     	responseWithData(result, request, response);
     }  
