@@ -23,6 +23,7 @@ import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.ISalesContractService;
+import com.pms.service.service.IShipService;
 import com.pms.service.util.ApiUtil;
 
 public class ArrivalNoticeServiceImpl extends AbstractService implements IArrivalNoticeService {
@@ -30,6 +31,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 	protected ISalesContractService scs;
 	
 	private IPurchaseContractService pService;
+	
+	private IShipService shipService;
 
 	public ISalesContractService getScs() {
 		return scs;
@@ -45,6 +48,16 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 
 	public void setpService(IPurchaseContractService pService) {
 		this.pService = pService;
+	}
+	
+	
+
+	public IShipService getShipService() {
+		return shipService;
+	}
+
+	public void setShipService(IShipService shipService) {
+		this.shipService = shipService;
 	}
 
 	@Override
@@ -79,12 +92,12 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER_ID, 
 				ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_CUSTOMER_ID});
      
-		Map<String, Object> result = dao.list(projectQuery, DBBean.PROJECT);
+		Map<String, Object> projects = dao.list(projectQuery, DBBean.PROJECT);
 		
-		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
+		List<Map<String, Object>> projectList = (List<Map<String, Object>>) projects.get(ApiConstants.RESULTS_DATA); 
 		List<String> pmIds = new ArrayList<String>(); 
 		List<String> cIds = new ArrayList<String>();
-		for(Map<String, Object> p : resultList){
+		for(Map<String, Object> p : projectList){
 			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
 			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
 			if (!ApiUtil.isEmpty(pmid)){
@@ -92,6 +105,28 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 			}
 			if (!ApiUtil.isEmpty(cid)){
 				cIds.add(cid);
+			}
+			
+			Map<String, Object> scQuery = new HashMap<String, Object>();
+			scQuery.put(SalesContractBean.SC_PROJECT_ID, p.get(ApiConstants.MONGO_ID));
+			scQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ApiConstants.MONGO_ID});
+			
+			List<Object> scIds =   this.dao.listLimitKeyValues(scQuery, DBBean.SALES_CONTRACT);
+			boolean find = false;
+			for(Object scId: scIds){
+				Map<String, Object> scParams = new HashMap<String, Object>();
+				scParams.put(SalesContractBean.SC_ID, scId);
+				 Map<String, Object> eqListMap = shipService.eqlist(scParams);
+				 
+				 if(ApiUtil.isValid(eqListMap.get(ApiConstants.RESULTS_DATA))){
+					 find = true;
+					 break;
+				 }
+				 
+			}
+			
+			if(find){
+				p.put(SalesContractBean.SC_EQ_LIST, "true");
 			}
 		}
 		Map<String, Object> pmQuery = new HashMap<String, Object>();
@@ -104,7 +139,9 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		cusQuery.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
 		Map<String, Object> cusData = dao.listToOneMapAndIdAsKey(cusQuery, DBBean.USER);
 		
-		for (Map<String, Object> p : resultList){
+		removeEmptyEqList(projectList, SalesContractBean.SC_EQ_LIST);
+		
+		for (Map<String, Object> p : projectList){
 			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
 			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmid);
 			if(ApiUtil.isEmpty(pmInfo)){
@@ -125,7 +162,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 			}
 		}
 		
-		return result;
+		return projects;
 	}
 	 
     public Map<String, Object> listEqListByScIDForShip(Object scId) {

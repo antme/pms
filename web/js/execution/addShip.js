@@ -97,51 +97,61 @@ $(document).ready(function() {
 	var deleteCommand  = undefined;
 	if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
 		//do nothing
+		$(".ship-edit").show();
+		$(".ship-add").hide();
 	}else if(redirectParams && redirectParams.type && redirectParams.type == "approve"){
 		//do nothing
+		$(".ship-add").hide();
+		$(".ship-edit").show();
 	}else if(popupParams){
 		//do nothing
+		$(".ship-add").hide();
+		$(".ship-edit").show();
+	}else if(redirectParams && redirectParams._id){
+		//do nothing
+		$(".ship-add").hide();
+		$(".ship-edit").show();
 		
 	}else{
 		deleteCommand =  { command: "destroy", text: "删除", width: 90 };
-	}
 	
-	 project = $("#project").kendoComboBox({
-        placeholder: "Select project",
-        dataTextField: "projectName",
-        dataValueField: "_id",
-        filter: "contains",
-        suggest: true,
-        dataSource: new kendo.data.DataSource({
-            transport: {
-                read: {
-                    url: "../service/arrivalNotice/project/list",
-                    dataType: "jsonp",
-    	            data: {
-    	            	pageSize: 0
-    	            }
-                }
-            },
-            schema: {
-            	total: "total",
-            	data: "data"
-            }
-        }),
-        change: function(e) {
-        	var dataItem = this.dataItem();
-        	model.set("projectName", dataItem.projectName);
-        	model.set("customer", dataItem.customer);
-        	model.set("applicationDepartment", dataItem.department);
-        	model.set("scId", "");
-        	
-        	loadSC();
-        	
-        }, 
-        dataBound : function(e){
-        	loadSC();
-        }
-    }).data("kendoComboBox");
-
+	
+		 project = $("#project").kendoComboBox({
+	        placeholder: "Select project",
+	        dataTextField: "projectName",
+	        dataValueField: "_id",
+	        filter: "contains",
+	        suggest: true,
+	        dataSource: new kendo.data.DataSource({
+	            transport: {
+	                read: {
+	                    url: "../service/arrivalNotice/project/list",
+	                    dataType: "jsonp",
+	    	            data: {
+	    	            	pageSize: 0
+	    	            }
+	                }
+	            },
+	            schema: {
+	            	total: "total",
+	            	data: "data"
+	            }
+	        }),
+	        change: function(e) {
+	        	var dataItem = this.dataItem();
+	        	model.set("projectName", dataItem.projectName);
+	        	model.set("customer", dataItem.customer);
+	        	model.set("applicationDepartment", dataItem.department);
+	        	model.set("scId", "");
+	        	
+	        	loadSC();
+	        	
+	        }, 
+	        dataBound : function(e){
+	        	loadSC();
+	        }
+	    }).data("kendoComboBox");
+	}
 	
 	
 	$("#deliveryRequirements").kendoDropDownList({
@@ -196,8 +206,8 @@ $(document).ready(function() {
 	    sortable : true,
 	    save : function(e){
 	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
-				alert("最多可以申请" + e.model.leftAmount);
-				e.preventDefault();
+//				alert("最多可以申请" + e.model.leftAmount);
+//				e.preventDefault();
 			}else{
 		    	var grid = $("#bj-ship-grid").data("kendoGrid");
 		    	grid.refresh();
@@ -249,8 +259,8 @@ $(document).ready(function() {
 				alert("实际发货数不能大于发货数");
 				e.preventDefault();
 			}else if(e.values.eqcostShipAmount > e.model.leftAmount){
-				alert("最多可以申请" + e.model.leftAmount);
-				e.preventDefault();
+//				alert("最多可以申请" + e.model.leftAmount);
+//				e.preventDefault();
 			}else{
 		    	var grid = $("#supplier-ship-grid").data("kendoGrid");
 		    	grid.refresh();
@@ -296,8 +306,8 @@ $(document).ready(function() {
 		    resizable: true,
 	        save : function(e){
 	    	if(e.values.eqcostShipAmount > e.model.leftAmount){
-				alert("最多可以申请" + e.model.leftAmount);
-				e.preventDefault();
+//				alert("最多可以申请" + e.model.leftAmount);
+//				e.preventDefault();
 			}else{
 		    	var grid = $("#sh-ship-grid").data("kendoGrid");
 		    	grid.refresh();

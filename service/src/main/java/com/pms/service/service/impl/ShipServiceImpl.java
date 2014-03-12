@@ -273,11 +273,16 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         return shipMergedEqList;
     }
 	
-    public Map<String, Object> submit(Map<String, Object> params) {
-        params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
-        params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_SUBMIT);
-        return create(params);
-    }
+	public Map<String, Object> submit(Map<String, Object> params) {
+
+		if (params.get(ShipBean.SHIP_STATUS) != null && params.get(ShipBean.SHIP_STATUS).toString().equalsIgnoreCase("已关闭")) {
+
+		} else {
+			params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
+			params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_SUBMIT);
+		}
+		return create(params);
+	}
 	   
     public Map<String, Object> approve(Map<String, Object> params) {
         Map<String, Object> oldShip = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), new String[] { SalesContractBean.SC_EQ_LIST, ShipBean.SHIP_STATUS }, DBBean.SHIP);
@@ -569,7 +574,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 				List<String[]> list = excleUtil.getAllData(ns);
 				Map<String, Integer> keyMap = new LinkedHashMap<String, Integer>();
 
-				int n = 1;
+				int n = 0;
 				String[] titles = list.get(n);
 
 				if (titles != null) {
@@ -584,7 +589,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 					}
 
 					if (!find) {
-						n = 2;
+						n = 1;
 						titles = list.get(n);
 					}
 					for (int i = 0; i < titles.length; i++) {
@@ -619,7 +624,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 					String productType2 = getRowColumnValue(row, keyMap, "型号2");
 					eq.put(EqCostListBean.EQ_LIST_PRODUCT_TYPE, productType1);
 					eq.put(EqCostListBean.EQ_LIST_UNIT, getRowColumnValue(row, keyMap, "单位"));
-
+					eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME, productName);
 					if (eqcostAmount < 0) {
 						eqcostAmount = 0;
 					}
@@ -639,47 +644,57 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 					}
 
 				}
-				List<Map<String, Object>> arrivalMap = (List<Map<String, Object>>) this.dao.list(new HashMap<String, Object>(), DBBean.ARRIVAL_NOTICE).get(
-				        ApiConstants.RESULTS_DATA);
+				
+				Map<String, Object> arrivalMapQuery = new HashMap<String, Object>();
+				arrivalMapQuery.put(ArrivalNoticeBean.ARRIVAL_DATE, null);
+				List<Map<String, Object>> arrivalMap = (List<Map<String, Object>>) this.dao.list(arrivalMapQuery, DBBean.ARRIVAL_NOTICE).get(ApiConstants.RESULTS_DATA);
 
 				for (Map<String, Object> arrival : arrivalMap) {
-
-					for (String scCode : eqListMap.keySet()) {
-
-						if (arrival.get(SalesContractBean.SC_CODE).equals(scCode)) {
-
-							List<Map<String, Object>> arrivalEqlist = (List<Map<String, Object>>) arrival.get(SalesContractBean.SC_EQ_LIST);
-							List<Map<String, Object>> eqList = eqListMap.get(scCode);
-
-							for (Map<String, Object> eqMap : eqList) {
-
-								for (Map<String, Object> arrivalEqMap : arrivalEqlist) {
-
-									if (arrivalEqMap.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE).equals(eqMap.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE))) {
-
-										if (arrivalEqMap.get(EqCostListBean.EQ_LIST_UNIT).equals(eqMap.get(EqCostListBean.EQ_LIST_UNIT))) {
-											int restAmount = ApiUtil.getInteger(eqMap.get(PurchaseContract.EQCOST_APPLY_AMOUNT));
-											int arrivalAmount = ApiUtil.getInteger(arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
-											int shipAmount = arrivalAmount - restAmount;
-											if (shipAmount < 0) {
-												shipAmount = 0;
-											} else {
-												arrivalEqMap.put(PurchaseContract.EQCOST_APPLY_AMOUNT, shipAmount);
-											}
-										} else {
-											arrivalEqMap.put(PurchaseContract.EQCOST_APPLY_AMOUNT, arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
-										}
-
-									} else {
-										arrivalEqMap.put(PurchaseContract.EQCOST_APPLY_AMOUNT, arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
-									}
-
-								}
-
-							}
-
-						}
+					List<Map<String, Object>> arrivalEqlist = (List<Map<String, Object>>) arrival.get(SalesContractBean.SC_EQ_LIST);
+					scs.mergeEqListBasicInfo(arrivalEqlist);
+					for (Map<String, Object> arrivalEqMap : arrivalEqlist) {
+						arrivalEqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
+						arrivalEqMap.put(ShipBean.SHIP_EQ_ACTURE_AMOUNT, arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
 					}
+
+//					for (String scCode : eqListMap.keySet()) {
+//
+//						if (arrival.get(SalesContractBean.SC_CODE).toString().equals(scCode)) {
+//
+//							List<Map<String, Object>> eqList = eqListMap.get(scCode);
+//							
+//							if(scCode.equalsIgnoreCase("TDSH-XS-2012-0002")){
+//								logger.info("TDSH-XS-2012-0002");
+//							}
+//							for (Map<String, Object> eqMap : eqList) {
+//
+//								for (Map<String, Object> arrivalEqMap : arrivalEqlist) {
+//
+//									
+//									if (arrivalEqMap.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE) != null && eqMap.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE) != null
+//									        && arrivalEqMap.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE).equals(eqMap.get(EqCostListBean.EQ_LIST_PRODUCT_TYPE))) {
+//
+//										int restAmount = ApiUtil.getInteger(eqMap.get(PurchaseContract.EQCOST_APPLY_AMOUNT));
+//										int arrivalAmount = ApiUtil.getInteger(arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
+//										int shipAmount = arrivalAmount - restAmount;
+//										if (shipAmount < 0) {
+//											logger.error("发货数小雨0" + shipAmount + " :::  " + scCode);
+//											shipAmount = 0;
+//										} else {
+//											logger.info(scCode +" 中找到为发货的清单：　" + arrivalEqMap.get(EqCostListBean.EQ_LIST_PRODUCT_NAME)  + " ====== " + shipAmount);
+//											arrivalEqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, shipAmount);
+//											arrivalEqMap.put(ShipBean.SHIP_EQ_ACTURE_AMOUNT, shipAmount);
+//											break;
+//										}
+//
+//									}
+//
+//								}
+//
+//							}
+//
+//						}
+//					}
 
 					Map<String, Object> newObj = new HashMap<String, Object>();
 					newObj.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_CLOSE);

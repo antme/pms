@@ -1,7 +1,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <script  src="js/execution/addShip.js"></script>
-
+<style>
+	.ship-edit{
+		display:none;
+	}
+</style>
 <body>
     <div id="addShip" class="k-content">
 	    <h3>发货详情页面</h3>
@@ -14,20 +18,36 @@
 	    	<div data-container-for="shipCode" class="k-edit-field">
 	    		<input readonly type="text" class="k-input k-textbox" name="shipCode" data-bind="value:shipCode">
 	    	</div>
+	    	
 	    	<div class="k-edit-label"></div>
 			<div class="k-edit-field"></div>
-	    	<div class="k-edit-label">
+	
+	    	<div class="k-edit-label ship-add" >
 	    		<label for="project">项目名称</label>
 	    	</div>
-	    	<div data-container-for="project" class="k-edit-field">
+	    	<div data-container-for="project" class="k-edit-field ship-add">
 	    		<input id="project" name="project" required="required" validationMessage="请选择项目" data-bind="value:projectId">
 	    	</div>
-	    	<div class="k-edit-label">
+	    	<div class="k-edit-label ship-add">
 	    		<label for="salesContract">销售合同编号</label>
 	    	</div>
-	    	<div data-container-for="salesContract" class="k-edit-field">
+	    	<div data-container-for="salesContract" class="k-edit-field ship-add">
 	    		<input id="salesContract" name="salesContract" required="required" validationMessage="请选择销售合同"  data-bind="value:scId">
 	    	</div>
+	    	<hr>
+	    	<div class="k-edit-label">
+	    		<label for="projectName" class="ship-edit">项目名称</label>
+	    	</div>
+	    	<div data-container-for="projectName" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox ship-edit" name="projectName" data-bind="value:projectName" readonly>
+	    	</div>
+	    	<div class="k-edit-label">
+	    		<label for="contractCode" class="ship-edit">销售合同编号</label>
+	    	</div>
+	    	<div data-container-for="contractCode" class="k-edit-field">
+	    		<input type="text" class="k-input k-textbox ship-edit" name="contractCode" required="required" data-bind="value:contractCode" readonly>
+	    	</div>
+	    	
 	    	<div class="k-edit-label">
 	    		<label for="applicationDepartment">申请部门</label>
 	    	</div>

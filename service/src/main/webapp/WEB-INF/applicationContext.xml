@@ -126,6 +126,8 @@
 		<property name="dao" ref="commonDao"></property>
 		<property name="scs" ref="salesContractService"></property>
 		<property name="pService" ref="purchaseContractService"></property>
+		<property name="shipService" ref="shipService"></property>
+		
 	</bean>
 
 	<bean
