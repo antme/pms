@@ -40,7 +40,7 @@ var eqModel = kendo.data.Model.define( {
     	eqcostProductType: { editable: false },
     	eqcostUnit: { editable: false },
     	eqcostBrand: { editable: false },
-    	eqcostShipAmount: { type: "number", validation: { min: 1} },
+    	eqcostShipAmount: { type: "number", validation: { min: 0} },
     	arrivalAmount: { type: "number", validation: {  min: 0} },
     	giveUp: { editable: false },
     	leftAmount: { editable: false  },
