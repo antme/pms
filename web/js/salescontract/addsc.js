@@ -775,7 +775,7 @@ function saveSC_ADD(){
 		
 		if(scm.contractType && scm.contractType.value){
 			scm.contractType = scm.contractType.value;
-		
+		}
 		
 		if(scm.archiveStatus && scm.archiveStatus.value){
 			scm.archiveStatus = scm.archiveStatus.value;
