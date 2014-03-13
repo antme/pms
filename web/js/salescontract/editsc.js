@@ -857,6 +857,10 @@ function saveSCDraft(){
 		if(scm.archiveStatus && scm.archiveStatus.value){
 			scm.archiveStatus = scm.archiveStatus.value;
 		}
+		if(scm.contractType && scm.contractType.value){
+			scm.contractType = scm.contractType.value;
+		}
+		
 		scm.set("status", "草稿");
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
@@ -1058,6 +1062,10 @@ function saveSC(){
 		if(scm.archiveStatus && scm.archiveStatus.value){
 			scm.archiveStatus = scm.archiveStatus.value;
 		}
+		if(scm.contractType && scm.contractType.value){
+			scm.contractType = scm.contractType.value;
+		}
+		
 		
 		scm.set("status", "已提交");
 		postAjaxRequest("/service/sc/add",  {models:kendo.stringify(scm)}, function(data){
