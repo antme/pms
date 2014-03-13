@@ -134,7 +134,7 @@ $(document).ready(function() {
 		//添加表单绑定一个空的 Model
 		pModel = new projectModel();
 		kendo.bind($("#addProject"), pModel);
-//		$("#projectCode").attr("disabled",true);
+		$("#projectCode").attr("disabled",true);
 	}
 	
 });//end dom ready
