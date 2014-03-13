@@ -195,7 +195,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
     	params.put(BorrowingBean.BORROW_APPLICANT, user.get(UserBean.USER_NAME));
     	// 借货调拨编号
     	String[] limitKeys = { BorrowingBean.BORROW_CODE };
-    	String code = generateCode("JHDB-", DBBean.BORROWING, BorrowingBean.BORROW_CODE);    	
+    	String code = generateCode("JHDB", DBBean.BORROWING, BorrowingBean.BORROW_CODE);    	
     	params.put(BorrowingBean.BORROW_CODE, code);
 		
     	return dao.add(params, DBBean.BORROWING);

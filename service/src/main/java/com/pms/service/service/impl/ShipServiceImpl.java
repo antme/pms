@@ -163,7 +163,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
             return update(params);
         } else {
         	// 发货申请编号        	
-        	String code = generateCode("FHSQ-", DBBean.SHIP, ShipBean.SHIP_CODE);        	        	
+        	String code = generateCode("FHSQ", DBBean.SHIP, ShipBean.SHIP_CODE);        	        	
         	params.put(ShipBean.SHIP_CODE, code);
             return dao.add(params, DBBean.SHIP);
         }
