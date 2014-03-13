@@ -588,6 +588,10 @@ function saveSCDraft_ADD(){
 			scm.runningStatus = scm.runningStatus.value;
 		}
 		
+		if(scm.contractType && scm.contractType.value){
+			scm.contractType = scm.contractType.value;
+		}
+		
 		if(scm.archiveStatus && scm.archiveStatus.value){
 			scm.archiveStatus = scm.archiveStatus.value;
 		}
@@ -768,6 +772,10 @@ function saveSC_ADD(){
 		if(scm.runningStatus && scm.runningStatus.value){
 			scm.runningStatus = scm.runningStatus.value;
 		}
+		
+		if(scm.contractType && scm.contractType.value){
+			scm.contractType = scm.contractType.value;
+		
 		
 		if(scm.archiveStatus && scm.archiveStatus.value){
 			scm.archiveStatus = scm.archiveStatus.value;
