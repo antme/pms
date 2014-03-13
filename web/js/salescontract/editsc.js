@@ -588,6 +588,11 @@ $(document).ready(function() {
 
 function edit(data){
 	scm = new scModel(data);
+	
+	if(scm.customer && scm.customer._id){
+		scm.customerId = scm.customer._id;
+		scm.customer = scm.customer._id;
+	}
 	if(scm.get("status") == "已提交"){
 		$("#saveDraftBtn").hide();
 	}
