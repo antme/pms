@@ -103,23 +103,11 @@ var eqCostListDataSource = new kendo.data.DataSource({
         }
 	}
 });
-var projectItems = new kendo.data.DataSource({
-	transport : {
-		read : {
-			url : "../service/project/listforselect",
-			dataType : "jsonp"
-		}
-	},
-	schema: {
-	    data: "data",
-	    model: { id: "_id" }
-	}
-});
+
 
 var tabs;
 var validateProject = false;
 $(document).ready(function() {
-	projectItems.read();
 	scm = new scModel();
 	//选项卡
 	

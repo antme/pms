@@ -277,7 +277,6 @@ var eqCostListDataSourceOld = new kendo.data.DataSource({
         }
 	}
 });
-var projectItems = undefined;
 var oldEqListLoadRefresh = false;
 
 $(document).ready(function() {
@@ -870,7 +869,7 @@ function saveSC(){
 	var validator = $("#editSalesContract").kendoValidator().data("kendoValidator");
 	
 	var projectId = scm.get("projectId");
-	var projectStatus = projectItems.get(projectId).get("projectStatus")
+	var projectStatus = scm.get("projectStatus")
 	
 	
 	if (projectStatus == "销售正式立项" && scm.get("contractType") =="N/A"){
