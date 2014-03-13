@@ -56,7 +56,10 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
         if (ApiUtil.isEmpty(project.get_id())){
             //Add
-             project.setProjectCode(genProjectCode(project.getProjectType(), project.getProjectStatus()));
+        	
+        	if(ApiUtil.isEmpty(project.getProjectCode())){
+        		project.setProjectCode(genProjectCode(project.getProjectType(), project.getProjectStatus()));
+        	}
             
 			if (ApiUtil.isEmpty(project.getProjectStatus())) {
 				project.setProjectStatus(ProjectBean.PROJECT_STATUS_PRE);
