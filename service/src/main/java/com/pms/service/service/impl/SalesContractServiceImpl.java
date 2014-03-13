@@ -128,28 +128,29 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
         Object projectId = params.get(SalesContractBean.SC_PROJECT_ID);
 
-  
-        	   // 如果提交的数据没包含项目，创建项目
-        Project project = (Project) DataUtil.toEntity(projectInfo, Project.class);
-        if(projectId !=null){
-        	project.set_id(projectId.toString());
+
+        if(projectId!=null){
+
+        	mergeCommonProjectInfo(contract, contract.get(SalesContractBean.SC_PROJECT_ID));
         }
-        projectService.addProject(project);
-        projectId = project.get_id();
-        
-
-        contract.put(SalesContractBean.SC_PROJECT_ID, projectId);
-
-
-		String scPId = (String) contract.get(SalesContractBean.SC_PROJECT_ID);
-
-		mergeCommonProjectInfo(contract, contract.get(SalesContractBean.SC_PROJECT_ID));
 		List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
 		eqcostList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
 		boolean isdraft = false;
 
 		Map<String, Object> addedContract = null;
 		if (ApiUtil.isEmpty(_id) || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {// Add
+			
+			// 如果提交的数据没包含项目，创建项目
+	        Project project = (Project) DataUtil.toEntity(projectInfo, Project.class);
+	        if(projectId !=null){
+	        	project.set_id(projectId.toString());
+	        }
+	        projectService.addProject(project);
+	        projectId = project.get_id();
+	        
+
+	        contract.put(SalesContractBean.SC_PROJECT_ID, projectId);
+	        
 			contract.put(SalesContractBean.SC_MODIFY_TIMES, 0);
 			contract.put(SalesContractBean.SC_LAST_TOTAL_AMOUNT, ApiUtil.getDouble(params, SalesContractBean.SC_AMOUNT));
 			String genSCCode = null;
@@ -163,12 +164,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					genSCCode = addedContract.get(SalesContractBean.SC_CODE).toString();
 				} else {
 					
-					genSCCode = genNewSCCode(scPId);
+					genSCCode = genNewSCCode(projectId.toString());
 					contract.put(SalesContractBean.SC_CODE, genSCCode);
 					addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
 				}
 			} else {
-				genSCCode = genNewSCCode(scPId);
+				genSCCode = genNewSCCode(projectId.toString());
 				contract.put(SalesContractBean.SC_CODE, genSCCode);
 
 				// 第一次提交的值
@@ -217,13 +218,15 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				relatedCQuery.put(SalesContractBean.SC_ID, _id);
 
 				updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, SalesContractBean.SC_CUSTOMER_ID, customerNew);
+				
+				// 单独更新关联项目中 冗余存的 customer (因为项目中没有外键关联到 SC ， 所以要单独更新处理)
+				Map<String, Object> pCustomerUpdate = new HashMap<String, Object>();
+				pCustomerUpdate.put(ApiConstants.MONGO_ID, projectId);
+				pCustomerUpdate.put(ProjectBean.PROJECT_CUSTOMER_ID, customerNew);
+				dao.updateById(pCustomerUpdate, DBBean.PROJECT);
 
 			}
-			// 单独更新关联项目中 冗余存的 customer (因为项目中没有外键关联到 SC ， 所以要单独更新处理)
-			Map<String, Object> pCustomerUpdate = new HashMap<String, Object>();
-			pCustomerUpdate.put(ApiConstants.MONGO_ID, projectId);
-			pCustomerUpdate.put(ProjectBean.PROJECT_CUSTOMER_ID, customerNew);
-			dao.updateById(pCustomerUpdate, DBBean.PROJECT);
+		
 
 			dao.updateById(contract, DBBean.SALES_CONTRACT);
 
