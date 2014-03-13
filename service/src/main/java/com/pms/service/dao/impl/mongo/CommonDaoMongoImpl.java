@@ -197,6 +197,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
         //FIXME: HOT FIX BUGS
         map.remove("fields");
         map.remove("_defaultId");
+        mergeDefaultValue(parameters, collection, map);
         return map;
     }
     
@@ -206,6 +207,31 @@ public class CommonDaoMongoImpl implements ICommonDao {
         return DataUtil.toEntity(entity, classzz);
     }
 
+	private void mergeDefaultValue(Map<String, Object> parameters, String collection, Map<String, Object> map) {
+		map.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID).toString());
+
+		if (map.get(ApiConstants.CREATED_ON) != null) {
+			if (map.get(ApiConstants.CREATED_ON) instanceof Long) {
+				long date = (Long) map.get(ApiConstants.CREATED_ON);
+				map.put(ApiConstants.CREATED_ON, new Date(date));
+				Map<String, Object> temp = new HashMap<String, Object>();
+				temp.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID));
+				temp.put(ApiConstants.CREATED_ON, new Date(date));
+				this.updateById(temp, collection);
+			}
+		}
+
+		if (map.get(ApiConstants.UPDATED_ON) != null) {
+			if (map.get(ApiConstants.UPDATED_ON) instanceof Long) {
+				long date = (Long) map.get(ApiConstants.UPDATED_ON);
+				map.put(ApiConstants.UPDATED_ON, new Date(date));
+				Map<String, Object> temp = new HashMap<String, Object>();
+				temp.put(ApiConstants.MONGO_ID, map.get(ApiConstants.MONGO_ID));
+				temp.put(ApiConstants.UPDATED_ON, new Date(date));
+				this.updateById(temp, collection);
+			}
+		}
+	}
 
 
 
@@ -681,6 +707,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
         List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
         while (cursor.hasNext()) {
             Map<String, Object> map = cursor.next().toMap();
+            mergeDefaultValue(parameters, collection, map);
 
             if (mergeToMap) {
                 if (mapKey == null){
@@ -711,6 +738,7 @@ public class CommonDaoMongoImpl implements ICommonDao {
         List<Object> data = new ArrayList<Object>();
         while (cursor.hasNext()) {
             Map<String, Object> map = cursor.next().toMap();
+            mergeDefaultValue(parameters, collection, map);
 
             if (key != null) {
                 if(map.get(key)!=null){
