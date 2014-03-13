@@ -11,7 +11,7 @@ var scModel = kendo.data.Model.define({
 				required : true
 			}
 		},
-		customer:{},
+		customerId:{},
 		archiveStatus : {},
 		runningStatus : {},
 		contractAmount : {},
@@ -331,7 +331,7 @@ $(document).ready(function() {
 		    data: "data"
 		}
 	});
-	$("#customer").kendoDropDownList({
+	$("#customerId").kendoDropDownList({
 		dataTextField : "name",
 		dataValueField : "_id",
         optionLabel: "选择客户...",
@@ -790,8 +790,8 @@ function edit(data){
 	scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
 	kendo.bind($("#editSalesContract"), scm);
 	
-	var customer = $("#customer").data("kendoDropDownList");
-	if(scm.customer){
+	var customer = $("#customerId").data("kendoDropDownList");
+	if(scm.customerId){
 		customer.enable(false);
 	}else{
 		customer.enable(true);
