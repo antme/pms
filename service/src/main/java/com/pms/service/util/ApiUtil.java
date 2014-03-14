@@ -403,7 +403,7 @@ public class ApiUtil {
                 } else {
 					if (floatFields.contains(key)) {
 						Float f = ApiUtil.getFloatParam(data, key);
-						float f1 = (float) (Math.round(f * 100) / 100);
+						float f1 = ((float) Math.round(f * 100)) / 100;
 						data.put(key, f1);
 					}
                 }
