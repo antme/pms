@@ -146,6 +146,7 @@ function projectPopView(data){
 	pModel = new projectModel(data);
 	pModel.projectManagerId = pModel.projectManagerName;
 	pModel.customerId = pModel.customerName;
+	
 	kendo.bind($("#addProject"), pModel);
 	
 	/*$("#scs").kendoTooltip({

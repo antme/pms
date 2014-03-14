@@ -1201,13 +1201,26 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			data.put(ProjectBean.PROJECT_CODE, project.get(ProjectBean.PROJECT_CODE));
 			data.put(ProjectBean.PROJECT_NAME, project.get(ProjectBean.PROJECT_NAME));
 
-			Map<String, Object> pmQuery = new HashMap<String, Object>();
-			pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER_ID));
-			pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.USER_NAME });
+			if (project.get(ProjectBean.PROJECT_MANAGER_ID) != null) {
+				Map<String, Object> pmQuery = new HashMap<String, Object>();
+				pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER_ID));
+				pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.USER_NAME });
 
-			Map<String, Object> pmInfo = this.dao.findOneByQuery(pmQuery, DBBean.USER);
-			if(pmInfo!=null){
-				data.put(ProjectBean.PROJECT_MANAGER_NAME, pmInfo.get(UserBean.USER_NAME));
+				Map<String, Object> pmInfo = this.dao.findOneByQuery(pmQuery, DBBean.USER);
+				if (pmInfo != null) {
+					data.put(ProjectBean.PROJECT_MANAGER_NAME, pmInfo.get(UserBean.USER_NAME));
+				}
+			}
+			
+			if (project.get(ProjectBean.PROJECT_CUSTOMER_ID) != null) {
+				Map<String, Object> customerQuery = new HashMap<String, Object>();
+				customerQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_CUSTOMER_ID));
+				customerQuery.put(ApiConstants.LIMIT_KEYS, new String[] { CustomerBean.NAME });
+
+				Map<String, Object> cuInfo = this.dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
+				if (cuInfo != null) {
+					data.put(ProjectBean.PROJECT_CUSTOMER_NAME, cuInfo.get(CustomerBean.NAME));
+				}
 			}
 
 			String ptype = (String) project.get(ProjectBean.PROJECT_TYPE);
