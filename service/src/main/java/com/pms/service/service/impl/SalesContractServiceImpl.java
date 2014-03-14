@@ -1191,7 +1191,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public void mergeCommonProjectInfo(Map<String, Object> data, Object projectId) {
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
 		projectQuery.put(ApiConstants.MONGO_ID, projectId);
-		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME });
+		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME });
 
 		Map<String, Object> project = this.dao.findOneByQuery(projectQuery, DBBean.PROJECT);
 		if (project != null) {
