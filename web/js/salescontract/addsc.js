@@ -371,6 +371,13 @@ $(document).ready(function() {
 					
 					var eqcostTotalAmount = eqcostAmount*eqcostLastBasePrice;
 					e.model.set("eqcostTotalAmount", eqcostTotalAmount);
+					
+					
+					var i=0; 
+					while(e.model.eqcostTotalAmount != eqcostTotalAmount && i<1000){
+						e.model.set("eqcostTotalAmount", eqcostTotalAmount);
+						i ++;
+					}
 
 					var grid1 = $("#scEqCostList").data("kendoGrid");
 					grid1.refresh();

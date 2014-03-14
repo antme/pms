@@ -281,7 +281,7 @@ var eqCostListDataSourceOld = new kendo.data.DataSource({
 	}
 });
 var oldEqListLoadRefresh = false;
-
+var newEqListLoadRefresh = false;
 $(document).ready(function() {
 	
 	//选项卡
@@ -515,13 +515,15 @@ $(document).ready(function() {
 			resizable: true,
 			sortable : true,
 			dataBound : function(e) {
+
 				moneyOnChange();
 			},
 			save: function(e) {
 			
-				    if(e.values.eqcostTotalAmount || e.values.eqcostLastBasePrice){
+				    if(e.values.eqcostTotalAmount !=undefined || e.values.eqcostLastBasePrice  !=undefined){
 				    	e.preventDefault();				    	
 				    }
+				
 					var oldEqcostTaxType = e.model.eqcostTaxType;
 					var oldTotalAmount = e.model.eqcostTotalAmount;
 					var eqcostBasePrice,eqcostDiscountRate,eqcostAmount = 0;
@@ -547,6 +549,12 @@ $(document).ready(function() {
 					var eqcostTotalAmount = eqcostAmount*eqcostLastBasePrice;
 					e.model.set("eqcostTotalAmount", eqcostTotalAmount);
 					
+					var i=0; 
+					while(e.model.eqcostTotalAmount != eqcostTotalAmount && i<1000){
+						e.model.set("eqcostTotalAmount", eqcostTotalAmount);
+						i ++;
+					}
+				
 					var grid1 = $("#scEqCostListNew").data("kendoGrid");
 					grid1.refresh();
 				
