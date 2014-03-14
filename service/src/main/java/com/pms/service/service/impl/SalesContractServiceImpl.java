@@ -1859,7 +1859,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         
         String scCode = projectCode + "-" + prefix;
         if(sameSCCount > 0){
-            scCode = scCode + "ADD" + sameSCCount;
+            scCode = scCode + "-ADD" + sameSCCount;
         }
         
         return scCode;
