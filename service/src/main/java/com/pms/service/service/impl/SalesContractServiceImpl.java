@@ -115,16 +115,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
             status = contract.get("status").toString();
         }
 
-        Map<String, Object> projectInfo = new HashMap<String, Object>();
-
-        projectInfo.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
-        projectInfo.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
-        projectInfo.put(ProjectBean.PROJECT_MANAGER_ID, params.get(ProjectBean.PROJECT_MANAGER_ID));
-        projectInfo.put(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME));
-        projectInfo.put(ProjectBean.PROJECT_STATUS, params.get(ProjectBean.PROJECT_STATUS));
-        projectInfo.put(ProjectBean.PROJECT_TYPE, params.get(ProjectBean.PROJECT_TYPE));
-        projectInfo.put(ProjectBean.PROJECT_MEMO, params.get(ProjectBean.PROJECT_MEMO));
-        contract.putAll(projectInfo);
 
         Object projectId = params.get(SalesContractBean.SC_PROJECT_ID);
 
@@ -140,6 +130,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> addedContract = null;
 		if (ApiUtil.isEmpty(_id) || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {// Add
 			
+	        Map<String, Object> projectInfo = new HashMap<String, Object>();
+
+	        projectInfo.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
+	        projectInfo.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
+	        projectInfo.put(ProjectBean.PROJECT_MANAGER_ID, params.get(ProjectBean.PROJECT_MANAGER_ID));
+	        projectInfo.put(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME));
+	        projectInfo.put(ProjectBean.PROJECT_STATUS, params.get(ProjectBean.PROJECT_STATUS));
+	        projectInfo.put(ProjectBean.PROJECT_TYPE, params.get(ProjectBean.PROJECT_TYPE));
+	        projectInfo.put(ProjectBean.PROJECT_MEMO, params.get(ProjectBean.PROJECT_MEMO));
+	 
+
 			// 如果提交的数据没包含项目，创建项目
 	        Project project = (Project) DataUtil.toEntity(projectInfo, Project.class);
 	        if(projectId !=null){

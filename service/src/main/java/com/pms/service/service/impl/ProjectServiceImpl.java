@@ -38,7 +38,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	public Map<String, Object> listProjects(Map<String, Object> params) {
 
 		String[] limitKeys = new String[] {ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CUSTOMER_ID,
-				ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_ABBR};
+				ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_ABBR, "signBy"};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		
 	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_CUSTOMER_NAME, CustomerBean.NAME,  DBBean.CUSTOMER);
@@ -150,10 +150,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
 			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmid);
 			if(ApiUtil.isEmpty(pmInfo)){
-				p.put(ProjectBean.PROJECT_MANAGER_ID, "N/A");
+				p.put(ProjectBean.PROJECT_MANAGER_NAME, "N/A");
 				p.put(UserBean.DEPARTMENT, "N/A");
 			}else{
-				p.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(UserBean.USER_NAME));
+				p.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(ApiConstants.MONGO_ID));
+				p.put(ProjectBean.PROJECT_MANAGER_NAME, pmInfo.get(UserBean.USER_NAME));
+
 				p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
 			}
 			
@@ -161,10 +163,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
 			p.put("cId", customerId);
 			Map<String, Object> customerInfo = (Map<String, Object>) cusData.get(customerId);
-			if(ApiUtil.isEmpty(pmInfo)){
-				p.put(ProjectBean.PROJECT_CUSTOMER_ID, "N/A");
+			if(ApiUtil.isEmpty(customerInfo)){
+				p.put(ProjectBean.PROJECT_CUSTOMER_NAME, "N/A");
 			}else{
-				p.put(ProjectBean.PROJECT_CUSTOMER_ID, pmInfo.get(UserBean.USER_NAME));
+				p.put(ProjectBean.PROJECT_CUSTOMER_ID, customerInfo.get(ApiConstants.MONGO_ID));
+				p.put(ProjectBean.PROJECT_CUSTOMER_NAME, customerInfo.get(CustomerBean.NAME));
+
 			}
 			
 		}

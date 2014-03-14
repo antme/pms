@@ -38,6 +38,15 @@
 					<input type="text" class="k-input k-textbox" name="projectName" id="projectName"
 						required="required" validationMessage="必填" data-bind="value: projectName" style="width:350px;">
 				</div>
+				
+				<div class="k-edit-label ">
+					<label for="signBy">立项人</label>
+				</div>
+				<div data-container-for="signBy" class="k-edit-field ">
+					<input type="text" class="k-input k-textbox" name="signBy" id="signBy"
+						 data-bind="value: signBy" readonly>
+				</div>
+				
 				<div class="k-edit-label ">
 					<label for="projectAbbr">项目缩写</label>
 				</div>

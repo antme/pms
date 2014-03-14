@@ -109,6 +109,9 @@ $(document).ready(function() {
 		},{
 			field : "customerName",
 			title : "客户名"
+		},{
+			field : "signBy",
+			title : "立项人"
 		}]
 	});
 });//end dom ready	

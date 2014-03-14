@@ -1073,7 +1073,6 @@ function saveSC(){
 			scm.contractType = scm.contractType.value;
 		}
 		
-		
 		scm.set("status", "已提交");
 		postAjaxRequest("/service/sc/add",  {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
