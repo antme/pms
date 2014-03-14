@@ -226,7 +226,7 @@ public abstract class AbstractController {
         }
 
         if (data != null && data instanceof Map) {
-            ApiUtil.updateDataValue(data);
+            ApiUtil.updateDataFloatValue(data);
         }
         response.setContentType("text/plain;charset=UTF-8");
         response.addHeader("Accept-Encoding", "gzip, deflate");

@@ -360,7 +360,7 @@ public class ApiUtil {
     
     
 
-    public static void updateDataValue(Map<String, Object> data) {
+    public static void updateDataFloatValue(Map<String, Object> data) {
         List<String> floatFields = new ArrayList<String>();
         floatFields.add("qualityMoney");
         floatFields.add("contractAmount");
@@ -391,22 +391,21 @@ public class ApiUtil {
             for (String key : data.keySet()) {
 
                 if (data.get(key) instanceof Map) {
-                    updateDataValue((Map<String, Object>) data.get(key));
+                    updateDataFloatValue((Map<String, Object>) data.get(key));
                 } else if (data.get(key) instanceof List) {
                     List<Object> objects = (List<Object>) data.get(key);
                     for(Object obj: objects){
                         if(obj instanceof Map){
-                            updateDataValue((Map<String, Object>)obj);
+                            updateDataFloatValue((Map<String, Object>)obj);
                         }
                     }
 
                 } else {
-                    if (floatFields.contains(key)) {
-                        Float f = ApiUtil.getFloatParam(data, key);
-                        BigDecimal b = new BigDecimal(f);
-                        float f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                        data.put(key, f1);
-                    }
+					if (floatFields.contains(key)) {
+						Float f = ApiUtil.getFloatParam(data, key);
+						float f1 = (float) (Math.round(f * 100) / 100);
+						data.put(key, f1);
+					}
                 }
             }
 

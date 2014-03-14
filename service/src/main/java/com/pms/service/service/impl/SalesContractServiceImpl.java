@@ -107,7 +107,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		String _id = (String) params.get(ApiConstants.MONGO_ID);
 
 		Map<String, Object> contract = params;
-		ApiUtil.updateDataValue(contract);
+		ApiUtil.updateDataFloatValue(contract);
 
         String status = SalesContractBean.SC_STATUS_SUBMITED;
 
