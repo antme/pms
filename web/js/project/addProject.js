@@ -76,7 +76,7 @@ $(document).ready(function() {
 			
 			$("#projectStatus").data("kendoDropDownList").setDataSource(proStatusItems);
 		}else{
-			postAjaxRequest("/service/project/getandmergescinfo", popupParams, popView);
+			postAjaxRequest("/service/project/getandmergescinfo", popupParams, projectPopView);
 			disableAllInPoppup();
 		}
 	}else{
@@ -131,7 +131,7 @@ $(document).ready(function() {
 			});
 		}
 		if (redirectParams) {//Edit
-			postAjaxRequest("/service/project/get", redirectParams, edit);
+			postAjaxRequest("/service/project/get", redirectParams, editProject);
 		} else {//Add
 			//添加表单绑定一个空的 Model
 			pModel = new projectModel();
@@ -142,8 +142,10 @@ $(document).ready(function() {
 	
 });//end dom ready
 
-function popView(data){
+function projectPopView(data){
 	pModel = new projectModel(data);
+	pModel.projectManagerId = pModel.projectManagerName;
+	pModel.customerId = pModel.customerName;
 	kendo.bind($("#addProject"), pModel);
 	
 	/*$("#scs").kendoTooltip({
@@ -178,7 +180,7 @@ function popView(data){
 	}//关联合同
 }
 
-function edit(data){
+function editProject(data){
 	var pStatus = $("#projectStatus").data("kendoDropDownList");
 
 	if(data){
@@ -218,7 +220,7 @@ function disableForm(){
 	}
 	var pStatus = $("#projectStatus").data("kendoDropDownList");
 
-	if(pStatus){
+	if(pStatus  && pModel.projectStatus=="销售正式立项"){
 		pStatus.enable(false);
 	}
 	

@@ -344,33 +344,23 @@ $(document).ready(function() {
 				moneyOnChange_ADD();
 			},
 			save: function(e) {
-				if (excuSave) {
-					var updateCount = false;
-					if(e.values.eqcostLastBasePrice || e.values.eqcostTotalAmount){	
-						excuSave = true;
-						if(updateCount){
-							updateCount = false;
-						}else{
-							e.preventDefault();
-							return false;
-						}
-					}
-			
-					excuSave = false;
+				    if(e.values.eqcostTotalAmount || e.values.eqcostLastBasePrice){
+				    	e.preventDefault();				    	
+				    }
 					var oldEqcostTaxType = e.model.eqcostTaxType;
 					var oldTotalAmount = e.model.eqcostTotalAmount;
 					var eqcostBasePrice,eqcostDiscountRate,eqcostAmount = 0;
-					if (e.values.eqcostBasePrice) {
+					if (e.values.eqcostBasePrice  != undefined) {
 						eqcostBasePrice = e.values.eqcostBasePrice;
 					} else {
 						eqcostBasePrice = e.model.eqcostBasePrice;
 					}
-					if (e.values.eqcostDiscountRate) {
+					if (e.values.eqcostDiscountRate  != undefined) {
 						eqcostDiscountRate = e.values.eqcostDiscountRate;
 					} else {
 						eqcostDiscountRate = e.model.eqcostDiscountRate;
 					}
-					if (e.values.eqcostAmount) {
+					if (e.values.eqcostAmount != undefined) {
 						eqcostAmount = e.values.eqcostAmount;
 					} else {
 						eqcostAmount = e.model.eqcostAmount;
@@ -381,14 +371,11 @@ $(document).ready(function() {
 					
 					var eqcostTotalAmount = eqcostAmount*eqcostLastBasePrice;
 					e.model.set("eqcostTotalAmount", eqcostTotalAmount);
-					updateCount = true;
 
 					var grid1 = $("#scEqCostList").data("kendoGrid");
 					grid1.refresh();
 					
-
-					excuSave = true;
-				}
+				
 			}
 		});
 	}//成本设备清单

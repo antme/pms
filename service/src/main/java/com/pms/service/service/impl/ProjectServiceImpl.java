@@ -395,6 +395,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			Map<String, Object> params) {
 		String id = (String) params.get(ApiConstants.MONGO_ID);
 		Map<String, Object> p = dao.findOne(ApiConstants.MONGO_ID, id, DBBean.PROJECT);
+		mergePMandCustomerInfo(p);
 		Map<String, Object> scQuery = new HashMap<String, Object>();
 		scQuery.put(ProjectBean.PROJECT_ID, p.get(ApiConstants.MONGO_ID));
 		scQuery.put(ApiConstants.LIMIT_KEYS, new String[] {SalesContractBean.SC_CODE, SalesContractBean.SC_PERSON, SalesContractBean.SC_DATE,

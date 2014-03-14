@@ -49,7 +49,10 @@ var scModel = kendo.data.Model.define({
 		estimateGrossProfit : {},
 		estimateGrossProfitRate : {},
 		addNewEqCostReason : {},
-		addNewEqCostMemo : {}
+		addNewEqCostMemo : {},
+		eqcostTotalAmount : {
+			editable : false
+		}
 	}
 });
 var scm;
@@ -490,7 +493,9 @@ $(document).ready(function() {
 				footerTemplate: "#=sum.toFixed(2)#",			
 				template : function(dataItem){
 					return dataItem.eqcostTotalAmount.toFixed(2);
-				}
+				},
+
+				editable: false
 			}, {
 				field : "eqcostTaxType",
 				title : "税收类型"
@@ -513,33 +518,24 @@ $(document).ready(function() {
 				moneyOnChange();
 			},
 			save: function(e) {
-				if (excuSave) {
-					var updateCount = false;
-					if(e.values.eqcostLastBasePrice || e.values.eqcostTotalAmount){	
-						excuSave = true;
-						if(updateCount){
-							updateCount = false;
-						}else{
-							e.preventDefault();
-							return false;
-						}
-					}
 			
-					excuSave = false;
+				    if(e.values.eqcostTotalAmount || e.values.eqcostLastBasePrice){
+				    	e.preventDefault();				    	
+				    }
 					var oldEqcostTaxType = e.model.eqcostTaxType;
 					var oldTotalAmount = e.model.eqcostTotalAmount;
 					var eqcostBasePrice,eqcostDiscountRate,eqcostAmount = 0;
-					if (e.values.eqcostBasePrice) {
+					if (e.values.eqcostBasePrice !=undefined) {
 						eqcostBasePrice = e.values.eqcostBasePrice;
 					} else {
 						eqcostBasePrice = e.model.eqcostBasePrice;
 					}
-					if (e.values.eqcostDiscountRate) {
+					if (e.values.eqcostDiscountRate  !=undefined) {
 						eqcostDiscountRate = e.values.eqcostDiscountRate;
 					} else {
 						eqcostDiscountRate = e.model.eqcostDiscountRate;
 					}
-					if (e.values.eqcostAmount) {
+					if (e.values.eqcostAmount !=undefined) {
 						eqcostAmount = e.values.eqcostAmount;
 					} else {
 						eqcostAmount = e.model.eqcostAmount;
@@ -550,12 +546,10 @@ $(document).ready(function() {
 					
 					var eqcostTotalAmount = eqcostAmount*eqcostLastBasePrice;
 					e.model.set("eqcostTotalAmount", eqcostTotalAmount);
-					updateCount = true;
 					
 					var grid1 = $("#scEqCostListNew").data("kendoGrid");
 					grid1.refresh();
-					excuSave = true;
-				}
+				
 			}
 		});
 	}//成本设备清单_new
@@ -675,7 +669,7 @@ function edit(data){
 				footerTemplate: "#=sum.toFixed(2)#",
 				template : function(dataItem){
 					return dataItem.eqcostTotalAmount.toFixed(2);
-				}
+				},
 			}, {
 				field : "eqcostTaxType",
 				title : "税收类型"
