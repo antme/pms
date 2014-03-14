@@ -379,6 +379,12 @@ $(document).ready(function() {
 						i ++;
 					}
 
+					i=0; 
+					while(e.model.eqcostLastBasePrice != eqcostLastBasePrice && i<1000){
+						e.model.set("eqcostLastBasePrice", eqcostLastBasePrice);
+						i ++;
+					}
+					
 					var grid1 = $("#scEqCostList").data("kendoGrid");
 					grid1.refresh();
 					

@@ -554,6 +554,14 @@ $(document).ready(function() {
 						e.model.set("eqcostTotalAmount", eqcostTotalAmount);
 						i ++;
 					}
+					
+					
+					i=0; 
+					while(e.model.eqcostLastBasePrice != eqcostLastBasePrice && i<1000){
+						e.model.set("eqcostLastBasePrice", eqcostLastBasePrice);
+						i ++;
+					}
+				
 				
 					var grid1 = $("#scEqCostListNew").data("kendoGrid");
 					grid1.refresh();
