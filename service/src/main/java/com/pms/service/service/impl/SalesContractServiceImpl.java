@@ -128,7 +128,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		boolean isdraft = false;
 
 		Map<String, Object> addedContract = null;
-		if (ApiUtil.isEmpty(_id) || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {// Add
+		if (ApiUtil.isEmpty(_id) || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {
+			
+			
+			// 草稿和新的销售合同Add
 			
 	        Map<String, Object> projectInfo = new HashMap<String, Object>();
 
@@ -366,16 +369,24 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 			} else {
 				String eqcostCode = genEqcostListCode(scCode, nextVersionNo);
-				realItem.put(EqCostListBean.EQ_LIST_CODE, eqcostCode);
 
-				float applyAmount = ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_AMOUNT);
-				float totalAmount = applyAmount + ApiUtil.getFloatParam(realItem, EqCostListBean.EQ_LIST_REAL_AMOUNT);
-				// (int)Float.parseFloat(realItem.get(EqCostListBean.EQ_LIST_REAL_AMOUNT).toString());
-				realItem.put(EqCostListBean.EQ_LIST_AMOUNT, totalAmount);
-				realItem.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, totalAmount);
-				realItem.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, totalAmount);
-				item.put(ApiConstants.MONGO_ID, realItem.get(ApiConstants.MONGO_ID));
-				this.dao.updateById(realItem, DBBean.EQ_COST);
+				if (ApiUtil.isEmpty(item.get(ApiConstants.MONGO_ID))) {
+					realItem.put(EqCostListBean.EQ_LIST_CODE, eqcostCode);
+
+					float applyAmount = ApiUtil.getFloatParam(item, EqCostListBean.EQ_LIST_AMOUNT);
+					float totalAmount = applyAmount + ApiUtil.getFloatParam(realItem, EqCostListBean.EQ_LIST_REAL_AMOUNT);
+					// (int)Float.parseFloat(realItem.get(EqCostListBean.EQ_LIST_REAL_AMOUNT).toString());
+					realItem.put(EqCostListBean.EQ_LIST_AMOUNT, totalAmount);
+					realItem.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, totalAmount);
+					realItem.put(EqCostListBean.EQ_LIST_LEFT_AMOUNT, totalAmount);
+					item.put(ApiConstants.MONGO_ID, realItem.get(ApiConstants.MONGO_ID));
+					this.dao.updateById(realItem, DBBean.EQ_COST);
+				}else{
+					this.dao.deleteByQuery(realItemQuery, DBBean.EQ_COST);
+					item.put(EqCostListBean.EQ_LIST_CODE, eqcostCode);
+					this.dao.add(item, DBBean.EQ_COST);
+
+				}
 			}
 
 			if (!isdraft) {
