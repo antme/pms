@@ -61,7 +61,7 @@ public class SalesContractController extends AbstractController {
      * @param response
      */
     @RequestMapping("/add")
-    @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
+    @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_MANAGEMENT, desc = RoleValidConstants.SALES_CONTRACT_MANAGEMENT_DESC)
 	public void addSC(HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> params = parserJsonParameters(request, false);

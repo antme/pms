@@ -67,7 +67,7 @@ public class ProjectController extends AbstractController {
      * @param response
      */
     @RequestMapping("/add")
-    @RoleValidate(roleID=RoleValidConstants.PROJECT_ADD, desc = RoleValidConstants.PROJECT_ADD_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PROJECT_MANAGEMENT, desc = RoleValidConstants.PROJECT_MANAGEMENT_DESC)
     public void addProject(HttpServletRequest request, HttpServletResponse response) {
         updateProject(request, response);
     }

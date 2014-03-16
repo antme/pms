@@ -57,12 +57,7 @@ public class RoleValidConstants {
     
     public static final String PROJECT_MANAGEMENT = "project_management";
     public static final String PROJECT_MANAGEMENT_DESC = "项目管理";
-    
-    public static final String PROJECT_ADD = "project_add";
-    public static final String PROJECT_ADD_DESC = "新建项目";
-    
-    public static final String PROJECT_UPDATE = "project_update";
-    public static final String PROJECT_UPDATE_DESC = "项目修改";
+
     
     public static final String SHIP_MANAGEMENT = "ship_management";
     public static final String SHIP_MANAGEMENT_DESC = "发货管理";
@@ -86,22 +81,16 @@ public class RoleValidConstants {
         
     public static final String REPOSITORY_MANAGEMENT_PROCESS = "repository_management_process";
     public static final String REPOSITORY_MANAGEMENT_PROCESS_DESC = "入库确认";
-    
-    public static final String REPOSITORY_OUT_MANAGEMENT = "repository_out_management";
-    public static final String REPOSITORY_OUT_MANAGEMENT_DESC = "出库管理";
+
         
     public static final String REPOSITORY_OUT_MANAGEMENT_PROCESS = "repository_out_management_process";
-    public static final String REPOSITORY_OUT_MANAGEMENT_PROCESS_DESC = "出库确认";
+    public static final String REPOSITORY_OUT_MANAGEMENT_PROCESS_DESC = "虚拟出入库确认";
     
 
     public static final String SALES_CONTRACT_MANAGEMENT = "salse_contract_management";
     public static final String SALES_CONTRACT_MANAGEMENT_DESC = "销售合同管理";
 
-    public static final String SALES_CONTRACT_ADD = "salse_contract_add";
-    public static final String SALES_CONTRACT_ADD_DESC = "新建销售合同";
-    
-    public static final String SALES_CONTRACT_UPDATE = "salse_contract_update";
-    public static final String SALES_CONTRACT_UPDATE_DESC = "编辑销售合同";
+ 
     
     public static final String FINANCE_MANAGEMENT = "finance_management";
     public static final String FINANCE_MANAGEMENT_DESC = "财务管理";
