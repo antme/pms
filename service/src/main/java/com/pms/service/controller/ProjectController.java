@@ -78,7 +78,7 @@ public class ProjectController extends AbstractController {
      * @param response
      */
     @RequestMapping("/update")
-    @RoleValidate(roleID=RoleValidConstants.PROJECT_UPDATE, desc = RoleValidConstants.PROJECT_UPDATE_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PROJECT_MANAGEMENT, desc = RoleValidConstants.PROJECT_MANAGEMENT_DESC)
     public void updateProject(HttpServletRequest request, HttpServletResponse response) {
         Project params = (Project) parserParametersToEntity(request, false, Project.class);
         projectService.addProject(params);
@@ -104,7 +104,7 @@ public class ProjectController extends AbstractController {
      * @param response
      */
     @RequestMapping("/setup")
-    @RoleValidate(roleID=RoleValidConstants.PROJECT_UPDATE, desc = RoleValidConstants.PROJECT_UPDATE_DESC)
+    @RoleValidate(roleID=RoleValidConstants.PROJECT_MANAGEMENT, desc = RoleValidConstants.PROJECT_MANAGEMENT_DESC)
     public void setupProject(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(projectService.setupProject(params), request, response);

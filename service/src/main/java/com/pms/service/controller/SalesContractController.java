@@ -82,7 +82,7 @@ public class SalesContractController extends AbstractController {
      * @param response
      */
     @RequestMapping("/update")
-    @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_UPDATE, desc = RoleValidConstants.SALES_CONTRACT_UPDATE_DESC)
+    @RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_MANAGEMENT, desc = RoleValidConstants.PROJECT_MANAGEMENT_DESC)
     public void updateSC(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(salesContractService.addSC(params), request, response);
