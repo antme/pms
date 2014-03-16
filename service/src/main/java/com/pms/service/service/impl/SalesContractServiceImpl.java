@@ -86,7 +86,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_NAME, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME, DBBean.USER);
 		mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
 		mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
-		mergeRefSearchQuery(params, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS, DBBean.PROJECT);
+		if(params.get(ProjectBean.PROJECT_STATUS) == null){
+		    params.put(ProjectBean.PROJECT_STATUS, "销售正式立项");
+		    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS, DBBean.PROJECT);
+		}else{
+		    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS, DBBean.PROJECT);
+		}
 		
 
 		mergeDataRoleQueryWithProjectAndScType(params);
@@ -157,27 +162,26 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	        if(projectId!=null){
 	            mergeCommonProjectInfo(contract, projectId);
 	        }
-	        contract.put(SalesContractBean.SC_PROJECT_ID, projectId);
 	        
+	        contract.put(SalesContractBean.SC_PROJECT_ID, projectId);
 			contract.put(SalesContractBean.SC_MODIFY_TIMES, 0);
 			contract.put(SalesContractBean.SC_LAST_TOTAL_AMOUNT, ApiUtil.getDouble(params, SalesContractBean.SC_AMOUNT));
-			String genSCCode = null;
+			String genSCCode = genNewSCCode(projectId.toString());
 
 			if (status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {
 				isdraft = true;
 				// 继续编辑草稿
 				if (!ApiUtil.isEmpty(_id)) {
 					contract.put(ApiConstants.MONGO_ID, _id);
-					addedContract = dao.updateById(contract, DBBean.SALES_CONTRACT);
-					genSCCode = addedContract.get(SalesContractBean.SC_CODE).toString();
-				} else {
+					genSCCode = contract.get(SalesContractBean.SC_CODE).toString();
 					
-					genSCCode = genNewSCCode(projectId.toString());
+					updateContractCodeSuffix(contract);
+					addedContract = dao.updateById(contract, DBBean.SALES_CONTRACT);
+				} else {					
 					contract.put(SalesContractBean.SC_CODE, genSCCode);
 					addedContract = dao.add(contract, DBBean.SALES_CONTRACT);
 				}
 			} else {
-				genSCCode = genNewSCCode(projectId.toString());
 				contract.put(SalesContractBean.SC_CODE, genSCCode);
 
 				// 第一次提交的值
@@ -238,7 +242,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 			}
 		
-
+			updateContractCodeSuffix(contract);
 			dao.updateById(contract, DBBean.SALES_CONTRACT);
 
 			// 添加成本设备清单记录
@@ -250,6 +254,24 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			return contract;
 		}
 	}
+	
+	
+    private void updateContractCodeSuffix(Map<String, Object> contract) {
+
+        String projectId = contract.get(SalesContractBean.SC_PROJECT_ID).toString();
+
+        String suffix = getScSuffix(projectId.toString());
+
+        String scCode = contract.get(SalesContractBean.SC_CODE).toString();
+
+        scCode = scCode.replaceAll("-QT", "-" + suffix);
+        scCode = scCode.replaceAll("-FW", "-" + suffix);
+        scCode = scCode.replaceAll("-XS", "-" + suffix);
+        scCode = scCode.replaceAll("-GC", "-" + suffix);
+        
+        contract.put(SalesContractBean.SC_CODE, scCode);
+
+    }
 	
 	public Map<String, Object> addSCAndProject(Project project, SalesContract contract, List<EqCost> costList){
  
@@ -1861,14 +1883,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	    
 	    String projectType  = (String)project.get(ProjectBean.PROJECT_TYPE);
 	    String projectCode  = (String)project.get(ProjectBean.PROJECT_CODE);
-	    String prefix = "QT";
-	    if(projectType.contains("服务")){
-	        prefix = "FW";
-	    }else if(projectType.contains("产品")){
-	        prefix = "XS";
-        }else if(projectType.contains("工程")){
-            prefix = "GC";
-        }
+	    
+	    String prefix = getScSuffix(projectType);
         
         // 草稿的销售合同项目编号可能为空
         Map<String, Object> scQuery = new HashMap<String, Object>();
@@ -1884,6 +1900,30 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         
         
 	}
+
+
+
+    public String getScSuffix(String pId) {
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ApiConstants.MONGO_ID, pId);
+        query.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_TYPE});
+        
+        Map<String, Object> project = this.dao.findOneByQuery(query, DBBean.PROJECT);
+        
+        String projectType  = (String)project.get(ProjectBean.PROJECT_TYPE);
+        
+        String prefix = "QT";
+	    if(projectType.contains("服务")){
+	        prefix = "FW";
+	    }else if(projectType.contains("产品")){
+	        prefix = "XS";
+        }else if(projectType.contains("工程")){
+            prefix = "GC";
+        }
+        return prefix;
+    }
+    
+    
 	
 	@Deprecated
 	private String genSCCode(String pId) {

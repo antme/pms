@@ -305,17 +305,21 @@ public abstract class AbstractService {
      */
     protected void mergeRefSearchQuery(Map<String, Object> params, String myRealQueryKey, String mySearchDataKey, String refSearchKey, String db) {
         if (params.get(mySearchDataKey) != null && !ApiUtil.isEmpty(params)) {
-            
+            Map<String, Object> refQuery = new HashMap<String, Object>();
+            refQuery.put(ApiConstants.LIMIT_KEYS, ApiConstants.MONGO_ID);
+
             if (params.get(mySearchDataKey) instanceof DBQuery) {
                 DBQuery query = (DBQuery) params.get(mySearchDataKey);
 
-                Map<String, Object> refQuery = new HashMap<String, Object>();
-                refQuery.put(ApiConstants.LIMIT_KEYS, ApiConstants.MONGO_ID);
                 refQuery.put(refSearchKey, new DBQuery(query.getOperation(), query.getValue()));
 
-                params.remove(mySearchDataKey);
-                params.put(myRealQueryKey, new DBQuery(DBQueryOpertion.IN, this.dao.listLimitKeyValues(refQuery, db)));
+            } else {
+                refQuery.put(refSearchKey, new DBQuery(DBQueryOpertion.LIKE, params.get(mySearchDataKey)));
+
             }
+
+            params.remove(mySearchDataKey);
+            params.put(myRealQueryKey, new DBQuery(DBQueryOpertion.IN, this.dao.listLimitKeyValues(refQuery, db)));
         }
     }
     
