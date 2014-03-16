@@ -92,14 +92,14 @@ $(document).ready(function() {
 				}
 			});
 		}
-		if($("#projectType").length > 0){
-			$("#projectType").kendoDropDownList({
-				dataTextField : "text",
-				dataValueField : "text",
-				optionLabel : "选择立项类别...",
-				dataSource : proCategoryItems
-			});
-		}
+//		if($("#projectType").length > 0){
+//			$("#projectType").kendoDropDownList({
+//				dataTextField : "text",
+//				dataValueField : "text",
+//				optionLabel : "选择立项类别...",
+//				dataSource : proCategoryItems
+//			});
+//		}
 
 		if($("#projectManagerId").length > 0){
 			$("#projectManagerId").kendoDropDownList({
@@ -209,11 +209,11 @@ function disableForm(){
 	$("#projectCode").attr("disabled",true);
 	$("#projectName").attr("disabled",true);
 	$("#projectAbbr").attr("disabled",true);
-	
-	var pTypeList = $("#projectType").data("kendoDropDownList");
-	if(pTypeList){
-		pTypeList.enable(false);
-	}
+
+//	var pTypeList = $("#projectType").data("kendoDropDownList");
+//	if(pTypeList){
+//		pTypeList.enable(false);
+//	}
 	var pManager = $("#projectManagerId").data("kendoDropDownList");
 	
 	if(pManager){

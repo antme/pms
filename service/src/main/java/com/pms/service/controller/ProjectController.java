@@ -27,24 +27,7 @@ public class ProjectController extends AbstractController {
 	private static Logger logger = LogManager.getLogger(ProjectController.class);
 
     private IProjectService projectService;
-    
-    @RequestMapping("/test")
-    public void test(HttpServletRequest request, HttpServletResponse response) {
-//    	String data = "[{\"_id\":\"51a41a1affcbd28dcc2bada4\",\"customerName\":\"dfgh\",\"purchaseAmount\":\"65\",\"projectStatus\":\"dfgh\",\"projectCode\":\"9078567\",\"description\":\"\",\"invoiceAmount\":\"34\",\"totalAmount\":\"456\",\"projectManager\":\"dfgh\",\"projectType\":\"dfgh\",\"projectName\":\"rfhdf\",\"getAmount\":\"456\",\"createdOn\":1369709082301,\"updatedOn\":1369709082301},{\"_id\":\"51a41a0cffcbd28dcc2bada3\",\"customerName\":\"ertyer\",\"purchaseAmount\":\"456\",\"projectStatus\":\"dfg\",\"projectCode\":\"2452345\",\"description\":\"\",\"invoiceAmount\":\"345\",\"totalAmount\":\"345634\",\"projectManager\":\"sryh\",\"projectType\":\"sdfg\",\"projectName\":\"dfhdft\",\"getAmount\":\"456\",\"createdOn\":1369709068214,\"updatedOn\":1369709068214}]";
-//    	data = data + "";
-    	String data="{\"d\" : {\"results\": [{\"name\":\"shihua\",\"age\":22},{\"name\":\"shihua\",\"age\":22},{\"name\":\"shihua\",\"age\":22}], \"__count\": \"3\"}}";
-    	String callback = request.getParameter("$callback");
-    	String jsonReturn=callback + "(" + data + ")";
-        response.setContentType("text/plain;charset=UTF-8");
-        response.setContentType("application/x-javascript;charset=UTF-8");
-        response.addHeader("Accept-Encoding", "gzip, deflate");
-        try {
-            response.getWriter().write(jsonReturn);
-        } catch (IOException e) {
-            logger.fatal("Write response data to client failed!", e);
-        }
-    }
-    
+
     @RequestMapping("/list")
     public void listProjects(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
@@ -105,7 +88,6 @@ public class ProjectController extends AbstractController {
     @RequestMapping("/get")
     public void getProjectById(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        String id = (String) params.get(ApiConstants.MONGO_ID);
         responseWithData(projectService.getProjectById(params), request, response);
     }
     

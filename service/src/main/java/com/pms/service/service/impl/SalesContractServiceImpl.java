@@ -86,6 +86,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_NAME, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME, DBBean.USER);
 		mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
 		mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
+		mergeRefSearchQuery(params, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS, DBBean.PROJECT);
+		
 
 		mergeDataRoleQueryWithProjectAndScType(params);
 		if (ApiThreadLocal.getMyTask() != null) {
@@ -108,7 +110,13 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		Map<String, Object> contract = params;
 		ApiUtil.updateDataFloatValue(contract);
+		contract.remove("scGotMoneyInfo");	
+	    contract.remove("scInvoiceInfo");
+	    contract.remove("monthMoneyList");
+	    contract.remove("scMonthShipmentsInfo");
+	    contract.remove("scYearShipmentsInfo");
 
+		
         String status = SalesContractBean.SC_STATUS_SUBMITED;
 
         if (contract.get("status") != null) {
@@ -118,19 +126,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
         Object projectId = params.get(SalesContractBean.SC_PROJECT_ID);
 
-
-        if(projectId!=null){
-
-        	mergeCommonProjectInfo(contract, contract.get(SalesContractBean.SC_PROJECT_ID));
-        }
 		List<Map<String, Object>> eqcostList = new ArrayList<Map<String, Object>>();
 		eqcostList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
 		boolean isdraft = false;
 
 		Map<String, Object> addedContract = null;
-		if (ApiUtil.isEmpty(_id) || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {
-			
-			
+		if (ApiUtil.isEmpty(_id) || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {						
 			// 草稿和新的销售合同Add
 			
 	        Map<String, Object> projectInfo = new HashMap<String, Object>();
@@ -138,6 +139,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	        projectInfo.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
 	        projectInfo.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
 	        projectInfo.put(ProjectBean.PROJECT_MANAGER_ID, params.get(ProjectBean.PROJECT_MANAGER_ID));
+	        projectInfo.put(ProjectBean.PROJECT_CUSTOMER_ID, params.get(ProjectBean.PROJECT_CUSTOMER_ID));
 	        projectInfo.put(ProjectBean.PROJECT_NAME, params.get(ProjectBean.PROJECT_NAME));
 	        projectInfo.put(ProjectBean.PROJECT_STATUS, params.get(ProjectBean.PROJECT_STATUS));
 	        projectInfo.put(ProjectBean.PROJECT_TYPE, params.get(ProjectBean.PROJECT_TYPE));
@@ -152,7 +154,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	        projectService.addProject(project);
 	        projectId = project.get_id();
 	        
-
+	        if(projectId!=null){
+	            mergeCommonProjectInfo(contract, projectId);
+	        }
 	        contract.put(SalesContractBean.SC_PROJECT_ID, projectId);
 	        
 			contract.put(SalesContractBean.SC_MODIFY_TIMES, 0);
@@ -201,6 +205,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 			return addedContract;
 		} else {// Update
+		    if(projectId!=null){
+                mergeCommonProjectInfo(contract, projectId);
+            }
 			contract.put(ApiConstants.MONGO_ID, _id);
 			contract.put(SalesContractBean.SC_CODE, params.get(SalesContractBean.SC_CODE));
 

@@ -144,6 +144,24 @@ $(document).ready(function() {
 		}
 	});
 	
+	$("#scStatusButton").kendoDropDownList({
+		dataTextField : "text",
+		dataValueField : "value",
+        optionLabel: "选择立项状态",
+		dataSource : proStatusItems,
+		select:function(e){
+			var dataItem = this.dataItem(e.item.index());
+			var grid = $("#grid").data("kendoGrid");
+			if(dataItem.text!="选择立项状态"){
+				dataSource.read({projectStatus:dataItem.text});
+			}else{
+				dataSource.read();
+			}
+		}
+	});
+	
+	
+	
 	$("#runningStatusButton").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",

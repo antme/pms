@@ -202,26 +202,31 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	}
 
     @Override
-	public Map<String, Object> getProjectById(Map<String, Object> params) {
+    public Map<String, Object> getProjectById(Map<String, Object> params) {
 
-		Map<String, Object> project = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PROJECT);
+        Map<String, Object> project = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PROJECT);
 
-		if (params.get("isScDraft") != null) {
-			Map<String, Object> query = new HashMap<String, Object>();
-			query.put("status", SalesContractBean.SC_STATUS_DRAFT);
-			query.put(SalesContractBean.SC_PROJECT_ID, params.get(ApiConstants.MONGO_ID));
-			Map<String, Object> result = this.dao.findOneByQuery(query, DBBean.SALES_CONTRACT);
+        if (params.get("isScDraft") != null) {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put("status", SalesContractBean.SC_STATUS_DRAFT);
+            query.put(SalesContractBean.SC_PROJECT_ID, params.get(ApiConstants.MONGO_ID));
+            Map<String, Object> result = this.dao.findOneByQuery(query, DBBean.SALES_CONTRACT);
 
-			if (result != null) {
-				result = scs.getSC(result);
+            if (result != null) {
+                result = scs.getSC(result);
 
-				project.putAll(result);
-			}
-		}
+                // 项目信息覆盖
+                result.putAll(project);
+                result.put(ProjectBean.PROJECT_ID, project.get(ApiConstants.MONGO_ID));
+                result.put(SalesContractBean.SC_ID, result.get(ApiConstants.MONGO_ID));
+                return result;
+            }
+        }
+        
+        project.put(ProjectBean.PROJECT_ID, project.get(ApiConstants.MONGO_ID));
+        return project;
 
-		return project;
-
-	}
+    }
 
 	/**
 	 * 预立项 转 正式立项：

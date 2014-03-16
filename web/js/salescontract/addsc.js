@@ -110,7 +110,6 @@ var validateProject = false;
 $(document).ready(function() {
 	scm = new scModel();
 	//选项卡
-	
 	if (!tabs){
 		tabs = $("#tabstrip").kendoTabStrip({
 	        animation:  {
@@ -129,9 +128,23 @@ $(document).ready(function() {
 		select:function(e){
 			var dataItem = this.dataItem(e.item.index());
             scTypeShowTabs(dataItem.value);
+            
+            if(dataItem.value.indexOf("产品销售")!=-1){
+            	scm.projectType="产品";
+            }else if(dataItem.value.indexOf("产品集成")!=-1){
+            	scm.projectType="工程";
+            }else if(dataItem.value.indexOf("弱电工程")!=-1){
+            	scm.projectType="工程";
+            }else if(dataItem.value.indexOf("维护及服务")!=-1){
+            	scm.projectType="服务";
+            }else{
+            	scm.projectType="其它";
+            }
+            
+            $("#projectType").val(scm.projectType);
 		}
 	});
-	
+	  
 	//表单中的各种控件
 	
 	$("#invoiceType").kendoDropDownList({
@@ -410,15 +423,15 @@ $(document).ready(function() {
 	
 	if(redirectParams && redirectParams.pageId && redirectParams.pageId=="newProject"){
 		validateProject = true;
-
+		console.log(redirectParams);
 		if(redirectParams._id){
 			postAjaxRequest("/service/sc/get", redirectParams, editDraftSc_ADD);
 		}else if(redirectParams.projectId){
 			postAjaxRequest("/service/project/get", {_id:redirectParams.projectId, isScDraft:true}, function(data){				
-				if(!data.projectId){
-					//数据从项目而来, 否则数据从销售合同来
-					data.projectId = data._id;
-					data._id="";
+				if(data.scId){					
+					data._id= data.scId;
+				}else{
+					data._id = "";
 				}
 				editDraftSc_ADD(data);
 			});
@@ -501,15 +514,15 @@ function editDraftSc_ADD(data){
 			showTabs(dataItem.text);
 		}
 	});
-	$("#projectType").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
-		optionLabel : "选择立项类别...",
-		dataSource : proCategoryItems,
-		select:function(e){
-			var dataItem = this.dataItem(e.item.index());
-		}
-	});
+//	$("#projectType").kendoDropDownList({
+//		dataTextField : "text",
+//		dataValueField : "value",
+//		optionLabel : "选择立项类别...",
+//		dataSource : proCategoryItems,
+//		select:function(e){
+//			var dataItem = this.dataItem(e.item.index());
+//		}
+//	});
 	
 
 	$("#projectManagerId").kendoDropDownList({
@@ -568,7 +581,7 @@ function saveSCDraft_ADD(){
 		if(scm.projectManagerId && scm.projectManagerId._id){
 			scm.projectManagerId = scm.projectManagerId._id;
 		}
-		
+
 		if(scm.customerId && scm.customerId._id){
 			scm.customerId = scm.customerId._id;
 		}
