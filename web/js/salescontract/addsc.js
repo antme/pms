@@ -119,7 +119,7 @@ $(document).ready(function() {
 	        }
 	    });
 	};
-	//弱电工程、产品集成（灯控/布线，楼控，其他）、产品销售、维护及服务
+	//弱电工程、产品集成(灯控/布线，楼控，其他)、产品销售、维护及服务
 	$("#contractType").kendoDropDownList({
 		dataTextField : "text",
 		dataValueField : "value",
@@ -423,7 +423,6 @@ $(document).ready(function() {
 	
 	if(redirectParams && redirectParams.pageId && redirectParams.pageId=="newProject"){
 		validateProject = true;
-		console.log(redirectParams);
 		if(redirectParams._id){
 			postAjaxRequest("/service/sc/get", redirectParams, editDraftSc_ADD);
 		}else if(redirectParams.projectId){
@@ -451,18 +450,15 @@ $(document).ready(function() {
 					}
 				  scm = new scModel(data);	
 		          showTabs(data.projectStatus);
-		          var relatedScType = data.contractType;
+		          var relatedScType = getScType(data.contractType);
 		          var sctypelist = $("#contractType").data("kendoDropDownList");
 		                    
-		          if (relatedScType != null && sctypelist!=null){
-			          	sctypelist.value(relatedScType);
-			          	sctypelist.enable(false);
-			          	scm.set("contractType",relatedScType)
-		          }
-		          
-		          if(data.projectStatus == "销售正式立项" && relatedScType=="N/A"){
+		          if (relatedScType != null && sctypelist != null){     	    
+			          	scm.set("contractType", relatedScType)
+		          }else if(data.projectStatus == "销售正式立项" && (relatedScType=="N/A" || relatedScType=="" || !relatedScType)){
 		        		sctypelist.enable(true);
 		          }
+		          
 		          //start: add for customer info
 		          var haveCustomer = data.cId;
 		          var cusList = $("#customerId").data("kendoDropDownList");
@@ -473,6 +469,11 @@ $(document).ready(function() {
 		         }
 		          kendo.bind($("#addSalesContract"), scm);
 		          
+		          if (relatedScType != null && sctypelist != null){     	    
+			          	sctypelist.value(relatedScType);
+			          	sctypelist.enable(false);
+		          }
+		          
 			    });
 		 }else{
 			scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
@@ -482,6 +483,26 @@ $(document).ready(function() {
 	}
 	
 });//end dom ready	
+
+
+function getScType(scType){
+
+	if(scType == "产品集成(灯控/布线)" ){
+		return "产品集成（灯控/布线）";
+	}else if(scType =="产品集成(楼控)" ){
+		return "产品集成（楼控）";
+	}else if(scType =="产品集成(其他)" ){
+		return "产品集成（其他）";
+	}else if(scType =="产品销售(灯控/布线)" ){
+		return "产品销售（灯控/布线）";
+	}else if(scType =="产品销售(楼控)" ){
+		return "产品销售（楼控）";
+	}else if(scType =="产品销售(其他)" ){
+		return "产品销售（其他）";
+	}
+	
+	return scType;
+}
 
 function editDraftSc_ADD(data){
 	$("#projectCode").attr("disabled", true);
@@ -809,8 +830,8 @@ function addAProject(){
 
 function moneyOnChange_ADD(){
 	if(scm){
-		var estimateEqCostAddedTaxC = 0; // 预估设备成本（增）
-		var estimateEqCostTaxc = 0; // 预估设备成本（非增）
+		var estimateEqCostAddedTaxC = 0; // 预估设备成本(增)
+		var estimateEqCostTaxc = 0; // 预估设备成本(非增)
 		var datalist = eqCostListDataSource.data();
 		for ( var int = 0; int < datalist.length; int++) {
 			if (datalist[int].eqcostTaxType == "增值税") {

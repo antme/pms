@@ -82,24 +82,27 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		// "status"};
 		// params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 
-		mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_NAME, ProjectBean.PROJECT_CUSTOMER_ID, CustomerBean.NAME, DBBean.CUSTOMER);
-		mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_NAME, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME, DBBean.USER);
-		mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
-		mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
-		if(params.get(ProjectBean.PROJECT_STATUS) == null){
-		    params.put(ProjectBean.PROJECT_STATUS, "销售正式立项");
-		    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS, DBBean.PROJECT);
-		}else{
-		    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS, DBBean.PROJECT);
-		}
-		
+
 
 		mergeDataRoleQueryWithProjectAndScType(params);
 		if (ApiThreadLocal.getMyTask() != null) {
 			mergeMyTaskQuery(params, DBBean.SALES_CONTRACT);
-		} else {
-			params.put("status", new DBQuery(DBQueryOpertion.NOT_IN, new String[] { SalesContractBean.SC_STATUS_DRAFT }));
-		}
+        } else {
+            if (params.get(ProjectBean.PROJECT_STATUS) == null) {
+                params.put(ProjectBean.PROJECT_STATUS, "销售正式立项");
+                mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS, DBBean.PROJECT);
+            } else {
+                mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_STATUS, DBBean.PROJECT);
+            }
+
+            params.put("status", new DBQuery(DBQueryOpertion.NOT_IN, new String[] { SalesContractBean.SC_STATUS_DRAFT }));
+        }
+		
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_NAME, ProjectBean.PROJECT_CUSTOMER_ID, CustomerBean.NAME, DBBean.CUSTOMER);
+	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_NAME, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME, DBBean.USER);
+	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
+	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
+
 
 		Map<String, Object> result = dao.list(params, DBBean.SALES_CONTRACT);
 
@@ -262,14 +265,27 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
         String suffix = getScSuffix(projectId.toString());
 
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ApiConstants.MONGO_ID, projectId);
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_TYPE });
+
+        Map<String, Object> project = this.dao.findOneByQuery(query, DBBean.PROJECT);
+
+        String projectCode = (String) project.get(ProjectBean.PROJECT_CODE);
+
         String scCode = contract.get(SalesContractBean.SC_CODE).toString();
 
-        scCode = scCode.replaceAll("-QT", "-" + suffix);
-        scCode = scCode.replaceAll("-FW", "-" + suffix);
-        scCode = scCode.replaceAll("-XS", "-" + suffix);
-        scCode = scCode.replaceAll("-GC", "-" + suffix);
-        
-        contract.put(SalesContractBean.SC_CODE, scCode);
+        // FIXME:
+        if (scCode.startsWith(projectCode)) {
+            // 新规则才跟新
+            scCode = scCode.substring(projectCode.length() - 1);
+            scCode = scCode.replaceAll("-QT", "-" + suffix);
+            scCode = scCode.replaceAll("-FW", "-" + suffix);
+            scCode = scCode.replaceAll("-XS", "-" + suffix);
+            scCode = scCode.replaceAll("-GC", "-" + suffix);
+
+            contract.put(SalesContractBean.SC_CODE, projectCode + scCode);
+        }
 
     }
 	
@@ -1884,7 +1900,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	    String projectType  = (String)project.get(ProjectBean.PROJECT_TYPE);
 	    String projectCode  = (String)project.get(ProjectBean.PROJECT_CODE);
 	    
-	    String prefix = getScSuffix(projectType);
+	    String prefix = getScSuffix(pId);
         
         // 草稿的销售合同项目编号可能为空
         Map<String, Object> scQuery = new HashMap<String, Object>();
