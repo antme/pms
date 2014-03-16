@@ -88,7 +88,6 @@ $(document).ready(function() {
 				dataSource : proStatusItems,
 				change: function(e){
 					var projectStatusDl = 	$("#projectStatus").data("kendoDropDownList");
-					console.log(projectStatusDl.value());
 				}
 			});
 		}

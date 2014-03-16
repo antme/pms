@@ -807,9 +807,9 @@ function saveSC_ADD(){
 			scm.archiveStatus = scm.archiveStatus.value;
 		}
 		
-//		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
-//			loadPage("salescontract_scList");
-//    	});
+		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
+			loadPage("salescontract_scList");
+    	});
     }
 };
 

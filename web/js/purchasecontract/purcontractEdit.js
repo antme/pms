@@ -969,7 +969,6 @@ function sumOrders(e) {
 	var eqcostLastBasePrice = e.model.eqcostLastBasePrice;
 	e.model.set("eqcostTotalMoney", eqcostLastBasePrice * eqcostApplyAmount);
 
-	console.log(e.model);
 	grid1.refresh();
 
 }

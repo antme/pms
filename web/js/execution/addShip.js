@@ -383,7 +383,6 @@ function loadSC(){
         change: function(e) {
         	var dataItem = this.dataItem();
        
-        	console.log(dataItem);
             model.set("contractCode", dataItem.contractCode);
             model.set("contractType", dataItem.contractType);
             model.set("applicationDepartment", dataItem.applicationDepartment);
