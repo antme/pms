@@ -138,7 +138,18 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		eqcostList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
 		boolean isdraft = false;
 
-	
+        
+        if(ApiUtil.isValid(_id)){
+            
+            //历史数据是草稿的话，清楚历史数据
+            Map<String, Object> oldContract = this.dao.findOne(ApiConstants.MONGO_ID, _id, new String[]{"status"}, DBBean.SALES_CONTRACT);
+            if(oldContract.get("status") == null || oldContract.get("status").toString().equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)){
+                Map<String, Object> eqDeleteQuery = new HashMap<String, Object>();
+                eqDeleteQuery.put(SalesContractBean.SC_ID, _id);
+                this.dao.deleteByQuery(eqDeleteQuery, DBBean.EQ_COST);
+            }
+        }
+        
 		contract.remove(SalesContractBean.SC_EQ_LIST);
 		Map<String, Object> addedContract = null;
 		if (ApiUtil.isEmpty(_id) || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {						
@@ -173,7 +184,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	            mergeCommonProjectInfo(contract, projectId);
 	        }
 	        
-	        
+
 	        
 	        contract.put(SalesContractBean.SC_PROJECT_ID, projectId);
 			contract.put(SalesContractBean.SC_MODIFY_TIMES, 0);
@@ -442,7 +453,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 					item.put(ApiConstants.MONGO_ID, realItem.get(ApiConstants.MONGO_ID));
 					this.dao.updateById(realItem, DBBean.EQ_COST);
 				}else{
-					this.dao.deleteByQuery(realItemQuery, DBBean.EQ_COST);
 					item.put(EqCostListBean.EQ_LIST_CODE, eqcostCode);
 					this.dao.add(item, DBBean.EQ_COST);
 
