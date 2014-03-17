@@ -313,7 +313,7 @@ public abstract class AbstractService {
 
                 refQuery.put(refSearchKey, new DBQuery(query.getOperation(), query.getValue()));
 
-            } else {
+            } else if(params.get(mySearchDataKey) instanceof String) {
                 refQuery.put(refSearchKey, new DBQuery(DBQueryOpertion.LIKE, params.get(mySearchDataKey)));
 
             }
@@ -362,8 +362,12 @@ public abstract class AbstractService {
                     // FIXME: put into constants
                     scTypesIn.add("弱电工程");
                     scTypesIn.add("产品集成（灯控/布线）");
+                    scTypesIn.add("产品集成(灯控/布线)");
+                    
                     scTypesIn.add("产品集成（楼控）");
+                    scTypesIn.add("产品集成(楼控)");
                     scTypesIn.add("产品集成（其他）");
+                    scTypesIn.add("产品集成(其他)");
                 } else if (key.equalsIgnoreCase(ProjectBean.PROJECT_TYPE)) {
                     scTypesIn.add("工程");
                 }
