@@ -18,6 +18,10 @@ public class Project extends SCBaseEntity {
     // 项目实施地址
     @Expose
     private String projectAddress;
+    
+    
+    @Expose
+    private Boolean isSetuped;
 
     // 备注
     @Expose
@@ -64,7 +68,16 @@ public class Project extends SCBaseEntity {
 	public void setSignBy(String signBy) {
 		this.signBy = signBy;
 	}
+
+    public Boolean getIsSetuped() {
+        return isSetuped;
+    }
+
+    public void setIsSetuped(Boolean isSetuped) {
+        this.isSetuped = isSetuped;
+    }
     
+	
     
 
 }

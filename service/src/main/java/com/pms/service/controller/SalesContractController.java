@@ -327,9 +327,9 @@ public class SalesContractController extends AbstractController {
     
     @RequestMapping("/clear")
     //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
-    public void clearEqCost(HttpServletRequest request, HttpServletResponse response){
+    public void clearData(HttpServletRequest request, HttpServletResponse response){
        
-    	salesContractService.clearEqCost();	
+    	salesContractService.clearData();	
     	responseWithData(null, request, response);
     }  
     

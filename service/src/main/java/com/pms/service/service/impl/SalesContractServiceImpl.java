@@ -161,12 +161,19 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	        if(projectId !=null){
 	        	project.set_id(projectId.toString());
 	        }
+	        
+	        if (!status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {
+	            //不是草稿 立项
+	            project.setIsSetuped(true);
+	        }
 	        projectService.addProject(project);
 	        projectId = project.get_id();
 	        
 	        if(projectId!=null){
 	            mergeCommonProjectInfo(contract, projectId);
 	        }
+	        
+	        
 	        
 	        contract.put(SalesContractBean.SC_PROJECT_ID, projectId);
 			contract.put(SalesContractBean.SC_MODIFY_TIMES, 0);
@@ -250,6 +257,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			updateContractCodeSuffix(contract);
 			dao.updateById(contract, DBBean.SALES_CONTRACT);
 
+		    Map<String, Object> project = new HashMap<String, Object>();
+		    project.put(ApiConstants.MONGO_ID, projectId);
+		    project.put("isSetuped", true);
+            dao.updateById(project, DBBean.PROJECT);
+
+		    
 			// 添加成本设备清单记录
 			if (!eqcostList.isEmpty()) {
 				updateTheModifyHistoryAndModifyTimesAndscLastAmount(params, eqcostList, contract, existContract);
@@ -1430,7 +1443,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 
 	public Map<String, Object> importEqHistoryExcleFile(Map<String, Object> params) {
-		clearEqCost();
+		clearData();
 		Map<String, Object> result = new LinkedHashMap<String, Object>();
 		try {
 			InputStream inputStream = (InputStream) params.get("inputStream");
@@ -1832,18 +1845,23 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 	
 	
-	public void clearEqCost() {
-		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.EQ_COST);
-		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.EQ_COST_HISTORY);
-		dao.deleteByQuery(new HashMap<String, Object>(), "eqCost_history");
-		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.PURCHASE_BACK);
-		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.PURCHASE_REQUEST);
-		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.PURCHASE_ORDER);
-		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.PURCHASE_CONTRACT);
-		dao.deleteByQuery(new HashMap<String, Object>(), DBBean.REPOSITORY);
-    	this.dao.deleteByQuery(new HashMap<String, Object>(), DBBean.ARRIVAL_NOTICE);
-	}
-	
+    public void clearData() {
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put("status", new DBQuery(DBQueryOpertion.NOT_IN, new String[] { SalesContractBean.SC_STATUS_DRAFT }));
+        query.put(SalesContractBean.SC_PROJECT_ID, new DBQuery(DBQueryOpertion.NOT_NULL));
+
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_PROJECT_ID });
+
+        List<Map<String, Object>> list = (List<Map<String, Object>>) this.dao.list(query, DBBean.SALES_CONTRACT).get(ApiConstants.RESULTS_DATA);
+
+        for (Map<String, Object> sc : list) {
+            Map<String, Object> project = new HashMap<String, Object>();
+            project.put(ApiConstants.MONGO_ID, sc.get(SalesContractBean.SC_PROJECT_ID));
+            project.put("isSetuped", true);
+            this.dao.updateById(project, DBBean.PROJECT);
+        }
+
+    }	
 	
 	public void updateContractStatus(String scId) {
 
