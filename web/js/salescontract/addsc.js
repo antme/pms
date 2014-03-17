@@ -638,6 +638,10 @@ function saveSC_ADD(){
 		projectStatus = pStatus.value();
 	}
 	
+	if(scm.projectStatus){
+		projectStatus = scm.projectStatus;
+	}
+	
 	
 	if(scm.projectType && scm.projectType.text){
 		scm.projectType = scm.projectType.text;
