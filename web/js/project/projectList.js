@@ -112,6 +112,16 @@ $(document).ready(function() {
 		},{
 			field : "signBy",
 			title : "立项人"
+		},{
+			field : "isSetuped",
+			title : "立项状态",
+			template : function(dataItem) {
+				if(dataItem.isSetuped){
+					return '已立项';
+				}else{
+					return "未立项";
+				}
+			}
 		}]
 	});
 });//end dom ready	
@@ -129,7 +139,7 @@ function toolbar_editProject(){
 		return;
 	}
 	
-	if(rowData.projectManagerName){
+	if(rowData.isSetuped){
 		loadPage("project_editProject",{_id:rowData._id});
 	}else{
 		loadPage("project_addProject",{_id:rowData._id});
@@ -145,7 +155,7 @@ function toolbar_setupProject() {//1:正式立项；2：预立项；3：内部�
 	}
 	
 	
-	if(row.projectManagerName){
+	if(row.isSetuped){
 		alert("此项目已经立项过，如果需要变更和增补，请在销售合同里操作");
 	}else{
 		loadPage("salescontract_addsc",{pageId:"newProject", projectId: row._id});

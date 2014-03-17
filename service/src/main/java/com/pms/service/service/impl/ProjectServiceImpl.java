@@ -38,7 +38,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	public Map<String, Object> listProjects(Map<String, Object> params) {
 
 		String[] limitKeys = new String[] {ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CUSTOMER_ID,
-				ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_ABBR, "signBy"};
+				ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_TYPE, ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_ABBR, "signBy", "isSetuped"};
 		params.put(ApiConstants.LIMIT_KEYS, limitKeys);
 		
 	    mergeRefSearchQuery(params, ProjectBean.PROJECT_CUSTOMER_ID, ProjectBean.PROJECT_CUSTOMER_NAME, CustomerBean.NAME,  DBBean.CUSTOMER);
@@ -213,12 +213,13 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
             Map<String, Object> result = this.dao.findOneByQuery(query, DBBean.SALES_CONTRACT);
 
             if (result != null) {
+                Object scId = result.get(ApiConstants.MONGO_ID);
                 result = scs.getSC(result);
 
                 // 项目信息覆盖
                 result.putAll(project);
                 result.put(ProjectBean.PROJECT_ID, project.get(ApiConstants.MONGO_ID));
-                result.put(SalesContractBean.SC_ID, result.get(ApiConstants.MONGO_ID));
+                result.put(SalesContractBean.SC_ID, scId);
                 return result;
             }
         }

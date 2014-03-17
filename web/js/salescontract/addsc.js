@@ -932,6 +932,7 @@ function showTabs(projectStatus){
 		
 		if(!scm.contractType){
 			scm.set("contractType", "N/A");
+			scm.set("projectType", "其它");
 		}
 	
 		//虚拟合同，只显示 设备清单Tab	

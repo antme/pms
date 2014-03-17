@@ -356,13 +356,16 @@ public class UserServiceImpl extends AbstractService implements IUserService {
 	@Override
 	public Map<String, Object> listPMs(Map<String, Object> parameters) {
 		Map<String, Object> groupPM = dao.findOne(GroupBean.GROUP_NAME, "项目经理", DBBean.USER_GROUP);
-		String pmGid = (String)groupPM.get(ApiConstants.MONGO_ID);
-		
-		List<String> groupIds = new ArrayList<String>();
-		if (!ApiUtil.isEmpty(pmGid)){
-			groupIds.add(pmGid);
-		}
-		
+	      List<String> groupIds = new ArrayList<String>();
+
+        if (groupPM != null) {
+            String pmGid = (String) groupPM.get(ApiConstants.MONGO_ID);
+
+            if (!ApiUtil.isEmpty(pmGid)) {
+                groupIds.add(pmGid);
+            }
+
+        }
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(UserBean.GROUPS, new DBQuery(DBQueryOpertion.IN, groupIds));
 		

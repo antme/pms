@@ -87,7 +87,7 @@ public interface ISalesContractService {
     
 	public Map<String, Object> getCustomerBySC(Map<String, Object> params);
 
-	public void clearEqCost(); 
+	public void clearData(); 
 	
 	public void updateContractStatus(String scId);
 
