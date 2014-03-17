@@ -115,7 +115,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	@Override
 	public Map<String, Object> addSC(Map<String, Object> params) {
 		String _id = (String) params.get(ApiConstants.MONGO_ID);
-
+			
 		Map<String, Object> contract = params;
 		ApiUtil.updateDataFloatValue(contract);
 		contract.remove("scGotMoneyInfo");	
@@ -138,6 +138,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		eqcostList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
 		boolean isdraft = false;
 
+	
+		contract.remove(SalesContractBean.SC_EQ_LIST);
 		Map<String, Object> addedContract = null;
 		if (ApiUtil.isEmpty(_id) || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {						
 			// 草稿和新的销售合同Add
