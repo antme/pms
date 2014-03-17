@@ -74,6 +74,7 @@ $(document).ready(function () {
         dataSource: datasource,
         pageable: true, resizable: true,
         resizable: true,
+        filterable : filterable,
         sortable : true,
         selectable : "row",
         toolbar: [{name: "create", text:"新增"}],

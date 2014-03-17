@@ -35,12 +35,12 @@ $(document).ready(function() {
 
 var selectedIds = undefined;
 function init(){
-
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true, resizable: true,
 		resizable: true,
 		selectable: "multiple, row",
+		filterable : filterable,
 		height : "550px",
 		columns : [ {
 			field : "userName",
