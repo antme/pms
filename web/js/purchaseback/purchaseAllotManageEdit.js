@@ -62,8 +62,14 @@ var subModel = kendo.data.Model.define({
        },
        eqcostLastBasePrice:{
     	   type: "number",
+    	   defaultValue:0,
+    	   editable : false
+       },
+       eqcostRepositoryBasePrice:{
+    	   type: "number",
     	   defaultValue:0
        },
+       
        eqcostDepotPrice:{
     	   type: "number",
     	   defaultValue:0
@@ -96,6 +102,11 @@ var myModel = kendo.data.Model.define({
 var currentObj = new myModel();
 
 $(document).ready(function () {
+	
+	if(popupParams){		
+		subModel.fields.eqcostRepositoryBasePrice.editable = false;
+	}
+	
 	checkRoles();
 	$("#subGrid").kendoGrid({
 		dataSource: {
@@ -117,13 +128,13 @@ $(document).ready(function () {
 			},
 			{ field: "paCount", title: "本次申请数量",width:"90px"},
 			{ field: "pbTotalCount", title: "备货数量"},
-			{ field: "eqcostBasePrice", title: "标准成本价" },
-			{ field: "eqcostLastBasePrice",title : "最终成本价",attributes: { "style": "color:red"},
+			{ field: "eqcostLastBasePrice", title: "最终成本价" },
+			{ field: "eqcostRepositoryBasePrice",title : "库存价格",attributes: { "style": "color:red"},
 				template :  function(dataItem) {
-					if(!dataItem.eqcostLastBasePrice){
-						dataItem.eqcostLastBasePrice = 0;
+					if(dataItem.eqcostRepositoryBasePrice == undefined){
+						dataItem.eqcostRepositoryBasePrice = dataItem.eqcostLastBasePrice;
 					}
-					return dataItem.eqcostLastBasePrice;
+					return dataItem.eqcostRepositoryBasePrice;
 				}
 			},
 			{ field: "eqcostProductType", title: "规格型号" }

@@ -280,7 +280,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         // FIXME:
         if (scCode.startsWith(projectCode)) {
             // 新规则才跟新
-            scCode = scCode.substring(projectCode.length() - 1);
+            scCode = scCode.substring(projectCode.length());
             scCode = scCode.replaceAll("-QT", "-" + suffix);
             scCode = scCode.replaceAll("-FW", "-" + suffix);
             scCode = scCode.replaceAll("-XS", "-" + suffix);

@@ -57,5 +57,7 @@ public interface IUserService {
 
     public Map<String, Object> saveMenuInfo(HashMap<String, Object> parameters);
 
+	public void disableUsers(Map<String, Object> params);
+
     
 }

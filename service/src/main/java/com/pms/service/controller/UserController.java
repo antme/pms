@@ -100,6 +100,21 @@ public class UserController extends AbstractController {
     }
 
     
+    @RequestMapping("/disable")
+    public void disableUsers(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, false);
+    	userService.disableUsers(params);
+        responseWithData(null, request, response);
+    }
+    
+    
+    @RequestMapping("/enable")
+    public void enableUsers(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, false);
+    	userService.enableUsers(params);
+        responseWithData(null, request, response);
+    }
+    
     @RequestMapping("/role/list")
     public void listRoleItems(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);

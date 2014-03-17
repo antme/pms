@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.Gson;
 import com.pms.service.annotation.InitBean;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
@@ -383,5 +384,28 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         }
         return null;
     }
+    
+    
+    public void disableUsers(Map<String, Object> params){
+    	String[] ids = (String[]) params.get("ids");
+    	
+    	for(String id: ids){
+    		Map<String, Object> user = new HashMap<String, Object>();
+    		user.put(ApiConstants.MONGO_ID, id);
+    		user.put("status", "locked");
+    		this.dao.updateById(user, DBBean.USER);
+    	}
+    }
+    
+	public void enableUsers(Map<String, Object> params) {
+		String[] ids = (String[]) params.get("ids");
+
+		for (String id : ids) {
+			Map<String, Object> user = new HashMap<String, Object>();
+			user.put(ApiConstants.MONGO_ID, id);
+			user.put("status", "normal");
+			this.dao.updateById(user, DBBean.USER);
+		}
+	}
 
 }

@@ -112,7 +112,6 @@ $(document).ready(function () {
 			{ field: "paCount", title: "本次申请数量", attributes: { "style": "color:red"}},
 			{ field: "pbLeftCount", title: "备货申请下可申请数量"},
 			{ field: "pbTotalCount", title: "备货数量"},
-			{ field: "eqcostBasePrice", title: "标准成本价" },
 			{ field: "eqcostLastBasePrice",title : "最终成本价"},
 			{ field: "pbComment", title: "备注" }
 	  	],

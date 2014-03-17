@@ -33,13 +33,14 @@ $(document).ready(function() {
 	groupDataSource.read();
 });
 
+var selectedIds = undefined;
 function init(){
 
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true, resizable: true,
 		resizable: true,
-		selectable : "row",
+		selectable: "multiple, row",
 		height : "550px",
 		columns : [ {
 			field : "userName",
@@ -56,6 +57,10 @@ function init(){
 		}, {
 			field : "department",
 			title : "部门",
+			width:"100px"
+		},{
+			field : "status",
+			title : "状态",
 			width:"100px"
 		}, {
 			field : "groups",
@@ -82,14 +87,22 @@ function init(){
 		 pageable: {
 			    pageSizes: [10, 20, 50]
 			    
-		 }
+		 },
+		 change: function(arg) {
+             selectedIds = $.map(this.select(), function(item) {
+            	var grid = $("#grid").data("kendoGrid");
+            	var response = grid.dataItem(item);
+                return response._id;
+             });
+
+         }
 	});
 }
-function add(){
+function addUser(){
 	loadPage("user_useredit");
 }
 
-function edit(){
+function editUser(){
 	var row = getSelectedRowDataByGridWithMsg("grid");	
 	if(row){
 		loadPage("user_useredit", {
@@ -98,12 +111,39 @@ function edit(){
 	}
 }
 
-function del() {
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	postAjaxRequest("/service/user/delete", {_id : row._id} , saveSuccess);	
+function delUser() {
+	
+	var grid = $("#grid").data("kendoGrid");
+	var row = grid.select()
+	
+	console.log(row);
+	
+	postAjaxRequest("/service/user/delete", {_id : row._id} , saveUserSuccess);	
 
 }
 
-function saveSuccess(){
+
+function disableUser() {
+	if(selectedIds){
+		postAjaxRequest("/service/user/disable", {ids : selectedIds} , saveUserSuccess);	
+	}else{
+		alert("请选择要禁用的用户");
+	}
+
+
+}
+
+function enableUser() {
+	if(selectedIds){
+		postAjaxRequest("/service/user/enable", {ids : selectedIds} , saveUserSuccess);	
+	}else{
+		alert("请选择要禁用的用户");
+	}
+
+
+}
+
+
+function saveUserSuccess(){
 	loadPage("user_userman");
 }

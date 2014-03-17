@@ -97,7 +97,17 @@ public abstract class AbstractController {
             if (pName.toLowerCase().startsWith("filter[filters]".toLowerCase())) {
                 filterLength++;
             } else {
-                parametersMap.put(pName, request.getParameter(pName).trim());
+                
+                if (pName.indexOf("[]") != -1) {
+					// 数组参数
+					String pNameKey = pName.replace("[]", "");
+					parametersMap.put(pNameKey, request.getParameterValues(pName));
+				} else {
+					String parameter = request.getParameter(pName).trim();
+					parameter = parameter.replaceAll("<script>", "");
+					parameter = parameter.replaceAll("</script>", "");
+					parametersMap.put(pName, parameter);
+				}
             }
         }
 
