@@ -43,9 +43,7 @@ var dataSource = new kendo.data.DataSource({
 			id : "_id",
 			fields : {
 				description : {
-					validation : {
-						required : true
-					}
+					
 				},
 				groupName : {
 					validation : {
@@ -65,6 +63,11 @@ var dataSource = new kendo.data.DataSource({
 });
 $(document).ready(function() {
 
+	initRoleSelect();
+
+});
+
+function initRoleSelect(){
 	$("#group-role-select").kendoMultiSelect({
 		dataTextField : "description",
 		dataValueField : "_id",
@@ -87,8 +90,7 @@ $(document).ready(function() {
 		height : 300
 	});
 
-
-});
+}
 
 function initPage(){
 
@@ -104,11 +106,6 @@ function initPage(){
 			text : "创建角色"
 		} ],
 		columns : [ {
-			field : "_id",
-			title : "ID",
-			hidden : true,
-			editHidden : true
-		}, {
 			field : "groupName",
 			title : "角色名"
 		}, {
@@ -118,7 +115,10 @@ function initPage(){
 			field : "roles",
 			title : "权限",
 			template : kendo.template($("#roleTemplate").html()),
-			editHidden : true
+			editHidden : true,
+			editor: function(container, options) {
+				
+			}
 
 		}, {
 			command : [{name : "edit",text : "编辑"}, {name : "destroy",text : "删除"} ],
@@ -150,11 +150,9 @@ function initPage(){
 }
 
 function onActivate(e) {
-	var multiselect = $("#group-role-select").data("kendoMultiSelect");
+	dataSource.cancelChanges();
 	var data = dataSource.data();
 	var length = data.length;
-	multiselect.value([]);
-	multiselect.refresh();
 
 	var roles;
 	for (i = 0; i < length; i++) {
@@ -167,6 +165,8 @@ function onActivate(e) {
 				for (j = 0; j < roles.length; j++) {
 					upRoles[j] = roles[j];
 				}
+				
+				var multiselect = $("#group-role-select").data("kendoMultiSelect");
 				multiselect.value(upRoles);
 			}
 			break;
@@ -187,5 +187,7 @@ function openGroupRoleWindow(id) {
 	openWindow(options);
 }
 function myreflush(){
-	loadPage("user_group");
+	
+	window.location.reload();
+	
 }
