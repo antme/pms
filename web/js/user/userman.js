@@ -61,7 +61,14 @@ function init(){
 		},{
 			field : "status",
 			title : "状态",
-			width:"100px"
+			width:"100px",
+			template : function(dataItem) {
+				if(dataItem.status && dataItem.status=="locked"){
+					return "已禁用";
+				}else{
+					return "正常";
+				}
+			}
 		}, {
 			field : "groups",
 			title : "角色",

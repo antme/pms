@@ -84,7 +84,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 
 
-		mergeDataRoleQueryWithProjectAndScType(params);
 		if (ApiThreadLocal.getMyTask() != null) {
 			mergeMyTaskQuery(params, DBBean.SALES_CONTRACT);
         } else {
@@ -102,6 +101,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	    mergeRefSearchQuery(params, ProjectBean.PROJECT_MANAGER_NAME, ProjectBean.PROJECT_MANAGER_ID, UserBean.USER_NAME, DBBean.USER);
 	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_NAME, DBBean.PROJECT);
 	    mergeRefSearchQuery(params, SalesContractBean.SC_PROJECT_ID, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_CODE, DBBean.PROJECT);
+		mergeDataRoleQueryWithProjectAndScType(params);
 
 
 		Map<String, Object> result = dao.list(params, DBBean.SALES_CONTRACT);

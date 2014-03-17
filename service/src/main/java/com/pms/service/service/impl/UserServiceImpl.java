@@ -66,11 +66,15 @@ public class UserServiceImpl extends AbstractService implements IUserService {
             userInfoMap.put(ApiConstants.MONGO_ID, user.get(ApiConstants.MONGO_ID));
             return dao.updateById(userInfoMap, DBBean.USER);
 
-        } else {
-            validate(userInfoMap, "register");
-            userInfoMap.put(UserBean.PASSWORD, DataEncrypt.generatePassword(userInfoMap.get(UserBean.PASSWORD).toString()));
-            return dao.add(userInfoMap, DBBean.USER);
-        }
+		} else {
+			validate(userInfoMap, "register");
+			userInfoMap.put(UserBean.PASSWORD, DataEncrypt.generatePassword(userInfoMap.get(UserBean.PASSWORD).toString()));
+
+			if (this.dao.exist(UserBean.USER_NAME, userInfoMap.get(UserBean.USER_NAME), DBBean.USER)) {
+				throw new ApiResponseException("username_exists", "username_exists");
+			}
+			return dao.add(userInfoMap, DBBean.USER);
+		}
 
     }
     
@@ -114,9 +118,21 @@ public class UserServiceImpl extends AbstractService implements IUserService {
     @Override
     public Map<String, Object> login(Map<String, Object> parameters) {
         this.validate(parameters, "login");
+        
+        Map<String, Object> lockQuery = new HashMap<String, Object>();
+        lockQuery.put(UserBean.USER_NAME, parameters.get(UserBean.USER_NAME));
+        lockQuery.put("status", "locked");
+        if(this.dao.exist(lockQuery, DBBean.USER)){
+            
+          throw new ApiResponseException("user_locked", "user_locked");
+            
+        }
+        
+        
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(UserBean.USER_NAME, parameters.get(UserBean.USER_NAME));
         query.put(UserBean.PASSWORD, DataEncrypt.generatePassword(parameters.get(UserBean.PASSWORD).toString()));
+        query.put("status", new DBQuery(DBQueryOpertion.NOT_EQUALS, "locked"));
         Map<String, Object> user = dao.findOneByQuery(query, DBBean.USER);
         if (user == null) {
             throw new ApiResponseException(String.format("Name or password is incorrect when try to login [%s] ", parameters), ResponseCodeConstants.USER_LOGIN_USER_NAME_OR_PASSWORD_INCORRECT);

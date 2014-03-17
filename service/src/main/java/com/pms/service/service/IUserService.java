@@ -59,5 +59,7 @@ public interface IUserService {
 
 	public void disableUsers(Map<String, Object> params);
 
+	public void enableUsers(Map<String, Object> params);
+
     
 }
