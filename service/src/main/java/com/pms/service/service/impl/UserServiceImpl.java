@@ -162,22 +162,22 @@ public class UserServiceImpl extends AbstractService implements IUserService {
 
     }
 
-    public Map<String, Object> updateUserGroup(Map<String, Object> userGroup) {
-        Map<String, Object> group = dao.findOne(ApiConstants.MONGO_ID, userGroup.get(ApiConstants.MONGO_ID), DBBean.USER_GROUP);
+    public Map<String, Object> updateUserGroup(Map<String, Object> newGroup) {
+        Map<String, Object> oldGroup = dao.findOne(ApiConstants.MONGO_ID, newGroup.get(ApiConstants.MONGO_ID), DBBean.USER_GROUP);
 
-        if (group != null) {
-            if (group.get(GroupBean.GROUP_NAME).equals(GroupBean.GROUP_ADMIN_VALUE)) {
+        if (oldGroup != null) {
+            if (oldGroup.get(GroupBean.GROUP_NAME).equals(GroupBean.GROUP_ADMIN_VALUE)) {
                 throw new ApiResponseException("Not allowed to edit admin group!", ResponseCodeConstants.ADMIN_GROUP_EDIT_DISABLED);
             }
 
-            if (group != null && group.get(ApiConstants.CREATOR) == null && !group.get(GroupBean.GROUP_NAME).toString().equalsIgnoreCase(userGroup.get(GroupBean.GROUP_NAME).toString())) {
-                throw new ApiResponseException("Not allowed to edit system default group!", ResponseCodeConstants.ADMIN_GROUP_EDIT_DISABLED);
+            if (oldGroup != null && oldGroup.get(ApiConstants.CREATOR) == null && !oldGroup.get(GroupBean.GROUP_NAME).toString().equalsIgnoreCase(newGroup.get(GroupBean.GROUP_NAME).toString())) {
+                throw new ApiResponseException("Not allowed to edit system default group!", ResponseCodeConstants.SYSTEM_GROUP_EDIT_DISABLED);
             }
 
-            userGroup.put(ApiConstants.MONGO_ID, userGroup.get(ApiConstants.MONGO_ID));
-            return dao.updateById(userGroup, DBBean.USER_GROUP);
+            newGroup.put(ApiConstants.MONGO_ID, newGroup.get(ApiConstants.MONGO_ID));
+            return dao.updateById(newGroup, DBBean.USER_GROUP);
         } else {
-            return dao.add(userGroup, DBBean.USER_GROUP);
+            return dao.add(newGroup, DBBean.USER_GROUP);
         }
 
     }
