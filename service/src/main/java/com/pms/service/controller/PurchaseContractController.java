@@ -97,6 +97,14 @@ public class PurchaseContractController extends AbstractController {
         responseWithData(null, request, response);
     }
     
+    @RequestMapping("/backtosc")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, desc = RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT_DESC)
+    public void backContractToSc(HttpServletRequest request, HttpServletResponse response) {
+        pService.backContractToSc(parserJsonParameters(request, false));
+        responseWithData(null, request, response);
+    }
+    
+    
 
     @RequestMapping("/update")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT, desc = RoleValidConstants.PURCHASE_CONTRACT_MANAGEMENT_DESC)

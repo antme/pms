@@ -2172,10 +2172,76 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     
     
-    public void backContractToOrder(HashMap<String, Object> parserJsonParameters){
-        
-        processRequest(parserJsonParameters, DBBean.PURCHASE_CONTRACT, PurchaseRequest.STATUS_BACKED);
-    }
+	public void backContractToOrder(HashMap<String, Object> parserJsonParameters) {
+
+		processRequest(parserJsonParameters, DBBean.PURCHASE_CONTRACT, PurchaseRequest.STATUS_BACKED);
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(PurchaseContract.PURCHASE_CONTRACT_ID, parserJsonParameters.get(ApiConstants.MONGO_ID));
+		query.put(ApiConstants.LIMIT_KEYS, new String[] { ApiConstants.MONGO_ID });
+
+		Map<String, Object> orderMap = this.dao.list(query, DBBean.PURCHASE_ORDER);
+		List<Map<String, Object>> orders = (List<Map<String, Object>>) orderMap.get(ApiConstants.RESULTS_DATA);
+
+		for (Map<String, Object> order : orders) {
+			cancelPurchaseOrder(order);
+		}
+	}
+    
+    
+	public void backContractToSc(HashMap<String, Object> parserJsonParameters) {
+		backContractToOrder(parserJsonParameters);
+
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(PurchaseContract.PURCHASE_CONTRACT_ID, parserJsonParameters.get(ApiConstants.MONGO_ID));
+		query.put(ApiConstants.LIMIT_KEYS, new String[] { ApiConstants.MONGO_ID, PurchaseOrder.BACK_REQUEST_ID, SalesContractBean.SC_EQ_LIST });
+
+		Map<String, Object> orderMap = this.dao.list(query, DBBean.PURCHASE_ORDER);
+		List<Map<String, Object>> orders = (List<Map<String, Object>>) orderMap.get(ApiConstants.RESULTS_DATA);
+
+		for (Map<String, Object> order : orders) {
+
+			if (order.get(SalesContractBean.SC_EQ_LIST) != null) {
+				Map<String, Object> backQuery = new HashMap<String, Object>();
+				backQuery.put(ApiConstants.MONGO_ID, order.get(PurchaseOrder.BACK_REQUEST_ID));
+				backQuery.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
+
+				Map<String, Object> back = this.dao.findOneByQuery(backQuery, DBBean.PURCHASE_BACK);
+				if (back.get(SalesContractBean.SC_EQ_LIST) != null) {
+					List<Map<String, Object>> backEqList = (List<Map<String, Object>>) back.get(SalesContractBean.SC_EQ_LIST);
+					scs.mergeEqListBasicInfo(backEqList);
+					List<Map<String, Object>> orderEqList = (List<Map<String, Object>>) order.get(SalesContractBean.SC_EQ_LIST);
+					float money = 0.0f;
+
+					for (Map<String, Object> backEq : backEqList) {
+
+						float price = ApiUtil.getFloatParam(backEq.get(EqCostListBean.EQ_LIST_BASE_PRICE));
+
+						for (Map<String, Object> orderEq : orderEqList) {
+
+							if (backEq.get(ApiConstants.MONGO_ID).equals(orderEq.get(ApiConstants.MONGO_ID))) {
+
+								int pbTotalCount = ApiUtil.getInteger(backEq.get(PurchaseBack.pbTotalCount));
+								int orderCount = ApiUtil.getInteger(orderEq.get(PurchaseOrder.EQCOST_APPLY_AMOUNT));
+
+								backEq.put(PurchaseBack.pbTotalCount, pbTotalCount - orderCount);
+
+								break;
+							}
+
+						}
+
+						int count = ApiUtil.getInteger(backEq.get(PurchaseBack.pbTotalCount));
+						money = money + price * count;
+
+					}
+
+					back.put(PurchaseBack.pbMoney, money);
+				}
+			}
+
+		}
+
+	}
     
     public void deletePurchaseRepository(HashMap<String, Object> parserJsonParameters){
         List<String> ids = new ArrayList<String>();

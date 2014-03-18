@@ -138,6 +138,22 @@ function backCon(){
 	}
 }
 
+function backConToSc(){
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "审批拒绝"){
+			postAjaxRequest("/service/purcontract/backtosc", {
+				_id : row._id
+			}, function(data) {
+				listDataSource.read();
+			});
+		}else{
+			alert("只能退回审核拒绝的采购合同");
+		}
+	}
+}
+
+
 var rowId = undefined;
 function addPOBumber(){
 	var row = getSelectedRowDataByGridWithMsg("grid");

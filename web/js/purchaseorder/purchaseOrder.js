@@ -110,24 +110,12 @@ function cancelOrder() {
 	if (row) {
 		if (row.status == "草稿" || (row.status == "已提交" && !row.purchaseContractId)) {
 
-	
-				$("#approve-comment").val("");
-				$("#approve-comment").attr("disabled", false);
-				var options = {
-					width : 500,
-					height : 200,
-					actions : [ "Maximize", "Close" ]
-				};
-				$("#approve-comment").val("");
-				$("#approve").kendoWindow({
-					width : options.width,
-					height : options.height,
-					title : options.title
-				});
-
-				kendoWindow = $("#approve").data("kendoWindow");
-				kendoWindow.open();
-				kendoWindow.center();
+			postAjaxRequest("/service/purcontract/order/cancel", {
+				_id : row._id
+			}, function(data) {
+				listDataSource.read();
+			});
+			
 			
 		} else {
 			alert("只能回退未发采购合同的订单, 如果已发采购合同，请从采购合同退回");
@@ -136,26 +124,29 @@ function cancelOrder() {
 
 }
 
-function cancelSubmit() {
+
+function backOrderToSc() {
+
+	
 	var row = getSelectedRowDataByGridWithMsg("grid");
-	if (row) {		
-		if (confirm("退回采购订单，相关的采购申请也会退回，是否确定退回？")) {
-			var param = {
-				"_id" : row._id,
-				"approveComment" : $("#approve-comment").val()
-			};
-			postAjaxRequest(cancelUrl, param, approveStatusCheck);
-			$("#approve-comment").val("");
+	if (row) {
+		if (row.status == "草稿" || (row.status == "已提交" && !row.purchaseContractId)) {
+			
+			
+			postAjaxRequest("/service/purcontract/order/backtosc", {
+				_id : row._id
+			}, function(data) {
+				listDataSource.read();
+			});
+			
+			
+		} else {
+			alert("只能回退未发采购合同的订单, 如果已发采购合同，请从采购合同退回");
 		}
 	}
+
 }
 
-
-function approveStatusCheck(response) {
-	var kendoWindow = $("#approve").data("kendoWindow");
-	kendoWindow.close();
-	listDataSource.read();
-}
 
 function approveOrder(){
 	var row = getSelectedRowDataByGridWithMsg("grid");
@@ -173,12 +164,6 @@ function approveOrder(){
 
 // 生成到货通知
 function openArrivalNoticePage() {
-
 	loadPage("execution_addArrivalNotice");
 
-}
-
-function callback(response) {
-	alert("到货通知已生成");
-	loadPage("purchasecontract_arrivalNotice");
 }

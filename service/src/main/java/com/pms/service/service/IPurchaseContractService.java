@@ -118,6 +118,9 @@ public interface IPurchaseContractService {
 	public Map<String, Object> importContractHistoryData(InputStream inputStream);
 	
     public void backContractToOrder(HashMap<String, Object> parserJsonParameters);
+    
+    public void backContractToSc(Map<String, Object> parserJsonParameters);
+
 
     public void deletePurchaseRepository(HashMap<String, Object> parserJsonParameters);
 
