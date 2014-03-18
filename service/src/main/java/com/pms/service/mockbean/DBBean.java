@@ -35,9 +35,7 @@ public class DBBean {
     public static final String REPOSITORY_OUT = "repositoryOut";
     
     public static final String PURCHASE_ORDER = "purchaseOrder";
-    
-    public static final String ALLOCATE = "allocate";
-    
+        
     public static final String SHIP = "ship";
     
     public static final String BORROWING = "borrowing";

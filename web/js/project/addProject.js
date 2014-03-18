@@ -205,6 +205,7 @@ function addRequiredField(){
 
 function disableForm(){
 	
+	
 	$("#projectCode").attr("disabled",true);
 	$("#projectName").attr("disabled",true);
 	$("#projectAbbr").attr("disabled",true);
@@ -215,20 +216,26 @@ function disableForm(){
 //	}
 	var pManager = $("#projectManagerId").data("kendoDropDownList");
 	
-	if(pManager){
+	if(pManager && pModel.projectManagerId && pModel.projectManagerId!=""){
 		pManager.enable(false);
 	}
+	
 	var pStatus = $("#projectStatus").data("kendoDropDownList");
 
-	if(pStatus  && pModel.projectStatus=="销售正式立项"){
+	if(pStatus && pModel.projectStatus=="销售正式立项"){
 		pStatus.enable(false);
 	}
 	
 	var customer = $("#customerId").data("kendoDropDownList");
 
-	if(customer){
+	if(customer && pModel.customerId && pModel.customerId!=""){
 		customer.enable(false);
 	}
+	
+	if(pModel.projectType && pModel.projectType!="" && $("#projectType").length>0){
+		$("#projectType").attr("disabled",true);
+	}
+	
 }
 
 function saveProject(){
@@ -239,6 +246,19 @@ function saveProject(){
     	if (popupParams !=null && popupParams.scAddProject == 1){//创建销售合同时 创建项目
     		saveProjectInAddSC(pModel.toJSON());
 		}else{
+			
+			if(pModel.customerId && pModel.customerId._id){
+				pModel.customerId = pModel.customerId._id;
+			}
+			
+			if(pModel.projectManagerId && pModel.projectManagerId._id){
+				pModel.projectManagerId = pModel.projectManagerId._id;
+			}
+			
+			if(pModel.projectType && pModel.projectType.value){
+				pModel.projectType = pModel.projectType.value;
+			}
+			
 			var proType = pModel.projectType;
 			var proAbbr = null;
 			if(pModel.projectAbbr){

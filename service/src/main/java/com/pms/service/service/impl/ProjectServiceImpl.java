@@ -66,27 +66,37 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 			}
             dao.add(project, DBBean.PROJECT, Project.class);
             
-        }else{//Update
-            
-            Map<String, Object> existProjectQuery = new HashMap<String, Object>();
-            existProjectQuery.put(ApiConstants.MONGO_ID, project.get_id());
-            Project oldProject = (Project) dao.findOneByQuery(existProjectQuery, DBBean.PROJECT, Project.class);
+		} else {// Update
 
-            //项目 PM 发生改变
-            String pmOld = oldProject.getProjectManagerId();
-            String pmNew = project.getProjectManagerId();
-            
-            if (!pmOld.equals(pmNew)){
-                //1.冗余存放 项目 PM 且存有 projectId 的相关集合，均需同步更新 项目 PM 字段
-                //符合1.中的  集合添加到下一行 relatedCollections 数组中
-                String[] relatedCollections = {DBBean.SALES_CONTRACT};//外键关联到project,又冗余存有 项目PM
-                Map<String, Object> relatedCQuery = new HashMap<String, Object>();
-                relatedCQuery.put(ProjectBean.PROJECT_ID, project.get_id());                
-                updateRelatedCollectionForTheSameField(relatedCollections, relatedCQuery, ProjectBean.PROJECT_MANAGER_ID, pmNew);
-            }                   
-            dao.updateById(project, DBBean.PROJECT, Project.class);
-        }
+			dao.updateById(project, DBBean.PROJECT, Project.class);			
+			String[] relatedCollections = new String[] { DBBean.SALES_CONTRACT, DBBean.PURCHASE_BACK, DBBean.PURCHASE_ALLOCATE, DBBean.PURCHASE_BACK, DBBean.PURCHASE_ORDER, DBBean.PURCHASE_REQUEST };
+			updateProjectRelatedCollectionInfo(relatedCollections, project.get_id());
+		}
     
+    }
+    
+    
+    /**
+     * 某个字段更新，相关联冗余存放该字段的地方都要同时更新。
+     * @param collections 冗余存放某字段，需要同时更新的 集合
+     * @param query 待更新记录的条件
+     * @param updateKey 更新字段
+     * @param updateValue 更新字段新的值
+     */
+    public void updateProjectRelatedCollectionInfo(String[] collections, String projectId){
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put(ProjectBean.PROJECT_ID, projectId);
+    	query.put(ApiConstants.LIMIT_KEYS, new String[] {ApiConstants.MONGO_ID});
+    	for (int i=0; i<collections.length; i++){
+    		String cName = collections[i];
+    		List<Object> ids = dao.listLimitKeyValues(query, cName);
+    		for (Object id : ids){
+    			Map<String, Object> updateQuery = new HashMap<String, Object>();
+        		updateQuery.put(ApiConstants.MONGO_ID, id);
+        		scs.mergeCommonProjectInfo(updateQuery, projectId);
+        		dao.updateById(updateQuery, cName);
+    		}
+    	}
     }
 
     public Map<String, Object> getProjectForAddSc(Map<String, Object> params){

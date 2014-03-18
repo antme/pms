@@ -1278,6 +1278,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Object> project = this.dao.findOneByQuery(projectQuery, DBBean.PROJECT);
 		if (project != null) {
 			data.put(ProjectBean.PROJECT_MANAGER_ID, project.get(ProjectBean.PROJECT_MANAGER_ID));
+			data.put(ProjectBean.PROJECT_CUSTOMER_ID, project.get(ProjectBean.PROJECT_CUSTOMER_ID));
 			data.put(ProjectBean.PROJECT_TYPE, project.get(ProjectBean.PROJECT_TYPE));
 
 			data.put(ProjectBean.PROJECT_CODE, project.get(ProjectBean.PROJECT_CODE));

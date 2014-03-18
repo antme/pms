@@ -43,10 +43,15 @@ public class BaseTestCase extends TestCase {
 //		scService.importSCExcleFile(map);
 
 		
-		Project project = new Project();
-		projectService.addProject(project);
-		assertNotNull(project);
-		
+//		Project project = new Project();
+//		projectService.addProject(project);
+//		assertNotNull(project);
+    	
+    	
+    	String s = null;
+    	String s1 = null;
+    	System.out.println(s.equals(s1));
+//		
 //        assertTrue(true);
 //
 //        List emails = new ArrayList();
