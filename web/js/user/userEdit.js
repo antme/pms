@@ -14,6 +14,9 @@ var userModel = kendo.data.Model.define({
 			validation : {
 				required : true
 			}
+		},
+		email : {
+			
 		}
 	}
 
@@ -77,12 +80,14 @@ function edit(user){
 		user.password = "";
 	}
 	editUser = new userModel(user);
-	var length = editUser.groups.length;
 	var groups = new Array();
-	for (i = 0; i < length; i++) {
-		groups.push(editUser.groups[i]);
-	}
 
+	if(editUser.groups){
+		var length = editUser.groups.length;
+		for (i = 0; i < length; i++) {
+			groups.push(editUser.groups[i]);
+		}
+	}
 	editUser.groups="";
 	kendo.bind($("#user-form"), editUser);
 	kendo.bind($("#user-view-form"), editUser);
@@ -96,6 +101,9 @@ function save(){
 	editUser.groups = $("#groups").data("kendoMultiSelect").value();
 	editUser.department = $("#department").data("kendoDropDownList").value();
 	editUser.password = $("#password").val();
+	editUser.email = $("#email").val();
+	editUser.phone = $("#phone").val();
+	editUser.userName = $("#userName").val();
 	if(validator.validate()){
 		postAjaxRequest("/service/user/update", {models:kendo.stringify(editUser)} , saveSuccess);
 	}

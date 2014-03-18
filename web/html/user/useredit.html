@@ -18,19 +18,19 @@
 			<label for="userName">用户名</label>
 		</div>
 		<div data-container-for="userName" class="k-edit-field ">
-			<input type="text" class="k-input k-textbox" name="userName" required="required" validationMessage="请输入用户名" data-bind="value:userName">
+			<input type="text" class="k-input k-textbox" name="userName" id="userName" required="required" validationMessage="请输入用户名" data-bind="value:userName">
 		</div>
 		<div class="k-edit-label ">
 			<label for="phone">手机</label>
 		</div>
 		<div data-container-for="phone" class="k-edit-field ">
-			<input type="tel" pattern="\d{11}" validationMessage="号码不正确" class="k-input k-textbox" name="phone" data-bind="value:phone">
+			<input type="tel" pattern="\d{11}" validationMessage="号码不正确" class="k-input k-textbox" id="phone" name="phone" data-bind="value:phone">
 		</div>
 		<div class="k-edit-label ">
 			<label for="email">Email</label>
 		</div>
 		<div data-container-for="email" class="k-edit-field ">
-			<input type="email" data-email-msg="邮箱不正确" class="k-input k-textbox" name="email" data-bind="value: email">
+			<input type="email" data-email-msg="邮箱不正确" class="k-input k-textbox" id="email" name="email" data-bind="value:email">
 		</div>
 		<div class="k-edit-label ">
             <label for="department">部门</label>

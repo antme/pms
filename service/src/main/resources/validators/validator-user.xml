@@ -4,18 +4,7 @@
 <form-validation>
 	<formset>
 		<form name="register">
-			<field property="email" depends="required, email,dbNotExists">
-				<arg key="user.email" />
-				<arg key="user.email.dbNotExists" />
-				<var>
-					<var-name>notMongoId</var-name>
-					<var-value>true</var-value>
-				</var>
-				<var>
-					<var-name>collection</var-name>
-					<var-value>user</var-value>
-				</var>
-			</field>
+
 			<field property="password" depends="required">
 				<arg key="user.password" />
 			</field>

@@ -1157,7 +1157,11 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> request = new HashMap<String, Object>();
         request.put(ApiConstants.MONGO_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID ));        
         processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELLED);
-        processRequest(parameters, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_CANCELLED);        
+        processRequest(parameters, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_CANCELLED);    
+        
+        Map<String, Object> pprequest = this.dao.findOne(ApiConstants.MONGO_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID ), DBBean.PURCHASE_REQUEST);
+        backService.updatePurchaseBackStatus(pprequest.get(PurchaseContract.BACK_REQUEST_ID).toString());
+        
         return parameters;
     }
 
