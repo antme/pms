@@ -189,7 +189,7 @@ $(document).ready(function() {
 		
 		if (redirectParams && redirectParams.addInSCList && redirectParams.addInSCList == 1){//销售合同列表中直接为 弱电工程 类添加
 			addOrderInSCListForRuodian();
-			disableTable();
+			disableTableForRuoDian();
 		}else{
 			$("#purchasecontract-edit-item").show();
 			postAjaxRequest("/service/purcontract/get", redirectParams, edit);
@@ -312,7 +312,7 @@ function selectCType(e){
 
 	
 }
-function disableTable(){
+function disableTableForRuoDian(){
 	
 	var tabStrip = $("#tabstrip").data("kendoTabStrip");
 	if(!tabStrip){
@@ -322,8 +322,8 @@ function disableTable(){
 	var tab0 = tabStrip.tabGroup.children("li").eq(0);
 	var tab1 = tabStrip.tabGroup.children("li").eq(1);
 	var tab2 = tabStrip.tabGroup.children("li").eq(2);
-	tabStrip.enable(tab1, false);
-	tabStrip.enable(tab2, false);
+	tabStrip.remove(tab1);
+	tabStrip.remove(tab2);
 	
 }
 function addOrderInSCListForRuodian(){
@@ -644,8 +644,10 @@ function edit(data) {
 	if(requestDataItem.fromRuodian){
 		if(redirectParams && !redirectParams.addInSCList){
 			addOrderInSCListForRuodian();
+		}else if(popupParams){
+			addOrderInSCListForRuodian();
 		}
-		disableTable();
+		disableTableForRuoDian();
 		eqCostListDataSource.data(requestDataItem.eqcostList);
 	}
 
