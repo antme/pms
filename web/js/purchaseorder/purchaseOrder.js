@@ -60,6 +60,16 @@ $(document).ready(function() {
 					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
 			}, {
+				field : "purchaseContractCode",
+				title : "采购合同编号",
+				template : function(dataItem) {
+					if(dataItem.purchaseContractCode){
+						return '<a  onclick="openPurchaseContractViewWindow(\'' + dataItem.purchaseContractId + '\');">' + dataItem.purchaseContractCode + '</a>';
+					}else{
+						return "";
+					}
+				}
+			},{
 				field : "customerName",
 				title : "客户名"
 			}, {

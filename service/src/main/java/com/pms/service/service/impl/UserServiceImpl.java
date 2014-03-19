@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.pms.service.annotation.InitBean;
+import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.dbhelper.DBQueryUtil;
@@ -427,7 +428,11 @@ public class UserServiceImpl extends AbstractService implements IUserService {
 		}
 	}
 	
-	public Map<String, Object>  updateSystemConfig(Map<String, Object> params) {
+	public Map<String, Object> updateSystemConfig(Map<String, Object> params) {
+
+		for (String key : params.keySet()) {
+			ConfigurationManager.setProperties(key, params.get(key).toString());
+		}
 
 		if (ApiUtil.isEmpty(params.get(ApiConstants.MONGO_ID))) {
 			return this.dao.add(params, "sysConfig");

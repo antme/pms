@@ -267,7 +267,14 @@ public class ExcleUtil {
 
         File f = new File(fileDir + UUID.randomUUID().toString() + ".xls");
 
-        ExcleUtil eu = new ExcleUtil();
+        return createExcelListFile(eqcostList, colunmTitleHeaders, colunmHeaders, f);
+	}
+
+	public static String createExcelListFile(Object eqcostList, String[] colunmTitleHeaders, String[] colunmHeaders, File f) {
+		if (f.exists()) {
+			f.delete();
+		}
+	    ExcleUtil eu = new ExcleUtil();
         eu.createFile(f);
         eu = new ExcleUtil(f);
 
@@ -303,7 +310,7 @@ public class ExcleUtil {
 
         }
 		return f.getAbsolutePath();
-	}
+    }
 	
 	
 	

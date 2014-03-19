@@ -1,5 +1,6 @@
 package com.pms.service.service.impl;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import com.pms.service.bean.EqCost;
 import com.pms.service.bean.Project;
 import com.pms.service.bean.SalesContract;
+import com.pms.service.cfg.ConfigurationManager;
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.dbhelper.DBQueryUtil;
@@ -1879,6 +1881,25 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		Map<String, Integer> restCountMap = purchaseService.countBackRestEqByScId(scId);
 		updateDataStatus(scId, DBBean.SALES_CONTRACT, SalesContractBean.SC_STATUS_CLOSED, SalesContractBean.SC_STATUS_SUBMITED, "status", restCountMap);
 
+	}
+	
+	
+	public String exportScExcle() {
+		String colunmTitleHeaders[] = new String[] { "销售合同编号", "项目名", "项目编号" };
+
+		String colunmHeaders[] = new String[] { SalesContractBean.SC_CODE, ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CODE };
+
+		String fileDir = ConfigurationManager.getProperty("file_download_dir");
+
+		File f = new File(fileDir + "销售合同.xls");
+
+		Map<String, Object> result = dao.list(new HashMap<String, Object>(), DBBean.SALES_CONTRACT);
+
+		mergeProjectInfoForSC(result);
+
+		ExcleUtil.createExcelListFile(result.get(ApiConstants.RESULTS_DATA), colunmTitleHeaders, colunmHeaders, f);
+
+		return f.getName();
 	}
 
 	public List<Map<String, Object>> mergeEqListBasicInfo(Object eqList) {

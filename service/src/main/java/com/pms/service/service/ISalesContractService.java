@@ -91,4 +91,6 @@ public interface ISalesContractService {
 	
 	public void updateContractStatus(String scId);
 
+	public String exportScExcle();
+
 }

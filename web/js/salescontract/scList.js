@@ -328,5 +328,12 @@ function openTraceWindow(param){
 }
 
 
+function toolbar_export(){
+	postAjaxRequest("/service/sc/export", {}, function(data){
+		
+		$("#download-link").attr("href", "/upload/" + data.file);
+		$("#download-link").show();
+	});
+}
 	
 	

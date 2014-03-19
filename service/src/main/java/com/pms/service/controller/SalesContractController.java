@@ -323,6 +323,14 @@ public class SalesContractController extends AbstractController {
 		}
         
     	responseWithData(null, request, response);
+    }
+    
+    
+    @RequestMapping("/export")
+    //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
+    public void exportScExcle(HttpServletRequest request, HttpServletResponse response){    
+   
+    	responseWithKeyValue("file", salesContractService.exportScExcle(), request, response);
     }  
     
     @RequestMapping("/clear")
