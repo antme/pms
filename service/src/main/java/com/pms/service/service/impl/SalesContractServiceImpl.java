@@ -141,16 +141,21 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		boolean isdraft = false;
 
         
-        if(ApiUtil.isValid(_id)){
-            
-            //历史数据是草稿的话，清楚历史数据
-            Map<String, Object> oldContract = this.dao.findOne(ApiConstants.MONGO_ID, _id, new String[]{"status"}, DBBean.SALES_CONTRACT);
-            if(oldContract.get("status") == null || oldContract.get("status").toString().equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)){
-                Map<String, Object> eqDeleteQuery = new HashMap<String, Object>();
-                eqDeleteQuery.put(SalesContractBean.SC_ID, _id);
-                this.dao.deleteByQuery(eqDeleteQuery, DBBean.EQ_COST);
-            }
-        }
+		if (ApiUtil.isValid(_id)) {
+
+			// 历史数据是草稿的话，清楚历史数据
+			Map<String, Object> oldContract = this.dao.findOne(ApiConstants.MONGO_ID, _id, new String[] { "status" }, DBBean.SALES_CONTRACT);
+			if (oldContract.get("status") == null || oldContract.get("status").toString().equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {
+				Map<String, Object> eqDeleteQuery = new HashMap<String, Object>();
+				eqDeleteQuery.put(SalesContractBean.SC_ID, _id);
+				this.dao.deleteByQuery(eqDeleteQuery, DBBean.EQ_COST);
+
+				//设置ID为空，重新添加
+				for (Map<String, Object> eqMap : eqcostList) {
+					eqMap.put(ApiConstants.MONGO_ID, null);
+				}
+			}
+		}
         
 		contract.remove(SalesContractBean.SC_EQ_LIST);
 		Map<String, Object> addedContract = null;
@@ -418,16 +423,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			realItemQuery.put(EqCostListBean.EQ_LIST_REAL_AMOUNT, new DBQuery(DBQueryOpertion.NOT_NULL));
 			realItemQuery.put(ApiConstants.LIMIT_KEYS, EqCostListBean.EQ_LIST_REAL_AMOUNT);
 			Map<String, Object> realItem = dao.findOneByQuery(realItemQuery, DBBean.EQ_COST);
-
-			// for(String key: realItemQuery.keySet()){
-			// Map<String, Object> queryMap = new HashMap<String, Object>();
-			// queryMap.put(key, realItemQuery.get(key));
-			//
-			// logger.info("....................................." + key +
-			// ".........................." + dao.count(queryMap,
-			// DBBean.EQ_COST)) ;
-			//
-			// }
 
 			if (realItem == null || !needMerge) {
 
