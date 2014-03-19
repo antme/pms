@@ -126,14 +126,17 @@ function approveCon() {
 function backCon(){
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "审批拒绝"){
-			postAjaxRequest("/service/purcontract/backtoorder", {
-				_id : row._id
-			}, function(data) {
-				listDataSource.read();
-			});
+		if(row.status == "审批拒绝" || row.status == "草稿" || row.status == "审批中"){
+			if(confirm("此成本清单将退回到备货申请中，相关的采购订单，采购申请也一并退回，是否退回？")){
+				postAjaxRequest("/service/purcontract/backtoorder", {
+					_id : row._id
+				}, function(data) {
+					listDataSource.read();
+				});
+			
+			}
 		}else{
-			alert("只能退回审核拒绝的采购合同");
+			alert("只能退回草稿，审批中，审核拒绝的采购合同");
 		}
 	}
 }
@@ -141,14 +144,16 @@ function backCon(){
 function backConToSc(){
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "审批拒绝"){
-			postAjaxRequest("/service/purcontract/backtosc", {
-				_id : row._id
-			}, function(data) {
-				listDataSource.read();
-			});
+		if(row.status == "审批拒绝" || row.status == "草稿" || row.status == "审批中"){
+			if(confirm("此成本清单将退回到成本清单中，相关的采购订单，采购申请，备货申请也会一并退回，是否退回？")){
+				postAjaxRequest("/service/purcontract/backtosc", {
+					_id : row._id
+				}, function(data) {
+					listDataSource.read();
+				});
+			}
 		}else{
-			alert("只能退回审核拒绝的采购合同");
+			alert("只能退回草稿，审批中，审核拒绝的采购合同");
 		}
 	}
 }

@@ -40,7 +40,10 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> rejectPurchaseOrder(Map<String, Object> order);
     
-    public Map<String, Object> cancelPurchaseOrder(Map<String, Object> request);
+    public Map<String, Object> backPurchaseOrder(Map<String, Object> request);
+    
+    public Map<String, Object> backPurchaseOrderToSc(Map<String, Object> request);
+
     
     public Map<String, Object> approvePurchaseContract(Map<String, Object> params);
     
@@ -67,7 +70,10 @@ public interface IPurchaseContractService {
 
     public Map<String, Object> approvePurchaseRequest(Map<String, Object> request);
     
-    public Map<String, Object> abrogatePurchaseRequest(Map<String, Object> request);
+    public Map<String, Object> backPurchaseRequest(Map<String, Object> request);
+    
+    public Map<String, Object> backkPurchaseRequestToSc(Map<String, Object> request);
+    
     
     public Map<String, Object> rejectPurchaseRequest(Map<String, Object> request);
     

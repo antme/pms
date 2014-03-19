@@ -109,13 +109,13 @@ function cancelOrder() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if (row.status == "草稿" || (row.status == "已提交" && !row.purchaseContractId)) {
-
-			postAjaxRequest("/service/purcontract/order/cancel", {
-				_id : row._id
-			}, function(data) {
-				listDataSource.read();
-			});
-			
+			if(confirm("此成本清单将退回到备货申请中，相关的采购申请也一并退回，是否退回？")){
+				postAjaxRequest("/service/purcontract/order/cancel", {
+					_id : row._id
+				}, function(data) {
+					listDataSource.read();
+				});
+			}
 			
 		} else {
 			alert("只能回退未发采购合同的订单, 如果已发采购合同，请从采购合同退回");
@@ -131,13 +131,16 @@ function backOrderToSc() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if (row.status == "草稿" || (row.status == "已提交" && !row.purchaseContractId)) {
+			if(confirm("此成本清单将退回到成本清单中，相关的采购申请，备货申请也会一并退回，是否退回？")){
+
 			
+				postAjaxRequest("/service/purcontract/order/backtosc", {
+					_id : row._id
+				}, function(data) {
+					listDataSource.read();
+				});
 			
-			postAjaxRequest("/service/purcontract/order/backtosc", {
-				_id : row._id
-			}, function(data) {
-				listDataSource.read();
-			});
+			}
 			
 			
 		} else {

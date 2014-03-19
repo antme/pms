@@ -103,8 +103,25 @@ function abrogatePurchaseRequest() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if(row.status == "已提交" || row.status == "草稿" || row.status == "审批拒绝" || row.status == "审批中"){
-			if(confirm("删除退回此采购申请？")){
+			if(confirm("此成本清单将退回到备货申请中，是否退回？")){
 				postAjaxRequest(cancelUrl, {
+					_id : row._id
+				}, function(data) {
+					listDataSource.read();
+				});
+			}
+		}else {
+			alert("只能废除未发采购订单的数据或则已提交的数据");
+		}
+	}
+}
+
+function abrogatePurchaseRequestToSc() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		if(row.status == "已提交" || row.status == "草稿" || row.status == "审批拒绝" || row.status == "审批中"){
+			if(confirm("此成本清单将退回到成本清单中，相关的备货申请也会一并退回，是否退回？")){
+				postAjaxRequest("/service/purcontract/request/abrogatetosc", {
 					_id : row._id
 				}, function(data) {
 					listDataSource.read();

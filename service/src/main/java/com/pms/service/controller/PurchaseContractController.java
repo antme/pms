@@ -179,9 +179,16 @@ public class PurchaseContractController extends AbstractController {
     
     @RequestMapping("/request/abrogate")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
-    public void abrogatePurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.abrogatePurchaseRequest(parserJsonParameters(request, false)), request, response);
+    public void backPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.backPurchaseRequest(parserJsonParameters(request, false)), request, response);
     }
+    
+    @RequestMapping("/request/abrogatetosc")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
+    public void abrogatePurchaseRequestToSc(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.backkPurchaseRequestToSc(parserJsonParameters(request, false)), request, response);
+    }
+    
     
     @RequestMapping("/request/reject")
     public void rejectPurchaseRequest(HttpServletRequest request, HttpServletResponse response) {
@@ -233,8 +240,14 @@ public class PurchaseContractController extends AbstractController {
     
     @RequestMapping("/order/cancel")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_MANAGEMENT, desc = RoleValidConstants.PURCHASE_ORDER_MANAGEMENT_DESC)
-    public void cancelPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.cancelPurchaseOrder(parserJsonParameters(request, false)), request, response);
+    public void backPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.backPurchaseOrder(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/order/backtosc")
+    @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_MANAGEMENT, desc = RoleValidConstants.PURCHASE_ORDER_MANAGEMENT_DESC)
+    public void backPurchaseOrderToSc(HttpServletRequest request, HttpServletResponse response) {
+        responseWithData(pService.backPurchaseOrderToSc(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/order/reject")
