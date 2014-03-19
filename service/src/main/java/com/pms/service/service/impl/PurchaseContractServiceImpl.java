@@ -2172,7 +2172,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     
     
-	public void backContractToOrder(HashMap<String, Object> parserJsonParameters) {
+	public void backContractToOrder(Map<String, Object> parserJsonParameters) {
 
 		processRequest(parserJsonParameters, DBBean.PURCHASE_CONTRACT, PurchaseRequest.STATUS_BACKED);
 		Map<String, Object> query = new HashMap<String, Object>();
@@ -2188,7 +2188,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 	}
     
     
-	public void backContractToSc(HashMap<String, Object> parserJsonParameters) {
+	public void backContractToSc(Map<String, Object> parserJsonParameters) {
 		backContractToOrder(parserJsonParameters);
 
 		Map<String, Object> query = new HashMap<String, Object>();
