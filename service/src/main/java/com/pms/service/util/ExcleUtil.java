@@ -274,6 +274,8 @@ public class ExcleUtil {
 		if (f.exists()) {
 			f.delete();
 		}
+		f.getParentFile().mkdirs();
+		
 	    ExcleUtil eu = new ExcleUtil();
         eu.createFile(f);
         eu = new ExcleUtil(f);
