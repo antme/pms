@@ -61,9 +61,11 @@ public class InitBean {
         
 		Map<String, Object> configMap = dao.findOneByQuery(new HashMap<String, Object>(), "sysConfig");
 
-		for (String key : configMap.keySet()) {
-			ConfigurationManager.setProperties(key, configMap.get(key).toString());
+		if (configMap != null) {
+			for (String key : configMap.keySet()) {
+				ConfigurationManager.setProperties(key, configMap.get(key).toString());
 
+			}
 		}
     }
 
