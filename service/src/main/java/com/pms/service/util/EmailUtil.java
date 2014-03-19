@@ -34,23 +34,16 @@ public class EmailUtil {
     	toList.add(to);
     	sendMail(subject, toList, content, file);
     }
-    
-    public static void sendMail(String subject, List<Object> toList, Map<String,Object> model, String template, String file) {
+
+    public static void sendEqListEmails(String subject, List<Object> toList, Map<String,Object> model, String template, Object eqList) {
+    	String file = ExcleUtil.createEqcostExcel(eqList);
     	String content  = getContent(model, template);
     	sendMail(subject, toList, content, file);
     }
-    
-    public static void sendEqListEmails(String subject, List<Object> toList, Map<String,Object> model, String template, Object eqList) {
-    	String file = ExcleUtil.createEqcostExcel(eqList);
-    	sendMail(subject, toList, model, template, file);
-    }
-    public static void sendEqListEmails(String subject, List<Object> toList,String content, Object eqList) {
-    	String file = ExcleUtil.createEqcostExcel(eqList);
-    	sendMail(subject, toList,content, file);
-    }
+
     
     /**发送主方法**/
-	public static void sendMail(String subject, List<Object> toList, String content, String file) {
+	private static void sendMail(String subject, List<Object> toList, String content, String file) {
 		HtmlEmail email = new HtmlEmail();
 		
         try {
@@ -101,7 +94,7 @@ public class EmailUtil {
      * @param model 向模版中传递的对象变量
      * @param tempate  模版名
      * */
-    public static String getContent(Map<String,Object> model, String template) {
+    private static String getContent(Map<String,Object> model, String template) {
         VelocityEngine ve = new VelocityEngine(); //配置模板引擎
         ve.setProperty(Velocity.FILE_RESOURCE_LOADER_PATH, ConfigurationManager.getEmailTemplatePath());//模板文件所在的路径
         ve.setProperty(Velocity.INPUT_ENCODING,"UTF-8");//处理中文问题
