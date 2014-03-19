@@ -427,10 +427,17 @@ public class UserServiceImpl extends AbstractService implements IUserService {
 		}
 	}
 	
-	
-	public void updateSystemConfig(Map<String, Object> parserJsonParameters){
-		
+	public Map<String, Object>  updateSystemConfig(Map<String, Object> params) {
+
+		if (ApiUtil.isEmpty(params.get(ApiConstants.MONGO_ID))) {
+			return this.dao.add(params, "sysConfig");
+		} else {
+			return this.dao.updateById(params, "sysConfig");
+		}
 	}
 
+	public Map<String, Object> loadSystemConfig() {
+		return this.dao.findOneByQuery(new HashMap<String, Object>(), "sysConfig");
+	}
 
 }

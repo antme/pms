@@ -182,9 +182,16 @@ public class UserController extends AbstractController {
     
 	@RequestMapping("/sys/update")
 	public void updateSystemConfig(HttpServletRequest request, HttpServletResponse response) {
-		userService.updateSystemConfig(parserJsonParameters(request, false));
-		responseWithData(null, request, response);
+		
+		responseWithData(userService.updateSystemConfig(parserJsonParameters(request, false)), request, response);
 	}
+	
+	@RequestMapping("/sys/load")
+	public void loadSystemConfig(HttpServletRequest request, HttpServletResponse response) {
+		
+		responseWithData(userService.loadSystemConfig(), request, response);
+	}
+	
 	
 
     public IUserService getUserService() {

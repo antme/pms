@@ -2,53 +2,60 @@
 
 <script type="text/javascript">
 
-var sysModel = kendo.data.Model.define({
-	id : "_id",
-	fields : {
-		_id : {
-			editable : false,
-			nullable : true
-		},
-		email : {
-			validation : {
-				required : true
-			}
-		},
-		password : {
-			validation : {
-				required : true
-			}
-		},
-		smtp : {
-			validation : {
-				required : true
-			}
-		},
-
-		emailUserName : {
-			validation : {
-				required : true
+	var sysModel = kendo.data.Model.define({
+		id : "_id",
+		fields : {
+			_id : {
+				editable : false,
+				nullable : true
+			},
+			email : {
+				validation : {
+					required : true
+				}
+			},
+			password : {
+				validation : {
+					required : true
+				}
+			},
+			smtp : {
+				validation : {
+					required : true
+				}
+			},
+	
+			emailUserName : {
+				validation : {
+					required : true
+				}
 			}
 		}
-	}
-
-});
+	
+	});
 
  	var sys = new sysModel();
-	function saveSysSettings(){
-		
-		console.log(sys);
-		
+	function saveSysSettings(){		
+		postAjaxRequest("/service/user/sys/update",  {models:kendo.stringify(sys)}, function(data){
+			sys = new sysModel(data);
+			kendo.bind($("#sys-settings"), sys);
+		});	
 	}
 	
 	
 	$(document).ready(function() {
 		
+		postAjaxRequest("/service/user/sys/load", {}, function(data){
+			sys = new sysModel(data);
+			kendo.bind($("#sys-settings"), sys);
+		});
 		
-		kendo.bind($("#sys-settings"), sys);
 		
 	});
 	
+	function projectPopView(data){
+		
+	}
 	
 </script>
 <body>

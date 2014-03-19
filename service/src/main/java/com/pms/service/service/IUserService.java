@@ -61,7 +61,9 @@ public interface IUserService {
 
 	public void enableUsers(Map<String, Object> params);
 
-	public void updateSystemConfig(Map<String, Object> parserJsonParameters);
+	public Map<String, Object>  updateSystemConfig(Map<String, Object> parserJsonParameters);
+
+	public Map<String, Object> loadSystemConfig();
 
     
 }
