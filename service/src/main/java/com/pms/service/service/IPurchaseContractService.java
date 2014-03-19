@@ -72,7 +72,7 @@ public interface IPurchaseContractService {
     
     public Map<String, Object> backPurchaseRequest(Map<String, Object> request);
     
-    public Map<String, Object> backkPurchaseRequestToSc(Map<String, Object> request);
+    public Map<String, Object> backPurchaseRequestToSc(Map<String, Object> request);
     
     
     public Map<String, Object> rejectPurchaseRequest(Map<String, Object> request);

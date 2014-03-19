@@ -186,7 +186,7 @@ public class PurchaseContractController extends AbstractController {
     @RequestMapping("/request/abrogatetosc")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT, desc = RoleValidConstants.PURCHASE_REQUEST_MANAGEMENT_DESC)
     public void abrogatePurchaseRequestToSc(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(pService.backkPurchaseRequestToSc(parserJsonParameters(request, false)), request, response);
+        responseWithData(pService.backPurchaseRequestToSc(parserJsonParameters(request, false)), request, response);
     }
     
     

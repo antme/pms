@@ -1144,24 +1144,24 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> backPurchaseOrder(Map<String, Object> parameters){
         
         Map<String, Object> order = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), new String[] { PurchaseRequest.PURCHASE_REQUEST_ID }, DBBean.PURCHASE_ORDER);
-        Map<String, Object> request = new HashMap<String, Object>();
-        request.put(ApiConstants.MONGO_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID ));        
-        processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_CANCELLED);
         processRequest(parameters, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_CANCELLED);    
-        
-        Map<String, Object> pprequest = this.dao.findOne(ApiConstants.MONGO_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID ), DBBean.PURCHASE_REQUEST);
-        backService.updatePurchaseBackStatus(pprequest.get(PurchaseContract.BACK_REQUEST_ID).toString());
-        
+
+        Map<String, Object> request = new HashMap<String, Object>();
+        request.put(ApiConstants.MONGO_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID ));                
+        backPurchaseRequest(request);
+
         return parameters;
     }
     
     public Map<String, Object> backPurchaseOrderToSc(Map<String, Object> parameters){       
-    	backPurchaseOrder(parameters);  
     	
-    	Map<String, Object> order = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), new String[]{PurchaseCommonBean.BACK_REQUEST_ID, SalesContractBean.SC_EQ_LIST}, DBBean.PURCHASE_ORDER);
-    	Map<String, Object> back = this.dao.findOne(ApiConstants.MONGO_ID, order.get(PurchaseCommonBean.BACK_REQUEST_ID), new String[]{SalesContractBean.SC_EQ_LIST}, DBBean.PURCHASE_BACK);
-    	
-    	backPurchaseToSc(back, (List<Map<String, Object>>) order.get(SalesContractBean.SC_EQ_LIST));
+        processRequest(parameters, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_CANCELLED);    
+
+        Map<String, Object> order = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), new String[] { PurchaseRequest.PURCHASE_REQUEST_ID }, DBBean.PURCHASE_ORDER);
+        Map<String, Object> request = new HashMap<String, Object>();
+        request.put(ApiConstants.MONGO_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID ));   
+        backPurchaseRequestToSc(request);
+    
         return parameters;
     }
     
@@ -1388,10 +1388,15 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> backPurchaseRequest(Map<String, Object> parameters) {
         processRequest(parameters, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_BACKED);
+
+        Map<String, Object> request = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), new String[] { PurchaseCommonBean.BACK_REQUEST_ID,
+                SalesContractBean.SC_EQ_LIST }, DBBean.PURCHASE_REQUEST);
+        
+        backService.updatePurchaseBackStatus(request.get(PurchaseCommonBean.BACK_REQUEST_ID).toString());
         return parameters;        
     }
     
-	public Map<String, Object> backkPurchaseRequestToSc(Map<String, Object> parameters) {
+	public Map<String, Object> backPurchaseRequestToSc(Map<String, Object> parameters) {
 		processRequest(parameters, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_BACKED);
 
 		Map<String, Object> request = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), new String[] { PurchaseCommonBean.BACK_REQUEST_ID,
@@ -1408,7 +1413,6 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     public Map<String, Object> rejectPurchaseRequest(Map<String, Object> parameters) {
         processRequest(parameters, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_REJECTED);
         Map<String, Object> result = this.dao.findOne(ApiConstants.MONGO_ID, parameters.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
-
         backService.updatePurchaseBackStatus(result.get(PurchaseContract.BACK_REQUEST_ID).toString());
         return result;
 
@@ -2195,8 +2199,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 	    	throw new ApiResponseException("已经退回，不能再次退回");
 	    }
 	        
-		
-		
+
 		processRequest(parserJsonParameters, DBBean.PURCHASE_CONTRACT, PurchaseRequest.STATUS_BACKED);
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(PurchaseContract.PURCHASE_CONTRACT_ID, parserJsonParameters.get(ApiConstants.MONGO_ID));
@@ -2211,32 +2214,23 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 	}
     
     
-	public void backContractToSc(Map<String, Object> parserJsonParameters) {
-		backContractToOrder(parserJsonParameters);
+    public void backContractToSc(Map<String, Object> parameters) {
+        processRequest(parameters, DBBean.PURCHASE_CONTRACT, PurchaseRequest.STATUS_CANCELLED);
 
-		Map<String, Object> query = new HashMap<String, Object>();
-		query.put(PurchaseContract.PURCHASE_CONTRACT_ID, parserJsonParameters.get(ApiConstants.MONGO_ID));
-		query.put(ApiConstants.LIMIT_KEYS, new String[] { ApiConstants.MONGO_ID, PurchaseOrder.BACK_REQUEST_ID, SalesContractBean.SC_EQ_LIST });
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(PurchaseContract.PURCHASE_CONTRACT_ID, parameters.get(ApiConstants.MONGO_ID));
+        query.put(ApiConstants.LIMIT_KEYS, new String[] { ApiConstants.MONGO_ID, PurchaseOrder.BACK_REQUEST_ID, SalesContractBean.SC_EQ_LIST });
 
-		Map<String, Object> orderMap = this.dao.list(query, DBBean.PURCHASE_ORDER);
-		List<Map<String, Object>> orders = (List<Map<String, Object>>) orderMap.get(ApiConstants.RESULTS_DATA);
+        Map<String, Object> orderMap = this.dao.list(query, DBBean.PURCHASE_ORDER);
+        List<Map<String, Object>> orders = (List<Map<String, Object>>) orderMap.get(ApiConstants.RESULTS_DATA);
 
-		for (Map<String, Object> order : orders) {
+        if (orders != null) {
+            for (Map<String, Object> order : orders) {
+                backPurchaseOrderToSc(order);
+            }
+        }
 
-			if (order.get(SalesContractBean.SC_EQ_LIST) != null) {
-				Map<String, Object> backQuery = new HashMap<String, Object>();
-				backQuery.put(ApiConstants.MONGO_ID, order.get(PurchaseOrder.BACK_REQUEST_ID));
-				backQuery.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
-
-				Map<String, Object> back = this.dao.findOneByQuery(backQuery, DBBean.PURCHASE_BACK);
-				List<Map<String, Object>> orderEqList = (List<Map<String, Object>>) order.get(SalesContractBean.SC_EQ_LIST);
-
-				backPurchaseToSc(back, orderEqList);
-			}
-
-		}
-
-	}
+    }
 
 	public void backPurchaseToSc(Map<String, Object> back, List<Map<String, Object>> orderEqList) {
 	    if (back.get(SalesContractBean.SC_EQ_LIST) != null) {
@@ -2268,7 +2262,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 	    	}
 
 	    	back.put(PurchaseBack.pbMoney, money);
-	    	this.dao.updateById(back, DBBean.PURCHASE_BACK);
+	    	this.dao.updateById(back, DBBean.PURCHASE_BACK);	    	
 	    }
     }
     
