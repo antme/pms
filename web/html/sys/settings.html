@@ -1,0 +1,98 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script type="text/javascript">
+
+var sysModel = kendo.data.Model.define({
+	id : "_id",
+	fields : {
+		_id : {
+			editable : false,
+			nullable : true
+		},
+		email : {
+			validation : {
+				required : true
+			}
+		},
+		password : {
+			validation : {
+				required : true
+			}
+		},
+		smtp : {
+			validation : {
+				required : true
+			}
+		},
+
+		emailUserName : {
+			validation : {
+				required : true
+			}
+		}
+	}
+
+});
+
+ 	var sys = new sysModel();
+	function saveSysSettings(){
+		
+		console.log(sys);
+		
+	}
+	
+	
+	$(document).ready(function() {
+		
+		
+		kendo.bind($("#sys-settings"), sys);
+		
+	});
+	
+	
+</script>
+<body>
+<div id="sys-settings" >
+	<div class="k-edit-form-container">
+			
+			
+			    <h3 style="margin-left:50px;">邮箱设置</h3>
+				<div class="k-edit-label ">
+				<label for="email"  class="required">邮箱帐号<span class="input_required_star">*</span></label>
+				</div>
+				<div data-container-for="email" class="k-edit-field ">
+					<input type="text" class="k-input k-textbox" name="email" id="email" style="width:250px;" data-bind="value: email">
+				</div>
+				
+				<div class="k-edit-label ">
+					<label for="password">邮箱密码<span class="input_required_star">*</span></label>
+				</div>
+				<div data-container-for="password" class="k-edit-field ">
+					<input type="text" class="k-input k-textbox" name="password" id="password"
+						required="required" validationMessage="必填" data-bind="value: password" style="width:350px;">
+				</div>
+				<div class="k-edit-label ">
+					<label for="smtp">smtp服务器<span class="input_required_star">*</span></label>
+				</div>
+				<div data-container-for="smtp" class="k-edit-field ">
+					<input type="text" class="k-input k-textbox" name="smtp" id="smtp"
+						 data-bind="value: smtp">
+				</div>
+	
+				<div class="k-edit-label ">
+					<label for="emailUserName">邮箱显示名字<span class="input_required_star">*</span></label>
+				</div>
+				<div data-container-for="emailUserName" class="k-edit-field ">
+					<input type="text" class="k-input k-textbox" name="emailUserName" id="emailUserName"
+						required="required" validationMessage="必填" data-bind="value: emailUserName" style="width:350px;">
+				</div>
+	        
+			
+	
+		</div>		
+		<hr>
+		<div style="margin-left:50px;">
+			<button class="k-button"  onclick="saveSysSettings();">提交</button>
+		</div>
+	</div>
+</body>

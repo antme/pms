@@ -179,7 +179,13 @@ public class UserController extends AbstractController {
     	responseWithData(userService.changePassword(parserJsonParameters(request,  false)), request, response, "change_success");
     }
        
-
+    
+	@RequestMapping("/sys/update")
+	public void updateSystemConfig(HttpServletRequest request, HttpServletResponse response) {
+		userService.updateSystemConfig(parserJsonParameters(request, false));
+		responseWithData(null, request, response);
+	}
+	
 
     public IUserService getUserService() {
         return userService;

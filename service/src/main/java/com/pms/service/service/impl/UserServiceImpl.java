@@ -426,5 +426,11 @@ public class UserServiceImpl extends AbstractService implements IUserService {
 			this.dao.updateById(user, DBBean.USER);
 		}
 	}
+	
+	
+	public void updateSystemConfig(Map<String, Object> parserJsonParameters){
+		
+	}
+
 
 }

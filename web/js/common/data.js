@@ -124,6 +124,8 @@ var menus = [
                          { text: "角色管理", id: "user_group", imageUrl: "/images/12xingzuo_11.png" },
                          { text: "菜单管理", id: "user_menu", imageUrl: "/images/designs.png" }
                      ]
+             }, {
+                 text: "系统设置", id: "sys_settings", imageUrl: "/images/friends_group.png"
              }
   ];
 
