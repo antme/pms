@@ -167,10 +167,11 @@ $(document).ready(function() {
 		    data: "data"
 		}
 	});
-	$("#customerId").kendoDropDownList({
+	$("#customerId").kendoComboBox({
 		dataTextField : "name",
 		dataValueField : "_id",
-        optionLabel: "选择客户...",
+		placeholder: "选择客户...",
+		filter: "contains",
 		dataSource : customerItems
 	});
 	
@@ -461,7 +462,7 @@ $(document).ready(function() {
 		          
 		          //start: add for customer info
 		          var haveCustomer = data.cId;
-		          var cusList = $("#customerId").data("kendoDropDownList");
+		          var cusList = $("#customerId").data("kendoComboBox");
 		          if (haveCustomer != null){
 			    	  cusList.value(haveCustomer);
 			    	  cusList.enable(false);
@@ -535,21 +536,14 @@ function editDraftSc_ADD(data){
 			showTabs(dataItem.text);
 		}
 	});
-//	$("#projectType").kendoDropDownList({
-//		dataTextField : "text",
-//		dataValueField : "value",
-//		optionLabel : "选择立项类别...",
-//		dataSource : proCategoryItems,
-//		select:function(e){
-//			var dataItem = this.dataItem(e.item.index());
-//		}
-//	});
+
 	
 
-	$("#projectManagerId").kendoDropDownList({
+	$("#projectManagerId").kendoComboBox({
 		dataTextField : "userName",
 		dataValueField : "_id",
-        optionLabel: "选择项目经理...",
+		placeholder: "选择项目经理...",
+		filter: "contains",
 		dataSource : proManagerItems
 	});
 	

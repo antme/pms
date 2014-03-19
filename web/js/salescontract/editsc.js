@@ -334,10 +334,11 @@ $(document).ready(function() {
 		    data: "data"
 		}
 	});
-	$("#customerId").kendoDropDownList({
+	$("#customerId").kendoComboBox({
 		dataTextField : "name",
 		dataValueField : "_id",
-        optionLabel: "选择客户...",
+		placeholder: "选择客户...",
+		filter: "contains",
 		dataSource : customerItems
 	});
 	//合同类型
@@ -800,7 +801,7 @@ function edit(data){
 	scm.set("contractDate", kendo.toString(scm.contractDate, 'd'));
 	kendo.bind($("#editSalesContract"), scm);
 	
-	var customer = $("#customerId").data("kendoDropDownList");
+	var customer = $("#customerId").data("kendoComboBox");
 	if(scm.customerId){
 		customer.enable(false);
 	}else{
