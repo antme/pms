@@ -582,11 +582,11 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
         Map<String, Object> eqMap = arrivalService.listEqlist(query);
      
-        List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) eqMap.get(SalesContractBean.SC_EQ_LIST);
-        purchaseEqList = scs.mergeEqListBasicInfo(purchaseEqList);
-        		
+        List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) eqMap.get(SalesContractBean.SC_EQ_LIST);       		
         List<Map<String, Object>> shipMergedEqList = laodSettlementRestEqLit(purchaseEqList, projectId);
-              
+         
+        shipMergedEqList = scs.mergeEqListBasicInfo(shipMergedEqList);
+
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put(ApiConstants.RESULTS_DATA, shipMergedEqList);
 		return res;

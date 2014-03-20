@@ -1231,30 +1231,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> project = dao.findOne(ApiConstants.MONGO_ID, request.getProjectId(), DBBean.PROJECT);
 
         if (project != null) {
-            Map<String, Object> pmQuery = new HashMap<String, Object>();
-            pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.USER_NAME });
-            pmQuery.put(ApiConstants.MONGO_ID, project.get(ProjectBean.PROJECT_MANAGER_ID));
-
-            Map<String, Object> pmData = dao.findOneByQuery(pmQuery, DBBean.USER);
-            if(pmData!=null){
-                project.put(ProjectBean.PROJECT_MANAGER_ID, pmData.get(UserBean.USER_NAME));
-            }
-
-            String cId = (String) project.get(ProjectBean.PROJECT_CUSTOMER_ID);
-
-            Map<String, Object> customerQuery = new HashMap<String, Object>();
-            customerQuery.put(ApiConstants.LIMIT_KEYS, new String[] { CustomerBean.NAME });
-            customerQuery.put(ApiConstants.MONGO_ID, cId);
-            Map<String, Object> customerData = dao.findOneByQuery(customerQuery, DBBean.CUSTOMER);
-
-            if(customerData!=null){
-            project.put(ProjectBean.PROJECT_CUSTOMER_ID, customerData.get(CustomerBean.NAME));
-            }
-
-            params.put("customerName", project.get(ProjectBean.PROJECT_CUSTOMER_ID));
-            params.put("projectName", project.get("projectName"));
-            params.put("projectManager", project.get("projectManager"));
-            params.put("projectCode", project.get(ProjectBean.PROJECT_CODE));
+        	scs.mergeCommonProjectInfo(project, project.get(ApiConstants.MONGO_ID));
         }
 
     }

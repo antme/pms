@@ -129,37 +129,11 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 				p.put(SalesContractBean.SC_EQ_LIST, "true");
 			}
 		}
-		Map<String, Object> pmQuery = new HashMap<String, Object>();
-		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pmIds));
-		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME, UserBean.DEPARTMENT});
-		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
-		
-		Map<String, Object> cusQuery = new HashMap<String, Object>();
-		cusQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, cIds));
-		cusQuery.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
-		Map<String, Object> cusData = dao.listToOneMapAndIdAsKey(cusQuery, DBBean.USER);
-		
-		removeEmptyEqList(projectList, SalesContractBean.SC_EQ_LIST);
-		
+
+		removeEmptyEqList(projectList, SalesContractBean.SC_EQ_LIST);		
 		for (Map<String, Object> p : projectList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
-			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmid);
-			if(ApiUtil.isEmpty(pmInfo)){
-				p.put(ProjectBean.PROJECT_MANAGER_ID, "N/A");
-				p.put(UserBean.DEPARTMENT, "N/A");
-			}else{
-				p.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(UserBean.USER_NAME));
-				p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
-			}
-			
-			
-			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
-			Map<String, Object> customerInfo = (Map<String, Object>) cusData.get(customerId);
-			if(ApiUtil.isEmpty(customerInfo)){
-				p.put(ProjectBean.PROJECT_CUSTOMER_ID, "N/A");
-			}else{
-				p.put(ProjectBean.PROJECT_CUSTOMER_ID, customerInfo.get(UserBean.USER_NAME));
-			}
+			scs.mergeCommonProjectInfo(p, p.get(ApiConstants.MONGO_ID));
+
 		}
 		
 		return projects;

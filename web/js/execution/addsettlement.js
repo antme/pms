@@ -41,7 +41,7 @@ var project ;
 
 var commonDataSource = new kendo.data.DataSource({
 	  group: [
-		      	{field:"salesContractCode"}
+		      	{field:"contractCode"}
 		      ],
 	schema : {
 		model : eqModel
@@ -146,24 +146,14 @@ function editsettlement(data) {
 }
 
 var supplierlist = new Array();
-var bjList = new Array();
-var shList = new Array();
 
 function loadEqList(data){
 	var eqList = data;
 	if(data.data){
 		 eqList = data.data;
 	}
-	supplierlist = new Array();
-	bjList = new Array();
-	shList = new Array();
 	var emptyList = new Array();
-    suppliersettlementDataSource.data(emptyList);
-    shDataSource.data(emptyList);
-    allsettlementDataSource.data(emptyList);
 	commonDataSource.data(emptyList);
-	bjDataSource.data(emptyList);
-	$(".settlement-grid").hide();
 	
 	if(eqList && eqList.length ==0){
 		$(".settlement-button").hide();
@@ -204,113 +194,68 @@ function loadEqList(data){
 				eqList[i].actureAmount = eqList[i].eqcostsettlementAmount;
 			}
 			
-			
-			
-			if(eqList[i].settlementType == "北京备货货架"){
-				eqList[i].settlementTypeDisplay = "上海—北京库";
-				bjList.push(eqList[i]);
-			}else if(eqList[i].settlementType == "上海备货货架"){
-				shList.push(eqList[i]);
-				eqList[i].settlementTypeDisplay = "上海—上海库";
-			}else if(eqList[i].settlementType == "直发现场"){
-				eqList[i].settlementTypeDisplay = "直发现场";
-				supplierlist.push(eqList[i]);
-			}else{									
-				if(eqList[i].settlementType == "上海—上海泰德库"){
-					eqList[i].settlementTypeDisplay = "上海—上海泰德库";
-					shList.push(eqList[i]);
-				}else{
-					eqList[i].settlementTypeDisplay = "上海—北京泰德库";
-					bjList.push(eqList[i]);
-				}									
-			} 
+
 		
 		}
 		
-		var settlementType = new kendo.data.DataSource({
+		
 	
+
+		//COMMON EQ LIST
+		commonDataSource.data(eqList);
+
+		$("#common-settlement-grid").kendoGrid({
+			dataSource : commonDataSource,
+		    columns: [
+		       
+		        { field: "eqcostMaterialCode", title: "物料代码" },
+		        { field: "eqcostProductName", title: "产品名称" },
+		        { field: "eqcostProductType", title: "规格型号" },
+		        { field: "eqcostBrand", title: "品牌" },
+		        { field: "eqcostUnit", title: "单位" },
+		    	{ field: "eqcostBasePrice", title: "标准成本价",	
+					template : function(dataItem){
+						return percentToFixed(dataItem.eqcostBasePrice);
+					}
+				},
+				{ field: "eqcostLastBasePrice",title : "最终成本价",	
+					template : function(dataItem){
+						return percentToFixed(dataItem.eqcostLastBasePrice);
+					}
+				},
+		        { field: "eqcostShipAmount", title: "发货数" , attributes: { "style": "color:red"}},
+		        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}}
+		        ,{
+					field : "shipType",
+					title : "来源"
+				},
+				 {
+					field : "eqcostDeliveryType",
+					title : "物流类别"
+				},	        
+		        { field: "eqcostMemo", title: "备注" },
+		        { command: "destroy", label:"删除", text: "删除", width: 90 }
+		        ],
+		    editable: true,
+		    groupable : true,
+		    resizable: true,
+		    sortable : true,
+		    save : function(e){
+		    	if(e.values.eqcostShipAmount > e.model.leftAmount){
+					alert("最多可以申请" + e.model.leftAmount);
+					e.preventDefault();
+				}else{
+			    	var grid = $("#bj-ship-grid").data("kendoGrid");
+			    	grid.refresh();
+				}
+		    }
 		});
 		
 		
-		if(supplierlist.length >0){
-			settlementType.add({ text: "直发现场" });
-		}
-		if(bjList.length >0){
-			settlementType.add({ text: "上海—北京库" });
-		}
-		if(shList.length >0){
-			settlementType.add({ text: "上海—上海库" });
-		}
 	
-		var settlementDataKendo = $("#settlementType").data("kendoDropDownList");	
-		
-		if (settlementType.data().length > 0) {
-//			if(!settlementDataKendo){};
-			$("#settlementType").kendoDropDownList({
-		        dataTextField: "text",
-		        dataValueField: "text",
-		        dataSource: settlementType,
-		        optionLabel: "选择发货类型...",
-		        change: function(e) {
-		        	var dataItem = this.dataItem();
-		        	if(dataItem.text=="选择发货类型..."){
-			        	model.settlementType = undefined;    	
-		        	}else{		        	
-		        		model.settlementType = dataItem.text;   
-		        	}
-		        	updatesettlementGrid();
-		        	$("#common-settlement").hide();
-		        }
-		    });
-			$("#settlement-type").show();
-			settlementDataKendo = $("#settlementType").data("kendoDropDownList");	
-		}else{
-			$("#settlement-type").hide();
-		}
-
-
-		//COMMON EQ LIST
-		commonDataSource.data(bjList);
-
-		for(var item in supplierlist){
-			commonDataSource.add(supplierlist[item]);
-		}
-	
-		for(var item in shList){
-			commonDataSource.add(shList[item]);
-		}
-		
-		
-		settlementDataKendo = $("#settlementType").data("kendoDropDownList");	
-		settlementDataKendo.value("");
-		if(model.settlementType){
-			settlementDataKendo.value(model.settlementType);
-			updatesettlementGrid();
-		}else{
-			$("#common-settlement").show();
-		}
 	}
 }
 
-function updatesettlementGrid(){
-	if(model.settlementType == "直发现场"){
-		suppliersettlementDataSource.data(supplierlist);
-		$("#supplier-settlement").show();
-		$("#bj-settlement").hide();
-		$("#sh-settlement").hide();
-	}else if(model.settlementType == "上海—上海库" || model.settlementType == "上海—上海泰德库"){
-		shDataSource.data(shList);
-		$("#supplier-settlement").hide();
-		$("#bj-settlement").hide();
-		$("#sh-settlement").show();
-	}else if(model.settlementType == "上海—北京库" || model.settlementType == "上海—北京泰德库"){
-		bjDataSource.data(bjList);		
-		$("#supplier-settlement").hide();
-		$("#bj-settlement").show();
-		$("#sh-settlement").hide();
-	} 
-	$("#common-settlement").hide();
-}
 
 function savesettlement(needCheck) {
 	allsettlementDataSource.data([]);

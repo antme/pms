@@ -132,64 +132,24 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		return mergeProjectForSc(result);
 	}
 
-    public Map<String, Object> mergeProjectForSc(Map<String, Object> result) {
-        List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
-		List<String> pmIds = new ArrayList<String>(); 
-		List<String> cIds = new ArrayList<String>();
+	public Map<String, Object> mergeProjectForSc(Map<String, Object> result) {
+		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
 		List<String> proIds = new ArrayList<String>();
-		for(Map<String, Object> p : resultList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
-			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
-			String proid = (String)p.get(ApiConstants.MONGO_ID);
+		for (Map<String, Object> p : resultList) {
+			String proid = (String) p.get(ApiConstants.MONGO_ID);
 			proIds.add(proid);
-			if (!ApiUtil.isEmpty(pmid)){
-				pmIds.add(pmid);
-			}
-			if (!ApiUtil.isEmpty(cid)){
-				cIds.add(cid);
-			}
 		}
-		Map<String, Object> pmQuery = new HashMap<String, Object>();
-		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pmIds));
-		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME, UserBean.DEPARTMENT});
-		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
-		
-		Map<String, Object> cusQuery = new HashMap<String, Object>();
-		cusQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, cIds));
-		cusQuery.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
-		Map<String, Object> cusData = dao.listToOneMapAndIdAsKey(cusQuery, DBBean.USER);
-		
-		for (Map<String, Object> p : resultList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
-			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmid);
-			if(ApiUtil.isEmpty(pmInfo)){
-				p.put(ProjectBean.PROJECT_MANAGER_NAME, "N/A");
-				p.put(UserBean.DEPARTMENT, "N/A");
-			}else{
-				p.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(ApiConstants.MONGO_ID));
-				p.put(ProjectBean.PROJECT_MANAGER_NAME, pmInfo.get(UserBean.USER_NAME));
 
-				p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
-			}
-			
-			
-			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
-			p.put("cId", customerId);
-			Map<String, Object> customerInfo = (Map<String, Object>) cusData.get(customerId);
-			if(ApiUtil.isEmpty(customerInfo)){
-				p.put(ProjectBean.PROJECT_CUSTOMER_NAME, "N/A");
-			}else{
-				p.put(ProjectBean.PROJECT_CUSTOMER_ID, customerInfo.get(ApiConstants.MONGO_ID));
-				p.put(ProjectBean.PROJECT_CUSTOMER_NAME, customerInfo.get(CustomerBean.NAME));
+		for (Map<String, Object> p : resultList) {
 
-			}
-			
+			scs.mergeCommonProjectInfo(p, p.get(ApiConstants.MONGO_ID));
+
 		}
-		
+
 		mergeScTypeInfo(proIds, result);
-		
+
 		return result;
-    }
+	}
 	
 	private void mergeScTypeInfo(List<String> proIds, Map<String, Object> result){
 		Map<String, Object> scQuery = new HashMap<String, Object>();
@@ -264,49 +224,13 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 	public void mergePMandCustomerInfo(Map<String, Object> result){
 		List<Map<String, Object>> resultListData = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
 		
-		List<String> pmIds = new ArrayList<String>();
-		List<String> customerIds = new ArrayList<String>();
 		
 		for (Map<String, Object> pro : resultListData){
-			String pPM = (String) pro.get(ProjectBean.PROJECT_MANAGER_ID);
-			if (pPM != null && pPM.length() > 0){
-				pmIds.add(pPM);
-			}
-			String pC = (String) pro.get(ProjectBean.PROJECT_CUSTOMER_ID);
-			if (pC != null && pC.length() > 0){
-				customerIds.add(pC);
-			}
+			scs.mergeCommonProjectInfo(pro, pro.get(ApiConstants.MONGO_ID));
 			
 		}
 		
-		Map<String, Object> pmQuery = new HashMap<String, Object>();
-		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME});
-		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pmIds));
-		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
 		
-		Map<String, Object> customerQuery = new HashMap<String, Object>();
-		customerQuery.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
-		customerQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, customerIds));
-		Map<String, Object> customerData = dao.listToOneMapAndIdAsKey(customerQuery, DBBean.CUSTOMER);
-		
-		for (Map<String, Object> pro : resultListData){
-			String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER_ID);
-			pro.put(ProjectBean.PROJECT_MANAGER_ID, pmId);
-			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
-			if (pmInfo != null){
-				pro.put(ProjectBean.PROJECT_MANAGER_NAME, pmInfo.get(UserBean.USER_NAME));
-			}
-
-			String cId = (String) pro.get(ProjectBean.PROJECT_CUSTOMER_ID);
-			pro.put(ProjectBean.PROJECT_CUSTOMER_NAME, cId);
-			Map<String, Object> cInfo = (Map<String, Object>) customerData.get(cId);
-			if (cInfo != null){
-				pro.put(ProjectBean.PROJECT_CUSTOMER_NAME, cInfo.get(CustomerBean.NAME));
-			}else{
-				pro.put(ProjectBean.PROJECT_CUSTOMER_NAME, "N/A");
-			}
-			
-		}
 	}
 
 	@Override
@@ -331,67 +255,6 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		cQuery.put(ApiConstants.LIMIT_KEYS, new String[] {CustomerBean.NAME});
 		Map<String, Object> customer = dao.findOneByQuery(cQuery, DBBean.CUSTOMER);
 		return (String) customer.get(CustomerBean.NAME);
-	}
-
-	@Override
-	public void importProjectAndSCData(Map<String, Object> params) {
-		String filePath = (String) params.get("filePath");
-		ExcleUtil excleUtil = new ExcleUtil(filePath);
-		List<String[]> list = excleUtil.getAllData(0);
-		List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
-		for (int i=0; i<list.size(); i++){
-			if (i>3){
-				Map<String, Object> row = new HashMap<String, Object>();
-				row.put(ProjectBean.PROJECT_NAME, list.get(i)[9].trim());
-				row.put(ProjectBean.PROJECT_ABBR, list.get(i)[4].trim());
-				row.put(ProjectBean.PROJECT_CUSTOMER_ID, list.get(i)[8].trim());
-				row.put(ProjectBean.PROJECT_MANAGER_ID, list.get(i)[5].trim());
-				row.put(ProjectBean.PROJECT_TYPE, list.get(i)[12].trim());
-				
-				row.put(SalesContractBean.SC_CODE, list.get(i)[2].trim());
-				row.put(SalesContractBean.SC_PERSON, list.get(i)[7].trim());
-				row.put(SalesContractBean.SC_TYPE, list.get(i)[10].trim());
-				row.put(SalesContractBean.SC_DATE, list.get(i)[14].trim());
-				row.put(SalesContractBean.SC_AMOUNT, list.get(i)[23].trim());
-				row.put(SalesContractBean.SC_RUNNING_STATUS, list.get(i)[34].trim());
-				
-				rows.add(row);
-			}
-		}
-		
-		for(Map<String, Object> row : rows){
-			Map<String, Object> customerQuery = new HashMap<String, Object>();
-			customerQuery.put(CustomerBean.NAME, row.get(ProjectBean.PROJECT_CUSTOMER_ID));
-			Map<String, Object> customerMap = customerService.importCustomer(customerQuery);
-			String customerId = (String) customerMap.get(ApiConstants.MONGO_ID);
-			
-			Map<String, Object> pmQuery = new HashMap<String, Object>();
-			pmQuery.put(UserBean.USER_NAME, row.get(ProjectBean.PROJECT_MANAGER_ID));
-			Map<String, Object> pmMap = userService.importUser(pmQuery);
-			String pmId = (String) pmMap.get(ApiConstants.MONGO_ID);
-			
-			Map<String, Object> project = new HashMap<String, Object>();
-
-			project.put(ProjectBean.PROJECT_NAME, row.get(ProjectBean.PROJECT_NAME));
-			project.put(ProjectBean.PROJECT_ABBR, row.get(ProjectBean.PROJECT_ABBR));
-			project.put(ProjectBean.PROJECT_CUSTOMER_ID, customerId);
-			project.put(ProjectBean.PROJECT_MANAGER_ID, pmId);
-			project.put(ProjectBean.PROJECT_TYPE, row.get(ProjectBean.PROJECT_TYPE));
-			
-			Project projectEntity = (Project) DataUtil.toEntity(project, Project.class);
-			addProject(projectEntity);
-			String proId = projectEntity.get_id();
-			
-			Map<String, Object> sc = new HashMap<String, Object>();
-			sc.put(SalesContractBean.SC_CODE, row.get(SalesContractBean.SC_CODE));
-			sc.put(SalesContractBean.SC_PERSON, row.get(SalesContractBean.SC_PERSON));
-			sc.put(SalesContractBean.SC_TYPE, row.get(SalesContractBean.SC_TYPE));
-			sc.put(SalesContractBean.SC_DATE, row.get(SalesContractBean.SC_DATE));
-			sc.put(SalesContractBean.SC_AMOUNT, row.get(SalesContractBean.SC_AMOUNT));
-			row.put(SalesContractBean.SC_RUNNING_STATUS, row.get(SalesContractBean.SC_RUNNING_STATUS));
-			sc.put(SalesContractBean.SC_PROJECT_ID, proId);
-			scs.addSC(sc);
-		}
 	}
 
 	

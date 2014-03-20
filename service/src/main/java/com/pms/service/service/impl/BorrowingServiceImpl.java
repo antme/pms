@@ -397,24 +397,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
 		
 		for (Map<String, Object> p : resultList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
-			Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmid);
-			if(ApiUtil.isEmpty(pmInfo)){
-				p.put(ProjectBean.PROJECT_MANAGER_ID, "N/A");
-				p.put(UserBean.DEPARTMENT, "N/A");
-			}else{
-				p.put(ProjectBean.PROJECT_MANAGER_ID, pmInfo.get(UserBean.USER_NAME));
-				p.put(UserBean.DEPARTMENT, pmInfo.get(UserBean.DEPARTMENT));
-			}
-			
-			
-			String customerId = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
-			Map<String, Object> customerInfo = (Map<String, Object>) pmData.get(customerId);
-			if(ApiUtil.isEmpty(pmInfo)){
-				p.put(ProjectBean.PROJECT_CUSTOMER_ID, "N/A");
-			}else{
-				p.put(ProjectBean.PROJECT_CUSTOMER_ID, pmInfo.get(UserBean.USER_NAME));
-			}
+			scs.mergeCommonProjectInfo(p, p.get(ApiConstants.MONGO_ID));
 		}
 		
 		return result;
