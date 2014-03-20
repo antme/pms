@@ -97,9 +97,11 @@ $(document).ready(function() {
 	        	var dataItem = this.dataItem();
 	        	model.set("projectName", dataItem.projectName);
 	        	model.set("projectId", dataItem._id);
-	        	model.set("customer", dataItem.customer);
+	        	model.set("customerName", dataItem.customerName);
 	        	model.set("applicationDepartment", dataItem.department);
-	        	
+	        	model.set("projectManagerName", dataItem.projectManagerName);
+	        	model.set("projectManagerId", dataItem.projectManagerId);
+	        	kendo.bind($("#addsettlement"),model);
 	        	loadSettlement();
 	        	
 	        }
@@ -208,6 +210,7 @@ function loadEqList(data){
 			dataSource : commonDataSource,
 		    columns: [
 		       
+		        { field: "contractCode", title: "销售合同" },
 		        { field: "eqcostMaterialCode", title: "物料代码" },
 		        { field: "eqcostProductName", title: "产品名称" },
 		        { field: "eqcostProductType", title: "规格型号" },
@@ -223,15 +226,11 @@ function loadEqList(data){
 						return percentToFixed(dataItem.eqcostLastBasePrice);
 					}
 				},
-		        { field: "eqcostShipAmount", title: "发货数" , attributes: { "style": "color:red"}},
-		        { field: "leftAmount", title: "可发货数量" , attributes: { "style": "color:red"}}
-		        ,{
+		        
+		        { field: "leftAmount", title: "剩余未发货数量" , attributes: { "style": "color:red"}}
+		        ,{ field: "settlementAmount", title: "去除数量" , attributes: { "style": "color:red"}},{
 					field : "shipType",
 					title : "来源"
-				},
-				 {
-					field : "eqcostDeliveryType",
-					title : "物流类别"
 				},	        
 		        { field: "eqcostMemo", title: "备注" },
 		        { command: "destroy", label:"删除", text: "删除", width: 90 }

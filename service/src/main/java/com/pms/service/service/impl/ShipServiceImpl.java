@@ -586,7 +586,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         List<Map<String, Object>> shipMergedEqList = laodSettlementRestEqLit(purchaseEqList, projectId);
          
         shipMergedEqList = scs.mergeEqListBasicInfo(shipMergedEqList);
-
+        removeEmptyEqList(shipMergedEqList, "leftAmount");
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put(ApiConstants.RESULTS_DATA, shipMergedEqList);
 		return res;
