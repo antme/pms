@@ -1,0 +1,20 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script src="js/execution/settlement.js"></script>
+
+
+<body>
+	<div id="ship" class="k-content">
+		<h3>项目结算列表页面</h3>
+		<div class="k-toolbar k-grid-toolbar">
+		
+			<button access="settlement_management" class="k-button " onclick="return toolbar_addSettlement()">新增</button>
+			<button access="settlement_management" class="k-button " onclick="return toolbar_edit()">编辑</button>
+			<button access="settlement_management" class="k-button " onclick="return toolbar_delete()">删除</button>
+			
+			<button access="settlement_management_process" class="k-button " onclick="return toolbar_approve_ship(1)">审核</button>
+			
+		</div>
+		<div id="grid"></div>
+	</div>
+</body>

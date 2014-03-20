@@ -182,7 +182,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 
     }
 
-    private Map<String, Object> listEqlist(Map<String, Object> query) {
+    public Map<String, Object> listEqlist(Map<String, Object> query) {
         List<Object> obj = this.dao.listLimitKeyValues(query, DBBean.ARRIVAL_NOTICE);
         Map<String, Object> result = new HashMap<String, Object>();
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();

@@ -217,7 +217,7 @@ function disableForm(){
 	var pManager = $("#projectManagerId").data("kendoDropDownList");
 	
 	if(pManager && pModel.projectManagerId && pModel.projectManagerId!=""){
-		pManager.enable(false);
+//		pManager.enable(false);
 	}
 	
 	var pStatus = $("#projectStatus").data("kendoDropDownList");

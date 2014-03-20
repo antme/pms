@@ -154,4 +154,19 @@ public class ShipController extends AbstractController {
     	responseWithData(result, request, response);
     }  
     
+    
+	@RequestMapping("/settlement/list")
+    public void listSettlement(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(shipService.listSettlement(params), request, response);
+    }
+	
+	
+    @RequestMapping("/settlement/eqlist")
+    public void loadEqlistForSettlement(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(shipService.loadEqlistForSettlement(params), request, response);
+    }
+    
+    
 }

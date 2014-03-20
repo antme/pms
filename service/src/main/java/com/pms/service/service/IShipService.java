@@ -36,4 +36,8 @@ public interface IShipService {
     public Map<String, Object> submitShipCount(Map<String, Object> params);
 
 	public Map<String, Object> importShipHistoryData(InputStream inputStream);
+
+	public Map<String, Object> listSettlement(Map<String, Object> params);
+
+	public Map<String, Object> loadEqlistForSettlement(Map<String, Object> params);
 }

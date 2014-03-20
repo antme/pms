@@ -69,8 +69,7 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 		} else {// Update
 
 			dao.updateById(project, DBBean.PROJECT, Project.class);			
-			String[] relatedCollections = new String[] { DBBean.SALES_CONTRACT, DBBean.PURCHASE_BACK, DBBean.PURCHASE_ALLOCATE, DBBean.PURCHASE_BACK, DBBean.PURCHASE_ORDER, DBBean.PURCHASE_REQUEST };
-			updateProjectRelatedCollectionInfo(relatedCollections, project.get_id());
+
 		}
     
     }
@@ -84,6 +83,10 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
      * @param updateValue 更新字段新的值
      */
     public void updateProjectRelatedCollectionInfo(String[] collections, String projectId){
+    	
+//		String[] relatedCollections = new String[] { DBBean.SALES_CONTRACT, DBBean.PURCHASE_BACK, DBBean.PURCHASE_ALLOCATE, DBBean.PURCHASE_BACK, DBBean.PURCHASE_ORDER, DBBean.PURCHASE_REQUEST };
+//		updateProjectRelatedCollectionInfo(relatedCollections, project.get_id());
+//		
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(ProjectBean.PROJECT_ID, projectId);
     	query.put(ApiConstants.LIMIT_KEYS, new String[] {ApiConstants.MONGO_ID});

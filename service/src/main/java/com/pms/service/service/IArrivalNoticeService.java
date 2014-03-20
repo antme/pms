@@ -16,6 +16,8 @@ public interface IArrivalNoticeService {
     
     public Map<String, Object> listByScIdForBorrowing(Object scId);
     
+    public Map<String, Object> listEqlist(Map<String, Object> query);
+    
     public Map<String, Object> listCanShipEq(Map<String, Object> params);
     
     public Map<String, Object> createByOrder(Map<String, Object> params);
