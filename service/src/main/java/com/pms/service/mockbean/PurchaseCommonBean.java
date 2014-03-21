@@ -214,8 +214,6 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String MANAGER_APPROVED = "经理审批通过";
     public static final String STATUS_BACKED = "已退回";
     
-    public static final String STATUS_ABROGATED_NEED_APPROVED = "废除待审批";
-    public static final String STATUS_ABROGATED = "已废除";
     
     public static final String STATUS_CANCELLED = "已退回";
     
@@ -227,8 +225,6 @@ public class PurchaseCommonBean extends BaseEntity {
     public static final String STATUS_ORDERING = "采购中";
     
     public static final String STATUS_ORDER_LOCKED = "已锁定";
-    public static final String STATUS_ORDER_FINISHED = "采购完毕";
-    public static final String STATUS_COMPLETED = "执行完毕";
     
     //物流类型
     public static final String EQCOST_DELIVERY_TYPE_DIRECTY = "直发现场"; 

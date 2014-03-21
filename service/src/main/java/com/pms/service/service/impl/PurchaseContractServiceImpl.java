@@ -1126,7 +1126,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
     public void approvePurchaseOrder(Map<String, Object> order) {
         // 此批准只批准中止申请
-        processRequest(order, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_ABROGATED);
+        processRequest(order, DBBean.PURCHASE_ORDER, PurchaseRequest.STATUS_APPROVED);
 
         Map<String, Object> request = this.dao.findOne(ApiConstants.MONGO_ID, order.get(ApiConstants.MONGO_ID), new String[] { "purchaseRequestId" }, DBBean.PURCHASE_ORDER);
         if (request.get("purchaseRequestId") != null) {
@@ -1246,7 +1246,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     
     public Map<String, Object> listPurchaseOrderForArrivalSelect(){
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_ORDER_FINISHED);
+        query.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_CLOSED);
         query.put("eqcostDeliveryType", PurchaseRequest.EQCOST_DELIVERY_TYPE_DIRECTY);
         query.put(ApiConstants.LIMIT_KEYS, new String[] { PurchaseRequest.PURCHASE_ORDER_CODE});
         Map<String, Object> data = dao.list(query, DBBean.PURCHASE_ORDER);
@@ -1325,12 +1325,9 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         Map<String, Object> requestMap = this.dao.findOne(ApiConstants.MONGO_ID, request.get(ApiConstants.MONGO_ID), 
                 new String[] { PurchaseCommonBean.PROCESS_STATUS }, DBBean.PURCHASE_REQUEST);      
         Map<String,Object> result = null;
-       if (requestMap.get(PurchaseCommonBean.PROCESS_STATUS).toString().equalsIgnoreCase(PurchaseCommonBean.STATUS_ABROGATED_NEED_APPROVED)) {
-           result = processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseRequest.STATUS_ABROGATED); 
-           reduceBackEqCount((String)request.get(ApiConstants.MONGO_ID));
-        } else {
+     
             result = processRequest(request, DBBean.PURCHASE_REQUEST, PurchaseCommonBean.STATUS_APPROVED);
-        }
+        
        
        Map<String, Object> pprequest = this.dao.findOne(ApiConstants.MONGO_ID, request.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_REQUEST);
        backService.updatePurchaseBackStatus(pprequest.get(PurchaseContract.BACK_REQUEST_ID).toString());
@@ -2099,7 +2096,7 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 
                 String isCompleted = item[columnIndexMap.get("是否执行完")].trim();
                 if (!ApiUtil.isEmpty(isCompleted) && isCompleted.equalsIgnoreCase("y")) {
-                    contract.put(PurchaseContract.PROCESS_STATUS, PurchaseContract.STATUS_COMPLETED);
+                    contract.put(PurchaseContract.PROCESS_STATUS, PurchaseContract.STATUS_CLOSED);
                 } else {
                     contract.put(PurchaseContract.PROCESS_STATUS, PurchaseContract.STATUS_APPROVED);
                 }
