@@ -27,10 +27,8 @@ var eqModel = kendo.data.Model.define( {
     	eqcostProductType: { editable: false },
     	eqcostUnit: { editable: false },
     	eqcostBrand: { editable: false },
-    	eqcostsettlementAmount: { type: "number", validation: { min: 0} },
-    	arrivalAmount: { type: "number", validation: {  min: 0} },
-    	giveUp: { editable: false },
-    	leftAmount: { editable: false  },
+    	leftAmount: { editable: false },
+    	settlementAmount: { type: "number", validation: { min: 0} },
     	eqcostDeliveryType : {editable: false},
     	eqcostMemo: {}
     }
@@ -216,18 +214,9 @@ function loadEqList(data){
 		        { field: "eqcostProductType", title: "规格型号" },
 		        { field: "eqcostBrand", title: "品牌" },
 		        { field: "eqcostUnit", title: "单位" },
-		    	{ field: "eqcostBasePrice", title: "标准成本价",	
-					template : function(dataItem){
-						return percentToFixed(dataItem.eqcostBasePrice);
-					}
-				},
-				{ field: "eqcostLastBasePrice",title : "最终成本价",	
-					template : function(dataItem){
-						return percentToFixed(dataItem.eqcostLastBasePrice);
-					}
-				},
+		    	
 		        
-		        { field: "leftAmount", title: "剩余未发货数量" , attributes: { "style": "color:red"}}
+		        { field: "leftAmount", title: "未发货数量" , attributes: { "style": "color:red"}}
 		        ,{ field: "settlementAmount", title: "去除数量" , attributes: { "style": "color:red"}},{
 					field : "shipType",
 					title : "来源"
@@ -240,11 +229,11 @@ function loadEqList(data){
 		    resizable: true,
 		    sortable : true,
 		    save : function(e){
-		    	if(e.values.eqcostShipAmount > e.model.leftAmount){
-					alert("最多可以申请" + e.model.leftAmount);
+		    	if(e.values.settlementAmount > e.model.leftAmount){
+					alert("最多可以消除" + e.model.leftAmount);
 					e.preventDefault();
 				}else{
-			    	var grid = $("#bj-ship-grid").data("kendoGrid");
+			    	var grid = $("#common-settlement-grid").data("kendoGrid");
 			    	grid.refresh();
 				}
 		    }
@@ -256,62 +245,23 @@ function loadEqList(data){
 }
 
 
-function savesettlement(needCheck) {
-	allsettlementDataSource.data([]);
-	var data = new Array();
-	$("#bjOutCode").attr("disabled",true);
-	$("#shOutCode").attr("disabled",true);
-	if(!model.settlementType){
-		alert("请选择发货类型");
-		return;
-	}
-	
-    if (model.settlementType == "直发现场") {
-		 data = suppliersettlementDataSource.data();
-	} else if (model.settlementType == "上海—上海库")  {
-		if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
-			 $("#shOutCode").removeAttr("disabled",true);
-		}
-		 data = shDataSource.data();
-	}else if (model.settlementType == "上海—北京库")  {
-		if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
-			 $("#bjOutCode").removeAttr("disabled",true);
-		}
-		 data = bjDataSource.data();
-	}
-	
-	
-	if (data.length == 0) {
-		alert("无任何设备清单");
-		return;
-	}
-	var validator = $("#addsettlement").kendoValidator().data("kendoValidator");
-	if (!validator.validate()) {
-		alert("验证不通过，请检查表单");
-	} else {
+function savesettlement(isDraft) {
 
-
-		for(i=0; i< data.length; i++){
-			allsettlementDataSource.add(data[i]);				
-			if(data[i].leftAmount <  data[i].eqcostsettlementAmount && needCheck){
-				alert("请检查设备可发货数量");
-				return;
-			}
-		}
-
-		model.set("eqcostList", allsettlementDataSource.data());
+	   if(isDraft){
+		   model.set("status", "草稿");
+	   }else{
+		   model.set("status", "申请中");
+	   }
+		model.set("eqcostList", commonDataSource.data());
 		
 		if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
-			postAjaxRequest("/service/settlement/record", {models:kendo.stringify(model)}, checkStatus);
+			postAjaxRequest("/service/settlement/record", {models:kendo.stringify(model)}, cancle);
 		}else if(redirectParams && redirectParams.type && redirectParams.type == "submit") {
-			postAjaxRequest("/service/settlement/submit", {models:kendo.stringify(model)}, checkStatus);
+			postAjaxRequest("/service/settlement/add", {models:kendo.stringify(model)}, cancle);
 		}else{
-			postAjaxRequest("/service/settlement/create", {models:kendo.stringify(model)}, checkStatus);
+			postAjaxRequest("/service/ship/settlement/add", {models:kendo.stringify(model)}, cancle);
 		}
-	
-		
 
-	}
 }
 
 
@@ -348,10 +298,6 @@ function reject_settlement() {
 
 function submitsettlement(){
 	model.set("status", "申请中");
-	if(!redirectParams){
-		redirectParams = {};
-	}
-	redirectParams.type = "submit";
 	savesettlement(true);
 }
 

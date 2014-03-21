@@ -116,6 +116,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 			for(Object scId: scIds){
 				Map<String, Object> scParams = new HashMap<String, Object>();
 				scParams.put(SalesContractBean.SC_ID, scId);
+				scParams.put(SalesContractBean.SC_PROJECT_ID, p.get(ApiConstants.MONGO_ID));
+				
 				 Map<String, Object> eqListMap = shipService.eqlist(scParams);
 				 
 				 if(ApiUtil.isValid(eqListMap.get(ApiConstants.RESULTS_DATA))){

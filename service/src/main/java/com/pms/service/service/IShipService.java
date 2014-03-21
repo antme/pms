@@ -40,4 +40,10 @@ public interface IShipService {
 	public Map<String, Object> listSettlement(Map<String, Object> params);
 
 	public Map<String, Object> loadEqlistForSettlement(Map<String, Object> params);
+	
+	
+	public Map<String, Object> addSettlement(Map<String, Object> params);
+
+	public void destroySettlement(Map<String, Object> params);
+
 }

@@ -140,9 +140,11 @@ $(document).ready(function() {
 	        change: function(e) {
 	        	var dataItem = this.dataItem();
 	        	model.set("projectName", dataItem.projectName);
-	        	model.set("customer", dataItem.customer);
 	        	model.set("applicationDepartment", dataItem.department);
 	        	model.set("scId", "");
+	            model.set("customerName", dataItem.customerName);
+	            model.set("customerId", dataItem.customerId);
+
 	        	
 	        	loadSC();
 	        	
@@ -354,8 +356,6 @@ $(document).ready(function() {
 
 
 function loadSC(){
-	model.set("customerName", "");
-	model.set("customerId", "");
 	salesContract = $("#salesContract").kendoComboBox({
 		autoBind: false,
         placeholder: "销售合同编号",
@@ -385,14 +385,9 @@ function loadSC(){
        
             model.set("contractCode", dataItem.contractCode);
             model.set("contractType", dataItem.contractType);
-            model.set("applicationDepartment", dataItem.applicationDepartment);
             model.shipType = undefined;
- 
-            postAjaxRequest("/service/sc/getCustomerBySC", {scId:dataItem.customerId}, function(data){
-            	model.set("customerName", data.name);
-            	model.set("customerId", data._id);
-            });
-            postAjaxRequest("/service/ship/eqlist", {scId:salesContract.value()}, loadEqList);
+   
+            postAjaxRequest("/service/ship/eqlist", {scId:salesContract.value(), projectId:model.projectId}, loadEqList);
 		
         }
     }).data("kendoComboBox");

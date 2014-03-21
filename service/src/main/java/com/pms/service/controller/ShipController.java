@@ -161,6 +161,11 @@ public class ShipController extends AbstractController {
     	responseWithData(shipService.listSettlement(params), request, response);
     }
 	
+	@RequestMapping("/settlement/add")
+    public void addSettlement(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(shipService.addSettlement(params), request, response);
+    }
 	
     @RequestMapping("/settlement/eqlist")
     public void loadEqlistForSettlement(HttpServletRequest request, HttpServletResponse response) {
@@ -168,5 +173,10 @@ public class ShipController extends AbstractController {
     	responseWithData(shipService.loadEqlistForSettlement(params), request, response);
     }
     
-    
+    @RequestMapping("/settlement/destroy")
+    public void destroySettlement(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	shipService.destroySettlement(params);
+    	responseWithData(null, request, response);
+    }
 }

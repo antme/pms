@@ -86,7 +86,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Object> result = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
         List<Map<String, Object>> mergeEqListBasicInfo = scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST));
         
-        List<Map<String, Object>> list =  laodShipRestEqLit(mergeEqListBasicInfo, result.get(ShipBean.SHIP_SALES_CONTRACT_ID).toString(), true);
+        List<Map<String, Object>> list =  laodShipRestEqLit(mergeEqListBasicInfo, result.get(ShipBean.SHIP_SALES_CONTRACT_ID).toString(), params.get(ShipBean.SHIP_PROJECT_ID).toString(), true);
         
 		scs.mergeCommonFieldsFromSc(result, result.get(ShipBean.SHIP_SALES_CONTRACT_ID));
 
@@ -182,25 +182,56 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
         purchaseEqList = scs.mergeEqListBasicInfo(purchaseEqList);
         		
-        List<Map<String, Object>> shipMergedEqList = laodShipRestEqLit(purchaseEqList, saleId, false);
+        List<Map<String, Object>> shipMergedEqList = laodShipRestEqLit(purchaseEqList, saleId, params.get(ShipBean.SHIP_PROJECT_ID).toString(), false);
               
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put(ApiConstants.RESULTS_DATA, shipMergedEqList);
 		return res;
 	}
 
-    private List<Map<String, Object>> laodShipRestEqLit(List<Map<String, Object>> purchaseEqList, String saleId, boolean loadExists) {
+    private List<Map<String, Object>> laodShipRestEqLit(List<Map<String, Object>> purchaseEqList, String saleId, String projectId, boolean loadSelf) {
         Map<String, Object> query = new HashMap<String, Object>();
-        query.put(SalesContractBean.SC_ID, saleId);
+        
+        if(ApiUtil.isValid(saleId)){
+        	query.put(SalesContractBean.SC_ID, saleId);
+        }
+        
+        if(ApiUtil.isValid(projectId)){
+        	query.put(SalesContractBean.SC_PROJECT_ID, projectId);
+        }
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
 
         Map<String, Integer> arrivedCountMap = countEqByKeyWithMultiKey(query, DBBean.ARRIVAL_NOTICE, ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
+        
+        
+        
+        //发货虽然是查询销售合同，但是我们这边只能查询所有的，清单ID一样代表销售合同是同一个
+        Map<String, Object> settlmentQuery = new HashMap<String, Object>();
+        if(ApiUtil.isValid(projectId)){
+        	settlmentQuery.put(SalesContractBean.SC_PROJECT_ID, projectId);
+        }else{
+        	settlmentQuery.put(SalesContractBean.SC_PROJECT_ID, "");
+        }
+        
+        Map<String, Integer> settlementCountMap = countEqByKeyWithMultiKey(settlmentQuery, DBBean.SETTLEMENT, "settlementAmount", null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
 
         // 已发货的数量统计
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { ShipBean.SHIP_STATUS_SUBMIT, ShipBean.SHIP_STATUS_FIRST_APPROVE, ShipBean.SHIP_STATUS_FINAL_APPROVE, ShipBean.SHIP_STATUS_CLOSE }));
-        parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, saleId);
+        
+        if(ApiUtil.isValid(saleId)){
+            parameters.put(ShipBean.SHIP_SALES_CONTRACT_ID, saleId);
+
+        }
+        if(ApiUtil.isValid(projectId)){
+        	parameters.put(SalesContractBean.SC_PROJECT_ID, projectId);
+        }
+        
+        
         Map<String, Integer> shipedCountMap = countEqByKeyWithMultiKey(parameters, DBBean.SHIP, ShipBean.EQCOST_SHIP_AMOUNT, null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
+        
+        
+        
         List<Map<String, Object>> shipMergedEqList = new ArrayList<Map<String, Object>>();
         Set<String> shipIds = new HashSet<String>();
 
@@ -211,70 +242,26 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
             }
             Object id = eqMap.get(ApiConstants.MONGO_ID).toString() + shipType;
 
-            if (!shipIds.contains(id.toString())) {
-                shipIds.add(id.toString());
-                if (shipedCountMap.get(id) != null && arrivedCountMap.get(id) != null) {
-                    eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arrivedCountMap.get(id) - shipedCountMap.get(id));
-                    if (!loadExists) {
-                        eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivedCountMap.get(id) - shipedCountMap.get(id));
-                    }
-                } else {
-                    eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, arrivedCountMap.get(id));
-                    if (!loadExists) {
-                        eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivedCountMap.get(id));
-                    }
-                }
-                shipMergedEqList.add(eqMap);
-            }
+			if (!shipIds.contains(id.toString())) {
+				shipIds.add(id.toString());
+				eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - ApiUtil.getInteger(settlementCountMap.get(id)));
+				if (!loadSelf) {
+					eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - ApiUtil.getInteger(settlementCountMap.get(id)));
+				}
+
+				shipMergedEqList.add(eqMap);
+			}
 
         }
 
-        if (!loadExists) {
+        if (!loadSelf) {
             removeEmptyEqList(shipMergedEqList, ShipBean.SHIP_LEFT_AMOUNT);
         }
         return shipMergedEqList;
     }
     
     
-    private List<Map<String, Object>> laodSettlementRestEqLit(List<Map<String, Object>> purchaseEqList, String projectId) {
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put(SalesContractBean.SC_PROJECT_ID, projectId);
-        query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
-
-        Map<String, Integer> arrivedCountMap = countEqByKeyWithMultiKey(query, DBBean.ARRIVAL_NOTICE, ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, null, null);
-
-        // 已发货的数量统计
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(ShipBean.SHIP_STATUS, new DBQuery(DBQueryOpertion.IN, new String[] { ShipBean.SHIP_STATUS_SUBMIT, ShipBean.SHIP_STATUS_FIRST_APPROVE, ShipBean.SHIP_STATUS_FINAL_APPROVE, ShipBean.SHIP_STATUS_CLOSE }));
-        parameters.put(SalesContractBean.SC_PROJECT_ID, projectId);
-        Map<String, Integer> shipedCountMap = countEqByKeyWithMultiKey(parameters, DBBean.SHIP, ShipBean.EQCOST_SHIP_AMOUNT, null, null);
-        
-        Map<String, Integer> settlementCountMap = countEqByKeyWithMultiKey(parameters, DBBean.SETTLEMENT, ShipBean.EQCOST_SHIP_AMOUNT, null, null);
-
-        List<Map<String, Object>> shipMergedEqList = new ArrayList<Map<String, Object>>();
-        Set<String> shipIds = new HashSet<String>();
-
-        for (Map<String, Object> eqMap : purchaseEqList) {
-       
-            String id = eqMap.get(ApiConstants.MONGO_ID).toString();
-
-            if (!shipIds.contains(id)) {
-                shipIds.add(id);
-                eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - ApiUtil.getInteger(settlementCountMap.get(id)));
-          
-//                if (!loadExists) {
-//                    eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivedCountMap.get(id));
-//                }
-                shipMergedEqList.add(eqMap);
-            }
-
-        }
-
-//        if (!loadExists) {
-//            removeEmptyEqList(shipMergedEqList, ShipBean.SHIP_LEFT_AMOUNT);
-//        }
-        return shipMergedEqList;
-    }
+   
 	
 	public Map<String, Object> submit(Map<String, Object> params) {
 
@@ -583,13 +570,38 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Object> eqMap = arrivalService.listEqlist(query);
      
         List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) eqMap.get(SalesContractBean.SC_EQ_LIST);       		
-        List<Map<String, Object>> shipMergedEqList = laodSettlementRestEqLit(purchaseEqList, projectId);
+        List<Map<String, Object>> shipMergedEqList = laodShipRestEqLit(purchaseEqList, null, projectId, false);
          
         shipMergedEqList = scs.mergeEqListBasicInfo(shipMergedEqList);
         removeEmptyEqList(shipMergedEqList, "leftAmount");
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put(ApiConstants.RESULTS_DATA, shipMergedEqList);
 		return res;
+	}
+	
+	
+	public Map<String, Object> addSettlement(Map<String, Object> params){
+		
+		
+		if(ApiUtil.isEmpty(params.get("settlementCode"))){
+			params.put("settlementCode", generateCode("JSSQ-", DBBean.SETTLEMENT, "settlementCode"));
+		}
+		if(ApiUtil.isEmpty(params.get(ApiConstants.MONGO_ID))){
+			params.put("applicationDate", new Date());
+			scs.mergeCommonProjectInfo(params, params.get(SalesContractBean.SC_PROJECT_ID));
+
+			return this.dao.add(params, DBBean.SETTLEMENT);
+		}else{
+			return this.dao.updateById(params, DBBean.SETTLEMENT);
+		}
+		
+	}
+	
+	public void destroySettlement(Map<String, Object> params){
+		
+		List<String> ids = new ArrayList<String>();
+		ids.add(params.get(ApiConstants.MONGO_ID).toString());
+		this.dao.deleteByIds(ids, DBBean.SETTLEMENT);
 	}
 
     public Map<String, Object> importShipHistoryData(InputStream inputStream){

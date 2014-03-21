@@ -54,28 +54,24 @@ $(document).ready(function () {
         height: "400px",
         columns: [
                {
-            	   field: "shipCode",
+            	   field: "settlementCode",
             	   title: "编号",
             	   template : function(dataItem) {
-       					return '<a  onclick="openShipViewWindow(\'' + dataItem._id + '\');">' + dataItem.shipCode + '</a>';      				
+       					return '<a  onclick="openShipViewWindow(\'' + dataItem._id + '\');">' + dataItem.settlementCode + '</a>';      				
        				}
                },
               
             { field:"applicationDepartment", title: "申请部门" },
             { field: "applicationDate", title:"申请日期" },
             {
-            	field: "contractCode",
-            	title:"销售合同编号",
-				template : function(dataItem) {
-					if (dataItem.contractCode) {
-						return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
-					} else {
-						return '';
-					}
-				}
+            	field: "projectName",
+            	title:"项目"
+            },
+            {
+            	field: "projectManagerName",
+            	title:"PM"
             },
             { field: "customerName", title:"客户名称" },
-            { field: "shipType", title: "发货类型"},
             {
             	field: "status", title:"状态"
             }
