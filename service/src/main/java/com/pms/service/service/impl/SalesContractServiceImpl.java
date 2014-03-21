@@ -623,73 +623,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		} else {
 			list.add(result);
 		}
-		List<String> pIdList = new ArrayList<String>();
-		List<String> pmIds = new ArrayList<String>();
-		List<String> custIds = new ArrayList<String>();
 		for (Map<String, Object> sc : list) {
 			String proId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
-			if (proId != null && proId.length() > 0) {
-				pIdList.add(proId);
-			}
-			String custId = (String) sc.get(SalesContractBean.SC_CUSTOMER_ID);
-			if (!ApiUtil.isEmpty(custId)) {
-				custIds.add(custId);
-			}
+
+			mergeCommonProjectInfo(sc, proId);
 		}
 
-		Map<String, Object> queryProject = new HashMap<String, Object>();
-		queryProject.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pIdList));
-		queryProject.put(ApiConstants.LIMIT_KEYS, new String[] { ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_CODE });
-		Map<String, Object> pInfoMap = dao.listToOneMapAndIdAsKey(queryProject, DBBean.PROJECT);
-
-		pInfoMap.remove(ApiConstants.RESULTS_DATA);
-		pInfoMap.remove(ApiConstants.PAGENATION);
-		for (Entry<String, Object> pro : pInfoMap.entrySet()) {
-			Map<String, Object> value = (Map<String, Object>) pro.getValue();
-			String pm = (String) value.get(ProjectBean.PROJECT_MANAGER_ID);
-			if (!ApiUtil.isEmpty(pm)) {
-				pmIds.add((String) value.get(ProjectBean.PROJECT_MANAGER_ID));
-			}
-
-		}
-
-		Map<String, Object> pmQuery = new HashMap<String, Object>();
-		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] { UserBean.USER_NAME, UserBean.DEPARTMENT });
-		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, pmIds));
-		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
-
-		Map<String, Object> customerQuery = new HashMap<String, Object>();
-		customerQuery.put(ApiConstants.LIMIT_KEYS, new String[] { CustomerBean.NAME });
-		customerQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, custIds));
-		Map<String, Object> customerData = dao.listToOneMapAndIdAsKey(customerQuery, DBBean.CUSTOMER);
-
-		for (Map<String, Object> sc : list) {
-			String pId = (String) sc.get(SalesContractBean.SC_PROJECT_ID);
-			String cusId = (String) sc.get(SalesContractBean.SC_CUSTOMER_ID);
-			Map<String, Object> cusInfo = (Map<String, Object>) customerData.get(cusId);
-			if (cusInfo != null) {
-				sc.put(ProjectBean.PROJECT_CUSTOMER_ID, cusInfo.get(CustomerBean.NAME));
-				sc.put(ProjectBean.PROJECT_CUSTOMER_NAME, cusInfo.get(CustomerBean.NAME));
-			} else {
-				sc.put(ProjectBean.PROJECT_CUSTOMER_ID, "N/A");
-				sc.put(ProjectBean.PROJECT_CUSTOMER_NAME, "N/A");
-			}
-			Map<String, Object> pro = (Map<String, Object>) pInfoMap.get(pId);
-
-			if (pro != null) {
-				String pmId = (String) pro.get(ProjectBean.PROJECT_MANAGER_ID);
-
-				sc.put(ProjectBean.PROJECT_CODE, pro.get(ProjectBean.PROJECT_CODE));
-				sc.put(ProjectBean.PROJECT_NAME, pro.get(ProjectBean.PROJECT_NAME));
-
-				Map<String, Object> pmInfo = (Map<String, Object>) pmData.get(pmId);
-				if (pmInfo != null) {
-					sc.put(ProjectBean.PROJECT_MANAGER_NAME, pmInfo.get(UserBean.USER_NAME));
-
-				}
-			}
-
-		}
 	}
 
 	@Override
