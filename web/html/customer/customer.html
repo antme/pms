@@ -1,8 +1,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script  src="js/customer/customer.js"></script>
+
+<script type="text/x-kendo-template" id="t-template-add">
+	<button class="k-button k-button-icontext k-grid-add access" access="customer_management" href="\#"><span class="k-icon k-add"></span>新增</button>
+	<button class="k-button k-button-icontext k-grid-edit access"  access="customer_management" onclick="editCustomer();" href="\#"><span class="k-icon k-edit"></span>编辑</button>
+</script>
+
+
+
 <body>
 	<div id="objList" class="k-content">
 	   <h3>客户列表</h3>
+	
 	
 		<div id="grid"></div>
 	</div>

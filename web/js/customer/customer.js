@@ -69,6 +69,18 @@ var datasource = new kendo.data.DataSource({
     }
 });
 
+function editCustomer(){
+	
+	var rowData = getSelectedRowDataByGridWithMsg("grid");
+	if(rowData){
+
+		var grid = $("#grid").data("kendoGrid");
+		var row = grid.select();
+		grid.editRow(row);
+		
+	}
+}
+
 $(document).ready(function () {
     $("#grid").kendoGrid({
         dataSource: datasource,
@@ -77,17 +89,21 @@ $(document).ready(function () {
         filterable : filterable,
         sortable : true,
         selectable : "row",
-        toolbar: [{name: "create", text:"新增"}],
+        toolbar: [
+            { template: kendo.template($("#t-template-add").html()) }
+        ],
+        
         columns: [
             { field: "code", title: "客户编号",width:"150px"},
             { field: "name", title: "客户名称",width:"250px" },
             { field: "contact", title: "客户联系人",width:"80px" },
             { field: "phone", title: "联系人电话",width:"120px" },
-            { field: "email", title: "联系人邮箱",width:"200px" },
-            { command: [{name: "edit", text: "编辑"}], width:"160px"}
+            { field: "email", title: "联系人邮箱",width:"200px" }
         ],
         editable: "popup"
     });
+    
+    checkRoles();
     
 });
 

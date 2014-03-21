@@ -434,7 +434,7 @@ function onWindowDefaultClose(e) {
 }
 
 function checkRoles(){
-	var buttons = $('button[access]');
+	var buttons = $('.access');
 	buttons.each(function(index){
 		var node = jQuery(buttons[index]);
 		var roleId = node.attr("access");

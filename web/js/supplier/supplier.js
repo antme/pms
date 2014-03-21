@@ -8,16 +8,16 @@ var model = kendo.data.Model.define({
 			editable : false,
 			nullable : true
 		},
-		supplierCode: { validation: { required: true } },
+		supplierCode: { },
 		supplierName: { validation: { required: true } },
-		supplierDescription: { validation: { required: true } },
-		supplierBankName: { validation: { required: true } },
-		supplierBankAccount: { validation: { required: true } },
-		supplierTaxAccount: { validation: { required: true } },
-		supplierContact: { validation: { required: true } },
+		supplierDescription: {  },
+		supplierBankName: { },
+		supplierBankAccount: {  },
+		supplierTaxAccount: {  },
+		supplierContact: {  },
 		supplierLocation: {},
 		supplierAddress: {},
-		supplierContactPhone: { validation: { required: true } },
+		supplierContactPhone: {  },
 		supplierEmail: {},
 		supplierFax: {},
 		supplierRemark: {}
@@ -64,6 +64,7 @@ var dataSource = new kendo.data.DataSource({
 var dm = new model();
 var validator;
 $(document).ready(function() {
+	
 	$("#grid").kendoGrid({
 		dataSource : dataSource,
 		pageable : true, resizable: true,
@@ -96,7 +97,7 @@ $(document).ready(function() {
         }
     });	
 	
-	
+    checkRoles();
 });
 
 
@@ -118,7 +119,6 @@ function saveData() {
 		return false;
 	}
 	
-
 	
 	postAjaxRequest(crudServiceBaseUrl + "/suppliers/create", {json_p: kendo.stringify(dm)}, function(data){
 		var window = $("#supplier-edit");

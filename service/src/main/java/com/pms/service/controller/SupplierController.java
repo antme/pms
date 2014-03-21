@@ -21,6 +21,7 @@ import com.pms.service.service.ISupplierService;
 
 @Controller
 @RequestMapping("/suppliers")
+@RoleValidate()
 public class SupplierController extends AbstractController {
 	
 	private static Logger logger = LogManager.getLogger(SupplierController.class);
