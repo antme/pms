@@ -114,8 +114,9 @@ $(document).ready(function() {
 		}, {
 			field : "contractAmount",
 			title : "合同金额",
+			width : 120,
 			template : function(dataItem) {
-				return '<a  onclick="openTraceWindow(\'' + dataItem._id + '\');">' + dataItem.contractAmount + '</a>';
+				return '<a style="float:right" onclick="openTraceWindow(\'' + dataItem._id + '\');">' + kendo.toString(dataItem.contractAmount, "c"); + '</a>';
 			}
 		}, {
 			field : "contractType",

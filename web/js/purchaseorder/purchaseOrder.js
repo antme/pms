@@ -80,7 +80,12 @@ $(document).ready(function() {
 				title : "订单状态"
 			}, {
 				field : "requestedTotalMoney",
-				title : "金额"
+				title : "金额",
+				width:100,
+				template: function(dataItem){
+					return "<span style='float:right'>" + kendo.toString(dataItem.requestedTotalMoney, "c") + "</span>";
+				}
+					
 			},{
 				field : "eqcostDeliveryType",
 				title : "货物递送方式"

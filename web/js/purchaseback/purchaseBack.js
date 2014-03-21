@@ -69,7 +69,7 @@ $(document).ready(function () {
 					return '<a  onclick="openBackRequestViewWindow(\'' + dataItem._id + '\');">' + dataItem.pbCode + '</a>';
 				}
 	        },
-	        { field:"projectName",title:"项目名",
+	        { field:"projectName",title:"项目名",width:200,
 	        	template : function(dataItem) {
 					if(dataItem.projectName){
 						return '<a  onclick="openProjectViewWindow(\'' + dataItem.projectId + '\');">' + dataItem.projectName + '</a>';
@@ -78,16 +78,17 @@ $(document).ready(function () {
 					}
 				}
 	        },
-	        { field:"projectManagerName", title:"PM"},
+	        { field:"projectManagerName", title:"PM", width:80},
 	        { 
 	        	field:"contractCode", 
 	        	title:"销售合同编号" ,
+	        	width:180,
 	        	template : function(dataItem) {
 					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
 	        },
 	        { field: "customerName", title:"客户名"},
-	        { field: "pbStatus", title:"申请状态",
+	        { field: "pbStatus", title:"申请状态", width:100,
 	        	filterable : {
 					ui: function(e){
 						e.kendoDropDownList({
@@ -99,8 +100,14 @@ $(document).ready(function () {
 					}
 				}
 	        },
-	        { field: "pbSubmitDate", title:"提交时间", filterable : false },
-	        { field: "pbMoney", title:"金额" }
+	        { field: "pbMoney", title:"金额",
+	        	width:100,
+				template: function(dataItem){
+					return "<span style='float:right'>" + kendo.toString(dataItem.pbMoney, "c") + "</span>";
+				}
+	        },
+	        { field: "pbSubmitDate", title:"提交时间", filterable : false, width:160 }
+
 	    ]
 	});
 	

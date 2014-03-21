@@ -75,7 +75,11 @@ $(document).ready(function() {
 			}
 		}, {
 			field : "contractMoney",
-			title : "合同金额"
+			title : "合同金额",
+			width:100,
+			template: function(dataItem){
+				return "<span style='float:right'>" + kendo.toString(dataItem.contractMoney, "c") + "</span>";
+			}
 		}, {
 			field : "eqcostDeliveryType",
 			title : "货物递送方式"

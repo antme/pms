@@ -6,7 +6,9 @@ body {
 	margin-left: 5px;
 	color: red;
 }
-
+.k-link{
+	text-align: center;
+}
 #tree-nav {
 	overflow: hidden !important;
 }

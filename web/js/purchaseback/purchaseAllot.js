@@ -86,7 +86,12 @@ $(document).ready(function () {
 	        },
 	        { field: "customerName", title:"客户名"},
 	        { field: "pbSubmitDate", title:"提交时间" },
-	        { field: "pbMoney", title:"金额" }
+	        { field: "pbMoney", title:"金额",
+	        	width:100,
+				template: function(dataItem){
+					return "<span style='float:right'>" + kendo.toString(dataItem.pbMoney, "c") + "</span>";
+				}	
+	        }
 	    ]
 	});
 	
