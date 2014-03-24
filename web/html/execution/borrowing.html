@@ -6,13 +6,12 @@
 	<div id="borrowing" class="k-content">
 		<h3>借货列表页面</h3>
 		<div class="k-toolbar k-grid-toolbar">
-			<button access="borrowing_management" class="k-button access" onclick="return toolbar_add()">新增</button>
-			<button access="borrowing_management" class="k-button access" onclick="return toolbar_edit()">编辑</button>
-			<button access="borrowing_management" class="k-button access" onclick="return toolbar_delete()">删除</button>
-			<button access="borrowing_management" class="k-button access" onclick="return toolbar_submit()">提交借货申请</button>
-			<button class="k-button" onclick="return toolbar_view()">查看</button>
-			<button access="borrowing_management_process" class="k-button access" onclick="return toolbar_option(1)">批准</button>
-			<button access="borrowing_management_process" class="k-button access" onclick="return toolbar_option(2)">拒绝</button>
+			<button access="borrowing_management" class="k-button access" onclick="return toolbar_addBorrwoing()">新增借货</button>
+			<button access="borrowing_management" class="k-button access" onclick="return toolbar_editBorrowing()">编辑借货</button>
+			<button access="borrowing_management" class="k-button access" onclick="return toolbar_deleteBorrowing()">删除借货</button>
+			<button access="borrowing_management" class="k-button access" onclick="return toolbar_backborrowing()">提交还货申请</button>
+			<button access="borrowing_management_process" class="k-button access" onclick="return toolbar_approveborrowing()">审核借货</button>
+			<button access="borrowing_management_process" class="k-button access" onclick="return toolbar_option()">审核还货</button>
 		</div>
 
 		<div id="grid"></div>

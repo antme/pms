@@ -178,9 +178,12 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	}
 
 	public Map<String, Object> update(Map<String, Object> params) {
-		// 变回草稿状态
-		params.put(BorrowingBean.BORROW_STATUS, "0");
-		return dao.updateById(params, DBBean.BORROWING);
+
+		if (ApiUtil.isEmpty(params.get(ApiConstants.MONGO_ID))) {
+			return create(params);
+		} else {
+			return dao.updateById(params, DBBean.BORROWING);
+		}
 	}
 
 	public void destroy(Map<String, Object> params) {
@@ -190,11 +193,9 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	}
 
 	public Map<String, Object> create(Map<String, Object> params) {
-		params.put(BorrowingBean.BORROW_STATUS, "0");
 		Map<String, Object> user = dao.findOne(ApiConstants.MONGO_ID, getCurrentUserId(), DBBean.USER);
     	params.put(BorrowingBean.BORROW_APPLICANT, user.get(UserBean.USER_NAME));
     	// 借货调拨编号
-    	String[] limitKeys = { BorrowingBean.BORROW_CODE };
     	String code = generateCode("JHDB", DBBean.BORROWING, BorrowingBean.BORROW_CODE);    	
     	params.put(BorrowingBean.BORROW_CODE, code);
 		

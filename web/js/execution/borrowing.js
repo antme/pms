@@ -82,58 +82,46 @@ $(document).ready(function () {
             },
             { field: "outProjectManager", title:"调出项目负责人" },
             {
-            	field: "status", title:"状态",
-            	template:function(dataItem) {
-					var name = "";
-					if (dataItem.status == 0){
-						name = "草稿";
-					} else if (dataItem.status == 1){
-						name = "借货申请中";
-					} else if (dataItem.status == 2){
-						name = "借货申请已批准";
-					} else if (dataItem.status == -1){
-						name = "借货申请被拒绝";
-					} else {
-						name = "未知";
-					}
-					return name;
-				}
+            	field: "status", title:"借货状态"
+            },
+            {
+            	field: "backStatus", title:"换货状态"
             },
         ],
         editable: "popup"
     });
 });
 
-function toolbar_add() {
+function toolbar_addBorrwoing() {
 	loadPage("execution_addBorrowing");
 }
 
-function toolbar_edit() {
+function toolbar_editBorrowing() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-		if (rowData.status == 0 || rowData.status == 1 || rowData.status == -1){
+//		if (rowData.status == 0 || rowData.status == 1 || rowData.status == -1){
 			loadPage("execution_addBorrowing",{_id:rowData._id});
-		} else {
-			alert("无法执行该操作");
-		}
+//		} else {
+//			alert("无法执行该操作");
+//		}
 	}
 }
 
-function toolbar_delete() {
+function toolbar_deleteBorrowing() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-		if (rowData.status == 0){
+//		if (rowData.status == 0){
 			if(confirm('确实要删除该内容吗?')) {
 				dataSource.remove(rowData);
 				dataSource.sync();
 			}
-		} else {
-			alert("无法执行该操作");
-		}
+//		} else {
+//			alert("无法执行该操作");
+//		}
 	}
 }
 
-function toolbar_submit() {
+function toolbar_backborrowing() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		
@@ -143,52 +131,25 @@ function toolbar_submit() {
 					_id : row._id,
 					"status" : "1"
 				};
-			postAjaxRequest(crudServiceBaseUrl + "/submit", param,
-						callback);
+			postAjaxRequest(crudServiceBaseUrl + "/submit", param, callback);
 		} else {
 			alert("无法执行该操作");
 		}
 	}
 }
 
-function toolbar_option(op) {
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	if (row) {
-		
-		var nextStatus = false;
-		
-		if (op == 1) { // 批准操作
-			if (row.status == 1) {
-				nextStatus = 2;
-			}
-		} else if (op == 2) { // 拒绝操作
-			if (row.status == 1) { // 借货申请
-				nextStatus = -1;
-			}
-		}
-		
-		if (nextStatus) {
-			var param = {
-					"_id" : row._id,
-					"status" : nextStatus
-				};
-			postAjaxRequest(crudServiceBaseUrl + "/option", param,
-						callback);
-		} else {
-			alert("无法执行该操作");
-		}
+function toolbar_approveborrowing() {
+	var rowData = getSelectedRowDataByGridWithMsg("grid");
+	if (rowData) {
+//		if (rowData.status == 0 || rowData.status == 1 || rowData.status == -1){
+			loadPage("execution_addBorrowing",{_id:rowData._id, page:"approve"});
+//		} else {
+//			alert("无法执行该操作");
+//		}
 	}
 }
 
 function callback(response) {
 	alert("操作成功");
 	dataSource.read();
-}
-
-function toolbar_view(){
-	var rowData = getSelectedRowDataByGridWithMsg("grid");
-	if (rowData) {
-		var options = { width:"1080px", height: "400px", title:"借货信息"};
-		openRemotePageWindow(options, "execution_addBorrowing", {_id : rowData._id});
-	}
 }

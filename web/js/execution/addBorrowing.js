@@ -9,26 +9,15 @@ var borrowing = kendo.data.Model.define( {
     	inProjectId: {},
     	inProjectCode: {},
     	inProjectName: {},
-    	inProjectManager: {},
+    	inProjectManagerId: {},
     	inScId: {},
     	inSalesContractCode: {},
     	inSalesContractType: {},
     	inProjectCustomer: {},
     	outProjectId: {},
     	outScId: {},
-    	eqcostList: {},
-    	// 发货信息
-    	shipCode: {},
-    	applicationDepartment: {},
-    	warehouse: {},
-    	deliveryContact: {},
-    	deliveryContactWay: {},
-    	deliveryUnit: {},
-    	deliveryAddress: {},
-    	deliveryStartDate: {},
-    	deliveryEndDate: {},
-    	deliveryRequirements: {},
-    	otherDeliveryRequirements: {}
+    	eqcostList: {}
+    	
     }
 });
 
@@ -47,29 +36,6 @@ var eqModel = kendo.data.Model.define( {
     }
 });
 
-var listDataSource = new kendo.data.DataSource({
-    transport: {
-        update: {
-            url: "../service/borrowing/update",
-            dataType: "jsonp",
-            type: "POST"
-        },
-        create: {
-            url: "../service/borrowing/create",
-            dataType: "jsonp",
-            type: "POST"
-        },
-        parameterMap: function(options, operation) {
-            if (operation !== "read" && options.models) {
-                return {models: kendo.stringify(options.models)};
-            }
-        }
-    },
-    batch: true,
-    schema: {
-        model: borrowing
-    }
-});
 
 $(document).ready(function() {
 	
@@ -82,171 +48,126 @@ $(document).ready(function() {
         }
     });
 	
-	$("#deliveryRequirements").kendoDropDownList({
-        dataTextField: "text",
-        dataValueField: "text",
-        optionLabel : "选择货运要求...",
-        dataSource: deliveryRequirementsItems
-    });
+
+    $("button").hide();
+    $(".cancel-button").show();
+    if(popupParams || redirectParams){
+		$(".borrowing-add").hide();	
+		
+		if(redirectParams){
+			if(redirectParams.page=="approve"){
+				$(".borrowing-approve").show();	
+			}else{
+				$(".borrowing-management").show();	
+			}
+		}else{
+			
+		}
+	} else {
+		//添加表单绑定一个空的 Model
+		model = new borrowing();
+		kendo.bind($("#addBorrowing"), model);
+		$(".borrowing-edit").hide();	
+		$(".borrowing-management").show();	
+	    
+		var inprojects = $("#in-projects").kendoComboBox({
+	        placeholder: "Select project",
+	        dataTextField: "projectName",
+	        dataValueField: "_id",
+	        filter: "contains",
+	        suggest: true,
+	        dataSource: new kendo.data.DataSource({
+	            transport: {
+	                read: {
+	                    url: "../service/borrowing/list/project",
+	                    dataType: "jsonp",
+	    	            data: {
+	    	            	type: "in"
+	    	            },
+	    	            data: {
+	    	            	pageSize: 0
+	    	            }
+	                }
+	            },
+	            schema: {
+	            	total: "total",
+	            	data: "data"
+	            }
+	        }),
+	        change: function(e) {
+	        	var dataItem = this.dataItem();
+	        	if (dataItem) {
+	        		model.set("inProjectCustomerId", dataItem.customerId);
+	        		model.set("inProjectCode", dataItem.projectCode);
+	        		model.set("inProjectManagerId", dataItem.projectManagerId);
+	        		model.set("inProjectName", dataItem.projectName);
+	        		model.set("applicationDepartment", dataItem.department);
+	        		
+		        	inSalesContract.value(null);
+		        	inProjectId = this.value();
+		        	inSalesContract.dataSource.read();
+	        	}
+	        }
+	    }).data("kendoComboBox");
+		
+		inSalesContract = $("#inSalesContract").kendoComboBox({
+			autoBind: false,
+			dataSource: new kendo.data.DataSource({
+	            transport: {
+	                read: {
+	                    url: crudServiceBaseUrl + "/borrowing/sclist",
+	                    dataType: "jsonp",
+	    	            data: {
+	    	            	projectId: function() {
+	                            return inProjectId;
+	                        }
+	    	            }
+	                }
+	            },
+	            schema: {
+	            	total: "total",
+	            	data: "data"
+	            }
+	        }),
+	        placeholder: "销售合同编号",
+	        dataTextField: "contractCode",
+	        dataValueField: "_id",
+	        filter: "contains",
+	        suggest: true,
+	        change: function(e) {
+	        	var dataItem = this.dataItem();
+	        	if (dataItem) {
+			        	model.set("inSalesContractCode", dataItem.contractCode);
+			        	model.set("inSalesContractType", dataItem.contractType);
+			        	model.set("inScId", this.value());
+			        	
+			        	var scId = this.value();
+			        	
+			        	eqDataSource = new kendo.data.DataSource({
+			        	    transport: {
+			        	        read: {
+			        	            url: crudServiceBaseUrl + "/borrowing/eqlist",
+			        	            dataType: "jsonp",
+			        	            data: {
+			        	            	inScId: scId,
+			        	            	type: 1
+			        	            }
+			        	        }
+			        	    },
+			        	    batch: true,
+			        	    schema: {
+			        	        model: eqModel,
+			        	        total: "total",
+			                	data: "data"
+			        	    }
+			        	});
+		        	
+			        	grid.setDataSource(eqDataSource);
+	        		}
+	        	}
+			}).data("kendoComboBox");
 	
-	var inprojects = $("#in-projects").kendoComboBox({
-        placeholder: "Select project",
-        dataTextField: "projectName",
-        dataValueField: "_id",
-        filter: "contains",
-        suggest: true,
-        dataSource: new kendo.data.DataSource({
-            transport: {
-                read: {
-                    url: "../service/borrowing/list/project",
-                    dataType: "jsonp",
-    	            data: {
-    	            	type: "in"
-    	            },
-    	            data: {
-    	            	pageSize: 0
-    	            }
-                }
-            },
-            schema: {
-            	total: "total",
-            	data: "data"
-            }
-        }),
-        change: function(e) {
-        	var dataItem = this.dataItem();
-        	if (dataItem) {
-        		model.set("inProjectCustomer", dataItem.customer);
-        		model.set("inProjectCode", dataItem.projectCode);
-        		model.set("inProjectManager", dataItem.projectManager);
-        		model.set("inProjectName", dataItem.projectName);
-        		model.set("applicationDepartment", dataItem.department);
-        		
-	        	inSalesContract.value(null);
-	        	inProjectId = this.value();
-	        	inSalesContract.dataSource.read();
-	        	inSalesContract.readonly(false);
-        	}
-        }
-    }).data("kendoComboBox");
-	
-	inSalesContract = $("#inSalesContract").kendoComboBox({
-		autoBind: false,
-		dataSource: new kendo.data.DataSource({
-            transport: {
-                read: {
-                    url: crudServiceBaseUrl + "/borrowing/sclist",
-                    dataType: "jsonp",
-    	            data: {
-    	            	projectId: function() {
-                            return inProjectId;
-                        }
-    	            }
-                }
-            },
-            schema: {
-            	total: "total",
-            	data: "data"
-            }
-        }),
-        placeholder: "销售合同编号",
-        dataTextField: "contractCode",
-        dataValueField: "_id",
-        filter: "contains",
-        suggest: true,
-        change: function(e) {
-        	var dataItem = this.dataItem();
-        	if (dataItem) {
-	        	model.set("inSalesContractCode", dataItem.contractCode);
-	        	model.set("inSalesContractType", dataItem.contractType);
-	        	
-	        	var scId = this.value();
-	        	
-	        	eqDataSource = new kendo.data.DataSource({
-	        	    transport: {
-	        	        read: {
-	        	            url: crudServiceBaseUrl + "/borrowing/eqlist",
-	        	            dataType: "jsonp",
-	        	            data: {
-	        	            	inScId: scId,
-	        	            	type: 1
-	        	            }
-	        	        }
-	        	    },
-	        	    batch: true,
-	        	    schema: {
-	        	        model: eqModel,
-	        	        total: "total",
-	                	data: "data"
-	        	    }
-	        	});
-	        	
-	        	grid.setDataSource(eqDataSource);
-        	}
-        }
-    }).data("kendoComboBox");
-	
-	inSalesContract.readonly();
-	
-	var outprojects = $("#out-projects").kendoComboBox({
-        placeholder: "Select project",
-        dataTextField: "projectName",
-        dataValueField: "_id",
-        filter: "contains",
-        suggest: true,
-        dataSource: new kendo.data.DataSource({
-            transport: {
-                read: {
-                    url: "../service/borrowing/list/project",
-                    dataType: "jsonp",
-    	            data: {
-    	            	pageSize: 0
-    	            }
-                }
-            },
-            schema: {
-            	total: "total",
-            	data: "data"
-            }
-        }),
-        change: function(e) {
-        	var dataItem = this.dataItem();
-        	if (dataItem) {
-	        	outSalesContract.value(null);
-	        	outProjectId = this.value();
-	        	outSalesContract.dataSource.read();
-	        	outSalesContract.readonly(false);
-        	}
-        }
-    }).data("kendoComboBox");
-	
-	outSalesContract = $("#outSalesContract").kendoComboBox({
-		autoBind: false,
-		dataSource: new kendo.data.DataSource({
-            transport: {
-                read: {
-                    url: crudServiceBaseUrl + "/borrowing/sclist",
-                    dataType: "jsonp",
-    	            data: {
-    	            	projectId: function() {
-                            return outProjectId;
-                        }
-    	            }
-                }
-            },
-            schema: {
-            	total: "total",
-            	data: "data"
-            }
-        }),
-        placeholder: "销售合同编号",
-        dataTextField: "contractCode",
-        dataValueField: "_id",
-        filter: "contains",
-        suggest: true
-    }).data("kendoComboBox");
-	
-	outSalesContract.readonly();
+	}
 	
 	grid = $("#equipments-grid").kendoGrid({
 	    toolbar: [ { name: "cancel", text: "撤销编辑" } ],
@@ -279,17 +200,89 @@ $(document).ready(function() {
 	}
 });
 
+
+function searchEqCost(){
+	var outprojects = $("#out-projects").kendoComboBox({
+        placeholder: "Select project",
+        dataTextField: "projectName",
+        dataValueField: "_id",
+        filter: "contains",
+        suggest: true,
+        dataSource: new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "../service/borrowing/list/project",
+                    dataType: "jsonp",
+    	            data: {
+    	            	pageSize: 0
+    	            }
+                }
+            },
+            schema: {
+            	total: "total",
+            	data: "data"
+            }
+        }),
+        change: function(e) {
+        	var dataItem = this.dataItem();
+        	if (dataItem) {
+	        	outSalesContract.value(null);
+	        	model.set("outProjectCustomerId", dataItem.customerId);
+        		model.set("outProjectCode", dataItem.projectCode);
+        		model.set("outProjectManagerId", dataItem.projectManagerId);
+        		model.set("outProjectName", dataItem.projectName);
+	        	outProjectId = this.value();
+	        	outSalesContract.dataSource.read();
+	        	outSalesContract.readonly(false);
+        	}
+        }
+    }).data("kendoComboBox");
+	
+	outSalesContract = $("#outSalesContract").kendoComboBox({
+		autoBind: false,
+		dataSource: new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: crudServiceBaseUrl + "/borrowing/sclist",
+                    dataType: "jsonp",
+    	            data: {
+    	            	projectId: function() {
+                            return outProjectId;
+                        }
+    	            }
+                }
+            },
+            schema: {
+            	total: "total",
+            	data: "data"
+            }
+        }),
+        
+        change: function(e) {
+        	var dataItem = this.dataItem();
+        	if (dataItem) {
+		        	model.set("outSalesContractCode", dataItem.contractCode);
+		        	model.set("outScId", this.value());
+        	}
+        },
+        placeholder: "销售合同编号",
+        dataTextField: "contractCode",
+        dataValueField: "_id",
+        filter: "contains",
+        suggest: true
+    }).data("kendoComboBox");
+	
+}
+
 function edit(data) {
 	model = new borrowing(data);
 
 	if (model.inProjectId) {
 		inProjectId = model.inProjectId;
-    	inSalesContract.readonly(false);
 	}
 	
 	if (model.outProjectId) {
 		outProjectId = model.outProjectId;
-    	outSalesContract.readonly(false);
 	}
 	
 	kendo.bind($("#addBorrowing"), model);
@@ -305,7 +298,12 @@ function edit(data) {
 	grid.setDataSource(eqDataSource);
 }
 
-function save() {
+
+function saveDraftBorrowing(){
+	
+}
+
+function saveBorrowing() {
 	
 	var validator = $("#addBorrowing").kendoValidator().data("kendoValidator");
 	if (!validator.validate()) {
@@ -315,24 +313,24 @@ function save() {
     		var data = eqDataSource.data();
     		if (data.length > 0) {
     			model.set("eqcostList", data);
-    			
-    			model.set("deliveryStartDate", kendo.toString(model.deliveryStartDate, 'yyyy-MM-dd'));
-    			model.set("deliveryEndDate", kendo.toString(model.deliveryEndDate, 'yyyy-MM-dd'));
-    			
-    			listDataSource.add(model);
+    			model.set("status", "已提交");
+    			console.log(model);
+    			postAjaxRequest("/service/borrowing/update", {models:kendo.stringify(model)}, reloadPage);
     	        
-    	    	if(listDataSource.at(0)){
-    	    		//force set haschanges = true
-    	    		listDataSource.at(0).set("uid", kendo.guid());
-    	    	}
-    	    	
-    	    	listDataSource.sync();
-    	        loadPage("execution_borrowing");
     		}
 		}
     }
 }
 
-function cancle() {
+function approveBorrowing(){
+	postAjaxRequest("/service/borrowing/approve", {_id:model._id}, reloadPage);
+}
+
+function rejectBorrowing(){
+	postAjaxRequest("/service/borrowing/reject", {_id:model._id}, reloadPage);
+}
+
+
+function reloadPage() {
 	loadPage("execution_borrowing");
 }

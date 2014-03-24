@@ -681,6 +681,16 @@ function openShipViewWindow(param){
 	openRemotePageWindow(options, "execution_addShip", {_id : param});	
 }
 
+
+
+function openBorrowingViewWindow(param){
+
+	var options = { width:"1080px", height: "400px", title:"借货信息"};
+	openRemotePageWindow(options, "execution_addBorrowing", {_id : param});
+	
+}
+
+
 function openRepositoryViewWindow(param){
 	var options = { width:"1080px", height: "500px", title:"入库信息"};
 	openRemotePageWindow(options, "repository_repositoryEdit", {_id : param});	
