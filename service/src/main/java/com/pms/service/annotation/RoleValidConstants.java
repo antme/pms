@@ -120,4 +120,14 @@ public class RoleValidConstants {
     public static final String SHIP_ARRIVAL_RECORD = "ship_arrival_record";
     public static final String SHIP_ARRIVAL_RECORD_DESC = "发货确认";
     
+    
+    
+    //结算
+    public static final String SETTLEMENT_MANAGEMENT = "settlement_management";
+    public static final String SETTLEMENT_MANAGEMENT_DESC = "结算管理";
+        
+    public static final String SETTLEMENT_MANAGEMENT_PROCESS = "settlement_management_process";
+    public static final String SETTLEMENT_MANAGEMENT_PROCESS_DESC = "结算审核";
+    
+    
 }

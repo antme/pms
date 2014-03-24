@@ -626,6 +626,15 @@ function openProjectViewWindow(param){
 }
 
 
+function openSettlmentWindow(param){
+	if(param && param!=""){
+		var options = { width:"1080px", height: "600px", title:"结算信息"};
+		openRemotePageWindow(options, "execution_addSettlement", {_id : param});
+	}else{
+		alert("此项目还没保存");
+	}
+}
+
 function openPurchaseRequestViewWindow(param){
 	var options = { width:"1080px", height: "600px", title:"采购申请信息"};
 	openRemotePageWindow(options, "purchasecontract_purchaseRequestEdit", {_id : param});

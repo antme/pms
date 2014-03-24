@@ -46,9 +46,9 @@ var commonDataSource = new kendo.data.DataSource({
 	}
 });
 
-
+var deleteCommand = {};
 $(document).ready(function() {
-	var deleteCommand  = undefined;
+	$("#project-select").hide();
 	if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
 		//do nothing
 		$(".settlement-edit").show();
@@ -63,14 +63,15 @@ $(document).ready(function() {
 		$(".settlement-edit").show();
 	}else if(redirectParams && redirectParams._id){
 		//do nothing
+		deleteCommand =  { command: "destroy", text: "删除", width: 90 };
 		$(".settlement-add").hide();
 		$(".settlement-edit").show();
 		
 	}else{
 		deleteCommand =  { command: "destroy", text: "删除", width: 90 };
+		$("#project-select").show();
 	
-	
-		 project = $("#project").kendoComboBox({
+		 project = $("#projectId").kendoComboBox({
 	        placeholder: "Select project",
 	        dataTextField: "projectName",
 	        dataValueField: "_id",
@@ -107,10 +108,10 @@ $(document).ready(function() {
 	}
 
 	if(popupParams){
-		postAjaxRequest("/service/settlement/get", popupParams, editsettlement);
+		postAjaxRequest("/service/ship/settlement/get", popupParams, editsettlement);
 		disableAllInPoppup();
 	} else if (redirectParams && redirectParams._id) {//Edit		
-		postAjaxRequest("/service/settlement/get", {_id:redirectParams._id}, editsettlement);
+		postAjaxRequest("/service/ship/settlement/get", {_id:redirectParams._id}, editsettlement);
 	} else {//Add
 		editsettlement();
 	}
@@ -222,7 +223,7 @@ function loadEqList(data){
 					title : "来源"
 				},	        
 		        { field: "eqcostMemo", title: "备注" },
-		        { command: "destroy", label:"删除", text: "删除", width: 90 }
+		        deleteCommand
 		        ],
 		    editable: true,
 		    groupable : true,
@@ -253,22 +254,17 @@ function savesettlement(isDraft) {
 		   model.set("status", "申请中");
 	   }
 		model.set("eqcostList", commonDataSource.data());
+	
+	   postAjaxRequest("/service/ship/settlement/add", {models:kendo.stringify(model)}, reloadPage);
 		
-		if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
-			postAjaxRequest("/service/settlement/record", {models:kendo.stringify(model)}, cancle);
-		}else if(redirectParams && redirectParams.type && redirectParams.type == "submit") {
-			postAjaxRequest("/service/settlement/add", {models:kendo.stringify(model)}, cancle);
-		}else{
-			postAjaxRequest("/service/ship/settlement/add", {models:kendo.stringify(model)}, cancle);
-		}
 
 }
 
 
 function approve_settlement() {
-	var url =crudServiceBaseUrl + "/settlement/approve";
+	var url = "/service/ship/settlement/approve";
 	if(model.status == "已初审"){
-		 url =crudServiceBaseUrl + "/settlement/finalapprove";
+		 url = "/service/ship/settlement/finalapprove";
 	}
 	var param = {
 			_id : model._id
@@ -281,9 +277,9 @@ function approve_settlement() {
 }
 
 function reject_settlement() {
-	var url =crudServiceBaseUrl + "/settlement/reject";
+	var url = "/service/ship/settlement/reject";
 	if(model.status == "已初审"){
-		 url =crudServiceBaseUrl + "/settlement/finalreject";
+		 url = "/service/ship/settlement/finalreject";
 	}
 	var param = {
 		_id : model._id
@@ -301,6 +297,6 @@ function submitsettlement(){
 	savesettlement(true);
 }
 
-function cancle() {
+function reloadPage() {
 	loadPage("execution_settlement");
 }

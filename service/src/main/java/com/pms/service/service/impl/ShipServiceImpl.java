@@ -584,7 +584,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		
 		
 		if(ApiUtil.isEmpty(params.get("settlementCode"))){
-			params.put("settlementCode", generateCode("JSSQ-", DBBean.SETTLEMENT, "settlementCode"));
+			params.put("settlementCode", generateCode("JSSQ", DBBean.SETTLEMENT, "settlementCode"));
 		}
 		if(ApiUtil.isEmpty(params.get(ApiConstants.MONGO_ID))){
 			params.put("applicationDate", new Date());
@@ -596,6 +596,31 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		}
 		
 	}
+	
+	public Map<String, Object> getSettlement(Map<String, Object> params) {
+
+		Map<String, Object> result = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SETTLEMENT);
+		List<Map<String, Object>> mergeEqListBasicInfo = scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST));
+
+		List<Map<String, Object>> list = laodShipRestEqLit(mergeEqListBasicInfo, null, result.get(ShipBean.SHIP_PROJECT_ID).toString(), true);
+
+		result.put(SalesContractBean.SC_EQ_LIST, list);
+
+		return result;
+
+	}
+	
+	public Map<String, Object> approveSettlement(Map<String, Object> params) {
+		params.put(ShipBean.SHIP_STATUS, PurchaseCommonBean.STATUS_APPROVED);
+		return this.dao.updateById(params, DBBean.SETTLEMENT);
+
+	}
+
+	public Map<String, Object> rejectSettlement(Map<String, Object> params) {
+		params.put(ShipBean.SHIP_STATUS, PurchaseCommonBean.STATUS_REJECTED);
+		return this.dao.updateById(params, DBBean.SETTLEMENT);
+	}
+
 	
 	public void destroySettlement(Map<String, Object> params){
 		

@@ -162,9 +162,30 @@ public class ShipController extends AbstractController {
     }
 	
 	@RequestMapping("/settlement/add")
+    @RoleValidate(roleID=RoleValidConstants.SETTLEMENT_MANAGEMENT, desc = RoleValidConstants.SETTLEMENT_MANAGEMENT_DESC)
     public void addSettlement(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
     	responseWithData(shipService.addSettlement(params), request, response);
+    }
+	
+	@RequestMapping("/settlement/get")
+    public void getSettlement(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(shipService.getSettlement(params), request, response);
+    }
+	
+	@RequestMapping("/settlement/approve")
+    @RoleValidate(roleID=RoleValidConstants.SETTLEMENT_MANAGEMENT_PROCESS, desc = RoleValidConstants.SETTLEMENT_MANAGEMENT_PROCESS_DESC)
+    public void approveSettlement(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(shipService.approveSettlement(params), request, response);
+    }
+	
+	@RequestMapping("/settlement/reject")
+    @RoleValidate(roleID=RoleValidConstants.SETTLEMENT_MANAGEMENT_PROCESS, desc = RoleValidConstants.SETTLEMENT_MANAGEMENT_PROCESS_DESC)
+    public void rejectSettlement(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(shipService.rejectSettlement(params), request, response);
     }
 	
     @RequestMapping("/settlement/eqlist")
@@ -174,6 +195,7 @@ public class ShipController extends AbstractController {
     }
     
     @RequestMapping("/settlement/destroy")
+    @RoleValidate(roleID=RoleValidConstants.SETTLEMENT_MANAGEMENT, desc = RoleValidConstants.SETTLEMENT_MANAGEMENT_DESC)
     public void destroySettlement(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
     	shipService.destroySettlement(params);

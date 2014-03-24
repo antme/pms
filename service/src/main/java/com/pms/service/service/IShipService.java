@@ -46,4 +46,10 @@ public interface IShipService {
 
 	public void destroySettlement(Map<String, Object> params);
 
+	public Map<String, Object> getSettlement(Map<String, Object> params);
+
+	public Map<String, Object> approveSettlement(Map<String, Object> params);
+
+	public Map<String, Object> rejectSettlement(Map<String, Object> params);
+
 }

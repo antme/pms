@@ -57,7 +57,7 @@ $(document).ready(function () {
             	   field: "settlementCode",
             	   title: "编号",
             	   template : function(dataItem) {
-       					return '<a  onclick="openShipViewWindow(\'' + dataItem._id + '\');">' + dataItem.settlementCode + '</a>';      				
+       					return '<a  onclick="openSettlmentWindow(\'' + dataItem._id + '\');">' + dataItem.settlementCode + '</a>';      				
        				}
                },
               
@@ -84,42 +84,18 @@ function toolbar_addSettlement() {
 	loadPage("execution_addSettlement");
 }
 
-function toolbar_edit() {
+function toolbar_editSettlement() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-		if (rowData.status == "草稿" || rowData.status == "已拒绝"){
-			loadPage("execution_addShip",{_id:rowData._id});
-		} else {
-			alert("只允许编辑已拒绝或则草稿数据");
-		}
+//		if (rowData.status == "草稿" || rowData.status == "已拒绝"){
+			loadPage("execution_addSettlement",{_id:rowData._id});
+//		} else {
+//			alert("只允许编辑已拒绝或则草稿数据");
+//		}
 	}
 }
 
-
-function toolbar_confirm() {
-	var rowData = getSelectedRowDataByGridWithMsg("grid");
-	if (rowData) {
-		if (rowData.status == "已终审"){
-			if(rowData.shipType == "直发现场"){
-				if(user.isPurchase || true){
-					loadPage("execution_addShip",{_id:rowData._id, type: "confirm"});
-				}else{
-					alert("直发类发货确认只能由采购确认");
-				}
-			}else{
-				if(user.isDepotManager){
-					loadPage("execution_addShip",{_id:rowData._id, type: "confirm"});
-				}else{
-					alert("非直发类发货确认只能由库管确认");
-				}
-			}
-		} else {
-			alert("只能确认已终审后的发货申请");
-		}
-	}
-}
-
-function toolbar_delete() {
+function toolbar_deleteSettlement() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
 
@@ -135,48 +111,17 @@ function toolbar_delete() {
 }
 
 
-function toolbar_approve_ship() {
+function toolbar_approve_settlement() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		if (row.status == "申请中") {
 
-			loadPage("execution_addShip",{_id:row._id, type: "approve"});
+			loadPage("execution_addSettlement",{_id:row._id, type: "approve"});
 		} else {
 			alert("非申请中状态，不允许审核");
 		}
 	}
 }
-
-function toolbar_final_approve_ship(){
-	var row = getSelectedRowDataByGridWithMsg("grid");
-	if (row) {
-		if (row.status == "已初审") {
-
-			loadPage("execution_addShip",{_id:row._id, type: "approve"});
-		} else {
-			alert("非初审状态，不允许审核");
-		}
-	}
-}
-//
-//function toolbar_reject_ship(op) {
-//	var row = getSelectedRowDataByGridWithMsg("grid");
-//	var url =crudServiceBaseUrl + "/reject";
-//	if (row) {
-//		if (row.status == "申请中") {
-//			var param = {
-//				_id : row._id
-//			};
-//			postAjaxRequest(url, param, function(response){
-//				alert("拒绝成功");
-//				dataSource.read();
-//			});
-//		} else {
-//			alert("非申请中状态，不允许审核");
-//		}
-//	}
-//}
-
 
 
 
