@@ -86,7 +86,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Object> result = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.SHIP);
         List<Map<String, Object>> mergeEqListBasicInfo = scs.mergeEqListBasicInfo(result.get(SalesContractBean.SC_EQ_LIST));
         
-        List<Map<String, Object>> list =  laodShipRestEqLit(mergeEqListBasicInfo, result.get(ShipBean.SHIP_SALES_CONTRACT_ID).toString(), params.get(ShipBean.SHIP_PROJECT_ID).toString(), true);
+        List<Map<String, Object>> list =  laodShipRestEqLit(mergeEqListBasicInfo, result.get(ShipBean.SHIP_SALES_CONTRACT_ID).toString(), result.get(ShipBean.SHIP_PROJECT_ID).toString(), true);
         
 		scs.mergeCommonFieldsFromSc(result, result.get(ShipBean.SHIP_SALES_CONTRACT_ID));
 
@@ -363,7 +363,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 //				}
 //			}
 //		}
-		
+//		
 		if (close) {
 			params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_CLOSE);
 			

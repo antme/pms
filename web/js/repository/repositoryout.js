@@ -42,7 +42,16 @@ $(document).ready(function() {
 				title : "申请编号",
 				template : function(dataItem) {
 					return '<a  onclick="openRepositoryOutViewWindow(\'' + dataItem._id + '\');">' + dataItem.repositoryCode + '</a>';
-				}
+				},
+				width: 150
+			}, {
+				field : "projectName",
+				title : "项目名称",
+				width: 200
+			}, {
+				field : "contractCode",
+				title : "销售合同编号",
+				width: 180
 			}, {
 				field : "recustomer",
 				title : "需方名称"

@@ -49,7 +49,7 @@ $(document).ready(function() {
     });
 	
 
-    $("button").hide();
+//    $("button").hide();
     $(".cancel-button").show();
     if(popupParams || redirectParams){
 		$(".borrowing-add").hide();	
