@@ -377,8 +377,10 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
             repositoryOut.put(ShipBean.SHIP_SALES_CONTRACT_ID, ship.get(ShipBean.SHIP_SALES_CONTRACT_ID));
             repositoryOut.put(ShipBean.SHIP_SALES_CONTRACT_CODE, ship.get(ShipBean.SHIP_SALES_CONTRACT_CODE));
             repositoryOut.put("outDate",  ship.get(ShipBean.SHIP_DATE));
+            repositoryOut.put("shipCode",  ship.get(ShipBean.SHIP_CODE));
+            repositoryOut.put("shipId",  ship.get(ApiConstants.MONGO_ID));
             
-            
+            repositoryOut.put(ShipBean.SHIP_TYPE,  ship.get(ShipBean.SHIP_TYPE));
             repositoryOut.put("type", "out");
             repositoryOut.put("status", PurchaseRequest.STATUS_OUT_REPOSITORY_NEED_CONFIRM);
 

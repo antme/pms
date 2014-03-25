@@ -59,6 +59,9 @@ $(document).ready(function() {
 				field : "status",
 				title : "出库状态"
 			}, {
+				field : "shipType",
+				title : "发货类型"
+			}, {
 				field : "outDate",
 				title : "发货时间",
 				template : function(dataItem) {
