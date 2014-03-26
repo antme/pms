@@ -1,30 +1,30 @@
 package com.pms.service.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
+import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
-import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
 import com.pms.service.mockbean.PurchaseCommonBean;
 import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.SalesContractBean;
-import com.pms.service.mockbean.ShipBean;
-import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.ISalesContractService;
 import com.pms.service.service.IShipService;
 import com.pms.service.util.ApiUtil;
+import com.pms.service.util.status.ResponseCodeConstants;
 
 public class ArrivalNoticeServiceImpl extends AbstractService implements IArrivalNoticeService {
 	
@@ -112,6 +112,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 			scQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ApiConstants.MONGO_ID});
 			
 			List<Object> scIds =   this.dao.listLimitKeyValues(scQuery, DBBean.SALES_CONTRACT);
+			Set<Object> findScIds = new HashSet<Object>();
 			boolean find = false;
 			for(Object scId: scIds){
 				Map<String, Object> scParams = new HashMap<String, Object>();
@@ -122,12 +123,20 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 				 
 				 if(ApiUtil.isValid(eqListMap.get(ApiConstants.RESULTS_DATA))){
 					 find = true;
-					 break;
+					 findScIds.add(scId);
 				 }
 				 
 			}
 			
 			if(find){
+				Map<String, Object> findScQuery = new HashMap<String, Object>();
+				findScQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, findScIds));
+				findScQuery.put(ApiConstants.LIMIT_KEYS, new String[] { SalesContractBean.SC_CODE, SalesContractBean.SC_TYPE });
+				Map<String, Object> result = dao.list(findScQuery, DBBean.SALES_CONTRACT);
+
+				List<Map<String, Object>> scList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+				p.put("scList", scList);
+				
 				p.put(SalesContractBean.SC_EQ_LIST, "true");
 			}
 		}
@@ -140,6 +149,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		
 		return projects;
 	}
+	
+	
 	 
     public Map<String, Object> listEqListByScIDForShip(Object scId) {
         Map<String, Object> query = new HashMap<String, Object>();

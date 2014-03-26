@@ -11,7 +11,7 @@ public interface IArrivalNoticeService {
 	public void destroy(Map<String, Object> params);
 	
     public Map<String, Object> listProjectsForSelect(Map<String, Object> params);
-    
+        
     public Map<String, Object> listEqListByScIDForShip(Object scId);
     
     public Map<String, Object> listByScIdForBorrowing(Object scId);

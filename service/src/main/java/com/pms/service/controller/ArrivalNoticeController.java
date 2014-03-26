@@ -57,6 +57,7 @@ public class ArrivalNoticeController extends AbstractController {
         Map<String, Object> params = parserJsonParameters(request, false);
         responseWithData(arrivalNoticeService.listProjectsForSelect(params), request, response);
     }
+
     
     @RequestMapping("/create/byorder")
     @RoleValidate(roleID=RoleValidConstants.PURCHASE_ORDER_ARRIVAL_NOTICE, desc = RoleValidConstants.PURCHASE_ORDER_ARRIVAL_NOTICE_DESC)

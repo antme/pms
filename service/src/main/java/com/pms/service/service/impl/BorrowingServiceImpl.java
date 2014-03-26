@@ -414,8 +414,9 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 				modelSet.add(eqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE).toString());
 			}
 		}
-		
-		
+
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		List<Map<String, Object>> projects = (List<Map<String, Object>>) arrivalService.listProjectsForSelect(parameters).get(ApiConstants.RESULTS_DATA);
 
 		return null;
 

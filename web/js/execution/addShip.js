@@ -93,6 +93,8 @@ var allShipDataSource = new kendo.data.DataSource({
 
 });
 
+var scList = new Array();
+
 $(document).ready(function() {
 	var deleteCommand  = undefined;
 	if(redirectParams && redirectParams.type && redirectParams.type == "confirm"){
@@ -144,9 +146,9 @@ $(document).ready(function() {
 	        	model.set("scId", "");
 	            model.set("customerName", dataItem.customerName);
 	            model.set("customerId", dataItem.customerId);
-
+	            scList = dataItem.scList;
 	        	
-	        	loadSC();
+	        	loadSC(scList);
 	        	
 	        }, 
 	        dataBound : function(e){
@@ -355,7 +357,7 @@ $(document).ready(function() {
 });
 
 
-function loadSC(){
+function loadSC(scList){
 	salesContract = $("#salesContract").kendoComboBox({
 		autoBind: false,
         placeholder: "销售合同编号",
@@ -364,21 +366,7 @@ function loadSC(){
         filter: "contains",
         suggest: true,
         dataSource: new kendo.data.DataSource({
-            transport: {
-                read: {
-                    url: crudServiceBaseUrl + "/sc/listbyproject",
-                    dataType: "jsonp",
-    	            data: {
-    	            	projectId: function() {
-                            return project.value();
-                        }
-    	            }
-                }
-            },
-            schema: {
-            	total: "total",
-            	data: "data"
-            }
+        	data:scList
         }),
         change: function(e) {
         	var dataItem = this.dataItem();
