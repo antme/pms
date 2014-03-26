@@ -353,77 +353,56 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 	}
 	
 	public Map<String, Object> listProjectForBorrowing(Map<String, Object> params) {
-		Map<String, Object> query = new HashMap<String, Object>();
-		query.put(PurchaseCommonBean.PROCESS_STATUS, PurchaseCommonBean.STATUS_APPROVED);
-        query.put(PurchaseContract.PURCHASE_CONTRACT_TYPE, PurchaseCommonBean.CONTRACT_EXECUTE_CATE_BEIJINGDAICAI);
-        query.put(ApiConstants.LIMIT_KEYS, new String[] { "eqcostList.projectId" });
-        Map<String, Object> purConEq = dao.list(query, DBBean.PURCHASE_CONTRACT);
-        List<Map<String, Object>> projectResults = (List<Map<String, Object>>) purConEq.get(ApiConstants.RESULTS_DATA);
-        
-        Set<Object> projectIdsList = new HashSet();
-        
-        for (Map<String, Object> map : projectResults) {
-        	List<Map<String, Object>> eqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
-        	for (Map<String, Object> eq : eqList) {
-        		projectIdsList.add(eq.get(ProjectBean.PROJECT_ID));
-			}
-		}
-        
-        String[] limitKeys = { ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER_ID, ProjectBean.PROJECT_CUSTOMER_ID };
-		Map<String, Object> pQuery = new HashMap<String, Object>();
-		pQuery.put(ApiConstants.LIMIT_KEYS, limitKeys);
-		// 选择调入项目
-		if ("in".equals(params.get("type"))) {
-			pQuery.put(ProjectBean.PROJECT_MANAGER_ID, ApiThreadLocal.getCurrentUserId());
-		}
-		pQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(projectIdsList)));
-		Map<String, Object> result = dao.list(pQuery, DBBean.PROJECT);
-		
-		List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA); 
-		Set<String> uids = new HashSet<String>();
-		for(Map<String, Object> p : resultList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
-			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
-			if (!ApiUtil.isEmpty(pmid)){
-				uids.add(pmid);
-			}
-			if (!ApiUtil.isEmpty(cid)){
-				uids.add(cid);
-			}
-		}
-		
-		Map<String, Object> pmQuery = new HashMap<String, Object>();
-		pmQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, new ArrayList<Object>(uids)));
-		pmQuery.put(ApiConstants.LIMIT_KEYS, new String[] {UserBean.USER_NAME, UserBean.DEPARTMENT});
-		Map<String, Object> pmData = dao.listToOneMapAndIdAsKey(pmQuery, DBBean.USER);
-		
-		for (Map<String, Object> p : resultList){
-			scs.mergeCommonProjectInfo(p, p.get(ApiConstants.MONGO_ID));
-		}
-		
-		return result;
+		return arrivalService.listProjectsForSelect(params);
 	}
 	
 	
-	public Map<String, Object> searchBorrowing(Map<String, Object> params) {
-		List<Map<String, Object>> resultList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
-		Set<String> modelSet = new HashSet<String>();
+    public Map<String, Object> searchBorrowing(Map<String, Object> params) {
 
-		for (Map<String, Object> eqCost : resultList) {
-			if (eqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE) != null) {
-				modelSet.add(eqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE).toString());
-			}
-		}
+        List<Map<String, Object>> resultList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
+        Set<String> modelSet = new HashSet<String>();
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		List<Map<String, Object>> projects = (List<Map<String, Object>>) arrivalService.listProjectsForSelect(parameters).get(ApiConstants.RESULTS_DATA);
-		
-		if(ApiUtil.isValid(projects)){
-			
-		}
+        for (Map<String, Object> eqCost : resultList) {
+            if (eqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE) != null) {
+                modelSet.add(eqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE).toString());
+            }
+        }
 
-		return null;
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        List<Map<String, Object>> projects = (List<Map<String, Object>>) arrivalService.listProjectsForSelect(parameters).get(ApiConstants.RESULTS_DATA);
+        List<Map<String, Object>> seachedEqList = new ArrayList<Map<String, Object>>();
 
-	}
+        if (ApiUtil.isValid(projects)) {
+
+            for (Map<String, Object> project : projects) {
+                List<Map<String, Object>> scList = (List<Map<String, Object>>) project.get("scList");
+                for (Map<String, Object> scMap : scList) {
+
+                    Map<String, Object> eqQuery = new HashMap<String, Object>();
+                    eqQuery.put(ShipBean.SHIP_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
+                    eqQuery.put(ShipBean.SHIP_SALES_CONTRACT_ID, scMap.get(ApiConstants.MONGO_ID));
+
+                    Map<String, Object> result = shipService.eqlist(eqQuery);
+                    List<Map<String, Object>> shipMergedEqList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+
+                    for (Map<String, Object> eqCost : resultList) {
+
+                        for (Map<String, Object> findEqCost : shipMergedEqList) {
+                            if (findEqCost.get(ApiConstants.MONGO_ID).equals(eqCost.get(ApiConstants.MONGO_ID))) {
+                                seachedEqList.add(findEqCost);
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+
+        Map<String, Object> res = new HashMap<String, Object>();
+        res.put(ApiConstants.RESULTS_DATA, seachedEqList);
+        return res;
+    }
 
 }

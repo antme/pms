@@ -37,6 +37,7 @@ var eqModel = kendo.data.Model.define( {
 });
 
 
+var scList = new Array();
 $(document).ready(function() {
 	
 	// 选项卡
@@ -102,10 +103,10 @@ $(document).ready(function() {
 	        		model.set("inProjectManagerId", dataItem.projectManagerId);
 	        		model.set("inProjectName", dataItem.projectName);
 	        		model.set("applicationDepartment", dataItem.department);
-	        		
+	        		scList = dataItem.scList;
 		        	inSalesContract.value(null);
 		        	inProjectId = this.value();
-		        	inSalesContract.dataSource.read();
+		        	inSalesContract.dataSource.data(scList);
 	        	}
 	        }
 	    }).data("kendoComboBox");
@@ -113,21 +114,6 @@ $(document).ready(function() {
 		inSalesContract = $("#inSalesContract").kendoComboBox({
 			autoBind: false,
 			dataSource: new kendo.data.DataSource({
-	            transport: {
-	                read: {
-	                    url: crudServiceBaseUrl + "/borrowing/sclist",
-	                    dataType: "jsonp",
-	    	            data: {
-	    	            	projectId: function() {
-	                            return inProjectId;
-	                        }
-	    	            }
-	                }
-	            },
-	            schema: {
-	            	total: "total",
-	            	data: "data"
-	            }
 	        }),
 	        placeholder: "销售合同编号",
 	        dataTextField: "contractCode",
