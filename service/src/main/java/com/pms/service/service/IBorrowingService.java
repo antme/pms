@@ -21,4 +21,6 @@ public interface IBorrowingService {
 	public Map<String, Object> listScByProjectForBorrowing(Map<String, Object> params);
 	
 	public Map<String, Object> listProjectForBorrowing(Map<String, Object> params);
+
+	public Map<String, Object> searchBorrowing(Map<String, Object> params);
 }

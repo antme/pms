@@ -96,4 +96,11 @@ public class BorrowingController extends AbstractController {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
     	responseWithData(borrowingService.listProjectForBorrowing(params), request, response);
     }
+    
+    
+    @RequestMapping("/search")
+    public void searchBorrowing(HttpServletRequest request, HttpServletResponse response) {
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(borrowingService.searchBorrowing(params), request, response);
+    }
 }

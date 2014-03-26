@@ -403,5 +403,22 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		
 		return result;
 	}
+	
+	
+	public Map<String, Object> searchBorrowing(Map<String, Object> params) {
+		List<Map<String, Object>> resultList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
+		Set<String> modelSet = new HashSet<String>();
+
+		for (Map<String, Object> eqCost : resultList) {
+			if (eqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE) != null) {
+				modelSet.add(eqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE).toString());
+			}
+		}
+		
+		
+
+		return null;
+
+	}
 
 }

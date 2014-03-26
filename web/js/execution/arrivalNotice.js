@@ -1,37 +1,31 @@
-var dataSource, crudServiceBaseUrl = "../service/arrivalNotice";
+var arrivalListDataSource, crudServiceBaseUrl = "../service/arrivalNotice";
+
+arrivalListDataSource = new kendo.data.DataSource({
+    transport: {
+        read:  {
+            url: crudServiceBaseUrl + "/list",
+            dataType: "jsonp"
+        }
+    },
+    batch: true,
+    pageSize: 10,
+	serverPaging: true,
+	serverSorting: true,
+	serverFiltering : true,
+    schema: {
+    	total: "total",
+    	data: "data"
+    }
+});
 
 $(document).ready(function () {
 	checkRoles();
-    dataSource = new kendo.data.DataSource({
-        transport: {
-            read:  {
-                url: crudServiceBaseUrl + "/list",
-                dataType: "jsonp"
-            },
-            destroy: {
-                url: crudServiceBaseUrl + "/destroy",
-                dataType: "jsonp"
-            },
-            parameterMap: function(options, operation) {
-                if (operation !== "read" && options.models) {
-                    return {models: kendo.stringify(options.models)};
-                }
-            }
-        },
-        batch: true,
-        pageSize: 10,
-    	serverPaging: true,
-    	serverSorting: true,
-    	serverFiltering : true,
-        schema: {
-        	total: "total",
-        	data: "data"
-        }
-    });
+   
 
     $("#grid").kendoGrid({
-        dataSource: dataSource,
-        pageable : true, resizable: true,
+        dataSource: arrivalListDataSource,
+        pageable : true, 
+        resizable: true,
 		sortable : true,
 		selectable : "row",
 		filterable : filterable,

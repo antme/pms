@@ -200,7 +200,11 @@ $(document).ready(function() {
 	}
 });
 
-
+function searchBorrowingEqCost(){
+	postAjaxRequest("/service/borrowing/search", {models:kendo.stringify(model)}, function(data){
+		
+	});
+}
 function searchEqCost(){
 	var outprojects = $("#out-projects").kendoComboBox({
         placeholder: "Select project",
