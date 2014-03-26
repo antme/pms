@@ -417,6 +417,10 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		List<Map<String, Object>> projects = (List<Map<String, Object>>) arrivalService.listProjectsForSelect(parameters).get(ApiConstants.RESULTS_DATA);
+		
+		if(ApiUtil.isValid(projects)){
+			
+		}
 
 		return null;
 
