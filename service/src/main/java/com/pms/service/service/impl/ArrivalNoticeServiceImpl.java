@@ -9,9 +9,9 @@ import java.util.Set;
 
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
-import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
+import com.pms.service.mockbean.BorrowingBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.ProjectBean;
 import com.pms.service.mockbean.PurchaseBack;
@@ -24,7 +24,6 @@ import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.ISalesContractService;
 import com.pms.service.service.IShipService;
 import com.pms.service.util.ApiUtil;
-import com.pms.service.util.status.ResponseCodeConstants;
 
 public class ArrivalNoticeServiceImpl extends AbstractService implements IArrivalNoticeService {
 	
@@ -82,14 +81,24 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 	}
 
 	
-	public Map<String, Object> listProjectsForSelect(Map<String, Object> params){
+	public Map<String, Object> listProjectsForSelect(Map<String, Object> params, boolean queryBorrowing){
 		Map<String, Object> query = new HashMap<String, Object>();
 		query.put(ApiConstants.LIMIT_KEYS, ProjectBean.PROJECT_ID);
 		List<Object> projectIds = this.dao.listLimitKeyValues(query, DBBean.ARRIVAL_NOTICE);
 		
+		
+		if (queryBorrowing) {
+			Map<String, Object> borrowQuery = new HashMap<String, Object>();
+			borrowQuery.put(ApiConstants.LIMIT_KEYS, BorrowingBean.BORROW_IN_PROJECT_ID);
+			List<Object> listLimitKeyValues = this.dao.listLimitKeyValues(borrowQuery, DBBean.BORROWING);
+			if (listLimitKeyValues.size() > 0) {
+				projectIds.addAll(listLimitKeyValues);
+			}
+		}
+		
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
 		projectQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, projectIds));
-		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME,ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER_ID, 
+		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER_ID, 
 				ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_CUSTOMER_ID});
      
 		Map<String, Object> projects = dao.list(projectQuery, DBBean.PROJECT);

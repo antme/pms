@@ -609,9 +609,12 @@ public abstract class AbstractService {
         }
         return eqCountMap;
     }
-    
-    
     public Map<String, Integer> countEqByKeyWithMultiKey(Map<String, Object> query, String db, String queryKey, Map<String, Integer> count, String[] keys) {
+    	
+    	return countEqByKeyWithMultiKey(query,  db, queryKey, ApiConstants.MONGO_ID, count, keys);
+    }
+    
+    public Map<String, Integer> countEqByKeyWithMultiKey(Map<String, Object> query, String db, String queryKey, String eqIdKey, Map<String, Integer> count, String[] keys) {
         query.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
         List<Object> list = this.dao.listLimitKeyValues(query, db);
         Map<String, Integer> eqCountMap = new HashMap<String, Integer>();

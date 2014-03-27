@@ -97,7 +97,7 @@
 		<property name="purchaseService" ref="purchaseService"></property>
         <property name="scs" ref="salesContractService"></property>
         <property name="arrivalService" ref="arrivalNoticeService"></property>
-        
+        <property name="borrowingService" ref="borrowingService"></property>
 	</bean>
 
     <bean name="borrowingService" class="com.pms.service.service.impl.BorrowingServiceImpl"

@@ -748,6 +748,9 @@ function edit(data) {
 				field : "remark",
 				title : "备注"
 			}, {
+				field : "projectName",
+				title : "项目名"
+			},{
 				field : "contractCode",
 				title : "销售合同编号"
 			},{

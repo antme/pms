@@ -79,6 +79,13 @@ public class BorrowingController extends AbstractController {
     	responseWithData(borrowingService.option(parserJsonParameters(request, false)), request, response);
     }
     
+    
+    @RequestMapping("/approve")
+    @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_PROCESS, desc = RoleValidConstants.BORROWING_MANAGEMENT_PROCESS_DESC)
+    public void approveBorrowing(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(borrowingService.approveBorrowing(parserJsonParameters(request, false)), request, response);
+    }
+    
     @RequestMapping("/eqlist")
     public void eqlist(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);

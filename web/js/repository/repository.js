@@ -43,6 +43,12 @@ $(document).ready(function() {
 				field : "offlineRepositoryCode",
 				title : "单据编号"
 			},{
+				field : "projectName",
+				title : "项目名"
+			},{
+				field : "contractCode",
+				title : "销售合同编号"
+			},{
 				field : "supplierName",
 				title : "供应商"
 			}, {

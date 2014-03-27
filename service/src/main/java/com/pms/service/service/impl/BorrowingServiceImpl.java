@@ -484,7 +484,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 
         //查询刻发货的
         Map<String, Object> parameters = new HashMap<String, Object>();
-        List<Map<String, Object>> projects = (List<Map<String, Object>>) arrivalService.listProjectsForSelect(parameters).get(ApiConstants.RESULTS_DATA);
+        List<Map<String, Object>> projects = (List<Map<String, Object>>) arrivalService.listProjectsForSelect(parameters, false).get(ApiConstants.RESULTS_DATA);
         List<Map<String, Object>> seachedEqList = new ArrayList<Map<String, Object>>();
 
         if (ApiUtil.isValid(projects)) {
@@ -504,6 +504,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 
                         for (Map<String, Object> findEqCost : shipMergedEqList) {
                             if (findEqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE).equals(eqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE))) {
+                            	findEqCost.put("borrowingId", eqCost.get(ApiConstants.MONGO_ID));
                                 seachedEqList.add(findEqCost);
                             }
                         }
@@ -519,5 +520,13 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
         res.put(ApiConstants.RESULTS_DATA, seachedEqList);
         return res;
     }
+    
+	public Map<String, Object> approveBorrowing(Map<String, Object> params){
+        Map<String, Object> res = new HashMap<String, Object>();
+        res.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+        res.put("status", BorrowingBean.STATUS_APPROVED);
+        this.dao.updateById(res, DBBean.BORROWING);
+        return res;
+	}
 
 }

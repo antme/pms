@@ -60,6 +60,9 @@ $(document).ready(function() {
 					return '<a  onclick="openSCViewWindow(\'' + dataItem.scId + '\');">' + dataItem.contractCode + '</a>';
 				}
 			}, {
+				field : "projectName",
+				title : "项目名"
+			}, {
 				field : "purchaseContractCode",
 				title : "采购合同编号",
 				template : function(dataItem) {

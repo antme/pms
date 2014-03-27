@@ -55,7 +55,6 @@ $(document).ready(function () {
         height: "400px",
         columns: [
             { field:"borrowCode", title: "编号" },
-            { field:"applicant", title: "申请人" },
             { field: "applicationDate", title:"申请日期" },
             {
             	field: "inProjectName",

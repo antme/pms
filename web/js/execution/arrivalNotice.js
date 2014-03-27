@@ -41,7 +41,14 @@ $(document).ready(function () {
 				}
             
             },
-            { field: "arrivalDate", title:"到货日期" },
+            { field: "arrivalDate", title:"到货日期" }, {
+				field : "projectName",
+				title : "项目名"
+			}, {
+				field : "contractCode",
+				title : "销售合同编号"
+			},
+            
             {
             	field: "foreignCode",
             	title:"来源",

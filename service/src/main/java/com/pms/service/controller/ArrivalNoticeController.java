@@ -55,7 +55,7 @@ public class ArrivalNoticeController extends AbstractController {
     @RequestMapping("/project/list")
     public void listProjectsForSelect(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> params = parserJsonParameters(request, false);
-        responseWithData(arrivalNoticeService.listProjectsForSelect(params), request, response);
+        responseWithData(arrivalNoticeService.listProjectsForSelect(params, true), request, response);
     }
 
     

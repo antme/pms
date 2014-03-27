@@ -46,4 +46,10 @@ public class BorrowingBean {
     
     public static final String EQCOST_CAN_BORROW_AMOUNT = "eqcostCanBorrowAmount"; // 借货数量
     
+    
+    public static final String STATUS_APPROVED = "审批通过"; // 借货数量
+    
+    public static final String STATUS_BACKED = "已换货"; // 借货数量
+
+    public static final String BOORWING_BACK_STAUTS = "backStatus"; // 借货数量 
 }

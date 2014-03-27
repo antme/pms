@@ -61,7 +61,10 @@ $(document).ready(function () {
                },
               
             { field:"applicationDepartment", title: "申请部门" },
-            { field: "applicationDate", title:"申请日期" },
+            { field: "applicationDate", title:"申请日期" }, {
+				field : "projectName",
+				title : "项目名"
+			},
             {
             	field: "contractCode",
             	title:"销售合同编号",

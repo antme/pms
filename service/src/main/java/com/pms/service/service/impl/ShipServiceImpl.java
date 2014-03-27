@@ -21,6 +21,7 @@ import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.ArrivalNoticeBean;
+import com.pms.service.mockbean.BorrowingBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.GroupBean;
@@ -34,6 +35,7 @@ import com.pms.service.mockbean.ShipCountBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.IArrivalNoticeService;
+import com.pms.service.service.IBorrowingService;
 import com.pms.service.service.IPurchaseContractService;
 import com.pms.service.service.IPurchaseService;
 import com.pms.service.service.IShipService;
@@ -52,6 +54,19 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	private IArrivalNoticeService arrivalService;
 		
 	private IPurchaseService purchaseService;
+	
+	
+	private IBorrowingService borrowingService;
+	
+	
+
+	public IBorrowingService getBorrowingService() {
+		return borrowingService;
+	}
+
+	public void setBorrowingService(IBorrowingService borrowingService) {
+		this.borrowingService = borrowingService;
+	}
 
 	public IPurchaseContractService getpService() {
 		return pService;
@@ -181,7 +196,8 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Object> map = arrivalService.listEqListByScIDForShip(saleId);
         List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
         purchaseEqList = scs.mergeEqListBasicInfo(purchaseEqList);
-        		
+        
+	
         List<Map<String, Object>> shipMergedEqList = laodShipRestEqLit(purchaseEqList, saleId, params.get(ShipBean.SHIP_PROJECT_ID).toString(), false);
               
 		Map<String, Object> res = new HashMap<String, Object>();
@@ -203,6 +219,23 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 
         Map<String, Integer> arrivedCountMap = countEqByKeyWithMultiKey(query, DBBean.ARRIVAL_NOTICE, ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT, null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
         
+        
+        
+        //借的货的设备
+        Map<String, Object> borrowingQuery = new HashMap<String, Object>();
+        borrowingQuery.put("inScId", saleId);
+        borrowingQuery.put("status", BorrowingBean.STATUS_APPROVED);
+        borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
+        Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, "borrowingId", null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
+
+//        
+//        //别人换货的设备
+//        Map<String, Object> borrowingBackQuery = new HashMap<String, Object>();
+//        borrowingBackQuery.put("inScId", saleId);
+//        borrowingBackQuery.put(BorrowingBean.BOORWING_BACK_STAUTS, BorrowingBean.STATUS_BACKED);
+//        borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
+//        Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, "borrowingId", null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
+
         
         
         //发货虽然是查询销售合同，但是我们这边只能查询所有的，清单ID一样代表销售合同是同一个
@@ -244,9 +277,9 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 
 			if (!shipIds.contains(id.toString())) {
 				shipIds.add(id.toString());
-				eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - ApiUtil.getInteger(settlementCountMap.get(id)));
+				eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, ApiUtil.getInteger(borrowingCountMap.get(id)) + ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - ApiUtil.getInteger(settlementCountMap.get(id)));
 				if (!loadSelf) {
-					eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - ApiUtil.getInteger(settlementCountMap.get(id)));
+					eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, ApiUtil.getInteger(borrowingCountMap.get(id)) + ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - ApiUtil.getInteger(settlementCountMap.get(id)));
 				}
 
 				shipMergedEqList.add(eqMap);
