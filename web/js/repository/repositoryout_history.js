@@ -36,6 +36,7 @@ $(document).ready(function() {
 					return '<a  onclick="openVirtualRepositoryOutViewWindow(\'' + dataItem._id + '\');">' + dataItem.virtualCode + '</a>';
 				}
 			},
+			 { field: "projectName", title:"项目名字" },
 			{
 				field : "repositoryCode",
 				title : "签收单编号",

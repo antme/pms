@@ -66,6 +66,7 @@ $(document).ready(function () {
 				}
 	        
 	        },
+	        { field: "projectName", title:"项目名字" },
 	        { 
 	        	field: "contractCode", 
 	        	title:"销售合同编号",
