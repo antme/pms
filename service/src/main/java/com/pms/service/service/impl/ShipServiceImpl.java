@@ -225,6 +225,9 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Object> borrowingQuery = new HashMap<String, Object>();
         borrowingQuery.put("inScId", saleId);
         borrowingQuery.put("status", BorrowingBean.STATUS_APPROVED);
+        
+        //还未还
+        borrowingQuery.put(BorrowingBean.BOORWING_BACK_STAUTS, null);    
         borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
         Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, "borrowingId", null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
 
@@ -233,19 +236,16 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Object> borrowedQuery = new HashMap<String, Object>();
         borrowedQuery.put("outScId", saleId);
         borrowedQuery.put("status", BorrowingBean.STATUS_APPROVED);
+        
+        //还未还
+        borrowingQuery.put(BorrowingBean.BOORWING_BACK_STAUTS, null);  
         borrowedQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
         Map<String, Integer> borrowedCountMap = countEqByKeyWithMultiKey(borrowedQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
 
-//        
-//        //别人换货的设备
-//        Map<String, Object> borrowingBackQuery = new HashMap<String, Object>();
-//        borrowingBackQuery.put("inScId", saleId);
-//        borrowingBackQuery.put(BorrowingBean.BOORWING_BACK_STAUTS, BorrowingBean.STATUS_BACKED);
-//        borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
-//        Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, "borrowingId", null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
+        
 
         
-        
+        //结算退回的 - 
         //发货虽然是查询销售合同，但是我们这边只能查询所有的，清单ID一样代表销售合同是同一个
         Map<String, Object> settlmentQuery = new HashMap<String, Object>();
         if(ApiUtil.isValid(projectId)){
