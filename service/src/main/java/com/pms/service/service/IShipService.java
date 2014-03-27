@@ -15,7 +15,7 @@ public interface IShipService {
 	
 	public Map<String, Object> create(Map<String, Object> params);
 
-	public Map<String, Object> eqlist(Map<String, Object> params);
+	public Map<String, Object> findCanShipEqlist(Map<String, Object> params);
 		
 	public Map<String, Object> approve(Map<String, Object> params);
 	

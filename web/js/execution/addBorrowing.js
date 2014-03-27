@@ -54,7 +54,7 @@ $(document).ready(function() {
     });
 	
 
-//    $("button").hide();
+    $("button").hide();
     $(".cancel-button").show();
     if(popupParams || redirectParams){
 		$(".borrowing-add").hide();	
@@ -62,13 +62,18 @@ $(document).ready(function() {
 		if(redirectParams){
 			if(redirectParams.page=="approve"){
 				$(".borrowing-approve").show();	
-			}else{
+			}else if(redirectParams.page=="returnborrowing"){
+				$(".submit-borrowing-back").show();	
+			}else if(redirectParams._id){
 				$(".borrowing-management").show();	
+			}else{
+				$(".borrowing-add").show();	
 			}
 		}else{
 			
 		}
 	} else {
+		$(".borrowing-add").show();	
 		//添加表单绑定一个空的 Model
 		model = new borrowing();
 		kendo.bind($("#addBorrowing"), model);
@@ -301,6 +306,9 @@ function rejectBorrowing(){
 	postAjaxRequest("/service/borrowing/reject", {_id:model._id}, reloadPage);
 }
 
+function submitBorrowingBack(){
+	postAjaxRequest("/service/borrowing/return/submit", {_id:model._id}, reloadPage);
+}
 
 function reloadPage() {
 	loadPage("execution_borrowing");

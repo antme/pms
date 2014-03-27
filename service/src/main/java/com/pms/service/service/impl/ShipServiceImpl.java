@@ -188,7 +188,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 		return null;
 	}
 	
-	public Map<String, Object> eqlist(Map<String, Object> params) {
+	public Map<String, Object> findCanShipEqlist(Map<String, Object> params) {
 
        
         String saleId = (String) params.get(ShipBean.SHIP_SALES_CONTRACT_ID);
@@ -221,12 +221,20 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         
         
         
-        //借的货的设备
+        //借的货的设备 + 
         Map<String, Object> borrowingQuery = new HashMap<String, Object>();
         borrowingQuery.put("inScId", saleId);
         borrowingQuery.put("status", BorrowingBean.STATUS_APPROVED);
         borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
         Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, "borrowingId", null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
+
+        
+        //借出去的货的设备 -
+        Map<String, Object> borrowedQuery = new HashMap<String, Object>();
+        borrowedQuery.put("outScId", saleId);
+        borrowedQuery.put("status", BorrowingBean.STATUS_APPROVED);
+        borrowedQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
+        Map<String, Integer> borrowedCountMap = countEqByKeyWithMultiKey(borrowedQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
 
 //        
 //        //别人换货的设备
@@ -278,9 +286,11 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 			if (!shipIds.contains(id.toString())) {
 				shipIds.add(id.toString());
 				
-				eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, ApiUtil.getInteger(borrowingCountMap.get(id)) + ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - ApiUtil.getInteger(settlementCountMap.get(id)));
+				eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, ApiUtil.getInteger(borrowingCountMap.get(id)) + ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - 
+						ApiUtil.getInteger(settlementCountMap.get(id)) - ApiUtil.getInteger(borrowedCountMap.get(id)));
 				if (!loadSelf) {
-					eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, ApiUtil.getInteger(borrowingCountMap.get(id)) + ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - ApiUtil.getInteger(settlementCountMap.get(id)));
+					eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, ApiUtil.getInteger(borrowingCountMap.get(id)) + ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - 
+							ApiUtil.getInteger(settlementCountMap.get(id)) - ApiUtil.getInteger(borrowedCountMap.get(id)));
 				}
 
 				shipMergedEqList.add(eqMap);

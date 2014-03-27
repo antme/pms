@@ -615,7 +615,10 @@ public abstract class AbstractService {
     }
     
 	public Map<String, Integer> countEqByKeyWithMultiKey(Map<String, Object> query, String db, String queryKey, String eqIdKey, Map<String, Integer> count, String[] keys) {
-		
+		if(ApiUtil.isEmpty(eqIdKey)){
+			eqIdKey = ApiConstants.MONGO_ID;
+			
+		}
 		if (ApiUtil.isEmpty(query.get(ApiConstants.LIMIT_KEYS))) {
 			query.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
 		}

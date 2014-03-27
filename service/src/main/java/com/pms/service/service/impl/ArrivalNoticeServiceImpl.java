@@ -107,7 +107,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		for(Map<String, Object> p : projectList){
 				
 			Map<String, Object> scQuery = new HashMap<String, Object>();
-			scQuery.put(SalesContractBean.SC_PROJECT_ID, p.get(ApiConstants.MONGO_ID));
+			Object pid = p.get(ApiConstants.MONGO_ID);
+			scQuery.put(SalesContractBean.SC_PROJECT_ID, pid);
 			scQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ApiConstants.MONGO_ID});
 			
 			List<Object> scIds =   this.dao.listLimitKeyValues(scQuery, DBBean.SALES_CONTRACT);
@@ -116,9 +117,9 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 			for(Object scId: scIds){
 				Map<String, Object> scParams = new HashMap<String, Object>();
 				scParams.put(SalesContractBean.SC_ID, scId);
-				scParams.put(SalesContractBean.SC_PROJECT_ID, p.get(ApiConstants.MONGO_ID));
+				scParams.put(SalesContractBean.SC_PROJECT_ID, pid);
 				
-				 Map<String, Object> eqListMap = shipService.eqlist(scParams);
+				 Map<String, Object> eqListMap = shipService.findCanShipEqlist(scParams);
 				 
 				 if(ApiUtil.isValid(eqListMap.get(ApiConstants.RESULTS_DATA))){
 					 find = true;

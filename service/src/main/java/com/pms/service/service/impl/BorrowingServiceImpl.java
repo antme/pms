@@ -491,27 +491,32 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 
             for (Map<String, Object> project : projects) {
                 List<Map<String, Object>> scList = (List<Map<String, Object>>) project.get("scList");
-                for (Map<String, Object> scMap : scList) {
+				for (Map<String, Object> scMap : scList) {
 
-                    Map<String, Object> eqQuery = new HashMap<String, Object>();
-                    eqQuery.put(ShipBean.SHIP_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
-                    eqQuery.put(ShipBean.SHIP_SALES_CONTRACT_ID, scMap.get(ApiConstants.MONGO_ID));
+					Map<String, Object> eqQuery = new HashMap<String, Object>();
+					eqQuery.put(ShipBean.SHIP_PROJECT_ID, project.get(ApiConstants.MONGO_ID));
+					eqQuery.put(ShipBean.SHIP_SALES_CONTRACT_ID, scMap.get(ApiConstants.MONGO_ID));
 
-                    Map<String, Object> result = shipService.eqlist(eqQuery);
-                    List<Map<String, Object>> shipMergedEqList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
+					Map<String, Object> result = shipService.findCanShipEqlist(eqQuery);
+					List<Map<String, Object>> shipMergedEqList = (List<Map<String, Object>>) result.get(ApiConstants.RESULTS_DATA);
 
-                    for (Map<String, Object> eqCost : resultList) {
+					for (Map<String, Object> eqCost : resultList) {
 
-                        for (Map<String, Object> findEqCost : shipMergedEqList) {
-                            if (findEqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE).equals(eqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE))) {
-                            	findEqCost.put("borrowingId", eqCost.get(ApiConstants.MONGO_ID));
-                                seachedEqList.add(findEqCost);
-                            }
-                        }
+						for (Map<String, Object> findEqCost : shipMergedEqList) {
+							if (findEqCost.get(SalesContractBean.SC_PROJECT_ID).equals(eqCost.get(SalesContractBean.SC_PROJECT_ID))) {
+								// 过滤掉自己的项目
+								continue;
+							}
 
-                    }
+							if (findEqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE).equals(eqCost.get(SalesContractBean.SC_EQ_LIST_PRODUCT_TYPE))) {
+								findEqCost.put("borrowingId", eqCost.get(ApiConstants.MONGO_ID));
+								seachedEqList.add(findEqCost);
+							}
+						}
 
-                }
+					}
+
+				}
 
             }
         }
@@ -527,6 +532,14 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
         res.put("status", BorrowingBean.STATUS_APPROVED);
         this.dao.updateById(res, DBBean.BORROWING);
         return res;
+	}
+	
+	public Map<String, Object> submitBorrowingReturn(Map<String, Object> params) {
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		res.put(BorrowingBean.BOORWING_BACK_STAUTS, BorrowingBean.STATUS_RETURN_NEED_CONFIRM);
+		this.dao.updateById(res, DBBean.BORROWING);
+		return res;
 	}
 
 }

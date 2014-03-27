@@ -282,7 +282,6 @@ public class InitBean {
                         if (role != null) {
                             role.put(RoleBean.ROLE_DESC, rv.desc());
                             
-                            System.out.println(rv.roleID() + " :::: " + rv.desc());
                             dao.updateById(role, DBBean.ROLE_ITEM);
                         } else {
                             Map<String, Object> roleMap = new HashMap<String, Object>();

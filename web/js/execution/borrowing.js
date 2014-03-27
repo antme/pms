@@ -124,13 +124,9 @@ function toolbar_backborrowing() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
 		
-		// 草稿或打回
-		if (row.status == 0 || row.status == -1) {
-			var param = {
-					_id : row._id,
-					"status" : "1"
-				};
-			postAjaxRequest(crudServiceBaseUrl + "/submit", param, callback);
+		// 
+		if (row.status == "审批通过") {
+			loadPage("execution_addBorrowing",{_id:row._id, page:"returnborrowing"});
 		} else {
 			alert("无法执行该操作");
 		}
