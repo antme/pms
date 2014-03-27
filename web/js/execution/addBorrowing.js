@@ -1,5 +1,5 @@
-var grid, inSalesContract, outSalesContract, model;
-var inProjectId, outProjectId;
+var grid, inSalesContract, model;
+var inProjectId;
 var eqDataSource, crudServiceBaseUrl = "../service";
 
 var borrowing = kendo.data.Model.define( {
@@ -29,10 +29,14 @@ var eqModel = kendo.data.Model.define( {
     	eqcostProductName: { editable: false },
     	eqcostProductType: { editable: false },
     	eqcostCanBorrowAmount: { editable: false },
-    	eqcostBorrowAmount: { type: "number", validation: { required: true, min: 1} },
+    	eqcostBorrowAmount: { editable: true , type: "number", validation: { required: true, min: 1} },
     	eqcostUnit: { editable: false },
     	eqcostBrand: { editable: false },
-    	eqcostMemo: { editable: false }
+    	eqcostMemo: { editable: false },
+    	shipType: { editable: false },
+    	eqcostShipAmount: { editable: false },
+    	projectName: { editable: false },
+    	contractCode: { editable: false }
     }
 });
 
@@ -153,26 +157,26 @@ $(document).ready(function() {
 	        	}
 			}).data("kendoComboBox");
 	
+		grid = $("#equipments-grid").kendoGrid({
+		    toolbar: [ { name: "cancel", text: "撤销编辑" } ],
+		    columns: [
+		        
+		        { field: "eqcostMaterialCode", title: "物料代码" },
+		        { field: "eqcostProductName", title: "产品名称" },
+		        { field: "eqcostProductType", title: "规格型号" },
+		        { field: "eqcostUnit", title: "单位" },
+		        { field: "eqcostCanBorrowAmount", title: "未到货数量" },
+		        { field: "eqcostBrand", title: "品牌" },
+		        { field: "eqcostMemo", title: "备注" },
+		        { command: "destroy", title: "&nbsp;", width: 90 }],
+		    editable: true,
+		    resizable: true,
+		    sortable : true
+		}).data("kendoGrid");
+	    
 	}
 	
-	grid = $("#equipments-grid").kendoGrid({
-	    toolbar: [ { name: "cancel", text: "撤销编辑" } ],
-	    columns: [
-	        
-	        { field: "eqcostMaterialCode", title: "物料代码" },
-	        { field: "eqcostProductName", title: "产品名称" },
-	        { field: "eqcostProductType", title: "规格型号" },
-	        { field: "eqcostUnit", title: "单位" },
-	        { field: "eqcostCanBorrowAmount", title: "可借数量" },
-	        { field: "eqcostBorrowAmount", title: "借货数量" },
-	        { field: "eqcostBrand", title: "品牌" },
-	        { field: "eqcostMemo", title: "备注" },
-	        { command: "destroy", title: "&nbsp;", width: 90 }],
-	    editable: true,
-	    resizable: true,
-	    sortable : true
-	}).data("kendoGrid");
-    
+	
 	if(popupParams){
 		postAjaxRequest("/service/borrowing/get", popupParams, edit);
 		disableAllInPoppup();
@@ -187,80 +191,59 @@ $(document).ready(function() {
 });
 
 function searchBorrowingEqCost(){
+	
+	$(".borrowing-info").hide();
+	
+	model.eqcostList = grid.dataSource.data();
 	postAjaxRequest("/service/borrowing/search", {models:kendo.stringify(model)}, function(data){
-		
+		eqModel.fields.eqcostBorrowAmount.editable = true;
+		if(data.data && data.data.length > 0){
+			$(".borrowing-info").show();
+			initBorrowGrid(data.data)
+		}else{
+			alert("无可借货清单");
+		}
 	});
 }
-function searchEqCost(){
-	var outprojects = $("#out-projects").kendoComboBox({
-        placeholder: "Select project",
-        dataTextField: "projectName",
-        dataValueField: "_id",
-        filter: "contains",
-        suggest: true,
-        dataSource: new kendo.data.DataSource({
-            transport: {
-                read: {
-                    url: "../service/borrowing/list/project",
-                    dataType: "jsonp",
-    	            data: {
-    	            	pageSize: 0
-    	            }
-                }
-            },
-            schema: {
-            	total: "total",
-            	data: "data"
-            }
-        }),
-        change: function(e) {
-        	var dataItem = this.dataItem();
-        	if (dataItem) {
-	        	outSalesContract.value(null);
-	        	model.set("outProjectCustomerId", dataItem.customerId);
-        		model.set("outProjectCode", dataItem.projectCode);
-        		model.set("outProjectManagerId", dataItem.projectManagerId);
-        		model.set("outProjectName", dataItem.projectName);
-	        	outProjectId = this.value();
-	        	outSalesContract.dataSource.read();
-	        	outSalesContract.readonly(false);
-        	}
-        }
-    }).data("kendoComboBox");
+
+function initBorrowGrid(eqList){
+
+	var canBorrowingDataSource = new kendo.data.DataSource({
+    	data: eqList,
+    	group: {
+    		field:"contractCode"
+    	},
+    	schema: {
+	        model: eqModel
+	    }
+    });
 	
-	outSalesContract = $("#outSalesContract").kendoComboBox({
-		autoBind: false,
-		dataSource: new kendo.data.DataSource({
-            transport: {
-                read: {
-                    url: crudServiceBaseUrl + "/borrowing/sclist",
-                    dataType: "jsonp",
-    	            data: {
-    	            	projectId: function() {
-                            return outProjectId;
-                        }
-    	            }
-                }
-            },
-            schema: {
-            	total: "total",
-            	data: "data"
-            }
-        }),
-        
-        change: function(e) {
-        	var dataItem = this.dataItem();
-        	if (dataItem) {
-		        	model.set("outSalesContractCode", dataItem.contractCode);
-		        	model.set("outScId", this.value());
-        	}
-        },
-        placeholder: "销售合同编号",
-        dataTextField: "contractCode",
-        dataValueField: "_id",
-        filter: "contains",
-        suggest: true
-    }).data("kendoComboBox");
+	for(index in eqList){
+		
+		if(eqList[index].eqcostBorrowAmount == undefined){
+			eqList[index].eqcostBorrowAmount = 0;
+		}
+	}
+	
+	$("#equipments-find-grid").kendoGrid({
+	    toolbar: [ { name: "cancel", text: "撤销编辑" } ],
+	    columns: [
+	        
+	        { field: "eqcostMaterialCode", title: "物料代码" },
+	        { field: "eqcostProductName", title: "产品名称" },
+	        { field: "eqcostProductType", title: "规格型号" },
+	        { field: "shipType", title: "货物来源" },
+	        { field: "eqcostShipAmount", title: "可借数量",  attributes: { "style": "color:red"} },
+	        { field: "eqcostBorrowAmount", title: "借货数量",  attributes: { "style": "color:red"} },
+	        { field: "projectName", title: "项目名" },
+	        { field: "contractCode", title: "销售合同" },
+	        { command: "destroy", title: "&nbsp;", width: 90 }],
+	    editable: true,
+	    resizable: true,
+	    sortable : true,
+	    dataSource: canBorrowingDataSource
+	});
+
 	
 }
 
@@ -276,16 +259,8 @@ function edit(data) {
 	}
 	
 	kendo.bind($("#addBorrowing"), model);
+	initBorrowGrid(model.eqcostList);
 	
-	eqDataSource = new kendo.data.DataSource({
-	    data: model.eqcostList,
-	    batch: true,
-	    schema: {
-	        model: eqModel
-	    }
-	});
-	
-	grid.setDataSource(eqDataSource);
 }
 
 
@@ -299,16 +274,22 @@ function saveBorrowing() {
 	if (!validator.validate()) {
 		return;
     } else {
-    	if (eqDataSource) {
-    		var data = eqDataSource.data();
+    	var grid = $("#equipments-find-grid").data("kendoGrid");
+    	if(grid){
+    		var data = grid.dataSource.data();
+	
     		if (data.length > 0) {
     			model.set("eqcostList", data);
     			model.set("status", "已提交");
-    			console.log(model);
     			postAjaxRequest("/service/borrowing/update", {models:kendo.stringify(model)}, reloadPage);
     	        
+    		}else{
+    			alert("无可借货清单")
     		}
-		}
+		
+    	}else{
+    		alert("无可借货清单")
+    	}
     }
 }
 

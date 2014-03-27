@@ -17,8 +17,7 @@
     <div id="addBorrowing" class="k-content">
 	    <h3>借货详情页面</h3>
 	    <div>
-	   		<button onclick="saveDraftBorrowing()" class="k-button borrowing-management">保存草稿</button>
-	    	<button onclick="saveBorrowing()" class="k-button borrowing-management">提交</button>
+	    	<button onclick="saveBorrowing();" class="k-button borrowing-management">提交</button>
 	    	
 	    	<button onclick="approveBorrowing();" class="k-button borrowing-approve">批准</button>
 	    	<button onclick='rejectBorrowing();' class="k-button borrowing-approve">拒绝</button>
@@ -58,19 +57,7 @@
 			    	<div data-container-for="inSalesContract" class="k-edit-field borrowing-add">
 			    		<input id="inSalesContract" name="inSalesContract" required="required" data-bind="value:inScId">
 			    	</div>
-			    	<div class="k-edit-label borrowing-add">
-			    		<label for="out-projects">调出项目名称</label>
-			    	</div>
-			    	<div data-container-for="out-projects" class="k-edit-field borrowing-add">
-			    		<input id="out-projects" name="out-projects" required="required" data-bind="value:outProjectId">
-			    	</div>
-			    	<div class="k-edit-label borrowing-add">
-			    		<label for="outSalesContract">调出销售合同编号</label>
-			    	</div>
-			    	<div data-container-for="outSalesContract" class="k-edit-field borrowing-add">
-			    		<input id="outSalesContract" name="outSalesContract" required="required" data-bind="value:outScId">
-			    	</div>
-			    	
+
 			    	
 			    	<div class="k-edit-label borrowing-edit">
 			    		<label for="in-projects-name">调入项目名称</label>
@@ -84,31 +71,33 @@
 			    	<div data-container-for="inSalesContractCode" class="k-edit-field borrowing-edit">
 			    		<input id="inSalesContractCode" name="inSalesContractCode" required="required" data-bind="value:inSalesContractCode">
 			    	</div>
+			    	
 			    	<div class="k-edit-label borrowing-edit">
 			    		<label for="out-projects-name">调出项目名称</label>
 			    	</div>
 			    	<div data-container-for="out-projects-name" class="k-edit-field borrowing-edit">
-			    		<input id="out-projects-name" name="out-projects-name" required="required" data-bind="value:outProjectName">
+			    		<input id="out-projects-name" name="out-projects-name"  data-bind="value:outProjectName">
 			    	</div>
 			    	<div class="k-edit-label borrowing-edit">
 			    		<label for="outSalesContractCode">调出销售合同编号</label>
 			    	</div>
 			    	<div data-container-for="outSalesContractCode" class="k-edit-field borrowing-edit">
-			    		<input id="outSalesContractCode" name="outSalesContractCode" required="required" data-bind="value:outSalesContractCode">
+			    		<input id="outSalesContractCode" name="outSalesContractCode" data-bind="value:outSalesContractCode">
 			    	</div>
 			    	
 			    </div>
 			    
-			    <div id="equipments-grid" ></div>
-			     <div><button class="borrowing-add" onclick="searchEqCost();">清单搜索</button></div>
+			     <div id="equipments-grid" ></div>
+			     <div><button class="borrowing-add" onclick="searchBorrowingEqCost();">清单搜索</button></div>
 			    
-			    	
+			    <hr>
+			    <div style="color:red; display:none; margin-top:20px;" class="borrowing-info"><h3>备注，提交的借货申请将按照销售合同拆分成多个申请，请核对好数据后再提交</h3></div>
+			    <div style="display:none;" class="borrowing-info">可借货的项目清单:</div>
+			   	 <div id="equipments-find-grid" ></div>
 			   
             </div>
             <div>
-            	<div class="k-edit-form-container">
-            		
-			    </div>
+            	
             </div>
            
         </div>

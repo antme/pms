@@ -59,7 +59,7 @@ $(document).ready(function () {
             { field: "applicationDate", title:"申请日期" },
             {
             	field: "inProjectName",
-            	title:"调入项目名称",
+            	title:"调入项目",
 				template : function(dataItem) {
 					if (dataItem.outProjectName) {
 						return '<a  onclick="openProjectViewWindow(\'' + dataItem.inProjectId + '\');">' + dataItem.inProjectName + '</a>';
@@ -68,10 +68,10 @@ $(document).ready(function () {
 					}
 				}
             },
-            { field: "inProjectManager", title:"调入项目负责人" },
+            { field: "inProjectManager", title:"调入项目经理" },
             {
             	field: "outProjectName",
-            	title:"调出项目名称",
+            	title:"调出项目",
 				template : function(dataItem) {
 					if (dataItem.outProjectName) {
 						return '<a  onclick="openProjectViewWindow(\'' + dataItem.outProjectId + '\');">' + dataItem.outProjectName + '</a>';
@@ -80,7 +80,7 @@ $(document).ready(function () {
 					}
 				}
             },
-            { field: "outProjectManager", title:"调出项目负责人" },
+            { field: "outProjectManager", title:"调出项目经理" },
             {
             	field: "status", title:"借货状态"
             },

@@ -87,11 +87,11 @@ function toolbar_addSettlement() {
 function toolbar_editSettlement() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-//		if (rowData.status == "草稿" || rowData.status == "已拒绝"){
+		if (rowData.status == "草稿" || rowData.status == "已拒绝" || rowData.status == "申请中"){
 			loadPage("execution_addSettlement",{_id:rowData._id});
-//		} else {
-//			alert("只允许编辑已拒绝或则草稿数据");
-//		}
+		} else {
+			alert("只允许编辑已拒绝,草稿或者申请中的数据");
+		}
 	}
 }
 

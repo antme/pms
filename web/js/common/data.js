@@ -80,7 +80,7 @@ var menus = [
                          { text: "采购申请", id: "purchasecontract_purchaseRequest", imageUrl: "/images/shopping_cart.png"},
                          { text: "开票申请", id: "finance_payInvoice", imageUrl: "/images/ticket.png" },
                          { text: "发货申请", id: "execution_ship", imageUrl: "/images/shipping.png"},
-                         { text: "项目结算", id: "execution_settlement", imageUrl: "/images/shipping.png"},
+                         { text: "项目货物结算", id: "execution_settlement", imageUrl: "/images/padlock.png"},
                          { text: "发货合计", id: "execution_shipCount", imageUrl: "/images/borrowing.png"},                      
                          { text: "借换货", id: "execution_borrowing", imageUrl: "/images/sign_in.png"}
                      ]

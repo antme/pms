@@ -95,18 +95,8 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		Map<String, Object> projects = dao.list(projectQuery, DBBean.PROJECT);
 		
 		List<Map<String, Object>> projectList = (List<Map<String, Object>>) projects.get(ApiConstants.RESULTS_DATA); 
-		List<String> pmIds = new ArrayList<String>(); 
-		List<String> cIds = new ArrayList<String>();
 		for(Map<String, Object> p : projectList){
-			String pmid = (String)p.get(ProjectBean.PROJECT_MANAGER_ID);
-			String cid = (String)p.get(ProjectBean.PROJECT_CUSTOMER_ID);
-			if (!ApiUtil.isEmpty(pmid)){
-				pmIds.add(pmid);
-			}
-			if (!ApiUtil.isEmpty(cid)){
-				cIds.add(cid);
-			}
-			
+				
 			Map<String, Object> scQuery = new HashMap<String, Object>();
 			scQuery.put(SalesContractBean.SC_PROJECT_ID, p.get(ApiConstants.MONGO_ID));
 			scQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ApiConstants.MONGO_ID});
