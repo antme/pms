@@ -278,7 +278,6 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 			if (!shipIds.contains(id.toString())) {
 				shipIds.add(id.toString());
 				
-				System.out.println(borrowingCountMap.get(id));
 				eqMap.put(ShipBean.SHIP_LEFT_AMOUNT, ApiUtil.getInteger(borrowingCountMap.get(id)) + ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - ApiUtil.getInteger(settlementCountMap.get(id)));
 				if (!loadSelf) {
 					eqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, ApiUtil.getInteger(borrowingCountMap.get(id)) + ApiUtil.getInteger(arrivedCountMap.get(id)) - ApiUtil.getInteger(shipedCountMap.get(id)) - ApiUtil.getInteger(settlementCountMap.get(id)));
