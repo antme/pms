@@ -241,7 +241,6 @@ function loadTreePage(page, parameters){
 
 function loadPage(page, parameters, popupDiv) {
 	kendo.ui.progress($("#pms_content"), true);
-	
 	if(!popupDiv){
 		if($(".k-window").length>0 && $(".k-overlay").length>0){
 			$(".k-window").hide();
@@ -263,7 +262,7 @@ function loadPage(page, parameters, popupDiv) {
 	if (page == "mytask") {
 		$("#myTask").show();
 		var tabMyTask = $("#tabMyTask").data("kendoTabStrip");
-
+		kendo.ui.progress($("#pms_content"), false);
 		if (!tabMyTask) {
 			$("#tabMyTask").kendoTabStrip({
 	
