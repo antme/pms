@@ -240,7 +240,7 @@ function loadTreePage(page, parameters){
 }
 
 function loadPage(page, parameters, popupDiv) {
-	kendo.ui.progress($("#right"), true);
+	kendo.ui.progress($("#pms_content"), true);
 	
 	if(!popupDiv){
 		if($(".k-window").length>0 && $(".k-overlay").length>0){
@@ -310,7 +310,7 @@ function loadPage(page, parameters, popupDiv) {
 		$.ajax({
 			url : url,
 			success : function(data) {
-				kendo.ui.progress($("#right"), false);
+				kendo.ui.progress($("#pms_content"), false);
 				if(popupDiv){
 					$("#"+popupDiv).html(data);
 
@@ -321,7 +321,7 @@ function loadPage(page, parameters, popupDiv) {
 			},
 			error : function(){
 				alert("连接Service失败");
-				kendo.ui.progress($("#right"), false);
+				kendo.ui.progress($("#pms_content"), false);
 			}
 		});
 	}
@@ -491,7 +491,7 @@ function openWindow(options) {
 
 
 function postAjaxRequest(url, parameters, callback) {
-    var pdiv= $("#top_nav");
+    var pdiv= $("#pms_content");
     kendo.ui.progress(pdiv, false);
     kendo.ui.progress(pdiv, true);
 	$.ajax({

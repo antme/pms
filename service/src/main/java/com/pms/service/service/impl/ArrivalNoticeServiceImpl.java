@@ -98,6 +98,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		
 		Map<String, Object> projectQuery = new HashMap<String, Object>();
 		projectQuery.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.IN, projectIds));
+		mergeDataRoleQueryWithProject(projectQuery);
 		projectQuery.put(ApiConstants.LIMIT_KEYS, new String[]{ProjectBean.PROJECT_NAME, ProjectBean.PROJECT_CODE, ProjectBean.PROJECT_MANAGER_ID, 
 				ProjectBean.PROJECT_STATUS, ProjectBean.PROJECT_CUSTOMER_ID});
      
