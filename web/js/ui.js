@@ -312,6 +312,13 @@ function loadPage(page, parameters, popupDiv) {
 				kendo.ui.progress($("#pms_content"), false);
 				if(popupDiv){
 					$("#"+popupDiv).html(data);
+					
+					var window = $("#popup");
+					var kendoWindow = window.data("kendoWindow");
+					if(kendoWindow){
+						kendoWindow.center();
+						$(".k-window").css("top","0px");
+					}
 
 				}else{
 					initKeyDownEvent();
@@ -573,13 +580,17 @@ function openRemotePageWindow(options, targetPage, parameter) {
 			width : options.width,
 			height : options.height,
 			title : options.title,
+			modal: true,
+			position: {
+			    top: 100,
+			    left: 200
+			  },
 			close : function(e) {
 				popupParams = undefined;
 			},
 			actions : [ "Maximize", "Close" ]
 		});
 		kendoWindow = window.data("kendoWindow");
-		kendoWindow.center();
 		kendoWindow.center();
 
 	} else {
