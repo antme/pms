@@ -80,16 +80,22 @@ public class BorrowingController extends AbstractController {
     }
     
     
-    @RequestMapping("/approve")
+    @RequestMapping("/confirm")
     @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_PROCESS, desc = RoleValidConstants.BORROWING_MANAGEMENT_PROCESS_DESC)
-    public void approveBorrowing(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(borrowingService.approveBorrowing(parserJsonParameters(request, false)), request, response);
+    public void confirmBorrowing(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(borrowingService.confirmBorrowing(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/return/submit")
     @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_PROCESS, desc = RoleValidConstants.BORROWING_MANAGEMENT_PROCESS_DESC)
     public void submitBorrowingReturn(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(borrowingService.submitBorrowingReturn(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/return/confirm")
+    @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_PROCESS, desc = RoleValidConstants.BORROWING_MANAGEMENT_PROCESS_DESC)
+    public void confirmBorrowingReturn(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(borrowingService.confirmBorrowingReturn(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/eqlist")

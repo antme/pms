@@ -54,16 +54,18 @@ $(document).ready(function() {
     });
 	
 
-    $("button").hide();
+    $("#addBorrowing button").hide();
     $(".cancel-button").show();
     if(popupParams || redirectParams){
 		$(".borrowing-add").hide();	
 		
 		if(redirectParams){
-			if(redirectParams.page=="approve"){
-				$(".borrowing-approve").show();	
+			if(redirectParams.page=="confirmborrowing"){
+				$(".borrowing-confirm").show();	
 			}else if(redirectParams.page=="returnborrowing"){
 				$(".submit-borrowing-back").show();	
+			}else if(redirectParams.page=="confirmreturnborrowing"){
+				$(".borrowing-back-approve").show();	
 			}else if(redirectParams._id){
 				$(".borrowing-management").show();	
 			}else{
@@ -269,9 +271,6 @@ function edit(data) {
 }
 
 
-function saveDraftBorrowing(){
-	
-}
 
 function saveBorrowing() {
 	
@@ -298,8 +297,12 @@ function saveBorrowing() {
     }
 }
 
-function approveBorrowing(){
-	postAjaxRequest("/service/borrowing/approve", {_id:model._id}, reloadPage);
+function confirmBorrowing(){
+	postAjaxRequest("/service/borrowing/confirm", {_id:model._id}, reloadPage);
+}
+
+function confirmBorrowingBack(){
+	postAjaxRequest("/service/borrowing/return/confirm", {_id:model._id}, reloadPage);
 }
 
 function rejectBorrowing(){

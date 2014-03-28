@@ -614,7 +614,12 @@ function openCustomerViewWindow(param){
 	var options = { width:"680px", height: "400px", title:"客户信息"};
 	openRemotePageWindow(options, "customer_view", {_id : param});
 }
-	
+
+function openBorrowingViewWindow(param){
+	var options = { width:"680px", height: "400px", title:"借还货信息"};
+	openRemotePageWindow(options, "execution_addBorrowing", {_id : param});
+}
+		
 
 function openProjectViewWindow(param){
 	if(param && param!=""){

@@ -54,7 +54,13 @@ $(document).ready(function () {
         selectable: "row",
         height: "400px",
         columns: [
-            { field:"borrowCode", title: "编号" },
+            { field:"borrowCode", title: "编号" ,
+				template : function(dataItem) {
+					return '<a  onclick="openBorrowingViewWindow(\'' + dataItem._id + '\');">' + dataItem.borrowCode + '</a>';
+				
+				}
+            	
+            },
             { field: "applicationDate", title:"申请日期" },
             {
             	field: "inProjectName",
@@ -95,16 +101,6 @@ function toolbar_addBorrwoing() {
 	loadPage("execution_addBorrowing");
 }
 
-function toolbar_editBorrowing() {
-	var rowData = getSelectedRowDataByGridWithMsg("grid");
-	if (rowData) {
-//		if (rowData.status == 0 || rowData.status == 1 || rowData.status == -1){
-			loadPage("execution_addBorrowing",{_id:rowData._id});
-//		} else {
-//			alert("无法执行该操作");
-//		}
-	}
-}
 
 function toolbar_deleteBorrowing() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
@@ -125,7 +121,7 @@ function toolbar_backborrowing() {
 	if (row) {
 		
 		// 
-		if (row.status == "审批通过") {
+		if (row.status == "已借货") {
 			loadPage("execution_addBorrowing",{_id:row._id, page:"returnborrowing"});
 		} else {
 			alert("无法执行该操作");
@@ -133,11 +129,24 @@ function toolbar_backborrowing() {
 	}
 }
 
-function toolbar_approveborrowing() {
+function toolbar_confirmborrowing() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
 //		if (rowData.status == 0 || rowData.status == 1 || rowData.status == -1){
-			loadPage("execution_addBorrowing",{_id:rowData._id, page:"approve"});
+			loadPage("execution_addBorrowing",{_id:rowData._id, page:"confirmborrowing"});
+//		} else {
+//			alert("无法执行该操作");
+//		}
+	}
+}
+
+
+function toolbar_accept_borrowing_return(){
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {		
+		// 
+//		if (row.status == "已借货") {
+			loadPage("execution_addBorrowing",{_id:row._id, page:"confirmreturnborrowing"});
 //		} else {
 //			alert("无法执行该操作");
 //		}

@@ -191,7 +191,12 @@ public abstract class AbstractService {
         return inGroup(GroupBean.DEPARTMENT_ASSISTANT_VALUE);
 
     }
-    
+    //库管
+    protected boolean isDepartMentManager() {
+
+        return inGroup(GroupBean.DEPARTMENT_MANAGER_VALUE);
+
+    }
     
     //库管
     protected boolean isDepotManager() {
@@ -344,44 +349,46 @@ public abstract class AbstractService {
 
         if (isAdmin() || isFinance() || isPurchase() || isCoo() || isDepotManager() || isDepartmentAssistant()) {
             // query all data
-        } else {
-            pmQuery.put(ProjectBean.PROJECT_MANAGER_ID, getCurrentUserId());
-            pmQuery.put(ApiConstants.CREATOR, getCurrentUserId());
+		} else {
+			pmQuery.put(ProjectBean.PROJECT_MANAGER_ID, getCurrentUserId());
+			pmQuery.put(ApiConstants.CREATOR, getCurrentUserId());
 
-            Map<String, Object> userQuery = new HashMap<String, Object>();
-            userQuery.put(ApiConstants.MONGO_ID, getCurrentUserId());
-            userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.DEPARTMENT);
-            Map<String, Object> user = this.dao.findOneByQuery(userQuery, DBBean.USER);
-            
-            if (user.get(UserBean.DEPARTMENT) != null) {
-                String dep = user.get(UserBean.DEPARTMENT).toString();
+			if (isDepartMentManager()) {
+				Map<String, Object> userQuery = new HashMap<String, Object>();
+				userQuery.put(ApiConstants.MONGO_ID, getCurrentUserId());
+				userQuery.put(ApiConstants.LIMIT_KEYS, UserBean.DEPARTMENT);
+				Map<String, Object> user = this.dao.findOneByQuery(userQuery, DBBean.USER);
 
-                List<String> scTypesIn = new ArrayList<String>();
+				if (user.get(UserBean.DEPARTMENT) != null) {
+					String dep = user.get(UserBean.DEPARTMENT).toString();
 
-                if (key.equalsIgnoreCase(SalesContractBean.SC_TYPE)) {
-                    // FIXME: put into constants
-                    scTypesIn.add("弱电工程");
-                    scTypesIn.add("产品集成（灯控/布线）");
-                    scTypesIn.add("产品集成(灯控/布线)");
-                    
-                    scTypesIn.add("产品集成（楼控）");
-                    scTypesIn.add("产品集成(楼控)");
-                    scTypesIn.add("产品集成（其他）");
-                    scTypesIn.add("产品集成(其他)");
-                } else if (key.equalsIgnoreCase(ProjectBean.PROJECT_TYPE)) {
-                    scTypesIn.add("工程");
-                }
-                if (dep.equalsIgnoreCase(UserBean.USER_DEPARTMENT_PROJECT)) {
-                    pmQuery.put(key, new DBQuery(DBQueryOpertion.IN, scTypesIn));
-                } else {
-                    pmQuery.put(key, new DBQuery(DBQueryOpertion.NOT_IN, scTypesIn));
-                }
+					List<String> scTypesIn = new ArrayList<String>();
 
-            }
+					if (key.equalsIgnoreCase(SalesContractBean.SC_TYPE)) {
+						// FIXME: put into constants
+						scTypesIn.add("弱电工程");
+						scTypesIn.add("产品集成（灯控/布线）");
+						scTypesIn.add("产品集成(灯控/布线)");
 
-            // list creator or manager's data
-            param.put(ProjectBean.PROJECT_MANAGER_ID, DBQueryUtil.buildQueryObject(pmQuery, false));
-        }
+						scTypesIn.add("产品集成（楼控）");
+						scTypesIn.add("产品集成(楼控)");
+						scTypesIn.add("产品集成（其他）");
+						scTypesIn.add("产品集成(其他)");
+					} else if (key.equalsIgnoreCase(ProjectBean.PROJECT_TYPE)) {
+						scTypesIn.add("工程");
+					}
+					if (dep.equalsIgnoreCase(UserBean.USER_DEPARTMENT_PROJECT)) {
+						pmQuery.put(key, new DBQuery(DBQueryOpertion.IN, scTypesIn));
+					} else {
+						pmQuery.put(key, new DBQuery(DBQueryOpertion.NOT_IN, scTypesIn));
+					}
+
+				}
+			}
+
+			// list creator or manager's data
+			param.put(ProjectBean.PROJECT_MANAGER_ID, DBQueryUtil.buildQueryObject(pmQuery, false));
+		}
     }
     
     

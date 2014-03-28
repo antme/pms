@@ -48,8 +48,13 @@ public class BorrowingBean {
     
     
     public static final String STATUS_APPROVED = "审批通过"; // 借货数量
+    public static final String STATUS_BORROWED = "已借货"; // 借货数量
+
     
     public static final String STATUS_RETURN_NEED_CONFIRM = "待确认"; // 借货数量
+    
+    public static final String STATUS_RETURN_CONFIRMED = "已还货"; // 借货数量
+
 
     
     public static final String STATUS_BACKED = "已换货"; // 借货数量

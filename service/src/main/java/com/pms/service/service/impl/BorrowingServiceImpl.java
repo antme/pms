@@ -210,6 +210,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 				params.put("outProjectManagerName", scInfo.get(ProjectBean.PROJECT_MANAGER_NAME));
 				params.put(SalesContractBean.SC_EQ_LIST, eqMapList.get(key));
 				params.put(ApiConstants.MONGO_ID, "");
+				params.put("applicationDate", new Date());
 				create(params);
 
 			}
@@ -526,10 +527,10 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
         return res;
     }
     
-	public Map<String, Object> approveBorrowing(Map<String, Object> params){
+	public Map<String, Object> confirmBorrowing(Map<String, Object> params){
         Map<String, Object> res = new HashMap<String, Object>();
         res.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
-        res.put("status", BorrowingBean.STATUS_APPROVED);
+        res.put("status", BorrowingBean.STATUS_BORROWED);
         this.dao.updateById(res, DBBean.BORROWING);
         return res;
 	}
@@ -538,6 +539,15 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
 		res.put(BorrowingBean.BOORWING_BACK_STAUTS, BorrowingBean.STATUS_RETURN_NEED_CONFIRM);
+		this.dao.updateById(res, DBBean.BORROWING);
+		return res;
+	}
+	
+	
+	public Map<String, Object> confirmBorrowingReturn(Map<String, Object> params){
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		res.put(BorrowingBean.BOORWING_BACK_STAUTS, BorrowingBean.STATUS_RETURN_CONFIRMED);
 		this.dao.updateById(res, DBBean.BORROWING);
 		return res;
 	}
