@@ -142,7 +142,17 @@ function editsettlement(data) {
 	kendo.bind($("#addsettlement"), model);
 	
 	if(model.eqcostList){
-		loadEqList(model.eqcostList);
+		var eqcostList = model.eqcostList;
+		if(model.status=="申请中"){
+			for(index in eqcostList){
+				
+				if(eqcostList[index].settlementAmount){
+					eqcostList[index].leftAmount = eqcostList[index].leftAmount + eqcostList[index].settlementAmount;
+				}
+				
+			}
+		}
+		loadEqList(eqcostList);
 	}
 }
 

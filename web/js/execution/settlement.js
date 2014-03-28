@@ -99,14 +99,14 @@ function toolbar_deleteSettlement() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
 
-//		if (rowData.status == "草稿" || rowData.status == "已拒绝" || rowData.status == "申请中") {
+		if (rowData.status == "草稿" || rowData.status == "已拒绝" || rowData.status == "申请中") {
 			if (confirm('确实要删除该内容吗?')) {
 				dataSource.remove(rowData);
 				dataSource.sync();
 			}
-//		} else {
-//			alert("不允许删除");
-//		}
+		} else {
+			alert("不允许删除");
+		}
 	}
 }
 

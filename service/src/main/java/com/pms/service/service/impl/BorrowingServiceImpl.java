@@ -253,15 +253,27 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 			shipedEqMap.put((String) p.get(ApiConstants.MONGO_ID), ApiUtil.getDouble(p.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT).toString()));
 		}
 		
+		
+		// 借的货的设备 -
+		Map<String, Object> borrowingQuery = new HashMap<String, Object>();
+		borrowingQuery.put("inScId", saleId);
+		borrowingQuery.put("status", new DBQuery(DBQueryOpertion.IN, new String[] { BorrowingBean.STATUS_APPROVED, BorrowingBean.STATUS_SUBMITED, BorrowingBean.STATUS_BORROWED }));
+		
+        //还未还
+//        borrowingQuery.put(BorrowingBean.BOORWING_BACK_STAUTS, null);    
+        borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
+        Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, "borrowingId", null, null);
+
+        
+		
 		// 结果数据
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		
 		for (Map<String, Object> purchaseEq : purchaseEqList) {
 			String id = (String) purchaseEq.get(ApiConstants.MONGO_ID);
-			Double canBorrowAmount = (Double) purchaseEq.get(PurchaseCommonBean.EQCOST_APPLY_AMOUNT);
-			if (shipedEqMap.containsKey(id)) {
-				canBorrowAmount -= shipedEqMap.get(id);
-			}
+			int canBorrowAmount = ApiUtil.getInteger(purchaseEq.get(PurchaseCommonBean.EQCOST_APPLY_AMOUNT));
+			canBorrowAmount = canBorrowAmount - ApiUtil.getInteger(shipedEqMap.get(id)) - ApiUtil.getInteger(borrowingCountMap.get(id));
+			
 			if (canBorrowAmount > 0) {
 				Map<String, Object> borrowMap = new HashMap<String, Object>();
 				borrowMap.put(ApiConstants.MONGO_ID, id);
@@ -483,7 +495,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
         List<Map<String, Object>> resultList = (List<Map<String, Object>>) params.get(SalesContractBean.SC_EQ_LIST);
 
 
-        //查询刻发货的
+        //查询未发货的
         Map<String, Object> parameters = new HashMap<String, Object>();
         List<Map<String, Object>> projects = (List<Map<String, Object>>) arrivalService.listProjectsForSelect(parameters, false).get(ApiConstants.RESULTS_DATA);
         List<Map<String, Object>> seachedEqList = new ArrayList<Map<String, Object>>();
