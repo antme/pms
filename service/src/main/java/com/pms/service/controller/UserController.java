@@ -1,8 +1,5 @@
 package com.pms.service.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +17,6 @@ import com.pms.service.mockbean.ApiConstants;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.IUserService;
 import com.pms.service.util.ApiThreadLocal;
-import com.pms.service.util.ApiUtil;
-import com.pms.service.util.EmailUtil;
 
 @Controller
 @RequestMapping("/user")
