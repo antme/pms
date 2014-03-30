@@ -82,7 +82,6 @@ $(document).ready(function() {
 	
 	// 如果是编辑
 	if (redirectParams || popupParams) {
-		$("#purchase-back-select").hide();
 		$("#purchase-request-edit-item").show();
 		
 		if(popupParams){
@@ -97,34 +96,9 @@ $(document).ready(function() {
 			}
 		}
 	} else {
-		$("#purchase-back-select").show();
 		$("#purchase-request-edit-item").hide();
 		//如果是新增
-		$("#purchaseBackSelect").kendoDropDownList({
-			dataTextField : "pbCode",
-			dataValueField : "_id",
-			dataSource : {
-				transport : {
-					read : {
-						dataType : "jsonp",
-						url : selectBackUrl
-					}
-				},
-				schema : {
-					total: "total", // total is returned in the "total" field of the response
-					data: "data"
-				}
-			},
-			dataBound : function(e) {
-				if (this.dataSource.at(0)) {
-					selectBackId = this.dataSource.at(0)._id;
-				}
-			},
-			// 当用户选择不同的采购申请时候赋值给requestDataItem对象
-			select : function(e) {
-				selectBackId = this.dataSource.at(e.item.index())._id;
-			}
-		});
+
 	}
 
 	
@@ -421,7 +395,8 @@ function edit(data) {
 		disableAllInPoppup();
 	}
 
-
+	var grid1 = $("#purchase-request-edit-grid").data("kendoGrid");
+	grid1.resize();
 }
 
 
