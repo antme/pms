@@ -229,7 +229,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         //还未还
         borrowingQuery.put(BorrowingBean.BOORWING_BACK_STAUTS, null);    
         borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
-        Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, "borrowingId", null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
+        Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, null, new String[] { ArrivalNoticeBean.SHIP_TYPE });
 
         
         //借出去的货的设备 -
@@ -613,7 +613,18 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(ShipBean.SHIP_PROJECT_ID, projectId);
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
-        Map<String, Object> eqMap = arrivalService.listEqlist(query);
+        
+        
+		Map<String, Object> borrowingQuery = new HashMap<String, Object>();
+		borrowingQuery.put(BorrowingBean.BORROW_IN_PROJECT_ID, projectId);
+		borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
+		
+		borrowingQuery.put("status", new DBQuery(DBQueryOpertion.IN, new String[] { BorrowingBean.STATUS_APPROVED, BorrowingBean.STATUS_SUBMITED, BorrowingBean.STATUS_BORROWED }));
+		
+        //还未还
+        borrowingQuery.put(BorrowingBean.BOORWING_BACK_STAUTS, null);
+
+		Map<String, Object> eqMap = arrivalService.listEqlist(query, borrowingQuery);
      
         List<Map<String, Object>> purchaseEqList = (List<Map<String, Object>>) eqMap.get(SalesContractBean.SC_EQ_LIST);       		
         List<Map<String, Object>> shipMergedEqList = laodShipRestEqLit(purchaseEqList, null, projectId, false);

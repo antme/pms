@@ -262,7 +262,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
         //还未还
 //        borrowingQuery.put(BorrowingBean.BOORWING_BACK_STAUTS, null);    
         borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
-        Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, "borrowingId", null, null);
+        Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, null, null);
 
         
 		

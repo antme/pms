@@ -157,20 +157,30 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(SalesContractBean.SC_ID, scId);
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
-        return listEqlist(query);
+        
+        
+		Map<String, Object> borrowingQuery = new HashMap<String, Object>();
+		borrowingQuery.put(BorrowingBean.BORROW_IN_SALES_CONTRACT_ID, scId);
+		borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
+		borrowingQuery.put("status", new DBQuery(DBQueryOpertion.IN, new String[] { BorrowingBean.STATUS_APPROVED, BorrowingBean.STATUS_SUBMITED, BorrowingBean.STATUS_BORROWED }));
+		
+        //还未还
+        borrowingQuery.put(BorrowingBean.BOORWING_BACK_STAUTS, null);
+		
+        return listEqlist(query, borrowingQuery);
     }
     
     public Map<String, Object> listByScIdForBorrowing(Object scId) {
 
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(SalesContractBean.SC_ID, scId);
-        query.put(ArrivalNoticeBean.SHIP_TYPE, new DBQuery(DBQueryOpertion.NOT_IN, new String[] { ArrivalNoticeBean.SHIP_TYPE_0, ArrivalNoticeBean.SHIP_TYPE_0_1 }));
+        query.put(ArrivalNoticeBean.SHIP_TYPE, new DBQuery(DBQueryOpertion.NOT_IN, new String[] {ArrivalNoticeBean.SHIP_TYPE_1_0, ArrivalNoticeBean.SHIP_TYPE_0, ArrivalNoticeBean.SHIP_TYPE_0_1 }));
         query.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
-        return listEqlist(query);
+        return listEqlist(query, null);
 
     }
 
-    public Map<String, Object> listEqlist(Map<String, Object> query) {
+    public Map<String, Object> listEqlist(Map<String, Object> query, Map<String, Object> borrowingQuery) {
         List<Object> obj = this.dao.listLimitKeyValues(query, DBBean.ARRIVAL_NOTICE);
         Map<String, Object> result = new HashMap<String, Object>();
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -180,6 +190,18 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
                 list.addAll(eqlistMap);
             }
         }
+        
+        
+		if (borrowingQuery != null) {
+			List<Object> borrowingObject = this.dao.listLimitKeyValues(borrowingQuery, DBBean.BORROWING);
+			if (borrowingObject != null) {
+				for (Object ob : borrowingObject) {
+					List<Map<String, Object>> eqlistMap = (List<Map<String, Object>>) ob;
+					list.addAll(eqlistMap);
+				}
+			}
+		}
+
 
         result.put(ArrivalNoticeBean.EQ_LIST, list);
         return result;
