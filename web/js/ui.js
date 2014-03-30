@@ -317,7 +317,7 @@ function loadPage(page, parameters, popupDiv) {
 					var kendoWindow = window.data("kendoWindow");
 					if(kendoWindow){
 						kendoWindow.center();
-						$(".k-window").css("top","0px");
+						$(".k-window").css("top","10px");
 					}
 
 				}else{
@@ -580,11 +580,7 @@ function openRemotePageWindow(options, targetPage, parameter) {
 			width : options.width,
 			height : options.height,
 			title : options.title,
-			modal: true,
-			position: {
-			    top: 100,
-			    left: 200
-			  },
+			modal: true,			
 			close : function(e) {
 				popupParams = undefined;
 			},

@@ -409,8 +409,7 @@ function edit(data) {
 											numbersPercentOfContract : totalPercent,
 											moneyPercentOfContract : requestActureMoneyPercent
 										});
-								kendoGrid = $("#purchase-request-sum-grid").data(
-										"kendoGrid");
+								kendoGrid = $("#purchase-request-sum-grid").data("kendoGrid");
 								kendoGrid.setDataSource(sumDataSource);
 
 							}
@@ -421,9 +420,7 @@ function edit(data) {
 	if(redirectParams && redirectParams.pageId && redirectParams.pageId=="approve"){
 		disableAllInPoppup();
 	}
-	
 
-	
 
 }
 
