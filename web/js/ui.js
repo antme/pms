@@ -2,7 +2,7 @@
 $(document).ready(function() {
 	initKeyDownEvent();
 	
-	kendo.ui.progress($("#main"), true);
+	kendo.ui.progress($("#pms_content"), true);
 	
 	kendo.cultures["zh-CN"] = {
 		    //<language code>-<country/region code>
@@ -136,7 +136,7 @@ function initKeyDownEvent(){
 
 
 function init(u){
-	kendo.ui.progress($("#main"), false);
+	kendo.ui.progress($("#pms_content"), false);
 	userRoles = u.data;
 	userMenus = u.menus;
 	user = u;
@@ -309,8 +309,8 @@ function loadPage(page, parameters, popupDiv) {
 		$.ajax({
 			url : url,
 			success : function(data) {
-				kendo.ui.progress($("#pms_content"), false);
 				if(popupDiv){
+					kendo.ui.progress($("#pms_content"), false);
 					$("#"+popupDiv).html(data);
 					
 					var window = $("#popup");
@@ -321,9 +321,12 @@ function loadPage(page, parameters, popupDiv) {
 					}
 
 				}else{
+					kendo.ui.progress($("#pms_content"), false);
 					initKeyDownEvent();
 					$("#main_right").html(data);
 				}
+				
+
 			},
 			error : function(){
 				alert("连接Service失败");

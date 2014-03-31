@@ -395,8 +395,7 @@ function edit(data) {
 		disableAllInPoppup();
 	}
 
-	var grid1 = $("#purchase-request-edit-grid").data("kendoGrid");
-	grid1.resize();
+
 }
 
 

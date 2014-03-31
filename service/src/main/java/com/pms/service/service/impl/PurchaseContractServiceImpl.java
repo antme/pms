@@ -188,15 +188,20 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
 		for (Map<String, Object> contract : contractList) {
 			List<Map<String, Object>> eqCostList = (List<Map<String, Object>>) contract.get("eqcostList");
 			Set<Map<String, Object>> ordersMap = new HashSet<Map<String, Object>>();
-			Map<String, Object> projectSupplierMap = new HashMap<String, Object>();
 
 			Set<String> orderCodeSet = new HashSet<String>();
 			if(eqCostList!=null){
 				for (Map<String, Object> p : eqCostList) {
 					if (p.get("purchaseOrderCode") != null) {
 						String orderCode = p.get("purchaseOrderCode").toString();
+						
+						Map<String, Object> eqquery = new HashMap<String, Object>();
+						eqquery.put(PurchaseContract.PURCHASE_CONTRACT_ID, contract.get(ApiConstants.MONGO_ID));
+						eqquery.put(PurchaseContract.PURCHASE_ORDER_CODE, orderCode);
+						eqquery.put("type", "in");
+						Map<String, Object> result = listContractsByContractAndOrder(eqquery);
 	
-						if (!orderCodeSet.contains(orderCode)) {
+						if (!orderCodeSet.contains(orderCode) && ApiUtil.isValid(result.get(ApiConstants.RESULTS_DATA))) {
 							Map<String, Object> order = new HashMap<String, Object>();
 							order.put(PurchaseOrder.PURCHASE_ORDER_CODE, orderCode);
 							order.put(PurchaseOrder.PURCHASE_ORDER_ID, p.get(PurchaseOrder.PURCHASE_ORDER_ID));
