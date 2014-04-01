@@ -298,10 +298,12 @@ function editSuccess(e){
 
 function validateModel(){
 	if(!currentObj.scId){
+		alert("请确认销售合同！");
 		return false;
 	}
 	var validator = $("#form-container").kendoValidator().data("kendoValidator");
 	if(!validator.validate()){
+		alert("请检查必填字段！");
 		return false;
 	}
 	var eqList = currentObj.eqcostList;

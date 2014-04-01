@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.stereotype.Repository;
+
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
@@ -264,6 +266,14 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
         borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
         Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, null, null);
 
+        //已入库的数据已经包含在到货的数据中了，所以只查询入库中的
+		// 入库中的货物 -
+		Map<String, Object> repositoryQuery = new HashMap<String, Object>();
+		repositoryQuery.put(PurchaseContract.SALES_CONTRACT_ID, saleId);
+		repositoryQuery.put("status", new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseContract.STATUS_REPOSITORY_NEW }));    
+		repositoryQuery.put(ApiConstants.LIMIT_KEYS, SalesContractBean.SC_EQ_LIST);
+        Map<String, Integer> repositoryCountMap = countEqByKeyWithMultiKey(repositoryQuery, DBBean.REPOSITORY, PurchaseContract.EQCOST_APPLY_AMOUNT, null, null);
+
         
 		
 		// 结果数据
@@ -272,7 +282,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		for (Map<String, Object> purchaseEq : purchaseEqList) {
 			String id = (String) purchaseEq.get(ApiConstants.MONGO_ID);
 			int canBorrowAmount = ApiUtil.getInteger(purchaseEq.get(PurchaseCommonBean.EQCOST_APPLY_AMOUNT));
-			canBorrowAmount = canBorrowAmount - ApiUtil.getInteger(shipedEqMap.get(id)) - ApiUtil.getInteger(borrowingCountMap.get(id));
+			canBorrowAmount = canBorrowAmount - ApiUtil.getInteger(shipedEqMap.get(id)) - ApiUtil.getInteger(borrowingCountMap.get(id)) - ApiUtil.getInteger(repositoryCountMap.get(id));
 			
 			if (canBorrowAmount > 0) {
 				Map<String, Object> borrowMap = new HashMap<String, Object>();
