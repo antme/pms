@@ -29,7 +29,7 @@ var eqModel = kendo.data.Model.define( {
     	eqcostProductName: { editable: false },
     	eqcostProductType: { editable: false },
     	eqcostCanBorrowAmount: { editable: false },
-    	eqcostBorrowAmount: { editable: true , type: "number", validation: { required: true, min: 1} },
+    	eqcostBorrowAmount: { editable: true , type: "number", validation: { required: true, min: 0} },
     	eqcostUnit: { editable: false },
     	eqcostBrand: { editable: false },
     	eqcostMemo: { editable: false },

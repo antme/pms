@@ -101,7 +101,7 @@ public class BorrowingController extends AbstractController {
     @RequestMapping("/eqlist")
     public void eqlist(HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> params = this.parserJsonParameters(request, true);
-    	responseWithData(borrowingService.eqlist(params), request, response);
+    	responseWithData(borrowingService.listNeedBorrowingEqlist(params), request, response);
     }
     
     @RequestMapping("/sclist")

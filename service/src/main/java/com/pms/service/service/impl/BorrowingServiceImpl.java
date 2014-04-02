@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.stereotype.Repository;
-
 import com.pms.service.dbhelper.DBQuery;
 import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
@@ -240,7 +238,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
     	return dao.add(params, DBBean.BORROWING);
 	}
 	
-	public Map<String, Object> eqlist(Map<String, Object> params) {
+	public Map<String, Object> listNeedBorrowingEqlist(Map<String, Object> params) {
 		
 		String saleId = (String) params.get(BorrowingBean.BORROW_IN_SALES_CONTRACT_ID);
 		
@@ -248,11 +246,11 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		List<Map<String, Object>> purchaseEqList = pService.listApprovedPurchaseContractCosts(saleId);
 		
 		// 已到货货物
-		Map<String, Object> map = arrivalService.listByScIdForBorrowing(saleId);
-		List<Map<String, Object>> shipedEqList = (List<Map<String, Object>>) map.get(SalesContractBean.SC_EQ_LIST);
-		Map<String, Double> shipedEqMap = new HashMap<String, Double>();
-		for (Map<String, Object> p : shipedEqList){
-			shipedEqMap.put((String) p.get(ApiConstants.MONGO_ID), ApiUtil.getDouble(p.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT).toString()));
+		Map<String, Object> arrivaledMap = arrivalService.listByScIdForBorrowing(saleId);
+		List<Map<String, Object>> arravaledShipedEqList = (List<Map<String, Object>>) arrivaledMap.get(SalesContractBean.SC_EQ_LIST);
+		Map<String, Double> arrivaledEqMap = new HashMap<String, Double>();
+		for (Map<String, Object> p : arravaledShipedEqList){
+			arrivaledEqMap.put((String) p.get(ApiConstants.MONGO_ID), ApiUtil.getDouble(p.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT).toString()));
 		}
 		
 		
@@ -264,7 +262,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
         //还未还
 //        borrowingQuery.put(BorrowingBean.BOORWING_BACK_STAUTS, null);    
         borrowingQuery.put(ApiConstants.LIMIT_KEYS, ArrivalNoticeBean.EQ_LIST);
-        Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, null, null);
+        Map<String, Integer> borrowingCountMap = countEqByKeyWithMultiKey(borrowingQuery, DBBean.BORROWING, BorrowingBean.EQCOST_BORROW_AMOUNT, "borrowingId", null, null);
 
         //已入库的数据已经包含在到货的数据中了，所以只查询入库中的
 		// 入库中的货物 -
@@ -282,7 +280,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		for (Map<String, Object> purchaseEq : purchaseEqList) {
 			String id = (String) purchaseEq.get(ApiConstants.MONGO_ID);
 			int canBorrowAmount = ApiUtil.getInteger(purchaseEq.get(PurchaseCommonBean.EQCOST_APPLY_AMOUNT));
-			canBorrowAmount = canBorrowAmount - ApiUtil.getInteger(shipedEqMap.get(id)) - ApiUtil.getInteger(borrowingCountMap.get(id)) - ApiUtil.getInteger(repositoryCountMap.get(id));
+			canBorrowAmount = canBorrowAmount - ApiUtil.getInteger(arrivaledEqMap.get(id)) - ApiUtil.getInteger(borrowingCountMap.get(id)) - ApiUtil.getInteger(repositoryCountMap.get(id));
 			
 			if (canBorrowAmount > 0) {
 				Map<String, Object> borrowMap = new HashMap<String, Object>();
@@ -465,7 +463,7 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 				scMap.put(BorrowingBean.BORROW_IN_SALES_CONTRACT_ID, scId);
 
 				// 获取已批准未到货的设备清单
-				Map<String, Object> result = eqlist(scMap);
+				Map<String, Object> result = listNeedBorrowingEqlist(scMap);
 				if (ApiUtil.isValid(result.get(ApiConstants.RESULTS_DATA))) {
 					finalScIdsList.add(scId);
 				}

@@ -15,7 +15,7 @@ public interface IBorrowingService {
 	
 	public Map<String, Object> create(Map<String, Object> params);
 
-	public Map<String, Object> eqlist(Map<String, Object> params);
+	public Map<String, Object> listNeedBorrowingEqlist(Map<String, Object> params);
 	
 	public Map<String, Object> option(Map<String, Object> params);
 	
