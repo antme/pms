@@ -42,7 +42,9 @@ var eqModel = kendo.data.Model.define( {
 
 
 var scList = new Array();
+var deleteCommand  = {}
 $(document).ready(function() {
+	
 	
 	// 选项卡
     $("#tabstrip").kendoTabStrip({
@@ -114,6 +116,7 @@ $(document).ready(function() {
 	        		model.set("inProjectManagerId", dataItem.projectManagerId);
 	        		model.set("inProjectName", dataItem.projectName);
 	        		model.set("applicationDepartment", dataItem.department);
+	        		model.set("projectManagerName", dataItem.projectManagerName);
 	        		scList = dataItem.scList;
 		        	inSalesContract.value(null);
 		        	inProjectId = this.value();
@@ -191,7 +194,9 @@ $(document).ready(function() {
 		postAjaxRequest("/service/borrowing/get", redirectParams, edit);
 	} else {//Add
 		//添加表单绑定一个空的 Model
+		deleteCommand =  { command: "destroy", title: "&nbsp;", width: 90 };
 		model = new borrowing();
+		model.borrowType = "借货调拨";
 		kendo.bind($("#addBorrowing"), model);
 		model.set("type", 1);
 	}
@@ -244,7 +249,7 @@ function initBorrowGrid(eqList){
 	        { field: "eqcostBorrowAmount", title: "借货数量",  attributes: { "style": "color:red"} },
 	        { field: "projectName", title: "项目名" },
 	        { field: "contractCode", title: "销售合同" },
-	        { command: "destroy", title: "&nbsp;", width: 90 }],
+	        deleteCommand],
 	    editable: true,
 	    resizable: true,
 	    sortable : true,

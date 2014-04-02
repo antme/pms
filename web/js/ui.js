@@ -625,7 +625,7 @@ function openCustomerViewWindow(param){
 }
 
 function openBorrowingViewWindow(param){
-	var options = { width:"680px", height: "400px", title:"借还货信息"};
+	var options = { width:"680px", height: "600px", title:"借还货信息"};
 	openRemotePageWindow(options, "execution_addBorrowing", {_id : param});
 }
 		
@@ -699,7 +699,7 @@ function openShipViewWindow(param){
 
 function openBorrowingViewWindow(param){
 
-	var options = { width:"1080px", height: "400px", title:"借货信息"};
+	var options = { width:"1080px", height: "600px", title:"借货信息"};
 	openRemotePageWindow(options, "execution_addBorrowing", {_id : param});
 	
 }

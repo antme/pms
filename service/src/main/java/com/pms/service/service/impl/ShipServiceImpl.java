@@ -181,12 +181,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
             return dao.add(params, DBBean.SHIP);
         }
     }
-	
-	public Map<String, Object> listCanShipEq(Map<String, Object> params) {
-		params.put(ArrivalNoticeBean.NOTICE_STATUS, ArrivalNoticeBean.NOTICE_STATUS_NORMAL);
-		dao.list(params, DBBean.ARRIVAL_NOTICE);
-		return null;
-	}
+
 	
 	public Map<String, Object> findCanShipEqlist(Map<String, Object> params) {
 

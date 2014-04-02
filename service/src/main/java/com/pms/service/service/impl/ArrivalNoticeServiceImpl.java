@@ -272,11 +272,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
 		
 		Map<String, Object> order = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.PURCHASE_ORDER);
 		
-		
-		//暂时注释掉，入库也会调用此方法
-//		if (!PurchaseCommonBean.STATUS_ORDER_FINISHED.equals(order.get(PurchaseCommonBean.PROCESS_STATUS))) {
-//			throw new ApiResponseException("采购未执行完毕", ResponseCodeConstants.PURCHASE_ORDER_UNFINISHED);
-//		}
+
 		
 		/**
 		 * TODO
@@ -300,6 +296,7 @@ public class ArrivalNoticeServiceImpl extends AbstractService implements IArriva
         }
         
         if(ApiUtil.isValid(params.get("storeHouse"))){
+        	//入库：上海—上海泰德库　　上海—北京泰德库
         	arriveryType = params.get("storeHouse").toString();
     		noticeParams.put(ArrivalNoticeBean.ARRIVAL_TYPE, "入库到货");
 

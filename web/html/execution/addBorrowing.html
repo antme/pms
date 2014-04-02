@@ -43,20 +43,20 @@
 			    	<div data-container-for="borrowCode" class="k-edit-field">
 			    		<input readonly type="text" class="k-input k-textbox" name="borrowCode" required="required" data-bind="value:borrowCode">
 			    	</div>
-			    	<div class="k-edit-label"></div>
-			    	<div class="k-edit-field"></div>
+			    	<div class="k-edit-label">调拨类型</div>
+			    	<div class="k-edit-field"><input readonly type="text" class="k-input k-textbox" name="borrowType" required="required" data-bind="value:borrowType"></div>
 			    	
 			    	<div class="k-edit-label borrowing-add">
 			    		<label for="in-projects">调入项目名称</label>
 			    	</div>
 			    	<div data-container-for="in-projects" class="k-edit-field borrowing-add">
-			    		<input id="in-projects" name="in-projects" required="required" data-bind="value:inProjectId">
+			    		<input id="in-projects" style="width:250px;" name="in-projects" required="required" data-bind="value:inProjectId">
 			    	</div>
 			    	<div class="k-edit-label borrowing-add">
 			    		<label for="inSalesContract">调入销售合同编号</label>
 			    	</div>
 			    	<div data-container-for="inSalesContract" class="k-edit-field borrowing-add">
-			    		<input id="inSalesContract" name="inSalesContract" required="required" data-bind="value:inScId">
+			    		<input id="inSalesContract" style="width:250px;" name="inSalesContract" required="required" data-bind="value:inScId">
 			    	</div>
 
 			    	
@@ -64,30 +64,43 @@
 			    		<label for="in-projects-name">调入项目名称</label>
 			    	</div>
 			    	<div data-container-for="in-projects-name" class="k-edit-field borrowing-edit">
-			    		<input id="in-projects-name" name="in-projects-name" required="required" data-bind="value:inProjectName">
+			    		<input id="in-projects-name" class="k-input k-textbox" name="in-projects-name" required="required" data-bind="value:inProjectName">
 			    	</div>
 			    	<div class="k-edit-label borrowing-edit">
 			    		<label for="inSalesContractCode">调入销售合同编号</label>
 			    	</div>
 			    	<div data-container-for="inSalesContractCode" class="k-edit-field borrowing-edit">
-			    		<input id="inSalesContractCode" name="inSalesContractCode" required="required" data-bind="value:inSalesContractCode">
+			    		<input id="inSalesContractCode" class="k-input k-textbox" name="inSalesContractCode" required="required" data-bind="value:inSalesContractCode">
 			    	</div>
+			    	
+			    	<div class="k-edit-label">
+			    		<label for="projectManagerName">调入项目负责人</label>
+			    	</div>
+			    	<div data-container-for="projectManagerName" class="k-edit-field">
+			    		<input readonly type="text" class="k-input k-textbox" name="projectManagerName" required="required" data-bind="value:projectManagerName">
+			    	</div>
+			    	<div class="k-edit-label"></div>
+			    	<div class="k-edit-field"></div>
+			    	
 			    	
 			    	<div class="k-edit-label borrowing-edit">
 			    		<label for="out-projects-name">调出项目名称</label>
 			    	</div>
 			    	<div data-container-for="out-projects-name" class="k-edit-field borrowing-edit">
-			    		<input id="out-projects-name" name="out-projects-name"  data-bind="value:outProjectName">
+			    		<input id="out-projects-name" class="k-input k-textbox" name="out-projects-name"  data-bind="value:outProjectName">
 			    	</div>
 			    	<div class="k-edit-label borrowing-edit">
 			    		<label for="outSalesContractCode">调出销售合同编号</label>
 			    	</div>
 			    	<div data-container-for="outSalesContractCode" class="k-edit-field borrowing-edit">
-			    		<input id="outSalesContractCode" name="outSalesContractCode" data-bind="value:outSalesContractCode">
+			    		<input id="outSalesContractCode" class="k-input k-textbox" name="outSalesContractCode" data-bind="value:outSalesContractCode">
 			    	</div>
 			    	
 			    </div>
-			    
+			   <div class="tempCommentdiv" style="margin-left:100px;">
+					<label>备注:</label>
+					<textarea style="margin-left:50px;" name="comment" id="comment" rows="4" cols="120" class="k-textbox" style="width:305px;" data-bind="value: comment" ></textarea>
+			  </div>
 			     <div id="equipments-grid" ></div>
 			     <div><button class="borrowing-add" onclick="searchBorrowingEqCost();">清单搜索</button></div>
 			    
@@ -97,9 +110,8 @@
 			   	 <div id="equipments-find-grid" ></div>
 			   
             </div>
-            <div>
-            	
-            </div>
+      
+
            
         </div>
 	    
