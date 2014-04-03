@@ -290,9 +290,42 @@ function saveBorrowing() {
     		var data = grid.dataSource.data();
 	
     		if (data.length > 0) {
+    			
+    			var borrowGrid =  $("#equipments-grid").data("kendoGrid");
+    			var borrowData = borrowGrid.dataSource.data();
+    			var total = 0;
+    			for(index in borrowData){
+    				
+    				var eqcostProductType = borrowData[index].eqcostProductType;
+    				var eqcostCanBorrowAmount = borrowData[index].eqcostCanBorrowAmount;
+    				var eqcostBorrowAount = 0;
+    				
+    				for(j in data){
+    					if(data[j].eqcostProductType == eqcostProductType && data[j].eqcostBorrowAmount){
+    						eqcostBorrowAount = eqcostBorrowAount + data[j].eqcostBorrowAmount;
+    					}
+    				}
+    				
+    				if(eqcostBorrowAount > eqcostCanBorrowAmount){
+    					alert("型号为　【" +eqcostProductType+ "】的借货数量超出采购未到货的数量");
+    					return false;
+    				}
+    				
+    				total = eqcostBorrowAount + total;
+    				
+    			}
+    			
+    			
+    			if(total == 0 ){
+    				alert("无具体借货数量");
+    				return false;
+    			}
+    			
     			model.set("eqcostList", data);
     			model.set("status", "已提交");
     			postAjaxRequest("/service/borrowing/update", {models:kendo.stringify(model)}, reloadPage);
+    			
+    			
     	        
     		}else{
     			alert("无可借货清单")

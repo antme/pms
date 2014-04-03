@@ -185,14 +185,17 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 
 			for (Map<String, Object> eqMap : shipedEqList) {
 				String scId = eqMap.get(SalesContractBean.SC_ID).toString();
-				if (eqMapList.get(scId) == null) {
-					List<Object> tmp = new ArrayList<Object>();
-					tmp.add(eqMap);
-					eqMapList.put(scId, tmp);
-				} else {
-					List<Object> tmp = eqMapList.get(scId);
-					tmp.add(eqMap);
-					eqMapList.put(scId, tmp);
+
+				if (ApiUtil.getInteger(eqMap.get("eqcostBorrowAmount")) > 0) {
+					if (eqMapList.get(scId) == null) {
+						List<Object> tmp = new ArrayList<Object>();
+						tmp.add(eqMap);
+						eqMapList.put(scId, tmp);
+					} else {
+						List<Object> tmp = eqMapList.get(scId);
+						tmp.add(eqMap);
+						eqMapList.put(scId, tmp);
+					}
 				}
 			}
 

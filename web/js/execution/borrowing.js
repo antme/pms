@@ -135,10 +135,10 @@ function toolbar_backborrowing() {
 	if (row) {
 		
 		// 
-		if (row.status == "已借货") {
+		if (row.status == "已借货" && !row.backStatus) {
 			loadPage("execution_addBorrowing",{_id:row._id, page:"returnborrowing"});
 		} else {
-			alert("项目还未借货确认");
+			alert("只允许提交已借货未还货的数据");
 		}
 	}
 }
@@ -162,7 +162,7 @@ function toolbar_accept_borrowing_return(){
 		if (row.backStatus == "待确认") {
 			loadPage("execution_addBorrowing",{_id:row._id, page:"confirmreturnborrowing"});
 		} else {
-			alert("项目还未提交换货申请");
+			alert("只允许确认待还货确认的数据");
 		}
 	}
 }
