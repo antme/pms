@@ -75,6 +75,11 @@ public class RoleValidConstants {
     public static final String BORROWING_MANAGEMENT_PROCESS = "borrowing_management_process";
     public static final String BORROWING_MANAGEMENT_PROCESS_DESC = "借货还货审批";
     
+    public static final String BORROWING_MANAGEMENT_CONFIRM = "borrowing_management_confirm";
+    public static final String BORROWING_MANAGEMENT_CONFIRM_DESC = "借货确认";
+    
+    public static final String BORROWING_MANAGEMENT_BACK_CONFIRM = "borrowing_management_back_confirm";
+    public static final String BORROWING_MANAGEMENT_BACK_CONFIRM_DESC = "还货确认";
     
     public static final String REPOSITORY_MANAGEMENT = "repository_management";
     public static final String REPOSITORY_MANAGEMENT_DESC = "入库管理";

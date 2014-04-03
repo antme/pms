@@ -296,30 +296,6 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		return res;
 	}
 
-	public Map<String, Object> option(Map<String, Object> params) {
-		Map<String, Object> result = null;
-		if (params.containsKey(BorrowingBean.BORROW_STATUS)) {
-			String status = params.get(BorrowingBean.BORROW_STATUS).toString();
-			Map<String, Object> cc = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
-	        params.put(ApiConstants.MONGO_ID, cc.get(ApiConstants.MONGO_ID));
-	        params.put(BorrowingBean.BORROW_STATUS, status);
-	        
-	        if (status.equals("1")) {
-	    		params.put(BorrowingBean.BORROW_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
-			}
-
-	        result =  dao.updateById(params, DBBean.BORROWING);
-	        
-	        // 库管批准借货申请
-	        if (status.equals("2")) {
-	        	Map<String, Object> borrowing = dao.findOne(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID), DBBean.BORROWING);
-	        	createShip(borrowing);
-	        	createReturn(borrowing);
-			}
-		}
-        
-        return result;
-    }
 	
 	// 生成发货申请
 	private Map<String, Object> createShip(Map<String, Object> params) {
@@ -568,6 +544,22 @@ public class BorrowingServiceImpl extends AbstractService implements IBorrowingS
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
 		res.put(BorrowingBean.BOORWING_BACK_STAUTS, BorrowingBean.STATUS_RETURN_CONFIRMED);
+		this.dao.updateById(res, DBBean.BORROWING);
+		return res;
+	}
+	
+	public Map<String, Object> approveBorrowing(Map<String, Object> params) {
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		res.put(BorrowingBean.BORROW_STATUS, BorrowingBean.STATUS_APPROVED);
+		this.dao.updateById(res, DBBean.BORROWING);
+		return res;
+	}
+
+	public Map<String, Object> rejectBorrowing(Map<String, Object> params) {
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put(ApiConstants.MONGO_ID, params.get(ApiConstants.MONGO_ID));
+		res.put(BorrowingBean.BORROW_STATUS, BorrowingBean.STATUS_REJECTED);
 		this.dao.updateById(res, DBBean.BORROWING);
 		return res;
 	}

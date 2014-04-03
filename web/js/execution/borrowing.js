@@ -105,16 +105,30 @@ function toolbar_addBorrwoing() {
 function toolbar_deleteBorrowing() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-//		if (rowData.status == 0){
+		if (rowData.status == "已提交" || rowData.status == "审批拒绝"){
 			if(confirm('确实要删除该内容吗?')) {
 				dataSource.remove(rowData);
 				dataSource.sync();
 			}
-//		} else {
-//			alert("无法执行该操作");
-//		}
+		} else {
+			alert("只允许删除已提交或者审批拒绝的数据");
+		}
 	}
 }
+
+function toolbar_approveBorrowing() {
+	var row = getSelectedRowDataByGridWithMsg("grid");
+	if (row) {
+		
+		// 
+		if (row.status == "已提交") {
+			loadPage("execution_addBorrowing",{_id:row._id, page:"approve"});
+		} else {
+			alert("只允许审核已提交的数据");
+		}
+	}
+}
+
 
 function toolbar_backborrowing() {
 	var row = getSelectedRowDataByGridWithMsg("grid");
@@ -124,7 +138,7 @@ function toolbar_backborrowing() {
 		if (row.status == "已借货") {
 			loadPage("execution_addBorrowing",{_id:row._id, page:"returnborrowing"});
 		} else {
-			alert("无法执行该操作");
+			alert("项目还未借货确认");
 		}
 	}
 }
@@ -132,11 +146,11 @@ function toolbar_backborrowing() {
 function toolbar_confirmborrowing() {
 	var rowData = getSelectedRowDataByGridWithMsg("grid");
 	if (rowData) {
-//		if (rowData.status == 0 || rowData.status == 1 || rowData.status == -1){
+		if (rowData.status == "审批通过"){
 			loadPage("execution_addBorrowing",{_id:rowData._id, page:"confirmborrowing"});
-//		} else {
-//			alert("无法执行该操作");
-//		}
+		} else {
+			alert("只允许确认审批通过的数据");
+		}
 	}
 }
 
@@ -145,11 +159,11 @@ function toolbar_accept_borrowing_return(){
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {		
 		// 
-//		if (row.status == "已借货") {
+		if (row.backStatus == "待确认") {
 			loadPage("execution_addBorrowing",{_id:row._id, page:"confirmreturnborrowing"});
-//		} else {
-//			alert("无法执行该操作");
-//		}
+		} else {
+			alert("项目还未提交换货申请");
+		}
 	}
 }
 

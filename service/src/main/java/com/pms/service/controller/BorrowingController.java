@@ -67,33 +67,35 @@ public class BorrowingController extends AbstractController {
         responseWithData(borrowingService.create(params), request, response);
     }
 
-    @RequestMapping("/submit")
-    @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT, desc = RoleValidConstants.BORROWING_MANAGEMENT_DESC)
-    public void submit(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(borrowingService.option(parserJsonParameters(request, false)), request, response);
-    }
-    
-    @RequestMapping("/option")
-    @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_PROCESS, desc = RoleValidConstants.BORROWING_MANAGEMENT_PROCESS_DESC)
-    public void option(HttpServletRequest request, HttpServletResponse response) {
-    	responseWithData(borrowingService.option(parserJsonParameters(request, false)), request, response);
-    }
-    
+
     
     @RequestMapping("/confirm")
-    @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_PROCESS, desc = RoleValidConstants.BORROWING_MANAGEMENT_PROCESS_DESC)
+    @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_CONFIRM, desc = RoleValidConstants.BORROWING_MANAGEMENT_CONFIRM_DESC)
     public void confirmBorrowing(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(borrowingService.confirmBorrowing(parserJsonParameters(request, false)), request, response);
     }
     
-    @RequestMapping("/return/submit")
+    
+    @RequestMapping("/approve")
     @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_PROCESS, desc = RoleValidConstants.BORROWING_MANAGEMENT_PROCESS_DESC)
+    public void approveBorrowing(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(borrowingService.approveBorrowing(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/reject")
+    @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_PROCESS, desc = RoleValidConstants.BORROWING_MANAGEMENT_PROCESS_DESC)
+    public void rejectBorrowing(HttpServletRequest request, HttpServletResponse response) {
+    	responseWithData(borrowingService.rejectBorrowing(parserJsonParameters(request, false)), request, response);
+    }
+    
+    @RequestMapping("/return/submit")
+    @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT, desc = RoleValidConstants.BORROWING_MANAGEMENT_DESC)
     public void submitBorrowingReturn(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(borrowingService.submitBorrowingReturn(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/return/confirm")
-    @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_PROCESS, desc = RoleValidConstants.BORROWING_MANAGEMENT_PROCESS_DESC)
+    @RoleValidate(roleID=RoleValidConstants.BORROWING_MANAGEMENT_BACK_CONFIRM, desc = RoleValidConstants.BORROWING_MANAGEMENT_BACK_CONFIRM_DESC)
     public void confirmBorrowingReturn(HttpServletRequest request, HttpServletResponse response) {
     	responseWithData(borrowingService.confirmBorrowingReturn(parserJsonParameters(request, false)), request, response);
     }

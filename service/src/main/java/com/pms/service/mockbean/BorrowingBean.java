@@ -50,6 +50,7 @@ public class BorrowingBean {
     public static final String STATUS_SUBMITED = "已提交"; // 借货数量
     
     public static final String STATUS_APPROVED = "审批通过"; // 借货数量
+    public static final String STATUS_REJECTED = "审批拒绝"; // 借货数量
     public static final String STATUS_BORROWED = "已借货"; // 借货数量
 
     

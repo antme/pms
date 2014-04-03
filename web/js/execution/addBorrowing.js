@@ -68,6 +68,8 @@ $(document).ready(function() {
 				$(".submit-borrowing-back").show();	
 			}else if(redirectParams.page=="confirmreturnborrowing"){
 				$(".borrowing-back-approve").show();	
+			}else if(redirectParams.page=="approve"){
+				$(".borrowing-approve").show();	
 			}else if(redirectParams._id){
 				$(".borrowing-management").show();	
 			}else{
@@ -309,6 +311,11 @@ function confirmBorrowing(){
 function confirmBorrowingBack(){
 	postAjaxRequest("/service/borrowing/return/confirm", {_id:model._id}, reloadPage);
 }
+
+function approveBorrowing(){
+	postAjaxRequest("/service/borrowing/approve", {_id:model._id}, reloadPage);
+}
+
 
 function rejectBorrowing(){
 	postAjaxRequest("/service/borrowing/reject", {_id:model._id}, reloadPage);

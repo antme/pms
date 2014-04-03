@@ -1,6 +1,5 @@
 package com.pms.service.service;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public interface IBorrowingService {
@@ -17,7 +16,6 @@ public interface IBorrowingService {
 
 	public Map<String, Object> listNeedBorrowingEqlist(Map<String, Object> params);
 	
-	public Map<String, Object> option(Map<String, Object> params);
 	
 	public Map<String, Object> listScByProjectForBorrowing(Map<String, Object> params);
 	
@@ -30,4 +28,8 @@ public interface IBorrowingService {
 	public Map<String, Object> submitBorrowingReturn(Map<String, Object> params);
 
 	public Map<String, Object> confirmBorrowingReturn(Map<String, Object> params);
+
+	public Map<String, Object> approveBorrowing(Map<String, Object> params);
+
+	public Map<String, Object> rejectBorrowing(Map<String, Object> params);
 }
