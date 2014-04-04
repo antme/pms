@@ -145,7 +145,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 			// 历史数据是草稿的话，清楚历史数据
 			Map<String, Object> oldContract = this.dao.findOne(ApiConstants.MONGO_ID, _id, new String[] { "status" }, DBBean.SALES_CONTRACT);
-			if (oldContract.get("status") == null || oldContract.get("status").toString().equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {
+			if (oldContract.get("status") != null && oldContract.get("status").toString().equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {
 				Map<String, Object> eqDeleteQuery = new HashMap<String, Object>();
 				eqDeleteQuery.put(SalesContractBean.SC_ID, _id);
 				this.dao.deleteByQuery(eqDeleteQuery, DBBean.EQ_COST);
@@ -159,6 +159,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         
 		contract.remove(SalesContractBean.SC_EQ_LIST);
 		Map<String, Object> addedContract = null;
+		
+		//如果是草稿或者新增
 		if (ApiUtil.isEmpty(_id) || status.equalsIgnoreCase(SalesContractBean.SC_STATUS_DRAFT)) {						
 			// 草稿和新的销售合同Add
 			
