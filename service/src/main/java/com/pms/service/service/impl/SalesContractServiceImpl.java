@@ -164,6 +164,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			
 	        Map<String, Object> projectInfo = new HashMap<String, Object>();
 
+	        projectInfo.put(ProjectBean.PROJECT_CODE, params.get(ProjectBean.PROJECT_CODE));
 	        projectInfo.put(ProjectBean.PROJECT_ABBR, params.get(ProjectBean.PROJECT_ABBR));
 	        projectInfo.put(ProjectBean.PROJECT_ADDRESS, params.get(ProjectBean.PROJECT_ADDRESS));
 	        projectInfo.put(ProjectBean.PROJECT_MANAGER_ID, params.get(ProjectBean.PROJECT_MANAGER_ID));
