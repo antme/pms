@@ -7,8 +7,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.pms.service.dbhelper.DBQuery;
+import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
 import com.pms.service.mockbean.SupplierBean;
@@ -39,22 +42,37 @@ public class SupplierServiceImpl extends AbstractService implements ISupplierSer
 		dao.deleteByIds(ids, DBBean.SUPPLIER);
 	}
 
-    public Map<String, Object> create(Map<String, Object> params) {
+	public Map<String, Object> create(Map<String, Object> params) {
 
-        if (this.dao.exist(SupplierBean.SUPPLIER_NAME, params.get(SupplierBean.SUPPLIER_NAME), DBBean.SUPPLIER)) {
-            Map<String, Object> old = this.dao.findOne(SupplierBean.SUPPLIER_NAME, params.get(SupplierBean.SUPPLIER_NAME), DBBean.SUPPLIER);
-            params.put(ApiConstants.MONGO_ID, old.get(ApiConstants.MONGO_ID));
-            this.dao.updateById(params, DBBean.SUPPLIER);
-            return params;
-        } else {
-            if(params.get(ApiConstants.MONGO_ID)!=null){
-                return this.dao.updateById(params, DBBean.SUPPLIER);
-            }else{
-                params.put(SupplierBean.SUPPLIER_CODE, generateCode("GYS", DBBean.SUPPLIER, SupplierBean.SUPPLIER_CODE));
-                return dao.add(params, DBBean.SUPPLIER);
-            }
-        }
-    }
+		if (ApiUtil.isEmpty(params.get(SupplierBean.SUPPLIER_NAME))) {
+			throw new ApiResponseException("供应商名称不能为空");
+		}
+
+		if (params.get(ApiConstants.MONGO_ID) != null) {
+			Map<String, Object> query = new HashMap<String, Object>();
+			query.put(ApiConstants.MONGO_ID, new DBQuery(DBQueryOpertion.NOT_EQUALS, params.get(ApiConstants.MONGO_ID)));
+			query.put(SupplierBean.SUPPLIER_NAME, params.get(SupplierBean.SUPPLIER_NAME));
+
+			if (this.dao.exist(query, DBBean.SUPPLIER)) {
+				throw new ApiResponseException("供应商名称不能重复");
+			}
+
+		}
+		if (this.dao.exist(SupplierBean.SUPPLIER_NAME, params.get(SupplierBean.SUPPLIER_NAME), DBBean.SUPPLIER)) {
+
+			Map<String, Object> old = this.dao.findOne(SupplierBean.SUPPLIER_NAME, params.get(SupplierBean.SUPPLIER_NAME), DBBean.SUPPLIER);
+			params.put(ApiConstants.MONGO_ID, old.get(ApiConstants.MONGO_ID));
+			this.dao.updateById(params, DBBean.SUPPLIER);
+			return params;
+		} else {
+			if (params.get(ApiConstants.MONGO_ID) != null) {
+				return this.dao.updateById(params, DBBean.SUPPLIER);
+			} else {
+				params.put(SupplierBean.SUPPLIER_CODE, generateCode("GYS", DBBean.SUPPLIER, SupplierBean.SUPPLIER_CODE));
+				return dao.add(params, DBBean.SUPPLIER);
+			}
+		}
+	}
 	
     public Map<String, Object> importSupplier(String supplierName) {
         Map<String, Object> supplier = dao.findOne(SupplierBean.SUPPLIER_NAME, supplierName, DBBean.SUPPLIER);
