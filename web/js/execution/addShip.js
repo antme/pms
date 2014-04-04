@@ -476,11 +476,11 @@ function loadEqList(data){
 			
 			
 			if(eqList[i].shipType == "北京备货货架"){
-				eqList[i].shipTypeDisplay = "上海—北京库";
+				eqList[i].shipTypeDisplay = "上海—北京泰德库(调拨)";
 				bjList.push(eqList[i]);
 			}else if(eqList[i].shipType == "上海备货货架"){
 				shList.push(eqList[i]);
-				eqList[i].shipTypeDisplay = "上海—上海库";
+				eqList[i].shipTypeDisplay = "上海—上海泰德库(调拨)";
 			}else if(eqList[i].shipType == "直发现场"){
 				eqList[i].shipTypeDisplay = "直发现场";
 				supplierlist.push(eqList[i]);
