@@ -92,7 +92,7 @@ function cancelRepo() {
 	
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "入库中" || row.status == "草稿"){
+		if(row.status == "已提交" || row.status == "草稿"){
 			if(confirm("确认退回？")){
 				postAjaxRequest(cancelUrl, {
 					_id : row._id
@@ -125,13 +125,13 @@ function openConfirmRepositoryPage(){
 	
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status == "入库中"){			
+		if(row.status == "已提交"){			
 			loadPage("repository_repositoryEdit", {
 				_id : row._id,
 				page: "confirm"
 			});
 		}else{
-			alert("只能确认入库中的数据");
+			alert("只能确认已提交的数据");
 		}
 	}
 }

@@ -21,7 +21,9 @@ public interface IShipService {
 	
 	public Map<String, Object> submit(Map<String, Object> params);
 	
-	public Map<String, Object> reject(Map<String, Object> params);
+	public Map<String, Object> firstReject(Map<String, Object> params);
+	
+	public Map<String, Object> finalReject(Map<String, Object> params);
 	
 	public Map<String, Object> confirmShipData(Map<String, Object> params);
 	

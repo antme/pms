@@ -2,7 +2,8 @@ $(document).ready(function() {
 	
     $("#scFile").kendoUpload({
         async: {
-            saveUrl: "/service/sc/importsc",
+//            saveUrl: "/service/sc/importsc",
+        	saveUrl: "/service/sc/importsc",
             autoUpload: true
         },
         success:function(e){

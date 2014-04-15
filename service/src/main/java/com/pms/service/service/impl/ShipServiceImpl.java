@@ -304,7 +304,7 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 	
 	public Map<String, Object> submit(Map<String, Object> params) {
 
-		if (params.get(ShipBean.SHIP_STATUS) != null && params.get(ShipBean.SHIP_STATUS).toString().equalsIgnoreCase("已关闭")) {
+		if (params.get(ShipBean.SHIP_STATUS) != null && params.get(ShipBean.SHIP_STATUS).toString().equalsIgnoreCase(ShipBean.SHIP_STATUS_CLOSE)) {
 
 		} else {
 			params.put(ShipBean.SHIP_DATE, ApiUtil.formateDate(new Date(), "yyy-MM-dd"));
@@ -380,11 +380,16 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
         return new HashMap<String, Object>();
     }
     
-    public Map<String, Object> reject(Map<String, Object> params){
-        params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_REJECT);
+    public Map<String, Object> firstReject(Map<String, Object> params){
+        params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_FIRST_REJECT);
         return this.dao.updateById(params, DBBean.SHIP); 
     }
-	
+    
+	public Map<String, Object> finalReject(Map<String, Object> params) {
+		params.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_FINAL_REJECT);
+		return this.dao.updateById(params, DBBean.SHIP);
+	}
+
 	public Map<String, Object> confirmShipData(Map<String, Object> params) {
 		List<Map<String, Object>> eqlist = (List<Map<String, Object>>) params.get(ShipBean.SHIP_EQ_LIST);
 		boolean close = true;
@@ -683,7 +688,6 @@ public class ShipServiceImpl extends AbstractService implements IShipService {
 
     public Map<String, Object> importShipHistoryData(InputStream inputStream){
     	
-        this.dao.deleteByQuery(new HashMap<String, Object>(), DBBean.SHIP);
         
     	Map<String, Object> result = new LinkedHashMap<String, Object>();
 		try {

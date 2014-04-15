@@ -408,7 +408,7 @@ public abstract class AbstractService {
         Map<String, Object> taskQuery = new HashMap<String, Object>();
         taskQuery.put(ApiConstants.CREATOR, ApiThreadLocal.getCurrentUserId());      
         Map<String, Object> statusQuery = new HashMap<String, Object>();      
-        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseRequest.STATUS_REJECTED, ShipBean.SHIP_STATUS_REJECT}));
+        statusQuery.put("status",  new DBQuery(DBQueryOpertion.IN, new String[]{PurchaseRequest.STATUS_REJECTED, ShipBean.SHIP_STATUS_FIRST_REJECT, ShipBean.SHIP_STATUS_FINAL_REJECT}));
         statusQuery.put(PurchaseBack.pbStatus, PurchaseStatus.rejected.toString());
         statusQuery.put(PurchaseBack.paStatus, new DBQuery(DBQueryOpertion.IN, new String[] { PurchaseStatus.rejected.toString(), PurchaseStatus.firstRejected.toString(), PurchaseStatus.finalRejected.toString() }));
 

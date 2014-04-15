@@ -142,7 +142,7 @@ $(document).ready(function() {
 	        change: function(e) {
 	        	var dataItem = this.dataItem();
 	        	model.set("projectName", dataItem.projectName);
-	        	model.set("applicationDepartment", dataItem.department);
+	        	model.set("applicationDepartment", dataItem.applicationDepartment);
 	        	model.set("scId", "");
 	            model.set("customerName", dataItem.customerName);
 	            model.set("customerId", dataItem.customerId);

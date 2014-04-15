@@ -92,13 +92,13 @@ public class ShipController extends AbstractController {
     @RequestMapping("/reject")
     @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT_PROCESS, desc = RoleValidConstants.SHIP_MANAGEMENT_PROCESS_DESC)
     public void reject(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(shipService.reject(parserJsonParameters(request, false)), request, response);
+        responseWithData(shipService.firstReject(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/finalreject")
     @RoleValidate(roleID=RoleValidConstants.SHIP_MANAGEMENT_FINAL_PROCESS, desc = RoleValidConstants.SHIP_MANAGEMENT_FINAL_PROCESS_DESC)
     public void finalReject(HttpServletRequest request, HttpServletResponse response) {
-        responseWithData(shipService.reject(parserJsonParameters(request, false)), request, response);
+        responseWithData(shipService.finalReject(parserJsonParameters(request, false)), request, response);
     }
     
     @RequestMapping("/eqlist")

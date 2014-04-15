@@ -116,9 +116,9 @@ function confirmRepositoryOut(){
 	
 	var row = getSelectedRowDataByGridWithMsg("grid");
 	if (row) {
-		if(row.status != "签收"){
-//			alert("此申请已经签收完毕，不需要再次签收");
-//		}else{
+		if(row.status == "已结束"){
+			alert("此申请已经签收完毕，不需要再次签收");
+		}else{
 			
 			loadPage("repository_repositoryOutEdit", {
 				_id : row._id,

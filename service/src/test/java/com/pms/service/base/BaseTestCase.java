@@ -46,9 +46,12 @@ public class BaseTestCase extends TestCase {
     	
     	
     	Map<String, Object> parameters = new HashMap<String,Object>();
-    	parameters.put("node[title]", "test");
-    	parameters.put("node[type]", "gsgg");
-    	parameters.put("node[body]", "test");
+    	parameters.put("title", "test");
+    	parameters.put("type", "gsgg");
+    	parameters.put("body", "test11111");
+    	parameters.put("api-key", "ffsssssssseeeeeeee");
+
+    	
     	
     	System.out.println(HttpClientUtil.doPost("http://localhost/api/node", parameters));
 //    	String s = null;

@@ -24,6 +24,7 @@ import com.pms.service.dbhelper.DBQueryOpertion;
 import com.pms.service.dbhelper.DBQueryUtil;
 import com.pms.service.exception.ApiResponseException;
 import com.pms.service.mockbean.ApiConstants;
+import com.pms.service.mockbean.ArrivalNoticeBean;
 import com.pms.service.mockbean.CustomerBean;
 import com.pms.service.mockbean.DBBean;
 import com.pms.service.mockbean.EqCostListBean;
@@ -36,6 +37,7 @@ import com.pms.service.mockbean.PurchaseContract;
 import com.pms.service.mockbean.PurchaseOrder;
 import com.pms.service.mockbean.PurchaseRequest;
 import com.pms.service.mockbean.SalesContractBean;
+import com.pms.service.mockbean.ShipBean;
 import com.pms.service.mockbean.UserBean;
 import com.pms.service.service.AbstractService;
 import com.pms.service.service.ICustomerService;
@@ -2255,6 +2257,100 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		result.put("status", 1);
 		return result;
+	}
+	
+	
+	public Map<String, Object> importSCExcleFile2(Map<String, Object> params) {
+
+		Map<String, Object> result = new LinkedHashMap<String, Object>();
+		try {
+			InputStream inputStream = (InputStream) params.get("inputStream");
+			ExcleUtil excleUtil = new ExcleUtil(inputStream);
+
+			List<String[]> list = excleUtil.getAllData(0);
+			Map<String, Integer> keyMap = new LinkedHashMap<String, Integer>();
+
+			String[] titles = list.get(0);
+
+			for (int i = 0; i < titles.length; i++) {
+				String key = titles[i].trim();
+				if (!ApiUtil.isEmpty(key)) {
+					keyMap.put(key, i);
+				}
+			}
+
+			for (int i = 1; i < list.size(); i++) {
+
+				String[] row = list.get(i);
+				String contractCode = getRowColumnValue(row, keyMap, "销售合同");
+
+				if (ApiUtil.isValid(contractCode)) {
+					Map<String, Object> query = new HashMap<String, Object>();
+					query.put(SalesContractBean.SC_CODE, new DBQuery(DBQueryOpertion.EQUAILS, contractCode));
+					Map<String, Object> contract = this.dao.findOneByQuery(query, DBBean.SALES_CONTRACT);
+					if (ApiUtil.isValid(contract)) {
+
+						List<Map<String, Object>> eqList = new ArrayList<Map<String, Object>>();
+
+						Map<String, Object> backparams = new HashMap<String, Object>();
+						backparams.put(SalesContractBean.SC_ID, contract.get(ApiConstants.MONGO_ID));
+
+						eqList = (List<Map<String, Object>>) purchaseService.prepareBack(backparams).get(SalesContractBean.SC_EQ_LIST);
+						if (eqList != null && eqList.size() > 0) {
+
+							addPurchaseBack(contractCode, eqList, contract);
+							createShip(contractCode);
+						} else {
+
+							logger.error("成本清单为空: " + contractCode);
+						}
+					} else {
+						logger.error("can not find " + contractCode);
+					}
+				} else {
+					logger.error("销售合同为空: " + contractCode);
+				}
+			}
+
+		} catch (Exception e) {
+			logger.error("", e);
+			result.put("status", 0);
+			throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
+		}
+		return result;
+
+	}
+	
+	
+	private void createShip(String contracCode){
+		
+		Map<String, Object> arrivalMapQuery = new HashMap<String, Object>();		
+		arrivalMapQuery.put(SalesContractBean.SC_CODE, contracCode);
+		List<Map<String, Object>> arrivalMap = (List<Map<String, Object>>) this.dao.list(arrivalMapQuery, DBBean.ARRIVAL_NOTICE).get(ApiConstants.RESULTS_DATA);
+
+		for (Map<String, Object> arrival : arrivalMap) {
+			List<Map<String, Object>> arrivalEqlist = (List<Map<String, Object>>) arrival.get(SalesContractBean.SC_EQ_LIST);
+			scs.mergeEqListBasicInfo(arrivalEqlist);
+			for (Map<String, Object> arrivalEqMap : arrivalEqlist) {
+				arrivalEqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
+				arrivalEqMap.put(ShipBean.SHIP_EQ_ACTURE_AMOUNT, arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
+			}
+
+
+
+			Map<String, Object> newObj = new HashMap<String, Object>();
+			newObj.put(ShipBean.SHIP_STATUS, ShipBean.SHIP_STATUS_CLOSE);
+			newObj.put(ShipBean.SHIP_TYPE, "上海—北京泰德库");
+			newObj.put(SalesContractBean.SC_ID, arrival.get(SalesContractBean.SC_ID));
+			newObj.put(SalesContractBean.SC_CODE, arrival.get(SalesContractBean.SC_CODE));
+			scs.mergeCommonFieldsFromSc(newObj, arrival.get(SalesContractBean.SC_ID));
+
+			newObj.put(ShipBean.SHIP_CODE, "FHSQ-" + arrival.get(SalesContractBean.SC_CODE));
+			newObj.put("comments", "历史数据导入");
+			newObj.put(SalesContractBean.SC_EQ_LIST, arrival.get(SalesContractBean.SC_EQ_LIST));
+			this.dao.add(newObj, DBBean.SHIP);
+
+		}
 	}
 
 	private void importFinInfo(String[] info) {
