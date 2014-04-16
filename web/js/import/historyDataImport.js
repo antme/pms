@@ -3,11 +3,11 @@ $(document).ready(function() {
     $("#scFile").kendoUpload({
         async: {
 //            saveUrl: "/service/sc/importsc",
-        	saveUrl: "/service/sc/importsc",
+        	saveUrl: "/service/sc/importsc2",
             autoUpload: true
         },
         success:function(e){
-        	if (e.response.status == 1 || e.response.status == "1"){//import success
+        	if (!e.response.msg){//import success
         		$("#importStatus").html("数据导入成功！");
         	}else{
         		alert(e.response.msg);

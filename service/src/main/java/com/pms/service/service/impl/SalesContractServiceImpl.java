@@ -65,6 +65,9 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	private IPurchaseService purchaseService;
 	
 	private IPurchaseContractService purchaseContractService;
+	
+	
+	private String orderId;
 
 
 	@Override
@@ -1543,7 +1546,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 						addEqCostListForContract(eqList, contract, false, false);
 
 						
-						addPurchaseBack(contractCode, eqList, contract);
+						addPurchaseBack(contractCode, eqList, contract, false);
 						
 					} else {
 
@@ -1581,7 +1584,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
     }
 
 
-	public void addPurchaseBack(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract) {
+	public void addPurchaseBack(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, boolean preback) {
 	    Map<String, Object> newObj = new HashMap<String, Object>();
 	    newObj.put(PurchaseBack.pbStatus, PurchaseStatus.closed.toString());
 	    newObj.put(PurchaseBack.pbCode, "BHSQ-" + contractCode);
@@ -1592,8 +1595,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	    
 	    
 	    for (Map<String, Object> eqMap : eqList) {
-	    	eqMap.put(PurchaseBack.pbTotalCount,
+	    	
+	    	if(!preback){
+	    		eqMap.put(PurchaseBack.pbTotalCount,
 	    	        ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+	    	}
 	    }
 
 	    removeEmptyEqList(eqList, PurchaseBack.pbTotalCount);
@@ -1603,12 +1609,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 	    	Map<String, Object> back = purchaseService.saveOrUpdateBack(newObj, newObj);
 	    	
-			addPurchaseRequest(contractCode, eqList, contract, back);
+			addPurchaseRequest(contractCode, eqList, contract, back, preback);
 
 	    }
     }
 	
-	public void addPurchaseRequest(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> back) {
+	public void addPurchaseRequest(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> back, boolean preback) {
 		Map<String, Object> newObj = new HashMap<String, Object>();
 		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_CLOSED);
 		newObj.put(PurchaseRequest.PURCHASE_REQUEST_CODE, "CGSQ-" + contractCode);
@@ -1620,7 +1626,12 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 
 		
         for (Map<String, Object> eqMap : eqList) {
-            eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT, ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+        	
+        	if(!preback){
+        		eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT, ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+        	}else{
+        		eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT, ApiUtil.getInteger(eqMap.get(PurchaseBack.pbTotalCount)));
+        	}
             eqMap.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));
             eqMap.put(PurchaseRequest.BACK_REQUEST_CODE, back.get(PurchaseBack.pbCode));
             eqMap.put(PurchaseRequest.SALES_CONTRACT_ID, back.get(PurchaseRequest.SALES_CONTRACT_ID));       
@@ -1629,17 +1640,17 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         }
 
 		newObj.put(SalesContractBean.SC_EQ_LIST, eqList);
-		this.dao.add(newObj, DBBean.PURCHASE_REQUEST);
-		Map<String, Object> request = purchaseContractService.updatePurchaseRequest(newObj);
+		this.dao.save(newObj, DBBean.PURCHASE_REQUEST);
+		purchaseContractService.updatePurchaseRequest(newObj);
 		back.put(PurchaseRequest.PURCHASE_REQUEST_ID, newObj.get(ApiConstants.MONGO_ID));
 		back.put(PurchaseRequest.PURCHASE_REQUEST_CODE, newObj.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
 		this.dao.updateById(back, DBBean.PURCHASE_BACK);
 		
-		addPurchaseOrder(contractCode, eqList, contract, request, back);
+		addPurchaseOrder(contractCode, eqList, contract, newObj, back, preback);
 	}
 	
 	
-	public void addPurchaseOrder(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> request, Map<String, Object> back) {
+	public void addPurchaseOrder(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> request, Map<String, Object> back, boolean preback) {
 		Map<String, Object> newObj = new HashMap<String, Object>();
 		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_CLOSED);
 		newObj.put(PurchaseRequest.PURCHASE_ORDER_CODE, "CGDD-" + contractCode);
@@ -1652,8 +1663,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
         newObj.put("eqcostDeliveryType", PurchaseRequest.EQCOST_DELIVERY_TYPE_REPOSITORY);
      
 		for (Map<String, Object> eqMap : eqList) {
-			eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT,
-			        ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+		 	if(!preback){
+        		eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT, ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+        	}else{
+        		eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT, ApiUtil.getInteger(eqMap.get(PurchaseBack.pbTotalCount)));
+        	}
             eqMap.put(PurchaseRequest.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));
             eqMap.put(PurchaseRequest.PURCHASE_REQUEST_CODE, request.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
             eqMap.put(PurchaseRequest.BACK_REQUEST_ID, back.get(ApiConstants.MONGO_ID));       
@@ -1666,15 +1680,16 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		this.dao.add(newObj, DBBean.PURCHASE_ORDER);
 		Map<String, Object> order = purchaseContractService.updatePurchaseOrder(newObj);
 
+		orderId = order.get(ApiConstants.MONGO_ID).toString();
 		request.put(PurchaseOrder.PURCHASE_REQUEST_ID, request.get(ApiConstants.MONGO_ID));
 		request.put(PurchaseOrder.PURCHASE_REQUEST_CODE, request.get(PurchaseOrder.PURCHASE_REQUEST_CODE));
 		this.dao.updateById(request, DBBean.PURCHASE_REQUEST);
 		
-		addPurchaseContract(contractCode, eqList, contract, order);
+		addPurchaseContract(contractCode, eqList, contract, order, preback);
 
 	}
 	
-	public void addPurchaseContract(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> order) {
+	public void addPurchaseContract(String contractCode, List<Map<String, Object>> eqList, Map<String, Object> contract, Map<String, Object> order, boolean preback) {
 		Map<String, Object> newObj = new HashMap<String, Object>();
 		newObj.put(PurchaseRequest.PROCESS_STATUS, PurchaseRequest.STATUS_CLOSED);
 		newObj.put(PurchaseRequest.PURCHASE_CONTRACT_CODE, "CGHT-" + contractCode);
@@ -1697,7 +1712,11 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		
 		float totalMoney = 0;
 		for (Map<String, Object> eqMap : eqList) {
-			eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT, ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+		 	if(!preback){
+        		eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT, ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_AMOUNT)) - ApiUtil.getInteger(eqMap.get(EqCostListBean.EQ_LIST_REST_COUNT)));
+        	}else{
+        		eqMap.put(PurchaseRequest.EQCOST_APPLY_AMOUNT, ApiUtil.getInteger(eqMap.get(PurchaseBack.pbTotalCount)));
+        	}
 			eqMap.put(PurchaseRequest.PURCHASE_REQUEST_ID, order.get(PurchaseRequest.PURCHASE_REQUEST_ID));
 			eqMap.put(PurchaseRequest.PURCHASE_REQUEST_CODE, order.get(PurchaseRequest.PURCHASE_REQUEST_CODE));
 			eqMap.put(PurchaseRequest.BACK_REQUEST_ID, order.get(PurchaseRequest.BACK_REQUEST_ID));
@@ -2282,7 +2301,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			for (int i = 1; i < list.size(); i++) {
 
 				String[] row = list.get(i);
-				String contractCode = getRowColumnValue(row, keyMap, "销售合同");
+				String contractCode = getRowColumnValue(row, keyMap, "销售合同编号");
 
 				if (ApiUtil.isValid(contractCode)) {
 					Map<String, Object> query = new HashMap<String, Object>();
@@ -2298,8 +2317,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 						eqList = (List<Map<String, Object>>) purchaseService.prepareBack(backparams).get(SalesContractBean.SC_EQ_LIST);
 						if (eqList != null && eqList.size() > 0) {
 
-							addPurchaseBack(contractCode, eqList, contract);
-							createShip(contractCode);
+							addPurchaseBack(contractCode, eqList, contract, true);
+							createShip(contractCode, orderId);
 						} else {
 
 							logger.error("成本清单为空: " + contractCode);
@@ -2322,15 +2341,15 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 	
 	
-	private void createShip(String contracCode){
+	private void createShip(String contracCode, String orderId){
 		
 		Map<String, Object> arrivalMapQuery = new HashMap<String, Object>();		
-		arrivalMapQuery.put(SalesContractBean.SC_CODE, contracCode);
+		arrivalMapQuery.put(ArrivalNoticeBean.FOREIGN_KEY, orderId);
 		List<Map<String, Object>> arrivalMap = (List<Map<String, Object>>) this.dao.list(arrivalMapQuery, DBBean.ARRIVAL_NOTICE).get(ApiConstants.RESULTS_DATA);
 
 		for (Map<String, Object> arrival : arrivalMap) {
 			List<Map<String, Object>> arrivalEqlist = (List<Map<String, Object>>) arrival.get(SalesContractBean.SC_EQ_LIST);
-			scs.mergeEqListBasicInfo(arrivalEqlist);
+			mergeEqListBasicInfo(arrivalEqlist);
 			for (Map<String, Object> arrivalEqMap : arrivalEqlist) {
 				arrivalEqMap.put(ShipBean.EQCOST_SHIP_AMOUNT, arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
 				arrivalEqMap.put(ShipBean.SHIP_EQ_ACTURE_AMOUNT, arrivalEqMap.get(ArrivalNoticeBean.EQCOST_ARRIVAL_AMOUNT));
@@ -2343,7 +2362,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 			newObj.put(ShipBean.SHIP_TYPE, "上海—北京泰德库");
 			newObj.put(SalesContractBean.SC_ID, arrival.get(SalesContractBean.SC_ID));
 			newObj.put(SalesContractBean.SC_CODE, arrival.get(SalesContractBean.SC_CODE));
-			scs.mergeCommonFieldsFromSc(newObj, arrival.get(SalesContractBean.SC_ID));
+			mergeCommonFieldsFromSc(newObj, arrival.get(SalesContractBean.SC_ID));
 
 			newObj.put(ShipBean.SHIP_CODE, "FHSQ-" + arrival.get(SalesContractBean.SC_CODE));
 			newObj.put("comments", "历史数据导入");

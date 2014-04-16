@@ -1273,19 +1273,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
     }
 
     public Map<String, Object> updatePurchaseRequest(Map<String, Object> parameters) {
-        PurchaseRequest request = (PurchaseRequest) new PurchaseRequest().toEntity(parameters);
         boolean adding = false;
-        Map<String, Object> pcrequest = new HashMap<String, Object>();
         
         Object id = parameters.get(ApiConstants.MONGO_ID);
 		if (ApiUtil.isEmpty(id) && ApiUtil.isEmpty(parameters.get(PurchaseCommonBean.PURCHASE_REQUEST_CODE))) {
-            request.setPurchaseRequestCode(generateCode("CGSQ", DBBean.PURCHASE_REQUEST, PurchaseCommonBean.PURCHASE_REQUEST_CODE));
-            pcrequest = request.toMap();
+			parameters.put(PurchaseCommonBean.PURCHASE_REQUEST_CODE, generateCode("CGSQ", DBBean.PURCHASE_REQUEST, PurchaseCommonBean.PURCHASE_REQUEST_CODE));
             adding = true;
-        }else{
-            pcrequest.putAll(parameters);
         }
-        
+		
         Object eqList = parameters.get(SalesContractBean.SC_EQ_LIST);
         List<Map<String, Object>> list = (List<Map<String, Object>>) eqList;
         updateEqListWithProjectId(parameters, list);
@@ -1300,20 +1295,20 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
         	
         }
         
-        pcrequest.put("requestedTotalMoney", requestedTotalMoney);
+        parameters.put("requestedTotalMoney", requestedTotalMoney);
 
-        pcrequest.put(SalesContractBean.SC_EQ_LIST, eqList);
+        parameters.put(SalesContractBean.SC_EQ_LIST, eqList);
 
         //TODO: 后台检查可申请数据
         
-        Map<String, Object> prequest = updatePurchase(pcrequest, DBBean.PURCHASE_REQUEST);
+        updatePurchase(parameters, DBBean.PURCHASE_REQUEST);
 
         if (adding) {
-            updateRequestIdForBack(prequest);
+            updateRequestIdForBack(parameters);
         }
         
-        backService.updatePurchaseBackStatus(prequest.get(PurchaseContract.BACK_REQUEST_ID).toString());
-        return prequest;
+        backService.updatePurchaseBackStatus(parameters.get(PurchaseContract.BACK_REQUEST_ID).toString());
+        return parameters;
     }
     
     
@@ -1452,15 +1447,14 @@ public class PurchaseContractServiceImpl extends AbstractService implements IPur
             }
         }
 
-        Map<String, Object> result = null;
         
         if (ApiUtil.isEmpty(parameters.get(ApiConstants.MONGO_ID))) {
-            result = this.dao.add(parameters, db);
+            this.dao.add(parameters, db);
         } else {
-            result = dao.updateById(parameters, db);
+            dao.updateById(parameters, db);
         }
 
-        return result;
+        return parameters;
     }
 
     

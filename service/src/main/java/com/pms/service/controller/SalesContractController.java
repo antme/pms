@@ -320,7 +320,7 @@ public class SalesContractController extends AbstractController {
 			e.printStackTrace();
 		}
         
-    	responseWithData(result, request, response);
+    	responseWithData(null, request, response);
     }  
     
     
