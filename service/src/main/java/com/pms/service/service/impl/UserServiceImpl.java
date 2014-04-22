@@ -292,7 +292,7 @@ public class UserServiceImpl extends AbstractService implements IUserService {
         
         String[] dbs = new String[]{DBBean.PURCHASE_REQUEST, DBBean.PURCHASE_BACK, DBBean.PURCHASE_ORDER, 
         		DBBean.PURCHASE_CONTRACT, DBBean.BORROWING, DBBean.PURCHASE_ALLOCATE, DBBean.REPOSITORY, 
-        		DBBean.SHIP, DBBean.SALES_CONTRACT};
+        		DBBean.SHIP};
         
         for(String db: dbs){
             if(query == null){

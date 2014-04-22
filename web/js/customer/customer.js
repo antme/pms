@@ -98,7 +98,9 @@ $(document).ready(function () {
             { field: "name", title: "客户名称",width:"250px" },
             { field: "contact", title: "客户联系人",width:"80px" },
             { field: "phone", title: "联系人电话",width:"120px" },
-            { field: "email", title: "联系人邮箱",width:"200px" }
+            { field: "email", title: "联系人邮箱",width:"200px" },
+            { field: "address", title: "联系地址",width:"200px" }
+            
         ],
         editable: "popup"
     });

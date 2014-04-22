@@ -70,6 +70,8 @@ public class SupplierController extends AbstractController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        responseWithData(result, request, response);
     }
     
 

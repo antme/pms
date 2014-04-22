@@ -103,6 +103,10 @@ public class DBQueryUtil {
                     object = new BasicDBObject(key, notNull);
                 } else if (dbQuery.getOperation() == DBQueryOpertion.NOT_EQUALS) {
                     DBObject notEquals = new BasicDBObject("$ne", dbQuery.getValue());
+
+                	 if (key == ApiConstants.MONGO_ID) {
+                		 notEquals = new BasicDBObject("$ne", new ObjectId(dbQuery.getValue().toString()));
+                     } 
                     object = new BasicDBObject(key, notEquals);
                 } else if (dbQuery.getOperation() == DBQueryOpertion.LARGER_THAN) {
                     DBObject notEquals = new BasicDBObject("$gt", dbQuery.getValue());
@@ -135,7 +139,11 @@ public class DBQueryUtil {
                     temp.put(key).regex(regex);
                     object = temp.get();
                 }else if (dbQuery.getOperation() == DBQueryOpertion.EQUAILS) {
-                      object = new BasicDBObject(key, dbQuery.getValue());
+					object = new BasicDBObject(key, dbQuery.getValue());
+
+					if (key == ApiConstants.MONGO_ID) {
+						object = new BasicDBObject(key, new ObjectId(dbQuery.getValue().toString()));
+					}
                 }
             } else if (value instanceof DBObject) {
                 object = (DBObject) value;

@@ -138,20 +138,23 @@ public class SupplierServiceImpl extends AbstractService implements ISupplierSer
 
             for (int i = 2; i < list.size(); i++) {// 硬编码从第9行开始读数据
                 Map<String, Object> eq = new LinkedHashMap<String, Object>();
-                String amount = list.get(i)[6].trim();
-                if (amount.length() == 0) {// 读到某一行数量为空时，认为清单数据结束
-                    break;
+                String[] row = list.get(i);
+                eq.put("supplierName", getRowColumnValue(row, keyMap, "公司名称"));
+                eq.put("supplierCate", getRowColumnValue(row, keyMap, "产品类型"));
+                eq.put("supplierAddress", getRowColumnValue(row, keyMap, "地址"));
+                eq.put("supplierContact", getRowColumnValue(row, keyMap, "联系人"));
+                eq.put("supplierContactMobile", getRowColumnValue(row, keyMap, "手机"));
+                eq.put("supplierContactPhone", getRowColumnValue(row, keyMap, "电话"));
+                eq.put("supplierFax", getRowColumnValue(row, keyMap, "传真"));
+                eq.put("supplierReviewTime", getRowColumnValue(row, keyMap, "评审时间"));
+                eq.put("supplierRemark", getRowColumnValue(row, keyMap, "备注"));
+                
+                
+                if(!ApiUtil.isEmpty(eq.get("supplierName"))){
+                	
+                    this.create(eq);
+
                 }
-                eq.put("supplierName", list.get(i)[keyMap.get("公司名称")].trim());
-                eq.put("supplierCate", list.get(i)[keyMap.get("产品类型")].trim());
-                eq.put("supplierAddress", list.get(i)[keyMap.get("地址")].trim());
-                eq.put("supplierContact", list.get(i)[keyMap.get("联系人")].trim());
-                eq.put("supplierContactMobile", list.get(i)[keyMap.get("手机")].trim());
-                eq.put("supplierContactPhone", list.get(i)[keyMap.get("电话")].trim());
-                eq.put("supplierFax", list.get(i)[keyMap.get("传真")].trim());
-                eq.put("supplierReviewTime", list.get(i)[keyMap.get("评审时间")].trim());
-                eq.put("supplierRemark", list.get(i)[keyMap.get("备注")].trim());
-                this.create(eq);
 
             }
 

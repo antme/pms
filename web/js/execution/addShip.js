@@ -147,8 +147,19 @@ $(document).ready(function() {
 	            model.set("customerName", dataItem.customerName);
 	            model.set("customerId", dataItem.customerId);
 	            scList = dataItem.scList;
+	            
+	            postAjaxRequest("/service/customer/get", {_id:dataItem.customerId}, function(data){
+	            	
+	                model.set("deliveryContact", data.contact);
+		            model.set("deliveryContactWay", data.phone);
+		            model.set("deliveryUnit", data.address);
+		            
+	            	loadSC(scList);
+	            	
+	            });
+	            
+	            
 	        	
-	        	loadSC(scList);
 	        	
 	        }, 
 	        dataBound : function(e){
