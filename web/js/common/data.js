@@ -82,7 +82,8 @@ var menus = [
                          { text: "发货申请", id: "execution_ship", imageUrl: "/images/shipping.png"},
                          { text: "项目货物结算", id: "execution_settlement", imageUrl: "/images/padlock.png"},
                          { text: "发货合计", id: "execution_shipCount", imageUrl: "/images/borrowing.png"},                      
-                         { text: "借换货", id: "execution_borrowing", imageUrl: "/images/sign_in.png"}
+                         { text: "借换货", id: "execution_borrowing", imageUrl: "/images/sign_in.png"},
+                         { text: "库存查询", id: "execution_repquery", imageUrl: "/images/shop.png"}
                      ]
              },
             

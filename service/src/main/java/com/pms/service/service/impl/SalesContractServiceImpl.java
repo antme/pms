@@ -2279,6 +2279,52 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 	
 	
+	@Override
+	public Map<String, Object> importfinance(Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<String> msgs = new ArrayList<String>();
+
+		// try {
+		InputStream inputStream = (InputStream) params.get("inputStream");
+		ExcleUtil excleUtil = new ExcleUtil(inputStream);
+		List<String[]> list = excleUtil.getAllData(0);
+
+		if (!list.isEmpty()) {
+
+			for (int i = 4; i < list.size(); i++) {// 从第5行开始读数据
+				String errorMsg = "";
+
+				String[] row = list.get(i);
+				String scCode = row[1].trim();
+				String kaipiao = row[2].trim();
+				String shoukuan = row[3].trim();
+
+				if (dao.exist(SalesContractBean.SC_CODE, scCode, DBBean.SALES_CONTRACT)) {
+
+					insertFinInfo(ApiUtil.getDouble(kaipiao), ApiUtil.getDouble(shoukuan), "", scCode);
+
+				} else {
+					logger.info("insert sc for " + scCode);
+					errorMsg = "销售合同不存在" + scCode;
+					errorMsg = String.format("第%s行：", i + 1).concat(errorMsg);
+					msgs.add(errorMsg);
+				}
+				// importFinInfo(list.get(i));
+
+			}
+		}
+
+		logger.error(msgs);
+
+		if (msgs.size() > 0) {
+			throw new ApiResponseException(String.format("【%s】条纪录未导入：【%s】", msgs.size(), msgs));
+		}
+
+		result.put("status", 1);
+		return result;
+	}
+	
+	
 	public Map<String, Object> importSCExcleFile2(Map<String, Object> params) {
 
 		Map<String, Object> result = new LinkedHashMap<String, Object>();
@@ -2341,6 +2387,77 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	}
 	
 	
+	public Map<String, Object> importrep(Map<String, Object> params) {
+
+		
+		this.dao.deleteByQuery(new HashMap<String, Object>(), "eqRepository");
+		Map<String, Object> result = new LinkedHashMap<String, Object>();
+		try {
+			InputStream inputStream = (InputStream) params.get("inputStream");
+			ExcleUtil excleUtil = new ExcleUtil(inputStream);
+			List<String[]> list = excleUtil.getAllData(0);
+			Map<String, Integer> keyMap = new LinkedHashMap<String, Integer>();
+
+			if (list.get(0) != null) {
+
+				// MAX 15 COLUMN
+				for (int i = 0; i < list.get(0).length; i++) {
+					String key = list.get(0)[i].trim();
+					if (!ApiUtil.isEmpty(key)) {
+						keyMap.put(key, i);
+					}
+				}
+			}
+
+			for (int i = 1; i < list.size(); i++) {// 硬编码从第9行开始读数据
+				Map<String, Object> eq = new LinkedHashMap<String, Object>();
+				String[] row = list.get(i);
+				String code = getRowColumnValue(row, keyMap, "物品代码"); 
+
+				eq.put(EqCostListBean.EQ_LIST_MATERIAL_CODE, code.trim());
+				eq.put(EqCostListBean.EQ_LIST_PRODUCT_NAME,  getRowColumnValue(row, keyMap, "物品名称"));
+				
+				eq.put("eqcostProductType1", getRowColumnValue(row, keyMap, "型号1"));
+				eq.put("eqcostProductType2", getRowColumnValue(row, keyMap, "型号2"));
+				eq.put("eqcostProductType3", getRowColumnValue(row, keyMap, "型号3"));
+				
+				eq.put(EqCostListBean.EQ_LIST_UNIT, getRowColumnValue(row, keyMap, "单位"));
+				eq.put(EqCostListBean.EQ_LIST_SALES_BASE_PRICE, getRowColumnValue(row, keyMap, "单价"));
+
+				Double eqcostAmount = ApiUtil.getDouble(getRowColumnValue(row, keyMap, "期末|数量"));
+
+
+				eq.put(EqCostListBean.EQ_LIST_AMOUNT, eqcostAmount);
+				
+				eq.put("repShipCode", getRowColumnValue(row, keyMap, "货位代码"));
+				
+				eq.put(EqCostListBean.EQ_LIST_TOTAL_AMOUNT,  ApiUtil.getDouble(getRowColumnValue(row, keyMap, "期末|金额")));
+				eq.put("repCode", getRowColumnValue(row, keyMap, "库房代码"));
+				
+				
+				this.dao.add(eq, "eqRepository");
+
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			result.put("status", 0);
+			throw new ApiResponseException("Import eqCostList error.", null, "模板格式错误");
+		}
+		return result;
+
+	}
+	
+	
+	@Override
+	public Map<String, Object> listEqRep(Map<String, Object> params) {
+
+		Map<String, Object> result = dao.list(params, "eqRepository");
+
+		return result;
+	}
+
+	
 	private void createShip(String contracCode, String orderId){
 		
 		Map<String, Object> arrivalMapQuery = new HashMap<String, Object>();		
@@ -2372,30 +2489,6 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		}
 	}
 
-	private void importFinInfo(String[] info) {
-		String scCode = info[2].trim();
-		double invoiceMoney = ApiUtil.getDouble(info[37], 0);
-		double payMoney = ApiUtil.getDouble(info[38], 0);
-		String data = "2012-12-01";
-		String today = DateUtil.getStringByDate(new Date());
-		insertFinInfo(invoiceMoney, payMoney, data, scCode);
-
-		int num = 43;// 12此循环，每次跳3
-		for (int i = 1; i <= 12; i++) {
-			invoiceMoney = ApiUtil.getDouble(info[num], 0);
-			payMoney = ApiUtil.getDouble(info[num + 1], 0);
-			if (i > 9) {
-				data = "2013-" + i + "-01";
-			} else {
-				data = "2013-0" + i + "-01";
-			}
-			if (data.compareTo(today) > 0)
-				break;
-			insertFinInfo(invoiceMoney, payMoney, data, scCode);
-			num += 2;
-		}
-
-	}
 
 	private void insertFinInfo(double invoiceMoney, double payMoney, String date, String scCode) {
 

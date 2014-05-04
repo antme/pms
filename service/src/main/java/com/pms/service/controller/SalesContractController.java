@@ -305,6 +305,25 @@ public class SalesContractController extends AbstractController {
     	responseWithData(result, request, response);
     }  
     
+    
+    @RequestMapping("/importfinance")
+    //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
+    public void importfinance(HttpServletRequest request, HttpServletResponse response){
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;   
+        MultipartFile uploadFile = multipartRequest.getFile("finaceFile");        
+        Map<String,Object> result = new HashMap<String,Object>();
+        try {
+			InputStream inputStream = uploadFile.getInputStream();
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("inputStream", inputStream);
+			result = salesContractService.importfinance(map);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+    	responseWithData(result, request, response);
+    }  
+    
     @RequestMapping("/importsc2")
     //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
     public void importScExcle2(HttpServletRequest request, HttpServletResponse response){
@@ -342,6 +361,36 @@ public class SalesContractController extends AbstractController {
         
     	responseWithData(null, request, response);
     }
+    
+    
+    @RequestMapping("/importrep")
+    //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
+    public void importrep(HttpServletRequest request, HttpServletResponse response){
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;   
+        MultipartFile uploadFile = multipartRequest.getFile("repimport");        
+        Map<String,Object> result = new HashMap<String,Object>();
+        try {
+			InputStream inputStream = uploadFile.getInputStream();
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("inputStream", inputStream);
+			result = salesContractService.importrep(map);
+		} catch (IOException e) {
+			responseServerError(e, request, response);
+			e.printStackTrace();
+		}
+        
+    	responseWithData(null, request, response);
+    }
+    
+    
+    
+    @RequestMapping("/eqrep/list")
+    //@RoleValidate(roleID=RoleValidConstants.SALES_CONTRACT_ADD, desc = RoleValidConstants.SALES_CONTRACT_ADD_DESC)
+    public void listEqRep(HttpServletRequest request, HttpServletResponse response){
+    	Map<String, Object> params = this.parserJsonParameters(request, true);
+    	responseWithData(salesContractService.listEqRep(params), request, response);
+    }
+    
     
     
     @RequestMapping("/export")

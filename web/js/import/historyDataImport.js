@@ -64,6 +64,22 @@ $(document).ready(function() {
         }
     });	
     
+    
+    $("#finaceFile").kendoUpload({
+        async: {
+//            saveUrl: "/service/sc/importsc",
+        	saveUrl: "/service/sc/importfinance",
+            autoUpload: true
+        },
+        success:function(e){
+        	if (!e.response.msg){//import success
+        		$("#importFinanceStatus").html("数据导入成功！");
+        	}else{
+        		alert(e.response.msg);
+        	}
+        }
+    });	
+    
 	
 });//end dom ready	
 
