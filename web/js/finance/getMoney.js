@@ -77,7 +77,11 @@ $(document).ready(function () {
             { field: "contractCode", title: "销售合同编号",editor: pcDropDownEditor,width:"200px"},
             { field: "creatorName", title:"申请人"},
             { field: "getMoneyActualDate",title:"日期",format: "{0:yyyy-MM-dd}",width:"120px"},
-            { field: "getMoneyActualMoney", title:"金额", min:0},
+            { field: "getMoneyActualMoney", title:"金额", min:0,
+            	template : function(dataItem){
+					return dataItem.getMoneyActualMoney.toFixed(2);
+				}
+            },
             { field: "customerName", title: "客户"},
             { field: "customerBankName", title: "客户开户行"},
             { field: "customerBankAccount", title: "客户银行账号"},

@@ -199,7 +199,11 @@ function detailInit(e) {
             { field: "itemMonth", title:"月份", width: "110px" },
             { field: "itemContent", title:"内容" },
             { field: "itemComment", title:"备注" },
-            { field: "itemMoney", title: "金额", width: "190px" }
+            { field: "itemMoney", title: "金额", width: "190px", 
+            	template : function(dataItem){
+					return dataItem.itemMoney.toFixed(2);
+				}
+            }
         ]
     });
 }
