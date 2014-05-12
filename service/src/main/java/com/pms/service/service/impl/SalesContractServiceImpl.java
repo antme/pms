@@ -2283,6 +2283,8 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 	public Map<String, Object> importfinance(Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		List<String> msgs = new ArrayList<String>();
+		this.dao.deleteByQuery(new HashMap<String, Object>(), DBBean.SC_INVOICE);
+		this.dao.deleteByQuery(new HashMap<String, Object>(), DBBean.SC_GOT_MONEY);
 
 		// try {
 		InputStream inputStream = (InputStream) params.get("inputStream");
@@ -2298,6 +2300,10 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 				String scCode = row[1].trim();
 				String kaipiao = row[2].trim();
 				String shoukuan = row[3].trim();
+				
+				if(ApiUtil.isEmpty(scCode)){
+					continue;
+				}
 
 				if (dao.exist(SalesContractBean.SC_CODE, scCode, DBBean.SALES_CONTRACT)) {
 
@@ -2501,7 +2507,7 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		invoice.put(InvoiceBean.payInvoicePlanDate, date);
 		invoice.put(InvoiceBean.payInvoiceSubmitDate, date);
 
-		invoice.put(InvoiceBean.payInvoiceReceivedMoneyStatus, "期初数据导入");// TODO:
+		invoice.put(InvoiceBean.payInvoiceReceivedMoneyStatus, "历史数据导入");// TODO:
 																		 // 正确？删除？
 		invoice.put(InvoiceBean.payInvoiceStatus, InvoiceBean.statusDone);
 		String comment = recordComment("提交", "期初数据导入", null);
@@ -2514,15 +2520,20 @@ public class SalesContractServiceImpl extends AbstractService implements ISalesC
 		invoice.put(SalesContractBean.SC_INVOICE_TYPE, sc.get(SalesContractBean.SC_INVOICE_TYPE));
 
 		mergeCommonFieldsFromSc(invoice, sc.get(ApiConstants.MONGO_ID));
-		dao.add(invoice, DBBean.SC_INVOICE);
+		if(invoiceMoney > 0){
+			dao.add(invoice, DBBean.SC_INVOICE);
+		}
 
 		// //////////////////////////////////////
 		Map<String, Object> moneyObj = new LinkedHashMap<String, Object>();
-		moneyObj.put("tempComment", "期初数据导入");
+		moneyObj.put("tempComment", "历史数据导入");
 		moneyObj.put(MoneyBean.getMoneyActualDate, date);
 		moneyObj.put(MoneyBean.getMoneyActualMoney, payMoney);
 		moneyObj.put(MoneyBean.contractCode, scCode);
-		saveGetMoneyForSC(moneyObj);
+		
+		if(payMoney > 0){
+			saveGetMoneyForSC(moneyObj);
+		}
 
 	}
 

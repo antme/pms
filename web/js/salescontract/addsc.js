@@ -611,6 +611,11 @@ function saveSCDraft_ADD(){
 		if(scm.archiveStatus && scm.archiveStatus.value){
 			scm.archiveStatus = scm.archiveStatus.value;
 		}
+		
+		if(scm.invoiceType && scm.invoiceType.value){
+			scm.invoiceType = scm.invoiceType.value;
+		}
+		
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
 		});
@@ -799,6 +804,10 @@ function saveSC_ADD(){
 		
 		if(scm.archiveStatus && scm.archiveStatus.value){
 			scm.archiveStatus = scm.archiveStatus.value;
+		}
+		
+		if(scm.invoiceType && scm.invoiceType.value){
+			scm.invoiceType = scm.invoiceType.value;
 		}
 		
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){

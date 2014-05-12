@@ -248,5 +248,8 @@ function detailInit(e) {
     });
 }
 function changeSuccess(e){
+	if(e.invoiceType.value){
+		e.invoiceType = e.invoiceType.value;
+	}
 	kendo.bind($("#scbaseinfo"), e);	
 }

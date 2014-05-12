@@ -876,7 +876,9 @@ function saveSCDraft(){
 		if(scm.contractType && scm.contractType.value){
 			scm.contractType = scm.contractType.value;
 		}
-		
+		if(scm.invoiceType && scm.invoiceType.value){
+			scm.invoiceType = scm.invoiceType.value;
+		}
 		scm.set("status", "草稿");
 		postAjaxRequest("/service/sc/add", {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
@@ -1082,6 +1084,9 @@ function saveSC(){
 			scm.contractType = scm.contractType.value;
 		}
 		
+		if(scm.invoiceType && scm.invoiceType.value){
+			scm.invoiceType = scm.invoiceType.value;
+		}
 		scm.set("status", "已提交");
 		postAjaxRequest("/service/sc/add",  {models:kendo.stringify(scm)}, function(data){
 			loadPage("salescontract_scList");
