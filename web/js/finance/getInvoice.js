@@ -119,44 +119,7 @@ $(document).ready(function () {
 	  	editable:"inline"
 	});
 	
-    $("#moneyGrid").kendoGrid({
-        dataSource: {
-            transport: {
-                read:  {
-                    url: "/service/purcontract/paymoney/list",
-                    dataType: "jsonp",
-                    type : "post"
-                }
-            },
-		    batch: true,
-		    pageSize: 5,
-			serverPaging: true,
-			serverSorting: true,
-			serverFiltering : true,
-            schema: {
-                model: moneyModel,
-                total: "total",
-                data:"data"
-            },
-			aggregate: [ 
-					    { field: "payMoneyActualMoney", aggregate: "sum"}
-			]
-        },
-        pageable: true, resizable: true,
-        resizable: true,
-        sortable : true,
-        selectable : "row",
-        detailTemplate: kendo.template($("#template2").html()),
-        columns: [
-            { field: "purchaseContractCode", title: "采购合同编号",editor:pcDropDownEditor},
-            { field: "creatorName", title: "申请人" },
-            { field: "payMoneyActualMoney", title:"金额", min:0,footerTemplate: "总额: #=sum.toFixed(2)#"},
-            { field: "payMoneyActualData",title:"日期",format: "{0:yyyy-MM-dd}",width:"120px"},
-            { field: "supplierName", title: "供货商"},
-            { field: "supplierBankName", title: "开户行"},
-            { field: "supplierBankAccount", title: "银行账号"}
-        ]
-    });
+   
 	
 });
 function addGI() {

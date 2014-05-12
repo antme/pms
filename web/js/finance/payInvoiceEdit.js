@@ -89,6 +89,9 @@ function saveSuccess(){
 	loadPage("finance_payInvoice");
 }
 function editSucess(e){
+	if(e.invoiceType.value){
+		e.invoiceType = e.invoiceType.value;
+	}
 	if(e.payInvoiceStatus == '草稿'){//只 提交 可见
 		$(".invoicedone").remove();
 		$("#form-container-button button[value!='add'][value!='cancel']").hide();
@@ -115,7 +118,12 @@ function editSucess(e){
 	}		
 	currentObj = new myModel(e);
 	currentObj.set("payInvoicePlanDate", kendo.toString(currentObj.payInvoicePlanDate, 'd'));
-	currentObj.set("payInvoiceActualDate", kendo.toString(currentObj.payInvoiceActualDate, 'd'));	
+	currentObj.set("payInvoiceActualDate", kendo.toString(currentObj.payInvoiceActualDate, 'd'));
+	
+	
+	if(e.invoiceType.value){
+		currentObj.invoiceType = e.invoiceType.value;
+	}
 	kendo.bind($("#form-container"), currentObj);
 }
 function validateModel(){

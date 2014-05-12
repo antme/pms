@@ -122,9 +122,17 @@ $(document).ready(function () {
 			{ field: "creatorName", title: "申请人" , width:"100px"},
 			{ field: "payInvoiceStatus", title: "状态", width: "100px"},
 			{ field: "payInvoicePlanDate", title: "要求日期",format: "{0:yyyy-MM-dd}",width:"100px"},
-			{ field: "payInvoiceMoney", title: "金额" ,footerTemplate: "总额: #=sum.toFixed(2)#", width:"120px"},
+			{ field: "payInvoiceMoney", title: "金额" ,footerTemplate: "总额: #=sum.toFixed(2)#", width:"120px",
+				template : function(dataItem){
+					return dataItem.payInvoiceMoney.toFixed(2);
+				}
+			},
 			{ field: "payInvoiceReceivedMoneyStatus", title: "收款情况", width:"100px"},
-			{ field: "payInvoiceActualMoney", title: "实际金额" ,footerTemplate: "总额: #=sum.toFixed(2)#", width:"120px"},
+			{ field: "payInvoiceActualMoney", title: "实际金额" ,footerTemplate: "总额: #=sum.toFixed(2)#", width:"120px",
+				template : function(dataItem){
+					return dataItem.payInvoiceActualMoney.toFixed(2);
+				}
+			},
 			{ field: "payInvoiceActualDate", title: "实际开票日期",format: "{0:yyyy-MM-dd}",width:"100px" },
 			{ field: "payInvoiceActualInvoiceNum", title: "发票号" , width:"200px"},
 			{ field: "payInvoiceActualSheetCount", title: "开票张数", width:"80px"},
@@ -132,59 +140,7 @@ $(document).ready(function () {
 	  	]
 	});
 	
-    $("#moneyGrid").kendoGrid({
-        dataSource: {
-            transport: {
-                read:  {
-                    url: "/service/sc/getmoney/list",
-                    dataType: "jsonp",
-                    type : "post"
-                },
-                update: {
-                    url:  "/service/sc/getmoney/save",
-                    dataType: "jsonp",
-                    type : "post"
-                },
-                destroy: {
-                    url: "/service/sc/getmoney/destroy",
-                    dataType: "jsonp",
-                    type : "post"
-                },
-                create: {
-                    url: "/service/sc/getmoney/save",
-                    dataType: "jsonp",
-                    type : "post"
-                }
-            },
-            batch: true,
-            pageSize: 10,
-        	serverPaging: true,
-        	serverSorting: true,
-        	serverFiltering : true,
-            schema: {
-                model: moneyModel,
-                total: "total",
-                data:"data"
-            },
-			aggregate: [ 
-			    { field: "getMoneyActualMoney", aggregate: "sum"}
-			]
-        },
-        pageable: true, resizable: true,
-	    sortable : true,
-	    resizable: true,
-        detailTemplate: kendo.template($("#template1").html()),
-        columns: [
-            { field: "contractCode", title: "销售合同编号", width:"160px" },
-            { field: "creatorName", title: "申请人", width:"100px" },
-            { field: "getMoneyActualDate",title:"日期",format: "{0:yyyy-MM-dd}",width:"100px"},
-            { field: "getMoneyActualMoney", title:"金额", min:0 ,footerTemplate: "总额: #=sum.toFixed(2)#", width:"120px"},
-            { field: "customerName", title: "客户", width:"200px"},
-            { field: "customerBankName", title: "客户开户行", width:"100px"},
-            { field: "customerBankAccount", title: "客户银行账号", width:"200px"}
-        ],
-        editable:"popup"
-    });
+   
 	
 	
 });

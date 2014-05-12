@@ -83,7 +83,10 @@ $(document).ready(function() {
 			//toolbar : [ { name:"create",text:"新收款" } ],
 			columns : [ {
 				field : "scGotMoney",
-				title : "收款金额"
+				title : "收款金额",
+				template : function(dataItem){
+					return dataItem.scGotMoney.toFixed(2);
+				}
 			}, {
 				field : "scGotMoneyDate",
 				title : "收款日期"
